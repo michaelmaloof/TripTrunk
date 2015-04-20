@@ -1,0 +1,25 @@
+//
+//  Photo.h
+//  TripTrunk
+//
+//  Created by Michael Maloof on 4/18/15.
+//  Copyright (c) 2015 Michael Maloof. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
+#import <Parse/PFObject+Subclass.h>
+
+@interface Photo : PFObject <PFSubclassing>
+@property (nonatomic) NSDate *createdAt;
+@property NSInteger likes;
+@property PFFile *imageFile;
+@property PFUser *user;
+@property NSString *name;
+@property NSString *caption;
+@property NSString *fbID;
+@property BOOL favorite;
+@property NSMutableArray *usersWhoHaveLiked;
+
+@end

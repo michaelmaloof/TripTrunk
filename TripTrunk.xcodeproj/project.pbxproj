@@ -7,13 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E31AE2BB89001FE916 /* Parse.framework */; };
+		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
+		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
+		223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E91AE2BBD0001FE916 /* MapKit.framework */; };
+		223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547EB1AE2BBD8001FE916 /* CoreLocation.framework */; };
+		223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547ED1AE2BBEE001FE916 /* Social.framework */; };
+		223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F01AE320FF001FE916 /* AddTripViewController.m */; };
+		223547F41AE322C3001FE916 /* Trip.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F31AE322C3001FE916 /* Trip.m */; };
+		223547F71AE333F2001FE916 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F61AE333F2001FE916 /* Photo.m */; };
+		223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */; };
+		223547FD1AE5B0CF001FE916 /* AddPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */; };
 		224F3F921AE1D35E003A1DEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F911AE1D35E003A1DEB /* main.m */; };
 		224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F941AE1D35E003A1DEB /* AppDelegate.m */; };
-		224F3F981AE1D35E003A1DEB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F971AE1D35E003A1DEB /* ViewController.m */; };
+		224F3F981AE1D35E003A1DEB /* HomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */; };
 		224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F991AE1D35E003A1DEB /* Main.storyboard */; };
 		224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F9C1AE1D35E003A1DEB /* Images.xcassets */; };
 		224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */; };
 		224F3FAC1AE1D35E003A1DEB /* TripTrunkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3FAB1AE1D35E003A1DEB /* TripTrunkTests.m */; };
+		224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */; };
+		224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */; };
+		224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */; };
+		224F3FEA1AE1E572003A1DEB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */; };
+		224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */; };
+		224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FED1AE1E589003A1DEB /* QuartzCore.framework */; };
+		224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEF1AE1E590003A1DEB /* Security.framework */; };
+		224F3FF21AE1E59E003A1DEB /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF11AE1E59E003A1DEB /* StoreKit.framework */; };
+		224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */; };
+		224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF51AE1E5AE003A1DEB /* libz.dylib */; };
+		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
+		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +50,48 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		223547E31AE2BB89001FE916 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		223547E91AE2BBD0001FE916 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		223547EB1AE2BBD8001FE916 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		223547ED1AE2BBEE001FE916 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		223547EF1AE320FF001FE916 /* AddTripViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripViewController.h; sourceTree = "<group>"; };
+		223547F01AE320FF001FE916 /* AddTripViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripViewController.m; sourceTree = "<group>"; };
+		223547F21AE322C3001FE916 /* Trip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trip.h; sourceTree = "<group>"; };
+		223547F31AE322C3001FE916 /* Trip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trip.m; sourceTree = "<group>"; };
+		223547F51AE333F2001FE916 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		223547F61AE333F2001FE916 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripPhotosViewController.h; sourceTree = "<group>"; };
+		223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripPhotosViewController.m; sourceTree = "<group>"; };
+		223547FB1AE5B0CF001FE916 /* AddPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPhotoViewController.h; sourceTree = "<group>"; };
+		223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddPhotoViewController.m; sourceTree = "<group>"; };
 		224F3F8C1AE1D35E003A1DEB /* TripTrunk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripTrunk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		224F3F901AE1D35E003A1DEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224F3F911AE1D35E003A1DEB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		224F3F931AE1D35E003A1DEB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		224F3F941AE1D35E003A1DEB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		224F3F961AE1D35E003A1DEB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		224F3F971AE1D35E003A1DEB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeMapViewController.h; sourceTree = "<group>"; };
+		224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeMapViewController.m; sourceTree = "<group>"; };
 		224F3F9A1AE1D35E003A1DEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		224F3F9C1AE1D35E003A1DEB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		224F3F9F1AE1D35E003A1DEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		224F3FA51AE1D35E003A1DEB /* TripTrunkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripTrunkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		224F3FAA1AE1D35E003A1DEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224F3FAB1AE1D35E003A1DEB /* TripTrunkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripTrunkTests.m; sourceTree = "<group>"; };
+		224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		224F3FED1AE1E589003A1DEB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		224F3FEF1AE1E590003A1DEB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		224F3FF11AE1E59E003A1DEB /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		224F3FF51AE1E5AE003A1DEB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		224F3FF91AE1E5BE003A1DEB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +99,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
+				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
+				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
+				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
+				223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */,
+				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
+				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
+				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
+				224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */,
+				224F3FF21AE1E59E003A1DEB /* StoreKit.framework in Frameworks */,
+				224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */,
+				224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */,
+				224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */,
+				223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */,
+				224F3FEA1AE1E572003A1DEB /* CoreGraphics.framework in Frameworks */,
+				224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */,
+				224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +132,7 @@
 		224F3F831AE1D35E003A1DEB = {
 			isa = PBXGroup;
 			children = (
+				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
 				224F3F8E1AE1D35E003A1DEB /* TripTrunk */,
 				224F3FA81AE1D35E003A1DEB /* TripTrunkTests */,
 				224F3F8D1AE1D35E003A1DEB /* Products */,
@@ -81,11 +151,23 @@
 		224F3F8E1AE1D35E003A1DEB /* TripTrunk */ = {
 			isa = PBXGroup;
 			children = (
+				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
-				224F3F961AE1D35E003A1DEB /* ViewController.h */,
-				224F3F971AE1D35E003A1DEB /* ViewController.m */,
-				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
+				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
+				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+				224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */,
+				224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */,
+				223547EF1AE320FF001FE916 /* AddTripViewController.h */,
+				223547F01AE320FF001FE916 /* AddTripViewController.m */,
+				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
+				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				223547FB1AE5B0CF001FE916 /* AddPhotoViewController.h */,
+				223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */,
+				223547F21AE322C3001FE916 /* Trip.h */,
+				223547F31AE322C3001FE916 /* Trip.m */,
+				223547F51AE333F2001FE916 /* Photo.h */,
+				223547F61AE333F2001FE916 /* Photo.m */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
 				224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */,
 				224F3F8F1AE1D35E003A1DEB /* Supporting Files */,
@@ -117,6 +199,30 @@
 				224F3FAA1AE1D35E003A1DEB /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				223547ED1AE2BBEE001FE916 /* Social.framework */,
+				223547EB1AE2BBD8001FE916 /* CoreLocation.framework */,
+				223547E91AE2BBD0001FE916 /* MapKit.framework */,
+				223547E71AE2BBAE001FE916 /* Accounts.framework */,
+				224F3FF91AE1E5BE003A1DEB /* UIKit.framework */,
+				224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */,
+				224F3FF51AE1E5AE003A1DEB /* libz.dylib */,
+				223547E51AE2BB92001FE916 /* Bolts.framework */,
+				223547E31AE2BB89001FE916 /* Parse.framework */,
+				224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */,
+				224F3FF11AE1E59E003A1DEB /* StoreKit.framework */,
+				224F3FEF1AE1E590003A1DEB /* Security.framework */,
+				224F3FED1AE1E589003A1DEB /* QuartzCore.framework */,
+				224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */,
+				224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */,
+				224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */,
+				224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,7 +325,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				224F3F981AE1D35E003A1DEB /* ViewController.m in Sources */,
+				223547F71AE333F2001FE916 /* Photo.m in Sources */,
+				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
+				223547FD1AE5B0CF001FE916 /* AddPhotoViewController.m in Sources */,
+				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
+				223547F41AE322C3001FE916 /* Trip.m in Sources */,
+				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
+				224F3F981AE1D35E003A1DEB /* HomeMapViewController.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
 				224F3F921AE1D35E003A1DEB /* main.m in Sources */,
 			);
@@ -349,8 +461,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/MichaelMaloof/Documents/Development,
+					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.6.2",
+					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.7.1",
+					/Users/MichaelMaloof/Documents/Development/FacebookSDK,
+					"$(PROJECT_DIR)",
+					/Users/MichaelMaloof/Documents/Development/Frameworks,
+					/Users/MichaelMaloof/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -359,8 +482,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/MichaelMaloof/Documents/Development,
+					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.6.2",
+					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.7.1",
+					/Users/MichaelMaloof/Documents/Development/FacebookSDK,
+					"$(PROJECT_DIR)",
+					/Users/MichaelMaloof/Documents/Development/Frameworks,
+					/Users/MichaelMaloof/Documents/FacebookSDK,
+				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -418,6 +552,7 @@
 				224F3FB11AE1D35E003A1DEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		224F3FB21AE1D35E003A1DEB /* Build configuration list for PBXNativeTarget "TripTrunkTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +561,7 @@
 				224F3FB41AE1D35E003A1DEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
