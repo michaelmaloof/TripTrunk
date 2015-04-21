@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *countryTextField;
 @property (weak, nonatomic) IBOutlet UITextField *stateTextField;
 @property NSDateFormatter *formatter;
+@property NSDate *startDate;
+@property NSDate *endDate;
 
 @end
 
@@ -29,6 +31,10 @@
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
     self.endTripTextField.delegate = self;
+    self.tripNameTextField.delegate = self;
+    self.cityNameTextField.delegate = self;
+    self.stateTextField.delegate = self;
+    self.countryTextField.delegate = self;
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
     
@@ -51,6 +57,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if (textField == self.endTripTextField) {
+        [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
         self.endTripTextField.backgroundColor = [UIColor redColor];
         self.tripDatePicker.backgroundColor = [UIColor redColor];
@@ -60,6 +67,7 @@
     }
     
     else if (textField == self.startTripTextField){
+        [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
         self.startTripTextField.backgroundColor = [UIColor blueColor];
         self.tripDatePicker.backgroundColor = [UIColor blueColor];
@@ -68,25 +76,11 @@
         return NO;
     }
     
-    else if (textField == self.cityNameTextField) {
-        self.tripDatePicker.hidden = YES;
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
-        return YES;
-    }
-    
-    else if (textField == self.tripNameTextField) {
-        self.tripDatePicker.hidden = YES;
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
-        return YES;
-    }
-    
     else {
         self.tripDatePicker.hidden = YES;
         self.startTripTextField.backgroundColor = [UIColor whiteColor];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
-        return  NO;
+        return  YES;
     }
 }
 
@@ -96,11 +90,20 @@
     {
         if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
         {
-            return YES;
+            NSTimeInterval startTimeInterval = [self.startDate timeIntervalSince1970];
+            NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
+            
+            if(startTimeInterval <= endTimeInterval){
+                return YES;
+            }
+            
+            else if (startTimeInterval > endTimeInterval)
+                [self notEnoughInfo:@"Your start date must happen before the end date"];
+                return NO;
         }
     }
     
-    [self notEnoughInfo];
+    [self notEnoughInfo:@"Please fill out all boxes"];
     return NO;
 }
 
@@ -124,10 +127,10 @@
     
 }
 
-- (void)notEnoughInfo {
+- (void)notEnoughInfo:(NSString*)message {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Please fill out all boxes.";
+    alertView.title = message;
     [alertView addButtonWithTitle:@"Ok"];
     [alertView show];
 }
@@ -136,11 +139,13 @@
     
     if (self.tripDatePicker.tag == 0){
         self.startTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
+        self.startDate = self.tripDatePicker.date;
 
     }
     
     else if (self.tripDatePicker.tag == 1){
         self.endTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
+        self.endDate = self.tripDatePicker.date;
     }
     
 }
