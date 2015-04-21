@@ -17,7 +17,7 @@
 		223547F41AE322C3001FE916 /* Trip.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F31AE322C3001FE916 /* Trip.m */; };
 		223547F71AE333F2001FE916 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F61AE333F2001FE916 /* Photo.m */; };
 		223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */; };
-		223547FD1AE5B0CF001FE916 /* AddPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */; };
+		22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */; };
 		224F3F921AE1D35E003A1DEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F911AE1D35E003A1DEB /* main.m */; };
 		224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F941AE1D35E003A1DEB /* AppDelegate.m */; };
 		224F3F981AE1D35E003A1DEB /* HomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */; };
@@ -64,8 +64,8 @@
 		223547F61AE333F2001FE916 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripPhotosViewController.h; sourceTree = "<group>"; };
 		223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripPhotosViewController.m; sourceTree = "<group>"; };
-		223547FB1AE5B0CF001FE916 /* AddPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPhotoViewController.h; sourceTree = "<group>"; };
-		223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddPhotoViewController.m; sourceTree = "<group>"; };
+		22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionViewCell.h; sourceTree = "<group>"; };
+		22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionViewCell.m; sourceTree = "<group>"; };
 		224F3F8C1AE1D35E003A1DEB /* TripTrunk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripTrunk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		224F3F901AE1D35E003A1DEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224F3F911AE1D35E003A1DEB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -162,8 +162,8 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
-				223547FB1AE5B0CF001FE916 /* AddPhotoViewController.h */,
-				223547FC1AE5B0CF001FE916 /* AddPhotoViewController.m */,
+				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
+				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
 				223547F21AE322C3001FE916 /* Trip.h */,
 				223547F31AE322C3001FE916 /* Trip.m */,
 				223547F51AE333F2001FE916 /* Photo.h */,
@@ -326,8 +326,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
+				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
-				223547FD1AE5B0CF001FE916 /* AddPhotoViewController.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,

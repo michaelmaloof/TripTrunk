@@ -18,7 +18,7 @@
 @dynamic fbID;
 @dynamic favorite;
 @dynamic usersWhoHaveLiked;
-
+@dynamic city;
 
 +(NSString *)parseClassName
 {

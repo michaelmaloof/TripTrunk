@@ -21,5 +21,6 @@
 @property NSString *fbID;
 @property BOOL favorite;
 @property NSMutableArray *usersWhoHaveLiked;
+@property NSString *city;
 
 @end

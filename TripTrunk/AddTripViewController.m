@@ -10,7 +10,7 @@
 #import "AddTripPhotosViewController.h"
 
 
-@interface AddTripViewController ()
+@interface AddTripViewController () <UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *cityNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
@@ -39,8 +39,23 @@
     
 }
 
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if ([identifier isEqualToString:@"photos"])
+    {
+        if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+        {
+            return YES;
+        }
+    }
+    
+    [self notEnoughInfo];
+    return NO;
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    
     NSString *tripName = self.tripNameTextField.text;
     NSString *tripCity = self.cityNameTextField.text;
     NSString *start = self.startTripTextField.text;
@@ -53,4 +68,13 @@
     addTripPhotosViewController.endDate = end;
     
 }
+
+- (void)notEnoughInfo {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = @"Please fill out all boxes.";
+    [alertView addButtonWithTitle:@"Ok"];
+    [alertView show];
+}
+
 @end

@@ -13,6 +13,8 @@
 @dynamic name;
 @dynamic city;
 @dynamic user;
+@dynamic startDate;
+@dynamic endDate;
 
 +(NSString *)parseClassName
 {

@@ -83,7 +83,6 @@
     for (Trip *trip in self.parseLocations)
     {
         NSString *city = trip.city;
-        NSLog(@"user.name = %@", city);
         [self addTripToMap:city];
     }
 }
@@ -106,7 +105,6 @@
         
         [self.mapView addAnnotation:annotation];
         [self.locations addObject:startAnnotation];
-        NSLog(@"array = %@", self.locations);
         [self.mapView showAnnotations:self.locations animated:YES];
         
     }];
