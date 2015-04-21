@@ -15,6 +15,8 @@
 @dynamic user;
 @dynamic startDate;
 @dynamic endDate;
+@dynamic state;
+@dynamic country;
 
 +(NSString *)parseClassName
 {

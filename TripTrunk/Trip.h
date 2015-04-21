@@ -14,6 +14,8 @@
 
 @property NSString *name;
 @property NSString *city;
+@property NSString *country;
+@property NSString *state;
 @property NSString *user;
 @property NSString *startDate;
 @property NSString *endDate;

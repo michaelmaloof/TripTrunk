@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
 @property (weak, nonatomic) IBOutlet UITextField *endTripTextField;
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
+@property (weak, nonatomic) IBOutlet UITextField *countryTextField;
+@property (weak, nonatomic) IBOutlet UITextField *stateTextField;
 @property NSDateFormatter *formatter;
 
 @end
@@ -43,7 +45,8 @@
 {
     [self.view endEditing:YES];
     self.tripDatePicker.hidden = YES;
-    
+    self.startTripTextField.backgroundColor = [UIColor whiteColor];
+    self.endTripTextField.backgroundColor = [UIColor whiteColor];
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
@@ -108,10 +111,14 @@
     NSString *tripCity = self.cityNameTextField.text;
     NSString *start = self.startTripTextField.text;
     NSString *end = self.endTripTextField.text;
+    NSString *countryName = self.countryTextField.text;
+    NSString *stateName = self.stateTextField.text;
     
     AddTripPhotosViewController *addTripPhotosViewController= segue.destinationViewController;
     addTripPhotosViewController.tripName = tripName;
     addTripPhotosViewController.tripCity = tripCity;
+    addTripPhotosViewController.tripCountry = countryName;
+    addTripPhotosViewController.tripState = stateName;
     addTripPhotosViewController.startDate = start;
     addTripPhotosViewController.endDate = end;
     

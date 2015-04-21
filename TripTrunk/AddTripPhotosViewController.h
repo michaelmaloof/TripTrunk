@@ -11,6 +11,8 @@
 @interface AddTripPhotosViewController : UIViewController
 @property NSString *tripName;
 @property NSString *tripCity;
+@property NSString *tripCountry;
+@property NSString *tripState;
 @property NSString *startDate;
 @property NSString *endDate;
 

@@ -46,6 +46,8 @@
     trip.user = [PFUser currentUser].username;
     trip.startDate = self.startDate;
     trip.endDate = self.endDate;
+    trip.state = self.tripState;
+    trip.country = self.tripCountry;
     
     [trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -72,8 +74,6 @@
     photo.name = [user objectForKey:@"name"];
     photo.fbID = [user objectForKey:@"fbId"];
     photo.user = [PFUser currentUser];
-
-    
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
