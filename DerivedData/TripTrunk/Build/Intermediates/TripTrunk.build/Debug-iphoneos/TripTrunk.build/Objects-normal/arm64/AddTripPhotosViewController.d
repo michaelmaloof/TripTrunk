@@ -29,4 +29,5 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Trip.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/PhotoCollectionViewCell.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/TripImageView.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Photo.h

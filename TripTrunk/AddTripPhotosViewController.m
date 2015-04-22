@@ -11,6 +11,7 @@
 #import "Trip.h"
 #import "PhotoCollectionViewCell.h"
 #import "Photo.h"
+#import "TripImageView.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property UIImagePickerController *PickerController;
@@ -18,6 +19,13 @@
 @property NSMutableArray *photos;
 @property UIImage *image2;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
+@property (weak, nonatomic) IBOutlet UITextView *caption;
+@property (weak, nonatomic) IBOutlet UIButton *addCaption;
+@property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
+@property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
+@property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
+@property NSIndexPath *path;
+@property NSMutableArray *photosToDelete;
 
 @end
 
@@ -26,10 +34,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.photos = [[NSMutableArray alloc]init];
+    self.photosToDelete = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.caption.text = @"Photo caption";
     self.title = self.tripName;
-
+    self.caption.hidden = YES;
+    self.cancelCaption.hidden = YES;
+    self.addCaption.hidden = YES;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -61,12 +73,34 @@
 }
 
 -(void)parsePhotos {
+    
+    NSLog(@"array is %@", self.photos);
+    
+    for (TripImageView *tripImage in self.photos)
+    {
+        UIImage *image = [[UIImage alloc]init];
+        image = tripImage.image;
+        NSString *string = tripImage.caption;
+        [self addImageData:UIImagePNGRepresentation(image) string:string];
+        [self addToDeleteArray:tripImage];
+    }
+    
+    for (TripImageView *tripImage in self.photosToDelete) {
+        [self.photos removeObject:tripImage];
+    }
+    
+    self.photosToDelete = nil;
+    
     for (UIImage *image in self.photos){
-        [self addImageData:UIImagePNGRepresentation(image)];
+        [self addImageData:UIImagePNGRepresentation(image)  string:nil];
     }
 }
 
-- (void)addImageData:(NSData *)imageData
+-(void)addToDeleteArray:(TripImageView*)trip{
+    [self.photosToDelete addObject:trip];
+}
+
+- (void)addImageData:(NSData *)imageData string:(NSString*)caption
 {
     PFFile *file = [PFFile fileWithData:imageData];
     PFUser *user = [PFUser currentUser];
@@ -77,6 +111,7 @@
     photo.name = [user objectForKey:@"name"];
     photo.fbID = [user objectForKey:@"fbId"];
     photo.user = [PFUser currentUser];
+    photo.caption = caption;
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
@@ -98,6 +133,7 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
+
     [self.photos addObject:image];
     [picker dismissViewControllerAnimated:YES completion:NULL];
     
@@ -136,6 +172,41 @@
 }
 
 
+//didSelect
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    self.path = indexPath;
+    self.caption.hidden = NO;
+    self.addCaption.hidden = NO;
+    self.cancelCaption.hidden = NO;
+    self.plusPhoto.hidden = YES;
+    self.submitTrunk.hidden = YES;
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    NSLog(@"hey %@",cell.tripImage.caption);
+    
+    
+}
+
+- (IBAction)onAddCaptionTapped:(id)sender {
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
+    cell.tripImage.caption = self.caption.text;
+    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImage];
+    self.plusPhoto.hidden = NO;
+    self.submitTrunk.hidden = NO;
+    self.cancelCaption.hidden = YES;
+    self.caption.hidden = YES;
+    self.addCaption.hidden = YES;
+    self.path = nil;
+}
+
+- (IBAction)onCancelCaptionTapped:(id)sender {
+    self.plusPhoto.hidden = NO;
+    self.submitTrunk.hidden = NO;
+    self.cancelCaption.hidden = YES;
+    self.caption.hidden = YES;
+    self.addCaption.hidden = YES;
+    self.path= nil;
+}
 
 
 @end

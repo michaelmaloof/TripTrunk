@@ -37,6 +37,7 @@
 		224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF51AE1E5AE003A1DEB /* libz.dylib */; };
 		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
 		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
+		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,8 @@
 		224F3FF51AE1E5AE003A1DEB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		224F3FF91AE1E5BE003A1DEB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
+		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +165,8 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				229D42841AE850C700458244 /* TripImageView.h */,
+				229D42851AE850C700458244 /* TripImageView.m */,
 				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
 				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
 				223547F21AE322C3001FE916 /* Trip.h */,
@@ -325,6 +330,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
