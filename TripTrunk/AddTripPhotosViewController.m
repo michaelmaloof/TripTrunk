@@ -26,6 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.photos = [[NSMutableArray alloc]init];
+    self.tripCollectionView.backgroundColor = [UIColor clearColor];
+    self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
 
 }
 

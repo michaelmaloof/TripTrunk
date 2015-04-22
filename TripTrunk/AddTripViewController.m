@@ -59,8 +59,8 @@
     if (textField == self.endTripTextField) {
         [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
-        self.endTripTextField.backgroundColor = [UIColor redColor];
-        self.tripDatePicker.backgroundColor = [UIColor redColor];
+        self.endTripTextField.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:100.0/255.0 alpha:1.0];
+        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:100.0/255.0 alpha:1.0];
         self.startTripTextField.backgroundColor = [UIColor whiteColor];
         self.tripDatePicker.tag = 1;
         return NO;
@@ -69,8 +69,8 @@
     else if (textField == self.startTripTextField){
         [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
-        self.startTripTextField.backgroundColor = [UIColor blueColor];
-        self.tripDatePicker.backgroundColor = [UIColor blueColor];
+        self.startTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
+        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         self.tripDatePicker.tag = 0;
         return NO;
@@ -131,6 +131,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
     alertView.title = message;
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
     [alertView addButtonWithTitle:@"Ok"];
     [alertView show];
 }
