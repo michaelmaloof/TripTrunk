@@ -294,20 +294,24 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dep-9d-xf1">
-                                <rect key="frame" x="150" y="522" width="70" height="70"/>
+                                <rect key="frame" x="218" y="522" width="70" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2nv-IL-OEJ"/>
                                     <constraint firstAttribute="width" constant="93" id="FZ0-IT-zTJ"/>
                                     <constraint firstAttribute="width" constant="70" id="OgW-we-edu"/>
+                                    <constraint firstAttribute="height" constant="70" id="ePc-86-KtM"/>
+                                    <constraint firstAttribute="width" constant="70" id="q68-1J-t6G"/>
                                     <constraint firstAttribute="height" constant="70" id="rI9-hf-lXU"/>
                                 </constraints>
-                                <state key="normal" image="Cricle">
+                                <state key="normal" image="Plus Circle">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="2nv-IL-OEJ"/>
                                         <exclude reference="FZ0-IT-zTJ"/>
+                                        <exclude reference="OgW-we-edu"/>
+                                        <exclude reference="rI9-hf-lXU"/>
                                     </mask>
                                 </variation>
                                 <connections>
@@ -352,14 +356,22 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cif-Kq-aC8">
-                                <rect key="frame" x="380" y="522" width="70" height="70"/>
+                                <rect key="frame" x="296" y="522" width="70" height="70"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="2Ll-PI-zde"/>
+                                    <constraint firstAttribute="height" constant="70" id="5GW-dt-cvt"/>
                                     <constraint firstAttribute="width" constant="70" id="6BG-a1-rXD"/>
                                     <constraint firstAttribute="height" constant="70" id="ZhN-Qr-4bd"/>
                                 </constraints>
-                                <state key="normal" image="Cricle Copy">
+                                <state key="normal" image="Check circle">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6BG-a1-rXD"/>
+                                        <exclude reference="ZhN-Qr-4bd"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <action selector="onDoneTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="DL1-sx-naU"/>
                                 </connections>
@@ -367,6 +379,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Cif-Kq-aC8" firstAttribute="leading" secondItem="Dep-9d-xf1" secondAttribute="trailing" constant="8" id="33P-K3-JhO"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="top" secondItem="8Fc-E2-Tuo" secondAttribute="bottom" constant="8" id="7Iq-2m-0xY"/>
                             <constraint firstItem="HJk-qO-N2Z" firstAttribute="top" secondItem="8Fc-E2-Tuo" secondAttribute="bottom" constant="118" id="Hpm-Qd-drq"/>
                             <constraint firstAttribute="bottomMargin" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="46" id="Iho-qe-xeg"/>
@@ -379,11 +392,14 @@
                             <constraint firstAttribute="centerX" secondItem="Dep-9d-xf1" secondAttribute="centerX" id="Tcb-Lr-R3D"/>
                             <constraint firstAttribute="centerX" secondItem="HJk-qO-N2Z" secondAttribute="centerX" id="X67-su-y3p"/>
                             <constraint firstAttribute="bottomMargin" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="65" id="bUA-Nv-TvQ"/>
+                            <constraint firstItem="Dep-9d-xf1" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="70" id="c9U-Pd-hcf"/>
                             <constraint firstAttribute="centerY" secondItem="HJk-qO-N2Z" secondAttribute="centerY" constant="-68" id="cgA-jF-fXH"/>
+                            <constraint firstItem="Dep-9d-xf1" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="12" id="h9H-p0-Cyo"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="-5" id="j1N-ty-L82"/>
                             <constraint firstAttribute="centerY" secondItem="Cif-Kq-aC8" secondAttribute="centerY" id="k0P-CF-FWl"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="12" id="ktP-be-mO5"/>
                             <constraint firstAttribute="centerX" secondItem="HJk-qO-N2Z" secondAttribute="centerX" id="l6P-sZ-gs4"/>
+                            <constraint firstItem="Cif-Kq-aC8" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="12" id="oym-Z9-ktT"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -394,10 +410,14 @@
                                 <exclude reference="l6P-sZ-gs4"/>
                                 <exclude reference="7Iq-2m-0xY"/>
                                 <exclude reference="Nb0-m1-FXI"/>
+                                <exclude reference="O4f-DG-d8C"/>
                                 <exclude reference="Tcb-Lr-R3D"/>
+                                <exclude reference="j1N-ty-L82"/>
+                                <exclude reference="LPN-jK-CTm"/>
                                 <exclude reference="Mbq-jg-HId"/>
                                 <exclude reference="RLi-tL-avA"/>
                                 <exclude reference="k0P-CF-FWl"/>
+                                <exclude reference="ktP-be-mO5"/>
                             </mask>
                         </variation>
                     </view>
@@ -449,8 +469,8 @@
     </scenes>
     <resources>
         <image name="Beach" width="375" height="667"/>
-        <image name="Cricle" width="320" height="320"/>
-        <image name="Cricle Copy" width="320" height="320"/>
+        <image name="Check circle" width="340" height="340"/>
+        <image name="Plus Circle" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
     </resources>
 </document>
