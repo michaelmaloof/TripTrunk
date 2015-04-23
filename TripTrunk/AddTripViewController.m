@@ -24,7 +24,6 @@
 @property NSDate *startDate;
 @property NSDate *endDate;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property BOOL validLocation;
 
 @end
 
@@ -107,51 +106,65 @@
             NSTimeInterval startTimeInterval = [self.startDate timeIntervalSince1970];
             NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
             
-            if(startTimeInterval <= endTimeInterval){
-                
-                [self validateAddress];
-                
-                if (self.validLocation == YES)
-                {
-                    self.validLocation = NO;
+            if(startTimeInterval <= endTimeInterval)
+            {
                     return YES;
-                }
-                
-                else {
-                    [self notEnoughInfo:@"Please make sure that you enter a valid location and are connected to the internet"];
-                    return NO;
-                }
             }
-            
-            else if (startTimeInterval > endTimeInterval)
+            else
+            {
                 [self notEnoughInfo:@"Your start date must happen before the end date"];
                 return NO;
+            }
         }
     }
-    
     [self notEnoughInfo:@"Please fill out all boxes"];
     return NO;
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+
+
+- (IBAction)onNextTapped:(id)sender {
     
-    NSString *tripName = self.tripNameTextField.text;
-    NSString *tripCity = self.cityNameTextField.text;
-    NSString *start = self.startTripTextField.text;
-    NSString *end = self.endTripTextField.text;
-    NSString *countryName = self.countryTextField.text;
-    NSString *stateName = self.stateTextField.text;
+    //dont do this every time they click next. only if they changed location text fields
     
-    AddTripPhotosViewController *addTripPhotosViewController= segue.destinationViewController;
-    addTripPhotosViewController.tripName = tripName;
-    addTripPhotosViewController.tripCity = tripCity;
-    addTripPhotosViewController.tripCountry = countryName;
-    addTripPhotosViewController.tripState = stateName;
-    addTripPhotosViewController.startDate = start;
-    addTripPhotosViewController.endDate = end;
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
+    
+    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error) {
+        
+        if (error)
+        {
+            [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
+        }
+        
+        else if (!error)
+        {
+            NSString *tripName = self.tripNameTextField.text;
+            NSString *tripCity = self.cityNameTextField.text;
+            NSString *start = self.startTripTextField.text;
+            NSString *end = self.endTripTextField.text;
+            NSString *countryName = self.countryTextField.text;
+            NSString *stateName = self.stateTextField.text;
+            
+            AddTripPhotosViewController *addTripPhotosViewController= [[AddTripPhotosViewController alloc]init];
+            
+            addTripPhotosViewController.tripName = tripName;
+            addTripPhotosViewController.tripCity = tripCity;
+            addTripPhotosViewController.tripCountry = countryName;
+            addTripPhotosViewController.tripState = stateName;
+            addTripPhotosViewController.startDate = start;
+            addTripPhotosViewController.endDate = end;
+            
+            UIStoryboardSegue *segue = [[UIStoryboardSegue alloc]initWithIdentifier:@"photos" source:self destination:addTripPhotosViewController];
+            [self prepareForSegue:segue sender:@"AddTripView"];
+        }
+        
+        return;
+    }];
     
 }
+
+
 
 - (void)notEnoughInfo:(NSString*)message {
     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -177,32 +190,10 @@
     
 }
 
--(void)validateAddress
-{
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-    NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
-    
-    
-    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error) {
-        
-        NSLog(@"placemarks = %@", placemarks);
-        
-        if (error)
-        {
-            self.validLocation = NO;
-            return;
-        }
-        
-        else if (!error)
-        {
-            self.validLocation = YES;
-            return;
-            
-        }
-        
-    }];
 
-}
+
+
+
 
 
 
