@@ -74,14 +74,9 @@
 
 -(void)parsePhotos {
     
-    NSLog(@"array is %@", self.photos);
-    
     for (TripImageView *tripImage in self.photos)
     {
-        UIImage *image = [[UIImage alloc]init];
-        image = tripImage.image;
-        NSString *string = tripImage.caption;
-        [self addImageData:UIImagePNGRepresentation(image) string:string];
+        [self addImageData:UIImagePNGRepresentation(tripImage.image) string:tripImage.caption];
         [self addToDeleteArray:tripImage];
     }
     
@@ -180,10 +175,6 @@
     self.cancelCaption.hidden = NO;
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
-    NSLog(@"hey %@",cell.tripImage.caption);
-    
-    
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {
