@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property NSIndexPath *path;
 @property NSMutableArray *photosToDelete;
+@property NSMutableArray *tripPhotos;
 
 @end
 
@@ -35,6 +36,7 @@
     [super viewDidLoad];
     self.photos = [[NSMutableArray alloc]init];
     self.photosToDelete = [[NSMutableArray alloc]init];
+    self.tripPhotos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"Photo caption";
@@ -74,17 +76,13 @@
 
 -(void)parsePhotos {
     
-    for (TripImageView *tripImage in self.photos)
+    
+    for (TripImageView *tripImage in self.tripPhotos)
     {
         [self addImageData:UIImagePNGRepresentation(tripImage.image) string:tripImage.caption];
         [self addToDeleteArray:tripImage];
+        [self.photos removeObject:tripImage.image];
     }
-    
-    for (TripImageView *tripImage in self.photosToDelete) {
-        [self.photos removeObject:tripImage];
-    }
-    
-    self.photosToDelete = nil;
     
     for (UIImage *image in self.photos){
         [self addImageData:UIImagePNGRepresentation(image)  string:nil];
@@ -181,7 +179,8 @@
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
     cell.tripImage.caption = self.caption.text;
-    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImage];
+//    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImage];;
+    [self.tripPhotos addObject:cell.tripImage];
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
