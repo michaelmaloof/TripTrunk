@@ -8,9 +8,11 @@
 
 #import "AddTripViewController.h"
 #import "AddTripPhotosViewController.h"
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 
-@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate>
+@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *cityNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
@@ -21,6 +23,8 @@
 @property NSDateFormatter *formatter;
 @property NSDate *startDate;
 @property NSDate *endDate;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property BOOL validLocation;
 
 @end
 
@@ -37,6 +41,16 @@
     self.countryTextField.delegate = self;
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
+    
+    //move to opening of app
+    [self.locationManager requestWhenInUseAuthorization];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
+    self.locationManager.delegate = self;
+    [self.locationManager startUpdatingLocation];
+    
+
     
 }
 
@@ -94,7 +108,19 @@
             NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
             
             if(startTimeInterval <= endTimeInterval){
-                return YES;
+                
+                [self validateAddress];
+                
+                if (self.validLocation == YES)
+                {
+                    self.validLocation = NO;
+                    return YES;
+                }
+                
+                else {
+                    [self notEnoughInfo:@"Please make sure that you enter a valid location and are connected to the internet"];
+                    return NO;
+                }
             }
             
             else if (startTimeInterval > endTimeInterval)
@@ -150,6 +176,34 @@
     }
     
 }
+
+-(void)validateAddress
+{
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
+    
+    
+    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error) {
+        
+        NSLog(@"placemarks = %@", placemarks);
+        
+        if (error)
+        {
+            self.validLocation = NO;
+            return;
+        }
+        
+        else if (!error)
+        {
+            self.validLocation = YES;
+            return;
+            
+        }
+        
+    }];
+
+}
+
 
 
 @end

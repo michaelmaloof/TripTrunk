@@ -12,6 +12,7 @@
 #import <Parse/Parse.h>
 #import "Trip.h"
 
+
 #define METERS_PER_MILE 1609.344
 
 @interface HomeMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
