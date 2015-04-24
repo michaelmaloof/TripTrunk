@@ -13,7 +13,7 @@
 #import "Photo.h"
 #import "TripImageView.h"
 
-@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate>
 @property UIImagePickerController *PickerController;
 @property CGFloat HeightOfButtons;
 @property NSMutableArray *photos;
@@ -39,7 +39,7 @@
     self.tripPhotos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.caption.text = @"Photo caption";
+    self.caption.text = @"";
     self.title = self.tripName;
     self.caption.hidden = YES;
     self.cancelCaption.hidden = YES;
@@ -168,18 +168,28 @@
 //didSelect
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     self.path = indexPath;
-    self.caption.hidden = NO;
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    
+    if (cell.tripImage.caption) {
+        self.caption.text = cell.tripImage.caption;
+        [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
+        cell.backgroundColor = [UIColor whiteColor];
+    }
+    
     self.addCaption.hidden = NO;
+    self.caption.hidden = NO;
     self.cancelCaption.hidden = NO;
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {
+    
+    if (![self.caption.text isEqual: @""])
+    {
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
     cell.tripImage.caption = self.caption.text;
-//    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImage];;
     [self.tripPhotos addObject:cell.tripImage];
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
@@ -187,6 +197,20 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     self.path = nil;
+    self.caption.text = @"";
+    [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
+    }
+    
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = @"No caption is typed";
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:@"OK"];
+        [alertView show];
+    }
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
@@ -195,6 +219,9 @@
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
+    [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
 }
 

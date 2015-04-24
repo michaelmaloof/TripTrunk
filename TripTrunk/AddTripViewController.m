@@ -30,6 +30,9 @@
 @implementation AddTripViewController
 
 - (void)viewDidLoad {
+    
+    //sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here? Also I think I can erase location manager
+    
     [super viewDidLoad];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
@@ -97,41 +100,20 @@
     }
 }
 
--(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+
+
+
+
+- (IBAction)onNextTapped:(id)sender
 {
-    if ([identifier isEqualToString:@"photos"])
-    {
-        if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
-        {
-            NSTimeInterval startTimeInterval = [self.startDate timeIntervalSince1970];
-            NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
-            
-            if(startTimeInterval <= endTimeInterval)
-            {
-                    return YES;
-            }
-            else
-            {
-                [self notEnoughInfo:@"Your start date must happen before the end date"];
-                return NO;
-            }
-        }
-    }
-    [self notEnoughInfo:@"Please fill out all boxes"];
-    return NO;
-}
-
-
-
-- (IBAction)onNextTapped:(id)sender {
     
     //dont do this every time they click next. only if they changed location text fields
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
     
-    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error) {
-        
+    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
+    {
         if (error)
         {
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
@@ -139,31 +121,53 @@
         
         else if (!error)
         {
-            NSString *tripName = self.tripNameTextField.text;
-            NSString *tripCity = self.cityNameTextField.text;
-            NSString *start = self.startTripTextField.text;
-            NSString *end = self.endTripTextField.text;
-            NSString *countryName = self.countryTextField.text;
-            NSString *stateName = self.stateTextField.text;
+
+                if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+                {
+                    NSTimeInterval startTimeInterval = [self.startDate timeIntervalSince1970];
+                    NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
+                    
+                    if(startTimeInterval <= endTimeInterval)
+                    {
+
+                        [self performSegueWithIdentifier:@"photos" sender:self];
+
+                    }
+                    else
+                    {
+                        [self notEnoughInfo:@"Your start date must happen before the end date"];
+                        
+                    }
+
+                }
             
-            AddTripPhotosViewController *addTripPhotosViewController= [[AddTripPhotosViewController alloc]init];
-            
-            addTripPhotosViewController.tripName = tripName;
-            addTripPhotosViewController.tripCity = tripCity;
-            addTripPhotosViewController.tripCountry = countryName;
-            addTripPhotosViewController.tripState = stateName;
-            addTripPhotosViewController.startDate = start;
-            addTripPhotosViewController.endDate = end;
-            
-            UIStoryboardSegue *segue = [[UIStoryboardSegue alloc]initWithIdentifier:@"photos" source:self destination:addTripPhotosViewController];
-            [self prepareForSegue:segue sender:@"AddTripView"];
+                else
+                {
+                    [self notEnoughInfo:@"Please fill out all boxes"];
+                }
         }
-        
+
         return;
     }];
+}
+    
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
+    NSString *tripName = self.tripNameTextField.text;
+    NSString *tripCity = self.cityNameTextField.text;
+    NSString *start = self.startTripTextField.text;
+    NSString *end = self.endTripTextField.text;
+    NSString *countryName = self.countryTextField.text;
+    NSString *stateName = self.stateTextField.text;
+    addTripPhotosViewController.tripName = tripName;
+    addTripPhotosViewController.tripCity = tripCity;
+    addTripPhotosViewController.tripCountry = countryName;
+    addTripPhotosViewController.tripState = stateName;
+    addTripPhotosViewController.startDate = start;
+    addTripPhotosViewController.endDate = end;
     
 }
-
 
 
 - (void)notEnoughInfo:(NSString*)message {

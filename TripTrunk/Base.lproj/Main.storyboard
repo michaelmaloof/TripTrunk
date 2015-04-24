@@ -91,7 +91,7 @@
         <!--Add Trip View Controller-->
         <scene sceneID="pRc-NV-6bL">
             <objects>
-                <viewController storyboardIdentifier="AddTripView" id="VtI-4S-iQ3" customClass="AddTripViewController" sceneMemberID="viewController">
+                <viewController id="VtI-4S-iQ3" customClass="AddTripViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6Gh-Vd-zMy"/>
                         <viewControllerLayoutGuide type="bottom" id="Vow-rq-vVI"/>
