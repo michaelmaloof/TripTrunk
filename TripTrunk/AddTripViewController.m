@@ -52,6 +52,13 @@
     self.locationManager.delegate = self;
     [self.locationManager startUpdatingLocation];
     
+    //TEMP
+    
+    self.tripNameTextField.text = @"Trip to Columbus";
+    self.countryTextField.text = @"U.S.";
+    self.stateTextField.text = @"Ohio";
+    self.cityNameTextField.text = @"Columbus";
+    
 
     
 }

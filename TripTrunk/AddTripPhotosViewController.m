@@ -81,7 +81,6 @@
     {
         [self addImageData:UIImagePNGRepresentation(tripImage.image) string:tripImage.caption];
         [self addToDeleteArray:tripImage];
-        [self.photos removeObject:tripImage.image];
     }
     
     for (UIImage *image in self.photos){
@@ -124,13 +123,14 @@
 
 #pragma mark - Image Picker delegates
 
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-
-    [self.photos addObject:image];
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        [self.photos addObject:image];
+        [picker dismissViewControllerAnimated:YES completion:NULL];
     
 }
+
 
 
 
@@ -173,7 +173,6 @@
     if (cell.tripImage.caption) {
         self.caption.text = cell.tripImage.caption;
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
-        cell.backgroundColor = [UIColor whiteColor];
     }
     
     self.addCaption.hidden = NO;
@@ -181,6 +180,7 @@
     self.cancelCaption.hidden = NO;
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
+    cell.backgroundColor = [UIColor whiteColor];
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {
@@ -191,6 +191,8 @@
     cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
     cell.tripImage.caption = self.caption.text;
     [self.tripPhotos addObject:cell.tripImage];
+    [self.photos removeObject:cell.tripImage];
+    
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
@@ -211,6 +213,7 @@
         [alertView addButtonWithTitle:@"OK"];
         [alertView show];
     }
+    
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
@@ -221,6 +224,7 @@
     self.addCaption.hidden = YES;
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    self.caption.text = @"";
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
 }
