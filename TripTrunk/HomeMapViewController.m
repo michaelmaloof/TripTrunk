@@ -15,9 +15,8 @@
 
 #define METERS_PER_MILE 1609.344
 
-@interface HomeMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
+@interface HomeMapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property CLLocationManager *locationManager;
 @property CLLocation *currentLocation;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
@@ -38,22 +37,16 @@
         [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
     }
     
-    self.locationManager = [[CLLocationManager alloc]init];
-    [self.locationManager requestWhenInUseAuthorization];
-    self.locationManager.delegate = self;
-    [self.locationManager startUpdatingLocation];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
-    self.currentLocation = [[CLLocation alloc]init];
-    self.currentLocation = [self.locationManager location];
     self.mapView.region = MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, 10000, 10000);
-    self.locations = [[NSMutableArray alloc]init];
-    
-    
+
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    // only add pins that have been updated
+    [self.mapView  removeAnnotations:self.mapView.annotations];
+    self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
+    self.parseLocations = nil;
     self.parseLocations = [[NSMutableArray alloc]init];
     [self queryParseMethod];
 }
@@ -79,23 +72,17 @@
 }
 
 -(void)placeTrips{
+
     NSInteger count = 0;
     for (Trip *trip in self.parseLocations)
     {
-        [self addTripToMap:trip];
-        count +=1;
-                
-        if (count == self.parseLocations.count)
-        {
-
-            [self.mapView showAnnotations:self.locations animated:YES];
-        }
-        
+        count = count +1;
+        [self addTripToMap:trip count:count];
     }
 
 }
 
--(void)addTripToMap:(Trip*)trip;
+-(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
 {
     //FIXEM needs to be address not city
     
@@ -105,11 +92,11 @@
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
-        
-//        self.mapView.region = MKCoordinateRegionMakeWithDistance(placemark.location.coordinate, 10000, 10000);
-        
         [self.mapView addAnnotation:annotation];
-        
+    //FIXME Doesnt include last pin
+        if (count == self.parseLocations.count) {
+            [self fitPins];
+        }
         
     }];
 }
@@ -117,7 +104,6 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *startAnnotation = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
-    startAnnotation.pinColor = MKPinAnnotationColorGreen;
     startAnnotation.animatesDrop = YES;
     startAnnotation.canShowCallout = YES;
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
@@ -127,14 +113,20 @@
     return startAnnotation;
 }
 
+-(void)fitPins
+{
+    self.mapView.camera.altitude *= 1.8;
+    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+}
+
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     CLLocationCoordinate2D center = view.annotation.coordinate;
     
     MKCoordinateSpan span;
-    span.longitudeDelta = 0.01;
-    span.latitudeDelta = 0.01;
+    span.longitudeDelta = 10.0;
+    span.latitudeDelta = 10.0;
     
     MKCoordinateRegion region;
     region.center = center;
