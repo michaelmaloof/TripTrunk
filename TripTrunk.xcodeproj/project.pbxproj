@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		220408D61AEBDF40009DB060 /* TrunkPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D51AEBDF40009DB060 /* TrunkPinAnnotationView.m */; };
+		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E31AE2BB89001FE916 /* Parse.framework */; };
 		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -52,8 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		220408D41AEBDF40009DB060 /* TrunkPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkPinAnnotationView.h; sourceTree = "<group>"; };
-		220408D51AEBDF40009DB060 /* TrunkPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkPinAnnotationView.m; sourceTree = "<group>"; };
+		220408D71AEC5475009DB060 /* TrunkListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkListViewController.h; sourceTree = "<group>"; };
+		220408D81AEC5475009DB060 /* TrunkListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkListViewController.m; sourceTree = "<group>"; };
 		223547E31AE2BB89001FE916 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -168,14 +168,14 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
+				220408D81AEC5475009DB060 /* TrunkListViewController.m */,
 				229D42841AE850C700458244 /* TripImageView.h */,
 				229D42851AE850C700458244 /* TripImageView.m */,
 				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
 				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
 				223547F21AE322C3001FE916 /* Trip.h */,
 				223547F31AE322C3001FE916 /* Trip.m */,
-				220408D41AEBDF40009DB060 /* TrunkPinAnnotationView.h */,
-				220408D51AEBDF40009DB060 /* TrunkPinAnnotationView.m */,
 				223547F51AE333F2001FE916 /* Photo.h */,
 				223547F61AE333F2001FE916 /* Photo.m */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
@@ -337,11 +337,11 @@
 			files = (
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
-				220408D61AEBDF40009DB060 /* TrunkPinAnnotationView.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
+				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				224F3F981AE1D35E003A1DEB /* HomeMapViewController.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,

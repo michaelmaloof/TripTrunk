@@ -7,11 +7,10 @@
 //
 
 #import "HomeMapViewController.h"
-#import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import <Parse/Parse.h>
 #import "Trip.h"
-
+#import "TrunkListViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -20,6 +19,7 @@
 @property CLLocation *currentLocation;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
+@property NSString *pinCityName;
 
 @end
 
@@ -108,6 +108,10 @@
     startAnnotation.canShowCallout = YES;
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    startAnnotation.rightCalloutAccessoryView.tag = 0;
+    startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    startAnnotation.leftCalloutAccessoryView.tag = 1;
     [self.locations addObject:startAnnotation];
     
     return startAnnotation;
@@ -122,6 +126,8 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
+    if (control.tag == 0)
+    {
     CLLocationCoordinate2D center = view.annotation.coordinate;
     
     MKCoordinateSpan span;
@@ -133,6 +139,14 @@
     region.span = span;
     
     [self.mapView setRegion:region animated:YES];
+    }
+    
+    else if (control.tag == 1)
+    {
+        self.pinCityName = view.annotation.title;
+        [self performSegueWithIdentifier:@"Trunk" sender:self];
+        self.pinCityName = nil;
+    }
 }
 
 
@@ -141,6 +155,16 @@
 {
     [self.view endEditing:YES];
     
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Trunk"])
+    {
+        TrunkListViewController *trunkView = segue.destinationViewController;
+        trunkView.city = self.pinCityName;
+        self.pinCityName = nil;
+    }
 }
 
 

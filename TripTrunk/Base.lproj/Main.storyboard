@@ -82,11 +82,30 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
+                        <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1117" y="429"/>
+        </scene>
+        <!--Trunk List View Controller-->
+        <scene sceneID="x3T-wA-FQC">
+            <objects>
+                <viewController id="iaX-sL-1aH" customClass="TrunkListViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="65g-8q-l87"/>
+                        <viewControllerLayoutGuide type="bottom" id="lwA-SP-Ib2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xMW-GT-hIA">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jf4-sa-9aP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="990" y="1256"/>
         </scene>
         <!--Add Trip View Controller-->
         <scene sceneID="pRc-NV-6bL">
