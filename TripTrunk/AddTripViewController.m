@@ -113,11 +113,11 @@
 
 - (IBAction)onNextTapped:(id)sender
 {
-    
     //dont do this every time they click next. only if they changed location text fields
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
     {
@@ -138,11 +138,13 @@
                     {
 
                         [self performSegueWithIdentifier:@"photos" sender:self];
+                        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
                     }
                     else
                     {
                         [self notEnoughInfo:@"Your start date must happen before the end date"];
+                        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                         
                     }
 
@@ -151,11 +153,14 @@
                 else
                 {
                     [self notEnoughInfo:@"Please fill out all boxes"];
+                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
-
+        
         return;
     }];
+
 }
     
 

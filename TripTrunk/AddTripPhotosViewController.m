@@ -27,6 +27,8 @@
 @property NSIndexPath *path;
 @property NSMutableArray *photosToDelete;
 @property NSMutableArray *tripPhotos;
+@property (weak, nonatomic) IBOutlet UIButton *remove;
+@property (weak, nonatomic) IBOutlet UIButton *delete;
 
 @end
 
@@ -44,6 +46,8 @@
     self.caption.hidden = YES;
     self.cancelCaption.hidden = YES;
     self.addCaption.hidden = YES;
+    self.remove.hidden = YES;
+    self.delete.hidden = YES;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -173,6 +177,7 @@
     if (cell.tripImage.caption) {
         self.caption.text = cell.tripImage.caption;
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
+        self.remove.hidden = NO;
     }
     
     self.addCaption.hidden = NO;
@@ -180,6 +185,7 @@
     self.cancelCaption.hidden = NO;
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
+    self.delete.hidden = NO;
     cell.backgroundColor = [UIColor whiteColor];
 }
 
@@ -196,6 +202,7 @@
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
+        self.remove.hidden = YES;
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     self.path = nil;
@@ -227,7 +234,41 @@
     self.caption.text = @"";
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
+    self.remove.hidden = YES;
 }
 
+- (IBAction)onRemoveTapped:(id)sender {
+    self.plusPhoto.hidden = NO;
+    self.submitTrunk.hidden = NO;
+    self.cancelCaption.hidden = YES;
+    self.caption.hidden = YES;
+    self.addCaption.hidden = YES;
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    cell.captionImage.image = [UIImage imageNamed:@"Plus Circle"];
+    cell.tripImage.caption = @"";
+    [self.tripPhotos removeObject:cell.tripImage];
+    [self.photos addObject:cell.tripImage];
+    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
+    self.path= nil;
+        self.remove.hidden = YES;
 
+}
+
+- (IBAction)onDeleteTapped:(id)sender {
+    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
+    [self.tripPhotos removeObject:cell.tripImage];
+    [self.photos removeObject:cell.tripImage.image];
+    self.path= nil;
+    self.delete.hidden = YES;
+    self.plusPhoto.hidden = NO;
+    self.submitTrunk.hidden = NO;
+    self.cancelCaption.hidden = YES;
+    self.caption.hidden = YES;
+    self.addCaption.hidden = YES;
+    self.remove.hidden = YES;
+    [self.tripCollectionView reloadData];
+
+    
+}
 @end
