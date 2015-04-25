@@ -83,34 +83,59 @@
 -(void)placeTrips{
     for (Trip *trip in self.parseLocations)
     {
-        NSString *city = trip.city;
-        [self addTripToMap:city];
+        [self addTripToMap:trip];
     }
+    
+    [self.mapView showAnnotations:self.locations animated:YES];
 }
 
--(void)addTripToMap:(NSString*)location;
+-(void)addTripToMap:(Trip*)trip;
 {
+    //FIXEM needs to be address not city
     
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
-    [geocoder geocodeAddressString:location completionHandler:^(NSArray *placemarks, NSError *error) {
+    [geocoder geocodeAddressString:trip.city completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
+        annotation.title = trip.city;
         
-        MKPinAnnotationView *startAnnotation = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
-        startAnnotation.pinColor = MKPinAnnotationColorGreen;
-        startAnnotation.animatesDrop = YES;
-        
-        
-        self.mapView.region = MKCoordinateRegionMakeWithDistance(placemark.location.coordinate, 10000, 10000);
+//        self.mapView.region = MKCoordinateRegionMakeWithDistance(placemark.location.coordinate, 10000, 10000);
         
         [self.mapView addAnnotation:annotation];
-        [self.locations addObject:startAnnotation];
-        [self.mapView showAnnotations:self.locations animated:YES];
+        
         
     }];
 }
 
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    MKPinAnnotationView *startAnnotation = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
+    startAnnotation.pinColor = MKPinAnnotationColorGreen;
+    startAnnotation.animatesDrop = YES;
+    startAnnotation.canShowCallout = YES;
+    startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    startAnnotation.image = [UIImage imageNamed:@"Plus Circle"];
+    [self.locations addObject:startAnnotation];
+    
+    return startAnnotation;
+}
+
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+    CLLocationCoordinate2D center = view.annotation.coordinate;
+    
+    MKCoordinateSpan span;
+    span.longitudeDelta = 0.01;
+    span.latitudeDelta = 0.01;
+    
+    MKCoordinateRegion region;
+    region.center = center;
+    region.span = span;
+    
+    [self.mapView setRegion:region animated:YES];
+}
 
 
 #pragma keyboard

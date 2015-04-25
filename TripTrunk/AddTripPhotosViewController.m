@@ -200,11 +200,11 @@
     cell.tripImage.caption = self.caption.text;
     [self.tripPhotos addObject:cell.tripImage];
     [self.photos removeObject:cell.tripImage];
-    
+    self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
-        self.remove.hidden = YES;
+    self.remove.hidden = YES;
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     self.path = nil;
@@ -237,6 +237,7 @@
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
     self.remove.hidden = YES;
+    self.delete.hidden = YES;
 }
 
 - (IBAction)onRemoveTapped:(id)sender {
@@ -252,7 +253,8 @@
     [self.photos addObject:cell.tripImage];
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
-        self.remove.hidden = YES;
+    self.remove.hidden = YES;
+    self.delete.hidden = YES;
 
 }
 
