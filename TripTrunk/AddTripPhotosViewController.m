@@ -48,6 +48,8 @@
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 -(void)viewDidAppear:(BOOL)animated{

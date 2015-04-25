@@ -58,7 +58,6 @@
     self.countryTextField.text = @"U.S.";
     self.stateTextField.text = @"Ohio";
     self.cityNameTextField.text = @"Columbus";
-    
 
     
 }
