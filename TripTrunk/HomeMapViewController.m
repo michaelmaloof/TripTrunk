@@ -49,15 +49,13 @@
     self.mapView.region = MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, 10000, 10000);
     self.locations = [[NSMutableArray alloc]init];
     
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = [[NSMutableArray alloc]init];
-    
     [self queryParseMethod];
-    [self.mapView showAnnotations:self.locations animated:YES];
-    
 }
 
 -(void)queryParseMethod
@@ -81,12 +79,20 @@
 }
 
 -(void)placeTrips{
+    NSInteger count = 0;
     for (Trip *trip in self.parseLocations)
     {
         [self addTripToMap:trip];
+        count +=1;
+                
+        if (count == self.parseLocations.count)
+        {
+
+            [self.mapView showAnnotations:self.locations animated:YES];
+        }
+        
     }
-    
-    [self.mapView showAnnotations:self.locations animated:YES];
+
 }
 
 -(void)addTripToMap:(Trip*)trip;
@@ -115,7 +121,7 @@
     startAnnotation.animatesDrop = YES;
     startAnnotation.canShowCallout = YES;
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    startAnnotation.image = [UIImage imageNamed:@"Plus Circle"];
+    startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
     [self.locations addObject:startAnnotation];
     
     return startAnnotation;
