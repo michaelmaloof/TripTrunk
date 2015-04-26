@@ -151,6 +151,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="WdL-YS-XJ3" id="5ub-zG-07C"/>
+                        <segue destination="XRX-XO-YxQ" kind="show" id="4iZ-43-2GM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jf4-sa-9aP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -487,22 +488,25 @@
                                     </mask>
                                 </variation>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EQG-Zd-K84">
-                                <rect key="frame" x="250" y="404" width="87" height="30"/>
-                                <color key="backgroundColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EQG-Zd-K84">
+                                <rect key="frame" x="306" y="404" width="70" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="87" id="OMx-LM-4Ac"/>
                                     <constraint firstAttribute="width" constant="87" id="SjR-pE-qny"/>
+                                    <constraint firstAttribute="width" constant="70" id="Ygj-k7-KbK"/>
+                                    <constraint firstAttribute="height" constant="70" id="bVl-fY-G84"/>
                                     <constraint firstAttribute="height" constant="30" id="k9X-6I-R1U"/>
                                     <constraint firstAttribute="height" constant="30" id="xzK-uh-qep"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Add Caption">
+                                <state key="normal" image="Add Caption">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="OMx-LM-4Ac"/>
                                         <exclude reference="SjR-pE-qny"/>
+                                        <exclude reference="k9X-6I-R1U"/>
                                         <exclude reference="xzK-uh-qep"/>
                                     </mask>
                                 </variation>
@@ -511,72 +515,81 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EUX-37-6at">
-                                <rect key="frame" x="270" y="480" width="48" height="30"/>
-                                <color key="backgroundColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="131" y="404" width="70" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="FOp-FJ-aK1"/>
                                     <constraint firstAttribute="height" constant="30" id="YbH-8n-b07"/>
                                     <constraint firstAttribute="height" constant="30" id="pjH-HT-MN4"/>
+                                    <constraint firstAttribute="width" constant="70" id="qqe-2s-rcS"/>
+                                    <constraint firstAttribute="height" constant="70" id="snH-7M-0G8"/>
                                     <constraint firstAttribute="width" constant="48" id="w4s-8S-WW5"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Cancel">
+                                <state key="normal" backgroundImage="Cancel">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="FOp-FJ-aK1"/>
                                         <exclude reference="YbH-8n-b07"/>
+                                        <exclude reference="pjH-HT-MN4"/>
+                                        <exclude reference="w4s-8S-WW5"/>
                                     </mask>
                                 </variation>
                                 <connections>
                                     <action selector="onCancelCaptionTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="PTo-wD-7pv"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3C-n6-SAf">
-                                <rect key="frame" x="237" y="518" width="115" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="57" id="DcP-KO-dhZ"/>
-                                    <constraint firstAttribute="width" constant="115" id="h8Z-NJ-gfw"/>
-                                    <constraint firstAttribute="height" constant="30" id="kSH-2R-Wt0"/>
-                                    <constraint firstAttribute="height" constant="30" id="ptZ-nj-9F5"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Remove Caption">
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="DcP-KO-dhZ"/>
-                                        <exclude reference="kSH-2R-Wt0"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="onRemoveTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="H25-8f-M4f"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0m-io-Uxz">
-                                <rect key="frame" x="250" y="442" width="89" height="30"/>
-                                <color key="backgroundColor" red="0.51372549020000002" green="0.22352941179999999" blue="0.80392156859999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="218" y="404" width="70" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="0Zl-t6-t6G"/>
                                     <constraint firstAttribute="height" constant="30" id="E4u-xs-aUf"/>
+                                    <constraint firstAttribute="width" constant="70" id="QNm-0R-qBM"/>
                                     <constraint firstAttribute="width" constant="89" id="azA-PE-Sam"/>
+                                    <constraint firstAttribute="height" constant="70" id="dwA-wL-Rtj"/>
                                     <constraint firstAttribute="height" constant="30" id="lqJ-BX-O5t"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Delete Photo">
+                                <state key="normal" backgroundImage="Delte Photo">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="0Zl-t6-t6G"/>
                                         <exclude reference="E4u-xs-aUf"/>
+                                        <exclude reference="azA-PE-Sam"/>
+                                        <exclude reference="lqJ-BX-O5t"/>
                                     </mask>
                                 </variation>
                                 <connections>
                                     <action selector="onDeleteTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="2sR-BW-vzI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3C-n6-SAf">
+                                <rect key="frame" x="394" y="404" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="57" id="DcP-KO-dhZ"/>
+                                    <constraint firstAttribute="height" constant="70" id="EXl-dU-ULc"/>
+                                    <constraint firstAttribute="width" constant="70" id="di3-8R-2k5"/>
+                                    <constraint firstAttribute="width" constant="115" id="h8Z-NJ-gfw"/>
+                                    <constraint firstAttribute="height" constant="30" id="kSH-2R-Wt0"/>
+                                    <constraint firstAttribute="height" constant="30" id="ptZ-nj-9F5"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" backgroundImage="Remove Caption">
+                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="DcP-KO-dhZ"/>
+                                        <exclude reference="h8Z-NJ-gfw"/>
+                                        <exclude reference="kSH-2R-Wt0"/>
+                                        <exclude reference="ptZ-nj-9F5"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="onRemoveTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="H25-8f-M4f"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -587,11 +600,13 @@
                             <constraint firstItem="EQG-Zd-K84" firstAttribute="top" secondItem="DWS-IY-eSd" secondAttribute="bottom" constant="8" id="3Zk-iR-zeC"/>
                             <constraint firstItem="b0m-io-Uxz" firstAttribute="top" secondItem="N3C-n6-SAf" secondAttribute="bottom" constant="8" id="6r6-Og-7Lp"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="top" secondItem="8Fc-E2-Tuo" secondAttribute="bottom" constant="8" id="7Iq-2m-0xY"/>
+                            <constraint firstItem="EUX-37-6at" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="-20" id="AD2-gX-q4a"/>
                             <constraint firstItem="EUX-37-6at" firstAttribute="top" secondItem="b0m-io-Uxz" secondAttribute="bottom" constant="8" id="Dxm-kl-Yy6"/>
                             <constraint firstItem="EQG-Zd-K84" firstAttribute="leading" secondItem="EUX-37-6at" secondAttribute="trailing" constant="105" id="HRI-tx-3Up"/>
                             <constraint firstAttribute="centerY" secondItem="DWS-IY-eSd" secondAttribute="centerY" id="Hi1-Dc-9Z5"/>
                             <constraint firstItem="HJk-qO-N2Z" firstAttribute="top" secondItem="8Fc-E2-Tuo" secondAttribute="bottom" constant="118" id="Hpm-Qd-drq"/>
                             <constraint firstAttribute="bottomMargin" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="46" id="Iho-qe-xeg"/>
+                            <constraint firstItem="b0m-io-Uxz" firstAttribute="top" secondItem="DWS-IY-eSd" secondAttribute="bottom" constant="8" id="Krh-Cl-n6V"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="leading" secondItem="Dep-9d-xf1" secondAttribute="trailing" constant="160" id="LPN-jK-CTm"/>
                             <constraint firstAttribute="centerX" secondItem="Cif-Kq-aC8" secondAttribute="centerX" id="Mbq-jg-HId"/>
                             <constraint firstAttribute="centerX" secondItem="DWS-IY-eSd" secondAttribute="centerX" id="MnB-Z0-gQb"/>
@@ -601,20 +616,26 @@
                             <constraint firstAttribute="centerX" secondItem="b0m-io-Uxz" secondAttribute="centerX" id="OQk-dD-zDY"/>
                             <constraint firstItem="EUX-37-6at" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="25" id="PM8-rW-2Q1"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="leading" secondItem="Dep-9d-xf1" secondAttribute="trailing" constant="500" id="RLi-tL-avA"/>
+                            <constraint firstItem="N3C-n6-SAf" firstAttribute="top" secondItem="DWS-IY-eSd" secondAttribute="bottom" constant="8" id="T0p-J4-FHm"/>
                             <constraint firstAttribute="centerX" secondItem="Dep-9d-xf1" secondAttribute="centerX" id="Tcb-Lr-R3D"/>
+                            <constraint firstItem="N3C-n6-SAf" firstAttribute="leading" secondItem="EQG-Zd-K84" secondAttribute="trailing" constant="18" id="W6V-kB-vqh"/>
                             <constraint firstAttribute="centerY" secondItem="DWS-IY-eSd" secondAttribute="centerY" id="W9s-KR-VNC"/>
                             <constraint firstAttribute="centerX" secondItem="HJk-qO-N2Z" secondAttribute="centerX" id="X67-su-y3p"/>
                             <constraint firstAttribute="bottomMargin" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="65" id="bUA-Nv-TvQ"/>
+                            <constraint firstItem="EQG-Zd-K84" firstAttribute="leading" secondItem="b0m-io-Uxz" secondAttribute="trailing" constant="18" id="bje-TN-Sd7"/>
                             <constraint firstAttribute="centerX" secondItem="EUX-37-6at" secondAttribute="centerX" id="bsQ-CT-uns"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="70" id="c9U-Pd-hcf"/>
                             <constraint firstAttribute="centerY" secondItem="HJk-qO-N2Z" secondAttribute="centerY" constant="-68" id="cgA-jF-fXH"/>
+                            <constraint firstItem="EQG-Zd-K84" firstAttribute="top" secondItem="DWS-IY-eSd" secondAttribute="bottom" constant="8" id="e2v-g0-xEl"/>
                             <constraint firstItem="N3C-n6-SAf" firstAttribute="top" secondItem="EUX-37-6at" secondAttribute="bottom" constant="8" id="eer-od-7kP"/>
                             <constraint firstAttribute="centerX" secondItem="N3C-n6-SAf" secondAttribute="centerX" id="ez7-Iv-cAx"/>
+                            <constraint firstItem="b0m-io-Uxz" firstAttribute="leading" secondItem="EUX-37-6at" secondAttribute="trailing" constant="17" id="fBs-i7-eUu"/>
                             <constraint firstAttribute="centerX" secondItem="b0m-io-Uxz" secondAttribute="centerX" id="gTj-pb-wfr"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="12" id="h9H-p0-Cyo"/>
                             <constraint firstItem="Dep-9d-xf1" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="-5" id="j1N-ty-L82"/>
                             <constraint firstAttribute="centerX" secondItem="DWS-IY-eSd" secondAttribute="centerX" id="jdD-jW-6rl"/>
                             <constraint firstAttribute="centerY" secondItem="Cif-Kq-aC8" secondAttribute="centerY" id="k0P-CF-FWl"/>
+                            <constraint firstItem="EUX-37-6at" firstAttribute="top" secondItem="DWS-IY-eSd" secondAttribute="bottom" constant="8" id="kix-Kn-7XJ"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="12" id="ktP-be-mO5"/>
                             <constraint firstAttribute="centerX" secondItem="HJk-qO-N2Z" secondAttribute="centerX" id="l6P-sZ-gs4"/>
                             <constraint firstAttribute="centerX" secondItem="N3C-n6-SAf" secondAttribute="centerX" id="lYe-CV-qjC"/>
@@ -633,19 +654,27 @@
                                 <exclude reference="l6P-sZ-gs4"/>
                                 <exclude reference="Hi1-Dc-9Z5"/>
                                 <exclude reference="MnB-Z0-gQb"/>
-                                <exclude reference="3Zk-iR-zeC"/>
-                                <exclude reference="HRI-tx-3Up"/>
+                                <exclude reference="Dxm-kl-Yy6"/>
+                                <exclude reference="PM8-rW-2Q1"/>
+                                <exclude reference="bsQ-CT-uns"/>
+                                <exclude reference="qNa-Q9-EAS"/>
                                 <exclude reference="6r6-Og-7Lp"/>
                                 <exclude reference="OQk-dD-zDY"/>
-                                <exclude reference="PM8-rW-2Q1"/>
-                                <exclude reference="qNa-Q9-EAS"/>
+                                <exclude reference="gTj-pb-wfr"/>
+                                <exclude reference="opy-8y-g2m"/>
+                                <exclude reference="3Tm-8N-maN"/>
+                                <exclude reference="3Zk-iR-zeC"/>
+                                <exclude reference="HRI-tx-3Up"/>
+                                <exclude reference="noa-Rj-y7v"/>
+                                <exclude reference="eer-od-7kP"/>
+                                <exclude reference="ez7-Iv-cAx"/>
+                                <exclude reference="lYe-CV-qjC"/>
+                                <exclude reference="pZB-Kt-vGV"/>
                                 <exclude reference="7Iq-2m-0xY"/>
                                 <exclude reference="Nb0-m1-FXI"/>
                                 <exclude reference="O4f-DG-d8C"/>
                                 <exclude reference="Tcb-Lr-R3D"/>
                                 <exclude reference="j1N-ty-L82"/>
-                                <exclude reference="lYe-CV-qjC"/>
-                                <exclude reference="pZB-Kt-vGV"/>
                                 <exclude reference="LPN-jK-CTm"/>
                                 <exclude reference="Mbq-jg-HId"/>
                                 <exclude reference="RLi-tL-avA"/>
@@ -708,9 +737,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Add Caption" width="340" height="340"/>
         <image name="Beach" width="375" height="667"/>
+        <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
+        <image name="Delte Photo" width="340" height="340"/>
         <image name="Plus Circle" width="340" height="340"/>
+        <image name="Remove Caption" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
     </resources>
 </document>

@@ -271,8 +271,8 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
+    self.caption.text = @"";
     [self.tripCollectionView reloadData];
-
     
 }
 @end
