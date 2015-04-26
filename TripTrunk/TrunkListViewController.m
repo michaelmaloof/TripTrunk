@@ -9,6 +9,7 @@
 #import "TrunkListViewController.h"
 #import <Parse/Parse.h>
 #import "Trip.h"
+#import "TrunkTableViewCell.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource>
 @property NSMutableArray *parseLocations;
@@ -25,17 +26,18 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"parse %lu", (unsigned long)self.parseLocations.count);
     return self.parseLocations.count;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
+    TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
+    cell.trip = trip;
     cell.textLabel.text = trip.name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", trip.startDate, trip.endDate];
+    cell.detailTextLabel.text = trip.user;
+    self.title = trip.city;
 
     return cell;
 }
