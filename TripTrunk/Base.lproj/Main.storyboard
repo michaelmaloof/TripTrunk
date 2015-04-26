@@ -73,6 +73,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Eje-fq-v1r">
+                        <barButtonItem key="leftBarButtonItem" image="user7" id="8Zx-kS-WEw">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="sd6-O8-N6r">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -745,5 +748,6 @@
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
+        <image name="user7" width="40" height="40"/>
     </resources>
 </document>

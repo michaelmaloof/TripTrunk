@@ -18,7 +18,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:(138.0/255.0) green:(225.0/255.0) blue:(174.0/255.0) alpha:1]];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
+    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1]];
     
     
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
@@ -51,6 +54,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
