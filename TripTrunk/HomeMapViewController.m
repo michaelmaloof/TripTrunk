@@ -28,6 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     [super viewDidLoad];
     

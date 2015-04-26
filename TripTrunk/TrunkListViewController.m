@@ -10,10 +10,12 @@
 #import <Parse/Parse.h>
 #import "Trip.h"
 #import "TrunkTableViewCell.h"
+#import "TrunkViewController.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource>
 @property NSMutableArray *parseLocations;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property NSIndexPath *path;
 
 @end
 @implementation TrunkListViewController
@@ -67,5 +69,20 @@
     }];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"TrunkView"])
+    {
+        TrunkViewController *trunkView = segue.destinationViewController;
+        Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
+        trunkView.trip =trip;
+        self.path = nil;
+    }
+}
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.path = indexPath;
+    [self performSegueWithIdentifier:@"TrunkView" sender:self];
+    
+}
 @end

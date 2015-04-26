@@ -151,7 +151,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="WdL-YS-XJ3" id="5ub-zG-07C"/>
-                        <segue destination="XRX-XO-YxQ" kind="show" id="4iZ-43-2GM"/>
+                        <segue destination="XRX-XO-YxQ" kind="show" identifier="TrunkView" id="4iZ-43-2GM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jf4-sa-9aP" userLabel="First Responder" sceneMemberID="firstResponder"/>

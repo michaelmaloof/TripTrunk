@@ -31,9 +31,10 @@
 
 - (void)viewDidLoad {
     
-    //sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here? Also I think I can erase location manager
+    //sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here? 
     
     [super viewDidLoad];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
     self.endTripTextField.delegate = self;
