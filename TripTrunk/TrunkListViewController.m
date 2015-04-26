@@ -20,7 +20,9 @@
 
 -(void)viewDidLoad {
     self.parseLocations = [[NSMutableArray alloc]init];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     [self queryParseMethod];
+    
 
 }
 

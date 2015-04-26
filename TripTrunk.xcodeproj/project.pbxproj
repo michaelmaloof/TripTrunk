@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
+		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
 		223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E31AE2BB89001FE916 /* Parse.framework */; };
 		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -57,6 +58,8 @@
 		220408D81AEC5475009DB060 /* TrunkListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkListViewController.m; sourceTree = "<group>"; };
 		220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkTableViewCell.h; sourceTree = "<group>"; };
 		220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkTableViewCell.m; sourceTree = "<group>"; };
+		220408E21AED58C0009DB060 /* TrunkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkViewController.h; sourceTree = "<group>"; };
+		220408E31AED58C0009DB060 /* TrunkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkViewController.m; sourceTree = "<group>"; };
 		223547E31AE2BB89001FE916 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -138,10 +141,69 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		220408DD1AED559A009DB060 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				220408DE1AED55C1009DB060 /* ViewControllers */,
+				220408DF1AED55E7009DB060 /* ViewCells */,
+				220408E01AED560B009DB060 /* ImageView */,
+			);
+			name = Presentation;
+			sourceTree = "<group>";
+		};
+		220408DE1AED55C1009DB060 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
+				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+				224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */,
+				224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */,
+				223547EF1AE320FF001FE916 /* AddTripViewController.h */,
+				223547F01AE320FF001FE916 /* AddTripViewController.m */,
+				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
+				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
+				220408D81AEC5475009DB060 /* TrunkListViewController.m */,
+				220408E21AED58C0009DB060 /* TrunkViewController.h */,
+				220408E31AED58C0009DB060 /* TrunkViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		220408DF1AED55E7009DB060 /* ViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
+				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
+				220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */,
+				220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */,
+			);
+			name = ViewCells;
+			sourceTree = "<group>";
+		};
+		220408E01AED560B009DB060 /* ImageView */ = {
+			isa = PBXGroup;
+			children = (
+				229D42841AE850C700458244 /* TripImageView.h */,
+				229D42851AE850C700458244 /* TripImageView.m */,
+			);
+			name = ImageView;
+			sourceTree = "<group>";
+		};
+		220408E11AED564A009DB060 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				223547F21AE322C3001FE916 /* Trip.h */,
+				223547F31AE322C3001FE916 /* Trip.m */,
+				223547F51AE333F2001FE916 /* Photo.h */,
+				223547F61AE333F2001FE916 /* Photo.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		224F3F831AE1D35E003A1DEB = {
 			isa = PBXGroup;
 			children = (
-				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
 				224F3F8E1AE1D35E003A1DEB /* TripTrunk */,
 				224F3FA81AE1D35E003A1DEB /* TripTrunkTests */,
 				224F3F8D1AE1D35E003A1DEB /* Products */,
@@ -163,28 +225,11 @@
 				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
-				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
-				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
-				224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */,
-				224F3F971AE1D35E003A1DEB /* HomeMapViewController.m */,
-				223547EF1AE320FF001FE916 /* AddTripViewController.h */,
-				223547F01AE320FF001FE916 /* AddTripViewController.m */,
-				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
-				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
-				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
-				220408D81AEC5475009DB060 /* TrunkListViewController.m */,
-				229D42841AE850C700458244 /* TripImageView.h */,
-				229D42851AE850C700458244 /* TripImageView.m */,
-				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
-				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
-				220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */,
-				220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */,
-				223547F21AE322C3001FE916 /* Trip.h */,
-				223547F31AE322C3001FE916 /* Trip.m */,
-				223547F51AE333F2001FE916 /* Photo.h */,
-				223547F61AE333F2001FE916 /* Photo.m */,
+				220408DD1AED559A009DB060 /* Presentation */,
+				220408E11AED564A009DB060 /* Model */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
 				224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */,
+				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
 				224F3F8F1AE1D35E003A1DEB /* Supporting Files */,
 			);
 			path = TripTrunk;
@@ -238,6 +283,7 @@
 				224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -347,6 +393,7 @@
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
+				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				224F3F981AE1D35E003A1DEB /* HomeMapViewController.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
