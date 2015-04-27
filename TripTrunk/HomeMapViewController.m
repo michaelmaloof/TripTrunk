@@ -20,6 +20,7 @@
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
 @property NSString *pinCityName;
+@property NSMutableArray *tripsToCheck;
 
 @end
 
@@ -29,8 +30,6 @@
     [super viewDidLoad];
     self.title = @"TripTrunk";
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    [super viewDidLoad];
     
     if(![PFUser currentUser])
     {
@@ -52,6 +51,11 @@
 -(void)viewDidAppear:(BOOL)animated {
     // only add pins that have been updated
     [self.mapView  removeAnnotations:self.mapView.annotations];
+    
+    //FIXME needs to cahce at some point
+    
+    self.tripsToCheck = nil;
+    self.tripsToCheck = [[NSMutableArray alloc]init];
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -70,7 +74,6 @@
         if(!error)
             {
                 self.parseLocations = [NSMutableArray arrayWithArray:objects];
-                
                 [self placeTrips];
             }else
             {
@@ -80,13 +83,16 @@
         }];
 }
 
--(void)placeTrips{
-
+-(void)placeTrips
+{
     NSInteger count = 0;
     for (Trip *trip in self.parseLocations)
     {
-        count = count +1;
-        [self addTripToMap:trip count:count];
+        if(![self.tripsToCheck containsObject:trip.city])
+        {
+           count = count +1;
+           [self addTripToMap:trip count:count];
+        }
     }
 
 }
@@ -94,16 +100,19 @@
 -(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
 {
     //FIXEM needs to be address not city
-    
+    [self.tripsToCheck addObject:trip.city];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:trip.city completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
+        
         [self.mapView addAnnotation:annotation];
-    //FIXME Doesnt include last pin
-        if (count == self.parseLocations.count) {
+        NSLog(@"pins %@", self.mapView.annotations);
+        
+    //FIXME Does it include last pin?
+        if (count == self.tripsToCheck.count) {
             [self fitPins];
         }
         
