@@ -16,7 +16,6 @@
 
 @interface HomeMapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property CLLocation *currentLocation;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
 @property NSString *pinCityName;
@@ -37,8 +36,6 @@
         [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
     }
     
-    self.mapView.region = MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, 10000, 10000);
-    
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain
@@ -52,7 +49,7 @@
     // only add pins that have been updated
     [self.mapView  removeAnnotations:self.mapView.annotations];
     
-    //FIXME needs to cahce at some point
+    //FIXME needs to cache at some point
     
     self.tripsToCheck = nil;
     self.tripsToCheck = [[NSMutableArray alloc]init];
@@ -109,26 +106,23 @@
         annotation.title = trip.city;
         
         [self.mapView addAnnotation:annotation];
-        NSLog(@"pins %@", self.mapView.annotations);
         
     //FIXME Does it include last pin?
-        if (count == self.tripsToCheck.count) {
-            [self fitPins];
-        }
+//        if (count == self.tripsToCheck.count) {
+//            [self fitPins];
+//        }
         
     }];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    MKPinAnnotationView *startAnnotation = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
-    startAnnotation.animatesDrop = YES;
+    MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
-    startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.rightCalloutAccessoryView.tag = 0;
     startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
     startAnnotation.leftCalloutAccessoryView.tag = 1;
     [self.locations addObject:startAnnotation];
     
@@ -183,6 +177,9 @@
         trunkView.city = self.pinCityName;
         self.pinCityName = nil;
     }
+}
+- (IBAction)onProfileTapped:(id)sender {
+    [self fitPins];
 }
 
 

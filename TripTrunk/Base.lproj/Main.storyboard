@@ -75,6 +75,9 @@
                     <navigationItem key="navigationItem" id="Eje-fq-v1r">
                         <barButtonItem key="leftBarButtonItem" image="user7" id="8Zx-kS-WEw">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="onProfileTapped:" destination="BYZ-38-t0r" id="RLN-HB-CxK"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="sd6-O8-N6r">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
