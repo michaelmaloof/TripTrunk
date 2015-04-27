@@ -16,11 +16,13 @@
 @property NSInteger likes;
 @property PFFile *imageFile;
 @property PFUser *user;
-@property NSString *name;
+@property NSString *tripName;
 @property NSString *caption;
 @property NSString *fbID;
 @property BOOL favorite;
 @property NSMutableArray *usersWhoHaveLiked;
 @property NSString *city;
+@property NSString *userName;
+
 
 @end

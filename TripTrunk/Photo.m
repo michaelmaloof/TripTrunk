@@ -13,12 +13,13 @@
 @dynamic likes;
 @dynamic imageFile;
 @dynamic user;
-@dynamic name;
+@dynamic userName;
 @dynamic caption;
 @dynamic fbID;
 @dynamic favorite;
 @dynamic usersWhoHaveLiked;
 @dynamic city;
+@dynamic tripName;
 
 +(NSString *)parseClassName
 {

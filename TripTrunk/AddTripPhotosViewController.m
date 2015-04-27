@@ -13,7 +13,7 @@
 #import "Photo.h"
 #import "TripImageView.h"
 
-@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate>
+@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
 @property CGFloat HeightOfButtons;
 @property NSMutableArray *photos;
@@ -106,10 +106,13 @@
     
     photo.likes = 0;
     photo.imageFile = file;
-    photo.name = [user objectForKey:@"name"];
+    photo.userName = [user objectForKey:@"name"];
     photo.fbID = [user objectForKey:@"fbId"];
     photo.user = [PFUser currentUser];
+    photo.tripName = self.tripName;
     photo.caption = caption;
+    photo.city = self.tripCity;
+    photo.userName = [PFUser currentUser].username;
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
