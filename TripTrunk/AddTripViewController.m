@@ -60,6 +60,13 @@
     self.countryTextField.text = @"U.S.";
     self.stateTextField.text = @"Ohio";
     self.cityNameTextField.text = @"Columbus";
+    
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
 
     
 }
