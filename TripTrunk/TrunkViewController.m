@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = self.trip.name;
     self.photos = [[NSArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     [self queryParseMethod];

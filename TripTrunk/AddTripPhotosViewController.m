@@ -37,6 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"Photos From Trip";
     self.photos = [[NSMutableArray alloc]init];
     self.photosToDelete = [[NSMutableArray alloc]init];
     self.tripPhotos = [[NSMutableArray alloc]init];

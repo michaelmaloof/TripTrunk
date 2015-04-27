@@ -63,6 +63,7 @@
         if(!error)
             {
                 self.parseLocations = [NSMutableArray arrayWithArray:objects];
+                
                 [self placeTrips];
             }else
             {

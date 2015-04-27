@@ -34,6 +34,7 @@
     //sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here? 
     
     [super viewDidLoad];
+    self.title = @"Trip Details";
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
