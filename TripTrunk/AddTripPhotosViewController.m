@@ -29,6 +29,7 @@
 @property NSMutableArray *tripPhotos;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
+@property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
 
 @end
 
@@ -48,11 +49,14 @@
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
+    self.selectedPhoto.hidden = YES;
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    self.tripCollectionView.hidden = NO;
+
     [self.tripCollectionView reloadData];
 }
 
@@ -189,13 +193,17 @@
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
     self.delete.hidden = NO;
+    self.selectedPhoto.hidden = NO;
     cell.backgroundColor = [UIColor whiteColor];
+    self.tripCollectionView.hidden = YES;
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {
     
     if (![self.caption.text isEqual: @""])
     {
+    self.selectedPhoto.hidden = YES;
+    self.tripCollectionView.hidden = NO;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
     cell.tripImage.caption = self.caption.text;
@@ -227,6 +235,8 @@
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
+    self.selectedPhoto.hidden = YES;
+    self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
@@ -242,6 +252,8 @@
 }
 
 - (IBAction)onRemoveTapped:(id)sender {
+    self.selectedPhoto.hidden = YES;
+    self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
@@ -260,6 +272,8 @@
 }
 
 - (IBAction)onDeleteTapped:(id)sender {
+    self.tripCollectionView.hidden = NO;
+    self.selectedPhoto.hidden = YES;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
      cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     [self.tripPhotos removeObject:cell.tripImage];
