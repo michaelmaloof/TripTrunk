@@ -56,13 +56,16 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     self.tripCollectionView.hidden = NO;
-
+    self.plusPhoto.hidden = NO;
+    self.submitTrunk.hidden = NO;
     [self.tripCollectionView reloadData];
 }
 
 - (IBAction)onDoneTapped:(id)sender {
     [self parseTrip];
     [self parsePhotos];
+    self.plusPhoto.hidden = YES;
+    self.submitTrunk.hidden = YES;
     
 }
 
@@ -79,6 +82,18 @@
     [trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          [self dismissViewControllerAnimated:YES completion:^{
+             
+             if(error) {
+                 //FIXME Check to see if actually works
+                 self.plusPhoto.hidden = NO;
+                 self.submitTrunk.hidden = NO;
+                 UIAlertView *alertView = [[UIAlertView alloc] init];
+                 alertView.delegate = self;
+                 alertView.title = @"No internet connection.";
+                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 [alertView addButtonWithTitle:@"OK"];
+                 [alertView show];
+             }
              
          }];
      }];
@@ -120,6 +135,16 @@
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
+        if(error) {
+            self.plusPhoto.hidden = NO;
+            self.submitTrunk.hidden = NO;
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"No internet connection.";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"OK"];
+            [alertView show];
+        }
     }];
     
 }
