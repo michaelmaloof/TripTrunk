@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
+@property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 
 @end
 
@@ -163,6 +164,7 @@
     picker.delegate = self;
     picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     [self presentViewController:picker animated:YES completion:NULL];
 }
 
@@ -229,6 +231,7 @@
     self.selectedPhoto.hidden = NO;
     cell.backgroundColor = [UIColor whiteColor];
     self.tripCollectionView.hidden = YES;
+    self.selectedPhoto.image = cell.tripImage.image;
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {

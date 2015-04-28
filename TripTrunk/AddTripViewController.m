@@ -24,6 +24,7 @@
 @property NSDate *startDate;
 @property NSDate *endDate;
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 
 @end
 

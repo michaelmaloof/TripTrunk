@@ -401,6 +401,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backGroundImage" destination="Lbp-ko-ErL" id="Xa1-4P-s58"/>
                         <outlet property="cityNameTextField" destination="def-GX-Qcc" id="AMv-nj-PAV"/>
                         <outlet property="countryTextField" destination="Qk9-ii-Rz5" id="oQz-ih-hTo"/>
                         <outlet property="endTripTextField" destination="dxi-2n-K02" id="n8a-pL-YWx"/>
@@ -743,6 +744,7 @@
                     </view>
                     <connections>
                         <outlet property="addCaption" destination="EQG-Zd-K84" id="c0w-LH-W1d"/>
+                        <outlet property="backGroundImage" destination="ODC-wx-ioq" id="vBZ-JF-FUt"/>
                         <outlet property="cancelCaption" destination="EUX-37-6at" id="7rg-Cy-pcc"/>
                         <outlet property="caption" destination="DWS-IY-eSd" id="Y7K-Oq-Yjz"/>
                         <outlet property="delete" destination="b0m-io-Uxz" id="ljF-kD-Yle"/>

@@ -107,7 +107,7 @@
         
         [self.mapView addAnnotation:annotation];
         
-    //FIXME Does it include last pin?
+    //FIXME Does it include last pin? DO I ACTUALLY EVEN NEED THIS FOR THE MAP?
 //        if (count == self.tripsToCheck.count) {
 //            [self fitPins];
 //        }
@@ -179,7 +179,7 @@
     }
 }
 - (IBAction)onProfileTapped:(id)sender {
-    [self fitPins];
+
 }
 
 
