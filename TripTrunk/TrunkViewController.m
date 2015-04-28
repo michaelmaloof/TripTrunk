@@ -13,6 +13,11 @@
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UILabel *location;
+@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *startDate;
+@property (weak, nonatomic) IBOutlet UILabel *endDate;
+
 
 @end
 
@@ -23,7 +28,11 @@
     self.title = self.trip.name;
     self.photos = [[NSArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
+    self.location.text = [NSString stringWithFormat:@"%@, %@ %@", self.trip.city
+                          , self.trip.state,self.trip.country];
+    self.photoLabel.text = [NSString stringWithFormat:@"Photos: %lu", (unsigned long)self.photos.count];
+    self.startDate.text = self.trip.startDate;
+    self.endDate.text = self.trip.endDate;
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain
@@ -73,5 +82,7 @@
     }];
 
 }
+
+
 
 @end
