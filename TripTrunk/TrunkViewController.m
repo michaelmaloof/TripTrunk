@@ -15,10 +15,12 @@
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UILabel *location;
 @property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
 @property (weak, nonatomic) IBOutlet UILabel *endDate;
+@property (weak, nonatomic) IBOutlet UILabel *memberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *cityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 
 
 @end
@@ -30,8 +32,8 @@
     self.title = self.trip.name;
     self.photos = [[NSArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.location.text = [NSString stringWithFormat:@"%@, %@ %@", self.trip.city
-                          , self.trip.state,self.trip.country];
+    self.cityLabel.text = self.trip.city;
+    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.state,self.trip.country];
     self.photoLabel.text = [NSString stringWithFormat:@"Photos: %lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     self.endDate.text = self.trip.endDate;
@@ -87,6 +89,9 @@
         [self.collectionView reloadData];
     }];
 
+}
+
+- (IBAction)onPhotoTapped:(id)sender {
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
