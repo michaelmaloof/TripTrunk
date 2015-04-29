@@ -11,6 +11,7 @@
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
 		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
+		220408EE1AF19E29009DB060 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220408ED1AF19E29009DB060 /* ParseUI.framework */; };
 		223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E31AE2BB89001FE916 /* Parse.framework */; };
 		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -63,6 +64,7 @@
 		220408E31AED58C0009DB060 /* TrunkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkViewController.m; sourceTree = "<group>"; };
 		220408E51AEDB23F009DB060 /* TrunkCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkCollectionViewCell.h; sourceTree = "<group>"; };
 		220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkCollectionViewCell.m; sourceTree = "<group>"; };
+		220408ED1AF19E29009DB060 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		223547E31AE2BB89001FE916 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -114,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				220408EE1AF19E29009DB060 /* ParseUI.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
@@ -275,6 +278,7 @@
 				223547E71AE2BBAE001FE916 /* Accounts.framework */,
 				224F3FF91AE1E5BE003A1DEB /* UIKit.framework */,
 				224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */,
+				220408ED1AF19E29009DB060 /* ParseUI.framework */,
 				224F3FF51AE1E5AE003A1DEB /* libz.dylib */,
 				223547E51AE2BB92001FE916 /* Bolts.framework */,
 				223547E31AE2BB89001FE916 /* Parse.framework */,

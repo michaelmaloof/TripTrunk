@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Photo.h"
+#import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
 
 @interface TrunkCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *photo;
+@property (weak, nonatomic) IBOutlet PFImageView *photo;
 @property Photo *tripPhoto;
 
 @end

@@ -26,4 +26,19 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFNullability.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFACL.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/Parse.h \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFTextField.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFSignUpViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFSignUpView.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFQueryCollectionViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFTableViewCell.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFPurchaseTableViewCell.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFQueryTableViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFProductTableViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFLogInViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFLogInView.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFImageView.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/ParseUIConstants.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFCollectionViewCell.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/ParseUI.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Modules/module.modulemap

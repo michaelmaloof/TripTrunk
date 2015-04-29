@@ -11,6 +11,8 @@
 #import "Photo.h"
 #import "AddTripViewController.h"
 #import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
+
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSArray *photos;
@@ -51,7 +53,7 @@
 {
     TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     cell.tripPhoto = [self.photos objectAtIndex:indexPath.row];
-    
+    [self convertPhoto:cell indexPath:indexPath];
     
     return cell;
 }
@@ -82,15 +84,26 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
+            [self.collectionView reloadData];
+
+            
         }else
         {
             NSLog(@"Error: %@",error);
         }
-        [self.collectionView reloadData];
+//        [self.collectionView reloadData];
+
     }];
 
 }
 
+-(void)convertPhoto:(TrunkCollectionViewCell*)cell indexPath:(NSIndexPath*)indexPath {
+    Photo *photo = [self.photos objectAtIndex:indexPath.row];
+    PFFile *file = photo.imageFile;
+    cell.photo.file = file;
+    [cell.photo loadInBackground];
+}
+     
 - (IBAction)onPhotoTapped:(id)sender {
 }
 
@@ -100,6 +113,27 @@
         vc.trip = self.trip;
     }
 }
+     
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @end

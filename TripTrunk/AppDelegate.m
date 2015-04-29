@@ -8,6 +8,9 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
+
+
 
 @interface AppDelegate ()
 
@@ -33,6 +36,7 @@
                   clientKey:@"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    [PFImageView class];
     
 
     return YES;
