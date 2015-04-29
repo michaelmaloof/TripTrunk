@@ -9,6 +9,8 @@
 #import "TrunkViewController.h"
 #import "TrunkCollectionViewCell.h"
 #import "Photo.h"
+#import "AddTripViewController.h"
+#import <Parse/Parse.h>
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSArray *photos;
@@ -57,6 +59,10 @@
     return self.photos.count;
 }
 
+- (IBAction)onEditTapped:(id)sender {
+    [self performSegueWithIdentifier:@"Edit" sender:self];
+}
+
 -(void)queryParseMethod{
     
     PFQuery *findPhotosTrip = [PFQuery queryWithClassName:@"Photo"];
@@ -83,6 +89,12 @@
 
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Edit"]) {
+        AddTripViewController *vc = segue.destinationViewController;
+        vc.trip = self.trip;
+    }
+}
 
 
 @end

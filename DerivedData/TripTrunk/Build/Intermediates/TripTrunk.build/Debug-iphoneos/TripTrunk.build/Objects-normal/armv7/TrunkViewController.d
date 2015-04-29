@@ -29,4 +29,5 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/Parse.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/TrunkCollectionViewCell.h \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Photo.h
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Photo.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/AddTripViewController.h

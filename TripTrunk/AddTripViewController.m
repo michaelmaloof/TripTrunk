@@ -32,7 +32,7 @@
 
 - (void)viewDidLoad {
     
-    //sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here? 
+//FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
     self.title = @"Trip Details";
@@ -47,20 +47,27 @@
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
     
-    //move to opening of app
+//FIXME Do I even need this?
     [self.locationManager requestWhenInUseAuthorization];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
     self.locationManager.delegate = self;
-    [self.locationManager startUpdatingLocation];
     
-    //TEMP
+    if (self.trip) {
+        self.tripNameTextField.text = self.trip.name;
+        self.countryTextField.text = self.trip.country;
+        self.stateTextField.text= self.trip.state;
+        self.cityNameTextField.text = self.trip.city;
+        self.startTripTextField.text = self.trip.startDate;
+        self.endTripTextField.text = self.trip.endDate;
+        
+        self.navigationItem.rightBarButtonItem.title = @"Update";
+        self.navigationItem.rightBarButtonItem.tag = 1;
+        self.navigationItem.leftBarButtonItem.tag = 1;
+    }
     
-    self.tripNameTextField.text = @"Trip to Columbus";
-    self.countryTextField.text = @"U.S.";
-    self.stateTextField.text = @"Ohio";
-    self.cityNameTextField.text = @"Columbus";
+    else {
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -68,14 +75,25 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    self.navigationItem.rightBarButtonItem.title = @"Next";
+    self.navigationItem.rightBarButtonItem.tag = 0;
+    self.navigationItem.leftBarButtonItem.tag = 0;
+    
+    }
 
     
 }
 
 - (IBAction)onCancelTapped:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
+    if (self.navigationItem.leftBarButtonItem.tag == 0)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
 }
 
 #pragma keyboard
@@ -122,7 +140,7 @@
 
 - (IBAction)onNextTapped:(id)sender
 {
-    //dont do this every time they click next. only if they changed location text fields
+//FIXME dont do this every time they click next. only if they changed location text fields
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
@@ -145,9 +163,16 @@
                     
                     if(startTimeInterval <= endTimeInterval)
                     {
-
+                        if (self.navigationItem.rightBarButtonItem.tag == 0 )
+                        {
                         [self performSegueWithIdentifier:@"photos" sender:self];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                        }
+                        
+                        else
+                        {
+                            [self parseTrip];
+                        }
 
                     }
                     else
@@ -174,13 +199,15 @@
     
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
+    
     NSString *tripName = self.tripNameTextField.text;
     NSString *tripCity = self.cityNameTextField.text;
     NSString *start = self.startTripTextField.text;
     NSString *end = self.endTripTextField.text;
     NSString *countryName = self.countryTextField.text;
     NSString *stateName = self.stateTextField.text;
+    
+    AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
     addTripPhotosViewController.tripName = tripName;
     addTripPhotosViewController.tripCity = tripCity;
     addTripPhotosViewController.tripCountry = countryName;
@@ -215,6 +242,38 @@
     
 }
 
+-(void)parseTrip {
+    
+//FIXME Should only parse if things have been changed
+    
+    self.trip.name = self.tripNameTextField.text;
+    self.trip.country = self.countryTextField.text;
+    self.trip.state = self.stateTextField.text;
+    self.trip.city = self.cityNameTextField.text;
+    self.trip.startDate = self.startTripTextField.text;
+    self.trip.endDate = self.endTripTextField.text;
+    
+    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         [self dismissViewControllerAnimated:YES completion:^{
+             
+             if(error) {
+                 //FIXME Check to see if actually works
+                 UIAlertView *alertView = [[UIAlertView alloc] init];
+                 alertView.delegate = self;
+                 alertView.title = @"No internet connection.";
+                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 [alertView addButtonWithTitle:@"OK"];
+                 [alertView show];
+             }
+             if (!error)
+             {
+                 [self.navigationController popViewControllerAnimated:YES];
+             }
+             
+         }];
+     }];
+}
 
 
 
