@@ -255,8 +255,7 @@
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
-         [self dismissViewControllerAnimated:YES completion:^{
-             
+         
              if(error) {
                  //FIXME Check to see if actually works
                  UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -272,7 +271,6 @@
              }
              
          }];
-     }];
 }
 
 
