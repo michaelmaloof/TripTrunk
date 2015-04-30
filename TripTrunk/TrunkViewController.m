@@ -12,6 +12,7 @@
 #import "AddTripViewController.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "PhotoViewController.h"
 
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -24,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
+@property PFImageView *imageview;
 
 
 @end
@@ -107,15 +109,21 @@
         AddTripViewController *vc = segue.destinationViewController;
         vc.trip = self.trip;
     }
+    
+    if([segue.identifier isEqualToString:@"photo"]){
+        PhotoViewController *vc = segue.destinationViewController;
+        vc.photo = [self.photos objectAtIndex:self.path.row];
+        self.path = nil;
+    }
 }
 
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     self.path = indexPath;
-    TrunkCollectionViewCell *cell = (TrunkCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:self.path];
-    NSLog(@"%@", cell);
-
+    [self performSegueWithIdentifier:@"photo" sender:self];
 }
+
+
      
 
 
