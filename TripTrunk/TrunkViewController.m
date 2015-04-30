@@ -69,21 +69,16 @@
 
 -(void)queryParseMethod{
     
-    PFQuery *findPhotosTrip = [PFQuery queryWithClassName:@"Photo"];
-    [findPhotosTrip whereKey:@"tripName" equalTo:self.trip.name];
+    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
+    [findPhotosUser whereKey:@"tripName" equalTo:self.trip.name];
+    [findPhotosUser whereKey:@"city" equalTo:self.trip.city];
+    [findPhotosUser whereKey:@"userName" equalTo:self.trip.user];
     
-    PFQuery *findPhotoUser = [PFQuery queryWithClassName:@"Photo"];
-    [findPhotosTrip whereKey:@"userName" matchesKey:self.trip.user inQuery:findPhotosTrip];
-    
-    PFQuery *findPhotoCity = [PFQuery queryWithClassName:@"Photo"];
-    [findPhotoCity whereKey:@"city" equalTo:self.trip.city];
-    
-    PFQuery *bothQueries = [PFQuery orQueryWithSubqueries:@[findPhotoUser,findPhotoCity]];
-    
-    [bothQueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
+            NSLog(@"%@", objects);
             [self.collectionView reloadData];
 
             
