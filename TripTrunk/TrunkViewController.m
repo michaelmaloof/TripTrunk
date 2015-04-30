@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *memberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
+@property NSIndexPath *path;
 
 
 @end
@@ -78,7 +79,6 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
-            NSLog(@"%@", objects);
             [self.collectionView reloadData];
 
             
@@ -86,7 +86,7 @@
         {
             NSLog(@"Error: %@",error);
         }
-//        [self.collectionView reloadData];
+
 
     }];
 
@@ -108,7 +108,14 @@
         vc.trip = self.trip;
     }
 }
-     
+
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    self.path = indexPath;
+    TrunkCollectionViewCell *cell = (TrunkCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:self.path];
+    NSLog(@"%@", cell);
+
+}
      
 
 
