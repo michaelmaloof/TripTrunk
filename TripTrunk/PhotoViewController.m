@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = self.photo.userName;
     PFFile *file = self.photo.imageFile;
     self.imageView.file = file;
     [self.imageView loadInBackground];
@@ -31,6 +32,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)onSavePhotoTapped:(id)sender {
+    
+    UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
+}
 
 
 @end
