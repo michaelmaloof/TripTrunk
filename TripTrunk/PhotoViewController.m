@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *addComment;
 
 
 @end
@@ -26,6 +27,7 @@
     PFFile *file = self.photo.imageFile;
     self.imageView.file = file;
     self.tableView.hidden = YES;
+    self.addComment.hidden = YES;
     [self.imageView loadInBackground];
 
 }
@@ -48,6 +50,8 @@
 
 - (IBAction)onCommentsTapped:(id)sender {
     self.tableView.hidden = !self.tableView.hidden;
+    self.addComment.hidden = !self.addComment.hidden;
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -57,9 +61,12 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.textLabel.text = @"hey hey hey hey hey hey hey hey hey";
+    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", self.photo.userName, self.photo.caption];
     
     return  cell;
+}
+- (IBAction)onAddCommentsTapped:(id)sender {
+    NSLog((@"hey girl"));
 }
 
 @end

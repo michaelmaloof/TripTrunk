@@ -601,15 +601,6 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ozt-n1-1q6" customClass="PFImageView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
-                                <rect key="frame" x="255" y="562" width="75" height="30"/>
-                                <state key="normal" title="Comments">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
-                                </connections>
-                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jOT-yp-0C3">
                                 <rect key="frame" x="35" y="212" width="531" height="300"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -641,15 +632,39 @@
                                     <outlet property="delegate" destination="aHH-Uj-SSR" id="iVg-YQ-wpe"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
+                                <rect key="frame" x="255" y="562" width="75" height="30"/>
+                                <state key="normal" title="Comments">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-QI-hXg">
+                                <rect key="frame" x="524" y="473" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="G3C-h4-hwN"/>
+                                    <constraint firstAttribute="height" constant="60" id="tvF-ab-AIY"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="Add Caption">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onAddCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="x5w-rQ-nQZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="ozt-n1-1q6" secondAttribute="trailing" constant="-16" id="3I0-YK-6g2"/>
+                            <constraint firstItem="9ua-QI-hXg" firstAttribute="trailing" secondItem="s0j-au-kD5" secondAttribute="trailingMargin" id="9sA-WQ-aAs"/>
                             <constraint firstItem="ozt-n1-1q6" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" constant="-16" id="JWv-NB-ayA"/>
                             <constraint firstItem="FCi-FU-N5k" firstAttribute="top" secondItem="Qe2-XC-VCF" secondAttribute="bottom" constant="8" id="RUQ-s7-Fem"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jOT-yp-0C3" secondAttribute="trailing" constant="2" id="UKE-Un-41F"/>
                             <constraint firstItem="FCi-FU-N5k" firstAttribute="top" secondItem="ozt-n1-1q6" secondAttribute="bottom" id="c1p-BL-Ikz"/>
                             <constraint firstItem="Qe2-XC-VCF" firstAttribute="top" secondItem="jOT-yp-0C3" secondAttribute="bottom" constant="40" id="e6u-5R-Avp"/>
+                            <constraint firstItem="9ua-QI-hXg" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" constant="409" id="eWq-O1-cg6"/>
                             <constraint firstAttribute="centerX" secondItem="Qe2-XC-VCF" secondAttribute="centerX" id="jS7-uX-aUA"/>
                             <constraint firstItem="ozt-n1-1q6" firstAttribute="top" secondItem="s0j-au-kD5" secondAttribute="topMargin" id="o6Z-bN-auT"/>
                             <constraint firstItem="jOT-yp-0C3" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" constant="2" id="vXs-9r-prU"/>
@@ -664,6 +679,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addComment" destination="9ua-QI-hXg" id="hZ7-e6-Pyn"/>
                         <outlet property="comments" destination="Qe2-XC-VCF" id="Vf0-dx-X8o"/>
                         <outlet property="imageView" destination="ozt-n1-1q6" id="q8g-bw-hQo"/>
                         <outlet property="tableView" destination="jOT-yp-0C3" id="StR-Z2-iAH"/>
