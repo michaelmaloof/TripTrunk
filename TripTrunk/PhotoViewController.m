@@ -10,8 +10,10 @@
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
 
-@interface PhotoViewController () <UIAlertViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIButton *comments;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 
 @end
@@ -23,6 +25,7 @@
     self.title = self.photo.userName;
     PFFile *file = self.photo.imageFile;
     self.imageView.file = file;
+    self.tableView.hidden = YES;
     [self.imageView loadInBackground];
 
 }
@@ -43,5 +46,20 @@
     [alertView show];
 }
 
+- (IBAction)onCommentsTapped:(id)sender {
+    self.tableView.hidden = !self.tableView.hidden;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 4; //FIXME ME TEMP
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
+    cell.textLabel.text = @"hey hey hey hey hey hey hey hey hey";
+    
+    return  cell;
+}
 
 @end
