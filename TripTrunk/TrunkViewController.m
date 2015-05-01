@@ -17,6 +17,7 @@
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSArray *photos;
+@property NSMutableArray *trunkAlbum;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
@@ -28,6 +29,7 @@
 @property PFImageView *imageview;
 
 
+
 @end
 
 @implementation TrunkViewController
@@ -36,6 +38,7 @@
     [super viewDidLoad];
     self.title = self.trip.name;
     self.photos = [[NSArray alloc]init];
+    self.trunkAlbum = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.cityLabel.text = self.trip.city;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.state,self.trip.country];
@@ -98,10 +101,26 @@
     Photo *photo = [self.photos objectAtIndex:indexPath.row];
     PFFile *file = photo.imageFile;
     cell.photo.file = file;
-    [cell.photo loadInBackground];
+    [cell.photo.file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+            cell.photo.image = [UIImage imageWithData:data];
+            [self.trunkAlbum addObject:cell.photo.image];
+        }
+    }];
 }
      
 - (IBAction)onPhotoTapped:(id)sender {
+    for (UIImage *image in self.trunkAlbum){
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+    }
+    
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = @"Saved Trunk photos to phone";
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"OK"];
+    [alertView show];
+
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
