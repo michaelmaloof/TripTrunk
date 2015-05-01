@@ -9,12 +9,14 @@
 #import "PhotoViewController.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "Comment.h"
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *addComment;
+@property (weak, nonatomic) IBOutlet UITextView *textView;
 
 
 @end
@@ -28,6 +30,7 @@
     self.imageView.file = file;
     self.tableView.hidden = YES;
     self.addComment.hidden = YES;
+    self.textView.hidden = YES;
     [self.imageView loadInBackground];
 
 }
@@ -51,7 +54,7 @@
 - (IBAction)onCommentsTapped:(id)sender {
     self.tableView.hidden = !self.tableView.hidden;
     self.addComment.hidden = !self.addComment.hidden;
-
+    self.textView.hidden = !self.textView.hidden;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

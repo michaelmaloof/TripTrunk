@@ -42,4 +42,5 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/ParseUIConstants.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/PFCollectionViewCell.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/ParseUI.h \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Modules/module.modulemap
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Modules/module.modulemap \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Comment.h

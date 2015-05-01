@@ -13,6 +13,7 @@
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408EE1AF19E29009DB060 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220408ED1AF19E29009DB060 /* ParseUI.framework */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
+		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
 		223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E31AE2BB89001FE916 /* Parse.framework */; };
 		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -68,6 +69,8 @@
 		220408ED1AF19E29009DB060 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		220408EF1AF1C1EA009DB060 /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
 		220408F01AF1C1EA009DB060 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
+		220408F21AF311D6009DB060 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
+		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		223547E31AE2BB89001FE916 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -210,6 +213,8 @@
 				223547F31AE322C3001FE916 /* Trip.m */,
 				223547F51AE333F2001FE916 /* Photo.h */,
 				223547F61AE333F2001FE916 /* Photo.m */,
+				220408F21AF311D6009DB060 /* Comment.h */,
+				220408F31AF311D6009DB060 /* Comment.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -407,6 +412,7 @@
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
+				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,

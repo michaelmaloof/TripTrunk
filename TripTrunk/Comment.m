@@ -9,5 +9,22 @@
 #import "Comment.h"
 
 @implementation Comment
+@dynamic user;
+@dynamic comment;
+@dynamic datePosted;
+@dynamic photo;
+@dynamic trip;
+@dynamic city;
+
++(NSString *)parseClassName
+{
+    return @"Comment";
+}
+
+
++(void)load
+{
+    [self registerSubclass];
+}
 
 @end
