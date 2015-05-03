@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property NSArray *commentsArray;
 
+
 @end
 
 @implementation PhotoViewController
@@ -80,7 +81,11 @@
     return  cell;
 }
 - (IBAction)onAddCommentsTapped:(id)sender {
-    [self parseComment];
+    
+    if(![self.textView.text isEqualToString:@""])
+    {
+        [self parseComment];
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
