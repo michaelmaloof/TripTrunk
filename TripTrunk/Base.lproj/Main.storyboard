@@ -671,6 +671,15 @@
                                     <outlet property="delegate" destination="aHH-Uj-SSR" id="iVg-YQ-wpe"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Toz-eK-N6m">
+                                <rect key="frame" x="162" y="562" width="44" height="30"/>
+                                <state key="normal" title="Delete">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDeleteWasTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="vNi-1p-4EK"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ua-QI-hXg">
                                 <rect key="frame" x="398" y="552" width="40" height="40"/>
                                 <constraints>
@@ -698,6 +707,7 @@
                             <constraint firstItem="ozt-n1-1q6" firstAttribute="top" secondItem="s0j-au-kD5" secondAttribute="topMargin" id="V20-AX-xuW"/>
                             <constraint firstItem="Qe2-XC-VCF" firstAttribute="top" secondItem="e7C-gc-JKu" secondAttribute="bottom" constant="23" id="XYb-Jl-Zld"/>
                             <constraint firstItem="FCi-FU-N5k" firstAttribute="top" secondItem="ozt-n1-1q6" secondAttribute="bottom" id="bM6-eL-tXs"/>
+                            <constraint firstItem="Toz-eK-N6m" firstAttribute="top" secondItem="e7C-gc-JKu" secondAttribute="bottom" constant="15" id="bQS-ys-Pll"/>
                             <constraint firstItem="FCi-FU-N5k" firstAttribute="top" secondItem="Qe2-XC-VCF" secondAttribute="bottom" constant="8" id="bkC-tY-ajN"/>
                             <constraint firstItem="9ua-QI-hXg" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="60" id="c0C-Qg-TMO"/>
                             <constraint firstAttribute="centerX" secondItem="jOT-yp-0C3" secondAttribute="centerX" id="eM5-dd-VFF"/>
@@ -706,6 +716,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="e7C-gc-JKu" secondAttribute="trailing" id="g1P-ct-Q5H"/>
                             <constraint firstItem="jOT-yp-0C3" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" id="h6W-Dn-IgH"/>
                             <constraint firstAttribute="centerX" secondItem="Qe2-XC-VCF" secondAttribute="centerX" id="kRt-yF-IXM"/>
+                            <constraint firstItem="Qe2-XC-VCF" firstAttribute="leading" secondItem="Toz-eK-N6m" secondAttribute="trailing" constant="49" id="pYh-Xm-hXg"/>
                             <constraint firstAttribute="centerX" secondItem="jOT-yp-0C3" secondAttribute="centerX" id="qRL-Hx-fny"/>
                             <constraint firstItem="jOT-yp-0C3" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" constant="8" id="tvh-pG-GeN"/>
                             <constraint firstItem="Qe2-XC-VCF" firstAttribute="top" secondItem="e7C-gc-JKu" secondAttribute="bottom" constant="15" id="txF-zF-8Ic"/>
@@ -736,6 +747,7 @@
                     <connections>
                         <outlet property="addComment" destination="9ua-QI-hXg" id="hZ7-e6-Pyn"/>
                         <outlet property="comments" destination="Qe2-XC-VCF" id="Vf0-dx-X8o"/>
+                        <outlet property="delete" destination="Toz-eK-N6m" id="Cxa-i9-WkN"/>
                         <outlet property="imageView" destination="ozt-n1-1q6" id="q8g-bw-hQo"/>
                         <outlet property="tableView" destination="jOT-yp-0C3" id="StR-Z2-iAH"/>
                         <outlet property="textView" destination="e7C-gc-JKu" id="srN-uI-XpX"/>

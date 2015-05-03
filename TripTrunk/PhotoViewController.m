@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property NSArray *commentsArray;
 @property BOOL viewMoved;
+@property (weak, nonatomic) IBOutlet UIButton *delete;
 
 
 @end
@@ -37,6 +38,13 @@
     self.textView.hidden = YES;
     [self.imageView loadInBackground];
     [self queryParseMethod];
+    self.delete.hidden = YES;
+    
+    if ([[PFUser currentUser].username isEqualToString:self.photo.userName]) {
+        self.delete.hidden = NO;
+    } else {
+        self.delete.hidden = YES;
+    }
 
 }
 
@@ -188,7 +196,28 @@
     }
 }
 
+- (IBAction)onDeleteWasTapped:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = @"Are you sure you want to delete this photo?";
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"No"];
+    [alertView addButtonWithTitle:@"Yes"];
+    [alertView show];
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1)
+    {
+        [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
+        }];
+
+    }
+}
 @end
 
 
