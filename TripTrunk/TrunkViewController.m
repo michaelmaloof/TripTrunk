@@ -51,6 +51,13 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
+
+    } else {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+    
     [self queryParseMethod];
 }
 
