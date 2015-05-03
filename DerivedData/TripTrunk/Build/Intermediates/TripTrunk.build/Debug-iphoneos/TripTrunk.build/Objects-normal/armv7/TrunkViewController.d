@@ -46,4 +46,5 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Headers/ParseUI.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseUI.framework/Modules/module.modulemap \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/AddTripViewController.h \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/PhotoViewController.h
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/PhotoViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/AddTripPhotosViewController.h

@@ -1,6 +1,7 @@
 dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/AddTripPhotosViewController.m \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/AddTripPhotosViewController.h \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Trip.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PF_Twitter.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFTwitterUtils.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFPush.h \
@@ -27,7 +28,6 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFACL.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/Parse.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Trip.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/PhotoCollectionViewCell.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/TripImageView.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/TripTrunk/Photo.h

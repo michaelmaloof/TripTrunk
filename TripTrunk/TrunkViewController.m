@@ -13,9 +13,10 @@
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
 #import "PhotoViewController.h"
+#import "AddTripPhotosViewController.h"
 
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
 @property NSArray *photos;
 @property NSMutableArray *trunkAlbum;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -27,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
 @property PFImageView *imageview;
+
 
 
 
@@ -59,21 +61,31 @@
     }
     
     [self queryParseMethod];
+    
 }
 
 
 -(TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.tripPhoto = [self.photos objectAtIndex:indexPath.row];
-    [self convertPhoto:cell indexPath:indexPath];
+
+    if(indexPath.row == 0)
+    {
+        cell.photo.image = [UIImage imageNamed:@"Add Caption"];
+    }
     
+    else if (indexPath.row > 0)
+    {
+        cell.tripPhoto = [self.photos objectAtIndex:indexPath.row -1];
+        [self convertPhoto:cell indexPath:indexPath];
+    
+    }
     return cell;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.photos.count;
+    return self.photos.count + 1;
 }
 
 - (IBAction)onEditTapped:(id)sender {
@@ -105,7 +117,7 @@
 }
 
 -(void)convertPhoto:(TrunkCollectionViewCell*)cell indexPath:(NSIndexPath*)indexPath {
-    Photo *photo = [self.photos objectAtIndex:indexPath.row];
+    Photo *photo = [self.photos objectAtIndex:indexPath.row -1];
     PFFile *file = photo.imageFile;
     cell.photo.file = file;
     [cell.photo.file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -136,17 +148,32 @@
         vc.trip = self.trip;
     }
     
-    if([segue.identifier isEqualToString:@"photo"]){
+    else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
-        vc.photo = [self.photos objectAtIndex:self.path.row];
+        vc.photo = [self.photos objectAtIndex:self.path.row -1];
         self.path = nil;
     }
+    
+    else if ([segue.identifier isEqualToString:@"addPhotos"]) {
+        AddTripPhotosViewController *vc = segue.destinationViewController;
+        vc.trip = self.trip;
+    }
+    
 }
 
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    self.path = indexPath;
-    [self performSegueWithIdentifier:@"photo" sender:self];
+    
+    if (indexPath.row > 0)
+    {
+        self.path = indexPath;
+        [self performSegueWithIdentifier:@"photo" sender:self];
+    }
+    
+    else if (indexPath.row == 0)
+    {
+        [self performSegueWithIdentifier:@"addPhotos" sender:self];
+    }
 }
 
 

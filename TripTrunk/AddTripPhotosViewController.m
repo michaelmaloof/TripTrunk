@@ -8,7 +8,6 @@
 
 #import "AddTripPhotosViewController.h"
 #import <Parse/Parse.h>
-#import "Trip.h"
 #import "PhotoCollectionViewCell.h"
 #import "Photo.h"
 #import "TripImageView.h"
@@ -38,7 +37,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Photos From Trip";
+    
+    if(self.trip)
+    {
+        self.title = self.trip.name;
+    }
+    
+    else
+    {
+        self.title = @"Photos From Trip";
+    }
+    
     self.photos = [[NSMutableArray alloc]init];
     self.photosToDelete = [[NSMutableArray alloc]init];
     self.tripPhotos = [[NSMutableArray alloc]init];
@@ -52,6 +61,7 @@
     self.remove.hidden = YES;
     self.delete.hidden = YES;
     self.selectedPhoto.hidden = YES;
+        
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -61,6 +71,8 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -71,7 +83,10 @@
 }
 
 - (IBAction)onDoneTapped:(id)sender {
-    [self parseTrip];
+    
+    if (!self.trip) {
+        [self parseTrip];
+    }
     [self parsePhotos];
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
@@ -90,8 +105,6 @@
     
     [trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
-         [self dismissViewControllerAnimated:YES completion:^{
-             
              if(error) {
                  //FIXME Check to see if actually works
                  self.plusPhoto.hidden = NO;
@@ -103,8 +116,6 @@
                  [alertView addButtonWithTitle:@"OK"];
                  [alertView show];
              }
-             
-         }];
      }];
 }
 
@@ -134,13 +145,18 @@
     
     photo.likes = 0;
     photo.imageFile = file;
-    photo.userName = [user objectForKey:@"name"];
     photo.fbID = [user objectForKey:@"fbId"];
-    photo.user = [PFUser currentUser];
-    photo.tripName = self.tripName;
-    photo.caption = caption;
-    photo.city = self.tripCity;
     photo.userName = [PFUser currentUser].username;
+    photo.user = [PFUser currentUser];
+    
+    if(!self.trip) {
+        photo.tripName = self.tripName;
+        photo.city = self.tripCity;
+    } else if (self.trip) {
+        photo.tripName = self.trip.name;
+        photo.city = self.trip.city;
+    }
+    photo.caption = caption;
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
@@ -153,6 +169,15 @@
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
             [alertView addButtonWithTitle:@"OK"];
             [alertView show];
+        } else {
+            if (!self.trip)
+            {
+                [self dismissViewControllerAnimated:YES completion:NULL];
+            }
+            else if (self.trip)
+            {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
         }
     }];
     

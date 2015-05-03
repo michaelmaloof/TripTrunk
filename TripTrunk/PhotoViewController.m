@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 
 
+
 @end
 
 @implementation PhotoViewController
@@ -212,7 +213,7 @@
     {
         [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
-                [self.navigationController popToRootViewControllerAnimated:YES];
+                [self.navigationController popViewControllerAnimated:YES];
             }
         }];
 
