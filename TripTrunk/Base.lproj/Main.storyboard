@@ -410,6 +410,15 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="SanFran" translatesAutoresizingMaskIntoConstraints="NO" id="Lbp-ko-ErL">
                                 <rect key="frame" x="-1" y="64" width="601" height="536"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wse-wM-OZQ">
+                                <rect key="frame" x="276" y="504" width="44" height="30"/>
+                                <state key="normal" title="Delete">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDeleteWasTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="TlC-OW-EaS"/>
+                                </connections>
+                            </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp">
                                 <rect key="frame" x="208" y="144" width="185" height="30"/>
                                 <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -523,6 +532,7 @@
                             <constraint firstItem="dxi-2n-K02" firstAttribute="top" secondItem="3w3-mT-drZ" secondAttribute="bottom" constant="8" id="8eh-hO-4r6"/>
                             <constraint firstItem="2kZ-OQ-Qkn" firstAttribute="top" secondItem="dxi-2n-K02" secondAttribute="bottom" constant="74" id="BBd-zg-R68"/>
                             <constraint firstAttribute="centerX" secondItem="N9W-Ie-2VI" secondAttribute="centerX" id="BZ9-cJ-zKP"/>
+                            <constraint firstAttribute="centerX" secondItem="Wse-wM-OZQ" secondAttribute="centerX" id="FGz-VR-uNl"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Lbp-ko-ErL" secondAttribute="trailing" constant="-16" id="Fuk-BH-Lyp"/>
                             <constraint firstAttribute="centerX" secondItem="Qk9-ii-Rz5" secondAttribute="centerX" id="IJx-IJ-FTf"/>
                             <constraint firstAttribute="centerX" secondItem="2kZ-OQ-Qkn" secondAttribute="centerX" id="Jxw-WR-iZg"/>
@@ -540,6 +550,7 @@
                             <constraint firstItem="Lbp-ko-ErL" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="-16" id="jx0-Wk-Ex7"/>
                             <constraint firstItem="def-GX-Qcc" firstAttribute="top" secondItem="N9W-Ie-2VI" secondAttribute="bottom" constant="8" id="mKV-3c-hdo"/>
                             <constraint firstItem="zdV-NN-4Zp" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="80" id="mxV-F4-LD7"/>
+                            <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="Wse-wM-OZQ" secondAttribute="bottom" constant="66" id="nhd-eu-GiR"/>
                             <constraint firstAttribute="centerX" secondItem="2kZ-OQ-Qkn" secondAttribute="centerX" id="oc5-FX-ovO"/>
                             <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="Lbp-ko-ErL" secondAttribute="bottom" id="qh9-gh-DAL"/>
                             <constraint firstAttribute="centerX" secondItem="def-GX-Qcc" secondAttribute="centerX" id="tUy-w9-y1q"/>
@@ -574,6 +585,7 @@
                         <outlet property="backGroundImage" destination="Lbp-ko-ErL" id="Xa1-4P-s58"/>
                         <outlet property="cityNameTextField" destination="def-GX-Qcc" id="AMv-nj-PAV"/>
                         <outlet property="countryTextField" destination="Qk9-ii-Rz5" id="oQz-ih-hTo"/>
+                        <outlet property="delete" destination="Wse-wM-OZQ" id="0r7-MR-oBW"/>
                         <outlet property="endTripTextField" destination="dxi-2n-K02" id="n8a-pL-YWx"/>
                         <outlet property="startTripTextField" destination="3w3-mT-drZ" id="19j-k3-iVZ"/>
                         <outlet property="stateTextField" destination="N9W-Ie-2VI" id="dit-x5-7o9"/>

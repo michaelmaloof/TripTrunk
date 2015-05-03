@@ -25,6 +25,7 @@
 @property NSDate *endDate;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
+@property (weak, nonatomic) IBOutlet UIButton *delete;
 
 @end
 
@@ -65,6 +66,7 @@
         self.navigationItem.rightBarButtonItem.title = @"Update";
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem.tag = 1;
+        self.delete.hidden = NO;
     }
     
     else {
@@ -78,6 +80,7 @@
     self.navigationItem.rightBarButtonItem.title = @"Next";
     self.navigationItem.rightBarButtonItem.tag = 0;
     self.navigationItem.leftBarButtonItem.tag = 0;
+    self.delete.hidden = YES;
     
     }
 
@@ -273,6 +276,13 @@
          }];
 }
 
+- (IBAction)onDeleteWasTapped:(id)sender {
+    [self.trip deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+    }];
+}
 
 
 
