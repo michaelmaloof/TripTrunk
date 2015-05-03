@@ -11,13 +11,14 @@
 #import <ParseUI/ParseUI.h>
 #import "Comment.h"
 
-@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *addComment;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property NSArray *commentsArray;
+@property BOOL viewMoved;
 
 
 @end
@@ -27,6 +28,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = self.photo.userName;
+    [self.textView setDelegate:self];
     self.commentsArray = [[NSArray alloc]init];
     PFFile *file = self.photo.imageFile;
     self.imageView.file = file;
@@ -91,6 +93,17 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
+    
+    if (self.viewMoved == YES) {
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 250), self.view.frame.size.width, self.view.frame.size.height);
+    self.comments.hidden = NO;
+    self.addComment.hidden = NO;
+        [UIView commitAnimations];}
 }
 
 -(void)parseComment {
@@ -142,6 +155,39 @@
     }];
     
 }
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if (textView == self.textView)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y - 250), self.view.frame.size.width, self.view.frame.size.height);
+        self.comments.hidden = YES;
+        self.addComment.hidden = YES;
+        self.viewMoved = YES;
+        [UIView commitAnimations];
+    }
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (textView == self.textView)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 250), self.view.frame.size.width, self.view.frame.size.height);
+        self.comments.hidden = NO;
+        self.addComment.hidden = NO;
+        self.viewMoved = NO;
+        [UIView commitAnimations];
+    }
+}
+
 
 @end
 
