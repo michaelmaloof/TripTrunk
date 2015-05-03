@@ -35,10 +35,6 @@
 
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (IBAction)onSavePhotoTapped:(id)sender {
     
@@ -70,6 +66,11 @@
 }
 - (IBAction)onAddCommentsTapped:(id)sender {
     NSLog((@"hey girl"));
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
 }
 
 @end
