@@ -57,13 +57,26 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.commentsArray.count;
+    return self.commentsArray.count +1;
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
-    Comment *comment = [self.commentsArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = comment.comment;
+    
+    if (indexPath.row == 0) {
+        cell.textLabel.text = self.photo.userName;
+        cell.detailTextLabel.text = self.photo.caption;
+    }
+    
+    else if (indexPath.row > 0) {
+    
+        Comment *comment = [self.commentsArray objectAtIndex:indexPath.row -1];
+        cell.textLabel.text = comment.user;
+        cell.detailTextLabel.text = comment.comment;
+        
+    }
+
+    
     return  cell;
 }
 - (IBAction)onAddCommentsTapped:(id)sender {
@@ -107,6 +120,7 @@
     [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];
     [findPhotosUser whereKey:@"city" equalTo:self.photo.city];
     [findPhotosUser whereKey:@"photo" equalTo:self.photo.objectId];
+    [findPhotosUser orderByDescending:@"createdAt"];
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
