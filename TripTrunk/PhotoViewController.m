@@ -20,6 +20,7 @@
 @property NSArray *commentsArray;
 @property BOOL viewMoved;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
+@property (weak, nonatomic) IBOutlet UIButton *like;
 
 
 
@@ -41,6 +42,10 @@
     [self queryParseMethod];
     self.delete.hidden = YES;
     
+    NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+    [self.like setTitle:string forState:UIControlStateNormal];
+
+
     if ([[PFUser currentUser].username isEqualToString:self.photo.userName]) {
         self.delete.hidden = NO;
     } else {
@@ -218,6 +223,45 @@
         }];
 
     }
+}
+
+- (IBAction)onLikeTapped:(id)sender {
+    
+    NSMutableArray *likesArray = [[NSMutableArray alloc]init];
+    NSString *objectID = [PFUser currentUser].objectId;
+    
+    if (self.like.tag == 0)
+    {
+        self.like.tag = 1;
+        self.photo.favorite = YES;
+        self.photo.likes ++;
+        [likesArray addObject:objectID];
+        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        }];
+        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+        [self.like setTitle:string forState:UIControlStateNormal];
+
+    }
+
+    else if (self.like.tag == 1){
+    
+    self.like.tag = 0;
+    self.photo.likes --;
+    if (self.photo.likes == 0)
+    {
+        self.photo.favorite = NO;
+    }
+    
+    [likesArray removeObject:objectID];
+    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+        {
+        }];
+    NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+    [self.like setTitle:string forState:UIControlStateNormal];
+    
+}
+
+
 }
 @end
 

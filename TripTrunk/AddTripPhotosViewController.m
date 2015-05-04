@@ -148,6 +148,8 @@
     photo.fbID = [user objectForKey:@"fbId"];
     photo.userName = [PFUser currentUser].username;
     photo.user = [PFUser currentUser];
+    NSMutableArray *localArray = [[NSMutableArray alloc] init];
+    photo.usersWhoHaveLiked = localArray;
     
     if(!self.trip) {
         photo.tripName = self.tripName;
