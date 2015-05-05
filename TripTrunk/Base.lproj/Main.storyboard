@@ -68,6 +68,16 @@
                                     <action selector="followersButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="Bd0-G2-TTO"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmG-dT-482">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Following">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="followingButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="i2z-FX-WaP"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxh-pG-bRN">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -95,16 +105,22 @@
                                     <action selector="findFriendsButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="ObR-qv-tET"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmG-dT-482">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Following">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="followingButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="i2z-FX-WaP"/>
-                                </connections>
-                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rcs-LE-WpV">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="rcs-LE-WpV" secondAttribute="height" multiplier="1:1" id="NU9-QI-pkN"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="NU9-QI-pkN"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="NU9-QI-pkN"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.69509463490000001" green="0.8630503303" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -115,11 +131,14 @@
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="131" id="JB3-zn-QuT"/>
                             <constraint firstItem="5pY-fw-zHx" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="KtP-yj-lqU"/>
                             <constraint firstItem="5pY-fw-zHx" firstAttribute="leading" secondItem="Pur-BN-0jv" secondAttribute="leadingMargin" constant="-16" id="YmX-ut-bvY"/>
+                            <constraint firstAttribute="centerX" secondItem="rcs-LE-WpV" secondAttribute="centerX" id="ath-Cr-Kpr"/>
                             <constraint firstItem="nmG-dT-482" firstAttribute="leading" secondItem="Fxh-pG-bRN" secondAttribute="trailing" constant="50" id="cfr-UG-rqM">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="nmG-dT-482" firstAttribute="height" secondItem="Fxh-pG-bRN" secondAttribute="height" id="ehA-NN-eNn"/>
+                            <constraint firstItem="rcs-LE-WpV" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="8" id="guu-TK-aLj"/>
                             <constraint firstItem="nmG-dT-482" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="iKN-ph-Ec0"/>
+                            <constraint firstItem="Fxh-pG-bRN" firstAttribute="top" secondItem="rcs-LE-WpV" secondAttribute="bottom" constant="23" id="mGa-fZ-KzZ"/>
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="centerY" secondItem="5pY-fw-zHx" secondAttribute="centerY" id="qxT-gT-jll"/>
                             <constraint firstAttribute="trailingMargin" secondItem="nmG-dT-482" secondAttribute="trailing" constant="-16" id="w88-wS-jzh"/>
                             <constraint firstItem="5pY-fw-zHx" firstAttribute="height" secondItem="Fxh-pG-bRN" secondAttribute="height" id="xRB-ak-OSq"/>
@@ -127,15 +146,19 @@
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="5pY-fw-zHx"/>
-                                <exclude reference="Fxh-pG-bRN"/>
                                 <exclude reference="nmG-dT-482"/>
+                                <exclude reference="Fxh-pG-bRN"/>
+                                <exclude reference="rcs-LE-WpV"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="ath-Cr-Kpr"/>
+                                <exclude reference="guu-TK-aLj"/>
                                 <exclude reference="KtP-yj-lqU"/>
                                 <exclude reference="YmX-ut-bvY"/>
                                 <exclude reference="xRB-ak-OSq"/>
                                 <exclude reference="8Pm-1A-NJ8"/>
                                 <exclude reference="JB3-zn-QuT"/>
+                                <exclude reference="mGa-fZ-KzZ"/>
                                 <exclude reference="qxT-gT-jll"/>
                                 <exclude reference="EaD-U6-EtH"/>
                                 <exclude reference="cfr-UG-rqM"/>
@@ -147,15 +170,19 @@
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="5pY-fw-zHx"/>
-                                <include reference="Fxh-pG-bRN"/>
                                 <include reference="nmG-dT-482"/>
+                                <include reference="Fxh-pG-bRN"/>
+                                <include reference="rcs-LE-WpV"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="ath-Cr-Kpr"/>
+                                <include reference="guu-TK-aLj"/>
                                 <include reference="KtP-yj-lqU"/>
                                 <include reference="YmX-ut-bvY"/>
                                 <include reference="xRB-ak-OSq"/>
                                 <include reference="8Pm-1A-NJ8"/>
                                 <include reference="JB3-zn-QuT"/>
+                                <include reference="mGa-fZ-KzZ"/>
                                 <include reference="qxT-gT-jll"/>
                                 <include reference="EaD-U6-EtH"/>
                                 <include reference="cfr-UG-rqM"/>
@@ -169,6 +196,7 @@
                         <outlet property="findFriendsButton" destination="Fxh-pG-bRN" id="6ep-Zd-bm4"/>
                         <outlet property="followersButton" destination="5pY-fw-zHx" id="Xkz-ZV-t0T"/>
                         <outlet property="followingButton" destination="nmG-dT-482" id="WLh-xP-LMC"/>
+                        <outlet property="profilePicImageView" destination="rcs-LE-WpV" id="pxN-Lg-uOv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KPU-HI-jbA" userLabel="First Responder" sceneMemberID="firstResponder"/>

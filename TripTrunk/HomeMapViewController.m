@@ -9,6 +9,7 @@
 #import "HomeMapViewController.h"
 #import <MapKit/MapKit.h>
 #import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "Trip.h"
 #import "TrunkListViewController.h"
 
@@ -30,7 +31,7 @@
     self.title = @"TripTrunk";
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    if(![PFUser currentUser])
+    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
     {
         
         [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];

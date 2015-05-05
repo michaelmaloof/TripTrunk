@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "HomeMapViewController.h"
 #import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 @interface LoginViewController ()
 
@@ -33,18 +34,37 @@
     // other fields can be set if you want to save more information
     user[@"phone"] = @"513-673-3114";
     
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            [self dismissViewControllerAnimated:YES completion:^{
-                
-            }];
-            
+//    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (!error) {
+//            [self dismissViewControllerAnimated:YES completion:^{
+//                
+//            }];
+//            
+//        } else {
+//            NSString *errorString = [error userInfo][@"error"];
+//            NSLog(@"%@",errorString);
+//        }
+//    }];
+    [self _loginWithFacebook];
+
+}
+
+- (void)_loginWithFacebook {
+    // Set permissions required from the facebook user account
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
+    
+    // Login PFUser using Facebook
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
+        if (!user) {
+            NSLog(@"Uh oh. The user cancelled the Facebook login.");
+        } else if (user.isNew) {
+            NSLog(@"User signed up and logged in through Facebook!");
+            user.username = @"mattschoch";
+            [user saveInBackground];
         } else {
-            NSString *errorString = [error userInfo][@"error"];
-            // Show the errorString somewhere and let the user try again.
+            NSLog(@"User logged in through Facebook!");
         }
     }];
-
 }
 
 @end

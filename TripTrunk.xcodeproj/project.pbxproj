@@ -46,6 +46,9 @@
 		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
 		C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */; };
+		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
+		C9026A121AF9577800A617F0 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */; };
+		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +121,9 @@
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
 		C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
+		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,11 +139,14 @@
 				223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */,
 				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
 				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
+				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */,
+				C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */,
 				224F3FF21AE1E59E003A1DEB /* StoreKit.framework in Frameworks */,
 				224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */,
 				224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */,
+				C9026A121AF9577800A617F0 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */,
 				223547E41AE2BB89001FE916 /* Parse.framework in Frameworks */,
 				224F3FEA1AE1E572003A1DEB /* CoreGraphics.framework in Frameworks */,
@@ -287,6 +296,9 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */,
+				C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */,
+				C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */,
 				223547ED1AE2BBEE001FE916 /* Social.framework */,
 				223547EB1AE2BBD8001FE916 /* CoreLocation.framework */,
 				223547E91AE2BBD0001FE916 /* MapKit.framework */,
@@ -563,8 +575,10 @@
 					"$(PROJECT_DIR)",
 					/Users/MichaelMaloof/Documents/Development/Frameworks,
 					/Users/MichaelMaloof/Documents/FacebookSDK,
+					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -584,8 +598,10 @@
 					"$(PROJECT_DIR)",
 					/Users/MichaelMaloof/Documents/Development/Frameworks,
 					/Users/MichaelMaloof/Documents/FacebookSDK,
+					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
