@@ -26,12 +26,12 @@
 
 - (IBAction)onLoginTapped:(id)sender {
     PFUser *user = [PFUser user];
-    user.username = @"michaelmaloof";
-    user.password = @"Harrypotter91";
-    user.email = @"michaelmaloof1991@gmail.com";
+    user.username = @"mattschoch";
+    user.password = @"mattspassword";
+    user.email = @"mattschoch@gmail.com";
     
     // other fields can be set if you want to save more information
-    user[@"phone"] = @"614-270-1558";
+    user[@"phone"] = @"513-673-3114";
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
