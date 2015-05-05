@@ -8,6 +8,7 @@
 
 #import "ProfileViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <Parse/Parse.h>
 
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
@@ -36,6 +37,9 @@
     NSLog(@"Following Button Pressed");
 
 }
+- (IBAction)logOutButtonPressed:(id)sender {
+    [PFUser logOut];
+}
 
 - (void)_loadData {
     // ...
@@ -62,6 +66,7 @@
     // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
 
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
+    
     
     // Run network request asynchronously
     [NSURLConnection sendAsynchronousRequest:urlRequest

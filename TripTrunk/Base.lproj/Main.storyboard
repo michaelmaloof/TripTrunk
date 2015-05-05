@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="C1o-nu-Z6O">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -23,10 +24,12 @@
                                 <color key="backgroundColor" red="0.86647224759999997" green="1" blue="0.74299708909999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="W6X-D6-raR"/>
-                                    <constraint firstAttribute="width" constant="156" id="bMu-Vf-rFr"/>
+                                    <constraint firstAttribute="width" constant="156" id="bMu-Vf-rFr">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
-                                <state key="normal" title="Login">
+                                <state key="normal" title="Login With Facebook">
                                     <color key="titleColor" red="0.23137254900000001" green="0.34901960780000002" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -121,12 +124,35 @@
                                     </mask>
                                 </variation>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiX-04-zAH">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="fiX-04-zAH" secondAttribute="height" multiplier="74:41" id="rq8-eW-t1i"/>
+                                </constraints>
+                                <state key="normal" title="Log Out">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="rq8-eW-t1i"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="rq8-eW-t1i"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="logOutButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="HQM-Vf-UVf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.69509463490000001" green="0.8630503303" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="leading" secondItem="5pY-fw-zHx" secondAttribute="trailing" constant="50" id="8Pm-1A-NJ8">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="fiX-04-zAH" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="8" id="CUW-yN-qZt"/>
                             <constraint firstItem="nmG-dT-482" firstAttribute="centerY" secondItem="Fxh-pG-bRN" secondAttribute="centerY" id="EaD-U6-EtH"/>
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="131" id="JB3-zn-QuT"/>
                             <constraint firstItem="5pY-fw-zHx" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="KtP-yj-lqU"/>
@@ -139,7 +165,9 @@
                             <constraint firstItem="rcs-LE-WpV" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="8" id="guu-TK-aLj"/>
                             <constraint firstItem="nmG-dT-482" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="iKN-ph-Ec0"/>
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="top" secondItem="rcs-LE-WpV" secondAttribute="bottom" constant="23" id="mGa-fZ-KzZ"/>
+                            <constraint firstItem="fiX-04-zAH" firstAttribute="trailing" secondItem="Pur-BN-0jv" secondAttribute="trailingMargin" id="mqo-yb-hRr"/>
                             <constraint firstItem="Fxh-pG-bRN" firstAttribute="centerY" secondItem="5pY-fw-zHx" secondAttribute="centerY" id="qxT-gT-jll"/>
+                            <constraint firstItem="fiX-04-zAH" firstAttribute="leading" secondItem="rcs-LE-WpV" secondAttribute="trailing" constant="60" id="sVz-rl-0U3"/>
                             <constraint firstAttribute="trailingMargin" secondItem="nmG-dT-482" secondAttribute="trailing" constant="-16" id="w88-wS-jzh"/>
                             <constraint firstItem="5pY-fw-zHx" firstAttribute="height" secondItem="Fxh-pG-bRN" secondAttribute="height" id="xRB-ak-OSq"/>
                         </constraints>
@@ -149,6 +177,7 @@
                                 <exclude reference="nmG-dT-482"/>
                                 <exclude reference="Fxh-pG-bRN"/>
                                 <exclude reference="rcs-LE-WpV"/>
+                                <exclude reference="fiX-04-zAH"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="ath-Cr-Kpr"/>
@@ -160,6 +189,9 @@
                                 <exclude reference="JB3-zn-QuT"/>
                                 <exclude reference="mGa-fZ-KzZ"/>
                                 <exclude reference="qxT-gT-jll"/>
+                                <exclude reference="CUW-yN-qZt"/>
+                                <exclude reference="mqo-yb-hRr"/>
+                                <exclude reference="sVz-rl-0U3"/>
                                 <exclude reference="EaD-U6-EtH"/>
                                 <exclude reference="cfr-UG-rqM"/>
                                 <exclude reference="ehA-NN-eNn"/>
@@ -173,6 +205,7 @@
                                 <include reference="nmG-dT-482"/>
                                 <include reference="Fxh-pG-bRN"/>
                                 <include reference="rcs-LE-WpV"/>
+                                <include reference="fiX-04-zAH"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="ath-Cr-Kpr"/>
@@ -184,6 +217,9 @@
                                 <include reference="JB3-zn-QuT"/>
                                 <include reference="mGa-fZ-KzZ"/>
                                 <include reference="qxT-gT-jll"/>
+                                <include reference="CUW-yN-qZt"/>
+                                <include reference="mqo-yb-hRr"/>
+                                <include reference="sVz-rl-0U3"/>
                                 <include reference="EaD-U6-EtH"/>
                                 <include reference="cfr-UG-rqM"/>
                                 <include reference="ehA-NN-eNn"/>
