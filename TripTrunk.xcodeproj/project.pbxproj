@@ -45,6 +45,7 @@
 		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
 		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,8 @@
 		224F3FF91AE1E5BE003A1DEB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +183,8 @@
 				220408E31AED58C0009DB060 /* TrunkViewController.m */,
 				220408EF1AF1C1EA009DB060 /* PhotoViewController.h */,
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
+				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
+				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -414,6 +419,7 @@
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
+				C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,

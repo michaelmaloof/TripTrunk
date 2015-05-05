@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="C1o-nu-Z6O">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -45,6 +46,135 @@
             </objects>
             <point key="canvasLocation" x="1086" y="-450"/>
         </scene>
+        <!--Profile View Controller-->
+        <scene sceneID="NZE-Mi-mwJ">
+            <objects>
+                <viewController id="WBZ-Fv-Hv8" customClass="ProfileViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="82I-5O-n0C"/>
+                        <viewControllerLayoutGuide type="bottom" id="dhC-Tz-5TM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Pur-BN-0jv">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pY-fw-zHx">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Followers">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="followersButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="Bd0-G2-TTO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxh-pG-bRN">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="kSv-Mf-xxQ"/>
+                                    <constraint firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="height" multiplier="134:65" id="rGs-J6-En9"/>
+                                </constraints>
+                                <state key="normal" title="Find Friends">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="kSv-Mf-xxQ"/>
+                                        <exclude reference="rGs-J6-En9"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="kSv-Mf-xxQ"/>
+                                        <exclude reference="rGs-J6-En9"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="findFriendsButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="ObR-qv-tET"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmG-dT-482">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Following">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="followingButtonPressed:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="i2z-FX-WaP"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.69509463490000001" green="0.8630503303" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Fxh-pG-bRN" firstAttribute="leading" secondItem="5pY-fw-zHx" secondAttribute="trailing" constant="50" id="8Pm-1A-NJ8">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="nmG-dT-482" firstAttribute="centerY" secondItem="Fxh-pG-bRN" secondAttribute="centerY" id="EaD-U6-EtH"/>
+                            <constraint firstItem="Fxh-pG-bRN" firstAttribute="top" secondItem="82I-5O-n0C" secondAttribute="bottom" constant="131" id="JB3-zn-QuT"/>
+                            <constraint firstItem="5pY-fw-zHx" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="KtP-yj-lqU"/>
+                            <constraint firstItem="5pY-fw-zHx" firstAttribute="leading" secondItem="Pur-BN-0jv" secondAttribute="leadingMargin" constant="-16" id="YmX-ut-bvY"/>
+                            <constraint firstItem="nmG-dT-482" firstAttribute="leading" secondItem="Fxh-pG-bRN" secondAttribute="trailing" constant="50" id="cfr-UG-rqM">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="nmG-dT-482" firstAttribute="height" secondItem="Fxh-pG-bRN" secondAttribute="height" id="ehA-NN-eNn"/>
+                            <constraint firstItem="nmG-dT-482" firstAttribute="width" secondItem="Fxh-pG-bRN" secondAttribute="width" id="iKN-ph-Ec0"/>
+                            <constraint firstItem="Fxh-pG-bRN" firstAttribute="centerY" secondItem="5pY-fw-zHx" secondAttribute="centerY" id="qxT-gT-jll"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="nmG-dT-482" secondAttribute="trailing" constant="-16" id="w88-wS-jzh"/>
+                            <constraint firstItem="5pY-fw-zHx" firstAttribute="height" secondItem="Fxh-pG-bRN" secondAttribute="height" id="xRB-ak-OSq"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="5pY-fw-zHx"/>
+                                <exclude reference="Fxh-pG-bRN"/>
+                                <exclude reference="nmG-dT-482"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="KtP-yj-lqU"/>
+                                <exclude reference="YmX-ut-bvY"/>
+                                <exclude reference="xRB-ak-OSq"/>
+                                <exclude reference="8Pm-1A-NJ8"/>
+                                <exclude reference="JB3-zn-QuT"/>
+                                <exclude reference="qxT-gT-jll"/>
+                                <exclude reference="EaD-U6-EtH"/>
+                                <exclude reference="cfr-UG-rqM"/>
+                                <exclude reference="ehA-NN-eNn"/>
+                                <exclude reference="iKN-ph-Ec0"/>
+                                <exclude reference="w88-wS-jzh"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="5pY-fw-zHx"/>
+                                <include reference="Fxh-pG-bRN"/>
+                                <include reference="nmG-dT-482"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="KtP-yj-lqU"/>
+                                <include reference="YmX-ut-bvY"/>
+                                <include reference="xRB-ak-OSq"/>
+                                <include reference="8Pm-1A-NJ8"/>
+                                <include reference="JB3-zn-QuT"/>
+                                <include reference="qxT-gT-jll"/>
+                                <include reference="EaD-U6-EtH"/>
+                                <include reference="cfr-UG-rqM"/>
+                                <include reference="ehA-NN-eNn"/>
+                                <include reference="iKN-ph-Ec0"/>
+                                <include reference="w88-wS-jzh"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="findFriendsButton" destination="Fxh-pG-bRN" id="6ep-Zd-bm4"/>
+                        <outlet property="followersButton" destination="5pY-fw-zHx" id="Xkz-ZV-t0T"/>
+                        <outlet property="followingButton" destination="nmG-dT-482" id="WLh-xP-LMC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KPU-HI-jbA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="186" y="429"/>
+        </scene>
         <!--Home Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -77,6 +207,7 @@
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="onProfileTapped:" destination="BYZ-38-t0r" id="RLN-HB-CxK"/>
+                                <segue destination="WBZ-Fv-Hv8" kind="show" id="jPl-10-e1Y"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="sd6-O8-N6r">
@@ -839,7 +970,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgM-K6-At2" customClass="TripImageView">
