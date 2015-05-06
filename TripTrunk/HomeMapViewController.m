@@ -31,11 +31,7 @@
     self.title = @"TripTrunk";
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-    {
-        
-        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
-    }
+
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -58,7 +54,15 @@
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
     self.parseLocations = [[NSMutableArray alloc]init];
-    [self queryParseMethod];
+    
+    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
+    {
+            [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+            
+    }
+    else {
+        [self queryParseMethod];
+    }
 }
 
 -(void)queryParseMethod

@@ -38,7 +38,13 @@
 
 }
 - (IBAction)logOutButtonPressed:(id)sender {
+    NSLog(@"Logout Button Pressed");
     [PFUser logOut];
+    
+    // This pushes the user back to the map view, which should then show the loginview
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    //TODO: clear any cached data, clear userdefaults, and display loginViewController
 }
 
 - (void)_loadData {
