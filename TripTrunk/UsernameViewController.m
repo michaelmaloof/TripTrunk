@@ -9,6 +9,7 @@
 #import "UsernameViewController.h"
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface UsernameViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
@@ -22,6 +23,31 @@
     NSLog(@"UsernameViewController viewDidLoad");
     
     _user = [PFUser currentUser];
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+            // result is a dictionary with the user's Facebook data
+            NSDictionary *userData = (NSDictionary *)result;
+            
+            NSString *facebookID = userData[@"id"];
+            NSString *name = userData[@"name"];
+            NSString *email = userData[@"email"];
+            [_user setObject:facebookID forKey:@"fbid"];
+            [_user setObject:name forKey:@"name"];
+            [_user setObject:email forKey:@"email"];
+            
+            NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
+            [_user setObject:pictureURL forKey:@"profilePicUrl"];
+            
+            [_user saveInBackground];
+
+        }
+        else {
+            NSLog(@"%@",error);
+        }
+    }];
+    
 
 }
 

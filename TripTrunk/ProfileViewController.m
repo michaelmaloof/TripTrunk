@@ -19,7 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self _loadData];
+    NSURL *pictureURL = [NSURL URLWithString:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
+    [self setProfilePic:pictureURL];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,23 +46,6 @@
     [self.navigationController popViewControllerAnimated:YES];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
-}
-
-- (void)_loadData {
-    // ...
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        if (!error) {
-            // result is a dictionary with the user's Facebook data
-            NSDictionary *userData = (NSDictionary *)result;
-            
-            NSString *facebookID = userData[@"id"];
-            NSString *name = userData[@"name"];
-            
-            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID]];
-            [self setProfilePic:pictureURL];
-        }
-    }];
 }
 
 - (void)setProfilePic:(NSURL *)pictureURL {

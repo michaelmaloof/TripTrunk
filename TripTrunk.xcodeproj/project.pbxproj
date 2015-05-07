@@ -50,6 +50,8 @@
 		C9026A121AF9577800A617F0 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */; };
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
+		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
+		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +129,10 @@
 		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
 		C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsernameViewController.m; sourceTree = "<group>"; };
+		C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFriendsViewController.h; sourceTree = "<group>"; };
+		C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFriendsViewController.m; sourceTree = "<group>"; };
+		C9CD1CAA1AFC27FA00D967A5 /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
+		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +205,8 @@
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
 				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
+				C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */,
+				C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -212,6 +220,8 @@
 				220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */,
 				220408E51AEDB23F009DB060 /* TrunkCollectionViewCell.h */,
 				220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */,
+				C9CD1CAA1AFC27FA00D967A5 /* FriendTableViewCell.h */,
+				C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */,
 			);
 			name = ViewCells;
 			sourceTree = "<group>";
@@ -430,6 +440,8 @@
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
+				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
+				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
