@@ -67,18 +67,31 @@
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
         } else if (user.isNew) {
             NSLog(@"User signed up and logged in through Facebook!");
-            user.username = @"mattschoch";
-            [user saveInBackground];
-            [self dismissViewControllerAnimated:YES completion:^{
-                
-            }];
+
+            [self showSetUsernameView];
+
         } else {
             NSLog(@"User logged in through Facebook!");
-            [self dismissViewControllerAnimated:YES completion:^{
-                
-            }];
+            
+            // Make sure the user has a TripTrunk username
+            if (!user.username) {
+                [self showSetUsernameView];
+            }
+            else
+            {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    
+                }];
+            }
         }
     }];
 }
+
+- (void)showSetUsernameView {
+    [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
+    
+}
+
+
 
 @end
