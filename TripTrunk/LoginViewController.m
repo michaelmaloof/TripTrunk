@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "HomeMapViewController.h"
 #import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 @interface LoginViewController ()
 
@@ -26,25 +27,71 @@
 
 - (IBAction)onLoginTapped:(id)sender {
     PFUser *user = [PFUser user];
-    user.username = @"michaelmaloof";
-    user.password = @"Harrypotter91";
-    user.email = @"michaelmaloof1991@gmail.com";
+    user.username = @"mattschoch";
+    user.password = @"mattspassword";
+    user.email = @"mattschoch@gmail.com";
     
     // other fields can be set if you want to save more information
-    user[@"phone"] = @"614-270-1558";
+    user[@"phone"] = @"513-673-3114";
     
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            [self dismissViewControllerAnimated:YES completion:^{
-                
-            }];
-            
-        } else {
-            NSString *errorString = [error userInfo][@"error"];
-            // Show the errorString somewhere and let the user try again.
-        }
-    }];
+//    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (!error) {
+//            [self dismissViewControllerAnimated:YES completion:^{
+//                
+//            }];
+//            
+//        } else {
+//            NSString *errorString = [error userInfo][@"error"];
+//            NSLog(@"%@",errorString);
+//        }
+//    }];
+    [self _loginWithFacebook];
 
 }
+
+- (void)_loginWithFacebook {
+    // Set permissions required from the facebook user account
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
+    
+    // Login PFUser using Facebook
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
+        
+        if (error) {
+            NSString *errorString = [error userInfo][@"error"];
+            NSLog(@"%@",errorString);
+            return;
+
+        }
+        
+        if (!user) {
+            NSLog(@"Uh oh. The user cancelled the Facebook login.");
+        } else if (user.isNew) {
+            NSLog(@"User signed up and logged in through Facebook!");
+
+            [self showSetUsernameView];
+
+        } else {
+            NSLog(@"User logged in through Facebook!");
+            
+            // Make sure the user has a TripTrunk username
+            if (!user.username) {
+                [self showSetUsernameView];
+            }
+            else
+            {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    
+                }];
+            }
+        }
+    }];
+}
+
+- (void)showSetUsernameView {
+    [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
+    
+}
+
+
 
 @end
