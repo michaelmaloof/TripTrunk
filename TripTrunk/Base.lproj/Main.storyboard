@@ -171,10 +171,10 @@
             </objects>
             <point key="canvasLocation" x="1812" y="-450"/>
         </scene>
-        <!--Profile View Controller-->
+        <!--Profile-->
         <scene sceneID="NZE-Mi-mwJ">
             <objects>
-                <viewController id="WBZ-Fv-Hv8" customClass="ProfileViewController" sceneMemberID="viewController">
+                <viewController title="Profile" id="WBZ-Fv-Hv8" customClass="ProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="82I-5O-n0C"/>
                         <viewControllerLayoutGuide type="bottom" id="dhC-Tz-5TM"/>
