@@ -90,7 +90,8 @@
     NSInteger count = 0;
     for (Trip *trip in self.parseLocations)
     {
-        if(![self.tripsToCheck containsObject:trip.city])
+        NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+        if(![self.tripsToCheck containsObject:string])
         {
            count = count +1;
            [self addTripToMap:trip count:count];
@@ -102,15 +103,17 @@
 -(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
 {
     //FIXEM needs to be address not city
-    [self.tripsToCheck addObject:trip.city];
+    NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
-    [geocoder geocodeAddressString:trip.city completionHandler:^(NSArray *placemarks, NSError *error) {
+    [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
         
         [self.mapView addAnnotation:annotation];
+        
         
     //FIXME Does it include last pin? DO I ACTUALLY EVEN NEED THIS FOR THE MAP?
 //        if (count == self.tripsToCheck.count) {
