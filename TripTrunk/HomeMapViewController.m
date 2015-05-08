@@ -21,6 +21,7 @@
 @property NSMutableArray *parseLocations;
 @property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
+@property NSInteger originalCount;
 
 @end
 
@@ -87,16 +88,18 @@
 -(void)placeTrips
 {
     NSInteger count = 0;
-    for (NSString *string in self.tripsToCheck)
-        if (![self.parseLocations containsObject:string])
+    
+    if (self.parseLocations.count < self.originalCount)
         {
             //FIXME (long term) to only remove deleted Trunk
             [self.mapView removeAnnotations:self.mapView.annotations];
             self.tripsToCheck = nil;
             self.tripsToCheck = [[NSMutableArray alloc]init];
+            self.originalCount = 0;
             [self viewDidAppear:YES];
         }
-    
+    else
+    {
     for (Trip *trip in self.parseLocations)
     {
         NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
@@ -104,7 +107,9 @@
         {
            count = count +1;
            [self addTripToMap:trip count:count];
+            self.originalCount = self.parseLocations.count;
         }
+    }
     }
 
 }
