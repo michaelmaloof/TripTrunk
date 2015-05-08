@@ -39,17 +39,15 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+   self.tripsToCheck = [[NSMutableArray alloc]init];
+
 
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    // only add pins that have been updated
-    [self.mapView  removeAnnotations:self.mapView.annotations];
-    
-    //FIXME needs to cache at some point
-    
-    self.tripsToCheck = nil;
-    self.tripsToCheck = [[NSMutableArray alloc]init];
+
+
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -77,6 +75,7 @@
             {
                 self.parseLocations = [NSMutableArray arrayWithArray:objects];
                 [self placeTrips];
+                
             }else
             {
                 NSLog(@"Error: %@",error);
@@ -88,6 +87,16 @@
 -(void)placeTrips
 {
     NSInteger count = 0;
+    for (NSString *string in self.tripsToCheck)
+        if (![self.parseLocations containsObject:string])
+        {
+            //FIXME (long term) to only remove deleted Trunk
+            [self.mapView removeAnnotations:self.mapView.annotations];
+            self.tripsToCheck = nil;
+            self.tripsToCheck = [[NSMutableArray alloc]init];
+            [self viewDidAppear:YES];
+        }
+    
     for (Trip *trip in self.parseLocations)
     {
         NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
