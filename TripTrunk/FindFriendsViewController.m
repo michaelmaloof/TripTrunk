@@ -13,6 +13,14 @@
 #import "FriendTableViewCell.h"
 #import "SocialUtility.h"
 
+@interface FindFriendsViewController() <UISearchDisplayDelegate, UISearchBarDelegate>
+
+@property (strong, nonatomic) IBOutlet UISearchDisplayController *searchController;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (nonatomic, strong) NSMutableArray *searchResults;
+
+@end
+
 @interface FindFriendsViewController () <UITableViewDelegate, UITableViewDataSource, FriendTableViewCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -27,6 +35,11 @@
 
     [self getFacebookFriendList];
     _friends = [[NSMutableArray alloc] init];
+    
+    CGPoint offset = CGPointMake(0, self.searchBar.frame.size.height);
+    self.tableView.contentOffset = offset;
+    
+    self.searchResults = [NSMutableArray array];
 }
 
 
@@ -77,6 +90,27 @@
 
 }
 
+- (void)filterResults:(NSString *)searchTerm {
+    
+    [self.searchResults removeAllObjects];
+    
+    PFQuery *query = [PFUser query];
+    [query whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
+    [query whereKey:@"username" containsString:searchTerm];
+    
+    NSArray *results  = [query findObjects];
+    
+    NSLog(@"%@", results);
+    
+    [self.searchResults addObjectsFromArray:results];
+}
+
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    [self filterResults:searchString];
+    return YES;
+}
+
 
 
 
@@ -101,15 +135,31 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _friends.count;
+    // Search Controller and the regular table view have different data sources
+    if (tableView == self.tableView) {
+        return _friends.count;
+    } else {
+        return self.searchResults.count;
+    }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
+    PFUser *possibleFriend;
+    FriendTableViewCell *cell;
+    
+    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+        cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+    }
+    else {
+        cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
+        possibleFriend = [_friends objectAtIndex:indexPath.row];
+    }
+    
     [cell setDelegate:self];
     [cell.followButton setSelected:NO];
 
-    PFUser *possibleFriend = [_friends objectAtIndex:indexPath.row];
     [cell setUser:possibleFriend];
     
     cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell

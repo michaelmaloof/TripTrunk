@@ -333,11 +333,34 @@
                                     <outlet property="delegate" destination="FZG-Zq-kXw" id="aW9-YW-huM"/>
                                 </connections>
                             </tableView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="WLK-7E-sC9">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="WLK-7E-sC9" secondAttribute="height" multiplier="100:11" id="p1P-Hb-0lp"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="p1P-Hb-0lp"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="p1P-Hb-0lp"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="delegate" destination="FZG-Zq-kXw" id="19q-5e-WBp"/>
+                                </connections>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="leading" secondItem="yMT-H1-uif" secondAttribute="leadingMargin" constant="-16" id="74z-KY-PYZ"/>
+                            <constraint firstAttribute="centerX" secondItem="WLK-7E-sC9" secondAttribute="centerX" id="Evo-1x-ahA"/>
                             <constraint firstItem="vJX-bv-3UH" firstAttribute="top" secondItem="ihi-4p-KHr" secondAttribute="bottom" id="Ifv-vQ-StM"/>
+                            <constraint firstItem="ihi-4p-KHr" firstAttribute="width" secondItem="WLK-7E-sC9" secondAttribute="width" id="jJ3-4C-ilh"/>
+                            <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="WLK-7E-sC9" secondAttribute="top" id="jgq-Qz-FMW"/>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="GFu-OD-PGf" secondAttribute="bottom" constant="-64" id="mbH-0W-HKy">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
@@ -346,31 +369,51 @@
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="ihi-4p-KHr"/>
+                                <exclude reference="WLK-7E-sC9"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Ifv-vQ-StM"/>
+                                <exclude reference="Evo-1x-ahA"/>
                                 <exclude reference="74z-KY-PYZ"/>
+                                <exclude reference="jJ3-4C-ilh"/>
+                                <exclude reference="jgq-Qz-FMW"/>
                                 <exclude reference="mbH-0W-HKy"/>
                                 <exclude reference="wXd-YH-Kjj"/>
+                                <exclude reference="Ifv-vQ-StM"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="ihi-4p-KHr"/>
+                                <include reference="WLK-7E-sC9"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="Ifv-vQ-StM"/>
+                                <include reference="Evo-1x-ahA"/>
                                 <include reference="74z-KY-PYZ"/>
+                                <include reference="jJ3-4C-ilh"/>
+                                <include reference="jgq-Qz-FMW"/>
                                 <include reference="mbH-0W-HKy"/>
                                 <include reference="wXd-YH-Kjj"/>
+                                <include reference="Ifv-vQ-StM"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="WLK-7E-sC9" id="9Xk-ou-z97"/>
+                        <outlet property="searchController" destination="qfU-uI-hNu" id="V2Q-rp-M8a"/>
+                        <outlet property="searchDisplayController" destination="qfU-uI-hNu" id="Tbp-LJ-Glu"/>
                         <outlet property="tableView" destination="ihi-4p-KHr" id="vat-Gm-Rxz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rh9-PE-AW7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="qfU-uI-hNu">
+                    <connections>
+                        <outlet property="delegate" destination="FZG-Zq-kXw" id="2zY-9x-pyA"/>
+                        <outlet property="searchBar" destination="WLK-7E-sC9" id="qDe-cZ-qJv"/>
+                        <outlet property="searchContentsController" destination="FZG-Zq-kXw" id="X6S-Rr-5oF"/>
+                        <outlet property="searchResultsDataSource" destination="FZG-Zq-kXw" id="suS-Ho-pCf"/>
+                        <outlet property="searchResultsDelegate" destination="FZG-Zq-kXw" id="QlZ-6d-s8U"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-519" y="441"/>
         </scene>
