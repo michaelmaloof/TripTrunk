@@ -25,7 +25,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property NSIndexPath *path;
 @property NSMutableArray *photosToDelete;
-@property NSMutableArray *tripPhotos;
+//@property NSMutableArray *tripPhotos;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
@@ -50,7 +50,7 @@
     
     self.photos = [[NSMutableArray alloc]init];
     self.photosToDelete = [[NSMutableArray alloc]init];
-    self.tripPhotos = [[NSMutableArray alloc]init];
+//    self.tripPhotos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
@@ -121,18 +121,19 @@
 
 -(void)parsePhotos {
     
-    
-    for (TripImageView *tripImage in self.tripPhotos)
+
+//    for (TripImageView *tripImage in self.tripPhotos)
+        for (TripImageView *tripImage in self.photos)
     {
         [self addImageData:UIImagePNGRepresentation(tripImage.image) string:tripImage.caption];
         [self addToDeleteArray:tripImage];
     }
     
-    for (UIImage *image in self.photos){
-        [self addImageData:UIImagePNGRepresentation(image)  string:nil];
-    }
+//    for (UIImage *image in self.photos){
+//        [self addImageData:UIImagePNGRepresentation(image)  string:nil];
+//    }
     
-    if (self.tripPhotos.count == 0){
+//    if (self.tripPhotos.count == 0){
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -204,9 +205,15 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
-        [self.photos addObject:image];
-        [picker dismissViewControllerAnimated:YES completion:NULL];
+//        UIImage *image = info[UIImagePickerControllerOriginalImage];
+//        [self.photos addObject:image];
+//        [picker dismissViewControllerAnimated:YES completion:NULL];
+    
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    TripImageView *tripImageView = [[TripImageView alloc]init];
+    tripImageView.image = image;
+    [self.photos addObject:tripImageView];
+    [picker dismissViewControllerAnimated:YES completion:NULL];
     
 }
 
@@ -236,7 +243,7 @@
 {
     
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.tripImage.image = [self.photos objectAtIndex:indexPath.row];
+    cell.tripImageView = [self.photos objectAtIndex:indexPath.row];
     return cell;
     
 }
@@ -247,8 +254,8 @@
     self.path = indexPath;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     
-    if (cell.tripImage.caption) {
-        self.caption.text = cell.tripImage.caption;
+    if (cell.tripImageView.caption) {
+        self.caption.text = cell.tripImageView.caption;
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
@@ -262,7 +269,7 @@
     self.selectedPhoto.hidden = NO;
     cell.backgroundColor = [UIColor whiteColor];
     self.tripCollectionView.hidden = YES;
-    self.selectedPhoto.image = cell.tripImage.image;
+    self.selectedPhoto.image = cell.tripImageView.image;
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender {
@@ -272,10 +279,10 @@
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
-    cell.captionImage.image = [UIImage imageNamed:@"Check circle"];
-    cell.tripImage.caption = self.caption.text;
-    [self.tripPhotos addObject:cell.tripImage];
-    [self.photos removeObject:cell.tripImage];
+    cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
+    [self.photos removeObject:cell.tripImageView.image];
+    cell.tripImageView.caption = self.caption.text;
+    [self.tripPhotos addObject:cell.tripImageView];
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
@@ -287,6 +294,8 @@
     self.caption.text = @"";
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
+        
+        
     }
     
     else
@@ -327,10 +336,10 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
-    cell.captionImage.image = [UIImage imageNamed:@"Plus Circle"];
-    cell.tripImage.caption = @"";
-    [self.tripPhotos removeObject:cell.tripImage];
-    [self.photos addObject:cell.tripImage];
+    cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
+    cell.tripImageView.caption = @"";
+    [self.tripPhotos removeObject:cell.tripImageView];
+    [self.photos addObject:cell.tripImageView.image];
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
     self.remove.hidden = YES;
@@ -343,8 +352,8 @@
     self.selectedPhoto.hidden = YES;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
      cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
-    [self.tripPhotos removeObject:cell.tripImage];
-    [self.photos removeObject:cell.tripImage.image];
+    [self.tripPhotos removeObject:cell.tripImageView];
+    [self.photos removeObject:cell.tripImageView.image];
     self.path= nil;
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;

@@ -1215,8 +1215,8 @@
                                         </view>
                                         <color key="backgroundColor" red="0.89411764705882357" green="0.45882352941176469" blue="0.3843137254901961" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
-                                            <outlet property="captionImage" destination="1oU-Km-cc8" id="ba6-T0-Zbl"/>
-                                            <outlet property="tripImage" destination="JgM-K6-At2" id="0MQ-Up-dwh"/>
+                                            <outlet property="captionImageView" destination="1oU-Km-cc8" id="XSB-Cf-PLi"/>
+                                            <outlet property="tripImageView" destination="JgM-K6-At2" id="6iU-vy-q4p"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
