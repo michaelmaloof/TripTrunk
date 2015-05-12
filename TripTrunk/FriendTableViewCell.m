@@ -8,6 +8,12 @@
 
 #import "FriendTableViewCell.h"
 
+@interface FriendTableViewCell ()
+
+@property (nonatomic, strong) PFUser *user;
+
+@end
+
 @implementation FriendTableViewCell
 
 - (void)awakeFromNib {
@@ -18,6 +24,22 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+- (void)setUser:(PFUser *)user {
+    _user = user;
+    
+    [self.nameLabel setText:user[@"name"]];
+    [self.usernameLabel setText:user.username];
+    
+}
+
+
+- (IBAction)followButtonPressed:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didPressFollowButton:)]) {
+        [self.delegate cell:self didPressFollowButton:_user];
+    }
 }
 
 @end

@@ -39,7 +39,19 @@
             if (!error) {
                 NSLog(@"fetched friends:%@", result);
                 // result will contain an array with user's friends in the "data" key
-                _friends = [result objectForKey:@"data"];
+                
+                // Loop through the friends list and create a new array of just their fbid's
+                NSMutableArray *friendList = [[NSMutableArray alloc] init];
+                for (NSDictionary *friend in [result objectForKey:@"data"]) {
+                    [friendList addObject:friend[@"id"]];
+                }
+                
+                // Now get the TripTrunk user objects
+                PFQuery *friendsQuery = [PFUser query];
+                [friendsQuery whereKey:@"fbid" containedIn:friendList];
+            
+                // TODO: run the query in the background thread
+                _friends = [NSMutableArray arrayWithArray:[friendsQuery findObjects]];
                 
                 // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -63,7 +75,9 @@
 {
     return 1;
 }
-
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 66;
+}
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
@@ -83,10 +97,11 @@
     FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
 //    UITableViewCell *cell = [[UITableViewCell alloc] init];
 
-    NSDictionary *friend = [_friends objectAtIndex:indexPath.row];
+    PFUser *possibleFriend = [_friends objectAtIndex:indexPath.row];
     
-    [cell.textLabel setText:friend[@"name"]];
-
+    
+    [cell setUser:possibleFriend];
+    
     
     return cell;
 }
