@@ -27,4 +27,48 @@ dependencies: \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFNullability.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/PFACL.h \
   /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Headers/Parse.h \
-  /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/Parse.framework/Modules/module.modulemap \
+  /Users/MichaelMaloof/Documents/Development/TripTrunk/ParseFacebookUtilsV4.framework/Headers/PFFacebookUtils.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFWebViewAppLinkResolver.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLinkResolving.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLinkReturnToRefererView.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLinkReturnToRefererController.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFMeasurementEvent.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFURL.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLinkTarget.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLink.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFAppLinkNavigation.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFTaskCompletionSource.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFTask.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BFExecutor.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/BoltsVersion.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Headers/Bolts.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/Bolts.framework/Modules/module.modulemap \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKGraphErrorRecoveryProcessor.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolver.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKButton.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKUtility.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKSettings.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKProfilePictureView.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKProfile.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKMutableCopying.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKConstants.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKAppLinkUtility.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKMacros.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKCopying.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKCoreKit.framework/Modules/module.modulemap \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginTooltipView.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginManagerLoginResult.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKTooltipView.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginManager.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginButton.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h \
+  /Users/MichaelMaloof/Documents/Development/FacebookSDK/FBSDKLoginKit.framework/Modules/module.modulemap

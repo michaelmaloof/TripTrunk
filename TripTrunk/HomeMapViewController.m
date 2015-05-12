@@ -21,6 +21,7 @@
 @property NSMutableArray *parseLocations;
 @property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
+@property NSInteger originalCount;
 
 @end
 
@@ -39,17 +40,15 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+   self.tripsToCheck = [[NSMutableArray alloc]init];
+
 
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    // only add pins that have been updated
-    [self.mapView  removeAnnotations:self.mapView.annotations];
-    
-    //FIXME needs to cache at some point
-    
-    self.tripsToCheck = nil;
-    self.tripsToCheck = [[NSMutableArray alloc]init];
+
+
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -77,6 +76,7 @@
             {
                 self.parseLocations = [NSMutableArray arrayWithArray:objects];
                 [self placeTrips];
+                
             }else
             {
                 NSLog(@"Error: %@",error);
@@ -88,13 +88,28 @@
 -(void)placeTrips
 {
     NSInteger count = 0;
+    
+    if (self.parseLocations.count < self.originalCount)
+        {
+            //FIXME (long term) to only remove deleted Trunk
+            [self.mapView removeAnnotations:self.mapView.annotations];
+            self.tripsToCheck = nil;
+            self.tripsToCheck = [[NSMutableArray alloc]init];
+            self.originalCount = 0;
+            [self viewDidAppear:YES];
+        }
+    else
+    {
     for (Trip *trip in self.parseLocations)
     {
-        if(![self.tripsToCheck containsObject:trip.city])
+        NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+        if(![self.tripsToCheck containsObject:string])
         {
            count = count +1;
            [self addTripToMap:trip count:count];
+            self.originalCount = self.parseLocations.count;
         }
+    }
     }
 
 }
@@ -102,15 +117,17 @@
 -(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
 {
     //FIXEM needs to be address not city
-    [self.tripsToCheck addObject:trip.city];
+    NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
-    [geocoder geocodeAddressString:trip.city completionHandler:^(NSArray *placemarks, NSError *error) {
+    [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
         
         [self.mapView addAnnotation:annotation];
+        
         
     //FIXME Does it include last pin? DO I ACTUALLY EVEN NEED THIS FOR THE MAP?
 //        if (count == self.tripsToCheck.count) {

@@ -131,6 +131,10 @@
     for (UIImage *image in self.photos){
         [self addImageData:UIImagePNGRepresentation(image)  string:nil];
     }
+    
+    if (self.tripPhotos.count == 0){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 -(void)addToDeleteArray:(TripImageView*)trip{
