@@ -11,8 +11,9 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
 #import "FriendTableViewCell.h"
+#import "SocialUtility.h"
 
-@interface FindFriendsViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface FindFriendsViewController () <UITableViewDelegate, UITableViewDataSource, FriendTableViewCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *friends;
@@ -49,14 +50,24 @@
                 // Now get the TripTrunk user objects
                 PFQuery *friendsQuery = [PFUser query];
                 [friendsQuery whereKey:@"fbid" containedIn:friendList];
-            
-                // TODO: run the query in the background thread
-                _friends = [NSMutableArray arrayWithArray:[friendsQuery findObjects]];
                 
-                // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView reloadData];
-                });
+               [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                    if(error)
+                    {
+                        NSLog(@"Error: %@",error);
+                    }
+                    else
+                    {
+                        _friends = [NSMutableArray arrayWithArray:objects];
+                        
+                        // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.tableView reloadData];
+                        });
+                    }
+                    
+                    
+                }];
             }
         }];
     }
@@ -95,14 +106,26 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
-//    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    [cell setDelegate:self];
+    [cell.followButton setSelected:NO];
 
     PFUser *possibleFriend = [_friends objectAtIndex:indexPath.row];
-    
-    
     [cell setUser:possibleFriend];
     
+    cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
     
+    // Determine the follow status of the user
+    PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
+    [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
+    [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (cell.tag == indexPath.row) {
+            [cell.followButton setSelected:(!error && number > 0)];
+        }
+    }];
+
     return cell;
 }
 
@@ -112,6 +135,45 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+}
+
+#pragma mark - FriendsTableViewCellDelegate
+
+- (void)cell:(FriendTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
+{
+    
+    if ([cellView.followButton isSelected]) {
+        // Unfollow
+        NSLog(@"Attempt to unfollow %@",user.username);
+        [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
+        [SocialUtility unfollowUser:user];
+    }
+    else {
+        // Follow
+        NSLog(@"Attempt to follow %@",user.username);
+        [cellView.followButton setSelected:YES];
+        
+        [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                NSLog(@"Error: %@", error);
+            }
+            if (!succeeded) {
+                NSLog(@"Follow NOT success");
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
+                                                                message:@"Please try again"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil, nil];
+                
+                [cellView.followButton setSelected:NO];
+                [alert show];
+            }
+            else
+            {
+                NSLog(@"Follow Succeeded");
+            }
+        }];
+    }
 }
 
 

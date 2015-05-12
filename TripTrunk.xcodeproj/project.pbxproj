@@ -49,6 +49,7 @@
 		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
 		C9026A121AF9577800A617F0 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */; };
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
+		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
@@ -127,6 +128,8 @@
 		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C9026A111AF9577800A617F0 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
+		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
 		C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsernameViewController.m; sourceTree = "<group>"; };
 		C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFriendsViewController.h; sourceTree = "<group>"; };
@@ -272,6 +275,8 @@
 				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
+				C9C7299E1B0248D900BA68D2 /* SocialUtility.h */,
+				C9C7299F1B0248D900BA68D2 /* SocialUtility.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
@@ -441,6 +446,7 @@
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
+				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,

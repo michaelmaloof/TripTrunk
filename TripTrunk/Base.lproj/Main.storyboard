@@ -208,6 +208,7 @@
                                                     <state key="normal" title="Follow">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <state key="selected" title="Following"/>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="PGF-sb-eWe"/>
