@@ -203,16 +203,12 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-//        UIImage *image = info[UIImagePickerControllerOriginalImage];
-//        [self.photos addObject:image];
-//        [picker dismissViewControllerAnimated:YES completion:NULL];
-    
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     TripImageView *tripImageView = [[TripImageView alloc]init];
     tripImageView.image = image;
     [self.photos addObject:tripImageView];
+    NSLog(@"array %@", self.photos);
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    
 }
 
 
@@ -233,15 +229,25 @@
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.photos.count;
-    
 }
 
 
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"array cell %@", self.photos);
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
     cell.tripImageView.image = tripImageView.image;
+    cell.tripImageView = tripImageView;
+    cell.backgroundColor = [UIColor whiteColor];
+    
+    if(tripImageView.caption){
+        cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
+    }
+    
+    else{
+         cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
+    }
 
     
     return cell;
@@ -270,30 +276,44 @@
     cell.backgroundColor = [UIColor whiteColor];
     self.tripCollectionView.hidden = YES;
     self.selectedPhoto.image = cell.tripImageView.image;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
 }
 
-- (IBAction)onAddCaptionTapped:(id)sender {
+- (IBAction)onAddCaptionTapped:(id)sender
+{
     
     if (![self.caption.text isEqual: @""])
     {
-    self.selectedPhoto.hidden = YES;
-    self.tripCollectionView.hidden = NO;
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
-    cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
-    cell.tripImageView.caption = self.caption.text;
-    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
-    self.delete.hidden = YES;
-    self.plusPhoto.hidden = NO;
-    self.submitTrunk.hidden = NO;
-    self.cancelCaption.hidden = YES;
-    self.remove.hidden = YES;
-    self.caption.hidden = YES;
-    self.addCaption.hidden = YES;
-    self.path = nil;
-    self.caption.text = @"";
-    [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
-    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
+
+        TripImageView *tripImageView = [self.photos objectAtIndex:self.path.row];
+        tripImageView.caption = self.caption.text;
+        [self.photos replaceObjectAtIndex:self.path.row withObject:tripImageView];
+       
+//    
+//        NSLog(@"begin array");
+//            for (TripImageView *trip in self.photos)
+//            {
+//                NSLog(@"%@",trip.image);
+//            }
         
+        self.path = nil;
+        self.caption.text = nil;
+        
+        [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+   
+
+        self.selectedPhoto.hidden = YES;
+        self.tripCollectionView.hidden = NO;
+        self.delete.hidden = YES;
+        self.plusPhoto.hidden = NO;
+        self.submitTrunk.hidden = NO;
+        self.cancelCaption.hidden = YES;
+        self.remove.hidden = YES;
+        self.caption.hidden = YES;
+        self.addCaption.hidden = YES;
+        [self.tripCollectionView reloadData];
+        self.navigationItem.leftBarButtonItem.enabled = NO;
+
         
     }
     
@@ -307,6 +327,8 @@
         [alertView show];
     }
     
+
+    
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
@@ -318,12 +340,12 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     self.caption.text = @"";
-    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
+
 }
 
 - (IBAction)onRemoveTapped:(id)sender {
@@ -337,21 +359,22 @@
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
     cell.tripImageView.caption = nil;
+    self.caption.text = nil;
     [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
-    [self.photos addObject:cell.tripImageView.image];
-    cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
+
+    [self.tripCollectionView reloadData];
+
 
 }
 
 - (IBAction)onDeleteTapped:(id)sender {
     self.tripCollectionView.hidden = NO;
     self.selectedPhoto.hidden = YES;
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
-     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
-    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
+    [self.photos removeObjectAtIndex:self.path.row];
     self.path= nil;
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
@@ -360,7 +383,9 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
-    self.caption.text = @"";
+    self.caption.text = nil;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
+
     [self.tripCollectionView reloadData];
     
 }
