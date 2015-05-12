@@ -24,7 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property NSIndexPath *path;
-@property NSMutableArray *photosToDelete;
+@property NSMutableArray *photosCounter;
 //@property NSMutableArray *tripPhotos;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
@@ -49,7 +49,7 @@
     }
     
     self.photos = [[NSMutableArray alloc]init];
-    self.photosToDelete = [[NSMutableArray alloc]init];
+    self.photosCounter = [[NSMutableArray alloc]init];
 //    self.tripPhotos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -123,23 +123,21 @@
     
 
 //    for (TripImageView *tripImage in self.tripPhotos)
-        for (TripImageView *tripImage in self.photos)
+        for (TripImageView *tripImageView in self.photos)
     {
-        [self addImageData:UIImagePNGRepresentation(tripImage.image) string:tripImage.caption];
-        [self addToDeleteArray:tripImage];
+        [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
+        [self addToCounterArray:tripImageView];
     }
     
-//    for (UIImage *image in self.photos){
-//        [self addImageData:UIImagePNGRepresentation(image)  string:nil];
-//    }
-    
-//    if (self.tripPhotos.count == 0){
+    if (self.photosCounter.count == self.photos.count){
         [self dismissViewControllerAnimated:YES completion:nil];
+        self.photos = nil;
+        self.photosCounter = nil;
     }
 }
 
--(void)addToDeleteArray:(TripImageView*)trip{
-    [self.photosToDelete addObject:trip];
+-(void)addToCounterArray:(TripImageView*)trip{
+    [self.photosCounter addObject:trip];
 }
 
 - (void)addImageData:(NSData *)imageData string:(NSString*)caption
@@ -241,9 +239,11 @@
 
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.tripImageView = [self.photos objectAtIndex:indexPath.row];
+    TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
+    cell.tripImageView.image = tripImageView.image;
+
+    
     return cell;
     
 }
@@ -280,9 +280,8 @@
     self.tripCollectionView.hidden = NO;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
-    [self.photos removeObject:cell.tripImageView.image];
     cell.tripImageView.caption = self.caption.text;
-    [self.tripPhotos addObject:cell.tripImageView];
+    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
@@ -337,8 +336,8 @@
     self.addCaption.hidden = YES;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
     cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
-    cell.tripImageView.caption = @"";
-    [self.tripPhotos removeObject:cell.tripImageView];
+    cell.tripImageView.caption = nil;
+    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
     [self.photos addObject:cell.tripImageView.image];
     cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
     self.path= nil;
@@ -352,8 +351,7 @@
     self.selectedPhoto.hidden = YES;
     PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
      cell.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:98.0/255.0 alpha:1.0];
-    [self.tripPhotos removeObject:cell.tripImageView];
-    [self.photos removeObject:cell.tripImageView.image];
+    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
     self.path= nil;
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
