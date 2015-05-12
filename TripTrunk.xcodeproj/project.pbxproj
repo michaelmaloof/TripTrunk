@@ -586,13 +586,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/MichaelMaloof/Documents/Development,
-					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.6.2",
-					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.7.1",
-					/Users/MichaelMaloof/Documents/Development/FacebookSDK,
 					"$(PROJECT_DIR)",
-					/Users/MichaelMaloof/Documents/Development/Frameworks,
-					/Users/MichaelMaloof/Documents/FacebookSDK,
 					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
@@ -609,13 +603,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/MichaelMaloof/Documents/Development,
-					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.6.2",
-					"/Users/MichaelMaloof/Documents/Development/Frameworks/parse-library-1.7.1",
-					/Users/MichaelMaloof/Documents/Development/FacebookSDK,
 					"$(PROJECT_DIR)",
-					/Users/MichaelMaloof/Documents/Development/Frameworks,
-					/Users/MichaelMaloof/Documents/FacebookSDK,
 					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
