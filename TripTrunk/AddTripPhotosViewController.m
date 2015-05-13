@@ -23,9 +23,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
 @property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
-@property NSIndexPath *path;
+@property NSInteger path;
 @property NSMutableArray *photosCounter;
-//@property NSMutableArray *tripPhotos;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
@@ -50,7 +49,6 @@
     
     self.photos = [[NSMutableArray alloc]init];
     self.photosCounter = [[NSMutableArray alloc]init];
-//    self.tripPhotos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
@@ -75,12 +73,11 @@
     
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    self.tripCollectionView.hidden = NO;
-    self.plusPhoto.hidden = NO;
-    self.submitTrunk.hidden = NO;
-    [self.tripCollectionView reloadData];
-}
+//-(void)viewDidAppear:(BOOL)animated{
+//    self.tripCollectionView.hidden = NO;
+//    self.plusPhoto.hidden = NO;
+//    self.submitTrunk.hidden = NO;
+//}
 
 - (IBAction)onDoneTapped:(id)sender {
     
@@ -206,8 +203,10 @@
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     TripImageView *tripImageView = [[TripImageView alloc]init];
     tripImageView.image = image;
+    NSLog(@"view check one %@", tripImageView);
+    NSLog(@"image check one = %@", tripImageView.image);
     [self.photos addObject:tripImageView];
-    NSLog(@"array %@", self.photos);
+    [self.tripCollectionView reloadData];
     [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -234,9 +233,10 @@
 
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"array cell %@", self.photos);
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
+    NSLog(@"view check two %@", tripImageView);
+    NSLog(@"image check two = %@", tripImageView.image);
     cell.tripImageView.image = tripImageView.image;
     cell.tripImageView = tripImageView;
     cell.backgroundColor = [UIColor whiteColor];
@@ -255,13 +255,14 @@
 }
 
 
-//didSelect
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    self.path = indexPath;
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
+    self.path = indexPath.row;
+    TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
+    NSLog(@"view check three %@", tripImageView);
+    NSLog(@"image check three = %@", tripImageView.image);
     
-    if (cell.tripImageView.caption) {
-        self.caption.text = cell.tripImageView.caption;
+    if (tripImageView.caption) {
+        self.caption.text = tripImageView.caption;
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
@@ -273,10 +274,9 @@
     self.submitTrunk.hidden = YES;
     self.delete.hidden = NO;
     self.selectedPhoto.hidden = NO;
-    cell.backgroundColor = [UIColor whiteColor];
     self.tripCollectionView.hidden = YES;
-    self.selectedPhoto.image = cell.tripImageView.image;
-    self.navigationItem.leftBarButtonItem.enabled = NO;
+    self.selectedPhoto.image = tripImageView.image;
+//    self.navigationItem.leftBarButtonItem.enabled = NO;
 }
 
 - (IBAction)onAddCaptionTapped:(id)sender
@@ -285,18 +285,10 @@
     if (![self.caption.text isEqual: @""])
     {
 
-        TripImageView *tripImageView = [self.photos objectAtIndex:self.path.row];
+        TripImageView *tripImageView = [self.photos objectAtIndex:self.path];
         tripImageView.caption = self.caption.text;
-        [self.photos replaceObjectAtIndex:self.path.row withObject:tripImageView];
+        [self.photos replaceObjectAtIndex:self.path withObject:tripImageView];
        
-//    
-//        NSLog(@"begin array");
-//            for (TripImageView *trip in self.photos)
-//            {
-//                NSLog(@"%@",trip.image);
-//            }
-        
-        self.path = nil;
         self.caption.text = nil;
         
         [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
@@ -312,9 +304,7 @@
         self.caption.hidden = YES;
         self.addCaption.hidden = YES;
         [self.tripCollectionView reloadData];
-        self.navigationItem.leftBarButtonItem.enabled = NO;
-
-        
+//        self.navigationItem.leftBarButtonItem.enabled = NO;
     }
     
     else
@@ -341,10 +331,10 @@
     self.addCaption.hidden = YES;
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
     self.caption.text = @"";
-    self.path= nil;
+//    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-    self.navigationItem.leftBarButtonItem.enabled = NO;
+//    self.navigationItem.leftBarButtonItem.enabled = NO;
 
 }
 
@@ -356,15 +346,15 @@
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
-    PhotoCollectionViewCell *cell = (PhotoCollectionViewCell*)[self.tripCollectionView cellForItemAtIndexPath:self.path];
-    cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
-    cell.tripImageView.caption = nil;
+    TripImageView *tripImageView = [self.photos objectAtIndex:self.path];
+//    cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
+//    cell.tripImageView.caption = nil;
     self.caption.text = nil;
-    [self.photos replaceObjectAtIndex:self.path.row withObject:cell.tripImageView];
-    self.path= nil;
+    [self.photos replaceObjectAtIndex:self.path withObject:tripImageView];
+//    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-    self.navigationItem.leftBarButtonItem.enabled = NO;
+//    self.navigationItem.leftBarButtonItem.enabled = NO;
 
     [self.tripCollectionView reloadData];
 
@@ -374,8 +364,8 @@
 - (IBAction)onDeleteTapped:(id)sender {
     self.tripCollectionView.hidden = NO;
     self.selectedPhoto.hidden = YES;
-    [self.photos removeObjectAtIndex:self.path.row];
-    self.path= nil;
+    [self.photos removeObjectAtIndex:self.path];
+//    self.path= nil;
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
@@ -384,7 +374,7 @@
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.caption.text = nil;
-    self.navigationItem.leftBarButtonItem.enabled = NO;
+//    self.navigationItem.leftBarButtonItem.enabled = NO;
 
     [self.tripCollectionView reloadData];
     
