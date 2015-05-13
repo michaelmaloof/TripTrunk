@@ -47,6 +47,7 @@
         self.title = @"Photos From Trip";
     }
     
+    self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.photosCounter = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
@@ -200,14 +201,12 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
     TripImageView *tripImageView = [[TripImageView alloc]init];
-    tripImageView.image = image;
-    NSLog(@"view check one %@", tripImageView);
-    NSLog(@"image check one = %@", tripImageView.image);
+    tripImageView.image = info[UIImagePickerControllerOriginalImage];
     [self.photos addObject:tripImageView];
-    [self.tripCollectionView reloadData];
     [picker dismissViewControllerAnimated:YES completion:NULL];
+    [self.tripCollectionView reloadData];
+
 }
 
 
@@ -235,8 +234,6 @@
 {
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
-    NSLog(@"view check two %@", tripImageView);
-    NSLog(@"image check two = %@", tripImageView.image);
     cell.tripImageView.image = tripImageView.image;
     cell.tripImageView = tripImageView;
     cell.backgroundColor = [UIColor whiteColor];
@@ -255,11 +252,10 @@
 }
 
 
+
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     self.path = indexPath.row;
     TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
-    NSLog(@"view check three %@", tripImageView);
-    NSLog(@"image check three = %@", tripImageView.image);
     
     if (tripImageView.caption) {
         self.caption.text = tripImageView.caption;
@@ -278,6 +274,9 @@
     self.selectedPhoto.image = tripImageView.image;
 //    self.navigationItem.leftBarButtonItem.enabled = NO;
 }
+
+
+#pragma Editing/Adding Caption to Photo
 
 - (IBAction)onAddCaptionTapped:(id)sender
 {
