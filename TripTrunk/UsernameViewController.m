@@ -70,7 +70,20 @@
     NSString *username = _usernameTextField.text;
     if (username || ![username isEqualToString:@""]) {
         _user.username = username;
-        [_user saveInBackground];
+        NSError *error;
+        [_user save:&error];
+        
+        if (error) {
+            NSLog(@"Error: %@",error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Username Taken, please try another"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay"
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            return NO;
+        }
+        
         NSLog(@"Username Saved");
         return YES;
     }
