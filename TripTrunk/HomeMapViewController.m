@@ -137,6 +137,21 @@
     }];
 }
 
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    CLLocationCoordinate2D center = view.annotation.coordinate;
+    
+    MKCoordinateSpan span;
+    span.longitudeDelta = 10.0;
+    span.latitudeDelta = 10.0;
+    
+    MKCoordinateRegion region;
+    region.center = center;
+    region.span = span;
+    
+    [self.mapView setRegion:region animated:YES];}
+
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
@@ -146,6 +161,8 @@
     startAnnotation.rightCalloutAccessoryView.tag = 0;
     startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.leftCalloutAccessoryView.tag = 1;
+    startAnnotation.rightCalloutAccessoryView.hidden = YES;
+    startAnnotation.leftCalloutAccessoryView.hidden = YES;
     [self.locations addObject:startAnnotation];
     
     return startAnnotation;
@@ -160,27 +177,10 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    if (control.tag == 0)
-    {
-    CLLocationCoordinate2D center = view.annotation.coordinate;
-    
-    MKCoordinateSpan span;
-    span.longitudeDelta = 10.0;
-    span.latitudeDelta = 10.0;
-    
-    MKCoordinateRegion region;
-    region.center = center;
-    region.span = span;
-    
-    [self.mapView setRegion:region animated:YES];
-    }
-    
-    else if (control.tag == 1)
-    {
-        self.pinCityName = view.annotation.title;
-        [self performSegueWithIdentifier:@"Trunk" sender:self];
-        self.pinCityName = nil;
-    }
+    self.pinCityName = view.annotation.title;
+    [self performSegueWithIdentifier:@"Trunk" sender:self];
+    self.pinCityName = nil;
+
 }
 
 
