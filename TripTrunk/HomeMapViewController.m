@@ -118,14 +118,26 @@
 {
     //FIXEM needs to be address not city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    __block NSString *countString = [[NSString alloc]init];
     [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
-        annotation.title = trip.city;
         
+        NSInteger count = 0;
+        for (Trip *tripCount in self.parseLocations) {
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", tripCount.city, tripCount.state, tripCount.country];
+            if ([address isEqualToString:string]){
+                count = count +1;
+            }
+        
+        countString = [NSString stringWithFormat:@"%ld",(long)count];
+        }
+        
+        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString ];
+
         [self.mapView addAnnotation:annotation];
         
         
@@ -163,7 +175,10 @@
     startAnnotation.leftCalloutAccessoryView.tag = 1;
     startAnnotation.rightCalloutAccessoryView.hidden = YES;
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
+    
     [self.locations addObject:startAnnotation];
+    
+    
     
     return startAnnotation;
 }
