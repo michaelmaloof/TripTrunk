@@ -199,6 +199,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="71" y="12" width="161" height="21"/>
+                                                    </variation>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aIf-Vm-BNO">
                                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
@@ -214,7 +217,8 @@
                                                             <exclude reference="PGF-sb-eWe"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="240" y="13" width="72" height="40"/>
                                                         <mask key="constraints">
                                                             <include reference="PGF-sb-eWe"/>
                                                         </mask>
@@ -228,6 +232,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="71" y="36" width="161" height="21"/>
+                                                    </variation>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hi5-wp-BFG">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -277,9 +284,6 @@
                                                     <exclude reference="hi5-wp-BFG"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <exclude reference="OXH-jA-kZH"/>
-                                                    <exclude reference="aWt-2Y-CCC"/>
-                                                    <exclude reference="b9t-E2-C2T"/>
                                                     <exclude reference="1W1-0l-50M"/>
                                                     <exclude reference="GGx-zF-XFt"/>
                                                     <exclude reference="cO4-El-gSK"/>
@@ -292,6 +296,9 @@
                                                     <exclude reference="N6V-1R-qTQ"/>
                                                     <exclude reference="qGS-O3-frS"/>
                                                     <exclude reference="xEt-Mc-NKs"/>
+                                                    <exclude reference="OXH-jA-kZH"/>
+                                                    <exclude reference="aWt-2Y-CCC"/>
+                                                    <exclude reference="b9t-E2-C2T"/>
                                                 </mask>
                                             </variation>
                                             <variation key="heightClass=regular-widthClass=compact">
@@ -302,9 +309,6 @@
                                                     <include reference="hi5-wp-BFG"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <include reference="OXH-jA-kZH"/>
-                                                    <include reference="aWt-2Y-CCC"/>
-                                                    <include reference="b9t-E2-C2T"/>
                                                     <include reference="1W1-0l-50M"/>
                                                     <include reference="GGx-zF-XFt"/>
                                                     <include reference="cO4-El-gSK"/>
@@ -317,6 +321,9 @@
                                                     <include reference="N6V-1R-qTQ"/>
                                                     <include reference="qGS-O3-frS"/>
                                                     <include reference="xEt-Mc-NKs"/>
+                                                    <include reference="OXH-jA-kZH"/>
+                                                    <include reference="aWt-2Y-CCC"/>
+                                                    <include reference="b9t-E2-C2T"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -356,9 +363,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="WLK-7E-sC9" secondAttribute="bottom" id="0XZ-AT-srk"/>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="leading" secondItem="yMT-H1-uif" secondAttribute="leadingMargin" constant="-16" id="74z-KY-PYZ"/>
                             <constraint firstAttribute="centerX" secondItem="WLK-7E-sC9" secondAttribute="centerX" id="Evo-1x-ahA"/>
                             <constraint firstItem="vJX-bv-3UH" firstAttribute="top" secondItem="ihi-4p-KHr" secondAttribute="bottom" id="Ifv-vQ-StM"/>
+                            <constraint firstItem="WLK-7E-sC9" firstAttribute="top" secondItem="GFu-OD-PGf" secondAttribute="bottom" id="XEL-Ex-xPO"/>
+                            <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="WLK-7E-sC9" secondAttribute="bottom" constant="-44" id="a7H-4C-gyw"/>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="width" secondItem="WLK-7E-sC9" secondAttribute="width" id="jJ3-4C-ilh"/>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="WLK-7E-sC9" secondAttribute="top" id="jgq-Qz-FMW"/>
                             <constraint firstItem="ihi-4p-KHr" firstAttribute="top" secondItem="GFu-OD-PGf" secondAttribute="bottom" constant="-64" id="mbH-0W-HKy">
@@ -373,7 +383,10 @@
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="Evo-1x-ahA"/>
+                                <exclude reference="XEL-Ex-xPO"/>
+                                <exclude reference="0XZ-AT-srk"/>
                                 <exclude reference="74z-KY-PYZ"/>
+                                <exclude reference="a7H-4C-gyw"/>
                                 <exclude reference="jJ3-4C-ilh"/>
                                 <exclude reference="jgq-Qz-FMW"/>
                                 <exclude reference="mbH-0W-HKy"/>
@@ -388,10 +401,13 @@
                             </mask>
                             <mask key="constraints">
                                 <include reference="Evo-1x-ahA"/>
+                                <include reference="XEL-Ex-xPO"/>
+                                <include reference="0XZ-AT-srk"/>
                                 <include reference="74z-KY-PYZ"/>
+                                <exclude reference="a7H-4C-gyw"/>
                                 <include reference="jJ3-4C-ilh"/>
-                                <include reference="jgq-Qz-FMW"/>
-                                <include reference="mbH-0W-HKy"/>
+                                <exclude reference="jgq-Qz-FMW"/>
+                                <exclude reference="mbH-0W-HKy"/>
                                 <include reference="wXd-YH-Kjj"/>
                                 <include reference="Ifv-vQ-StM"/>
                             </mask>

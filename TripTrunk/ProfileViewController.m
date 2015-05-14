@@ -10,6 +10,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Parse/Parse.h>
 
+#import "FriendsListViewController.h"
+
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
 
@@ -29,6 +31,9 @@
 }
 - (IBAction)followersButtonPressed:(id)sender {
     NSLog(@"Followers Button Pressed");
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithFollowingStatus:NO];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 - (IBAction)findFriendsButtonPressed:(id)sender {
     NSLog(@"Find Friends Button Pressed");
@@ -36,6 +41,10 @@
 }
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
+    
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithFollowingStatus:YES];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 
 }
 - (IBAction)logOutButtonPressed:(id)sender {

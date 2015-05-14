@@ -10,10 +10,11 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
+#import "UIImageView+AFNetworking.h"
 #import "FriendTableViewCell.h"
 #import "SocialUtility.h"
 
-@interface FindFriendsViewController() <UISearchDisplayDelegate, UISearchBarDelegate>
+@interface FindFriendsViewController() <UISearchControllerDelegate, UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController *searchController;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -35,10 +36,7 @@
 
     [self getFacebookFriendList];
     _friends = [[NSMutableArray alloc] init];
-    
-    CGPoint offset = CGPointMake(0, self.searchBar.frame.size.height);
-    self.tableView.contentOffset = offset;
-    
+
     self.searchResults = [NSMutableArray array];
 }
 
@@ -87,7 +85,6 @@
     else {
         NSLog(@"No Facebook Access Token");
     }
-
 }
 
 - (void)filterResults:(NSString *)searchTerm {
@@ -105,13 +102,21 @@
     [self.searchResults addObjectsFromArray:results];
 }
 
+#pragma mark - UISearchDisplayControllerDelegate
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+// TODO: change to UISearchController - we're using a deprecated method
+
+- (BOOL)searchDisplayController:(UISearchController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     [self filterResults:searchString];
     return YES;
 }
 
+- (void)searchDisplayController:(UISearchDisplayController *)controller
+ willHideSearchResultsTableView:(UITableView *)tableView
+{
+    [self.tableView reloadData];
 
+}
 
 
 #pragma mark - UITableViewDataSource
@@ -125,10 +130,16 @@
 }
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
-            return @"Facebook Friends on TripTrunk";
-            break;
+
+    // Search Controller and the regular table view have different data sources
+    if (tableView == self.tableView) {
+        switch (section) {
+            case 0:
+                return @"Facebook Friends on TripTrunk";
+                break;
+        }
+    } else {
+        return @"TripTrunk Users";
     }
     
     return @"";
@@ -176,6 +187,21 @@
         }
     }];
 
+    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    NSURL *picUrl = [NSURL URLWithString:possibleFriend[@"profilePicUrl"]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+    __weak FriendTableViewCell *weakCell = cell;
+    
+    [cell.userImageView setImageWithURLRequest:request
+                                    placeholderImage:nil
+                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                 
+                                                 [weakCell.userImageView setImage:image];
+                                                 [weakCell setNeedsLayout];
+                                                 
+                                             } failure:nil];
+    return weakCell;
+    
     return cell;
 }
 

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="UserTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
+                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
+                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="nm6-qI-Iog" secondAttribute="height" multiplier="7:5" id="a29-2Q-lvC"/>
+                        </constraints>
+                        <state key="normal" title="Follow">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="selected" title="Following"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="a29-2Q-lvC"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="a29-2Q-lvC"/>
+                            </mask>
+                        </variation>
+                        <connections>
+                            <action selector="followButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="j2m-e5-Vpl"/>
+                        </connections>
+                    </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5Rf-mU-r4e">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="5Rf-mU-r4e" secondAttribute="height" multiplier="1:1" id="O6w-x4-tl9"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="O6w-x4-tl9"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="O6w-x4-tl9"/>
+                            </mask>
+                        </variation>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XkG-SG-iF1">
+                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="zPO-bb-qRg" firstAttribute="leading" secondItem="5Rf-mU-r4e" secondAttribute="trailing" constant="14" id="4ly-8f-IHk"/>
+                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="6hg-eS-qAF"/>
+                    <constraint firstItem="zPO-bb-qRg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="7k8-dG-Tpl"/>
+                    <constraint firstItem="XkG-SG-iF1" firstAttribute="leading" secondItem="5Rf-mU-r4e" secondAttribute="trailing" constant="14" id="OOD-33-erR"/>
+                    <constraint firstItem="XkG-SG-iF1" firstAttribute="top" secondItem="zPO-bb-qRg" secondAttribute="bottom" constant="8" id="Oq9-fU-fFj"/>
+                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="RTU-ZH-N9G"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="5Rf-mU-r4e" secondAttribute="bottom" constant="-9" id="XR3-b9-LGl"/>
+                    <constraint firstItem="nm6-qI-Iog" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="c4J-Pd-TFM"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="nm6-qI-Iog" secondAttribute="trailing" constant="-1" id="c6M-an-RIT"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="nm6-qI-Iog" secondAttribute="bottom" constant="-1" id="kdk-au-pdd"/>
+                    <constraint firstItem="XkG-SG-iF1" firstAttribute="width" secondItem="zPO-bb-qRg" secondAttribute="width" id="l0K-Y5-xJ0"/>
+                    <constraint firstItem="nm6-qI-Iog" firstAttribute="leading" secondItem="zPO-bb-qRg" secondAttribute="trailing" constant="8" id="n4L-ml-bSC"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="subviews">
+                        <exclude reference="zPO-bb-qRg"/>
+                        <exclude reference="nm6-qI-Iog"/>
+                        <exclude reference="5Rf-mU-r4e"/>
+                        <exclude reference="XkG-SG-iF1"/>
+                    </mask>
+                    <mask key="constraints">
+                        <exclude reference="6hg-eS-qAF"/>
+                        <exclude reference="RTU-ZH-N9G"/>
+                        <exclude reference="XR3-b9-LGl"/>
+                        <exclude reference="4ly-8f-IHk"/>
+                        <exclude reference="7k8-dG-Tpl"/>
+                        <exclude reference="OOD-33-erR"/>
+                        <exclude reference="Oq9-fU-fFj"/>
+                        <exclude reference="l0K-Y5-xJ0"/>
+                        <exclude reference="c4J-Pd-TFM"/>
+                        <exclude reference="c6M-an-RIT"/>
+                        <exclude reference="kdk-au-pdd"/>
+                        <exclude reference="n4L-ml-bSC"/>
+                    </mask>
+                </variation>
+                <variation key="heightClass=regular-widthClass=compact">
+                    <mask key="subviews">
+                        <include reference="zPO-bb-qRg"/>
+                        <include reference="nm6-qI-Iog"/>
+                        <include reference="5Rf-mU-r4e"/>
+                        <include reference="XkG-SG-iF1"/>
+                    </mask>
+                    <mask key="constraints">
+                        <include reference="6hg-eS-qAF"/>
+                        <include reference="RTU-ZH-N9G"/>
+                        <include reference="XR3-b9-LGl"/>
+                        <include reference="4ly-8f-IHk"/>
+                        <include reference="7k8-dG-Tpl"/>
+                        <include reference="OOD-33-erR"/>
+                        <include reference="Oq9-fU-fFj"/>
+                        <include reference="l0K-Y5-xJ0"/>
+                        <include reference="c4J-Pd-TFM"/>
+                        <include reference="c6M-an-RIT"/>
+                        <include reference="kdk-au-pdd"/>
+                        <include reference="n4L-ml-bSC"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="followButton" destination="nm6-qI-Iog" id="JLJ-Yh-wfU"/>
+                <outlet property="nameLabel" destination="zPO-bb-qRg" id="qC1-vR-5iO"/>
+                <outlet property="profilePicImageView" destination="5Rf-mU-r4e" id="Wem-0e-H1h"/>
+                <outlet property="usernameLabel" destination="XkG-SG-iF1" id="ZUO-2G-f0C"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>
