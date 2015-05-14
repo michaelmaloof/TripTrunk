@@ -63,6 +63,8 @@
 		C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0A1B04FC2200CABBC9 /* AFURLRequestSerialization.m */; };
 		C90C3D161B04FC2200CABBC9 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0C1B04FC2200CABBC9 /* AFURLResponseSerialization.m */; };
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
+		C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */; };
+		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
@@ -148,8 +150,8 @@
 		C90C3CF31B04F45500CABBC9 /* UserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTableViewCell.h; sourceTree = "<group>"; };
 		C90C3CF41B04F45500CABBC9 /* UserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTableViewCell.m; sourceTree = "<group>"; };
 		C90C3CF51B04F45500CABBC9 /* UserTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserTableViewCell.xib; sourceTree = "<group>"; };
-		C90C3CF81B04F9C400CABBC9 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
-		C90C3CF91B04F9C400CABBC9 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		C90C3CF81B04F9C400CABBC9 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+AFNetworking.h"; path = "../UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		C90C3CF91B04F9C400CABBC9 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+AFNetworking.m"; path = "../UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		C90C3CFC1B04FC2200CABBC9 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		C90C3CFD1B04FC2200CABBC9 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		C90C3CFE1B04FC2200CABBC9 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -169,6 +171,9 @@
 		C90C3D0C1B04FC2200CABBC9 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		C90C3D0D1B04FC2200CABBC9 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
+		C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
+		C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
@@ -249,6 +254,9 @@
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
 				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
+				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
+				C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */,
+				C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */,
 				C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */,
 				C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */,
 				C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */,
@@ -327,8 +335,6 @@
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
 				C90C3CFB1B04FC2200CABBC9 /* AFNetworking */,
-				C90C3CF81B04F9C400CABBC9 /* UIImageView+AFNetworking.h */,
-				C90C3CF91B04F9C400CABBC9 /* UIImageView+AFNetworking.m */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
 				224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */,
 				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
@@ -395,6 +401,8 @@
 		C90C3CFB1B04FC2200CABBC9 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				C90C3CF81B04F9C400CABBC9 /* UIImageView+AFNetworking.h */,
+				C90C3CF91B04F9C400CABBC9 /* UIImageView+AFNetworking.m */,
 				C90C3CFC1B04FC2200CABBC9 /* AFHTTPRequestOperation.h */,
 				C90C3CFD1B04FC2200CABBC9 /* AFHTTPRequestOperation.m */,
 				C90C3CFE1B04FC2200CABBC9 /* AFHTTPRequestOperationManager.h */,
@@ -498,6 +506,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
@@ -521,6 +530,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */,
+				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,

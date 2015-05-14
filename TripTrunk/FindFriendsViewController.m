@@ -91,9 +91,16 @@
     
     [self.searchResults removeAllObjects];
     
-    PFQuery *query = [PFUser query];
-    [query whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
-    [query whereKey:@"username" containsString:searchTerm];
+    PFQuery *usernameQuery = [PFUser query];
+    [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
+    [usernameQuery whereKey:@"username" containsString:searchTerm];
+    
+    PFQuery *nameQuery = [PFUser query];
+    [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
+    [nameQuery whereKey:@"name" containsString:searchTerm];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
+    
     
     NSArray *results  = [query findObjects];
     

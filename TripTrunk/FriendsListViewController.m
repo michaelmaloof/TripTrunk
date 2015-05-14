@@ -13,6 +13,7 @@
 
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
+#import "UserProfileViewController.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -20,17 +21,19 @@
 
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
+@property (strong, nonatomic) PFUser *thisUser;
 
 @end
 
 @implementation FriendsListViewController
 
-- (id)initWithFollowingStatus:(BOOL)isFollowing
+- (id)initWithUser:(PFUser *)user andFollowingStatus:(BOOL)isFollowing
 {
     self = [super initWithNibName:@"FriendsListViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _friends = [[NSMutableArray alloc] init];
         _isFollowing = isFollowing;
+        _thisUser = user;
     }
     return self;
 }
@@ -60,7 +63,7 @@
     
     // Query all user's that
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"toUser"];
@@ -94,7 +97,7 @@
     
     // Query all user's that
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"toUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"fromUser"];
@@ -190,6 +193,13 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    PFUser *user = [_friends objectAtIndex:indexPath.row];
+    
+    if (user) {
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 
 }
 

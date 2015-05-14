@@ -1,28 +1,49 @@
 //
-//  ProfileViewController.m
+//  UserProfileViewController.m
 //  TripTrunk
 //
-//  Created by Matt Schoch on 5/5/15.
+//  Created by Matt Schoch on 5/14/15.
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import "ProfileViewController.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "UserProfileViewController.h"
 #import <Parse/Parse.h>
 
 #import "FriendsListViewController.h"
 
-@interface ProfileViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
+@interface UserProfileViewController ()
 
+@property (strong, nonatomic) IBOutlet UILabel *nameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
+@property (strong, nonatomic) PFUser *user;
 @end
 
-@implementation ProfileViewController
+@implementation UserProfileViewController
+
+- (id)initWithUser:(PFUser *)user
+{
+    self = [super initWithNibName:@"ProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    if (self) {
+        _user = user;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSURL *pictureURL = [NSURL URLWithString:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
+    
+    [self.nameLabel setText:_user[@"name"]];
+    [self.usernameLabel setText:_user[@"username"]];
+    
+    NSURL *pictureURL = [NSURL URLWithString:[_user valueForKey:@"profilePicUrl"]];
     [self setProfilePic:pictureURL];
+    
+    // Disable the find friends button and hide the logout button
+    // These buttons still exist in case we want to just use this one viewcontroller for MY profile or a FRIEND profile
+    [self.findFriendsButton setEnabled:NO];
+    [self.findFriendsButton setTitle:@"" forState:UIControlStateNormal];
+    [self.logoutButton setHidden:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,20 +52,19 @@
 }
 - (IBAction)followersButtonPressed:(id)sender {
     NSLog(@"Followers Button Pressed");
-    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:NO];
-    
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
     [self.navigationController pushViewController:vc animated:YES];
 }
 - (IBAction)findFriendsButtonPressed:(id)sender {
     NSLog(@"Find Friends Button Pressed");
-
+    
 }
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
     
-    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:YES];
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
     [self.navigationController pushViewController:vc animated:YES];
-
+    
 }
 - (IBAction)logOutButtonPressed:(id)sender {
     NSLog(@"Logout Button Pressed");
@@ -58,7 +78,7 @@
 
 - (void)setProfilePic:(NSURL *)pictureURL {
     // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
-
+    
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
     
     
@@ -78,14 +98,5 @@
      }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

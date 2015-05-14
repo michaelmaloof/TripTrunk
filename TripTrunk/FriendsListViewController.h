@@ -11,6 +11,6 @@
 #import <ParseUI/ParseUI.h>
 
 @interface FriendsListViewController : UITableViewController
-- (id)initWithFollowingStatus:(BOOL)isFollowing;
+- (id)initWithUser:(PFUser *)user andFollowingStatus:(BOOL)isFollowing;
 
 @end
