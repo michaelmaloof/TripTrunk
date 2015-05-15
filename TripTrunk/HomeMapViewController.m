@@ -22,6 +22,7 @@
 @property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
 @property NSInteger originalCount;
+@property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 
 @end
 
@@ -30,6 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
+    self.zoomOut.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
 
@@ -85,6 +87,11 @@
         }];
 }
 
+- (IBAction)zoomOut:(id)sender {
+    [self fitPins];
+    self.zoomOut.hidden = YES;
+}
+
 -(void)placeTrips
 {
     NSInteger count = 0;
@@ -136,7 +143,8 @@
         countString = [NSString stringWithFormat:@"%ld",(long)count];
         }
         
-        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString ];
+//        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString]; ADD LATER
+        annotation.title = trip.city;
 
         [self.mapView addAnnotation:annotation];
         
@@ -160,6 +168,8 @@
     MKCoordinateRegion region;
     region.center = center;
     region.span = span;
+    self.zoomOut.hidden = NO;
+
     
     [self.mapView setRegion:region animated:YES];}
 
