@@ -10,7 +10,7 @@
 #import "TripImageView.h"
 
 @interface PhotoCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet TripImageView *tripImage;
-@property (weak, nonatomic) IBOutlet UIImageView *captionImage;
+@property (weak, nonatomic) IBOutlet TripImageView *tripImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *captionImageView;
 
 @end

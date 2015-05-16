@@ -22,6 +22,7 @@
 @property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
 @property NSInteger originalCount;
+@property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 
 @end
 
@@ -30,6 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
+    self.zoomOut.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
 
@@ -85,6 +87,11 @@
         }];
 }
 
+- (IBAction)zoomOut:(id)sender {
+    [self fitPins];
+    self.zoomOut.hidden = YES;
+}
+
 -(void)placeTrips
 {
     NSInteger count = 0;
@@ -118,14 +125,27 @@
 {
     //FIXEM needs to be address not city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    __block NSString *countString = [[NSString alloc]init];
     [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
-        annotation.title = trip.city;
         
+        NSInteger count = 0;
+        for (Trip *tripCount in self.parseLocations) {
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", tripCount.city, tripCount.state, tripCount.country];
+            if ([address isEqualToString:string]){
+                count = count +1;
+            }
+        
+        countString = [NSString stringWithFormat:@"%ld",(long)count];
+        }
+        
+//        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString]; ADD LATER
+        annotation.title = trip.city;
+
         [self.mapView addAnnotation:annotation];
         
         
@@ -137,6 +157,23 @@
     }];
 }
 
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    CLLocationCoordinate2D center = view.annotation.coordinate;
+    
+    MKCoordinateSpan span;
+    span.longitudeDelta = 10.0;
+    span.latitudeDelta = 10.0;
+    
+    MKCoordinateRegion region;
+    region.center = center;
+    region.span = span;
+    self.zoomOut.hidden = NO;
+
+    
+    [self.mapView setRegion:region animated:YES];}
+
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
@@ -146,7 +183,12 @@
     startAnnotation.rightCalloutAccessoryView.tag = 0;
     startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.leftCalloutAccessoryView.tag = 1;
+    startAnnotation.rightCalloutAccessoryView.hidden = YES;
+    startAnnotation.leftCalloutAccessoryView.hidden = YES;
+    
     [self.locations addObject:startAnnotation];
+    
+    
     
     return startAnnotation;
 }
@@ -160,27 +202,10 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    if (control.tag == 0)
-    {
-    CLLocationCoordinate2D center = view.annotation.coordinate;
-    
-    MKCoordinateSpan span;
-    span.longitudeDelta = 10.0;
-    span.latitudeDelta = 10.0;
-    
-    MKCoordinateRegion region;
-    region.center = center;
-    region.span = span;
-    
-    [self.mapView setRegion:region animated:YES];
-    }
-    
-    else if (control.tag == 1)
-    {
-        self.pinCityName = view.annotation.title;
-        [self performSegueWithIdentifier:@"Trunk" sender:self];
-        self.pinCityName = nil;
-    }
+    self.pinCityName = view.annotation.title;
+    [self performSegueWithIdentifier:@"Trunk" sender:self];
+    self.pinCityName = nil;
+
 }
 
 
