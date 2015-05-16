@@ -10,6 +10,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Parse/Parse.h>
 
+#import "FriendsListViewController.h"
+
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
 
@@ -19,7 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self _loadData];
+    NSURL *pictureURL = [NSURL URLWithString:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
+    [self setProfilePic:pictureURL];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -28,6 +31,9 @@
 }
 - (IBAction)followersButtonPressed:(id)sender {
     NSLog(@"Followers Button Pressed");
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:NO];
+    
+    [self.navigationController pushViewController:vc animated:YES];
 }
 - (IBAction)findFriendsButtonPressed:(id)sender {
     NSLog(@"Find Friends Button Pressed");
@@ -35,6 +41,9 @@
 }
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
+    
+    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:YES];
+    [self.navigationController pushViewController:vc animated:YES];
 
 }
 - (IBAction)logOutButtonPressed:(id)sender {
@@ -45,23 +54,6 @@
     [self.navigationController popViewControllerAnimated:YES];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
-}
-
-- (void)_loadData {
-    // ...
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        if (!error) {
-            // result is a dictionary with the user's Facebook data
-            NSDictionary *userData = (NSDictionary *)result;
-            
-            NSString *facebookID = userData[@"id"];
-            NSString *name = userData[@"name"];
-            
-            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID]];
-            [self setProfilePic:pictureURL];
-        }
-    }];
 }
 
 - (void)setProfilePic:(NSURL *)pictureURL {
