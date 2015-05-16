@@ -26,25 +26,7 @@
 }
 
 - (IBAction)onLoginTapped:(id)sender {
-    PFUser *user = [PFUser user];
-    user.username = @"mattschoch";
-    user.password = @"mattspassword";
-    user.email = @"mattschoch@gmail.com";
-    
-    // other fields can be set if you want to save more information
-    user[@"phone"] = @"513-673-3114";
-    
-//    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if (!error) {
-//            [self dismissViewControllerAnimated:YES completion:^{
-//                
-//            }];
-//            
-//        } else {
-//            NSString *errorString = [error userInfo][@"error"];
-//            NSLog(@"%@",errorString);
-//        }
-//    }];
+
     [self _loginWithFacebook];
 
 }
