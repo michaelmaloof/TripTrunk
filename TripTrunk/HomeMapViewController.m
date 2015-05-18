@@ -24,6 +24,7 @@
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 
+
 @end
 
 @implementation HomeMapViewController
@@ -31,7 +32,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
-    self.zoomOut.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
 
@@ -89,7 +89,6 @@
 
 - (IBAction)zoomOut:(id)sender {
     [self fitPins];
-    self.zoomOut.hidden = YES;
 }
 
 -(void)placeTrips
@@ -143,16 +142,10 @@
         countString = [NSString stringWithFormat:@"%ld",(long)count];
         }
         
-//        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString]; ADD LATER
         annotation.title = trip.city;
 
         [self.mapView addAnnotation:annotation];
         
-        
-    //FIXME Does it include last pin? DO I ACTUALLY EVEN NEED THIS FOR THE MAP?
-//        if (count == self.tripsToCheck.count) {
-//            [self fitPins];
-//        }
         
     }];
 }
@@ -189,10 +182,8 @@
     [self.locations addObject:startAnnotation];
     
     
-    
     return startAnnotation;
 }
-
 -(void)fitPins
 {
     self.mapView.camera.altitude *= 1.8;
@@ -224,6 +215,7 @@
         trunkView.city = self.pinCityName;
         self.pinCityName = nil;
     }
+      [self fitPins];
 }
 - (IBAction)onProfileTapped:(id)sender {
 
