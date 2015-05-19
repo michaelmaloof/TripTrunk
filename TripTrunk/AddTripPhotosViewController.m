@@ -237,7 +237,7 @@
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
     cell.tripImageView.image = tripImageView.image;
-    cell.tripImageView = tripImageView;
+    cell.tripImageView.caption = tripImageView.caption;
     cell.backgroundColor = [UIColor whiteColor];
     
     if(tripImageView.caption){
