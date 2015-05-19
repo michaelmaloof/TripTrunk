@@ -642,8 +642,21 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hWn-6E-iwD"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
-                                <rect key="frame" x="59" y="558" width="22" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
+                                <rect key="frame" x="554" y="548" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="4Q6-LS-RyW"/>
+                                    <constraint firstAttribute="height" constant="50" id="gwx-aC-Acb"/>
+                                    <constraint firstAttribute="width" constant="35" id="lDe-eQ-zQd"/>
+                                    <constraint firstAttribute="height" constant="35" id="pYX-Zc-7zh"/>
+                                </constraints>
+                                <state key="normal" image="Glass"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="4Q6-LS-RyW"/>
+                                        <exclude reference="gwx-aC-Acb"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <action selector="zoomOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9ga-7t-Vo3"/>
                                 </connections>
@@ -653,15 +666,31 @@
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="paW-Ly-ly2" secondAttribute="trailing" constant="-16" id="1P8-u6-Hev"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="5Rc-rz-BTx"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Obx-lh-siw"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="SQU-bT-ERF"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="28" id="SVE-ZS-caH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="paW-Ly-ly2" secondAttribute="bottom" id="SxR-ba-ohE"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="49" id="YcW-f7-EHV"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="5" id="cFN-xs-xFq"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="20" id="cg8-78-vmk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="-10" id="eab-Oc-Hyx"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="f3N-di-oIY"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="481" id="fKL-EK-TQ8"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="ow4-Qa-GyF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="qO6-K8-mEr"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="SVE-ZS-caH"/>
+                                <exclude reference="YcW-f7-EHV"/>
+                                <exclude reference="cg8-78-vmk"/>
+                                <exclude reference="f3N-di-oIY"/>
+                                <exclude reference="Obx-lh-siw"/>
+                                <exclude reference="fKL-EK-TQ8"/>
                                 <exclude reference="g6L-lA-y2w"/>
+                                <exclude reference="ow4-Qa-GyF"/>
+                                <exclude reference="qO6-K8-mEr"/>
                             </mask>
                         </variation>
                     </view>
@@ -1807,6 +1836,7 @@
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
+        <image name="Glass" width="400" height="400"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
