@@ -182,10 +182,13 @@
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
     
-    if (self.color == 1) {
-    startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    if (self.color == 0) {
+        startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 40, 40);
+
     } else {
-        startAnnotation.image = [UIImage imageNamed:@"Cancel"];
+        startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 40, 40);
     }
     
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
