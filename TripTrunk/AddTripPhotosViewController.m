@@ -205,6 +205,11 @@
 {
     TripImageView *tripImageView = [[TripImageView alloc]init];
     tripImageView.image = info[UIImagePickerControllerOriginalImage];
+//    NSData *imgData = UIImageJPEGRepresentation(tripImageView.image , 1);
+//    NSData *kmg = UIImagePNGRepresentation(tripImageView.image);
+//    NSUInteger inter = [imgData length];
+//    NSUInteger inter2 = [kmg length];
+//    NSLog(@"Check 1 size is  jpeg %lu  png %lu", (unsigned long)inter, (unsigned long)inter2);
     [self.photos addObject:tripImageView];
     [picker dismissViewControllerAnimated:YES completion:NULL];
     [self.tripCollectionView reloadData];
@@ -240,6 +245,12 @@
     cell.tripImageView.caption = tripImageView.caption;
     cell.backgroundColor = [UIColor whiteColor];
     
+//    NSData *imgData = UIImageJPEGRepresentation(tripImageView.image , 1);
+//    NSData *kmg = UIImagePNGRepresentation(tripImageView.image);
+//    NSUInteger inter = [imgData length];
+//    NSUInteger inter2 = [kmg length];
+//    NSLog(@"Check 2 size is  jpeg %lu  png %lu", (unsigned long)inter, (unsigned long)inter2);
+    
     if(tripImageView.caption){
         cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
     }
@@ -274,7 +285,9 @@
     self.selectedPhoto.hidden = NO;
     self.tripCollectionView.hidden = YES;
     self.selectedPhoto.image = tripImageView.image;
-//    self.navigationItem.leftBarButtonItem.enabled = NO;
+    
+    [self.navigationItem setHidesBackButton:YES animated:YES];
+
 }
 
 
@@ -305,7 +318,9 @@
         self.caption.hidden = YES;
         self.addCaption.hidden = YES;
         [self.tripCollectionView reloadData];
-//        self.navigationItem.leftBarButtonItem.enabled = NO;
+        
+        [self.navigationItem setHidesBackButton:NO animated:YES];
+
     }
     
     else
@@ -317,8 +332,6 @@
         [alertView addButtonWithTitle:@"OK"];
         [alertView show];
     }
-    
-
     
 }
 
@@ -335,7 +348,7 @@
 //    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-//    self.navigationItem.leftBarButtonItem.enabled = NO;
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
 }
 
@@ -355,7 +368,7 @@
 //    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-//    self.navigationItem.leftBarButtonItem.enabled = NO;
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
     [self.tripCollectionView reloadData];
 
@@ -375,7 +388,7 @@
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.caption.text = nil;
-//    self.navigationItem.leftBarButtonItem.enabled = NO;
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
     [self.tripCollectionView reloadData];
     
