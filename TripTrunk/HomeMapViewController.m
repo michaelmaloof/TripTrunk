@@ -23,6 +23,7 @@
 @property NSMutableArray *tripsToCheck;
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
+@property BOOL color;
 
 
 @end
@@ -143,6 +144,15 @@
         }
         
         annotation.title = trip.city;
+        
+        NSDate *today = [NSDate date];
+        NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+        
+        if (tripInterval < 3600) {
+            self.color = 1;
+        } else{
+            self.color = 0;
+        }
 
         [self.mapView addAnnotation:annotation];
         
@@ -171,7 +181,13 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
+    
+    if (self.color == 1) {
     startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    } else {
+        startAnnotation.image = [UIImage imageNamed:@"Cancel"];
+    }
+    
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.rightCalloutAccessoryView.tag = 0;
     startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];

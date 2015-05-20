@@ -92,16 +92,16 @@
 }
 
 -(void)parseTrip {
-    Trip *trip = [[Trip alloc]init];
-    trip.name = self.tripName;
-    trip.city = self.tripCity;
-    trip.user = [PFUser currentUser].username;
-    trip.startDate = self.startDate;
-    trip.endDate = self.endDate;
-    trip.state = self.tripState;
-    trip.country = self.tripCountry;
+    self.trip = [[Trip alloc]init];
+    self.trip.name = self.tripName;
+    self.trip.city = self.tripCity;
+    self.trip.user = [PFUser currentUser].username;
+    self.trip.startDate = self.startDate;
+    self.trip.endDate = self.endDate;
+    self.trip.state = self.tripState;
+    self.trip.country = self.tripCountry;
     
-    [trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
              if(error) {
                  //FIXME Check to see if actually works
@@ -120,8 +120,7 @@
 -(void)parsePhotos {
     
 
-//    for (TripImageView *tripImage in self.tripPhotos)
-        for (TripImageView *tripImageView in self.photos)
+    for (TripImageView *tripImageView in self.photos)
     {
         [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
         [self addToCounterArray:tripImageView];
@@ -131,6 +130,15 @@
         [self dismissViewControllerAnimated:YES completion:nil];
         self.photos = nil;
         self.photosCounter = nil;
+        
+        self.trip.mostRecentPhoto = [NSDate date];
+        
+        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+         {
+             if(error) {
+
+             }
+         }];
     }
 }
 

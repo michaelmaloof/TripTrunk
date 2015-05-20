@@ -17,6 +17,7 @@
 @dynamic endDate;
 @dynamic state;
 @dynamic country;
+@dynamic mostRecentPhoto;
 
 +(NSString *)parseClassName
 {

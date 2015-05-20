@@ -19,5 +19,6 @@
 @property NSString *user;
 @property NSString *startDate;
 @property NSString *endDate;
+@property NSDate *mostRecentPhoto;
 
 @end
