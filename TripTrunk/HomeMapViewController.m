@@ -49,8 +49,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-
-
+    self.hot = 0;
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -64,6 +63,9 @@
     else {
         [self queryParseMethod];
     }
+    
+    [self fitPins];
+
 }
 
 -(void)queryParseMethod
@@ -117,7 +119,7 @@
                 color = 0;
             }
 
-            if(![self.tripsToCheck containsObject:address] || color == 1) //****FIXME Does this ! the color BOOL too?****
+            if(![self.tripsToCheck containsObject:address] || color == 1)
             {
                 [self addTripToMap:trip dot:color];
                 self.originalCount = self.parseLocations.count;
@@ -137,7 +139,14 @@
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
-        self.hot = hot;
+        if (hot == YES)
+        {
+            self.hot = 1;
+        }
+        else if (hot == NO)
+        {
+            self.hot = 0;
+        }
         [self.mapView addAnnotation:annotation];
         
     }];
@@ -184,14 +193,16 @@
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
     [self.locations addObject:startAnnotation];
-    
-    
+    if (self.mapView.annotations > 0){
+//        [self fitPins];
+
+    }
     return startAnnotation;
 }
 -(void)fitPins
 {
-    self.mapView.camera.altitude *= 1.8;
-    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+//    self.mapView.camera.altitude *= 1.8;
+//    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
 
@@ -228,6 +239,7 @@
 }
 
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+   
 }
 
 @end
