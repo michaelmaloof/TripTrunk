@@ -26,6 +26,9 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
+@property NSString *country;
+@property NSString *city;
+@property NSString *state;
 
 @end
 
@@ -168,12 +171,22 @@
                     {
                         if (self.navigationItem.rightBarButtonItem.tag == 0 )
                         {
+                            CLPlacemark *placemark= placemarks.firstObject;
+                            self.country = placemark.country;
+                            self.city = placemark.locality;
+                            self.state = placemark.administrativeArea;
+                            NSLog(@"postal = %@", self.state);
+                            
                         [self performSegueWithIdentifier:@"photos" sender:self];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                         }
                         
                         else
                         {
+                            CLPlacemark *placemark= placemarks.firstObject;
+                            self.country = placemark.country;
+                            self.city = placemark.locality;
+                            self.state = placemark.administrativeArea;
                             [self parseTrip];
                         }
 
@@ -204,17 +217,14 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     NSString *tripName = self.tripNameTextField.text;
-    NSString *tripCity = self.cityNameTextField.text;
     NSString *start = self.startTripTextField.text;
     NSString *end = self.endTripTextField.text;
-    NSString *countryName = self.countryTextField.text;
-    NSString *stateName = self.stateTextField.text;
     
     AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
     addTripPhotosViewController.tripName = tripName;
-    addTripPhotosViewController.tripCity = tripCity;
-    addTripPhotosViewController.tripCountry = countryName;
-    addTripPhotosViewController.tripState = stateName;
+    addTripPhotosViewController.tripCity = self.city;
+    addTripPhotosViewController.tripCountry = self.country;
+    addTripPhotosViewController.tripState = self.state;
     addTripPhotosViewController.startDate = start;
     addTripPhotosViewController.endDate = end;
     
@@ -250,9 +260,9 @@
 //FIXME Should only parse if things have been changed
     
     self.trip.name = self.tripNameTextField.text;
-    self.trip.country = self.countryTextField.text;
-    self.trip.state = self.stateTextField.text;
-    self.trip.city = self.cityNameTextField.text;
+    self.trip.country = self.country;
+    self.trip.state = self.state;
+    self.trip.city = self.city;
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
     
