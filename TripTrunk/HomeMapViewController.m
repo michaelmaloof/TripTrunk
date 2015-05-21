@@ -23,7 +23,7 @@
 @property NSMutableArray *tripsToCheck;
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
-@property BOOL hot;
+@property NSMutableArray *hotDots;
 
 @end
 
@@ -49,7 +49,8 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    self.hot = 0;
+    self.hotDots = nil;
+    self.hotDots = [[NSMutableArray alloc]init];
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -112,7 +113,6 @@
             NSDate *today = [NSDate date];
             NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
             BOOL color = 0;
-            NSLog(@"trip = %f", tripInterval);
             if (tripInterval < 86400) {
                 color = 1;
             } else{
@@ -132,6 +132,7 @@
 -(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
 {
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+
     [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -139,15 +140,20 @@
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
+        NSLog(@" annotation %@ and city %@ = %@",annotation.title, trip.city, annotation);
+
+
         if (hot == YES)
         {
-            self.hot = 1;
+            [self.hotDots addObject:annotation.title];
+            [self.mapView addAnnotation:annotation];
+
         }
-        else if (hot == NO)
-        {
-            self.hot = 0;
-        }
+        
+        else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
+
         [self.mapView addAnnotation:annotation];
+        }
         
     }];
 }
@@ -174,16 +180,13 @@
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
     
-    if (self.hot == 1) {
+    if ([self.hotDots containsObject:annotation.title]) {
         startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
-
     } else {
         startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
     }
-    
-    self.hot = 0;
     
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.rightCalloutAccessoryView.tag = 0;

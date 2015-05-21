@@ -124,6 +124,8 @@
     {
         [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
         [self addToCounterArray:tripImageView];
+        self.trip.mostRecentPhoto = [NSDate date];
+
     }
     
     if (self.photosCounter.count == self.photos.count){
@@ -131,7 +133,6 @@
         self.photos = nil;
         self.photosCounter = nil;
         
-        self.trip.mostRecentPhoto = [NSDate date];
         
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
