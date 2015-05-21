@@ -93,11 +93,8 @@
 
 -(void)placeTrips
 {
-    NSInteger count = 0;
-    
     if (self.parseLocations.count < self.originalCount)
         {
-            //FIXME (long term) to only remove deleted Trunk
             [self.mapView removeAnnotations:self.mapView.annotations];
             self.tripsToCheck = nil;
             self.tripsToCheck = [[NSMutableArray alloc]init];
@@ -106,64 +103,42 @@
         }
     else
     {
-    for (Trip *trip in self.parseLocations)
-    {
-        NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-        if(![self.tripsToCheck containsObject:string])
+        for (Trip *trip in self.parseLocations)
         {
-           count = count +1;
-           [self addTripToMap:trip count:count];
-            self.originalCount = self.parseLocations.count;
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+       
+            NSDate *today = [NSDate date];
+            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+            BOOL color = 0;
+            NSLog(@"trip = %f", tripInterval);
+            if (tripInterval < 86400) {
+                color = 1;
+            } else{
+                color = 0;
+            }
+
+            if(![self.tripsToCheck containsObject:address] || color == 1) //****FIXME Does this ! the color BOOL too?****
+            {
+                [self addTripToMap:trip dot:color];
+                self.originalCount = self.parseLocations.count;
+            }
         }
-    }
     }
 
 }
 
--(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
+-(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
 {
-    //FIXEM needs to be address not city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-    __block NSString *countString = [[NSString alloc]init];
     [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
-        
-        NSInteger count = 0;
-        for (Trip *tripCount in self.parseLocations) {
-            NSDate *today = [NSDate date];
-            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
-            BOOL color = 0;
-            if (tripInterval < 3600) {
-                color = 1;
-            } else{
-                color = 0;
-            }
-            
-            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", tripCount.city, tripCount.state, tripCount.country];
-            if ([address isEqualToString:string] || color == 1)
-            {
-                if ([address isEqualToString:string])
-                    {
-                        count = count +1;
-                    }
-                
-                if (tripInterval < 3600) {
-                    self.hot = 1;
-                } else{
-                    self.hot = 0;
-                }
-                [self.mapView addAnnotation:annotation];
-
-            }
-        
-        countString = [NSString stringWithFormat:@"%ld",(long)count];
-        }
-        
         annotation.title = trip.city;
+        self.hot = hot;
+        [self.mapView addAnnotation:annotation];
         
     }];
 }
