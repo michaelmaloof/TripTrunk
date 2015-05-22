@@ -140,8 +140,6 @@
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
-        NSLog(@" annotation %@ and city %@ = %@",annotation.title, trip.city, annotation);
-
 
         if (hot == YES)
         {
@@ -163,8 +161,8 @@
     CLLocationCoordinate2D center = view.annotation.coordinate;
     
     MKCoordinateSpan span;
-    span.longitudeDelta = 10.0;
-    span.latitudeDelta = 10.0;
+    span.longitudeDelta = 3.5;
+    span.latitudeDelta = 3.5;
     
     MKCoordinateRegion region;
     region.center = center;
@@ -204,7 +202,7 @@
 }
 -(void)fitPins
 {
-    self.mapView.camera.altitude *= 1.8;
+    self.mapView.camera.altitude *= 5.0;
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
