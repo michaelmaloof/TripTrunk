@@ -19,11 +19,12 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
-@property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
+@property NSMutableArray *hotDots;
+@property NSString *pinCityName;
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
-@property NSMutableArray *hotDots;
+@property (weak, nonatomic) IBOutlet UIButton *mapFilter;
 
 @end
 
@@ -62,19 +63,25 @@
             
     }
     else {
-        [self queryParseMethod];
+        NSString *user = [PFUser currentUser].username;
+        NSMutableArray *users = [[NSMutableArray alloc]init];
+        [users addObject:user];
+        [self queryParseMethod:users];
     }
     
     [self fitPins];
 
 }
 
--(void)queryParseMethod
+-(void)queryParseMethod:(NSMutableArray*)userNames
 {
     
-    NSString *user = [PFUser currentUser].username;
     PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
-    [findTrip whereKey:@"user" equalTo:user];
+    
+    for (NSString *user in userNames)
+    {
+        [findTrip whereKey:@"user" equalTo:user];
+    }
 
     [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
@@ -239,8 +246,78 @@
     
 }
 
--(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
-   
-}
 
+- (IBAction)mapToggleTapped:(id)sender {
+    
+    if (self.mapFilter.tag == 0)
+    {
+        [self.mapFilter setImage:[UIImage imageNamed:@"Them"] forState:UIControlStateNormal];
+        self.originalCount = 0;
+        self.hotDots = nil;
+        self.hotDots = [[NSMutableArray alloc]init];
+        self.locations = nil;
+        self.locations = [[NSMutableArray alloc]init];
+        self.parseLocations = nil;
+        self.parseLocations = [[NSMutableArray alloc]init];
+        self.tripsToCheck = nil;
+        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
+        //        NSString *user = [PFUser currentUser].username;
+        //        NSMutableArray *users = [[NSMutableArray alloc]init];
+        //        //ADD USERS HERE
+        //        [self queryParseMethod:users];
+        
+    }
+    
+    else if (self.mapFilter.tag == 1)
+    {
+        [self.mapFilter setImage:[UIImage imageNamed:@"Me"] forState:UIControlStateNormal];
+        self.originalCount = 0;
+        self.hotDots = nil;
+        self.hotDots = [[NSMutableArray alloc]init];
+        self.locations = nil;
+        self.locations = [[NSMutableArray alloc]init];
+        self.parseLocations = nil;
+        self.parseLocations = [[NSMutableArray alloc]init];
+        self.tripsToCheck = nil;
+        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
+        NSString *user = [PFUser currentUser].username;
+        NSMutableArray *users = [[NSMutableArray alloc]init];
+        [users addObject:user];
+        [self queryParseMethod:users];
+ 
+
+    }
+    self.mapFilter.tag = !self.mapFilter.tag;
+    
+    
+}
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

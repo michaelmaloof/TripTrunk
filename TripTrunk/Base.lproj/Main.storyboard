@@ -642,8 +642,27 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hWn-6E-iwD"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NR1-Eu-K3b">
+                                <rect key="frame" x="534" y="505" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="G9R-aG-GN3"/>
+                                    <constraint firstAttribute="width" constant="35" id="dhJ-r0-uTK"/>
+                                    <constraint firstAttribute="width" constant="50" id="en3-bv-ige"/>
+                                    <constraint firstAttribute="height" constant="50" id="iNK-cc-ys6"/>
+                                </constraints>
+                                <state key="normal" image="Me"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="en3-bv-ige"/>
+                                        <exclude reference="iNK-cc-ys6"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="mapToggleTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5QO-HW-Faf"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
-                                <rect key="frame" x="554" y="548" width="35" height="35"/>
+                                <rect key="frame" x="534" y="545" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="4Q6-LS-RyW"/>
                                     <constraint firstAttribute="height" constant="50" id="gwx-aC-Acb"/>
@@ -665,15 +684,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="paW-Ly-ly2" secondAttribute="trailing" constant="-16" id="1P8-u6-Hev"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="NR1-Eu-K3b" secondAttribute="bottom" constant="5" id="1W4-wv-837"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="NR1-Eu-K3b" secondAttribute="trailing" id="3ey-EJ-9Xa"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="5Rc-rz-BTx"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Obx-lh-siw"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="SQU-bT-ERF"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="28" id="SVE-ZS-caH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="paW-Ly-ly2" secondAttribute="bottom" id="SxR-ba-ohE"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="49" id="YcW-f7-EHV"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="5" id="cFN-xs-xFq"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="cFN-xs-xFq"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="20" id="cg8-78-vmk"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="-10" id="eab-Oc-Hyx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="eab-Oc-Hyx"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="f3N-di-oIY"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="481" id="fKL-EK-TQ8"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
@@ -710,6 +731,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapFilter" destination="NR1-Eu-K3b" id="UmP-nN-z20"/>
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
                         <outlet property="zoomOut" destination="itu-Co-AEg" id="rW6-oE-g8A"/>
                         <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
@@ -1877,7 +1899,8 @@
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
-        <image name="Glass" width="400" height="400"/>
+        <image name="Glass" width="500" height="500"/>
+        <image name="Me" width="500" height="500"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
