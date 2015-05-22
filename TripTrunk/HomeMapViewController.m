@@ -204,8 +204,8 @@
 }
 -(void)fitPins
 {
-//    self.mapView.camera.altitude *= 1.8;
-//    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+    self.mapView.camera.altitude *= 1.8;
+    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
 
