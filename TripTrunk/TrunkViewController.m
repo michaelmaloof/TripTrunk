@@ -27,7 +27,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
 @property PFImageView *imageview;
-@property NSUInteger photosOriginal;
+@property int photosOriginal;
 
 @end
 
@@ -131,16 +131,13 @@
 
 -(void)checkPhotos
 {
-    if (!self.photosOriginal == self.photos.count)
+    int photoCount = (int)self.photos.count;
+    if (self.photosOriginal != photoCount)
     {
-        self.photosOriginal = self.photos.count;
+        self.photosOriginal = photoCount;
         [self.collectionView reloadData];
     }
     
-    else
-    {
-        
-    }
 
 }
 
