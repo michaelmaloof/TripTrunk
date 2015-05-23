@@ -29,6 +29,9 @@
 @property NSString *country;
 @property NSString *city;
 @property NSString *state;
+@property (weak, nonatomic) IBOutlet UIButton *public;
+@property (weak, nonatomic) IBOutlet UIButton *private;
+@property BOOL isPrivate;
 
 @end
 
@@ -87,8 +90,28 @@
     
     }
 
-    
+    [self checkPublicPrivate];
+
 }
+
+-(void)checkPublicPrivate{
+    if (self.trip.isPrivate == NO || self.trip == nil)
+    {
+        self.public.backgroundColor = [UIColor blueColor];
+        self.private.backgroundColor = [UIColor whiteColor];
+        self.public.tag = 1;
+        self.public.tag = 0;
+    }
+    
+    else {
+        self.public.backgroundColor = [UIColor whiteColor];
+        self.private.backgroundColor = [UIColor blueColor];
+        self.public.tag = 0;
+        self.public.tag = 1;
+    }
+}
+
+
 
 - (IBAction)onCancelTapped:(id)sender {
     if (self.navigationItem.leftBarButtonItem.tag == 0)
@@ -175,7 +198,6 @@
                             self.country = placemark.country;
                             self.city = placemark.locality;
                             self.state = placemark.administrativeArea;
-                            NSLog(@"postal = %@", self.state);
                             
                         [self performSegueWithIdentifier:@"photos" sender:self];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -227,6 +249,7 @@
     addTripPhotosViewController.tripState = self.state;
     addTripPhotosViewController.startDate = start;
     addTripPhotosViewController.endDate = end;
+    addTripPhotosViewController.isPrivate = self.isPrivate;
     
 }
 
@@ -265,6 +288,7 @@
     self.trip.city = self.city;
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
+    self.trip.isPrivate = self.isPrivate;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -294,9 +318,30 @@
     }];
 }
 
+- (IBAction)publicTapped:(id)sender {
+    if (self.public.tag == 0)
+    {
+        self.public.tag = 1;
+        self.private.tag = 0;
+        self.public.backgroundColor = [UIColor blueColor];
+        self.private.backgroundColor = [UIColor whiteColor];
+        self.isPrivate = NO;
+    }
+    
+}
 
 
+- (IBAction)privateTapped:(id)sender {
+    if (self.private.tag == 0)
+    {
+        self.public.tag = 0;
+        self.private.tag = 1;
+        self.public.backgroundColor = [UIColor whiteColor];
+        self.private.backgroundColor = [UIColor blueColor];
+        self.isPrivate = YES;
 
+    }
 
+}
 
 @end

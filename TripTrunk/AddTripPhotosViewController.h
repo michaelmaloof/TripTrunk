@@ -17,6 +17,6 @@
 @property NSString *tripState;
 @property NSString *startDate;
 @property NSString *endDate;
-
+@property BOOL isPrivate;
 
 @end

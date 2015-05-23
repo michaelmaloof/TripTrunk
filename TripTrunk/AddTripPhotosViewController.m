@@ -86,6 +86,7 @@
     self.trip.endDate = self.endDate;
     self.trip.state = self.tripState;
     self.trip.country = self.tripCountry;
+    self.trip.isPrivate = self.isPrivate;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {

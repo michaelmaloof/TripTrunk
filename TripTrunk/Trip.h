@@ -20,5 +20,6 @@
 @property NSString *startDate;
 @property NSString *endDate;
 @property NSDate *mostRecentPhoto;
+@property BOOL isPrivate;
 
 @end
