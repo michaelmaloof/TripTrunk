@@ -36,33 +36,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if(self.trip)
-    {
-        self.title = self.trip.name;
-    }
-    
-    else
-    {
-        self.title = @"Photos From Trip";
-    }
-    
+    self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.photosCounter = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
-    self.title = self.tripName;
     self.caption.hidden = YES;
     self.cancelCaption.hidden = YES;
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
     self.selectedPhoto.hidden = YES;
-        
-    
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""

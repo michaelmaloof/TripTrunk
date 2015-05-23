@@ -72,7 +72,7 @@
 
     if(indexPath.row == 0)
     {
-        cell.photo.image = [UIImage imageNamed:@"Add Caption"];
+        cell.photo.image = [UIImage imageNamed:@"Plus Square"];
     }
     
     else if (indexPath.row > 0)

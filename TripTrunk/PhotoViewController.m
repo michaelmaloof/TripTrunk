@@ -70,6 +70,7 @@
     self.tableView.hidden = !self.tableView.hidden;
     self.addComment.hidden = !self.addComment.hidden;
     self.textView.hidden = !self.textView.hidden;
+    self.like.hidden = !self.like.hidden;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
