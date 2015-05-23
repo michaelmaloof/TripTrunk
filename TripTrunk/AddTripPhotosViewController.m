@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
+@property int count;
 
 @end
 
@@ -117,8 +118,8 @@
     
     if (self.photosCounter.count == self.photos.count){
         [self dismissViewControllerAnimated:YES completion:nil];
-        self.photos = nil;
-        self.photosCounter = nil;
+//        self.photos = nil;
+//        self.photosCounter = nil;
         
         
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
@@ -171,11 +172,27 @@
         } else {
             if (!self.trip)
             {
-                [self dismissViewControllerAnimated:YES completion:NULL];
+                self.count = self.count +1;
+                int arrayCount = (int)self.photos.count;
+                if (self.count == arrayCount)
+                {
+                    [self dismissViewControllerAnimated:YES completion:NULL];
+                    self.photos = nil;
+                    self.photosCounter = nil;
+                }
             }
             else if (self.trip)
             {
-                [self.navigationController popViewControllerAnimated:YES];
+                self.count = self.count +1;
+                int arrayCount = (int)self.photos.count;
+                NSLog(@"count = %d",self.count);
+                NSLog(@"photo count = %d",arrayCount);
+                if (self.count == arrayCount)
+                {
+                    [self.navigationController popViewControllerAnimated:YES];
+                    self.photos = nil;
+                    self.photosCounter = nil;
+                }
             }
         }
     }];
