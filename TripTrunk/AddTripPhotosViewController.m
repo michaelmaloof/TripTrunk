@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property int count;
+@property BOOL alreadyTrip;
 
 @end
 
@@ -57,6 +58,12 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    if (self.trip){
+        self.alreadyTrip = YES;
+    } else {
+        self.alreadyTrip = NO;
+    }
         
     
 }
@@ -75,7 +82,7 @@
     [self parsePhotos];
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
-    
+    [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
 
 -(void)parseTrip {
@@ -97,10 +104,12 @@
                  self.submitTrunk.hidden = NO;
                  UIAlertView *alertView = [[UIAlertView alloc] init];
                  alertView.delegate = self;
-                 alertView.title = @"No internet connection.";
+                 alertView.title = @"No internet connection to save trip";
                  alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
                  [alertView addButtonWithTitle:@"OK"];
                  [alertView show];
+                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
+
              }
      }];
 }
@@ -117,7 +126,7 @@
     }
     
     if (self.photosCounter.count == self.photos.count){
-        [self dismissViewControllerAnimated:YES completion:nil];
+//        [self dismissViewControllerAnimated:YES completion:nil];
 //        self.photos = nil;
 //        self.photosCounter = nil;
         
@@ -148,14 +157,8 @@
     photo.user = [PFUser currentUser];
     NSMutableArray *localArray = [[NSMutableArray alloc] init];
     photo.usersWhoHaveLiked = localArray;
-    
-    if(!self.trip) {
-        photo.tripName = self.tripName;
-        photo.city = self.tripCity;
-    } else if (self.trip) {
-        photo.tripName = self.trip.name;
-        photo.city = self.trip.city;
-    }
+    photo.tripName = self.trip.name;
+    photo.city = self.trip.city;
     photo.caption = caption;
     
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -164,13 +167,14 @@
             self.plusPhoto.hidden = NO;
             self.submitTrunk.hidden = NO;
             UIAlertView *alertView = [[UIAlertView alloc] init];
+            [[self navigationController] setNavigationBarHidden:NO animated:YES];
             alertView.delegate = self;
-            alertView.title = @"No internet connection.";
+            alertView.title = @"No internet connection to save photos.";
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
             [alertView addButtonWithTitle:@"OK"];
             [alertView show];
         } else {
-            if (!self.trip)
+            if (self.alreadyTrip == NO)
             {
                 self.count = self.count +1;
                 int arrayCount = (int)self.photos.count;
@@ -181,12 +185,10 @@
                     self.photosCounter = nil;
                 }
             }
-            else if (self.trip)
+            else if (self.alreadyTrip == YES)
             {
                 self.count = self.count +1;
                 int arrayCount = (int)self.photos.count;
-                NSLog(@"count = %d",self.count);
-                NSLog(@"photo count = %d",arrayCount);
                 if (self.count == arrayCount)
                 {
                     [self.navigationController popViewControllerAnimated:YES];
