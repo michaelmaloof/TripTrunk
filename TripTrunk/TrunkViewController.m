@@ -24,13 +24,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
 @property (weak, nonatomic) IBOutlet UILabel *endDate;
 @property (weak, nonatomic) IBOutlet UIButton *memberButton;
-@property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
 @property PFImageView *imageview;
-
-
-
+@property NSUInteger photosOriginal;
 
 @end
 
@@ -38,12 +35,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.title = self.trip.name;
-    self.photos = [[NSArray alloc]init];
     self.trunkAlbum = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
-    self.cityLabel.text = self.trip.city;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@ %@, %@",self.trip.city, self.trip.state,self.trip.country];
     self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
@@ -55,14 +51,20 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
 
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    self.photos = nil;
+    self.photos = [[NSArray alloc]init];
+    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
+        
     } else {
         self.navigationItem.rightBarButtonItem = nil;
     }
     
     [self queryParseMethod];
-    
 }
 
 
@@ -106,8 +108,16 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
-            [self.collectionView reloadData];
-
+            [self checkPhotos];
+//            if (!self.photosOriginal == self.photos.count)
+//            {
+//                self.photosOriginal = self.photos.count;
+//                [self.collectionView reloadData];
+//            }
+//            
+//            else {
+//                
+//            }
             
         }else
         {
@@ -116,6 +126,21 @@
 
 
     }];
+
+}
+
+-(void)checkPhotos
+{
+    if (!self.photosOriginal == self.photos.count)
+    {
+        self.photosOriginal = self.photos.count;
+        [self.collectionView reloadData];
+    }
+    
+    else
+    {
+        
+    }
 
 }
 
