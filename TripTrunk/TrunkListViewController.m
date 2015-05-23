@@ -16,12 +16,14 @@
 @property NSMutableArray *parseLocations;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;
+@property NSDate *today;
 
 @end
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
     self.parseLocations = [[NSMutableArray alloc]init];
+    self.today = [NSDate date];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
@@ -49,6 +51,16 @@
     cell.textLabel.text = trip.name;
     cell.detailTextLabel.text = trip.user;
     self.title = trip.city;
+
+    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
+    if (tripInterval < 86400) {
+        cell.backgroundColor = [UIColor redColor];
+    }
+    
+    else
+    {
+        cell.backgroundColor = [UIColor blueColor];
+    }
 
     return cell;
 }
