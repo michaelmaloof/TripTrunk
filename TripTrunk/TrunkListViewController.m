@@ -33,6 +33,9 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
+    self.title = self.city;
+
+    
      [self queryParseMethod];
 
 }
@@ -49,8 +52,13 @@
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
     cell.trip = trip;
     cell.textLabel.text = trip.name;
-    cell.detailTextLabel.text = trip.user;
-    self.title = trip.city;
+    if (cell.trip.isPrivate == NO)
+    {
+        cell.detailTextLabel.text = @"";
+    } else
+    {
+       cell.detailTextLabel.text = @"private";
+    }
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     if (tripInterval < 86400) {
