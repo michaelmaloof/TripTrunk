@@ -110,6 +110,8 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.path = indexPath;
     [self performSegueWithIdentifier:@"TrunkView" sender:self];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     
 }
 @end
