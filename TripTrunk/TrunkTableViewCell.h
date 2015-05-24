@@ -11,5 +11,6 @@
 
 @interface TrunkTableViewCell : UITableViewCell
 @property Trip *trip;
+@property (weak, nonatomic) IBOutlet UIImageView *lockPhoto;
 
 @end

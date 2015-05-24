@@ -50,14 +50,15 @@
 {
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
+    cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
     cell.textLabel.text = trip.name;
     if (cell.trip.isPrivate == NO)
     {
-        cell.detailTextLabel.text = @"";
+        cell.lockPhoto.hidden = YES;
     } else
     {
-       cell.detailTextLabel.text = @"private";
+        cell.lockPhoto.hidden = NO;
     }
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
@@ -69,6 +70,9 @@
     {
         cell.backgroundColor = [UIColor blueColor];
     }
+    
+    NSLog(@"title = %@", cell.textLabel.text);
+
 
     return cell;
 }
