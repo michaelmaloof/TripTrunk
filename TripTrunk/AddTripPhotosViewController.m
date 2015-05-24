@@ -110,6 +110,11 @@
                  [alertView show];
                  [[self navigationController] setNavigationBarHidden:NO animated:YES];
 
+             } else {
+                 if (self.photos.count == 0) {
+                     [self dismissViewControllerAnimated:YES completion:NULL];
+                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+                 }
              }
      }];
 }
@@ -361,14 +366,13 @@
     self.addCaption.hidden = YES;
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
     self.caption.text = @"";
-//    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
     [self.navigationItem setHidesBackButton:NO animated:YES];
 
 }
 
-- (IBAction)onRemoveTapped:(id)sender {
+- (IBAction)onRemoveTapped:(id)sender { //FIXME Doesn't remove caption
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
@@ -377,11 +381,9 @@
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
     TripImageView *tripImageView = [self.photos objectAtIndex:self.path];
-//    cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
-//    cell.tripImageView.caption = nil;
+    tripImageView.caption = nil;
     self.caption.text = nil;
     [self.photos replaceObjectAtIndex:self.path withObject:tripImageView];
-//    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
     [self.navigationItem setHidesBackButton:NO animated:YES];
@@ -395,7 +397,6 @@
     self.tripCollectionView.hidden = NO;
     self.selectedPhoto.hidden = YES;
     [self.photos removeObjectAtIndex:self.path];
-//    self.path= nil;
     self.delete.hidden = YES;
     self.plusPhoto.hidden = NO;
     self.submitTrunk.hidden = NO;
