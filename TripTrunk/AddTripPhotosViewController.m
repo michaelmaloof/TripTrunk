@@ -82,7 +82,7 @@
         [self parseTrip];
     }
     [self parsePhotos];
-    [[self navigationController] setNavigationBarHidden:YES animated:no];
+    [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
 
 -(void)parseTrip {
@@ -108,7 +108,7 @@
                  alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
                  [alertView addButtonWithTitle:@"OK"];
                  [alertView show];
-                 [[self navigationController] setNavigationBarHidden:NO animated:NO];
+                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
 
              }
      }];
@@ -166,7 +166,7 @@
             self.plusPhoto.hidden = NO;
             self.submitTrunk.hidden = NO;
             UIAlertView *alertView = [[UIAlertView alloc] init];
-            [[self navigationController] setNavigationBarHidden:NO animated:NO];
+            [[self navigationController] setNavigationBarHidden:NO animated:YES];
             alertView.delegate = self;
             alertView.title = @"No internet connection to save photos.";
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
@@ -180,7 +180,7 @@
                 if (self.count == arrayCount)
                 {
                     [self dismissViewControllerAnimated:YES completion:NULL];
-                    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
                     self.photos = nil;
                     self.photosCounter = nil;
                 }
@@ -191,8 +191,8 @@
                 int arrayCount = (int)self.photos.count;
                 if (self.count == arrayCount)
                 {
-                    [self.navigationController popViewControllerAnimated:NO];
-                    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+                    [self.navigationController popViewControllerAnimated:YES];
+                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
                     self.photos = nil;
                     self.photosCounter = nil;
                 }
@@ -302,7 +302,7 @@
     self.tripCollectionView.hidden = YES;
     self.selectedPhoto.image = tripImageView.image;
     
-    [self.navigationItem setHidesBackButton:YES animated:NO];
+    [self.navigationItem setHidesBackButton:YES animated:YES];
 
 }
 
@@ -335,7 +335,7 @@
         self.addCaption.hidden = YES;
         [self.tripCollectionView reloadData];
         
-        [self.navigationItem setHidesBackButton:NO animated:NO];
+        [self.navigationItem setHidesBackButton:NO animated:YES];
 
     }
     
@@ -364,7 +364,7 @@
 //    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-    [self.navigationItem setHidesBackButton:NO animated:NO];
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
 }
 
@@ -384,7 +384,7 @@
 //    self.path= nil;
     self.remove.hidden = YES;
     self.delete.hidden = YES;
-    [self.navigationItem setHidesBackButton:NO animated:NO];
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
     [self.tripCollectionView reloadData];
 
@@ -404,7 +404,7 @@
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.caption.text = nil;
-    [self.navigationItem setHidesBackButton:NO animated:NO];
+    [self.navigationItem setHidesBackButton:NO animated:YES];
 
     [self.tripCollectionView reloadData];
     
