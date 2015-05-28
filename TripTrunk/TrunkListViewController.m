@@ -68,7 +68,7 @@
     
     else
     {
-        cell.backgroundColor = [UIColor blueColor];
+        cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
     }
     
     NSLog(@"title = %@", cell.textLabel.text);

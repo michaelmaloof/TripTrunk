@@ -776,7 +776,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="lock" translatesAutoresizingMaskIntoConstraints="NO" id="ysg-hH-IUR">
-                                                    <rect key="frame" x="250" y="8" width="30" height="30"/>
+                                                    <rect key="frame" x="291" y="8" width="20" height="27"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1111,7 +1111,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XBQ-xK-0fI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1719" y="1595"/>
+            <point key="canvasLocation" x="1863" y="1430"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="LER-YN-fem">
@@ -1959,7 +1959,7 @@
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
         <image name="SanFran" width="375" height="667"/>
-        <image name="lock" width="30" height="30"/>
+        <image name="lock" width="20" height="27"/>
         <image name="user7" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>

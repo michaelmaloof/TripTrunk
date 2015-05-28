@@ -99,17 +99,17 @@
 -(void)checkPublicPrivate{
     if (self.trip.isPrivate == NO || self.trip == nil)
     {
-        self.public.backgroundColor = [UIColor blueColor];
+        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.private.backgroundColor = [UIColor whiteColor];
         self.public.tag = 1;
-        self.public.tag = 0;
+        self.private.tag = 0;
     }
     
     else {
         self.public.backgroundColor = [UIColor whiteColor];
-        self.private.backgroundColor = [UIColor blueColor];
+        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.public.tag = 0;
-        self.public.tag = 1;
+        self.private.tag = 1;
     }
 }
 
@@ -325,7 +325,7 @@
     {
         self.public.tag = 1;
         self.private.tag = 0;
-        self.public.backgroundColor = [UIColor blueColor];
+        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.private.backgroundColor = [UIColor whiteColor];
         self.isPrivate = NO;
     }
@@ -339,7 +339,7 @@
         self.public.tag = 0;
         self.private.tag = 1;
         self.public.backgroundColor = [UIColor whiteColor];
-        self.private.backgroundColor = [UIColor blueColor];
+        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.isPrivate = YES;
 
     }

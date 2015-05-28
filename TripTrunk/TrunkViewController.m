@@ -108,6 +108,8 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
+            NSString *string = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
+            self.photoLabel.text = string;
             [self checkPhotos];
 //            if (!self.photosOriginal == self.photos.count)
 //            {
