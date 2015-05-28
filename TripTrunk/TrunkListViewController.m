@@ -63,7 +63,7 @@
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     if (tripInterval < 86400) {
-        cell.backgroundColor = [UIColor redColor];
+        cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
     }
     
     else
