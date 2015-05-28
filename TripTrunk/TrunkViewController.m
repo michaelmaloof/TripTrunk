@@ -20,7 +20,7 @@
 @property NSArray *photos;
 @property NSMutableArray *trunkAlbum;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
 @property (weak, nonatomic) IBOutlet UILabel *endDate;
 @property (weak, nonatomic) IBOutlet UIButton *memberButton;
@@ -41,7 +41,7 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@ %@, %@",self.trip.city, self.trip.state,self.trip.country];
-    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
+//    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     self.endDate.text = self.trip.endDate;
     UIBarButtonItem *newBackButton =
@@ -108,8 +108,8 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
-            NSString *string = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
-            self.photoLabel.text = string;
+//            NSString *string = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
+//            self.photoLabel.text = string;
             [self checkPhotos];
 //            if (!self.photosOriginal == self.photos.count)
 //            {
