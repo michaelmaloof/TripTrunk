@@ -103,6 +103,8 @@
     if(![self.textView.text isEqualToString:@""])
     {
         [self parseComment];
+        [self moveUpTextBox];
+        
     }
 }
 
@@ -112,14 +114,19 @@
     
     if (self.viewMoved == YES) {
     
+        [self moveUpTextBox];
+ }
+}
+
+-(void)moveUpTextBox{
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDuration:0.5];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 250), self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
     self.comments.hidden = NO;
     self.addComment.hidden = NO;
-        [UIView commitAnimations];}
+    [UIView commitAnimations];
 }
 
 -(void)parseComment {
