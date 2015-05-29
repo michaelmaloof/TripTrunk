@@ -103,7 +103,7 @@
 
 -(void)placeTrips
 {
-    if (self.parseLocations.count < self.originalCount)
+    if (self.parseLocations.count < self.originalCount )
         {
             [self.mapView removeAnnotations:self.mapView.annotations];
             self.tripsToCheck = nil;

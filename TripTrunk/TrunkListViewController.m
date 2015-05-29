@@ -22,8 +22,6 @@
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
-    self.parseLocations = [[NSMutableArray alloc]init];
-    self.today = [NSDate date];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
@@ -35,9 +33,15 @@
     
     self.title = self.city;
 
-    
-     [self queryParseMethod];
+}
 
+-(void)viewDidAppear:(BOOL)animated{
+    
+    self.parseLocations = [[NSMutableArray alloc]init];
+    self.today = [NSDate date];
+    [self queryParseMethod];
+
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
