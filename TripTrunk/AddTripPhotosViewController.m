@@ -11,6 +11,7 @@
 #import "PhotoCollectionViewCell.h"
 #import "Photo.h"
 #import "TripImageView.h"
+#import "AddTripFriendsViewController.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -130,6 +131,7 @@
 
     }
     
+    // ** mattschoch 5/29 - Why are we comparing these counts? In AddImageData both of those counters get set to nil so they'll always be equal right?
     if (self.photosCounter.count == self.photos.count){
 //        [self dismissViewControllerAnimated:YES completion:nil];
 //        self.photos = nil;
@@ -138,7 +140,15 @@
         
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
-             if(error) {
+             if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
+             
+             if (succeeded) {
+                 NSLog(@"Save Trip Success - Now push to Friend VC");
+                 
+                 AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] init];
+                 
+                 [self.navigationController pushViewController:vc animated:YES];
+                 
              }
          }];
     }
@@ -184,7 +194,11 @@
                 int arrayCount = (int)self.photos.count;
                 if (self.count == arrayCount)
                 {
-                    [self dismissViewControllerAnimated:YES completion:NULL];
+                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
+                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
+                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
+                     */
+//                    [self dismissViewControllerAnimated:YES completion:NULL];
                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
                     self.photos = nil;
                     self.photosCounter = nil;

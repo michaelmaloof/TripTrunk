@@ -171,33 +171,33 @@
                     <exclude reference="QbL-KF-0wc"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="AbC-oO-RJ6"/>
-                    <exclude reference="Tpu-8i-Y4D"/>
-                    <exclude reference="XTB-yj-qbw"/>
                     <exclude reference="6lM-lj-xjh"/>
                     <exclude reference="Qof-qo-Rq0"/>
                     <exclude reference="tsh-Dl-scC"/>
                     <exclude reference="UmF-l2-u6p"/>
                     <exclude reference="nld-kW-JY2"/>
                     <exclude reference="oO1-uI-3JJ"/>
-                    <exclude reference="OhW-ML-nf3"/>
-                    <exclude reference="Rvo-md-3lD"/>
-                    <exclude reference="Tek-td-xqO"/>
-                    <exclude reference="uUN-LA-qEW"/>
-                    <exclude reference="zGI-PN-HOv"/>
+                    <exclude reference="hai-9l-N7f"/>
+                    <exclude reference="kOC-fe-Hu0"/>
                     <exclude reference="5q9-0P-1t5"/>
                     <exclude reference="LNA-2s-dP5"/>
                     <exclude reference="bcs-Wq-tl3"/>
                     <exclude reference="hQV-Bm-f1B"/>
                     <exclude reference="p3d-uE-FcO"/>
                     <exclude reference="qkQ-B9-M48"/>
-                    <exclude reference="hai-9l-N7f"/>
-                    <exclude reference="kOC-fe-Hu0"/>
+                    <exclude reference="OhW-ML-nf3"/>
+                    <exclude reference="Rvo-md-3lD"/>
+                    <exclude reference="Tek-td-xqO"/>
+                    <exclude reference="uUN-LA-qEW"/>
+                    <exclude reference="zGI-PN-HOv"/>
                     <exclude reference="7D4-UF-WPn"/>
                     <exclude reference="DTd-ir-ZuN"/>
                     <exclude reference="Nlw-RC-SFe"/>
                     <exclude reference="cWR-Hz-Cj4"/>
                     <exclude reference="hhh-IP-7Yy"/>
+                    <exclude reference="AbC-oO-RJ6"/>
+                    <exclude reference="Tpu-8i-Y4D"/>
+                    <exclude reference="XTB-yj-qbw"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -211,33 +211,33 @@
                     <include reference="QbL-KF-0wc"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="AbC-oO-RJ6"/>
-                    <include reference="Tpu-8i-Y4D"/>
-                    <include reference="XTB-yj-qbw"/>
                     <include reference="6lM-lj-xjh"/>
                     <include reference="Qof-qo-Rq0"/>
                     <include reference="tsh-Dl-scC"/>
                     <include reference="UmF-l2-u6p"/>
                     <include reference="nld-kW-JY2"/>
                     <include reference="oO1-uI-3JJ"/>
-                    <include reference="OhW-ML-nf3"/>
-                    <include reference="Rvo-md-3lD"/>
-                    <include reference="Tek-td-xqO"/>
-                    <include reference="uUN-LA-qEW"/>
-                    <exclude reference="zGI-PN-HOv"/>
+                    <include reference="hai-9l-N7f"/>
+                    <include reference="kOC-fe-Hu0"/>
                     <include reference="5q9-0P-1t5"/>
                     <include reference="LNA-2s-dP5"/>
                     <include reference="bcs-Wq-tl3"/>
                     <exclude reference="hQV-Bm-f1B"/>
                     <include reference="p3d-uE-FcO"/>
                     <exclude reference="qkQ-B9-M48"/>
-                    <include reference="hai-9l-N7f"/>
-                    <include reference="kOC-fe-Hu0"/>
+                    <include reference="OhW-ML-nf3"/>
+                    <include reference="Rvo-md-3lD"/>
+                    <include reference="Tek-td-xqO"/>
+                    <include reference="uUN-LA-qEW"/>
+                    <exclude reference="zGI-PN-HOv"/>
                     <include reference="7D4-UF-WPn"/>
                     <exclude reference="DTd-ir-ZuN"/>
                     <include reference="Nlw-RC-SFe"/>
                     <include reference="cWR-Hz-Cj4"/>
                     <exclude reference="hhh-IP-7Yy"/>
+                    <include reference="AbC-oO-RJ6"/>
+                    <include reference="Tpu-8i-Y4D"/>
+                    <include reference="XTB-yj-qbw"/>
                 </mask>
             </variation>
         </view>
