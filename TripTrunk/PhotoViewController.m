@@ -71,6 +71,17 @@
     self.addComment.hidden = !self.addComment.hidden;
     self.textView.hidden = !self.textView.hidden;
     self.like.hidden = !self.like.hidden;
+    
+    if ([self.comments.titleLabel.text isEqualToString:@"Comments"]){
+        [self.comments setTitle:@"Done" forState:UIControlStateNormal];
+
+    }
+    
+    else if ([self.comments.titleLabel.text isEqualToString:@"Done"]){
+        [self.comments setTitle:@"Comments" forState:UIControlStateNormal];
+        [self moveUpTextBox];
+
+    }
 
 }
 
@@ -108,25 +119,22 @@
     }
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.view endEditing:YES];
-    
-    if (self.viewMoved == YES) {
-    
-        [self moveUpTextBox];
- }
-}
 
 -(void)moveUpTextBox{
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
-    self.comments.hidden = NO;
-    self.addComment.hidden = NO;
-    [UIView commitAnimations];
+    
+    if (self.viewMoved == YES) {
+            [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
+        self.comments.hidden = NO;
+        self.addComment.hidden = NO;
+        [UIView commitAnimations];
+        self.viewMoved = NO;
+    }
+    
+
 }
 
 -(void)parseComment {
@@ -193,6 +201,13 @@
         self.viewMoved = YES;
         [UIView commitAnimations];
     }
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+    
+    
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView
