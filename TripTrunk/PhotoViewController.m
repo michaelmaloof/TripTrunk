@@ -132,8 +132,15 @@
         self.addComment.hidden = NO;
         [UIView commitAnimations];
         self.viewMoved = NO;
+        [self.textView endEditing:YES];
+
     }
     
+
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self textViewDidEndEditing:self.textView];
 
 }
 
@@ -203,26 +210,24 @@
     }
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.view endEditing:YES];
-    
-    
-}
+
 
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
     if (textView == self.textView)
     {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
-        self.comments.hidden = NO;
-        self.addComment.hidden = NO;
-        self.viewMoved = NO;
-        [UIView commitAnimations];
+//        [UIView beginAnimations:nil context:NULL];
+//        [UIView setAnimationDelegate:self];
+//        [UIView setAnimationDuration:0.5];
+//        [UIView setAnimationBeginsFromCurrentState:YES];
+//        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
+//        self.comments.hidden = NO;
+//        self.addComment.hidden = NO;
+//        self.viewMoved = NO;
+//        [UIView commitAnimations];
+        [self.textView endEditing:YES];
+        [self moveUpTextBox];
+
     }
 }
 
