@@ -70,6 +70,7 @@
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
 		C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */; };
+		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,6 +186,8 @@
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripFriendsViewController.h; sourceTree = "<group>"; };
 		C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripFriendsViewController.m; sourceTree = "<group>"; };
+		C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkMembersViewController.h; sourceTree = "<group>"; };
+		C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkMembersViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +258,8 @@
 				220408D81AEC5475009DB060 /* TrunkListViewController.m */,
 				220408E21AED58C0009DB060 /* TrunkViewController.h */,
 				220408E31AED58C0009DB060 /* TrunkViewController.m */,
+				C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */,
+				C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */,
 				220408EF1AF1C1EA009DB060 /* PhotoViewController.h */,
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
@@ -536,6 +541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */,
+				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,

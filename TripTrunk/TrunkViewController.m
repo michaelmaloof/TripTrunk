@@ -14,6 +14,7 @@
 #import <ParseUI/ParseUI.h>
 #import "PhotoViewController.h"
 #import "AddTripPhotosViewController.h"
+#import "TrunkMembersViewController.h"
 
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
@@ -167,6 +168,12 @@
     [alertView addButtonWithTitle:@"OK"];
     [alertView show];
 
+}
+
+- (IBAction)membersButtonPressed:(id)sender {
+    NSLog(@"membersButtonPressed");
+    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
