@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="66" id="KGk-i7-Jjw" customClass="UserTableViewCell">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="87" id="KGk-i7-Jjw" customClass="UserTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -22,6 +22,9 @@
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="58" y="7" width="208" height="21"/>
+                        </variation>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
@@ -37,7 +40,8 @@
                                 <exclude reference="a29-2Q-lvC"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="274" y="8" width="39" height="28"/>
                             <mask key="constraints">
                                 <include reference="a29-2Q-lvC"/>
                             </mask>
@@ -56,7 +60,8 @@
                                 <exclude reference="O6w-x4-tl9"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                             <mask key="constraints">
                                 <include reference="O6w-x4-tl9"/>
                             </mask>
@@ -67,6 +72,9 @@
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="58" y="36" width="208" height="18"/>
+                        </variation>
                     </label>
                 </subviews>
                 <constraints>
@@ -134,7 +142,7 @@
                 <outlet property="profilePicImageView" destination="5Rf-mU-r4e" id="Wem-0e-H1h"/>
                 <outlet property="usernameLabel" destination="XkG-SG-iF1" id="ZUO-2G-f0C"/>
             </connections>
-            <point key="canvasLocation" x="351" y="319"/>
+            <point key="canvasLocation" x="351" y="329.5"/>
         </tableViewCell>
     </objects>
 </document>

@@ -21,10 +21,20 @@
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
+@property (strong, nonatomic) Trip *trip;
 
 @end
 
 @implementation AddTripFriendsViewController
+
+- (id)initWithTrip:(Trip *)trip
+{
+    self = [super init]; // nil is ok if the nib is included in the main bundle
+    if (self) {
+        self.trip = trip;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,13 +45,17 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(saveFriendsAndClose)];
-    
     _thisUser = [PFUser currentUser];
     
     // Create nested arrays to populate the table view
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
     _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
+    
+    [self.tableView setEditing:YES animated:YES];
+    [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
+    [self.tableView setAllowsSelectionDuringEditing:YES];
+
     
     // Get the users for the list
     [self loadFollowing];
@@ -152,9 +166,12 @@
     return 66;
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PFUser *possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    [cell setEditing:YES animated:YES];
+    [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
     
@@ -177,6 +194,23 @@
     return weakCell;
 
 }
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
+}
+
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    
+//}
+//
+//-(NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//}
 
 #pragma mark - UserTableViewCellDelegate
 
@@ -222,10 +256,54 @@
  */
 - (void)saveFriendsAndClose
 {
-    //TODO: save friend relation in the trip
+    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
+    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+    if (selectedRows.count == 0) {
+        NSLog(@"No Friends Selected");
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    for (NSIndexPath *indexPath in selectedRows) {
+        PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
+        [tripUsers addObject:tripUser];
+    }
+    
+    [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            NSLog(@"Error saving friends to trip: %@", error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
+                                                            message:@"Please try again"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay"
+                                                  otherButtonTitles:nil, nil];
+            
+            [alert show];
+        }
+        if (!succeeded) {
+            NSLog(@"Add Friends to Trip NOT success");
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saving Frinds Failed"
+                                                            message:@"Please try again"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay"
+                                                  otherButtonTitles:nil, nil];
+            
+            [alert show];
+        }
+        else
+        {
+            NSLog(@"saveFriends to Trip Succeeded");
+        }
+        
+    }];
+    
     
     // Dismiss the view controller
+    // We dismiss it outside the save block so that there's no hangup for the user.
+    // The downside is, if it fails then they have to redo everything
+    //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
     [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 

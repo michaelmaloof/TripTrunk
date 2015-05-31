@@ -52,5 +52,50 @@
     }];
 }
 
++ (void)addUser:(PFUser *)user toTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock
+{
+    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+        return;
+    }
+    
+    PFObject *addToTripActivity = [PFObject objectWithClassName:@"Activity"];
+    [addToTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [addToTripActivity setObject:user forKey:@"toUser"];
+    [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
+    [addToTripActivity setObject:trip forKey:@"trip"];
+    
+    PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [followACL setPublicReadAccess:YES];
+    [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
+    addToTripActivity.ACL = followACL;
+    
+    [addToTripActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (completionBlock) {
+            completionBlock(succeeded, error);
+        }
+    }];
+}
+
++ (PFObject *)createAddToTripObjectForUser:(PFUser *)user onTrip:(Trip *)trip
+{
+    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+        return nil;
+    }
+    
+    PFObject *addToTripActivity = [PFObject objectWithClassName:@"Activity"];
+    [addToTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [addToTripActivity setObject:user forKey:@"toUser"];
+    [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
+    [addToTripActivity setObject:trip forKey:@"trip"];
+    
+    PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [followACL setPublicReadAccess:YES];
+    [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
+    addToTripActivity.ACL = followACL;
+    
+    
+    return addToTripActivity;
+}
+
 
 @end

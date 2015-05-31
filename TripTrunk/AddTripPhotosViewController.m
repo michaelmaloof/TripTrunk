@@ -145,7 +145,7 @@
              if (succeeded) {
                  NSLog(@"Save Trip Success - Now push to Friend VC");
                  
-                 AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] init];
+                 AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
                  
                  [self.navigationController pushViewController:vc animated:YES];
                  
