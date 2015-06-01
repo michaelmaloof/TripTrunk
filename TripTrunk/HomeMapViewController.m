@@ -19,10 +19,12 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
-@property NSString *pinCityName;
 @property NSMutableArray *tripsToCheck;
+@property NSMutableArray *hotDots;
+@property NSString *pinCityName;
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
+@property (weak, nonatomic) IBOutlet UIButton *mapFilter;
 
 @end
 
@@ -31,7 +33,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
-    self.zoomOut.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
 
@@ -49,8 +50,8 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-
-
+    self.hotDots = nil;
+    self.hotDots = [[NSMutableArray alloc]init];
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
@@ -62,16 +63,25 @@
             
     }
     else {
-        [self queryParseMethod];
+        NSString *user = [PFUser currentUser].username;
+        NSMutableArray *users = [[NSMutableArray alloc]init];
+        [users addObject:user];
+        [self queryParseMethod:users];
     }
+    
+    [self fitPins];
+
 }
 
--(void)queryParseMethod
+-(void)queryParseMethod:(NSMutableArray*)userNames
 {
     
-    NSString *user = [PFUser currentUser].username;
     PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
-    [findTrip whereKey:@"user" equalTo:user];
+    
+    for (NSString *user in userNames)
+    {
+        [findTrip whereKey:@"user" equalTo:user];
+    }
 
     [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
@@ -89,16 +99,12 @@
 
 - (IBAction)zoomOut:(id)sender {
     [self fitPins];
-    self.zoomOut.hidden = YES;
 }
 
 -(void)placeTrips
 {
-    NSInteger count = 0;
-    
-    if (self.parseLocations.count < self.originalCount)
+    if (self.parseLocations.count < self.originalCount )
         {
-            //FIXME (long term) to only remove deleted Trunk
             [self.mapView removeAnnotations:self.mapView.annotations];
             self.tripsToCheck = nil;
             self.tripsToCheck = [[NSMutableArray alloc]init];
@@ -107,52 +113,52 @@
         }
     else
     {
-    for (Trip *trip in self.parseLocations)
-    {
-        NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-        if(![self.tripsToCheck containsObject:string])
+        for (Trip *trip in self.parseLocations)
         {
-           count = count +1;
-           [self addTripToMap:trip count:count];
-            self.originalCount = self.parseLocations.count;
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+       
+            NSDate *today = [NSDate date];
+            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+            BOOL color = 0;
+            if (tripInterval < 86400) {
+                color = 1;
+            } else{
+                color = 0;
+            }
+
+            if(![self.tripsToCheck containsObject:address] || color == 1)
+            {
+                [self addTripToMap:trip dot:color];
+                self.originalCount = self.parseLocations.count;
+            }
         }
-    }
     }
 
 }
 
--(void)addTripToMap:(Trip*)trip count:(NSInteger)count;
+-(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
 {
-    //FIXEM needs to be address not city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-    __block NSString *countString = [[NSString alloc]init];
+
     [self.tripsToCheck addObject:string];
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
-        
-        NSInteger count = 0;
-        for (Trip *tripCount in self.parseLocations) {
-            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", tripCount.city, tripCount.state, tripCount.country];
-            if ([address isEqualToString:string]){
-                count = count +1;
-            }
-        
-        countString = [NSString stringWithFormat:@"%ld",(long)count];
-        }
-        
-//        annotation.title = [NSString stringWithFormat:@"%@ (%@)", trip.city,countString]; ADD LATER
         annotation.title = trip.city;
 
+        if (hot == YES)
+        {
+            [self.hotDots addObject:annotation.title];
+            [self.mapView addAnnotation:annotation];
+
+        }
+        
+        else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
+
         [self.mapView addAnnotation:annotation];
-        
-        
-    //FIXME Does it include last pin? DO I ACTUALLY EVEN NEED THIS FOR THE MAP?
-//        if (count == self.tripsToCheck.count) {
-//            [self fitPins];
-//        }
+        }
         
     }];
 }
@@ -162,8 +168,8 @@
     CLLocationCoordinate2D center = view.annotation.coordinate;
     
     MKCoordinateSpan span;
-    span.longitudeDelta = 10.0;
-    span.latitudeDelta = 10.0;
+    span.longitudeDelta = 3.5;
+    span.latitudeDelta = 3.5;
     
     MKCoordinateRegion region;
     region.center = center;
@@ -178,7 +184,15 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
-    startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+    
+    if ([self.hotDots containsObject:annotation.title]) {
+        startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
+    } else {
+        startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
+    }
+    
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     startAnnotation.rightCalloutAccessoryView.tag = 0;
     startAnnotation.leftCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
@@ -187,15 +201,15 @@
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
     [self.locations addObject:startAnnotation];
-    
-    
-    
+    if (self.mapView.annotations > 0){
+//        [self fitPins];
+
+    }
     return startAnnotation;
 }
-
 -(void)fitPins
 {
-    self.mapView.camera.altitude *= 1.8;
+    self.mapView.camera.altitude *= 5.0;
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
@@ -224,6 +238,7 @@
         trunkView.city = self.pinCityName;
         self.pinCityName = nil;
     }
+      [self fitPins];
 }
 - (IBAction)onProfileTapped:(id)sender {
 
@@ -231,7 +246,78 @@
     
 }
 
--(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
-}
 
+- (IBAction)mapToggleTapped:(id)sender {
+    
+    if (self.mapFilter.tag == 0)
+    {
+        [self.mapFilter setImage:[UIImage imageNamed:@"Them"] forState:UIControlStateNormal];
+        self.originalCount = 0;
+        self.hotDots = nil;
+        self.hotDots = [[NSMutableArray alloc]init];
+        self.locations = nil;
+        self.locations = [[NSMutableArray alloc]init];
+        self.parseLocations = nil;
+        self.parseLocations = [[NSMutableArray alloc]init];
+        self.tripsToCheck = nil;
+        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
+        //        NSString *user = [PFUser currentUser].username;
+        //        NSMutableArray *users = [[NSMutableArray alloc]init];
+        //        //ADD USERS HERE
+        //        [self queryParseMethod:users];
+        
+    }
+    
+    else if (self.mapFilter.tag == 1)
+    {
+        [self.mapFilter setImage:[UIImage imageNamed:@"Me"] forState:UIControlStateNormal];
+        self.originalCount = 0;
+        self.hotDots = nil;
+        self.hotDots = [[NSMutableArray alloc]init];
+        self.locations = nil;
+        self.locations = [[NSMutableArray alloc]init];
+        self.parseLocations = nil;
+        self.parseLocations = [[NSMutableArray alloc]init];
+        self.tripsToCheck = nil;
+        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
+        NSString *user = [PFUser currentUser].username;
+        NSMutableArray *users = [[NSMutableArray alloc]init];
+        [users addObject:user];
+        [self queryParseMethod:users];
+ 
+
+    }
+    self.mapFilter.tag = !self.mapFilter.tag;
+    
+    
+}
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

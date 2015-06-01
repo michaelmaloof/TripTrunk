@@ -16,12 +16,12 @@
 @property NSMutableArray *parseLocations;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;
+@property NSDate *today;
 
 @end
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
-    self.parseLocations = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
@@ -31,8 +31,17 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-     [self queryParseMethod];
+    self.title = self.city;
 
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    self.parseLocations = [[NSMutableArray alloc]init];
+    self.today = [NSDate date];
+    [self queryParseMethod];
+
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -45,10 +54,29 @@
 {
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
+    cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
     cell.textLabel.text = trip.name;
-    cell.detailTextLabel.text = trip.user;
-    self.title = trip.city;
+    if (cell.trip.isPrivate == NO)
+    {
+        cell.lockPhoto.hidden = YES;
+    } else
+    {
+        cell.lockPhoto.hidden = NO;
+    }
+
+    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
+    if (tripInterval < 86400) {
+        cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
+    }
+    
+    else
+    {
+        cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+    }
+    
+    NSLog(@"title = %@", cell.textLabel.text);
+
 
     return cell;
 }
@@ -90,6 +118,8 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.path = indexPath;
     [self performSegueWithIdentifier:@"TrunkView" sender:self];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     
 }
 @end

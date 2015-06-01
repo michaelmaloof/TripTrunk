@@ -26,6 +26,12 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
+@property NSString *country;
+@property NSString *city;
+@property NSString *state;
+@property (weak, nonatomic) IBOutlet UIButton *public;
+@property (weak, nonatomic) IBOutlet UIButton *private;
+@property BOOL isPrivate;
 
 @end
 
@@ -47,6 +53,8 @@
     self.countryTextField.delegate = self;
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
+    
+
     
 //FIXME Do I even need this?
     [self.locationManager requestWhenInUseAuthorization];
@@ -84,8 +92,28 @@
     
     }
 
-    
+    [self checkPublicPrivate];
+
 }
+
+-(void)checkPublicPrivate{
+    if (self.trip.isPrivate == NO || self.trip == nil)
+    {
+        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.private.backgroundColor = [UIColor whiteColor];
+        self.public.tag = 1;
+        self.private.tag = 0;
+    }
+    
+    else {
+        self.public.backgroundColor = [UIColor whiteColor];
+        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.public.tag = 0;
+        self.private.tag = 1;
+    }
+}
+
+
 
 - (IBAction)onCancelTapped:(id)sender {
     if (self.navigationItem.leftBarButtonItem.tag == 0)
@@ -168,12 +196,21 @@
                     {
                         if (self.navigationItem.rightBarButtonItem.tag == 0 )
                         {
+                            CLPlacemark *placemark= placemarks.firstObject;
+                            self.country = placemark.country;
+                            self.city = placemark.locality;
+                            self.state = placemark.administrativeArea;
+                            
                         [self performSegueWithIdentifier:@"photos" sender:self];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                         }
                         
                         else
                         {
+                            CLPlacemark *placemark= placemarks.firstObject;
+                            self.country = placemark.country;
+                            self.city = placemark.locality;
+                            self.state = placemark.administrativeArea;
                             [self parseTrip];
                         }
 
@@ -204,19 +241,17 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     NSString *tripName = self.tripNameTextField.text;
-    NSString *tripCity = self.cityNameTextField.text;
     NSString *start = self.startTripTextField.text;
     NSString *end = self.endTripTextField.text;
-    NSString *countryName = self.countryTextField.text;
-    NSString *stateName = self.stateTextField.text;
     
     AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
     addTripPhotosViewController.tripName = tripName;
-    addTripPhotosViewController.tripCity = tripCity;
-    addTripPhotosViewController.tripCountry = countryName;
-    addTripPhotosViewController.tripState = stateName;
+    addTripPhotosViewController.tripCity = self.city;
+    addTripPhotosViewController.tripCountry = self.country;
+    addTripPhotosViewController.tripState = self.state;
     addTripPhotosViewController.startDate = start;
     addTripPhotosViewController.endDate = end;
+    addTripPhotosViewController.isPrivate = self.isPrivate;
     
 }
 
@@ -250,11 +285,12 @@
 //FIXME Should only parse if things have been changed
     
     self.trip.name = self.tripNameTextField.text;
-    self.trip.country = self.countryTextField.text;
-    self.trip.state = self.stateTextField.text;
-    self.trip.city = self.cityNameTextField.text;
+    self.trip.country = self.country;
+    self.trip.state = self.state;
+    self.trip.city = self.city;
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
+    self.trip.isPrivate = self.isPrivate;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -284,9 +320,30 @@
     }];
 }
 
+- (IBAction)publicTapped:(id)sender {
+    if (self.public.tag == 0)
+    {
+        self.public.tag = 1;
+        self.private.tag = 0;
+        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.private.backgroundColor = [UIColor whiteColor];
+        self.isPrivate = NO;
+    }
+    
+}
 
 
+- (IBAction)privateTapped:(id)sender {
+    if (self.private.tag == 0)
+    {
+        self.public.tag = 0;
+        self.private.tag = 1;
+        self.public.backgroundColor = [UIColor whiteColor];
+        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.isPrivate = YES;
 
+    }
 
+}
 
 @end

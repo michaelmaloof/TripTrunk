@@ -30,7 +30,7 @@
     _user = user;
     
     [self.nameLabel setText:user[@"name"]];
-    [self.usernameLabel setText:user.username];
+    [self.usernameLabel setText:[NSString stringWithFormat:@"@%@", user.username]];
     
 }
 

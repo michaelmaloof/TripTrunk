@@ -14,23 +14,21 @@
 #import <ParseUI/ParseUI.h>
 #import "PhotoViewController.h"
 #import "AddTripPhotosViewController.h"
+#import "TrunkMembersViewController.h"
 
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
 @property NSArray *photos;
 @property NSMutableArray *trunkAlbum;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
 @property (weak, nonatomic) IBOutlet UILabel *endDate;
 @property (weak, nonatomic) IBOutlet UIButton *memberButton;
-@property (weak, nonatomic) IBOutlet UILabel *cityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
 @property PFImageView *imageview;
-
-
-
+@property int photosOriginal;
 
 @end
 
@@ -38,13 +36,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.title = self.trip.name;
-    self.photos = [[NSArray alloc]init];
     self.trunkAlbum = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.cityLabel.text = self.trip.city;
-    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.state,self.trip.country];
-    self.photoLabel.text = [NSString stringWithFormat:@"Photos: %lu", (unsigned long)self.photos.count];
+    self.title = self.trip.name;
+    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@ %@, %@",self.trip.city, self.trip.state,self.trip.country];
+//    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     self.endDate.text = self.trip.endDate;
     UIBarButtonItem *newBackButton =
@@ -54,14 +52,20 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
 
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    self.photos = nil;
+    self.photos = [[NSArray alloc]init];
+    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
+        
     } else {
         self.navigationItem.rightBarButtonItem = nil;
     }
     
     [self queryParseMethod];
-    
 }
 
 
@@ -71,7 +75,7 @@
 
     if(indexPath.row == 0)
     {
-        cell.photo.image = [UIImage imageNamed:@"Add Caption"];
+        cell.photo.image = [UIImage imageNamed:@"Plus Square"];
     }
     
     else if (indexPath.row > 0)
@@ -80,6 +84,8 @@
         [self convertPhoto:cell indexPath:indexPath];
     
     }
+    
+
     return cell;
 }
 
@@ -103,8 +109,18 @@
         if(!error)
         {
             self.photos = [NSArray arrayWithArray:objects];
-            [self.collectionView reloadData];
-
+//            NSString *string = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
+//            self.photoLabel.text = string;
+            [self checkPhotos];
+//            if (!self.photosOriginal == self.photos.count)
+//            {
+//                self.photosOriginal = self.photos.count;
+//                [self.collectionView reloadData];
+//            }
+//            
+//            else {
+//                
+//            }
             
         }else
         {
@@ -113,6 +129,18 @@
 
 
     }];
+
+}
+
+-(void)checkPhotos
+{
+    int photoCount = (int)self.photos.count;
+    if (self.photosOriginal != photoCount)
+    {
+        self.photosOriginal = photoCount;
+        [self.collectionView reloadData];
+    }
+    
 
 }
 
@@ -140,6 +168,12 @@
     [alertView addButtonWithTitle:@"OK"];
     [alertView show];
 
+}
+
+- (IBAction)membersButtonPressed:(id)sender {
+    NSLog(@"membersButtonPressed");
+    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
