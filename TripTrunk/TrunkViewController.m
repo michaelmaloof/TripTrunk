@@ -157,15 +157,13 @@
 }
      
 - (IBAction)onPhotoTapped:(id)sender {
-    for (UIImage *image in self.trunkAlbum){
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-    }
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Saved Trunk photos to phone";
+    alertView.title = @"Save Trunk photos to phone?";
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"OK"];
+    [alertView addButtonWithTitle:@"No"];
+    [alertView addButtonWithTitle:@"Download"];
     [alertView show];
 
 }
@@ -211,7 +209,22 @@
 }
 
 
-     
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        for (UIImage *image in self.trunkAlbum){
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+        }
+        
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = @"Photos have been saved";
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:@"Sweet!"];
+        [alertView show];
+
+    }
+}
+
 
 
 
