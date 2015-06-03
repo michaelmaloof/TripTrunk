@@ -313,11 +313,17 @@
 }
 
 - (IBAction)onDeleteWasTapped:(id)sender {
-    [self.trip deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        }
-    }];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = @"Are you sure you want to delete this Trunk?";
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"No"];
+    [alertView addButtonWithTitle:@"Delete"];
+    alertView.tag = 0;
+    [alertView show];
+    
+    
 }
 
 - (IBAction)publicTapped:(id)sender {
@@ -343,6 +349,26 @@
         self.isPrivate = YES;
 
     }
+
+}
+
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if (alertView.tag == 0)
+    {
+        if (buttonIndex == 1)
+        {
+            [self.trip deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
+            }];
+        }
+    }
+    
 
 }
 

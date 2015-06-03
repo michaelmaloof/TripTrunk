@@ -57,14 +57,17 @@
 
 - (IBAction)onSavePhotoTapped:(id)sender {
     
-    UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Saved photo to phone";
+    alertView.title = @"Save photo to phone?";
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"OK"];
+    [alertView addButtonWithTitle:@"No"];
+    [alertView addButtonWithTitle:@"Download"];
+    alertView.tag = 1;
     [alertView show];
 }
+
+
 
 - (IBAction)onCommentsTapped:(id)sender {
     self.tableView.hidden = !self.tableView.hidden;
@@ -238,18 +241,40 @@
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
     [alertView addButtonWithTitle:@"No"];
     [alertView addButtonWithTitle:@"Yes"];
+    alertView.tag = 0;
     [alertView show];
 
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1)
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if (alertView.tag == 0)
     {
-        [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                [self.navigationController popViewControllerAnimated:YES];
+        if (buttonIndex == 1)
+            {
+                [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                {
+                    if (succeeded)
+                    {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+                }];
             }
-        }];
+    }
+    
+    if (alertView.tag == 1) {
+        if (buttonIndex == 1)
+        {
+        UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Photo has been saved";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"Sweet!"];
+            [alertView show];
+        }
+        
 
     }
 }
