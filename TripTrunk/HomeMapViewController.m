@@ -165,6 +165,15 @@
         [self.mapView addAnnotation:annotation];
         }
         
+        self.dropped = self.dropped + 1;
+        
+        
+        if (self.dropped + self.notDropped == self.parseLocations.count){
+            [self fitPins];
+            self.dropped = 0;
+            self.notDropped = 0;
+        }
+
     }];
 }
 
@@ -206,14 +215,14 @@
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
     [self.locations addObject:startAnnotation];
-    self.dropped = self.dropped + 1;
-
-    
-    if (self.dropped + self.notDropped == self.parseLocations.count){
-        [self fitPins];
-        self.dropped = 0;
-        self.notDropped = 0;
-    }
+//    self.dropped = self.dropped + 1;
+//
+//    
+//    if (self.dropped + self.notDropped == self.parseLocations.count){
+//        [self fitPins];
+//        self.dropped = 0;
+//        self.notDropped = 0;
+//    }
     return startAnnotation;
 }
 -(void)fitPins
@@ -247,7 +256,6 @@
         trunkView.city = self.pinCityName;
         self.pinCityName = nil;
     }
-//      [self fitPins];
 }
 - (IBAction)onProfileTapped:(id)sender {
 
