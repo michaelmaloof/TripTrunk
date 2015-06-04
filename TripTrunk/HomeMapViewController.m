@@ -25,6 +25,8 @@
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 @property (weak, nonatomic) IBOutlet UIButton *mapFilter;
+@property int dropped;
+@property int notDropped;
 
 @end
 
@@ -68,9 +70,6 @@
         [users addObject:user];
         [self queryParseMethod:users];
     }
-    
-    [self fitPins];
-
 }
 
 -(void)queryParseMethod:(NSMutableArray*)userNames
@@ -115,10 +114,14 @@
     {
         for (Trip *trip in self.parseLocations)
         {
+
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-       
+            
+            
             NSDate *today = [NSDate date];
             NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+        
+            
             BOOL color = 0;
             if (tripInterval < 86400) {
                 color = 1;
@@ -130,6 +133,8 @@
             {
                 [self addTripToMap:trip dot:color];
                 self.originalCount = self.parseLocations.count;
+            } else {
+                self.notDropped = self.notDropped +1;
             }
         }
     }
@@ -201,15 +206,19 @@
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
     [self.locations addObject:startAnnotation];
-    if (self.mapView.annotations > 0){
-//        [self fitPins];
+    self.dropped = self.dropped + 1;
 
+    
+    if (self.dropped + self.notDropped == self.parseLocations.count){
+        [self fitPins];
+        self.dropped = 0;
+        self.notDropped = 0;
     }
     return startAnnotation;
 }
 -(void)fitPins
 {
-    self.mapView.camera.altitude *= 5.0;
+    self.mapView.camera.altitude *= 1.0;
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
@@ -238,7 +247,7 @@
         trunkView.city = self.pinCityName;
         self.pinCityName = nil;
     }
-      [self fitPins];
+//      [self fitPins];
 }
 - (IBAction)onProfileTapped:(id)sender {
 
