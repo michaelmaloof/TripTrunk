@@ -12,6 +12,7 @@
 #import "Photo.h"
 #import "TripImageView.h"
 #import "AddTripFriendsViewController.h"
+#import "Utility.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -137,18 +138,27 @@
 //        self.photos = nil;
 //        self.photosCounter = nil;
         
-        
+
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                 NSLog(@"Save Trip Success - Now push to Friend VC");
-                 
-                 AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
-                 
-                 [self.navigationController pushViewController:vc animated:YES];
-                 
+                 if (self.alreadyTrip) {
+                     NSLog(@"Save Trip Success - Pop VC since trip already exists so don't add new members");
+
+                     [self.navigationController popViewControllerAnimated:YES];
+                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+
+                 }
+                 else
+                 {
+                     NSLog(@"Save Trip Success - Now push to Friend VC");
+                     
+                     AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
+                     
+                     [self.navigationController pushViewController:vc animated:YES];
+                 }
              }
          }];
     }
@@ -165,7 +175,7 @@
     Photo *photo = [Photo object];
     
     photo.likes = 0;
-    photo.imageFile = file;
+//    photo.imageFile = file;
     photo.fbID = [user objectForKey:@"fbId"];
     photo.userName = [PFUser currentUser].username;
     photo.user = [PFUser currentUser];
@@ -174,7 +184,10 @@
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
+        
     
+    [[Utility sharedInstance] uploadPhoto:photo withImageData:imageData];
+    return; // ADDED TO STOP FROM SAVING TO PARSE
     [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         if(error) {

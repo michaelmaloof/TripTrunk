@@ -23,6 +23,8 @@
 @property NSMutableArray *usersWhoHaveLiked;
 @property NSString *city;
 @property NSString *userName;
+@property NSString *imageUrl;
+
 
 
 @end
