@@ -22,6 +22,7 @@
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
@@ -30,11 +31,15 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
+
     self.title = self.city;
     
-    self.tableView.hidden = YES;
+    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"earth"]];
+    [tempImageView setFrame:self.tableView.frame];
+    
+    self.tableView.backgroundView = tempImageView;
 
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
