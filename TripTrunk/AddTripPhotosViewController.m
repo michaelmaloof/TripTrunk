@@ -81,10 +81,11 @@
     self.submitTrunk.hidden = YES;
     
     if (!self.trip) {
+        // This shouldn't happen, trip should always be set from the previous view controler
         [self parseTrip];
     }
-    [self parsePhotos];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    [self parsePhotos];
 }
 
 -(void)parseTrip {
@@ -129,6 +130,11 @@
         [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
         [self addToCounterArray:tripImageView];
         self.trip.mostRecentPhoto = [NSDate date];
+        if (!self.isTripCreation) {
+            // This came from the Trunk view, so pop back to it.
+            [self.navigationController popViewControllerAnimated:YES];
+            [[self navigationController] setNavigationBarHidden:NO animated:YES];
+        }
 
     }
     
@@ -144,23 +150,11 @@
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                 if (self.alreadyTrip) {
-                     NSLog(@"Save Trip Success - Pop VC since trip already exists so don't add new members");
+                     NSLog(@"Save Trip Success - dismiss view controller");
 
-                     [self.navigationController popViewControllerAnimated:YES];
+                     [self dismissViewControllerAnimated:YES completion:NULL];
                      [[self navigationController] setNavigationBarHidden:NO animated:YES];
 
-                 }
-                 else
-                 {
-                     NSLog(@"Save Trip Success - Now push to Friend VC");
-                     
-                     AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
-                     
-                     [self.navigationController pushViewController:vc animated:YES];
-                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
-
-                 }
              }
          }];
     }

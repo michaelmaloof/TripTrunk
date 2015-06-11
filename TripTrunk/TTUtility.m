@@ -62,6 +62,8 @@ CLCloudinary *cloudinary;
                   }
                   else {
                       NSLog(@"Saved Successfully to parse");
+                      // post the notification so that the TrunkViewController can know to reload the data
+                      [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
                   }
               }];
               
