@@ -15,14 +15,14 @@
 #import <Parse/Parse.h>
 
 
-@interface Utility : NSObject <CLUploaderDelegate>
+@interface TTUtility : NSObject <CLUploaderDelegate>
 
 /**
  *  Singleton instances of the shared API
  *
  *  @return shared API instance
  */
-+ (Utility *)sharedInstance;
++ (TTUtility *)sharedInstance;
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 

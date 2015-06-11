@@ -9,6 +9,7 @@
 #import "TrunkMembersViewController.h"
 #import "UIImageView+AFNetworking.h"
 
+#import "AddTripFriendsViewController.h"
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
@@ -43,13 +44,22 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Members"
+                                                                              style:UIBarButtonItemStyleBordered
+                                                                             target:self
+                                                                             action:@selector(addMembers)];
+    
     
     // initialize array for table view data source
     _tripMembers = [[NSMutableArray alloc] init];
     
+
+    
+}
+- (void)viewDidAppear:(BOOL)animated
+{
     // Get the users for the list
     [self loadUsers];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,7 +70,7 @@
 - (void)loadUsers
 {
     
-    // Query all user's that
+    // Query all user's that are in this trip
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
     [memberQuery whereKey:@"trip" equalTo:_trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -75,6 +85,8 @@
         else
         {
             NSLog(@"%@", objects);
+            
+            [_tripMembers removeAllObjects]; // clear the array in case it already has stuff in it
             
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
@@ -274,6 +286,13 @@
             }
         }];
     }
+}
+
+// Pushes to the Add Friends view controller
+- (void)addMembers
+{
+    AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

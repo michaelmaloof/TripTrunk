@@ -6,22 +6,22 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import "Utility.h"
+#import "TTUtility.h"
 
 #define CLOUDINARY_URL @"cloudinary://831333642159488:Dn_JFKToHLc_wXPi1qnkXQJrAtc@mattschoch"
 
-@implementation Utility 
+@implementation TTUtility 
 
 CLCloudinary *cloudinary;
 
-+ (Utility*)sharedInstance
++ (TTUtility*)sharedInstance
 {
-    static Utility *_sharedInstance = nil;
+    static TTUtility *_sharedInstance = nil;
     
     static dispatch_once_t oncePredicate;
     
     dispatch_once(&oncePredicate, ^{
-        _sharedInstance = [[Utility alloc] init];
+        _sharedInstance = [[TTUtility alloc] init];
     });
     
     return _sharedInstance;
