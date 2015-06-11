@@ -140,8 +140,8 @@
     if (textField == self.endTripTextField) {
         [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
-        self.endTripTextField.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:100.0/255.0 alpha:1.0];
-        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:228.0/255.0 green:117.0/255.0 blue:100.0/255.0 alpha:1.0];
+        self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
+        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
         self.startTripTextField.backgroundColor = [UIColor whiteColor];
         self.tripDatePicker.tag = 1;
         return NO;
@@ -150,8 +150,8 @@
     else if (textField == self.startTripTextField){
         [self.view endEditing:YES];
         self.tripDatePicker.hidden = NO;
-        self.startTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
-        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
+        self.startTripTextField.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         self.tripDatePicker.tag = 0;
         return NO;
