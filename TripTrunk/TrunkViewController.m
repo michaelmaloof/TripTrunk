@@ -16,6 +16,8 @@
 #import "AddTripPhotosViewController.h"
 #import "TrunkMembersViewController.h"
 
+#import "UIImageView+AFNetworking.h"
+
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
 @property NSArray *photos;
@@ -77,17 +79,36 @@
     {
         cell.photo.image = [UIImage imageNamed:@"Plus Square"];
     }
-    
+    // This is the images
     else if (indexPath.row > 0)
     {
         cell.tripPhoto = [self.photos objectAtIndex:indexPath.row -1];
-        [self convertPhoto:cell indexPath:indexPath];
+        
+        // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
+//        [self convertPhoto:cell indexPath:indexPath];
+        
+        
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:cell.tripPhoto.imageUrl]];
+        UIImage *placeholderImage = [UIImage new];
+        __weak TrunkCollectionViewCell *weakCell = cell;
+        
+        [cell.photo setImageWithURLRequest:request
+                                    placeholderImage:placeholderImage
+                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                 
+                                                 [self.trunkAlbum addObject:image];
+
+                                                 weakCell.photo.image = image;
+                                                 [weakCell setNeedsLayout];
+                                                 
+                                             } failure:nil];
+        return weakCell;
     
     }
-    
-
     return cell;
 }
+
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -108,19 +129,9 @@
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
+            // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
-//            NSString *string = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
-//            self.photoLabel.text = string;
-            [self checkPhotos];
-//            if (!self.photosOriginal == self.photos.count)
-//            {
-//                self.photosOriginal = self.photos.count;
-//                [self.collectionView reloadData];
-//            }
-//            
-//            else {
-//                
-//            }
+            [self.collectionView reloadData];
             
         }else
         {
@@ -132,6 +143,7 @@
 
 }
 
+// mattschoch 6/10 - I think this method can be deleted?
 -(void)checkPhotos
 {
     int photoCount = (int)self.photos.count;
@@ -144,6 +156,7 @@
 
 }
 
+// mattschoch 6/10 - I think this method can be deleted as well - replaced with setting image in the cell
 -(void)convertPhoto:(TrunkCollectionViewCell*)cell indexPath:(NSIndexPath*)indexPath {
     Photo *photo = [self.photos objectAtIndex:indexPath.row -1];
     PFFile *file = photo.imageFile;
@@ -183,6 +196,10 @@
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
         vc.photo = [self.photos objectAtIndex:self.path.row -1];
+        //TODO: VC.Image sets the WRONG image.
+        // It could be just from having a "photo" without an imageUrl though, so maybe it works.
+        // I think it works, but it can crash sometimes from an index-out-of-range exception
+        vc.image = [self.trunkAlbum objectAtIndex:self.path.row -1];
         self.path = nil;
     }
     
@@ -199,6 +216,7 @@
     if (indexPath.row > 0)
     {
         self.path = indexPath;
+        
         [self performSegueWithIdentifier:@"photo" sender:self];
     }
     

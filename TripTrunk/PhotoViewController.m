@@ -38,7 +38,12 @@
     self.tableView.hidden = YES;
     self.addComment.hidden = YES;
     self.textView.hidden = YES;
-    [self.imageView loadInBackground];
+    
+    //mattschoch 6/10 - setting the image on the imageview directly
+//    [self.imageView loadInBackground];
+    self.imageView.image = self.image;
+    
+    
     [self queryParseMethod];
     self.delete.hidden = YES;
     

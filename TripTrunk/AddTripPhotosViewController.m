@@ -12,6 +12,7 @@
 #import "Photo.h"
 #import "TripImageView.h"
 #import "AddTripFriendsViewController.h"
+#import "TTUtility.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -137,18 +138,29 @@
 //        self.photos = nil;
 //        self.photosCounter = nil;
         
-        
+
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                 NSLog(@"Save Trip Success - Now push to Friend VC");
-                 
-                 AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
-                 
-                 [self.navigationController pushViewController:vc animated:YES];
-                 
+                 if (self.alreadyTrip) {
+                     NSLog(@"Save Trip Success - Pop VC since trip already exists so don't add new members");
+
+                     [self.navigationController popViewControllerAnimated:YES];
+                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+
+                 }
+                 else
+                 {
+                     NSLog(@"Save Trip Success - Now push to Friend VC");
+                     
+                     AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
+                     
+                     [self.navigationController pushViewController:vc animated:YES];
+                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+
+                 }
              }
          }];
     }
@@ -165,7 +177,7 @@
     Photo *photo = [Photo object];
     
     photo.likes = 0;
-    photo.imageFile = file;
+//    photo.imageFile = file;
     photo.fbID = [user objectForKey:@"fbId"];
     photo.userName = [PFUser currentUser].username;
     photo.user = [PFUser currentUser];
@@ -174,50 +186,53 @@
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
-    
-    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
-        if(error) {
-            self.plusPhoto.hidden = NO;
-            self.submitTrunk.hidden = NO;
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            [[self navigationController] setNavigationBarHidden:NO animated:YES];
-            alertView.delegate = self;
-            alertView.title = @"No internet connection to save photos.";
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"OK"];
-            [alertView show];
-        } else {
-            if (self.alreadyTrip == NO)
-            {
-                self.count = self.count +1;
-                int arrayCount = (int)self.photos.count;
-                if (self.count == arrayCount)
-                {
-                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
-                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
-                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
-                     */
-//                    [self dismissViewControllerAnimated:YES completion:NULL];
-                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-                    self.photos = nil;
-                    self.photosCounter = nil;
-                }
-            }
-            else if (self.alreadyTrip == YES)
-            {
-                self.count = self.count +1;
-                int arrayCount = (int)self.photos.count;
-                if (self.count == arrayCount)
-                {
-                    [self.navigationController popViewControllerAnimated:YES];
-                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-                    self.photos = nil;
-                    self.photosCounter = nil;
-                }
-            }
-        }
-    }];
+    
+    [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
+    return; // ADDED TO STOP FROM SAVING TO PARSE
+//    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        
+//        if(error) {
+//            self.plusPhoto.hidden = NO;
+//            self.submitTrunk.hidden = NO;
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//            alertView.delegate = self;
+//            alertView.title = @"No internet connection to save photos.";
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:@"OK"];
+//            [alertView show];
+//        } else {
+//            if (self.alreadyTrip == NO)
+//            {
+//                self.count = self.count +1;
+//                int arrayCount = (int)self.photos.count;
+//                if (self.count == arrayCount)
+//                {
+//                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
+//                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
+//                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
+//                     */
+////                    [self dismissViewControllerAnimated:YES completion:NULL];
+//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//                    self.photos = nil;
+//                    self.photosCounter = nil;
+//                }
+//            }
+//            else if (self.alreadyTrip == YES)
+//            {
+//                self.count = self.count +1;
+//                int arrayCount = (int)self.photos.count;
+//                if (self.count == arrayCount)
+//                {
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//                    self.photos = nil;
+//                    self.photosCounter = nil;
+//                }
+//            }
+//        }
+//    }];
     
 }
 

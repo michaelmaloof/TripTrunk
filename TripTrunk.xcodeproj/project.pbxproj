@@ -65,6 +65,11 @@
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
 		C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
+		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
+		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
+		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
+		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
+		C9525A401B25297300185713 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
@@ -176,6 +181,14 @@
 		C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
 		C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
+		C9525A331B251FC100185713 /* libCloudinary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCloudinary.a; sourceTree = "<group>"; };
+		C9525A371B251FD400185713 /* CLCloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLCloudinary.h; sourceTree = "<group>"; };
+		C9525A381B251FD400185713 /* CLEagerTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLEagerTransformation.h; sourceTree = "<group>"; };
+		C9525A391B251FD400185713 /* Cloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
+		C9525A3A1B251FD400185713 /* CLTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
+		C9525A3B1B251FD400185713 /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
+		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
+		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
@@ -214,6 +227,7 @@
 				224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */,
 				224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */,
 				224F3FEA1AE1E572003A1DEB /* CoreGraphics.framework in Frameworks */,
+				C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */,
 				224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */,
 				224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */,
 			);
@@ -223,6 +237,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9525A401B25297300185713 /* Parse.framework in Frameworks */,
+				C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,11 +358,14 @@
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
 				C9C7299E1B0248D900BA68D2 /* SocialUtility.h */,
 				C9C7299F1B0248D900BA68D2 /* SocialUtility.m */,
+				C9525A3C1B25218800185713 /* TTUtility.h */,
+				C9525A3D1B25218800185713 /* TTUtility.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
 				C90C3CFB1B04FC2200CABBC9 /* AFNetworking */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
 				224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */,
+				C9525A361B251FD400185713 /* Cloudinary */,
 				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
 				224F3F8F1AE1D35E003A1DEB /* Supporting Files */,
 			);
@@ -382,6 +401,7 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9525A331B251FC100185713 /* libCloudinary.a */,
 				2289D9891B0AAE9200CEECF5 /* ParseUI.framework */,
 				2289D9871B0AAE8100CEECF5 /* Parse.framework */,
 				C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */,
@@ -434,6 +454,18 @@
 				C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */,
 			);
 			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		C9525A361B251FD400185713 /* Cloudinary */ = {
+			isa = PBXGroup;
+			children = (
+				C9525A371B251FD400185713 /* CLCloudinary.h */,
+				C9525A381B251FD400185713 /* CLEagerTransformation.h */,
+				C9525A391B251FD400185713 /* Cloudinary.h */,
+				C9525A3A1B251FD400185713 /* CLTransformation.h */,
+				C9525A3B1B251FD400185713 /* CLUploader.h */,
+			);
+			path = Cloudinary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -557,6 +589,7 @@
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
+				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
@@ -583,6 +616,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9525A3F1B25218800185713 /* TTUtility.m in Sources */,
 				224F3FAC1AE1D35E003A1DEB /* TripTrunkTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -714,7 +748,12 @@
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -735,7 +774,12 @@
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -748,6 +792,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -755,6 +800,10 @@
 				);
 				INFOPLIST_FILE = TripTrunkTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripTrunk.app/TripTrunk";
 			};
@@ -767,9 +816,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = TripTrunkTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripTrunk.app/TripTrunk";
 			};

@@ -302,8 +302,13 @@
     // We dismiss it outside the save block so that there's no hangup for the user.
     // The downside is, if it fails then they have to redo everything
     //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
-    [self dismissViewControllerAnimated:YES completion:nil];
-
+    if (self.presentingViewController) {
+        NSLog(@"This VC was presented, so we can dismiss the modal");
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 

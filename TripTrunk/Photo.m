@@ -20,6 +20,7 @@
 @dynamic usersWhoHaveLiked;
 @dynamic city;
 @dynamic tripName;
+@dynamic imageUrl;
 
 +(NSString *)parseClassName
 {
