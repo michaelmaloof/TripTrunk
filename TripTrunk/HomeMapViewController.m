@@ -47,6 +47,7 @@
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
    self.tripsToCheck = [[NSMutableArray alloc]init];
+    self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
 
 
 }

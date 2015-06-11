@@ -31,7 +31,9 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    self.title = self.city; 
+    self.title = self.city;
+    
+    self.tableView.hidden = YES;
 
 }
 
