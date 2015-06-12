@@ -70,10 +70,13 @@
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A401B25297300185713 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
+		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
+		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
+		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
 		C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */; };
 		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
 /* End PBXBuildFile section */
@@ -189,6 +192,10 @@
 		C9525A3B1B251FD400185713 /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
+		C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
+		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
+		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
+		C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
@@ -197,6 +204,8 @@
 		C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFriendsViewController.m; sourceTree = "<group>"; };
 		C9CD1CAA1AFC27FA00D967A5 /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
+		C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextField.h; sourceTree = "<group>"; };
+		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
 		C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripFriendsViewController.h; sourceTree = "<group>"; };
 		C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripFriendsViewController.m; sourceTree = "<group>"; };
 		C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkMembersViewController.h; sourceTree = "<group>"; };
@@ -362,10 +371,9 @@
 				C9525A3D1B25218800185713 /* TTUtility.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
-				C90C3CFB1B04FC2200CABBC9 /* AFNetworking */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
 				224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */,
-				C9525A361B251FD400185713 /* Cloudinary */,
+				C95FD1431B2A66AD001755FF /* Third Party */,
 				224F3FDA1AE1DB64003A1DEB /* Frameworks */,
 				224F3F8F1AE1D35E003A1DEB /* Supporting Files */,
 			);
@@ -466,6 +474,21 @@
 				C9525A3B1B251FD400185713 /* CLUploader.h */,
 			);
 			path = Cloudinary;
+			sourceTree = "<group>";
+		};
+		C95FD1431B2A66AD001755FF /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
+				C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */,
+				C90C3CFB1B04FC2200CABBC9 /* AFNetworking */,
+				C9525A361B251FD400185713 /* Cloudinary */,
+				C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */,
+				C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */,
+				C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
+				C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+			);
+			name = "Third Party";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -587,6 +610,8 @@
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
+				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
+				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
@@ -595,6 +620,7 @@
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */,
+				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
