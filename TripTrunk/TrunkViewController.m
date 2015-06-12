@@ -67,6 +67,11 @@
         self.navigationItem.rightBarButtonItem = nil;
     }
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(queryParseMethod)
+                                                 name:@"parsePhotosUpdatedNotification"
+                                               object:nil];
+    
     [self queryParseMethod];
 }
 
@@ -243,6 +248,9 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 

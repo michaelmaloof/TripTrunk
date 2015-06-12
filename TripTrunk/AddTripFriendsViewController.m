@@ -7,6 +7,7 @@
 //
 
 #import "AddTripFriendsViewController.h"
+#import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "UIImageView+AFNetworking.h"
@@ -21,7 +22,6 @@
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
-@property (strong, nonatomic) Trip *trip;
 
 @end
 
@@ -42,9 +42,19 @@
 
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                           target:self
-                                                                                           action:@selector(saveFriendsAndClose)];
+    // During trip creation flow we want a Next button, otherwise it's a Done button
+    if (self.isTripCreation) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next"
+                                                                                  style:UIBarButtonItemStylePlain
+                                                                                 target:self
+                                                                                 action:@selector(saveFriendsAndClose)];
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                               target:self
+                                                                                               action:@selector(saveFriendsAndClose)];
+    }
     _thisUser = [PFUser currentUser];
     
     // Create nested arrays to populate the table view
@@ -258,11 +268,20 @@
 {
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+
     if (selectedRows.count == 0) {
         NSLog(@"No Friends Selected");
-        [self dismissViewControllerAnimated:YES completion:nil];
+        if (!self.isTripCreation) {
+            // Adding friends to an existing trip, so pop back
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else {
+            // Nex trip creation flow, so push forward
+            [self performSegueWithIdentifier:@"photos" sender:self];
+        }
         return;
     }
+    
     for (NSIndexPath *indexPath in selectedRows) {
         PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
@@ -302,24 +321,29 @@
     // We dismiss it outside the save block so that there's no hangup for the user.
     // The downside is, if it fails then they have to redo everything
     //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
-    if (self.presentingViewController) {
-        NSLog(@"This VC was presented, so we can dismiss the modal");
-        [self dismissViewControllerAnimated:YES completion:nil];
+    if (!self.isTripCreation) {
+        // Adding friends to an existing trip, so pop back
+        [self.navigationController popViewControllerAnimated:YES];
     }
     else {
-        [self.navigationController popViewControllerAnimated:YES];
+        // Nex trip creation flow, so push forward
+        [self performSegueWithIdentifier:@"photos" sender:self];
     }
 }
 
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+
+
+    AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
+    addTripPhotosViewController.trip = self.trip;
+    addTripPhotosViewController.isTripCreation = YES;
+    
 }
-*/
+
 
 @end
