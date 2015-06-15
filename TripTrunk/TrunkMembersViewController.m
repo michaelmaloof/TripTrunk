@@ -67,6 +67,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+/**
+ * Loads all users who are part of this trunk. First, it queries the Activity model to get members in this trunk, then it queries the Trip model to get the trip creator
+ */
 - (void)loadUsers
 {
     
@@ -124,7 +127,10 @@
         }
         
     }];
+    
 }
+
+
 
 #pragma mark - Table view data source
 

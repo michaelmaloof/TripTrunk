@@ -10,7 +10,7 @@
 #import "AddTripPhotosViewController.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-
+#import "AddTripFriendsViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
@@ -78,6 +78,8 @@
     }
     
     else {
+        // initialize the trip object
+        self.trip = [[Trip alloc] init];
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -194,25 +196,17 @@
                     
                     if(startTimeInterval <= endTimeInterval)
                     {
-                        if (self.navigationItem.rightBarButtonItem.tag == 0 )
-                        {
-                            CLPlacemark *placemark= placemarks.firstObject;
-                            self.country = placemark.country;
-                            self.city = placemark.locality;
-                            self.state = placemark.administrativeArea;
+                        // Trip Input has correct data - save the trip!
+                    
+                        CLPlacemark *placemark= placemarks.firstObject;
+                        self.country = placemark.country;
+                        self.city = placemark.locality;
+                        self.state = placemark.administrativeArea;
+                        NSLog(@"Got input for trip");
+                        [self parseTrip];
                             
-                        [self performSegueWithIdentifier:@"photos" sender:self];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                        }
-                        
-                        else
-                        {
-                            CLPlacemark *placemark= placemarks.firstObject;
-                            self.country = placemark.country;
-                            self.city = placemark.locality;
-                            self.state = placemark.administrativeArea;
-                            [self parseTrip];
-                        }
+ 
 
                     }
                     else
@@ -240,19 +234,9 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    NSString *tripName = self.tripNameTextField.text;
-    NSString *start = self.startTripTextField.text;
-    NSString *end = self.endTripTextField.text;
-    
-    AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
-    addTripPhotosViewController.tripName = tripName;
-    addTripPhotosViewController.tripCity = self.city;
-    addTripPhotosViewController.tripCountry = self.country;
-    addTripPhotosViewController.tripState = self.state;
-    addTripPhotosViewController.startDate = start;
-    addTripPhotosViewController.endDate = end;
-    addTripPhotosViewController.isPrivate = self.isPrivate;
-    
+    AddTripFriendsViewController *vc = segue.destinationViewController;
+    vc.trip = self.trip;
+    vc.isTripCreation = YES;
 }
 
 
@@ -291,7 +275,9 @@
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
     self.trip.isPrivate = self.isPrivate;
-    
+    self.trip.user = [PFUser currentUser].username;
+
+    NSLog(@"Saving Trip: %@", self.trip);
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          
@@ -304,9 +290,12 @@
                  [alertView addButtonWithTitle:@"OK"];
                  [alertView show];
              }
-             if (!error)
+             else
              {
-                 [self.navigationController popViewControllerAnimated:YES];
+                 NSLog(@"Trip Saved, performing segue to add friends");
+                 [self performSegueWithIdentifier:@"addFriends" sender:self];
+                 // Save Successful - push to Add Friends screen
+
              }
              
          }];

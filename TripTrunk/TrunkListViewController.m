@@ -47,7 +47,6 @@
     self.parseLocations = [[NSMutableArray alloc]init];
     self.today = [NSDate date];
     [self queryParseMethod];
-
     
 }
 

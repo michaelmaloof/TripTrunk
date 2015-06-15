@@ -60,7 +60,8 @@
     self.parseLocations = nil;
     self.parseLocations = [[NSMutableArray alloc]init];
     
-    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
+//    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
+    if(![PFUser currentUser])
     {
             [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
             
@@ -308,6 +309,11 @@
     self.mapFilter.tag = !self.mapFilter.tag;
     
     
+}
+
+// This is needed for the login to work properly
+// DO NOT DELETE
+-(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
 @end
 

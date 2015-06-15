@@ -10,9 +10,11 @@
 #import "HomeMapViewController.h"
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
-
+#import "MSTextField.h"
 @interface LoginViewController ()
 
+@property (strong, nonatomic) IBOutlet MSTextField *usernameTextField;
+@property (strong, nonatomic) IBOutlet MSTextField *passwordTextField;
 
 @end
 
@@ -24,11 +26,35 @@
     
     
 }
+- (IBAction)loginWithUsernameButtonPressed:(id)sender {
+    NSError *error;
+    
+    [PFUser logInWithUsername:_usernameTextField.text
+                     password:_passwordTextField.text
+                        error:&error];
+    if (error) {
+        NSLog(@"Error: %@",error);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Try again"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:^{   
+    }];
+    
+}
 
 - (IBAction)onLoginTapped:(id)sender {
 
     [self _loginWithFacebook];
 
+}
+
+- (IBAction)signupWithEmailPressed:(id)sender {
+    [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
 }
 
 - (void)_loginWithFacebook {

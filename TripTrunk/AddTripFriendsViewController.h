@@ -22,4 +22,8 @@
  */
 - (id)initWithTrip:(Trip *)trip;
 
+@property (strong, nonatomic) Trip *trip;
+
+@property (nonatomic)BOOL isTripCreation;
+
 @end
