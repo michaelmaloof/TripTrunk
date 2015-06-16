@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *mapFilter;
 @property int dropped;
 @property int notDropped;
+@property BOOL loadedOnce;
 
 @end
 
@@ -80,7 +81,10 @@
 
 -(void)queryParseMethod:(NSMutableArray*)userNames
 {
-    self.title = @"Loading Trunks...";
+    if (self.loadedOnce == NO){
+        self.title = @"Loading Trunks...";
+        self.loadedOnce = YES;
+    }
     PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
     
     for (NSString *user in userNames)
