@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -12,25 +11,18 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
-                    <rect key="frame" x="20" y="140" width="441" height="43"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="MZy-sb-Pi0">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_large" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
+                    <rect key="frame" x="180" y="185" width="120" height="110"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="dpu-om-igL"/>
+                        <constraint firstAttribute="height" constant="110" id="vzd-MQ-CHk"/>
+                    </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.36862745098039218" green="0.58039215686274503" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="kId-c2-rCX" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="bottom" multiplier="1/3" constant="1" id="5cJ-9S-tgC"/>
-                <constraint firstAttribute="bottom" secondItem="MZy-sb-Pi0" secondAttribute="bottom" id="AxJ-ox-1V9"/>
-                <constraint firstAttribute="centerX" secondItem="kId-c2-rCX" secondAttribute="centerX" id="Koa-jz-hwk"/>
-                <constraint firstItem="MZy-sb-Pi0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Pc0-by-pAK"/>
-                <constraint firstAttribute="trailing" secondItem="MZy-sb-Pi0" secondAttribute="trailing" id="elD-eq-lnM"/>
-                <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" symbolic="YES" id="fvb-Df-36g"/>
-                <constraint firstItem="MZy-sb-Pi0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nc0-a7-q4V"/>
+                <constraint firstAttribute="centerX" secondItem="bhu-yy-h3K" secondAttribute="centerX" id="1DB-4c-5vf"/>
+                <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="xzn-gN-cIP"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -38,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="mountain" width="1080" height="1920"/>
+        <image name="logo_large" width="830" height="722"/>
     </resources>
 </document>
