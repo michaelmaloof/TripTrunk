@@ -40,6 +40,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog( @"trip is %@", self.trip);
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
@@ -89,6 +90,8 @@
 }
 
 -(void)parseTrip {
+    self.title = @"Uploading Photos..";
+
     self.trip = [[Trip alloc]init];
     self.trip.name = self.tripName;
     self.trip.city = self.tripCity;
@@ -124,7 +127,7 @@
 
 -(void)parsePhotos {
     
-
+    self.title = @"Uploading Photos..";
     for (TripImageView *tripImageView in self.photos)
     {
         [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
@@ -151,7 +154,7 @@
              
              if (succeeded) {
                      NSLog(@"Save Trip Success - dismiss view controller");
-
+                    self.title = @"TripTrunk";
                      [self dismissViewControllerAnimated:YES completion:NULL];
                      [[self navigationController] setNavigationBarHidden:NO animated:YES];
 

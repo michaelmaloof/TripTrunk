@@ -266,6 +266,8 @@
  */
 - (void)saveFriendsAndClose
 {
+    self.title = @"Saving Friends...";
+
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
 
@@ -274,10 +276,13 @@
         if (!self.isTripCreation) {
             // Adding friends to an existing trip, so pop back
             [self.navigationController popViewControllerAnimated:YES];
+            self.title = @"TripTrunk";
+
         }
         else {
             // Nex trip creation flow, so push forward
            [self performSegueWithIdentifier:@"photos" sender:self];
+            self.title = @"TripTrunk";
             //    AddTripPhotosViewController *vc = [[AddTripPhotosViewController alloc]init];
         //    vc.trip = self.trip;
          //   vc.isTripCreation = YES;
@@ -302,6 +307,8 @@
                                                   otherButtonTitles:nil, nil];
             
             [alert show];
+            self.title = @"TripTrunk";
+
         }
         if (!succeeded) {
             NSLog(@"Add Friends to Trip NOT success");
@@ -312,10 +319,14 @@
                                                   otherButtonTitles:nil, nil];
             
             [alert show];
+            self.title = @"TripTrunk";
+
         }
         else
         {
             NSLog(@"saveFriends to Trip Succeeded");
+            self.title = @"TripTrunk";
+
         }
         
     }];

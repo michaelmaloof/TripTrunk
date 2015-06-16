@@ -174,7 +174,7 @@
 - (IBAction)onNextTapped:(id)sender
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
-    
+    self.title = @"Verifying Location...";
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -204,7 +204,6 @@
                         self.state = placemark.administrativeArea;
                         NSLog(@"Got input for trip");
                         [self parseTrip];
-                            
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
  
 
@@ -289,6 +288,8 @@
                  alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
                  [alertView addButtonWithTitle:@"OK"];
                  [alertView show];
+                 self.title = @"TripTrunk";
+
              }
              else
              {
@@ -298,6 +299,7 @@
               //   vc.trip = self.trip;
                //  vc.isTripCreation = YES;
                //  [self.navigationController pushViewController:vc animated:YES];
+                 self.title = @"TripTrunk";
 
                  [self performSegueWithIdentifier:@"addFriends" sender:self];
                  // Save Successful - push to Add Friends screen
