@@ -80,7 +80,7 @@
 
 -(void)queryParseMethod:(NSMutableArray*)userNames
 {
-    
+    self.title = @"Loading Trunks...";
     PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
     
     for (NSString *user in userNames)
@@ -97,6 +97,8 @@
             }else
             {
                 NSLog(@"Error: %@",error);
+                self.title = @"TripTrunk";
+
             }
             
         }];
@@ -178,6 +180,9 @@
 //            [self fitPins]; showing hometown now
             self.dropped = 0;
             self.notDropped = 0;
+            self.title = @"TripTrunk";
+            self.title = @"TripTrunk";
+
         }
 
     }];
