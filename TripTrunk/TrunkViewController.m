@@ -31,6 +31,7 @@
 @property NSIndexPath *path;
 @property PFImageView *imageview;
 @property int photosOriginal;
+@property BOOL isMember;
 
 @end
 
@@ -54,6 +55,8 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
+    [self checkIfIsMember];
+    
 
 
 }
@@ -75,6 +78,42 @@
     [self queryParseMethod];
 }
 
+-(void)checkIfIsMember{
+    
+//    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) FIXME CODE BELOW IS TEMPORARY
+    if ([[PFUser currentUser].username isEqualToString:@"3"])
+
+    {
+        self.isMember = YES;
+    }
+    else
+    {
+    
+        PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+        [memberQuery whereKey:@"trip" equalTo:self.trip];
+        [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+        [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+        [memberQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        
+        [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(!error)
+            {
+                NSMutableArray *members = [NSMutableArray arrayWithArray:objects];
+                if (members.count == 0 || members == nil){
+                    self.isMember = NO;
+                } else {
+                    self.isMember = YES;
+                }
+                
+            }else
+            {
+                NSLog(@"Error: %@",error);
+            }
+            
+        }];
+    }
+
+}
 
 -(TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -225,7 +264,17 @@
         [self performSegueWithIdentifier:@"photo" sender:self];
     }
     
-    else if (indexPath.row == 0)
+    else if (indexPath.row == 0 && self.isMember == NO)
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = [NSString stringWithFormat:@"Only members may add photos. Contact %@ to be made a member of this trunk", self.trip.user];
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:@"OK"];
+        [alertView show];
+    }
+    
+    else if (indexPath.row == 0 && self.isMember == YES)
     {
         [self performSegueWithIdentifier:@"addPhotos" sender:self];
     }
