@@ -103,7 +103,6 @@
 }
 
 - (IBAction)zoomOut:(id)sender {
-//    [self fitPins];
     self.mapView.camera.altitude *= 3.5;
 }
 
@@ -176,7 +175,7 @@
         
         
         if (self.dropped + self.notDropped == self.parseLocations.count){
-            [self fitPins];
+//            [self fitPins]; showing hometown now
             self.dropped = 0;
             self.notDropped = 0;
         }
