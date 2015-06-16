@@ -46,9 +46,13 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-   self.tripsToCheck = [[NSMutableArray alloc]init];
+    self.tripsToCheck = [[NSMutableArray alloc]init];
     self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
-
+    
+    
+    //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
+    NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
+    NSLog(@"hometown = %@", hometown);
 
 }
 
@@ -63,7 +67,7 @@
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
     if(![PFUser currentUser])
     {
-            [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
             
     }
     else {
@@ -99,7 +103,8 @@
 }
 
 - (IBAction)zoomOut:(id)sender {
-    [self fitPins];
+//    [self fitPins];
+    self.mapView.camera.altitude *= 3.5;
 }
 
 -(void)placeTrips

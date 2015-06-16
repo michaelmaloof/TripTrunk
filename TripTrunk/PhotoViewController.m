@@ -51,7 +51,7 @@
     [self.like setTitle:string forState:UIControlStateNormal];
 
 
-    if ([[PFUser currentUser].username isEqualToString:self.photo.userName]) {
+    if ([PFUser currentUser] == self.photo.user) {
         self.delete.hidden = NO;
     } else {
         self.delete.hidden = YES;

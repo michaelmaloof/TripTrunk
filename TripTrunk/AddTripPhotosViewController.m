@@ -173,6 +173,7 @@
     photo.likes = 0;
 //    photo.imageFile = file;
     photo.fbID = [user objectForKey:@"fbId"];
+    photo.trip = self.trip;
     photo.userName = [PFUser currentUser].username;
     photo.user = [PFUser currentUser];
     NSMutableArray *localArray = [[NSMutableArray alloc] init];

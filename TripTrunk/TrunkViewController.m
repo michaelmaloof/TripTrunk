@@ -80,9 +80,7 @@
 
 -(void)checkIfIsMember{
     
-//    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) FIXME CODE BELOW IS TEMPORARY
-    if ([[PFUser currentUser].username isEqualToString:@"3"])
-
+    if ([[PFUser currentUser].username isEqualToString:self.trip.user])
     {
         self.isMember = YES;
     }
@@ -300,23 +298,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

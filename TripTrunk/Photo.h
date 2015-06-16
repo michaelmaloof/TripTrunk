@@ -10,11 +10,13 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
+#import "Trip.h"
 
 @interface Photo : PFObject <PFSubclassing>
 @property (nonatomic) NSDate *createdAt;
 @property NSInteger likes;
 @property PFFile *imageFile;
+@property Trip *trip;
 @property PFUser *user;
 @property NSString *tripName;
 @property NSString *caption;
