@@ -234,7 +234,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    AddTripFriendsViewController *vc = segue.destinationViewController;
+  AddTripFriendsViewController *vc = segue.destinationViewController;
     vc.trip = self.trip;
     vc.isTripCreation = YES;
 }
@@ -293,6 +293,12 @@
              else
              {
                  NSLog(@"Trip Saved, performing segue to add friends");
+                 
+             //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
+              //   vc.trip = self.trip;
+               //  vc.isTripCreation = YES;
+               //  [self.navigationController pushViewController:vc animated:YES];
+
                  [self performSegueWithIdentifier:@"addFriends" sender:self];
                  // Save Successful - push to Add Friends screen
 

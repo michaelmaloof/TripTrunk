@@ -1335,7 +1335,7 @@
                         <outlet property="stateTextField" destination="N9W-Ie-2VI" id="dit-x5-7o9"/>
                         <outlet property="tripDatePicker" destination="2kZ-OQ-Qkn" id="xfl-JM-mtg"/>
                         <outlet property="tripNameTextField" destination="zdV-NN-4Zp" id="YUD-JE-9Pu"/>
-                        <segue destination="npq-fR-GHM" kind="show" identifier="photos" id="ggl-Zw-hv4"/>
+                        <segue destination="Eme-WN-YvW" kind="show" identifier="addFriends" id="Zqm-R8-ltx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kJ6-HM-5XW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1908,7 +1908,36 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qc3-8Y-lbt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3580" y="439"/>
+            <point key="canvasLocation" x="4312" y="377"/>
+        </scene>
+        <!--Add Trip Friends View Controller-->
+        <scene sceneID="aZY-8Z-C80">
+            <objects>
+                <tableViewController id="Eme-WN-YvW" customClass="AddTripFriendsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Q7z-74-jdk">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Hgo-b2-68r">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hgo-b2-68r" id="3WF-8I-k7n">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Eme-WN-YvW" id="XRh-We-h2H"/>
+                            <outlet property="delegate" destination="Eme-WN-YvW" id="VL1-K4-0q9"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <segue destination="npq-fR-GHM" kind="show" identifier="photos" id="yXb-jN-ymd"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="odd-SO-VOD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3491" y="412"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JHG-qy-leG">
@@ -1963,7 +1992,7 @@
         <image name="user7" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JSU-Dg-jAI"/>
         <segue reference="UVs-AV-0Qj"/>
+        <segue reference="yXb-jN-ymd"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -277,7 +277,11 @@
         }
         else {
             // Nex trip creation flow, so push forward
-            [self performSegueWithIdentifier:@"photos" sender:self];
+           [self performSegueWithIdentifier:@"photos" sender:self];
+            //    AddTripPhotosViewController *vc = [[AddTripPhotosViewController alloc]init];
+        //    vc.trip = self.trip;
+         //   vc.isTripCreation = YES;
+        //    [self.navigationController pushViewController:vc animated:YES];
         }
         return;
     }
@@ -328,6 +332,7 @@
     else {
         // Nex trip creation flow, so push forward
         [self performSegueWithIdentifier:@"photos" sender:self];
+
     }
 }
 
