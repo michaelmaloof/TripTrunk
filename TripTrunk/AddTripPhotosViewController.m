@@ -169,7 +169,7 @@
 
 - (void)addImageData:(NSData *)imageData string:(NSString*)caption
 {
-    PFFile *file = [PFFile fileWithData:imageData];
+//    PFFile *file = [PFFile fileWithData:imageData];
     PFUser *user = [PFUser currentUser];
     Photo *photo = [Photo object];
     
@@ -184,10 +184,11 @@
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
-        
     
     [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
-    return; // ADDED TO STOP FROM SAVING TO PARSE
+    return;
+    
+    // ADDED TO STOP FROM SAVING TO PARSE
 //    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 //        
 //        if(error) {

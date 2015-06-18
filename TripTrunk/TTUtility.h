@@ -13,6 +13,7 @@
 
 #import "Cloudinary.h"
 #import <Parse/Parse.h>
+#import "LoginViewController.h"
 
 
 @interface TTUtility : NSObject <CLUploaderDelegate>
@@ -25,6 +26,8 @@
 + (TTUtility *)sharedInstance;
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
+
+@property LoginViewController *login;
 
 @end
 

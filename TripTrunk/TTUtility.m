@@ -7,6 +7,7 @@
 //
 
 #import "TTUtility.h"
+#import "AppDelegate.h"
 
 #define CLOUDINARY_URL @"cloudinary://831333642159488:Dn_JFKToHLc_wXPi1qnkXQJrAtc@mattschoch"
 
@@ -72,8 +73,7 @@ CLCloudinary *cloudinary;
           }
           
       } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
-          
-          
+
           
       }];
     

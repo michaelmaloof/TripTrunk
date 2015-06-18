@@ -202,8 +202,14 @@
                     
                         CLPlacemark *placemark= placemarks.firstObject;
                         self.country = placemark.country;
-                        self.city = placemark.locality;
-                        self.state = placemark.administrativeArea;
+                        
+                        if (placemark.locality == nil){
+                            self.city = placemark.administrativeArea;
+                            self.state = placemark.administrativeArea;
+                        } else{
+                            self.city = placemark.locality;
+                            self.state = placemark.administrativeArea;
+                        }
                         NSLog(@"Got input for trip");
                         [self parseTrip];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
