@@ -42,9 +42,8 @@ CLCloudinary *cloudinary;
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 {
-    CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
-
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -92,10 +91,10 @@ CLCloudinary *cloudinary;
 }
 
 - (void) uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
-    
-    NSLog(@"Upload progress: %ld/%ld (+%ld)", (long)totalBytesWritten, (long)totalBytesExpectedToWrite, (long)bytesWritten);
+    float divide = totalBytesWritten/totalBytesExpectedToWrite;
+    NSString *string =  [NSString stringWithFormat:@"written:%ld    totalwritten:%ld    expectedToWrite:%ld   divided:%f", (long)bytesWritten, (long)totalBytesWritten, (long)totalBytesExpectedToWrite, divide];
+    NSLog(@"%@", string);
 }
-
 
 
 

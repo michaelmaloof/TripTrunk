@@ -12,10 +12,13 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "Trip.h"
 #import "TrunkListViewController.h"
+#import "TTUtility.h"
+#import "Cloudinary.h"
+
 
 #define METERS_PER_MILE 1609.344
 
-@interface HomeMapViewController () <MKMapViewDelegate>
+@interface HomeMapViewController () <MKMapViewDelegate, CLUploaderDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
@@ -28,6 +31,7 @@
 @property int dropped;
 @property int notDropped;
 @property BOOL loadedOnce;
+@property TTUtility *utility;
 
 @end
 
@@ -38,7 +42,6 @@
     self.title = @"TripTrunk";
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -54,10 +57,11 @@
     //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
     NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
     NSLog(@"hometown = %@", hometown);
-
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    self.utility.cloudinary.alloc
     self.hotDots = nil;
     self.hotDots = [[NSMutableArray alloc]init];
     self.locations = nil;
@@ -327,6 +331,12 @@
 // This is needed for the login to work properly
 // DO NOT DELETE
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+}
+
+-(void)uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context{
+    NSInteger percentage = totalBytesWritten/totalBytesExpectedToWrite;
+    NSString *progress = [NSString stringWithFormat:@"(%ld)", (long)percentage];
+    NSLog(@"%@", progress);
 }
 @end
 

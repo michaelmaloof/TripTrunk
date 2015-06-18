@@ -75,6 +75,8 @@
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem.tag = 1;
         self.delete.hidden = NO;
+        self.public.hidden = YES;
+        self.private.hidden = YES;
     }
     
     else {

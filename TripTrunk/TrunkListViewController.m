@@ -89,17 +89,19 @@
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
+    
+    
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
     cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
+    cell.lockPhoto.hidden = YES;
     cell.textLabel.text = trip.name;
     if (cell.trip.isPrivate == NO)
     {
-        cell.lockPhoto.hidden = YES;
     } else
     {
-        cell.lockPhoto.hidden = NO;
+        cell.hidden = YES;
     }
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
