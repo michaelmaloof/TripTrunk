@@ -24,7 +24,6 @@
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
-
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     UIBarButtonItem *newBackButton =
@@ -97,12 +96,8 @@
     cell.trip = trip;
     cell.lockPhoto.hidden = YES;
     cell.textLabel.text = trip.name;
-    if (cell.trip.isPrivate == NO)
-    {
-    } else
-    {
-        cell.hidden = YES;
-    }
+
+    
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     if (tripInterval < 86400) {

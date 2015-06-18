@@ -32,6 +32,7 @@
 @property PFImageView *imageview;
 @property int photosOriginal;
 @property BOOL isMember;
+@property (weak, nonatomic) IBOutlet UIImageView *lock;
 
 @end
 
@@ -39,7 +40,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.lock.hidden = YES;
+    if (self.trip.isPrivate == YES){
+        self.lock.hidden = NO;
+    }else{
+        self.lock.hidden = YES;
+    }
     self.title = self.trip.name;
     self.trunkAlbum = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -64,6 +70,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     self.photos = nil;
     self.photos = [[NSArray alloc]init];
+
+    
     if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
         
     } else {

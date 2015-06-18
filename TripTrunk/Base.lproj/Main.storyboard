@@ -957,6 +957,13 @@
                                     <action selector="membersButtonPressed:" destination="XRX-XO-YxQ" eventType="touchUpInside" id="vAp-RH-zCw"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="lock" translatesAutoresizingMaskIntoConstraints="NO" id="TId-ct-cbf">
+                                <rect key="frame" x="134" y="87" width="35" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="E1M-h6-uI7"/>
+                                    <constraint firstAttribute="width" constant="35" id="ml7-b2-fQ4"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -981,11 +988,13 @@
                             <constraint firstAttribute="centerX" secondItem="lza-JM-Xj2" secondAttribute="centerX" id="CZP-ym-4On"/>
                             <constraint firstItem="1Ke-o6-NYh" firstAttribute="top" secondItem="68p-fX-An1" secondAttribute="bottom" constant="47" id="E43-aD-fKY"/>
                             <constraint firstItem="n9Q-z5-kzS" firstAttribute="top" secondItem="o2X-FD-baW" secondAttribute="bottom" id="EiG-Ke-idZ"/>
+                            <constraint firstItem="TId-ct-cbf" firstAttribute="leading" secondItem="YXB-LB-7B6" secondAttribute="trailing" constant="7" id="FBQ-Qi-Rjr"/>
                             <constraint firstItem="Wql-hi-i1a" firstAttribute="top" secondItem="lza-JM-Xj2" secondAttribute="bottom" constant="19" id="G24-pR-0SY"/>
                             <constraint firstItem="lza-JM-Xj2" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" id="GKc-D9-JkV"/>
                             <constraint firstItem="zUW-ht-yVP" firstAttribute="top" secondItem="68p-fX-An1" secondAttribute="bottom" constant="5" id="GSV-uQ-WWu"/>
                             <constraint firstAttribute="centerX" secondItem="zUW-ht-yVP" secondAttribute="centerX" id="GUG-E7-s2n"/>
                             <constraint firstAttribute="trailingMargin" secondItem="o2X-FD-baW" secondAttribute="trailing" constant="-24" id="HyT-WM-MuY"/>
+                            <constraint firstItem="TId-ct-cbf" firstAttribute="top" secondItem="68p-fX-An1" secondAttribute="bottom" constant="23" id="JB3-WG-Lmp"/>
                             <constraint firstItem="lza-JM-Xj2" firstAttribute="leading" secondItem="v8I-bb-942" secondAttribute="leadingMargin" id="JNd-tV-V5s"/>
                             <constraint firstItem="o2X-FD-baW" firstAttribute="top" secondItem="68p-fX-An1" secondAttribute="bottom" constant="115" id="JXa-MW-tLQ"/>
                             <constraint firstItem="1Ke-o6-NYh" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="15" id="L6I-mU-SjU"/>
@@ -1094,6 +1103,7 @@
                     <connections>
                         <outlet property="collectionView" destination="o2X-FD-baW" id="Jet-Bo-c2M"/>
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
+                        <outlet property="lock" destination="TId-ct-cbf" id="SlC-EK-Ush"/>
                         <outlet property="memberButton" destination="lza-JM-Xj2" id="spL-P0-S6f"/>
                         <outlet property="startDate" destination="zUW-ht-yVP" id="tk4-q5-aiY"/>
                         <outlet property="stateCountryLabel" destination="YXB-LB-7B6" id="qQ4-iH-GXG"/>
@@ -1993,6 +2003,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="UVs-AV-0Qj"/>
-        <segue reference="yXb-jN-ymd"/>
+        <segue reference="JSU-Dg-jAI"/>
     </inferredMetricsTieBreakers>
 </document>
