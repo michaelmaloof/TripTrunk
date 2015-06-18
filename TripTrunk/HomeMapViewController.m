@@ -13,12 +13,11 @@
 #import "Trip.h"
 #import "TrunkListViewController.h"
 #import "TTUtility.h"
-#import "Cloudinary.h"
 
 
 #define METERS_PER_MILE 1609.344
 
-@interface HomeMapViewController () <MKMapViewDelegate, CLUploaderDelegate>
+@interface HomeMapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
@@ -31,7 +30,6 @@
 @property int dropped;
 @property int notDropped;
 @property BOOL loadedOnce;
-@property TTUtility *utility;
 
 @end
 
@@ -61,7 +59,6 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    self.utility.cloudinary.alloc
     self.hotDots = nil;
     self.hotDots = [[NSMutableArray alloc]init];
     self.locations = nil;
@@ -333,11 +330,7 @@
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
 
--(void)uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context{
-    NSInteger percentage = totalBytesWritten/totalBytesExpectedToWrite;
-    NSString *progress = [NSString stringWithFormat:@"(%ld)", (long)percentage];
-    NSLog(@"%@", progress);
-}
+
 @end
 
 
