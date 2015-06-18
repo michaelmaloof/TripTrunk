@@ -11,6 +11,7 @@
 #import <ParseUI/ParseUI.h>
 #import "Comment.h"
 
+
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
@@ -50,8 +51,10 @@
     NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
     [self.like setTitle:string forState:UIControlStateNormal];
 
+    NSLog(@"user = %@",[PFUser currentUser].objectId);
+    NSLog(@"user photo = %@",self.photo.user.objectId);
 
-    if ([PFUser currentUser] == self.photo.user) {
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         self.delete.hidden = NO;
     } else {
         self.delete.hidden = YES;

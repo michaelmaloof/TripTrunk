@@ -83,7 +83,6 @@
 -(void)queryParseMethod:(NSMutableArray*)userNames
 {
     if (self.loadedOnce == NO){
-        self.title = @"Loading Trunks...";
         self.loadedOnce = YES;
     }
     PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
@@ -94,6 +93,10 @@
     }
 
     [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (self.loadedOnce == NO){
+            self.title = @"Loading Trunks...";
+            self.loadedOnce = YES;
+        }
         if(!error)
             {
                 self.parseLocations = [NSMutableArray arrayWithArray:objects];
