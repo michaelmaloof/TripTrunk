@@ -308,9 +308,18 @@
                //  vc.isTripCreation = YES;
                //  [self.navigationController pushViewController:vc animated:YES];
                  self.title = @"TripTrunk";
-
-                 [self performSegueWithIdentifier:@"addFriends" sender:self];
-                 // Save Successful - push to Add Friends screen
+                 
+                 
+                 if (self.navigationItem.leftBarButtonItem.tag == 0)
+                 {
+                     [self performSegueWithIdentifier:@"addFriends" sender:self];
+                 }
+                 
+                 else {
+                     [self.navigationController popViewControllerAnimated:YES];
+                 }
+                 
+                  // Save Successful - push to Add Friends screen
 
              }
              
