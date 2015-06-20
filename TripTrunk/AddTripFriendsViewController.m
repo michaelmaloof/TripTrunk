@@ -39,7 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Add Friends";
-
+    
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
     // During trip creation flow we want a Next button, otherwise it's a Done button
@@ -55,6 +55,7 @@
                                                                                                target:self
                                                                                                action:@selector(saveFriendsAndClose)];
     }
+        
     _thisUser = [PFUser currentUser];
     
     // Create nested arrays to populate the table view
