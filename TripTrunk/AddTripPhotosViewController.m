@@ -137,6 +137,7 @@
             // This came from the Trunk view, so pop back to it.
             [self.navigationController popViewControllerAnimated:YES];
             [[self navigationController] setNavigationBarHidden:NO animated:YES];
+
         }
 
     }
@@ -188,50 +189,8 @@
     [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
     return;
     
-    // ADDED TO STOP FROM SAVING TO PARSE
-//    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        
-//        if(error) {
-//            self.plusPhoto.hidden = NO;
-//            self.submitTrunk.hidden = NO;
-//            UIAlertView *alertView = [[UIAlertView alloc] init];
-//            [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//            alertView.delegate = self;
-//            alertView.title = @"No internet connection to save photos.";
-//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-//            [alertView addButtonWithTitle:@"OK"];
-//            [alertView show];
-//        } else {
-//            if (self.alreadyTrip == NO)
-//            {
-//                self.count = self.count +1;
-//                int arrayCount = (int)self.photos.count;
-//                if (self.count == arrayCount)
-//                {
-//                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
-//                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
-//                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
-//                     */
-////                    [self dismissViewControllerAnimated:YES completion:NULL];
-//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//                    self.photos = nil;
-//                    self.photosCounter = nil;
-//                }
-//            }
-//            else if (self.alreadyTrip == YES)
-//            {
-//                self.count = self.count +1;
-//                int arrayCount = (int)self.photos.count;
-//                if (self.count == arrayCount)
-//                {
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//                    self.photos = nil;
-//                    self.photosCounter = nil;
-//                }
-//            }
-//        }
-//    }];
+    //This is place holder for unusedMethodOne. Dont erase
+    
     
 }
 
@@ -438,4 +397,51 @@
     [self.tripCollectionView reloadData];
     
 }
+
+//unusedMethodOne
+//Dont erase
+// ADDED TO STOP FROM SAVING TO PARSE
+//    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//
+//        if(error) {
+//            self.plusPhoto.hidden = NO;
+//            self.submitTrunk.hidden = NO;
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//            alertView.delegate = self;
+//            alertView.title = @"No internet connection to save photos.";
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:@"OK"];
+//            [alertView show];
+//        } else {
+//            if (self.alreadyTrip == NO)
+//            {
+//                self.count = self.count +1;
+//                int arrayCount = (int)self.photos.count;
+//                if (self.count == arrayCount)
+//                {
+//                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
+//                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
+//                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
+//                     */
+////                    [self dismissViewControllerAnimated:YES completion:NULL];
+//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//                    self.photos = nil;
+//                    self.photosCounter = nil;
+//                }
+//            }
+//            else if (self.alreadyTrip == YES)
+//            {
+//                self.count = self.count +1;
+//                int arrayCount = (int)self.photos.count;
+//                if (self.count == arrayCount)
+//                {
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//                    self.photos = nil;
+//                    self.photosCounter = nil;
+//                }
+//            }
+//        }
+//    }];
 @end

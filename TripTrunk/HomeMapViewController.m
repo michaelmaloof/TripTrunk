@@ -13,6 +13,7 @@
 #import "Trip.h"
 #import "TrunkListViewController.h"
 #import "TTUtility.h"
+#import "AddTripPhotosViewController.h"
 
 
 #define METERS_PER_MILE 1609.344
@@ -30,6 +31,7 @@
 @property int dropped;
 @property int notDropped;
 @property BOOL loadedOnce;
+@property MKAnnotationView *photoPin;
 
 @end
 
@@ -55,6 +57,7 @@
     //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
     NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
     NSLog(@"hometown = %@", hometown);
+
     
 }
 
@@ -256,6 +259,7 @@
     self.pinCityName = view.annotation.title;
     [self performSegueWithIdentifier:@"Trunk" sender:self];
     self.pinCityName = nil;
+    self.photoPin = view;
 
 }
 
@@ -332,6 +336,7 @@
 // DO NOT DELETE
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
+
 
 
 @end

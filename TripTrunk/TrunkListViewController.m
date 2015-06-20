@@ -41,6 +41,7 @@
     [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
     
 
+    self.today = [NSDate date];
 
     self.title = self.city;
     
@@ -60,8 +61,6 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
-    self.today = [NSDate date];
-
 }
 
 -(void)rightBarItemWasTapped {
@@ -88,10 +87,10 @@
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    
-    
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
+    NSLog(@"trip name = %@", trip.name);
+    NSLog(@"trip most recent photo = %@", trip.mostRecentPhoto);
     cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
     cell.lockPhoto.hidden = YES;
@@ -100,10 +99,12 @@
     
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
-    if (tripInterval < 86400) {
+    NSLog(@"today = %@", self.today);
+    NSLog(@"trip interval = %f", tripInterval);
+
+    if (tripInterval < 86400 && trip.mostRecentPhoto != NULL) {
         cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
     }
-    
     else
     {
         cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];

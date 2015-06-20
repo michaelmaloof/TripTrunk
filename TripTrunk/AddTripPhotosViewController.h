@@ -19,6 +19,5 @@
 @property NSString *endDate;
 @property BOOL isPrivate;
 @property (nonatomic)BOOL isTripCreation;
-
-
 @end
+
