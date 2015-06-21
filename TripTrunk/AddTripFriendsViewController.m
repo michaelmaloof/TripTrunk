@@ -48,6 +48,13 @@
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(saveFriendsAndClose)];
+        
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
     }
     else
     {

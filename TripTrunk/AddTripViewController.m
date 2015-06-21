@@ -185,6 +185,7 @@
     {
         if (error)
         {
+            self.title = @"TripTrunk";
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
