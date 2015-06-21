@@ -51,9 +51,6 @@
     NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
     [self.like setTitle:string forState:UIControlStateNormal];
 
-    NSLog(@"user = %@",[PFUser currentUser].objectId);
-    NSLog(@"user photo = %@",self.photo.user.objectId);
-
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         self.delete.hidden = NO;
     } else {
@@ -187,7 +184,7 @@
     [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];
     [findPhotosUser whereKey:@"city" equalTo:self.photo.city];
     [findPhotosUser whereKey:@"photo" equalTo:self.photo.objectId];
-    [findPhotosUser orderByDescending:@"createdAt"];
+    [findPhotosUser orderByAscending:@"createdAt"];
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)

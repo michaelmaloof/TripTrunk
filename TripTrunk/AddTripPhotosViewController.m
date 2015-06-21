@@ -85,7 +85,7 @@
         // This shouldn't happen, trip should always be set from the previous view controler
         [self parseTrip];
     }
-    [[self navigationController] setNavigationBarHidden:YES animated:YES];
+//    [[self navigationController] setNavigationBarHidden:YES animated:YES]; we dont need this now 
     [self parsePhotos];
 }
 
