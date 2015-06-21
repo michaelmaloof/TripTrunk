@@ -40,6 +40,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.collectionView.backgroundColor = [UIColor clearColor];
     self.lock.hidden = YES;
     if (self.trip.isPrivate == YES){
         self.lock.hidden = NO;
