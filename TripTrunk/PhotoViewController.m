@@ -104,6 +104,9 @@
     if (indexPath.row == 0) {
         cell.textLabel.text = self.photo.userName;
         cell.detailTextLabel.text = self.photo.caption;
+        if (self.photo.caption == nil){
+            cell.hidden = YES;
+        }
     }
     
     else if (indexPath.row > 0) {
