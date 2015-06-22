@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain2" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_large" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
@@ -21,23 +21,43 @@
                         <constraint firstAttribute="height" constant="110" id="vzd-MQ-CHk"/>
                     </constraints>
                 </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="@AWBarnard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bjC-WY-93W">
+                    <rect key="frame" x="189" y="449" width="102" height="21"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="22"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                    <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.36862745098039218" green="0.58039215686274503" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="bhu-yy-h3K" secondAttribute="centerX" id="1DB-4c-5vf"/>
+                <constraint firstAttribute="centerX" secondItem="bjC-WY-93W" secondAttribute="centerX" id="3Ix-iz-XAI"/>
+                <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="9R7-jj-MQP"/>
                 <constraint firstAttribute="trailing" secondItem="iDn-Rh-3lx" secondAttribute="trailing" id="BVA-pF-ORs"/>
+                <constraint firstAttribute="bottom" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="58" id="O6H-PL-bpR"/>
                 <constraint firstItem="iDn-Rh-3lx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Xp5-fP-Mna"/>
                 <constraint firstAttribute="bottom" secondItem="iDn-Rh-3lx" secondAttribute="bottom" id="hUW-YE-OAg"/>
+                <constraint firstItem="bjC-WY-93W" firstAttribute="top" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="100" id="mFI-v0-f7n"/>
+                <constraint firstAttribute="bottom" secondItem="bjC-WY-93W" secondAttribute="bottom" constant="10" id="rtp-dZ-e7n"/>
                 <constraint firstItem="iDn-Rh-3lx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="sOo-4B-4Xh"/>
                 <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="xzn-gN-cIP"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="O6H-PL-bpR"/>
+                    <exclude reference="xzn-gN-cIP"/>
+                    <exclude reference="mFI-v0-f7n"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
     <resources>
         <image name="logo_large" width="830" height="722"/>
-        <image name="mountain" width="1080" height="1920"/>
+        <image name="mountain2" width="1080" height="1920"/>
     </resources>
 </document>
