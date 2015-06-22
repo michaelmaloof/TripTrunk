@@ -14,6 +14,8 @@
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource>
 @property NSMutableArray *parseLocations;
+@property NSMutableArray *meParseLocations;
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;
 @property NSDate *today;
@@ -25,9 +27,6 @@
 
 -(void)viewDidLoad {
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    self.friends = [[NSMutableArray alloc]init];
-
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -53,11 +52,8 @@
     
     self.tableView.backgroundView = tempImageView;
     
-    self.filter.tag = 0;
-    
-    [self queryParseMethodMe]; //change to everyone later
-    self.filter.tag = 0;
-
+    self.filter.tag = 1;
+    [self rightBarItemWasTapped];
     
 }
 
@@ -66,16 +62,12 @@
 }
 
 -(void)rightBarItemWasTapped {
-    
     if (self.filter.tag == 0) {
         [self.filter setTitle:@"Everyone"];
-        self.filter.tag = 1;
         [self queryParseMethodMe];
-    } else {
+    } else if (self.filter.tag == 1) {
         [self.filter setTitle:@"Me"];
-        self.filter.tag = 0;
         [self queryParseMethodEveryone];
-        
     }
 }
 
@@ -83,16 +75,30 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.parseLocations.count;
+    if (self.filter.tag == 1 && self.parseLocations !=nil) {
+        NSLog(@"parse check 2 = %lu", (unsigned long)self.parseLocations.count);
+        return self.parseLocations.count;
+    }else if (self.filter.tag == 0 && self.meParseLocations !=nil){
+        return self.meParseLocations.count;
+    }
+    else {
+        return 0;
+    }
 }
 
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
-    NSLog(@"trip = %@", [self.parseLocations objectAtIndex:indexPath.row]);
-    Trip *trip = [self.parseLocations objectAtIndex:indexPath.row];
+    Trip *trip = [[Trip alloc]init];
+    
+    if (self.filter.tag == 1) {
+        trip = [self.parseLocations objectAtIndex:indexPath.row];
 
+    } else {
+        trip = [self.meParseLocations objectAtIndex:indexPath.row];
+
+    }
     cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
     cell.lockPhoto.hidden = YES;
@@ -116,40 +122,11 @@
 
 -(void)queryParseMethodMe
 {
-//    NSString *user = [PFUser currentUser].username;
-//    PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
-//    [findTrip whereKey:@"user" equalTo:user];
-//    [findTrip whereKey:@"city" equalTo:self.city];
-//
-//    [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if(!error)
-//        {
-//            self.parseLocations = [NSMutableArray arrayWithArray:objects];
-////            PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
-////            [memberQuery whereKey:@"city" equalTo:self.city];
-////            [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
-////            [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-////            [memberQuery includeKey:@"toUser"];
-////Need to add City Filter to activity
-//            [self.tableView reloadData];
-//
-//        }else
-//        {
-//            NSLog(@"Error: %@",error);
-//        }
-//        
-//    }];
-    
-
-}
-
--(void)queryParseMethodEveryone{
-    
+    if (self.meParseLocations == nil) {
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-    [followingQuery whereKey:@"type" equalTo:@"follow"];
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-    [followingQuery includeKey:@"toUser"];
+    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery includeKey:@"trip"];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -158,7 +135,44 @@
         else
         {
             int count = 0;
-            for (PFObject *activity in objects) {
+            self.meParseLocations = [[NSMutableArray alloc]init];
+            for (PFObject *activity in objects){
+                Trip *trip = activity[@"trip"];
+                if (trip.name != nil){
+                    [self.meParseLocations addObject:trip];
+                }
+                count += 1;
+                if(count == objects.count){
+                        [self.tableView reloadData];
+                }
+            }
+        }
+        
+    }];
+    } else{
+        [self.tableView reloadData];
+    }
+}
+
+-(void)queryParseMethodEveryone{
+    
+    if (self.parseLocations == nil)
+    {
+        self.friends = [[NSMutableArray alloc]init];
+        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+        [followingQuery whereKey:@"type" equalTo:@"follow"];
+        [followingQuery includeKey:@"toUser"];
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else if (!error)
+        {
+            int count = 0;
+            for (PFObject *activity in objects)
+            {
                 PFUser *user = activity[@"toUser"];
                 [self.friends addObject:user];
                 count += 1;
@@ -169,16 +183,20 @@
             }
         }
     }];
+        
+    } else
+    {
+        [self.tableView reloadData];
+    }
+
 }
 
 -(void)queryForTrunks{
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-//    [followingQuery whereKey:@"toUser" containsAllObjectsInArray:self.friends];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
     [followingQuery includeKey:@"trip"];
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -186,20 +204,20 @@
         }
         else
         {
-            NSLog(@"object = %@", objects);
-            NSLog(@"object count = %lu", (unsigned long)objects.count);
             int count = 0;
             self.parseLocations = [[NSMutableArray alloc]init];
-            for (PFObject *activity in objects){
+            for (PFObject *activity in objects)
+            {
                 Trip *trip = activity[@"trip"];
-                if (trip.name != nil){
+                if (trip.name != nil)
+                {
                     [self.parseLocations addObject:trip];
+                    NSLog(@"parse location = %ld", (long)self.parseLocations.count);
+                    NSLog(@"trip name = %@", trip.name);
                 }
                 count += 1;
                 if(count == objects.count){
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.tableView reloadData];
-                        });
+                    [self.tableView reloadData];
                 }
             }
         }
