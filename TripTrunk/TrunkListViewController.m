@@ -75,10 +75,9 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.filter.tag == 1 && self.parseLocations !=nil) {
-        NSLog(@"parse check 2 = %lu", (unsigned long)self.parseLocations.count);
+    if (self.filter.tag == 0 && self.parseLocations !=nil) {
         return self.parseLocations.count;
-    }else if (self.filter.tag == 0 && self.meParseLocations !=nil){
+    }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
         return self.meParseLocations.count;
     }
     else {
@@ -92,7 +91,7 @@
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     
-    if (self.filter.tag == 1) {
+    if (self.filter.tag == 0) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
 
     } else {
@@ -143,6 +142,7 @@
                 }
                 count += 1;
                 if(count == objects.count){
+                        self.filter.tag = 1;
                         [self.tableView reloadData];
                 }
             }
@@ -150,6 +150,7 @@
         
     }];
     } else{
+        self.filter.tag = 1;
         [self.tableView reloadData];
     }
 }
@@ -186,6 +187,7 @@
         
     } else
     {
+        self.filter.tag = 0;
         [self.tableView reloadData];
     }
 
@@ -212,11 +214,11 @@
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
-                    NSLog(@"parse location = %ld", (long)self.parseLocations.count);
-                    NSLog(@"trip name = %@", trip.name);
+  
                 }
                 count += 1;
                 if(count == objects.count){
+                    self.filter.tag = 0;
                     [self.tableView reloadData];
                 }
             }

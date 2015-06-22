@@ -636,14 +636,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="paW-Ly-ly2">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="paW-Ly-ly2">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hWn-6E-iwD"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NR1-Eu-K3b">
-                                <rect key="frame" x="534" y="505" width="35" height="35"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NR1-Eu-K3b">
+                                <rect key="frame" x="534" y="433" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="G9R-aG-GN3"/>
                                     <constraint firstAttribute="width" constant="35" id="dhJ-r0-uTK"/>
@@ -662,12 +662,12 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
-                                <rect key="frame" x="534" y="545" width="35" height="35"/>
+                                <rect key="frame" x="534" y="501" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="4Q6-LS-RyW"/>
                                     <constraint firstAttribute="height" constant="50" id="gwx-aC-Acb"/>
-                                    <constraint firstAttribute="width" constant="35" id="lDe-eQ-zQd"/>
-                                    <constraint firstAttribute="height" constant="35" id="pYX-Zc-7zh"/>
+                                    <constraint firstAttribute="width" constant="45" id="lDe-eQ-zQd"/>
+                                    <constraint firstAttribute="height" constant="45" id="pYX-Zc-7zh"/>
                                 </constraints>
                                 <state key="normal" image="Glass"/>
                                 <variation key="default">
@@ -687,34 +687,54 @@
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="NR1-Eu-K3b" secondAttribute="bottom" constant="5" id="1W4-wv-837"/>
                             <constraint firstAttribute="trailingMargin" secondItem="NR1-Eu-K3b" secondAttribute="trailing" id="3ey-EJ-9Xa"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="5Rc-rz-BTx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="-5" id="6qP-MR-7xQ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="J9S-fj-2gt"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="L2j-Ip-k0z"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Obx-lh-siw"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="SQU-bT-ERF"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="28" id="SVE-ZS-caH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="paW-Ly-ly2" secondAttribute="bottom" id="SxR-ba-ohE"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="XLL-Of-FpM"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="49" id="YcW-f7-EHV"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="bpc-pe-WhI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="cDq-av-4cz"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="cFN-xs-xFq"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="20" id="cg8-78-vmk"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="eab-Oc-Hyx"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="f3N-di-oIY"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="481" id="fKL-EK-TQ8"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="5" id="oWF-EG-AeR"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="ow4-Qa-GyF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="qO6-K8-mEr"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="J9S-fj-2gt"/>
                                 <exclude reference="SVE-ZS-caH"/>
                                 <exclude reference="YcW-f7-EHV"/>
+                                <exclude reference="bpc-pe-WhI"/>
+                                <exclude reference="cFN-xs-xFq"/>
                                 <exclude reference="cg8-78-vmk"/>
                                 <exclude reference="f3N-di-oIY"/>
+                                <exclude reference="1W4-wv-837"/>
+                                <exclude reference="L2j-Ip-k0z"/>
                                 <exclude reference="Obx-lh-siw"/>
+                                <exclude reference="cDq-av-4cz"/>
+                                <exclude reference="eab-Oc-Hyx"/>
                                 <exclude reference="fKL-EK-TQ8"/>
                                 <exclude reference="g6L-lA-y2w"/>
+                                <exclude reference="oWF-EG-AeR"/>
                                 <exclude reference="ow4-Qa-GyF"/>
                                 <exclude reference="qO6-K8-mEr"/>
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" id="36S-1a-Uih">
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="image" keyPath="selectedImage" value="add_trunk"/>
+                        </userDefinedRuntimeAttributes>
+                    </tabBarItem>
                     <navigationItem key="navigationItem" id="Eje-fq-v1r">
                         <barButtonItem key="leftBarButtonItem" image="user7" id="8Zx-kS-WEw">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2089,10 +2109,11 @@
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
-        <image name="Glass" width="500" height="500"/>
+        <image name="Glass" width="1002" height="1002"/>
         <image name="Me" width="500" height="500"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
+        <image name="add_trunk" width="500" height="500"/>
         <image name="lock" width="20" height="27"/>
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="540" height="960"/>
