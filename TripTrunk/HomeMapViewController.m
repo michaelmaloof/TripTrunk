@@ -130,7 +130,18 @@
                 Trip *trip = activity[@"trip"];
                 if (trip.name != nil)
                 {
-                    [self.parseLocations addObject:trip];
+                    if (trip.isPrivate == YES)
+                    {
+                        if (activity[@"toUser"] == [PFUser currentUser])
+                        {
+                            [self.parseLocations addObject:trip];
+
+                        }
+                            
+                    } else
+                    {
+                        [self.parseLocations addObject:trip];
+                    }
                     
                 }
                 count += 1;
