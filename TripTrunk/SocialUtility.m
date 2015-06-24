@@ -78,15 +78,19 @@
 
 + (PFObject *)createAddToTripObjectForUser:(PFUser *)user onTrip:(Trip *)trip
 {
-    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
-        return nil;
-    }
+    //COMMENTED OUT because we are adding "self" as a member for easier querying
+//    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+//        return nil;
+//    }
+    
+    NSString *location = [NSString stringWithFormat:@"%@", trip.city];
     
     PFObject *addToTripActivity = [PFObject objectWithClassName:@"Activity"];
     [addToTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
     [addToTripActivity setObject:user forKey:@"toUser"];
     [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
     [addToTripActivity setObject:trip forKey:@"trip"];
+    [addToTripActivity setObject:location forKey:@"content"];
     
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [followACL setPublicReadAccess:YES];

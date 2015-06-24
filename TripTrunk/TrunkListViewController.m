@@ -58,7 +58,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
+    NSLog(@"%@", self.city);
 }
 
 -(void)rightBarItemWasTapped {
@@ -125,6 +125,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+//    [followingQuery whereKey:@"content" equalTo:self.city];
     [followingQuery includeKey:@"trip"];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -164,6 +165,7 @@
         PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
         [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"follow"];
+//        [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"toUser"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
