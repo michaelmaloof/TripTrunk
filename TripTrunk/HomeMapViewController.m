@@ -32,6 +32,7 @@
 @property int notDropped;
 @property BOOL loadedOnce;
 @property MKAnnotationView *photoPin;
+@property NSMutableArray *friends;
 
 @end
 
@@ -76,43 +77,110 @@
             
     }
     else {
-        NSString *user = [PFUser currentUser].username;
-        NSMutableArray *users = [[NSMutableArray alloc]init];
-        [users addObject:user];
-        [self queryParseMethod:users];
+        [self queryParseMethodEveryone];
     }
 }
 
--(void)queryParseMethod:(NSMutableArray*)userNames
+//-(void)queryTrunks
+//{
+//    PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
+//    [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (self.loadedOnce == NO){
+//            self.title = @"Loading Trunks...";
+//            self.loadedOnce = YES;
+//        }
+//        if(!error)
+//            {
+//                self.parseLocations = [NSMutableArray arrayWithArray:objects];
+//                [self placeTrips];
+//                
+//            }else
+//            {
+//                NSLog(@"Error: %@",error);
+//                self.title = @"TripTrunk";
+//
+//            }
+//            
+//        }];
+//}
+
+-(void)queryForTrunks{
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"toUser" containedIn:self.friends];
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery includeKey:@"trip"];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (self.loadedOnce == NO)
+        {
+            self.title = @"Loading Trunks...";
+            self.loadedOnce = YES;
+        }
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            self.title = @"TripTrunk";
+        }
+        else
+        {
+            int count = 0;
+            self.parseLocations = [[NSMutableArray alloc]init];
+            for (PFObject *activity in objects)
+            {
+                Trip *trip = activity[@"trip"];
+                if (trip.name != nil)
+                {
+                    [self.parseLocations addObject:trip];
+                    
+                }
+                count += 1;
+                if(count == objects.count){
+                    [self placeTrips];
+                }
+            }
+        }
+        
+    }];
+}
+
+
+-(void)queryParseMethodEveryone
 {
     if (self.loadedOnce == NO){
         self.loadedOnce = YES;
     }
-    PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
-    
-    for (NSString *user in userNames)
+        self.friends = [[NSMutableArray alloc]init];
+        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+        [followingQuery whereKey:@"type" equalTo:@"follow"];
+        [followingQuery includeKey:@"toUser"];
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
-        [findTrip whereKey:@"user" equalTo:user];
-    }
-
-    [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (self.loadedOnce == NO){
             self.title = @"Loading Trunks...";
             self.loadedOnce = YES;
         }
-        if(!error)
+            if(error)
             {
-                self.parseLocations = [NSMutableArray arrayWithArray:objects];
-                [self placeTrips];
-                
-            }else
-            {
-                NSLog(@"Error: %@",error);
                 self.title = @"TripTrunk";
-
+                NSLog(@"Error: %@",error);
             }
-            
-        }];
+            else if (!error)
+            {
+                int count = 0;
+                for (PFObject *activity in objects)
+                {
+                    PFUser *user = activity[@"toUser"];
+                    [self.friends addObject:user];
+                    count += 1;
+                    
+                    if(count == objects.count)
+                    {
+                        [self queryForTrunks];
+                    }
+                }
+            }
+    }];
 }
 
 - (IBAction)zoomOut:(id)sender {
@@ -192,8 +260,6 @@
             self.dropped = 0;
             self.notDropped = 0;
             self.title = @"TripTrunk";
-            self.title = @"TripTrunk";
-
         }
 
     }];
@@ -323,7 +389,7 @@
         NSString *user = [PFUser currentUser].username;
         NSMutableArray *users = [[NSMutableArray alloc]init];
         [users addObject:user];
-        [self queryParseMethod:users];
+        [self queryParseMethodEveryone];
  
 
     }
