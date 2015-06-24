@@ -108,6 +108,7 @@
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
+    [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     NSLog(@"friends = %@", self.friends);
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
     [followingQuery includeKey:@"trip"];

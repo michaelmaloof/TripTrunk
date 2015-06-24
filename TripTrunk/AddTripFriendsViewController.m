@@ -278,32 +278,31 @@
 
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-
-    if (selectedRows.count == 0) {
-        NSLog(@"No Friends Selected");
-        if (!self.isTripCreation) {
-            // Adding friends to an existing trip, so pop back
-            [self.navigationController popViewControllerAnimated:YES];
-            self.title = @"TripTrunk";
-
-        }
-        else {
-            // Nex trip creation flow, so push forward
-           [self performSegueWithIdentifier:@"photos" sender:self];
-            self.title = @"TripTrunk";
-            //    AddTripPhotosViewController *vc = [[AddTripPhotosViewController alloc]init];
-        //    vc.trip = self.trip;
-         //   vc.isTripCreation = YES;
-        //    [self.navigationController pushViewController:vc animated:YES];
-        }
-        return;
-    }
     
-    for (NSIndexPath *indexPath in selectedRows) {
-        PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
+    if (self.isTripCreation) {
+        // It's the creation flow, so add the creator as a "member" to the trip
+        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
         [tripUsers addObject:tripUser];
     }
+
+    if (selectedRows.count == 0 && !self.isTripCreation) {
+        NSLog(@"No Friends Selected");
+        // Adding friends to an existing trip, so pop back
+        [self.navigationController popViewControllerAnimated:YES];
+        self.title = @"TripTrunk";
+        return; // make sureit doesn't execute further.
+
+    }
+    else if (selectedRows.count > 0)
+    {
+        
+        for (NSIndexPath *indexPath in selectedRows) {
+            PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
+            [tripUsers addObject:tripUser];
+        }
+    }
+
     
     [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
         if (error) {
