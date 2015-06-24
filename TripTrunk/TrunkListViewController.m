@@ -160,6 +160,7 @@
     if (self.parseLocations == nil)
     {
         self.friends = [[NSMutableArray alloc]init];
+        [self.friends addObject:[PFUser currentUser]];
         PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
         [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"follow"];
