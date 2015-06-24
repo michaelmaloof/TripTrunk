@@ -21,6 +21,7 @@
 @property NSDate *today;
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
+@property NSMutableArray *objectIDs;
 
 @end
 @implementation TrunkListViewController
@@ -53,6 +54,9 @@
     self.tableView.backgroundView = tempImageView;
     
     self.filter.tag = 1;
+    
+    self.objectIDs = [[NSMutableArray alloc]init];
+    
     [self rightBarItemWasTapped];
     
 }
@@ -201,6 +205,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery whereKey:@"content" equalTo:self.city];
     [followingQuery includeKey:@"trip"];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -214,9 +219,10 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                if (trip.name != nil)
+                if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
                     [self.parseLocations addObject:trip];
+                    [self.objectIDs addObject:trip.objectId];
   
                 }
                 count += 1;

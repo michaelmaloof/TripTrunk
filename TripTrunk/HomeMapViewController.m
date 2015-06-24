@@ -104,7 +104,8 @@
 //        }];
 //}
 
--(void)queryForTrunks{
+-(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
+
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
