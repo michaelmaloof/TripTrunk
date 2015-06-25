@@ -109,9 +109,10 @@
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
-//    [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
     [followingQuery includeKey:@"trip"];
+    [followingQuery includeKey:@"toUser"];
+
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (self.loadedOnce == NO)
         {
@@ -130,13 +131,14 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
+                PFUser *user = activity[@"toUser"];
 
-                
                 if (trip.name != nil)
                 {
+
                     if (trip.isPrivate == YES)
                     {
-                        if (activity[@"toUser"] == [PFUser currentUser])
+                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
                         {
                             [self.parseLocations addObject:trip];
 
