@@ -129,7 +129,7 @@
         PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
         [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    //    [followingQuery whereKey:@"content" equalTo:self.city];
+        [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"trip"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
@@ -169,7 +169,6 @@
         PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
         [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"follow"];
-//        [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"toUser"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -207,6 +206,7 @@
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
     [followingQuery whereKey:@"content" equalTo:self.city];
     [followingQuery includeKey:@"trip"];
+    [followingQuery includeKey:@"toUser"];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -221,8 +221,20 @@
                 Trip *trip = activity[@"trip"];
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
-                    [self.parseLocations addObject:trip];
-                    [self.objectIDs addObject:trip.objectId];
+                    if (trip.isPrivate == YES)
+                    {
+                        PFUser *user = activity[@"toUser"];
+                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+                        {
+                            [self.parseLocations addObject:trip];
+                            [self.objectIDs addObject:trip.objectId];
+                        }
+                    
+                    } else {
+                        [self.parseLocations addObject:trip];
+                        [self.objectIDs addObject:trip.objectId];
+
+                    }
   
                 }
                 count += 1;
