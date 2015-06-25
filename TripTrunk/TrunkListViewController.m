@@ -126,34 +126,34 @@
 -(void)queryParseMethodMe
 {
     if (self.meParseLocations == nil) {
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-//    [followingQuery whereKey:@"content" equalTo:self.city];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            int count = 0;
-            self.meParseLocations = [[NSMutableArray alloc]init];
-            for (PFObject *activity in objects){
-                Trip *trip = activity[@"trip"];
-                if (trip.name != nil){
-                    [self.meParseLocations addObject:trip];
-                }
-                count += 1;
-                if(count == objects.count){
-                        self.filter.tag = 1;
-                        [self.tableView reloadData];
+        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    //    [followingQuery whereKey:@"content" equalTo:self.city];
+        [followingQuery includeKey:@"trip"];
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            else
+            {
+                int count = 0;
+                self.meParseLocations = [[NSMutableArray alloc]init];
+                for (PFObject *activity in objects){
+                    Trip *trip = activity[@"trip"];
+                    if (trip.name != nil){
+                        [self.meParseLocations addObject:trip];
+                    }
+                    count += 1;
+                    if(count == objects.count){
+                            self.filter.tag = 1;
+                            [self.tableView reloadData];
+                    }
                 }
             }
-        }
-        
-    }];
+            
+        }];
     } else{
         self.filter.tag = 1;
         [self.tableView reloadData];

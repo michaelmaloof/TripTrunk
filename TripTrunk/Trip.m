@@ -12,6 +12,7 @@
 
 @dynamic name;
 @dynamic city;
+@dynamic creator;
 @dynamic user;
 @dynamic startDate;
 @dynamic endDate;

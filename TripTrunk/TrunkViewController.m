@@ -64,6 +64,7 @@
     
     [self checkIfIsMember];
     
+    NSLog(@"Trip Name is: %@", self.trip.name);
 
 
 }
