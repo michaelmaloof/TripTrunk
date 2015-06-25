@@ -53,11 +53,9 @@ CLCloudinary *cloudinary;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (!HUD) {
             HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
             HUD.labelText = @"Uploading Memories";
             HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
-        }
 
     });
     
@@ -104,6 +102,7 @@ CLCloudinary *cloudinary;
     // Hide HUD spinner
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        [HUD hide:YES];
     });
 }
 
