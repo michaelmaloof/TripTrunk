@@ -169,7 +169,6 @@
         PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
         [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"follow"];
-//        [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"toUser"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
