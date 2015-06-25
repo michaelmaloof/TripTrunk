@@ -77,6 +77,7 @@
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
     [memberQuery whereKey:@"trip" equalTo:_trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [memberQuery whereKey:@"toUser" notEqualTo:_trip.creator];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
     

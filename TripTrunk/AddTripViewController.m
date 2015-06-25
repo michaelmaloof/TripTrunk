@@ -284,6 +284,8 @@
     self.trip.endDate = self.endTripTextField.text;
     self.trip.isPrivate = self.isPrivate;
     self.trip.user = [PFUser currentUser].username;
+    self.trip.creator = [PFUser currentUser];
+
 
     NSLog(@"Saving Trip: %@", self.trip);
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)

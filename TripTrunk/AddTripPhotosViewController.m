@@ -96,6 +96,7 @@
     self.trip.name = self.tripName;
     self.trip.city = self.tripCity;
     self.trip.user = [PFUser currentUser].username;
+    self.trip.creator = [PFUser currentUser];
     self.trip.startDate = self.startDate;
     self.trip.endDate = self.endDate;
     self.trip.state = self.tripState;
