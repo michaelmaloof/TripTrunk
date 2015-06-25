@@ -8,10 +8,16 @@
 
 #import "TTUtility.h"
 #import "AppDelegate.h"
+#import "MBProgressHUD.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
-@implementation TTUtility 
+@interface TTUtility () <MBProgressHUDDelegate>{
+    MBProgressHUD *HUD;
+}
+@end
+
+@implementation TTUtility
 
 CLCloudinary *cloudinary;
 
@@ -44,6 +50,16 @@ CLCloudinary *cloudinary;
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 {
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (!HUD) {
+            HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+            HUD.labelText = @"Uploading Memories";
+            HUD.mode = MBProgressHUDModeDeterminate;
+        }
+
+    });
     
     [uploader upload:imageData
              options:@{@"type":@"upload"}
@@ -84,16 +100,37 @@ CLCloudinary *cloudinary;
 - (void) uploaderSuccess:(NSDictionary*)result context:(id)context {
     NSString* publicId = [result valueForKey:@"public_id"];
     NSLog(@"Upload success. Public ID=%@, Full result=%@", publicId, result);
+    
+    // Hide HUD spinner
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        [HUD hide:YES];
+    });
 }
 
 -(void)uploaderError:(NSString *)result code:(NSInteger)code context:(id)context {
     NSLog(@"Upload error: %@, %ld", result, (long)code);
+    
+    // Hide HUD spinner
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+    });
 }
 
 - (void) uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
-    float divide = totalBytesWritten/totalBytesExpectedToWrite;
+    float divide = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
     NSString *string =  [NSString stringWithFormat:@"written:%ld    totalwritten:%ld    expectedToWrite:%ld   divided:%f", (long)bytesWritten, (long)totalBytesWritten, (long)totalBytesExpectedToWrite, divide];
     NSLog(@"%@", string);
+    HUD.progress = divide;
+}
+
+
+#pragma mark - MBProgressHUDDelegate
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+    // Remove HUD from screen when the HUD was hidded
+    [HUD removeFromSuperview];
+    HUD = nil;
 }
 
 
