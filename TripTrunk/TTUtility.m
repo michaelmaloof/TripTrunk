@@ -9,7 +9,7 @@
 #import "TTUtility.h"
 #import "AppDelegate.h"
 
-#define CLOUDINARY_URL @"cloudinary://831333642159488:Dn_JFKToHLc_wXPi1qnkXQJrAtc@mattschoch"
+#define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
 @implementation TTUtility 
 
