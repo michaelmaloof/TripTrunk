@@ -415,6 +415,8 @@
     [usernameQuery whereKey:@"username" containsString:searchTerm];
     [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
     
+    //TODO: add NOT IN existingUsers query to both of these
+    
     PFQuery *nameQuery = [PFUser query];
     [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
     [nameQuery whereKey:@"name" containsString:searchTerm];
