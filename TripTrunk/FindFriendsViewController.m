@@ -234,7 +234,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFUser *possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    PFUser *possibleFriend;
     
     if (self.searchController.active) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
