@@ -11,6 +11,7 @@
 #import <Parse/Parse.h>
 
 #import "FriendsListViewController.h"
+#import "FindFriendsViewController.h"
 
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
@@ -37,6 +38,9 @@
 }
 - (IBAction)findFriendsButtonPressed:(id)sender {
     NSLog(@"Find Friends Button Pressed");
+    
+    FindFriendsViewController *vc = [[FindFriendsViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 
 }
 - (IBAction)followingButtonPressed:(id)sender {

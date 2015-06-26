@@ -11,21 +11,16 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
 #import "UIImageView+AFNetworking.h"
-#import "FriendTableViewCell.h"
+#import "UserTableViewCell.h"
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
 
-@interface FindFriendsViewController() <UISearchControllerDelegate, UISearchBarDelegate>
+@interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
-@property (strong, nonatomic) IBOutlet UISearchDisplayController *searchController;
-@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) UISearchController *searchController;
+
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
-@end
-
-@interface FindFriendsViewController () <UITableViewDelegate, UITableViewDataSource, FriendTableViewCellDelegate>
-
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *friends;
 
 @end
@@ -34,11 +29,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     [self getFacebookFriendList];
     _friends = [[NSMutableArray alloc] init];
 
     self.searchResults = [NSMutableArray array];
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    [self.searchController.searchBar sizeToFit];
+
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    
+
+
 }
 
 
@@ -95,10 +108,13 @@
     PFQuery *usernameQuery = [PFUser query];
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
     [usernameQuery whereKey:@"username" containsString:searchTerm];
+    [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
     
     PFQuery *nameQuery = [PFUser query];
     [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
     [nameQuery whereKey:@"name" containsString:searchTerm];
+    [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
+
     
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
     
@@ -110,20 +126,13 @@
     [self.searchResults addObjectsFromArray:results];
 }
 
-#pragma mark - UISearchDisplayControllerDelegate
 
-// TODO: change to UISearchController - we're using a deprecated method
-
-- (BOOL)searchDisplayController:(UISearchController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    [self filterResults:searchString];
-    return YES;
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller
- willHideSearchResultsTableView:(UITableView *)tableView
+#pragma mark - UISearchResultsUpdating
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
+    NSString *searchString = searchController.searchBar.text;
+    [self filterResults:searchString];
     [self.tableView reloadData];
-
 }
 
 
@@ -133,6 +142,14 @@
 {
     return 1;
 }
+
+//-(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+//    CGRect searchBarFrame = self.searchController.searchBar.frame;
+//    [self.tableView scrollRectToVisible:searchBarFrame animated:NO];
+//    return NSNotFound;
+//}
+
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 66;
 }
@@ -140,34 +157,32 @@
 {
 
     // Search Controller and the regular table view have different data sources
-    if (tableView == self.tableView) {
+    if (!self.searchController.active)
+    {
         switch (section) {
             case 0:
                 return @"Facebook Friends on TripTrunk";
                 break;
         }
-    } else {
-        return @"TripTrunk Users";
     }
-    
-    return @"";
+    return nil;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Search Controller and the regular table view have different data sources
-    if (tableView == self.tableView) {
-        return _friends.count;
-    } else {
+    if (self.searchController.active) {
         return self.searchResults.count;
+    } else {
+        return _friends.count;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PFUser *possibleFriend;
-    FriendTableViewCell *cell;
+    UserTableViewCell *cell;
     
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+    if (self.searchController.active) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
         cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     }
@@ -199,13 +214,13 @@
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:possibleFriend[@"profilePicUrl"]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    __weak FriendTableViewCell *weakCell = cell;
+    __weak UserTableViewCell *weakCell = cell;
     
-    [cell.userImageView setImageWithURLRequest:request
+    [cell.profilePicImageView setImageWithURLRequest:request
                                     placeholderImage:nil
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
-                                                 [weakCell.userImageView setImage:image];
+                                                 [weakCell.profilePicImageView setImage:image];
                                                  [weakCell setNeedsLayout];
                                                  
                                              } failure:nil];
@@ -221,8 +236,7 @@
 {
     PFUser *possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     
-    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+    if (self.searchController.active) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
@@ -239,9 +253,9 @@
     
 }
 
-#pragma mark - FriendsTableViewCellDelegate
+#pragma mark - UserTableViewCellDelegate
 
-- (void)cell:(FriendTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
+- (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
 {
     
     if ([cellView.followButton isSelected]) {

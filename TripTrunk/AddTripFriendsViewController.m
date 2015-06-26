@@ -40,6 +40,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (!self.existingMembers) {
+        self.existingMembers = [[NSArray alloc] init]; // init so no crash
+    }
+    
     self.title = @"Add Friends";
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
