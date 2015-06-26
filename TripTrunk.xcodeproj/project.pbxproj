@@ -49,6 +49,7 @@
 		C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */; };
 		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
+		C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C90552161B3C3ABC007B5946 /* MBProgressHUD.m */; };
 		C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3CEF1B04F40000CABBC9 /* FriendsListViewController.m */; };
 		C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */; };
 		C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3CF41B04F45500CABBC9 /* UserTableViewCell.m */; };
@@ -154,6 +155,8 @@
 		C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C90552151B3C3ABC007B5946 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		C90552161B3C3ABC007B5946 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsListViewController.h; sourceTree = "<group>"; };
 		C90C3CEF1B04F40000CABBC9 /* FriendsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsListViewController.m; sourceTree = "<group>"; };
 		C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListViewController.xib; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 			children = (
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
 				C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */,
+				C90552151B3C3ABC007B5946 /* MBProgressHUD.h */,
+				C90552161B3C3ABC007B5946 /* MBProgressHUD.m */,
 				C90C3CFB1B04FC2200CABBC9 /* AFNetworking */,
 				C9525A361B251FD400185713 /* Cloudinary */,
 				C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */,
@@ -540,7 +545,7 @@
 				TargetAttributes = {
 					224F3F8B1AE1D35E003A1DEB = {
 						CreatedOnToolsVersion = 6.3;
-						DevelopmentTeam = VZZA3QQ3SE;
+						DevelopmentTeam = 2FMA362958;
 					};
 					224F3FA41AE1D35E003A1DEB = {
 						CreatedOnToolsVersion = 6.3;
@@ -631,6 +636,7 @@
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
+				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				C90C3D0F1B04FC2200CABBC9 /* AFHTTPRequestOperation.m in Sources */,
 				220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */,
 				C90C3D161B04FC2200CABBC9 /* AFURLResponseSerialization.m in Sources */,
