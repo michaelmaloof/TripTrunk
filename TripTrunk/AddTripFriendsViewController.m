@@ -22,16 +22,18 @@
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
+@property (strong, nonatomic) NSArray *existingMembers;
 
 @end
 
 @implementation AddTripFriendsViewController
 
-- (id)initWithTrip:(Trip *)trip
+- (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 {
     self = [super init]; // nil is ok if the nib is included in the main bundle
     if (self) {
         self.trip = trip;
+        self.existingMembers = members;
     }
     return self;
 }
@@ -92,6 +94,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery whereKey:@"toUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"toUser"];
     
@@ -126,6 +129,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery whereKey:@"fromUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"fromUser"];
     
@@ -157,7 +161,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

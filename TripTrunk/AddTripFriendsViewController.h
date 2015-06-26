@@ -17,10 +17,11 @@
  *  Initializer that sets the currently-being-created Trip so we know what trip to add the friends to
  *
  *  @param trip Trip custom parse object
+ *  @param members Array of members currently in the trip
  *
  *  @return self
  */
-- (id)initWithTrip:(Trip *)trip;
+- (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
 @property (strong, nonatomic) Trip *trip;
 

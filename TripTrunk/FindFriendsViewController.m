@@ -13,6 +13,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "FriendTableViewCell.h"
 #import "SocialUtility.h"
+#import "UserProfileViewController.h"
 
 @interface FindFriendsViewController() <UISearchControllerDelegate, UISearchBarDelegate>
 
@@ -190,6 +191,7 @@
     [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (cell.tag == indexPath.row) {
+            [cell.followButton setHidden:NO];
             [cell.followButton setSelected:(!error && number > 0)];
         }
     }];
@@ -217,6 +219,23 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    PFUser *possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    
+    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    else {
+        possibleFriend = [_friends objectAtIndex:indexPath.row];
+    }
+    
+    
+    if (possibleFriend) {
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:possibleFriend];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+
     
 }
 
