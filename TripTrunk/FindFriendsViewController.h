@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
-@interface FindFriendsViewController : UIViewController
+@interface FindFriendsViewController : UITableViewController
 
 @end

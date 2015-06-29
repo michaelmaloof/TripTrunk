@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 
 #import "FriendsListViewController.h"
+#import "SocialUtility.h"
 
 @interface UserProfileViewController ()
 
@@ -46,6 +47,51 @@
     [self.logoutButton setHidden:YES];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    // Don't show the follow button if it's the current user's profile
+    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        [self.followButton setHidden:YES];
+    }
+    else {
+        [self.followButton setHidden:NO];
+    
+        // Refresh the following status of this user
+        
+        // Query all user's that
+        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+        [followingQuery whereKey:@"type" equalTo:@"follow"];
+        [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+        [followingQuery whereKey:@"toUser" equalTo:_user];
+        
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            // If we have anything in Objects, then we're following the user.
+            else if (objects.count > 0)
+            {
+                // We have the following status, so update the Selected status and enable the button
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.followButton setEnabled:YES];
+                    [self.followButton setSelected:YES];
+                });
+            }
+            else {
+                // Not following this user, enable the button and set the selected status
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.followButton setEnabled:YES];
+                    [self.followButton setSelected:NO];
+                });
+            }
+            
+        }];
+    }
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -74,6 +120,42 @@
     [self.navigationController popViewControllerAnimated:YES];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
+}
+- (IBAction)followButtonPressed:(id)sender {
+    
+    if ([self.followButton isSelected]) {
+        // Unfollow
+        NSLog(@"Attempt to unfollow %@",_user.username);
+        [self.followButton setSelected:NO]; // change the button for immediate user feedback
+        [SocialUtility unfollowUser:_user];
+    }
+    else {
+        // Follow
+        NSLog(@"Attempt to follow %@",_user.username);
+        [self.followButton setSelected:YES];
+        
+        [SocialUtility followUserInBackground:_user block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                NSLog(@"Error: %@", error);
+            }
+            if (!succeeded) {
+                NSLog(@"Follow NOT success");
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
+                                                                message:@"Please try again"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil, nil];
+                
+                [self.followButton setSelected:NO];
+                [alert show];
+            }
+            else
+            {
+                NSLog(@"Follow Succeeded");
+            }
+        }];
+    }
+    
 }
 
 - (void)setProfilePic:(NSURL *)pictureURL {

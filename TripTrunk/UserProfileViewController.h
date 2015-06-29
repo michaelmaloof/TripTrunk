@@ -25,5 +25,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *followingButton;
 @property (strong, nonatomic) IBOutlet UIButton *findFriendsButton;
 @property (strong, nonatomic) IBOutlet UIButton *logoutButton;
+@property (strong, nonatomic) IBOutlet UIButton *followButton;
 
 @end

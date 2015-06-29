@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -22,11 +22,8 @@
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
-                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="58" y="7" width="208" height="21"/>
-                        </variation>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="nm6-qI-Iog" secondAttribute="height" multiplier="7:5" id="a29-2Q-lvC"/>
@@ -40,8 +37,7 @@
                                 <exclude reference="a29-2Q-lvC"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="274" y="8" width="39" height="28"/>
+                        <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
                                 <include reference="a29-2Q-lvC"/>
                             </mask>
@@ -60,8 +56,7 @@
                                 <exclude reference="O6w-x4-tl9"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                        <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
                                 <include reference="O6w-x4-tl9"/>
                             </mask>
@@ -72,9 +67,6 @@
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
-                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="58" y="36" width="208" height="18"/>
-                        </variation>
                     </label>
                 </subviews>
                 <constraints>

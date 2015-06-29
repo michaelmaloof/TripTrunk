@@ -298,7 +298,9 @@
 // Pushes to the Add Friends view controller
 - (void)addMembers
 {
-    AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip];
+    NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.tripMembers];
+    [members addObject:self.tripCreator];
+    AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

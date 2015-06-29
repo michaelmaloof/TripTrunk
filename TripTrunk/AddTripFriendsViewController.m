@@ -17,27 +17,37 @@
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface AddTripFriendsViewController () <UserTableViewCellDelegate>
+@interface AddTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+
+@property (strong, nonatomic) UISearchController *searchController;
+@property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
+@property (strong, nonatomic) NSArray *existingMembers;
 
 @end
 
 @implementation AddTripFriendsViewController
 
-- (id)initWithTrip:(Trip *)trip
+- (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 {
     self = [super init]; // nil is ok if the nib is included in the main bundle
     if (self) {
         self.trip = trip;
+        self.existingMembers = members;
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (!self.existingMembers) {
+        self.existingMembers = [[NSArray alloc] init]; // init so no crash
+    }
+    
     self.title = @"Add Friends";
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
@@ -73,6 +83,9 @@
     [self.tableView setEditing:YES animated:YES];
     [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
     [self.tableView setAllowsSelectionDuringEditing:YES];
+    
+    
+    [self initSearchController];
 
     
     // Get the users for the list
@@ -85,6 +98,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)initSearchController {
+    self.searchResults = [NSMutableArray array];
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    [self.searchController.searchBar sizeToFit];
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+
+}
+
 - (void)loadFollowing
 {
     
@@ -92,6 +119,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery whereKey:@"toUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"toUser"];
     
@@ -126,6 +154,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery whereKey:@"fromUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"fromUser"];
     
@@ -157,27 +186,37 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
-            return @"Following";
-            break;
-        case 1:
-            return @"Followers";
-        default:
-            break;
+    // Search Controller and the regular table view have different data sources
+    if (!self.searchController.active)
+    {
+    
+        switch (section) {
+            case 0:
+                return @"Following";
+                break;
+            case 1:
+                return @"Followers";
+            default:
+                break;
+        }
     }
-    return @"Users";
+    return nil;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-    return [[_friends objectAtIndex:section] count];
+    
+    // Search Controller and the regular table view have different data sources
+    if (!self.searchController.active) {
+        return [[_friends objectAtIndex:section] count];
+    } else {
+        return self.searchResults.count;
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -186,7 +225,16 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFUser *possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    PFUser *possibleFriend;
+    
+    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+    if (self.searchController.active) {
+        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    else {
+        possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    }
+    
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setEditing:YES animated:YES];
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
@@ -352,6 +400,45 @@
         [self performSegueWithIdentifier:@"photos" sender:self];
 
     }
+}
+
+
+
+#pragma mark - Search Stuff
+
+- (void)filterResults:(NSString *)searchTerm {
+    
+    [self.searchResults removeAllObjects];
+    
+    PFQuery *usernameQuery = [PFUser query];
+    [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
+    [usernameQuery whereKey:@"username" containsString:searchTerm];
+    [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
+    
+    //TODO: add NOT IN existingUsers query to both of these
+    
+    PFQuery *nameQuery = [PFUser query];
+    [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
+    [nameQuery whereKey:@"name" containsString:searchTerm];
+    [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
+    
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
+    
+    
+    NSArray *results  = [query findObjects];
+    
+    NSLog(@"%@", results);
+    
+    [self.searchResults addObjectsFromArray:results];
+}
+
+#pragma mark - UISearchResultsUpdating
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
+    [self filterResults:searchString];
+    [self.tableView reloadData];
 }
 
 
