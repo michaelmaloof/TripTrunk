@@ -104,7 +104,6 @@
     }
     cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
-    cell.lockPhoto.hidden = YES;
     cell.textLabel.text = trip.name;
     
 
