@@ -40,6 +40,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.endDate.text = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.lock.hidden = YES;
     if (self.trip.isPrivate == YES){
@@ -54,7 +55,10 @@
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
 //    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
-    self.endDate.text = self.trip.endDate;
+    
+    if (![self.trip.startDate isEqualToString:self.trip.endDate]){
+        self.endDate.text = self.trip.endDate;
+    } 
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain
