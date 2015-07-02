@@ -39,7 +39,7 @@
     _isFBUser = NO;
 
     // If the user has been created - aka logged in through fb.
-    if (_user && [_user valueForKey:@"fbid"]) {
+    if (_user) {
 
         _isFBUser = YES;
         
@@ -49,12 +49,17 @@
                 // result is a dictionary with the user's Facebook data
                 NSDictionary *userData = (NSDictionary *)result;
                 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self updateFieldsWithFBInfo:userData];
+                });
+
                 NSString *facebookID = userData[@"id"];
                 NSString *name = userData[@"name"];
                 NSString *email = userData[@"email"];
                 [_user setObject:facebookID forKey:@"fbid"];
                 [_user setObject:name forKey:@"name"];
                 [_user setObject:email forKey:@"email"];
+                
                 
                 NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
                 [_user setObject:pictureURL forKey:@"profilePicUrl"];
@@ -69,6 +74,11 @@
     }
 
 
+}
+
+- (void)updateFieldsWithFBInfo:(NSDictionary *)userData {
+    [self.emailTextField setText:userData[@"email"]];
+    [self.fullnameTextField setText:userData[@"name"]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -97,7 +107,14 @@
     if ((username || ![username isEqualToString:@""])
         && fullName && email && password && hometown) {
         
-        _user = [PFUser user];
+        // Init the user ONLY if it doesn't exist. If we're logging in with FB, _user is already populated
+        if (!_user) {
+            _user = [PFUser user];
+        }
+        else {
+            _user = [PFUser currentUser];
+        }
+        
         _user.username = username;
         [_user setValue:fullName forKey:@"name"];
         _user.email = email;
@@ -105,15 +122,16 @@
         [_user setValue:hometown forKey:@"hometown"];
 
         NSError *error;
-        BOOL didSignUp;
         // fb user exists so save, signup if it's a new user
         if (_isFBUser) {
-           didSignUp = [_user save:&error];
-
+            [_user save:&error];
+            // After setting the username/password, the Session Token gets erased because it was authenticated with FB.
+            // So, we now have to Log In again otherwise an error with throw.
+            [PFUser logInWithUsernameInBackground:_user.username password:_user.password];
         }
         else
         {
-           didSignUp = [_user signUp];
+           [_user signUp:&error];
         }
         
         if (error) {

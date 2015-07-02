@@ -36,7 +36,7 @@
     
     [Parse setApplicationId:@"jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS"
                   clientKey:@"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"];
-    
+    [PFUser enableRevocableSessionInBackground];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     [PFImageView class];
     
