@@ -130,7 +130,7 @@
         [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
         [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"trip"];
-        [followingQuery orderByDescending:@"start"];
+        [followingQuery orderByDescending:@"mostRecentPhoto"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {

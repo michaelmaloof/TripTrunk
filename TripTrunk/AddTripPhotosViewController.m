@@ -102,9 +102,6 @@
     self.trip.state = self.tripState;
     self.trip.country = self.tripCountry;
     self.trip.isPrivate = self.isPrivate;
-    NSDate *date = [NSDate date];
-    self.trip.mostRecentPhoto = [[NSDate alloc] initWithTimeInterval:-15000000000000000
-                                                            sinceDate:date];
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -208,6 +205,8 @@
     picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    picker.navigationBar.tintColor = [UIColor whiteColor];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self presentViewController:picker animated:YES completion:NULL];
 }
 
@@ -224,6 +223,7 @@
 //    NSUInteger inter2 = [kmg length];
 //    NSLog(@"Check 1 size is  jpeg %lu  png %lu", (unsigned long)inter, (unsigned long)inter2);
     [self.photos addObject:tripImageView];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [picker dismissViewControllerAnimated:YES completion:NULL];
     [self.tripCollectionView reloadData];
 
@@ -232,6 +232,8 @@
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     [picker dismissViewControllerAnimated:YES completion:NULL];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
 }
 
 #pragma keyboard
