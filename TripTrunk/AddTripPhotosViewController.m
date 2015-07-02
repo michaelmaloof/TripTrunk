@@ -102,6 +102,9 @@
     self.trip.state = self.tripState;
     self.trip.country = self.tripCountry;
     self.trip.isPrivate = self.isPrivate;
+    NSDate *date = [NSDate date];
+    self.trip.mostRecentPhoto = [[NSDate alloc] initWithTimeInterval:-15000000000000000
+                                                            sinceDate:date];
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -186,6 +189,7 @@
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
+    
     
     [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
     return;

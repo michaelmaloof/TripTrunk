@@ -19,6 +19,7 @@
 @property PFUser *creator;
 @property NSString *user;
 @property NSString *startDate;
+@property NSDate *start;
 @property NSString *endDate;
 @property NSDate *mostRecentPhoto;
 @property BOOL isPrivate;

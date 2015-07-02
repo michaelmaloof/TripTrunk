@@ -284,6 +284,7 @@
     self.trip.endDate = self.endTripTextField.text;
     self.trip.isPrivate = self.isPrivate;
     self.trip.user = [PFUser currentUser].username;
+    self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
 
 

@@ -51,7 +51,7 @@
     self.trunkAlbum = [[NSMutableArray alloc]init];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
-    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@ %@, %@",self.trip.city, self.trip.state,self.trip.country];
+    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
 //    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     self.endDate.text = self.trip.endDate;

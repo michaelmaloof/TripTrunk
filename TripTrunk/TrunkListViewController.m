@@ -130,6 +130,7 @@
         [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
         [followingQuery whereKey:@"content" equalTo:self.city];
         [followingQuery includeKey:@"trip"];
+        [followingQuery orderByDescending:@"start"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
@@ -206,6 +207,7 @@
     [followingQuery whereKey:@"content" equalTo:self.city];
     [followingQuery includeKey:@"trip"];
     [followingQuery includeKey:@"toUser"];
+    [followingQuery orderByDescending:@"mostRecentPhoto"];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -213,11 +215,15 @@
         }
         else
         {
+            NSLog(@"objects = %@", objects);
             int count = 0;
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
+                NSLog(@"trip id = %@", trip.objectId);
+                NSLog(@"trip name = %@", trip.name);
+
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
                     if (trip.isPrivate == YES)
