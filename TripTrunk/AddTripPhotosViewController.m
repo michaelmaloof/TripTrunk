@@ -131,7 +131,7 @@
     self.title = @"Uploading Photos..";
     for (TripImageView *tripImageView in self.photos)
     {
-        [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
+        [self addImageData:UIImageJPEGRepresentation(tripImageView.image, 1.0) string:tripImageView.caption];
         [self addToCounterArray:tripImageView];
         self.trip.mostRecentPhoto = [NSDate date];
         if (!self.isTripCreation) {
