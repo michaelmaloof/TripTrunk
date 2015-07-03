@@ -250,13 +250,14 @@
     __weak UserTableViewCell *weakCell = cell;
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:nil
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
                                                  [weakCell setNeedsLayout];
                                                  
                                              } failure:nil];
+    
     return weakCell;
 
 }
