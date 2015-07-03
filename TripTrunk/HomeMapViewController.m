@@ -14,6 +14,7 @@
 #import "TrunkListViewController.h"
 #import "TTUtility.h"
 #import "AddTripPhotosViewController.h"
+#import "ParseErrorHandlingController.h"
 
 
 #define METERS_PER_MILE 1609.344
@@ -77,6 +78,7 @@
             
     }
     else {
+        NSLog(@"viewDidAppear - queryParseMethodEveryone");
         [self queryParseMethodEveryone];
     }
 }
@@ -123,6 +125,7 @@
         {
             NSLog(@"Error: %@",error);
             self.title = @"TripTrunk";
+            [ParseErrorHandlingController handleError:error];
         }
         else
         {
@@ -172,33 +175,34 @@
         [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
         [followingQuery whereKey:@"type" equalTo:@"follow"];
         [followingQuery includeKey:@"toUser"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-    {
-        if (self.loadedOnce == NO){
-            self.title = @"Loading Trunks...";
-            self.loadedOnce = YES;
-        }
-            if(error)
-            {
-                self.title = @"TripTrunk";
-                NSLog(@"Error: %@",error);
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (self.loadedOnce == NO){
+                self.title = @"Loading Trunks...";
+                self.loadedOnce = YES;
             }
-            else if (!error)
-            {
-                int count = 0;
-                for (PFObject *activity in objects)
+                if (error)
                 {
-                    PFUser *user = activity[@"toUser"];
-                    [self.friends addObject:user];
-                    count += 1;
-                    
-                    if(count == objects.count)
+                    self.title = @"TripTrunk";
+                    NSLog(@"Error: %@",error);
+                    [ParseErrorHandlingController handleError:error];
+
+                }
+                else if (!error)
+                {
+                    int count = 0;
+                    for (PFObject *activity in objects)
                     {
-                        [self queryForTrunks];
+                        PFUser *user = activity[@"toUser"];
+                        [self.friends addObject:user];
+                        count += 1;
+                        
+                        if(count == objects.count)
+                        {
+                            [self queryForTrunks];
+                        }
                     }
                 }
-            }
-    }];
+        }];
 }
 
 - (IBAction)zoomOut:(id)sender {
