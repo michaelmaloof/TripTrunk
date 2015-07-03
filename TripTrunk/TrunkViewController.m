@@ -15,6 +15,7 @@
 #import "PhotoViewController.h"
 #import "AddTripPhotosViewController.h"
 #import "TrunkMembersViewController.h"
+#import "TTUtility.h"
 
 #import "UIImageView+AFNetworking.h"
 
@@ -145,8 +146,10 @@
         
         
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:cell.tripPhoto.imageUrl]];
-        UIImage *placeholderImage = [UIImage new];
+        NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+        UIImage *placeholderImage = [UIImage imageNamed:@"photo134"];
+        [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         __weak TrunkCollectionViewCell *weakCell = cell;
         
         [cell.photo setImageWithURLRequest:request

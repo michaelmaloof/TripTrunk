@@ -27,6 +27,9 @@
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 
+- (NSString *)thumbnailImageUrl:(NSString *)url;
+
+
 @property LoginViewController *login;
 
 @end
