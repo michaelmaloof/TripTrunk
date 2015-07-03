@@ -116,6 +116,9 @@
     [followingQuery includeKey:@"toUser"];
 
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        NSLog(@" trunk objects = %@", objects);
+        
         if (self.loadedOnce == NO)
         {
             self.title = @"Loading Trunks...";
@@ -176,15 +179,19 @@
         [followingQuery whereKey:@"type" equalTo:@"follow"];
         [followingQuery includeKey:@"toUser"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
             if (self.loadedOnce == NO){
                 self.title = @"Loading Trunks...";
                 self.loadedOnce = YES;
             }
+            
                 if (error)
                 {
                     self.title = @"TripTrunk";
-                    NSLog(@"Error: %@",error);
                     [ParseErrorHandlingController handleError:error];
+
+                } else if (objects.count == 0) {
+                    [self queryForTrunks];
 
                 }
                 else if (!error)
