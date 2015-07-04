@@ -238,8 +238,8 @@
 }
 
 - (IBAction)membersButtonPressed:(id)sender {
-    NSLog(@"membersButtonPressed");
     TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+    vc.isMember = self.isMember;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
