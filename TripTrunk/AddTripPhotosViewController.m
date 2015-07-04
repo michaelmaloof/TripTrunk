@@ -103,6 +103,13 @@
     self.trip.country = self.tripCountry;
     self.trip.isPrivate = self.isPrivate;
     
+    if (self.trip.mostRecentPhoto == nil){
+        NSString *date = @"01/01/1200";
+        NSDateFormatter *format = [[NSDateFormatter alloc]init];
+        [format setDateFormat:@"yyyy-MM-dd"];
+        self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
+    
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
              if(error) {

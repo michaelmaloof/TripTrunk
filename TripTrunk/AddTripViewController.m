@@ -286,6 +286,13 @@
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
+    
+    if (self.trip.mostRecentPhoto == nil){
+        NSString *date = @"01/01/1200";
+        NSDateFormatter *format = [[NSDateFormatter alloc]init];
+        [format setDateFormat:@"yyyy-MM-dd"];
+        self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
 
 
     NSLog(@"Saving Trip: %@", self.trip);
