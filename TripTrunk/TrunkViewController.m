@@ -113,10 +113,10 @@
                     self.isMember = NO;
                 } else {
                     self.isMember = YES;
-                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
+                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
                                                                                               style:UIBarButtonItemStyleBordered
                                                                                              target:self
-                                                                                             action:@selector(editTapped)];
+                                                                                             action:@selector(leaveTrunk)];
                 }
                 
             }else
@@ -127,6 +127,18 @@
         }];
     }
 
+}
+
+-(void)leaveTrunk{
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = [NSString stringWithFormat:@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited"];
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"Dismiss"];
+    [alertView addButtonWithTitle:@"Leave Trunk"];
+    alertView.tag = 2;
+
+    [alertView show];
 }
 
 -(TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -296,19 +308,30 @@
 }
 
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        for (UIImage *image in self.trunkAlbum){
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    
+    if (alertView.tag == 2)
+    {
+        if (buttonIndex == 1) {
+            [self deleteFromTrunk];
         }
-        
-        UIAlertView *alertView = [[UIAlertView alloc] init];
-        alertView.delegate = self;
-        alertView.title = @"Photos have been saved";
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"Sweet!"];
-        [alertView show];
-
+    }
+    else
+    {
+        if (buttonIndex == 1)
+        {
+            for (UIImage *image in self.trunkAlbum)
+            {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+            }
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Photos have been saved";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"Sweet!"];
+            [alertView show];
+        }
     }
 }
 
@@ -316,7 +339,62 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)deleteFromTrunk
+{
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery whereKey:@"content" equalTo:self.trip.city];
+    [followingQuery whereKey:@"trip" equalTo:self.trip];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+    {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
+            [self removeActivityRow:objects];
+        }
+    }];
+}
 
+-(void)removeActivityRow:(NSArray*)objects{
+    PFObject *object = [objects objectAtIndex:0];
+    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }];
+}
 
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+         
+         
+         
+         

@@ -58,7 +58,6 @@
     
     //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
     NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
-    NSLog(@"hometown = %@", hometown);
 
     
 }
@@ -78,7 +77,6 @@
             
     }
     else {
-        NSLog(@"viewDidAppear - queryParseMethodEveryone");
         [self queryParseMethodEveryone];
     }
 }
@@ -116,9 +114,7 @@
     [followingQuery includeKey:@"toUser"];
 
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-        NSLog(@" trunk objects = %@", objects);
-        
+                
         if (self.loadedOnce == NO)
         {
             self.title = @"Loading Trunks...";

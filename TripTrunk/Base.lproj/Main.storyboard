@@ -971,6 +971,7 @@
                         <outlet property="stateCountryLabel" destination="YXB-LB-7B6" id="qQ4-iH-GXG"/>
                         <segue destination="aHH-Uj-SSR" kind="show" identifier="photo" id="8D2-7c-Dcs"/>
                         <segue destination="npq-fR-GHM" kind="show" identifier="addPhotos" id="JSU-Dg-jAI"/>
+                        <segue destination="VtI-4S-iQ3" kind="show" identifier="Edit" id="hXf-dS-IMJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XBQ-xK-0fI" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2364,5 +2365,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="JSU-Dg-jAI"/>
+        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>

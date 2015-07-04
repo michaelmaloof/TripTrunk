@@ -75,8 +75,6 @@
         }
         else
         {
-            NSLog(@"%@", objects);
-
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
                 PFUser *user = activity[@"toUser"];
@@ -109,7 +107,6 @@
         }
         else
         {
-            NSLog(@"%@", objects);
             
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
@@ -156,7 +153,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"NUMBER OF ROWS %lu", (unsigned long)_friends.count);
 
     return _friends.count;
 }
@@ -210,13 +206,11 @@
     
     if ([cellView.followButton isSelected]) {
         // Unfollow
-        NSLog(@"Attempt to unfollow %@",user.username);
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
         [SocialUtility unfollowUser:user];
     }
     else {
         // Follow
-        NSLog(@"Attempt to follow %@",user.username);
         [cellView.followButton setSelected:YES];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
@@ -236,7 +230,6 @@
             }
             else
             {
-                NSLog(@"Follow Succeeded");
             }
         }];
     }

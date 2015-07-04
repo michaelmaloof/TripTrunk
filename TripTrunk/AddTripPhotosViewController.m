@@ -40,7 +40,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog( @"trip is %@", self.trip);
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
@@ -162,7 +161,6 @@
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                     NSLog(@"Save Trip Success - dismiss view controller");
                     self.title = @"TripTrunk";
                      [self dismissViewControllerAnimated:YES completion:NULL];
                      [[self navigationController] setNavigationBarHidden:NO animated:YES];

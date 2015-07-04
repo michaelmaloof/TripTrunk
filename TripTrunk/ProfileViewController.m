@@ -31,27 +31,23 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)followersButtonPressed:(id)sender {
-    NSLog(@"Followers Button Pressed");
     FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:NO];
     
     [self.navigationController pushViewController:vc animated:YES];
 }
 - (IBAction)findFriendsButtonPressed:(id)sender {
-    NSLog(@"Find Friends Button Pressed");
     
     FindFriendsViewController *vc = [[FindFriendsViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 
 }
 - (IBAction)followingButtonPressed:(id)sender {
-    NSLog(@"Following Button Pressed");
     
     FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:[PFUser currentUser] andFollowingStatus:YES];
     [self.navigationController pushViewController:vc animated:YES];
 
 }
 - (IBAction)logOutButtonPressed:(id)sender {
-    NSLog(@"Logout Button Pressed");
     [PFUser logOut];
     
     // This pushes the user back to the map view, which should then show the loginview

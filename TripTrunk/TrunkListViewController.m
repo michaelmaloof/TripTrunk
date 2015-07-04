@@ -62,7 +62,6 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    NSLog(@"%@", self.city);
 }
 
 -(void)rightBarItemWasTapped {
@@ -215,14 +214,12 @@
         }
         else
         {
-            NSLog(@"objects = %@", objects);
             int count = 0;
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                NSLog(@"trip id = %@", trip.objectId);
-                NSLog(@"trip name = %@", trip.name);
+
 
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {

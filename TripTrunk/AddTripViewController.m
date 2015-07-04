@@ -211,7 +211,6 @@
                             self.city = placemark.locality;
                             self.state = placemark.administrativeArea;
                         }
-                        NSLog(@"Got input for trip");
                         [self parseTrip];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
  
@@ -294,8 +293,6 @@
         self.trip.mostRecentPhoto = [format dateFromString:date];
     }
 
-
-    NSLog(@"Saving Trip: %@", self.trip);
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          
@@ -311,9 +308,7 @@
 
              }
              else
-             {
-                 NSLog(@"Trip Saved, performing segue to add friends");
-                 
+             {                 
              //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
               //   vc.trip = self.trip;
                //  vc.isTripCreation = YES;
