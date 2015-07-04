@@ -961,15 +961,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" id="xSk-Pn-g4X">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="yGh-i0-AEL">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="onEditTapped:" destination="XRX-XO-YxQ" id="KhA-NK-ZUR"/>
-                                <segue destination="VtI-4S-iQ3" kind="show" identifier="Edit" id="UVs-AV-0Qj"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="xSk-Pn-g4X"/>
                     <connections>
                         <outlet property="collectionView" destination="o2X-FD-baW" id="Jet-Bo-c2M"/>
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
@@ -1497,7 +1489,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgM-K6-At2" customClass="TripImageView">
@@ -2372,6 +2364,5 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="UVs-AV-0Qj"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -40,6 +40,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.endDate.text = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.lock.hidden = YES;
@@ -53,7 +54,6 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
-//    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
@@ -78,12 +78,6 @@
     self.photos = [[NSArray alloc]init];
 
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
-        
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(queryParseMethod)
                                                  name:@"parsePhotosUpdatedNotification"
@@ -97,6 +91,10 @@
     if ([[PFUser currentUser].username isEqualToString:self.trip.user])
     {
         self.isMember = YES;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
+                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                 target:self
+                                                                                 action:@selector(editTapped)];
     }
     else
     {
@@ -115,6 +113,10 @@
                     self.isMember = NO;
                 } else {
                     self.isMember = YES;
+                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
+                                                                                              style:UIBarButtonItemStyleBordered
+                                                                                             target:self
+                                                                                             action:@selector(editTapped)];
                 }
                 
             }else
@@ -171,7 +173,8 @@
     return self.photos.count + 1;
 }
 
-- (IBAction)onEditTapped:(id)sender {
+
+-(void)editTapped{
     [self performSegueWithIdentifier:@"Edit" sender:self];
 }
 
