@@ -43,7 +43,13 @@
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     self.title = @"Trip Details";
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
@@ -137,6 +143,7 @@
     }
     
 }
+
 
 #pragma keyboard
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

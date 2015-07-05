@@ -13,6 +13,7 @@
 #import "TripImageView.h"
 #import "AddTripFriendsViewController.h"
 #import "TTUtility.h"
+#import "AddTripViewController.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -40,7 +41,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     if (self.trip){
         self.alreadyTrip = YES;
     } else {
@@ -162,9 +166,10 @@
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                    self.title = @"TripTrunk";
-                     [self dismissViewControllerAnimated:YES completion:NULL];
-                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+                self.title = @"TripTrunk";
+                 [self.tabBarController setSelectedIndex:0];
+                 [self.navigationController popToRootViewControllerAnimated:NO];
+                 //ASK MIKE HERE
 
              }
          }];
