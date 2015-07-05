@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *public;
 @property (weak, nonatomic) IBOutlet UIButton *private;
 @property BOOL isPrivate;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBar;
 
 @end
 
@@ -77,12 +78,18 @@
         self.delete.hidden = NO;
         self.public.hidden = YES;
         self.private.hidden = YES;
+        
+        self.cancelBar.title = @"Cancel";
+        self.cancelBar.enabled = YES;
     }
     
     else {
         // initialize the trip object
         self.trip = [[Trip alloc] init];
-    
+        self.cancelBar.title = @"";
+        self.cancelBar.enabled = FALSE;
+       
+
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain

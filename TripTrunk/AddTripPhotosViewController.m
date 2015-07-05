@@ -40,6 +40,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.trip){
+        self.alreadyTrip = YES;
+    } else {
+        self.alreadyTrip = NO;
+        
+    }
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
@@ -61,12 +68,6 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    if (self.trip){
-        self.alreadyTrip = YES;
-    } else {
-        self.alreadyTrip = NO;
-    }
-        
     
 }
 
