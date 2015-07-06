@@ -46,7 +46,9 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-
+    
+    self.tabBarController.tabBar.translucent = false;
+    [self.tabBarController.tabBar setTintColor:[UIColor whiteColor]];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     

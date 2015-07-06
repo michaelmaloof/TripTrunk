@@ -60,6 +60,8 @@
     } else {
         self.delete.hidden = YES;
     }
+    
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
 
 }
 
