@@ -62,6 +62,8 @@
     }
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
+    self.tableView.contentInset = UIEdgeInsetsMake(-36, 0, 0, 0);
+
 
 }
 
