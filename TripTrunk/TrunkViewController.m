@@ -22,7 +22,10 @@
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
 @property NSArray *photos;
-@property NSMutableArray *trunkAlbum;
+/**
+ *  Array holding the UIImage Thumbnails for this trunk
+ */
+@property NSMutableArray *trunkThumbnails;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
@@ -41,55 +44,60 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"Trip Name is: %@", self.trip.name);
+
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     self.navigationController.navigationItem.rightBarButtonItem = nil;
-    self.endDate.text = nil;
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.lock.hidden = YES;
-    if (self.trip.isPrivate == YES){
+    
+    if (self.trip.isPrivate) {
         self.lock.hidden = NO;
-    }else{
+    }
+    else {
         self.lock.hidden = YES;
     }
-    self.title = self.trip.name;
-    self.trunkAlbum = [[NSMutableArray alloc]init];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
     self.startDate.text = self.trip.startDate;
     
+    self.endDate.text = @"";
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
         self.endDate.text = self.trip.endDate;
-    } 
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    }
     
+    [[self navigationItem] setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@""
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil]];
+    
+    self.photos = nil;
+    self.photos = [[NSArray alloc] init];
+    
+    // Load initial data
     [self checkIfIsMember];
-    
-    NSLog(@"Trip Name is: %@", self.trip.name);
+    [self queryParseMethod];
 
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    self.photos = nil;
-    self.photos = [[NSArray alloc]init];
-
+    
+    // Add observer for when uploading is finished.
+    // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(queryParseMethod)
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
     
-    [self queryParseMethod];
 }
+
+#pragma mark - Queries
 
 -(void)checkIfIsMember{
     
@@ -134,70 +142,9 @@
 
 }
 
--(void)leaveTrunk{
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    alertView.delegate = self;
-    alertView.title = [NSString stringWithFormat:@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited"];
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Dismiss"];
-    [alertView addButtonWithTitle:@"Leave Trunk"];
-    alertView.tag = 2;
-
-    [alertView show];
-}
-
--(TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-
-    if(indexPath.row == 0)
-    {
-        cell.photo.image = [UIImage imageNamed:@"Plus Square"];
-    }
-    // This is the images
-    else if (indexPath.row > 0)
-    {
-        cell.tripPhoto = [self.photos objectAtIndex:indexPath.row -1];
-        
-        // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
-//        [self convertPhoto:cell indexPath:indexPath];
-        
-        
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        UIImage *placeholderImage = [UIImage imageNamed:@"photo134"];
-        [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
-        __weak TrunkCollectionViewCell *weakCell = cell;
-        
-        [cell.photo setImageWithURLRequest:request
-                                    placeholderImage:placeholderImage
-                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                 
-                                                 [self.trunkAlbum addObject:image];
-
-                                                 weakCell.photo.image = image;
-                                                 [weakCell setNeedsLayout];
-                                                 
-                                             } failure:nil];
-        return weakCell;
-    
-    }
-    return cell;
-}
-
-
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return self.photos.count + 1;
-}
-
-
--(void)editTapped{
-    [self performSegueWithIdentifier:@"Edit" sender:self];
-}
-
 -(void)queryParseMethod{
+    
+    NSLog(@"TrunkViewController - queryParseMethod");
     
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
     [findPhotosUser whereKey:@"tripName" equalTo:self.trip.name];
@@ -209,6 +156,7 @@
         {
             // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
+            self.trunkThumbnails = [[NSMutableArray alloc] initWithCapacity:self.photos.count]; // initialize to the length of the photos list
             [self.collectionView reloadData];
             
         }else
@@ -221,32 +169,8 @@
 
 }
 
-// mattschoch 6/10 - I think this method can be deleted?
--(void)checkPhotos
-{
-    int photoCount = (int)self.photos.count;
-    if (self.photosOriginal != photoCount)
-    {
-        self.photosOriginal = photoCount;
-        [self.collectionView reloadData];
-    }
-    
+#pragma mark - Button Actions 
 
-}
-
-// mattschoch 6/10 - I think this method can be deleted as well - replaced with setting image in the cell
--(void)convertPhoto:(TrunkCollectionViewCell*)cell indexPath:(NSIndexPath*)indexPath {
-    Photo *photo = [self.photos objectAtIndex:indexPath.row -1];
-    PFFile *file = photo.imageFile;
-    cell.photo.file = file;
-    [cell.photo.file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-            cell.photo.image = [UIImage imageWithData:data];
-            [self.trunkAlbum addObject:cell.photo.image];
-        }
-    }];
-}
-     
 - (IBAction)onPhotoTapped:(id)sender {
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -265,58 +189,49 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"Edit"]) {
-        AddTripViewController *vc = segue.destinationViewController;
-        vc.trip = self.trip;
-    }
-    
-    else if([segue.identifier isEqualToString:@"photo"]){
-        PhotoViewController *vc = segue.destinationViewController;
-        vc.photo = [self.photos objectAtIndex:self.path.row -1];
-        //TODO: VC.Image sets the WRONG image.
-        // It could be just from having a "photo" without an imageUrl though, so maybe it works.
-        // I think it works, but it can crash sometimes from an index-out-of-range exception
-        vc.image = [self.trunkAlbum objectAtIndex:self.path.row -1];
-        vc.photos = self.photos;
-        vc.trunkAlbum = self.trunkAlbum;
-        vc.arrayInt = self.path.row-1;
-        self.path = nil;
-    }
-    
-    else if ([segue.identifier isEqualToString:@"addPhotos"]) {
-        AddTripPhotosViewController *vc = segue.destinationViewController;
-        vc.trip = self.trip;
-    }
-    
+-(void)editTapped{
+    [self performSegueWithIdentifier:@"Edit" sender:self];
 }
 
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+-(void)leaveTrunk{
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = [NSString stringWithFormat:@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited"];
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"Dismiss"];
+    [alertView addButtonWithTitle:@"Leave Trunk"];
+    alertView.tag = 2;
     
-    if (indexPath.row > 0)
-    {
-        self.path = indexPath;
-        
-        [self performSegueWithIdentifier:@"photo" sender:self];
-    }
-    
-    else if (indexPath.row == 0 && self.isMember == NO)
-    {
-        UIAlertView *alertView = [[UIAlertView alloc] init];
-        alertView.delegate = self;
-        alertView.title = [NSString stringWithFormat:@"Only members may add photos. Contact %@ to be made a member of this trunk", self.trip.user];
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"OK"];
-        [alertView show];
-    }
-    
-    else if (indexPath.row == 0 && self.isMember == YES)
-    {
-        [self performSegueWithIdentifier:@"addPhotos" sender:self];
-    }
+    [alertView show];
 }
 
+-(void)deleteFromTrunk
+{
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery whereKey:@"content" equalTo:self.trip.city];
+    [followingQuery whereKey:@"trip" equalTo:self.trip];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if(error)
+         {
+             NSLog(@"Error: %@",error);
+         }
+         else
+         {
+             [self removeActivityRow:objects];
+         }
+     }];
+}
+
+-(void)removeActivityRow:(NSArray*)objects{
+    PFObject *object = [objects objectAtIndex:0];
+    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         [self.navigationController popToRootViewControllerAnimated:YES];
+     }];
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -327,11 +242,13 @@
             [self deleteFromTrunk];
         }
     }
+    // DOWNLOADING IMAGES
+    //TODO: don't download images in the list. Download full-res from server
     else
     {
         if (buttonIndex == 1)
         {
-            for (UIImage *image in self.trunkAlbum)
+            for (UIImage *image in self.trunkThumbnails)
             {
                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
             }
@@ -345,37 +262,125 @@
     }
 }
 
+#pragma mark - UICollectionView Data Source
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+//    NSLog(@"numberOfItems: %lu", self.photos.count + 1);
+    return self.photos.count + 1;
+}
+
+- (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+    
+    if(indexPath.item == 0)
+    {
+        cell.photo.image = [UIImage imageNamed:@"Plus Square"];
+    }
+    // This is the images
+    else if (indexPath.item > 0)
+    {
+        cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
+        
+        // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
+        //        [self convertPhoto:cell indexPath:indexPath];
+        
+        
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+        UIImage *placeholderImage = [UIImage imageNamed:@"photo134"];
+        [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
+        __weak TrunkCollectionViewCell *weakCell = cell;
+        
+        [cell.photo setImageWithURLRequest:request
+                          placeholderImage:placeholderImage
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                       
+//                                       NSLog(@"adding Photo to cell at index: %lu", indexPath.item - 1);
+//                                       NSLog(@"trunkThumbnails Count: %lu", self.trunkThumbnails.count);
+
+                                       [self.trunkThumbnails insertObject:image atIndex:indexPath.item - 1];
+                                       
+                                       weakCell.photo.image = image;
+                                       [weakCell setNeedsLayout];
+                                       
+                                   } failure:nil];
+        return weakCell;
+        
+    }
+    return cell;
+}
+
+#pragma mark - UICollectionView Delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.item > 0)
+    {
+        self.path = indexPath;
+        NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
+        
+        [self performSegueWithIdentifier:@"photo" sender:self];
+    }
+    
+    else if (indexPath.item == 0 && self.isMember == NO)
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = [NSString stringWithFormat:@"Only members may add photos. Contact %@ to be made a member of this trunk", self.trip.user];
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:@"OK"];
+        [alertView show];
+    }
+    
+    else if (indexPath.item == 0 && self.isMember == YES)
+    {
+        [self performSegueWithIdentifier:@"addPhotos" sender:self];
+    }
+}
+
+
+#pragma mark - Segue
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Edit"]) {
+        AddTripViewController *vc = segue.destinationViewController;
+        vc.trip = self.trip;
+    }
+    
+    else if([segue.identifier isEqualToString:@"photo"]){
+        PhotoViewController *vc = segue.destinationViewController;
+        vc.photo = [self.photos objectAtIndex:self.path.item -1];
+        //TODO: VC.Image sets the WRONG image.
+        // It could be just from having a "photo" without an imageUrl though, so maybe it works.
+        // I think it works, but it can crash sometimes from an index-out-of-range exception
+        vc.image = [self.trunkThumbnails objectAtIndex:self.path.item -1];
+        vc.photos = self.photos;
+        vc.trunkAlbum = self.trunkThumbnails;
+        vc.arrayInt = self.path.item-1;
+        self.path = nil;
+    }
+    
+    else if ([segue.identifier isEqualToString:@"addPhotos"]) {
+        AddTripPhotosViewController *vc = segue.destinationViewController;
+        vc.trip = self.trip;
+    }
+    
+}
+
+
+#pragma mark - viewWillDissappear
+
 - (void)viewWillDisappear:(BOOL)animated {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void)deleteFromTrunk
-{
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery whereKey:@"content" equalTo:self.trip.city];
-    [followingQuery whereKey:@"trip" equalTo:self.trip];
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-    {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            [self removeActivityRow:objects];
-        }
-    }];
-}
-
--(void)removeActivityRow:(NSArray*)objects{
-    PFObject *object = [objects objectAtIndex:0];
-    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-    {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }];
-}
 
 
 @end

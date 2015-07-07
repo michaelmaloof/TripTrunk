@@ -25,12 +25,34 @@
  */
 + (TTUtility *)sharedInstance;
 
+/**
+ *  Uploads a Photo to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse
+ *
+ *  @param photo     TripTrunk parse Photo object
+ *  @param imageData NSData of a JPEG image (works with PNG as well, but that takes up more space, so we recommend JPEG)
+ */
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 
-- (NSString *)thumbnailImageUrl:(NSString *)url;
+/**
+ *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with thumbnail transformations
+ *
+ *  @param urlString imageUrl of a Photo on Cloudinary
+ *
+ *  @return String of a transformed imageUrl
+ */
+- (NSString *)thumbnailImageUrl:(NSString *)urlString;
+
+/**
+ *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with a quality of 60
+ *
+ *  @param urlString imageUrl of a Photo on Cloudinary
+ *
+ *  @return String of a transformed imageUrl
+ */
+- (NSString *)mediumQualityImageUrl:(NSString *)urlString;
 
 
-@property LoginViewController *login;
+//@property LoginViewController *login;
 
 @end
 

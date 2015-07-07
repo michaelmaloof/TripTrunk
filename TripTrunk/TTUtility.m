@@ -109,6 +109,23 @@ CLCloudinary *cloudinary;
     return transformedUrl;
 }
 
+- (NSString *)mediumQualityImageUrl:(NSString *)urlString;
+{
+    CLTransformation *transformation = [CLTransformation transformation];
+// TODO: set the width/height to the screen's resolution
+//    [transformation setWidthWithInt: 160];
+//    [transformation setHeightWithInt: 160];
+//    [transformation setCrop: @"fill"];
+    [transformation setQualityWithFloat:60];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
+
 #pragma mark - Cloudinary CLUploaderDelegate
 
 - (void) uploaderSuccess:(NSDictionary*)result context:(id)context {

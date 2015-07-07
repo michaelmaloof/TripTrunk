@@ -9,7 +9,9 @@
 #import "PhotoViewController.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "UIImageView+AFNetworking.h"
 #import "Comment.h"
+#import "TTUtility.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
@@ -44,8 +46,7 @@
     
     //mattschoch 6/10 - setting the image on the imageview directly
 //    [self.imageView loadInBackground];
-    self.imageView.image = self.image;
-    
+    [self loadImage];
     
     [self queryParseMethod];
     
@@ -77,7 +78,20 @@
 //    NSLog(@"object at photos 1 %@", [self.photos objectAtIndex:0]);
 
 
+}
 
+- (void)loadImage {
+    
+    NSString *urlString = [[TTUtility sharedInstance] mediumQualityImageUrl:self.photo.imageUrl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    UIImage *placeholderImage = self.image;
+    [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    
+    [self.imageView setImageWithURLRequest:request
+                      placeholderImage:placeholderImage
+                               success:nil failure:nil];
+
+    
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -252,6 +266,9 @@
 }
 
 -(void)queryParseMethod {
+    
+    NSLog(@"PhotoViewController - queryParseMethod");
+
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Comment"];
     [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];
     [findPhotosUser whereKey:@"city" equalTo:self.photo.city];
