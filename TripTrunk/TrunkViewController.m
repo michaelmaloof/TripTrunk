@@ -236,30 +236,15 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     
-    if (alertView.tag == 2)
-    {
+    if (alertView.tag == 2) {
         if (buttonIndex == 1) {
             [self deleteFromTrunk];
         }
     }
-    // DOWNLOADING IMAGES
-    //TODO: don't download images in the list. Download full-res from server
-    else
-    {
-        if (buttonIndex == 1)
-        {
+    else {
+        // DOWNLOADING IMAGES
+        if (buttonIndex == 1) {
             [[TTUtility sharedInstance] downloadPhotos:self.photos];
-//            for (UIImage *image in self.trunkThumbnails)
-//            {
-//                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-//                
-//            }
-//            UIAlertView *alertView = [[UIAlertView alloc] init];
-//            alertView.delegate = self;
-//            alertView.title = @"Photos have been saved";
-//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-//            [alertView addButtonWithTitle:@"Sweet!"];
-//            [alertView show];
         }
     }
 }
@@ -348,6 +333,7 @@
 #pragma mark - Segue
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if ([segue.identifier isEqualToString:@"Edit"]) {
         AddTripViewController *vc = segue.destinationViewController;
         vc.trip = self.trip;
@@ -356,12 +342,8 @@
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
         vc.photo = [self.photos objectAtIndex:self.path.item -1];
-        //TODO: VC.Image sets the WRONG image.
-        // It could be just from having a "photo" without an imageUrl though, so maybe it works.
-        // I think it works, but it can crash sometimes from an index-out-of-range exception
-        vc.image = [(Photo *)[self.photos objectAtIndex:self.path.item -1] image];
         vc.photos = self.photos;
-        vc.arrayInt = self.path.item-1;
+        vc.arrayInt = self.path.item - 1;
         self.path = nil;
     }
     

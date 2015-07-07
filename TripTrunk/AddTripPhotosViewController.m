@@ -182,33 +182,24 @@
 
 - (void)createAndUploadImage:(UIImage *)image withCaption:(NSString*)caption
 {
-    CGDataProviderRef provider = CGImageGetDataProvider(image.CGImage);
+    
     NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
     
-    
-//    NSData *imageData;
-//    PFFile *file = [PFFile fileWithData:imageData];
     PFUser *user = [PFUser currentUser];
     Photo *photo = [Photo object];
     
     photo.likes = 0;
-//    photo.imageFile = file;
-    photo.fbID = [user objectForKey:@"fbId"];
+    // Mattschoch 7/7 - Why do we have a fbid property on Photo? It hasn't been used yet because the I is capitalized so it never finds a user's fbid. Can we delete?
+//    photo.fbID = [user objectForKey:@"fbId"];
     photo.trip = self.trip;
-    photo.userName = [PFUser currentUser].username;
-    photo.user = [PFUser currentUser];
-    NSMutableArray *localArray = [[NSMutableArray alloc] init];
-    photo.usersWhoHaveLiked = localArray;
+    photo.userName = user.username;
+    photo.user = user;
+    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
     
-    
     [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
-    return;
-    
-    //This is place holder for unusedMethodOne. Dont erase
-    
     
 }
 
