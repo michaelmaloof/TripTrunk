@@ -26,10 +26,7 @@
  *  Array holding Photo objects for the photos in this trunk
  */
 @property NSArray *photos;
-/**
- *  Array holding the UIImage Thumbnails for this trunk
- */
-@property NSMutableArray *trunkThumbnails;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
@@ -160,7 +157,6 @@
         {
             // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
-            self.trunkThumbnails = [[NSMutableArray alloc] initWithCapacity:self.photos.count]; // initialize to the length of the photos list
             [self.collectionView reloadData];
             
         }else
@@ -276,7 +272,6 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfItems: %lu", self.photos.count + 1);
     return self.photos.count + 1;
 }
 
@@ -307,13 +302,9 @@
         [cell.photo setImageWithURLRequest:request
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                       
-                                       NSLog(@"adding Photo to cell at index: %lu", indexPath.item - 1);
-                                       NSLog(@"trunkThumbnails Count: %lu", self.trunkThumbnails.count);
 
-                                       //TODO: This is a BUG
-                                       // Images can finish downloading in a different order, so this array gets mis-ordered easily.
-                                       [self.trunkThumbnails addObject:image];
+                                       // Set the image to the Photo object in the array
+                                       [(Photo *)[self.photos objectAtIndex:indexPath.item - 1] setImage:image];
                                        
                                        weakCell.photo.image = image;
                                        [weakCell setNeedsLayout];
@@ -368,9 +359,8 @@
         //TODO: VC.Image sets the WRONG image.
         // It could be just from having a "photo" without an imageUrl though, so maybe it works.
         // I think it works, but it can crash sometimes from an index-out-of-range exception
-        vc.image = [self.trunkThumbnails objectAtIndex:self.path.item -1];
+        vc.image = [(Photo *)[self.photos objectAtIndex:self.path.item -1] image];
         vc.photos = self.photos;
-        vc.trunkAlbum = self.trunkThumbnails;
         vc.arrayInt = self.path.item-1;
         self.path = nil;
     }

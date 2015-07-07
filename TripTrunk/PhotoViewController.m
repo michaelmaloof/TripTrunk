@@ -38,8 +38,6 @@
     self.title = self.photo.userName;
     [self.textView setDelegate:self];
     self.commentsArray = [[NSArray alloc]init];
-    PFFile *file = self.photo.imageFile;
-    self.imageView.file = file;
     self.tableView.hidden = YES;
     self.addComment.hidden = YES;
     self.textView.hidden = YES;
@@ -72,11 +70,6 @@
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swiperight];
 
-//    NSLog(@"image = %@", self.image);
-//    NSLog(@"photo = %@", self.photo);
-//    NSLog(@"object at trunk 1 %@", [self.trunkAlbum objectAtIndex:0]);
-//    NSLog(@"object at photos 1 %@", [self.photos objectAtIndex:0]);
-
 
 }
 
@@ -101,7 +94,7 @@
     {
         self.arrayInt = self.arrayInt - 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
-        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
+        self.image = [(Photo *)[self.photos objectAtIndex:self.arrayInt] image];
         self.imageView.image = self.image;
         self.title = self.photo.userName;
         
@@ -124,7 +117,7 @@
     {
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
-        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
+        self.image = [(Photo *)[self.photos objectAtIndex:self.arrayInt] image];
         self.imageView.image = self.image;
         self.title = self.photo.userName;
         
