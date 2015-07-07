@@ -23,8 +23,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIButton *like;
 
-
-
 @end
 
 @implementation PhotoViewController
@@ -50,6 +48,7 @@
     
     
     [self queryParseMethod];
+    
     self.delete.hidden = YES;
     
     NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
@@ -63,8 +62,70 @@
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     self.tableView.contentInset = UIEdgeInsetsMake(-36, 0, 0, 0);
+    
+    UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
+    swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeleft];
+    
+    UISwipeGestureRecognizer * swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight:)];
+    swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swiperight];
+
+//    NSLog(@"image = %@", self.image);
+//    NSLog(@"photo = %@", self.photo);
+//    NSLog(@"object at trunk 1 %@", [self.trunkAlbum objectAtIndex:0]);
+//    NSLog(@"object at photos 1 %@", [self.photos objectAtIndex:0]);
 
 
+
+}
+
+-(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
+{
+    NSLog(@"check 1 = %ld", (long)self.arrayInt);
+    if (self.tableView.hidden == YES && self.arrayInt > 0)
+    {
+        self.arrayInt = self.arrayInt - 1;
+        self.photo = [self.photos objectAtIndex:self.arrayInt];
+        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
+        self.imageView.image = self.image;
+        self.title = self.photo.userName;
+        
+        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+        [self.like setTitle:string forState:UIControlStateNormal];
+        
+        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            self.delete.hidden = NO;
+        } else {
+            self.delete.hidden = YES;
+        }
+
+        [self queryParseMethod];
+    }
+}
+
+-(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
+{
+    if (self.tableView.hidden == YES && self.arrayInt != self.photos.count - 1)
+    {
+        self.arrayInt = self.arrayInt + 1;
+        self.photo = [self.photos objectAtIndex:self.arrayInt];
+        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
+        self.imageView.image = self.image;
+        self.title = self.photo.userName;
+        
+        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+        [self.like setTitle:string forState:UIControlStateNormal];
+        
+        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            self.delete.hidden = NO;
+        } else {
+            self.delete.hidden = YES;
+        }
+        
+        [self queryParseMethod];
+
+    }
 }
 
 
@@ -333,6 +394,14 @@
 
 
 }
+
+
+
+
+
+
+
+
 @end
 
 

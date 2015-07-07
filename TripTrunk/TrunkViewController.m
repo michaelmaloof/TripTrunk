@@ -275,6 +275,9 @@
         // It could be just from having a "photo" without an imageUrl though, so maybe it works.
         // I think it works, but it can crash sometimes from an index-out-of-range exception
         vc.image = [self.trunkAlbum objectAtIndex:self.path.row -1];
+        vc.photos = self.photos;
+        vc.trunkAlbum = self.trunkAlbum;
+        vc.arrayInt = self.path.row-1;
         self.path = nil;
     }
     
