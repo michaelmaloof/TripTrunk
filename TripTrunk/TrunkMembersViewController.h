@@ -20,4 +20,5 @@
  *  @return self
  */
 - (id)initWithTrip:(Trip *)trip;
+@property BOOL isMember;
 @end

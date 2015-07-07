@@ -41,6 +41,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.endDate.text = nil;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.lock.hidden = YES;
@@ -54,7 +59,6 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.title = self.trip.name;
     self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
-//    self.photoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.photos.count];
     self.startDate.text = self.trip.startDate;
     
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
@@ -79,12 +83,6 @@
     self.photos = [[NSArray alloc]init];
 
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user]) {
-        
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(queryParseMethod)
                                                  name:@"parsePhotosUpdatedNotification"
@@ -98,6 +96,10 @@
     if ([[PFUser currentUser].username isEqualToString:self.trip.user])
     {
         self.isMember = YES;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
+                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                 target:self
+                                                                                 action:@selector(editTapped)];
     }
     else
     {
@@ -116,6 +118,10 @@
                     self.isMember = NO;
                 } else {
                     self.isMember = YES;
+                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
+                                                                                              style:UIBarButtonItemStyleBordered
+                                                                                             target:self
+                                                                                             action:@selector(leaveTrunk)];
                 }
                 
             }else
@@ -126,6 +132,18 @@
         }];
     }
 
+}
+
+-(void)leaveTrunk{
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = [NSString stringWithFormat:@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited"];
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"Dismiss"];
+    [alertView addButtonWithTitle:@"Leave Trunk"];
+    alertView.tag = 2;
+
+    [alertView show];
 }
 
 -(TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -174,7 +192,8 @@
     return self.photos.count + 1;
 }
 
-- (IBAction)onEditTapped:(id)sender {
+
+-(void)editTapped{
     [self performSegueWithIdentifier:@"Edit" sender:self];
 }
 
@@ -241,8 +260,8 @@
 }
 
 - (IBAction)membersButtonPressed:(id)sender {
-    NSLog(@"membersButtonPressed");
     TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+    vc.isMember = self.isMember;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -259,6 +278,9 @@
         // It could be just from having a "photo" without an imageUrl though, so maybe it works.
         // I think it works, but it can crash sometimes from an index-out-of-range exception
         vc.image = [self.trunkAlbum objectAtIndex:self.path.row -1];
+        vc.photos = self.photos;
+        vc.trunkAlbum = self.trunkAlbum;
+        vc.arrayInt = self.path.row-1;
         self.path = nil;
     }
     
@@ -296,19 +318,30 @@
 }
 
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        for (UIImage *image in self.trunkAlbum){
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    
+    if (alertView.tag == 2)
+    {
+        if (buttonIndex == 1) {
+            [self deleteFromTrunk];
         }
-        
-        UIAlertView *alertView = [[UIAlertView alloc] init];
-        alertView.delegate = self;
-        alertView.title = @"Photos have been saved";
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"Sweet!"];
-        [alertView show];
-
+    }
+    else
+    {
+        if (buttonIndex == 1)
+        {
+            for (UIImage *image in self.trunkAlbum)
+            {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+            }
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Photos have been saved";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"Sweet!"];
+            [alertView show];
+        }
     }
 }
 
@@ -316,7 +349,62 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)deleteFromTrunk
+{
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery whereKey:@"content" equalTo:self.trip.city];
+    [followingQuery whereKey:@"trip" equalTo:self.trip];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+    {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
+            [self removeActivityRow:objects];
+        }
+    }];
+}
 
+-(void)removeActivityRow:(NSArray*)objects{
+    PFObject *object = [objects objectAtIndex:0];
+    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }];
+}
 
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+         
+         
+         
+         

@@ -28,6 +28,10 @@
 
 -(void)viewDidLoad {
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -59,10 +63,12 @@
     
     [self rightBarItemWasTapped];
     
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
+
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    NSLog(@"%@", self.city);
 }
 
 -(void)rightBarItemWasTapped {
@@ -215,14 +221,12 @@
         }
         else
         {
-            NSLog(@"objects = %@", objects);
             int count = 0;
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                NSLog(@"trip id = %@", trip.objectId);
-                NSLog(@"trip name = %@", trip.name);
+
 
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {

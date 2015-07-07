@@ -33,6 +33,11 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     [self getFacebookFriendList];
@@ -63,7 +68,6 @@
         // Facebook doesn't allow us to get the whole friends list, only friends on the app.
         [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/friends" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             if (!error) {
-                NSLog(@"fetched friends:%@", result);
                 // result will contain an array with user's friends in the "data" key
                 
                 // Loop through the friends list and create a new array of just their fbid's
@@ -120,8 +124,6 @@
     
     
     NSArray *results  = [query findObjects];
-    
-    NSLog(@"%@", results);
     
     [self.searchResults addObjectsFromArray:results];
 }
@@ -217,7 +219,7 @@
     __weak UserTableViewCell *weakCell = cell;
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:nil
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
@@ -260,13 +262,11 @@
     
     if ([cellView.followButton isSelected]) {
         // Unfollow
-        NSLog(@"Attempt to unfollow %@",user.username);
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
         [SocialUtility unfollowUser:user];
     }
     else {
         // Follow
-        NSLog(@"Attempt to follow %@",user.username);
         [cellView.followButton setSelected:YES];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
@@ -274,7 +274,6 @@
                 NSLog(@"Error: %@", error);
             }
             if (!succeeded) {
-                NSLog(@"Follow NOT success");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
                                                                 message:@"Please try again"
                                                                delegate:self
@@ -286,7 +285,6 @@
             }
             else
             {
-                NSLog(@"Follow Succeeded");
             }
         }];
     }

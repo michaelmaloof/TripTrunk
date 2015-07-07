@@ -33,7 +33,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:_user[@"username"]];
     

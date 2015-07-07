@@ -40,7 +40,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     // Register Cell Classes
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
@@ -75,8 +78,6 @@
         }
         else
         {
-            NSLog(@"%@", objects);
-
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
                 PFUser *user = activity[@"toUser"];
@@ -109,7 +110,6 @@
         }
         else
         {
-            NSLog(@"%@", objects);
             
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
@@ -156,7 +156,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"NUMBER OF ROWS %lu", (unsigned long)_friends.count);
 
     return _friends.count;
 }
@@ -177,7 +176,7 @@
     __weak UserTableViewCell *weakCell = cell;
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:nil
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
@@ -210,13 +209,11 @@
     
     if ([cellView.followButton isSelected]) {
         // Unfollow
-        NSLog(@"Attempt to unfollow %@",user.username);
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
         [SocialUtility unfollowUser:user];
     }
     else {
         // Follow
-        NSLog(@"Attempt to follow %@",user.username);
         [cellView.followButton setSelected:YES];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {

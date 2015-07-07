@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *public;
 @property (weak, nonatomic) IBOutlet UIButton *private;
 @property BOOL isPrivate;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBar;
 
 @end
 
@@ -42,7 +43,13 @@
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     self.title = @"Trip Details";
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
@@ -77,12 +84,18 @@
         self.delete.hidden = NO;
         self.public.hidden = YES;
         self.private.hidden = YES;
+        
+        self.cancelBar.title = @"Cancel";
+        self.cancelBar.enabled = YES;
     }
     
     else {
         // initialize the trip object
         self.trip = [[Trip alloc] init];
-    
+        self.cancelBar.title = @"";
+        self.cancelBar.enabled = FALSE;
+       
+
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain
@@ -130,6 +143,7 @@
     }
     
 }
+
 
 #pragma keyboard
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -211,7 +225,6 @@
                             self.city = placemark.locality;
                             self.state = placemark.administrativeArea;
                         }
-                        NSLog(@"Got input for trip");
                         [self parseTrip];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
  
@@ -286,9 +299,14 @@
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
+    
+    if (self.trip.mostRecentPhoto == nil){
+        NSString *date = @"01/01/1200";
+        NSDateFormatter *format = [[NSDateFormatter alloc]init];
+        [format setDateFormat:@"yyyy-MM-dd"];
+        self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
 
-
-    NSLog(@"Saving Trip: %@", self.trip);
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          
@@ -304,9 +322,7 @@
 
              }
              else
-             {
-                 NSLog(@"Trip Saved, performing segue to add friends");
-                 
+             {                 
              //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
               //   vc.trip = self.trip;
                //  vc.isTripCreation = YES;

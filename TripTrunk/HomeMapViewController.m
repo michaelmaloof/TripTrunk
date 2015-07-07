@@ -42,6 +42,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"TripTrunk";
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
+    self.tabBarController.tabBar.translucent = false;
+    [self.tabBarController.tabBar setTintColor:[UIColor whiteColor]];
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     
@@ -58,7 +66,6 @@
     
     //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
     NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
-    NSLog(@"hometown = %@", hometown);
 
     
 }
@@ -78,7 +85,6 @@
             
     }
     else {
-        NSLog(@"viewDidAppear - queryParseMethodEveryone");
         [self queryParseMethodEveryone];
     }
 }
@@ -116,6 +122,7 @@
     [followingQuery includeKey:@"toUser"];
 
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                
         if (self.loadedOnce == NO)
         {
             self.title = @"Loading Trunks...";
@@ -176,15 +183,19 @@
         [followingQuery whereKey:@"type" equalTo:@"follow"];
         [followingQuery includeKey:@"toUser"];
         [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
             if (self.loadedOnce == NO){
                 self.title = @"Loading Trunks...";
                 self.loadedOnce = YES;
             }
+            
                 if (error)
                 {
                     self.title = @"TripTrunk";
-                    NSLog(@"Error: %@",error);
                     [ParseErrorHandlingController handleError:error];
+
+                } else if (objects.count == 0) {
+                    [self queryForTrunks];
 
                 }
                 else if (!error)

@@ -27,8 +27,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"UsernameViewController viewDidLoad");
-    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     _fullnameTextField.delegate = self;
     _emailTextField.delegate = self;
     _usernameTextField.delegate = self;

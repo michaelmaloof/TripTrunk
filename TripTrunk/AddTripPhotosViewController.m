@@ -13,6 +13,7 @@
 #import "TripImageView.h"
 #import "AddTripFriendsViewController.h"
 #import "TTUtility.h"
+#import "AddTripViewController.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -40,7 +41,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog( @"trip is %@", self.trip);
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    if (self.trip){
+        self.alreadyTrip = YES;
+    } else {
+        self.alreadyTrip = NO;
+        
+    }
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
@@ -62,12 +72,6 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    if (self.trip){
-        self.alreadyTrip = YES;
-    } else {
-        self.alreadyTrip = NO;
-    }
-        
     
 }
 
@@ -102,6 +106,13 @@
     self.trip.state = self.tripState;
     self.trip.country = self.tripCountry;
     self.trip.isPrivate = self.isPrivate;
+    
+    if (self.trip.mostRecentPhoto == nil){
+        NSString *date = @"01/01/1200";
+        NSDateFormatter *format = [[NSDateFormatter alloc]init];
+        [format setDateFormat:@"yyyy-MM-dd"];
+        self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -155,10 +166,10 @@
              if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
              
              if (succeeded) {
-                     NSLog(@"Save Trip Success - dismiss view controller");
-                    self.title = @"TripTrunk";
-                     [self dismissViewControllerAnimated:YES completion:NULL];
-                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
+                self.title = @"TripTrunk";
+                 [self.tabBarController setSelectedIndex:0];
+                 [self.navigationController popToRootViewControllerAnimated:NO];
+                 //ASK MIKE HERE
 
              }
          }];

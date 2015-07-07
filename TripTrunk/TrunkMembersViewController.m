@@ -39,15 +39,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     self.title = @"Trip Members";
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+    if (self.isMember == YES) {
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add"
+                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                 target:self
+                                                                                 action:@selector(addMembers)];
+
+    }
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add"
-                                                                              style:UIBarButtonItemStyleBordered
-                                                                             target:self
-                                                                             action:@selector(addMembers)];
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
     
     // initialize array for table view data source
@@ -88,8 +97,6 @@
         }
         else
         {
-            NSLog(@"%@", objects);
-            
             [_tripMembers removeAllObjects]; // clear the array in case it already has stuff in it
             
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
@@ -146,16 +153,13 @@
     switch (section) {
         case 0:
             if (_tripCreator) {
-                NSLog(@"Number of rows in section 0: 1");
 
                 return 1;
             }
-            NSLog(@"Number of rows in section 0: 0");
 
             return 0; // make sure we have the _tripCreator already otherwise we'll get an error here
             break;
         case 1:
-            NSLog(@"Number of rows in section 1: %lu", (unsigned long)_tripMembers.count);
             return _tripMembers.count;
             break;
         default:
@@ -193,7 +197,6 @@
     // Section 0 is the Trip Creator, so make sure we set the cell differently.
     switch (indexPath.section) {
         case 0: {
-            NSLog(@"TripCreator: %@", _tripCreator.username);
             if (indexPath.row >= 0) {
                 picUrl = [NSURL URLWithString:_tripCreator[@"profilePicUrl"]];
                 [cell setUser:_tripCreator];
@@ -202,7 +205,6 @@
         }
             
         case 1: {
-            NSLog(@"tripMembers");
             if (indexPath.row >= 0) {
                 PFUser *user = [_tripMembers objectAtIndex:indexPath.row];
                 picUrl = [NSURL URLWithString:user[@"profilePicUrl"]];
@@ -222,7 +224,7 @@
     __weak UserTableViewCell *weakCell = cell;
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:nil
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
@@ -263,13 +265,11 @@
     
     if ([cellView.followButton isSelected]) {
         // Unfollow
-        NSLog(@"Attempt to unfollow %@",user.username);
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
         [SocialUtility unfollowUser:user];
     }
     else {
         // Follow
-        NSLog(@"Attempt to follow %@",user.username);
         [cellView.followButton setSelected:YES];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
