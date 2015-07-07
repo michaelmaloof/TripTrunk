@@ -256,8 +256,6 @@
 }
 
 -(void)queryParseMethod {
-    
-    NSLog(@"PhotoViewController - queryParseMethod");
 
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Comment"];
     [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];

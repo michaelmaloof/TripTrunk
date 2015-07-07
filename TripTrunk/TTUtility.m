@@ -187,10 +187,7 @@ CLCloudinary *cloudinary;
 - (NSString *)mediumQualityImageUrl:(NSString *)urlString;
 {
     CLTransformation *transformation = [CLTransformation transformation];
-// TODO: set the width/height to the screen's resolution
-//    [transformation setWidthWithInt: 160];
-//    [transformation setHeightWithInt: 160];
-//    [transformation setCrop: @"fill"];
+
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];
     
@@ -206,7 +203,7 @@ CLCloudinary *cloudinary;
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    NSLog(@"screen size: %f x %f", screenWidth, screenHeight);
+//    NSLog(@"screen size: %f x %f", screenWidth, screenHeight);
     
     //TODO: change width/height scaling for iPhone 6+ since it's a 3x phone.
     
