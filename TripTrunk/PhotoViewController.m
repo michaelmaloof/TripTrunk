@@ -82,7 +82,7 @@
 
 - (void)loadImage {
     
-    NSString *urlString = [[TTUtility sharedInstance] mediumQualityImageUrl:self.photo.imageUrl];
+    NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:self.photo.imageUrl];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     UIImage *placeholderImage = self.image;
     [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
@@ -360,13 +360,15 @@
     if (alertView.tag == 1) {
         if (buttonIndex == 1)
         {
-        UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = @"Photo has been saved";
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"Sweet!"];
-            [alertView show];
+            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+
+//            UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            alertView.delegate = self;
+//            alertView.title = @"Photo has been saved";
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:@"Sweet!"];
+//            [alertView show];
         }
         
 

@@ -34,6 +34,20 @@
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 
 /**
+ *  Save the given photo to Camera Roll
+ *
+ *  @param photo   Photo Object containing the imageUrl of the remote image to save
+ */
+- (void)downloadPhoto:(Photo *)photo;
+
+/**
+ *  Save a list of photos to Camera Roll
+ *
+ *  @param photos Array of Photo objects to save, each containing the imageUrl of a remote image to save
+ */
+- (void)downloadPhotos:(NSArray *)photos;
+
+/**
  *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with thumbnail transformations
  *
  *  @param urlString imageUrl of a Photo on Cloudinary
@@ -51,8 +65,15 @@
  */
 - (NSString *)mediumQualityImageUrl:(NSString *)urlString;
 
+/**
+ *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with a quality of 60 and downsized to the phone's screen size
+ *
+ *  @param urlString imageUrl of a Photo on Cloudinary
+ *
+ *  @return String of a transformed imageUrl
+ */
+- (NSString *)mediumQualityScaledDownImageUrl:(NSString *)urlString;
 
-//@property LoginViewController *login;
 
 @end
 

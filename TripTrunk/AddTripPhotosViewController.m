@@ -142,7 +142,7 @@
     self.title = @"Uploading Photos..";
     for (TripImageView *tripImageView in self.photos)
     {
-        [self addImageData:UIImageJPEGRepresentation(tripImageView.image, 1.0) string:tripImageView.caption];
+        [self createAndUploadImage:tripImageView.image withCaption:tripImageView.caption];
         [self addToCounterArray:tripImageView];
         self.trip.mostRecentPhoto = [NSDate date];
         if (!self.isTripCreation) {
@@ -180,8 +180,13 @@
     [self.photosCounter addObject:trip];
 }
 
-- (void)addImageData:(NSData *)imageData string:(NSString*)caption
+- (void)createAndUploadImage:(UIImage *)image withCaption:(NSString*)caption
 {
+    CGDataProviderRef provider = CGImageGetDataProvider(image.CGImage);
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    
+    
+//    NSData *imageData;
 //    PFFile *file = [PFFile fileWithData:imageData];
     PFUser *user = [PFUser currentUser];
     Photo *photo = [Photo object];

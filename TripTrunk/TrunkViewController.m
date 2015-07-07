@@ -21,6 +21,10 @@
 
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
+
+/**
+ *  Array holding Photo objects for the photos in this trunk
+ */
 @property NSArray *photos;
 /**
  *  Array holding the UIImage Thumbnails for this trunk
@@ -248,16 +252,18 @@
     {
         if (buttonIndex == 1)
         {
-            for (UIImage *image in self.trunkThumbnails)
-            {
-                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-            }
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = @"Photos have been saved";
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"Sweet!"];
-            [alertView show];
+            [[TTUtility sharedInstance] downloadPhotos:self.photos];
+//            for (UIImage *image in self.trunkThumbnails)
+//            {
+//                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+//                
+//            }
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            alertView.delegate = self;
+//            alertView.title = @"Photos have been saved";
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:@"Sweet!"];
+//            [alertView show];
         }
     }
 }
@@ -270,7 +276,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-//    NSLog(@"numberOfItems: %lu", self.photos.count + 1);
+    NSLog(@"numberOfItems: %lu", self.photos.count + 1);
     return self.photos.count + 1;
 }
 
@@ -302,10 +308,12 @@
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                        
-//                                       NSLog(@"adding Photo to cell at index: %lu", indexPath.item - 1);
-//                                       NSLog(@"trunkThumbnails Count: %lu", self.trunkThumbnails.count);
+                                       NSLog(@"adding Photo to cell at index: %lu", indexPath.item - 1);
+                                       NSLog(@"trunkThumbnails Count: %lu", self.trunkThumbnails.count);
 
-                                       [self.trunkThumbnails insertObject:image atIndex:indexPath.item - 1];
+                                       //TODO: This is a BUG
+                                       // Images can finish downloading in a different order, so this array gets mis-ordered easily.
+                                       [self.trunkThumbnails addObject:image];
                                        
                                        weakCell.photo.image = image;
                                        [weakCell setNeedsLayout];
