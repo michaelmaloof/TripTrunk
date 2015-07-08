@@ -9,6 +9,7 @@
 #import "TTUtility.h"
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
+#import "AFNetworking/AFNetworking.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
@@ -91,6 +92,133 @@ CLCloudinary *cloudinary;
           
       }];
     
+}
+
+- (void)downloadPhoto:(Photo *)photo;
+{
+    // Show HUD spinner
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = @"Downloading";
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+    
+    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+    [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (responseObject) {
+            UIImage *image = (UIImage *)responseObject;
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                // Hide HUD spinner
+                HUD.labelText = @"Complete!";
+                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+                
+            });
+
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error downloading photo");
+    }];
+    [request start];
+}
+
+- (void)downloadPhotos:(NSArray *)photos;
+{
+    // Show HUD spinner
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = [NSString stringWithFormat:@"Downloading 1 of %lu", (unsigned long)photos.count];
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+    
+    __block int completedDownloads = 0;
+    for (Photo *photo in photos) {
+        AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+        [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+        [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            if (responseObject) {
+                // Save image to phone
+                UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
+                NSLog(@"saved a photo");
+
+                // Increment counter so we know when to hide the HUD
+                completedDownloads++;
+                if (completedDownloads == photos.count) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Hide HUD spinner
+                        HUD.labelText = @"Complete!";
+                        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+                    });
+                }
+                else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        HUD.labelText = [NSString stringWithFormat:@"Downloading %i of %lu", completedDownloads + 1, (unsigned long)photos.count];
+                    });
+                }
+
+            }
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error downloading photo");
+        }];
+        [request start];
+    }
+    
+}
+
+- (NSString *)thumbnailImageUrl:(NSString *)urlString;
+{
+    CLTransformation *transformation = [CLTransformation transformation];
+    [transformation setWidthWithInt: 160];
+    [transformation setHeightWithInt: 160];
+    [transformation setCrop: @"fill"];
+    [transformation setQualityWithFloat:60];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
+
+- (NSString *)mediumQualityImageUrl:(NSString *)urlString;
+{
+    CLTransformation *transformation = [CLTransformation transformation];
+
+    [transformation setQualityWithFloat:60];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
+
+- (NSString *)mediumQualityScaledDownImageUrl:(NSString *)urlString;
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+//    NSLog(@"screen size: %f x %f", screenWidth, screenHeight);
+    
+    //TODO: change width/height scaling for iPhone 6+ since it's a 3x phone.
+    
+    CLTransformation *transformation = [CLTransformation transformation];
+    [transformation setHeightWithFloat: screenWidth * 2];
+    [transformation setHeightWithFloat: screenHeight * 2];
+    [transformation setCrop: @"limit"];
+    [transformation setQualityWithFloat:60];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
 }
 
 #pragma mark - Cloudinary CLUploaderDelegate

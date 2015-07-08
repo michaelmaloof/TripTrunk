@@ -142,7 +142,7 @@
     self.title = @"Uploading Photos..";
     for (TripImageView *tripImageView in self.photos)
     {
-        [self addImageData:UIImagePNGRepresentation(tripImageView.image) string:tripImageView.caption];
+        [self createAndUploadImage:tripImageView.image withCaption:tripImageView.caption];
         [self addToCounterArray:tripImageView];
         self.trip.mostRecentPhoto = [NSDate date];
         if (!self.isTripCreation) {
@@ -180,30 +180,26 @@
     [self.photosCounter addObject:trip];
 }
 
-- (void)addImageData:(NSData *)imageData string:(NSString*)caption
+- (void)createAndUploadImage:(UIImage *)image withCaption:(NSString*)caption
 {
-//    PFFile *file = [PFFile fileWithData:imageData];
+    
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    
     PFUser *user = [PFUser currentUser];
     Photo *photo = [Photo object];
     
     photo.likes = 0;
-//    photo.imageFile = file;
-    photo.fbID = [user objectForKey:@"fbId"];
+    // Mattschoch 7/7 - Why do we have a fbid property on Photo? It hasn't been used yet because the I is capitalized so it never finds a user's fbid. Can we delete?
+//    photo.fbID = [user objectForKey:@"fbId"];
     photo.trip = self.trip;
-    photo.userName = [PFUser currentUser].username;
-    photo.user = [PFUser currentUser];
-    NSMutableArray *localArray = [[NSMutableArray alloc] init];
-    photo.usersWhoHaveLiked = localArray;
+    photo.userName = user.username;
+    photo.user = user;
+    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
     photo.caption = caption;
     
-    
     [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
-    return;
-    
-    //This is place holder for unusedMethodOne. Dont erase
-    
     
 }
 

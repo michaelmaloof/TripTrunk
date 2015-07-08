@@ -79,6 +79,7 @@
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
 		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
+		C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */; };
 		C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */; };
 		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
 /* End PBXBuildFile section */
@@ -212,6 +213,7 @@
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextField.h; sourceTree = "<group>"; };
 		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
+		C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo134.png; path = Images.xcassets/photo134.imageset/photo134.png; sourceTree = "<group>"; };
 		C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTripFriendsViewController.h; sourceTree = "<group>"; };
 		C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripFriendsViewController.m; sourceTree = "<group>"; };
 		C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkMembersViewController.h; sourceTree = "<group>"; };
@@ -391,6 +393,7 @@
 		224F3F8F1AE1D35E003A1DEB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */,
 				224F3F901AE1D35E003A1DEB /* Info.plist */,
 				224F3F911AE1D35E003A1DEB /* main.m */,
 			);
@@ -583,6 +586,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */,
+				C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,

@@ -10,8 +10,8 @@
 
 @implementation Photo
 @dynamic createdAt;
+@dynamic trip;
 @dynamic likes;
-@dynamic imageFile;
 @dynamic user;
 @dynamic userName;
 @dynamic caption;
@@ -22,13 +22,15 @@
 @dynamic tripName;
 @dynamic imageUrl;
 
-+(NSString *)parseClassName
+@synthesize image;
+
++ (NSString *)parseClassName
 {
     return @"Photo";
 }
 
 
-+(void)load
++ (void)load
 {
     [self registerSubclass];
 }

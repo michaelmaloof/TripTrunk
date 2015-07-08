@@ -15,7 +15,6 @@
 @interface Photo : PFObject <PFSubclassing>
 @property (nonatomic) NSDate *createdAt;
 @property NSInteger likes;
-@property PFFile *imageFile;
 @property Trip *trip;
 @property PFUser *user;
 @property NSString *tripName;
@@ -27,6 +26,10 @@
 @property NSString *userName;
 @property NSString *imageUrl;
 
+/**
+ *  Transient image property. This doesn't get saved to Parse, it's used so that we can keep the Image itself with the object after downloading from the URL
+ */
+@property UIImage *image;
 
 
 @end

@@ -13,7 +13,6 @@
 @interface PhotoViewController : UIViewController
 @property Photo *photo;
 //mattschoch 6/10 - added so that we can pass in the image directly instead of downloading it again
-@property UIImage *image;
 @property NSArray *photos;
 @property NSArray *trunkAlbum;
 @property NSInteger arrayInt;

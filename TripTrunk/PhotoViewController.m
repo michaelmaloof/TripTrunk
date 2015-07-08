@@ -9,7 +9,9 @@
 #import "PhotoViewController.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "UIImageView+AFNetworking.h"
 #import "Comment.h"
+#import "TTUtility.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
@@ -29,40 +31,34 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Tab Bar Initializiation
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
+    // Set initial UI
     self.title = self.photo.userName;
-    [self.textView setDelegate:self];
-    self.commentsArray = [[NSArray alloc]init];
-    PFFile *file = self.photo.imageFile;
-    self.imageView.file = file;
     self.tableView.hidden = YES;
-    self.addComment.hidden = YES;
-    self.textView.hidden = YES;
-    
-    //mattschoch 6/10 - setting the image on the imageview directly
-//    [self.imageView loadInBackground];
-    self.imageView.image = self.image;
-    
-    
-    [self queryParseMethod];
-    
-    self.delete.hidden = YES;
-    
-    NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-    [self.like setTitle:string forState:UIControlStateNormal];
-
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-        self.delete.hidden = NO;
-    } else {
-        self.delete.hidden = YES;
-    }
-    
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     self.tableView.contentInset = UIEdgeInsetsMake(-36, 0, 0, 0);
     
+    self.addComment.hidden = YES;
+    self.textView.hidden = YES;
+    
+    self.delete.hidden = YES;
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        self.delete.hidden = NO;
+    }
+    [self.textView setDelegate:self];
+    
+    NSString *likeString = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
+    [self.like setTitle:likeString forState:UIControlStateNormal];
+    
+    self.commentsArray = [[NSArray alloc]init];
+
+
+    // Add swipe gestures
     UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeleft];
@@ -70,25 +66,35 @@
     UISwipeGestureRecognizer * swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swiperight];
-
-//    NSLog(@"image = %@", self.image);
-//    NSLog(@"photo = %@", self.photo);
-//    NSLog(@"object at trunk 1 %@", [self.trunkAlbum objectAtIndex:0]);
-//    NSLog(@"object at photos 1 %@", [self.photos objectAtIndex:0]);
-
-
+    
+    
+    // Load initial data (photo and comments)
+    [self loadImageForPhoto:self.photo];
+    
+    [self queryParseMethod];
 
 }
 
--(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
+- (void)loadImageForPhoto: (Photo *)photo {
+    
+    NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    UIImage *placeholderImage = photo.image;
+    [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    
+    [self.imageView setImageWithURLRequest:request
+                      placeholderImage:placeholderImage
+                               success:nil failure:nil];
+}
+
+-(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     NSLog(@"check 1 = %ld", (long)self.arrayInt);
     if (self.tableView.hidden == YES && self.arrayInt > 0)
     {
         self.arrayInt = self.arrayInt - 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
-        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
-        self.imageView.image = self.image;
+        [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
         NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
@@ -104,14 +110,13 @@
     }
 }
 
--(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
+-(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (self.tableView.hidden == YES && self.arrayInt != self.photos.count - 1)
     {
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
-        self.image = [self.trunkAlbum objectAtIndex:self.arrayInt];
-        self.imageView.image = self.image;
+        [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
         NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
@@ -215,7 +220,6 @@
         [self.textView endEditing:YES];
 
     }
-    
 
 }
 
@@ -252,6 +256,7 @@
 }
 
 -(void)queryParseMethod {
+
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Comment"];
     [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];
     [findPhotosUser whereKey:@"city" equalTo:self.photo.city];
@@ -325,34 +330,22 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    if (alertView.tag == 0)
-    {
-        if (buttonIndex == 1)
-            {
-                [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+    if (buttonIndex == 1) {
+        // Delete
+        if (alertView.tag == 0) {
+            
+            [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded)
                 {
-                    if (succeeded)
-                    {
-                        [self.navigationController popViewControllerAnimated:YES];
-                    }
-                }];
-            }
-    }
-    
-    if (alertView.tag == 1) {
-        if (buttonIndex == 1)
-        {
-        UIImageWriteToSavedPhotosAlbum(self.imageView.image, nil, nil, nil);
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = @"Photo has been saved";
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"Sweet!"];
-            [alertView show];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+            
         }
-        
-
+        // Download Photo
+        else if (alertView.tag == 1) {
+            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+        }
     }
 }
 
