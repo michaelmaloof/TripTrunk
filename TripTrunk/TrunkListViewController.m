@@ -147,9 +147,11 @@
                 int count = 0;
                 self.meParseLocations = [[NSMutableArray alloc]init];
                 for (PFObject *activity in objects){
+                    
                     Trip *trip = activity[@"trip"];
                     if (trip.name != nil){
                         [self.meParseLocations addObject:trip];
+
                     }
                     count += 1;
                     if(count == objects.count){
@@ -183,6 +185,7 @@
         }
         else if (!error)
         {
+            
             int count = 0;
             for (PFObject *activity in objects)
             {
@@ -206,7 +209,7 @@
 }
 
 -(void)queryForTrunks{
-    
+
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"toUser" containedIn:self.friends];
     [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -221,6 +224,7 @@
         }
         else
         {
+
             int count = 0;
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)

@@ -434,8 +434,8 @@
         <scene sceneID="Q2p-hJ-OYc">
             <objects>
                 <navigationController id="zJ1-9f-Iue" userLabel="Profile" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="2" title="" image="meIcon" id="m6t-2j-eOc">
-                        <inset key="imageInsets" minX="2" minY="5" maxX="0.0" maxY="-3"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="" image="themSquare" id="m6t-2j-eOc">
+                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GHy-xS-Jwt">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1939,9 +1939,8 @@
         <scene sceneID="8pL-MB-MjW">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xW8-rG-HSM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="" image="addTrunk" id="Hnp-GQ-egK">
-                        <inset key="imageInsets" minX="0.0" minY="6" maxX="2" maxY="-3"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="" image="add_trunk" id="Hnp-GQ-egK">
+                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="WHY-MW-Yo5">
@@ -2431,7 +2430,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="itw-KF-J7I" userLabel="Search" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="3" image="searchGlass" id="8ye-J7-BwL">
-                        <inset key="imageInsets" minX="6" minY="8" maxX="0.0" maxY="0.0"/>
+                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="mul-Bd-SSh">
@@ -2457,17 +2456,16 @@
         <image name="Glass" width="1002" height="1002"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
-        <image name="addTrunk" width="38" height="34"/>
-        <image name="add_trunk" width="500" height="500"/>
+        <image name="add_trunk" width="40" height="40"/>
         <image name="lock" width="200" height="200"/>
-        <image name="map" width="34" height="32"/>
-        <image name="meIcon" width="34" height="32"/>
+        <image name="map" width="40" height="40"/>
         <image name="members" width="200" height="200"/>
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="540" height="960"/>
         <image name="save" width="200" height="200"/>
         <image name="saveSmall" width="24" height="17"/>
         <image name="searchGlass" width="40" height="40"/>
+        <image name="themSquare" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="5P2-gM-OYf"/>

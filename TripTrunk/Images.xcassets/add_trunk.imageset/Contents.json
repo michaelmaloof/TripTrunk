@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "add_trunk.png"
+      "filename" : "trunkSquare.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "add_trunk-1.png"
+      "filename" : "trunkSquare@2x.png"
     },
     {
       "idiom" : "universal",
