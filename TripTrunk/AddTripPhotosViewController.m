@@ -17,23 +17,18 @@
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
-@property CGFloat HeightOfButtons;
-@property NSMutableArray *photos; // array of Photos to be used in displaying the photos selected
-@property NSMutableArray *imageUrls; // array of referenceUrls to be used in uploading the raw image data
-@property UIImage *image2;
+@property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
 @property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
-@property NSInteger path;
-@property int photosCounter;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
-@property int count;
+@property NSInteger path;
 @property BOOL alreadyTrip;
 
 @end
@@ -55,8 +50,6 @@
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
-    self.imageUrls = [[NSMutableArray alloc]init];
-    self.photosCounter = 0;
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
@@ -97,14 +90,28 @@
 }
 
 - (IBAction)libraryTapped:(id)sender {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = NO;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    picker.navigationBar.tintColor = [UIColor whiteColor];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [self presentViewController:picker animated:YES completion:NULL];
+    
+    // 10 photo upload limit, so make sure they haven't already picked 10 photos.
+    
+    if (self.photos.count >= 10) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Limit Reached"
+                                                        message:@"You can only upload 10 photos at a time. Upload these first, then you can add more"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = NO;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        picker.navigationBar.tintColor = [UIColor whiteColor];
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        [self presentViewController:picker animated:YES completion:NULL];
+    }
 }
 
 
@@ -195,6 +202,8 @@
     
     for (Photo *photo in self.photos)
     {
+        // Uses the Photos framework to get the raw image data from the local asset library url, then uploads that
+        // This fixes the issue of using UIImageJPEGRepresentation which increases file size
         NSURL *assetUrl = [NSURL URLWithString:photo.imageUrl];
         NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
         PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
@@ -205,11 +214,9 @@
         [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
                                                           options:options
                                                     resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
-                                                        
+                                                        // Calls the method to actually upload the image and save the Photo to parse
                                                         [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
-                                                        
                                                     }];
-        
     }
     
     self.trip.mostRecentPhoto = [NSDate date];
@@ -399,50 +406,4 @@
     
 }
 
-//unusedMethodOne
-//Dont erase
-// ADDED TO STOP FROM SAVING TO PARSE
-//    [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//
-//        if(error) {
-//            self.plusPhoto.hidden = NO;
-//            self.submitTrunk.hidden = NO;
-//            UIAlertView *alertView = [[UIAlertView alloc] init];
-//            [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//            alertView.delegate = self;
-//            alertView.title = @"No internet connection to save photos.";
-//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-//            [alertView addButtonWithTitle:@"OK"];
-//            [alertView show];
-//        } else {
-//            if (self.alreadyTrip == NO)
-//            {
-//                self.count = self.count +1;
-//                int arrayCount = (int)self.photos.count;
-//                if (self.count == arrayCount)
-//                {
-//                    /* COMMENTED OUT THIS LINE - mattschoch 5/29
-//                     * We don't want to dismiss the modal view controller here anymore. After adding photos, we'll push to an Add Friends view.
-//                     * And, this method get's called numerous times in a loop, so if we try to push from here then it'll try to push numerous times.
-//                     */
-////                    [self dismissViewControllerAnimated:YES completion:NULL];
-//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//                    self.photos = nil;
-//                    self.photosCounter = nil;
-//                }
-//            }
-//            else if (self.alreadyTrip == YES)
-//            {
-//                self.count = self.count +1;
-//                int arrayCount = (int)self.photos.count;
-//                if (self.count == arrayCount)
-//                {
-//                    [self.navigationController popViewControllerAnimated:YES];
-//                    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//                    self.photos = nil;
-//                    self.photosCounter = nil;
-//                }
-//            }
-//        }
-//    }];
 @end
