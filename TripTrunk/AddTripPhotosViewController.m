@@ -10,15 +10,16 @@
 #import <Parse/Parse.h>
 #import "PhotoCollectionViewCell.h"
 #import "Photo.h"
-#import "TripImageView.h"
 #import "AddTripFriendsViewController.h"
 #import "TTUtility.h"
 #import "AddTripViewController.h"
+#import <Photos/Photos.h>
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
 @property UIImagePickerController *PickerController;
 @property CGFloat HeightOfButtons;
-@property NSMutableArray *photos;
+@property NSMutableArray *photos; // array of Photos to be used in displaying the photos selected
+@property NSMutableArray *imageUrls; // array of referenceUrls to be used in uploading the raw image data
 @property UIImage *image2;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UITextView *caption;
@@ -27,7 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property NSInteger path;
-@property NSMutableArray *photosCounter;
+@property int photosCounter;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
@@ -54,7 +55,8 @@
     self.title = @"Add Photos to Trip";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
-    self.photosCounter = [[NSMutableArray alloc]init];
+    self.imageUrls = [[NSMutableArray alloc]init];
+    self.photosCounter = 0;
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
@@ -81,21 +83,72 @@
 //    self.submitTrunk.hidden = NO;
 //}
 
+#pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
     
     if (!self.trip) {
         // This shouldn't happen, trip should always be set from the previous view controler
-        [self parseTrip];
+        [self saveParseTrip];
     }
 //    [[self navigationController] setNavigationBarHidden:YES animated:YES]; we dont need this now 
-    [self parsePhotos];
+    [self uploadAllPhotos];
 }
 
--(void)parseTrip {
-    self.title = @"Uploading Photos..";
+- (IBAction)libraryTapped:(id)sender {
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.allowsEditing = NO;
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    picker.navigationBar.tintColor = [UIColor whiteColor];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self presentViewController:picker animated:YES completion:NULL];
+}
 
+
+#pragma mark - Image Picker delegates
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    Photo *photo = [Photo object];
+    photo.image = info[UIImagePickerControllerOriginalImage];
+    
+    // set the reference URL now so we have it for uploading the raw image data
+    photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
+    
+    // Set all the generic trip info on the Photo object
+    PFUser *user = [PFUser currentUser];
+    photo.likes = 0;
+    photo.trip = self.trip;
+    photo.userName = user.username;
+    photo.user = user;
+    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
+    photo.tripName = self.trip.name;
+    photo.city = self.trip.city;
+    
+    
+    [self.photos addObject:photo];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    [self.tripCollectionView reloadData];
+
+}
+
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
+}
+
+#pragma mark - Saving Photos
+
+-(void)saveParseTrip {
+    self.title = @"Uploading Photos..";
+    
     self.trip = [[Trip alloc]init];
     self.trip.name = self.tripName;
     self.trip.city = self.tripCity;
@@ -116,141 +169,81 @@
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
-             if(error) {
-                 //FIXME Check to see if actually works
-                 self.plusPhoto.hidden = NO;
-                 self.submitTrunk.hidden = NO;
-                 UIAlertView *alertView = [[UIAlertView alloc] init];
-                 alertView.delegate = self;
-                 alertView.title = @"No internet connection to save trip";
-                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                 [alertView addButtonWithTitle:@"OK"];
-                 [alertView show];
+         if(error) {
+             //FIXME Check to see if actually works
+             self.plusPhoto.hidden = NO;
+             self.submitTrunk.hidden = NO;
+             UIAlertView *alertView = [[UIAlertView alloc] init];
+             alertView.delegate = self;
+             alertView.title = @"No internet connection to save trip";
+             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+             [alertView addButtonWithTitle:@"OK"];
+             [alertView show];
+             [[self navigationController] setNavigationBarHidden:NO animated:YES];
+             
+         } else {
+             if (self.photos.count == 0) {
+                 [self dismissViewControllerAnimated:YES completion:NULL];
                  [[self navigationController] setNavigationBarHidden:NO animated:YES];
-
-             } else {
-                 if (self.photos.count == 0) {
-                     [self dismissViewControllerAnimated:YES completion:NULL];
-                     [[self navigationController] setNavigationBarHidden:NO animated:YES];
-                 }
              }
+         }
      }];
 }
 
--(void)parsePhotos {
-    
+- (void)uploadAllPhotos {
     self.title = @"Uploading Photos..";
-    for (TripImageView *tripImageView in self.photos)
+    
+    for (Photo *photo in self.photos)
     {
-        [self createAndUploadImage:tripImageView.image withCaption:tripImageView.caption];
-        [self addToCounterArray:tripImageView];
-        self.trip.mostRecentPhoto = [NSDate date];
-        if (!self.isTripCreation) {
-            // This came from the Trunk view, so pop back to it.
-            [self.navigationController popViewControllerAnimated:YES];
-            [[self navigationController] setNavigationBarHidden:NO animated:YES];
-
-        }
-
-    }
-    
-    // ** mattschoch 5/29 - Why are we comparing these counts? In AddImageData both of those counters get set to nil so they'll always be equal right?
-    if (self.photosCounter.count == self.photos.count){
-//        [self dismissViewControllerAnimated:YES completion:nil];
-//        self.photos = nil;
-//        self.photosCounter = nil;
+        NSURL *assetUrl = [NSURL URLWithString:photo.imageUrl];
+        NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
+        PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        [options setVersion:PHImageRequestOptionsVersionOriginal];
+        [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
         
-
-        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-         {
-             if(error) NSLog(@"Error saving trip in parsePhotos: %@", error);
-             
-             if (succeeded) {
-                self.title = @"TripTrunk";
-                 [self.tabBarController setSelectedIndex:0];
-                 [self.navigationController popToRootViewControllerAnimated:NO];
-                 //ASK MIKE HERE
-
-             }
-         }];
+        [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
+                                                          options:options
+                                                    resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+                                                        
+                                                        [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
+                                                        
+                                                    }];
+        
     }
-}
-
--(void)addToCounterArray:(TripImageView*)trip{
-    [self.photosCounter addObject:trip];
-}
-
-- (void)createAndUploadImage:(UIImage *)image withCaption:(NSString*)caption
-{
     
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    self.trip.mostRecentPhoto = [NSDate date];
     
-    PFUser *user = [PFUser currentUser];
-    Photo *photo = [Photo object];
-    
-    photo.likes = 0;
-    // Mattschoch 7/7 - Why do we have a fbid property on Photo? It hasn't been used yet because the I is capitalized so it never finds a user's fbid. Can we delete?
-//    photo.fbID = [user objectForKey:@"fbId"];
-    photo.trip = self.trip;
-    photo.userName = user.username;
-    photo.user = user;
-    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
-    photo.tripName = self.trip.name;
-    photo.city = self.trip.city;
-    photo.caption = caption;
-    
-    [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
-    
+    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         if(error) NSLog(@"Error saving trip in uploadAllPhotos: %@", error);
+         
+         if (succeeded) {
+             
+             self.title = @"TripTrunk";
+             
+             if (!self.isTripCreation) {
+                 // This came from the Trunk view, so pop back to it.
+                 [self.navigationController popViewControllerAnimated:YES];
+                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
+             }
+             else {
+                 [self.navigationController popToRootViewControllerAnimated:NO];
+                 [self.tabBarController setSelectedIndex:0];
+             }
+         }
+     }];
 }
 
 
-
-
-- (IBAction)libraryTapped:(id)sender {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = NO;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    picker.navigationBar.tintColor = [UIColor whiteColor];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [self presentViewController:picker animated:YES completion:NULL];
-}
-
-
-#pragma mark - Image Picker delegates
-
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    TripImageView *tripImageView = [[TripImageView alloc]init];
-    tripImageView.image = info[UIImagePickerControllerOriginalImage];
-//    NSData *imgData = UIImageJPEGRepresentation(tripImageView.image , 1);
-//    NSData *kmg = UIImagePNGRepresentation(tripImageView.image);
-//    NSUInteger inter = [imgData length];
-//    NSUInteger inter2 = [kmg length];
-//    NSLog(@"Check 1 size is  jpeg %lu  png %lu", (unsigned long)inter, (unsigned long)inter2);
-    [self.photos addObject:tripImageView];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    [self.tripCollectionView reloadData];
-
-}
-
-
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-}
-
-#pragma keyboard
+#pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
     
 }
 
-#pragma mark - CollectionView
+#pragma mark - Collection View
 
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -262,18 +255,12 @@
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
-    cell.tripImageView.image = tripImageView.image;
-    cell.tripImageView.caption = tripImageView.caption;
+    Photo *photo = [self.photos objectAtIndex:indexPath.row];
+    cell.tripImageView.image = photo.image;
+    cell.tripImageView.caption = photo.caption;
     cell.backgroundColor = [UIColor whiteColor];
-    
-//    NSData *imgData = UIImageJPEGRepresentation(tripImageView.image , 1);
-//    NSData *kmg = UIImagePNGRepresentation(tripImageView.image);
-//    NSUInteger inter = [imgData length];
-//    NSUInteger inter2 = [kmg length];
-//    NSLog(@"Check 2 size is  jpeg %lu  png %lu", (unsigned long)inter, (unsigned long)inter2);
-    
-    if(tripImageView.caption){
+
+    if(photo.caption){
         cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
     }
     
@@ -290,10 +277,10 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     self.path = indexPath.row;
-    TripImageView *tripImageView = [self.photos objectAtIndex:indexPath.row];
+    Photo *photo = [self.photos objectAtIndex:indexPath.row];
     
-    if (tripImageView.caption) {
-        self.caption.text = tripImageView.caption;
+    if (photo.caption) {
+        self.caption.text = photo.caption;
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
@@ -306,14 +293,14 @@
     self.delete.hidden = NO;
     self.selectedPhoto.hidden = NO;
     self.tripCollectionView.hidden = YES;
-    self.selectedPhoto.image = tripImageView.image;
+    self.selectedPhoto.image = photo.image;
     
     [self.navigationItem setHidesBackButton:YES animated:YES];
 
 }
 
 
-#pragma Editing/Adding Caption to Photo
+#pragma mark - Editing/Adding Caption to Photo
 
 - (IBAction)onAddCaptionTapped:(id)sender
 {
@@ -321,9 +308,9 @@
     if (![self.caption.text isEqual: @""])
     {
 
-        TripImageView *tripImageView = [self.photos objectAtIndex:self.path];
-        tripImageView.caption = self.caption.text;
-        [self.photos replaceObjectAtIndex:self.path withObject:tripImageView];
+        Photo *photo = [self.photos objectAtIndex:self.path];
+        photo.caption = self.caption.text;
+        [self.photos replaceObjectAtIndex:self.path withObject:photo];
        
         self.caption.text = nil;
         
@@ -381,10 +368,10 @@
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
     self.addCaption.hidden = YES;
-    TripImageView *tripImageView = [self.photos objectAtIndex:self.path];
-    tripImageView.caption = nil;
+    Photo *photo = [self.photos objectAtIndex:self.path];
+    photo.caption = nil;
     self.caption.text = nil;
-    [self.photos replaceObjectAtIndex:self.path withObject:tripImageView];
+    [self.photos replaceObjectAtIndex:self.path withObject:photo];
     self.remove.hidden = YES;
     self.delete.hidden = YES;
     [self.navigationItem setHidesBackButton:NO animated:YES];

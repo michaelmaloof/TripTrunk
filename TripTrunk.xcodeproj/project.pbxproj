@@ -74,6 +74,7 @@
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
+		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
@@ -203,6 +204,7 @@
 		C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
 		C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseErrorHandlingController.h; sourceTree = "<group>"; };
 		C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseErrorHandlingController.m; sourceTree = "<group>"; };
+		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
 				2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */,
@@ -352,6 +355,7 @@
 		224F3F831AE1D35E003A1DEB = {
 			isa = PBXGroup;
 			children = (
+				C9ABA4D91B4EAC4D006F0625 /* Photos.framework */,
 				224F3F8E1AE1D35E003A1DEB /* TripTrunk */,
 				224F3FA81AE1D35E003A1DEB /* TripTrunkTests */,
 				224F3F8D1AE1D35E003A1DEB /* Products */,
