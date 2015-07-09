@@ -16,6 +16,7 @@
 #import "AddTripPhotosViewController.h"
 #import "TrunkMembersViewController.h"
 #import "TTUtility.h"
+#import "SocialUtility.h"
 
 #import "UIImageView+AFNetworking.h"
 
@@ -179,6 +180,7 @@
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
     [alertView addButtonWithTitle:@"No"];
     [alertView addButtonWithTitle:@"Download"];
+    alertView.tag = 3;
     [alertView show];
 
 }
@@ -205,45 +207,28 @@
     [alertView show];
 }
 
--(void)deleteFromTrunk
-{
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery whereKey:@"content" equalTo:self.trip.city];
-    [followingQuery whereKey:@"trip" equalTo:self.trip];
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-     {
-         if(error)
-         {
-             NSLog(@"Error: %@",error);
-         }
-         else
-         {
-             [self removeActivityRow:objects];
-         }
-     }];
-}
-
--(void)removeActivityRow:(NSArray*)objects{
-    PFObject *object = [objects objectAtIndex:0];
-    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         [self.navigationController popToRootViewControllerAnimated:YES];
-     }];
-}
-
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    
-    if (alertView.tag == 2) {
-        if (buttonIndex == 1) {
-            [self deleteFromTrunk];
+    // Okay button pressed
+    if (buttonIndex == 1) {
+        // Delete self from trunk
+        if (alertView.tag == 2) {
+            [SocialUtility removeUser:[PFUser currentUser] fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
+                else if (error) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                        message:@"Failed to leave trunk. Try Again."
+                                                                       delegate:self
+                                                              cancelButtonTitle:@"Okay"
+                                                              otherButtonTitles:nil, nil];
+                    [alertView show];
+                }
+            }];
         }
-    }
-    else {
         // DOWNLOADING IMAGES
-        if (buttonIndex == 1) {
+        else if (alertView.tag == 3) {
             [[TTUtility sharedInstance] downloadPhotos:self.photos];
         }
     }

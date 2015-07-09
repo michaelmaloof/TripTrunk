@@ -10,11 +10,13 @@
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking/AFNetworking.h"
+#import "MSFloatingProgressView.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
 @interface TTUtility () <MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
+    MSFloatingProgressView *progressView;
 }
 @end
 
@@ -59,7 +61,6 @@ CLCloudinary *cloudinary;
             HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
 
     });
-    
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -223,7 +224,7 @@ CLCloudinary *cloudinary;
 
 #pragma mark - Cloudinary CLUploaderDelegate
 
-- (void) uploaderSuccess:(NSDictionary*)result context:(id)context {
+- (void)uploaderSuccess:(NSDictionary*)result context:(id)context {
     NSString* publicId = [result valueForKey:@"public_id"];
     NSLog(@"Upload success. Public ID=%@, Full result=%@", publicId, result);
     
@@ -243,7 +244,7 @@ CLCloudinary *cloudinary;
     });
 }
 
-- (void) uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
+- (void)uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
     float divide = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
     NSString *string =  [NSString stringWithFormat:@"written:%ld    totalwritten:%ld    expectedToWrite:%ld   divided:%f", (long)bytesWritten, (long)totalBytesWritten, (long)totalBytesExpectedToWrite, divide];
     NSLog(@"%@", string);
@@ -259,6 +260,23 @@ CLCloudinary *cloudinary;
     HUD = nil;
 }
 
+- (void)addUploaderProgressView {
+    
+    progressView = [[MSFloatingProgressView alloc] init];
+    
+    // Add the progress bar to the Window so it should stay up front
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[[UIApplication sharedApplication] delegate] window] addSubview:progressView];
 
+    });
+}
+
+- (void)removeUploaderProgressView {
+    //TODO: This doesn't work
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [progressView removeFromSuperview];
+    });
+    progressView = nil;
+}
 
 @end

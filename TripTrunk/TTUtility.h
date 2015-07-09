@@ -73,6 +73,7 @@
  *  @return String of a transformed imageUrl
  */
 - (NSString *)mediumQualityScaledDownImageUrl:(NSString *)urlString;
+- (void)addUploaderProgressView;
 
 
 @end
