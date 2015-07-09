@@ -13,8 +13,19 @@
 
 @interface SocialUtility : NSObject
 
-
+/**
+ *  CurrentUser will follow the given user, asychronous operation
+ *
+ *  @param user            User to follow
+ *  @param completionBlock callback with success or error
+ */
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  The Parse CurrentUser will unfollow the given User
+ *
+ *  @param user the user to unfollow
+ */
 + (void)unfollowUser:(PFUser *)user;
 
 /**
@@ -38,5 +49,17 @@
  *  @return PFObject, which is an Activity class
  */
 + (PFObject *)createAddToTripObjectForUser:(PFUser *)user onTrip:(Trip *)trip;
+
+/**
+ *  Removes the Parse Activity that added the given user to the given trip
+ *  Enforces that a user can only remove themself unless they are the creator
+ *  Does not enforce preventing creators from leaving their own trip--that must be done elsewhere
+ *
+ *  @param user            Trip Member that should be removed
+ *  @param trip            Trip of which the user is a member
+ *  @param completionBlock Callback with Success or Error
+ */
++ (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
 
 @end

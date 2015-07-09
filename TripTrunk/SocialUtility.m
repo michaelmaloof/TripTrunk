@@ -101,5 +101,44 @@
     return addToTripActivity;
 }
 
++ (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    // If the user isn't currentUser AND the user isn't the trip creator, don't let them remove people.
+    // They can remove themselves no matter what, but only the creator can remove others.
+    if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[user objectId] isEqualToString:[trip.creator objectId]]) {
+        return;
+    }
+    
+    PFObject *removeFromTripActivity = [PFObject objectWithClassName:@"Activity"];
+    [removeFromTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [removeFromTripActivity setObject:user forKey:@"toUser"];
+    [removeFromTripActivity setObject:@"addToTrip" forKey:@"type"];
+    [removeFromTripActivity setObject:trip forKey:@"trip"];
+    
+    PFQuery *removeFromTripQuery = [PFQuery queryWithClassName:@"Activity"];
+    [removeFromTripQuery whereKey:@"toUser" equalTo:user];
+    [removeFromTripQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [removeFromTripQuery whereKey:@"trip" equalTo:trip];
+    
+    [removeFromTripQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             NSLog(@"Successfully retrieved %lu added-to-trip activities.", (unsigned long)objects.count);
+             // Delete the found objects
+             for (PFObject *object in objects) {
+                 [object deleteInBackground];
+             }
+             completionBlock(YES, nil);
+
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+             completionBlock(NO, error);
+         }
+     }];
+    
+
+}
+
 
 @end
