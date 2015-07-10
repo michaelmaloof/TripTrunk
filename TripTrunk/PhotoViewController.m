@@ -155,11 +155,11 @@
     self.like.hidden = !self.like.hidden;
     
     if ([self.comments.titleLabel.text isEqualToString:@"Comments"]){
-        [self.comments setTitle:@"Done" forState:UIControlStateNormal];
+        [self.comments setTitle:@"Dismiss" forState:UIControlStateNormal];
 
     }
     
-    else if ([self.comments.titleLabel.text isEqualToString:@"Done"]){
+    else if ([self.comments.titleLabel.text isEqualToString:@"Dismiss"]){
         [self.comments setTitle:@"Comments" forState:UIControlStateNormal];
         [self moveUpTextBox];
 

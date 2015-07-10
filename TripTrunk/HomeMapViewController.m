@@ -8,7 +8,6 @@
 
 #import "HomeMapViewController.h"
 #import <MapKit/MapKit.h>
-#import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "Trip.h"
 #import "TrunkListViewController.h"
@@ -41,31 +40,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.title = @"TripTrunk";
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    
-    self.tabBarController.tabBar.translucent = false;
-    [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
 
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    if (self.user == nil) {
     
+        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+            
+        self.tabBarController.tabBar.translucent = false;
+        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+            
+            
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                             style:UIBarButtonItemStylePlain
+                                            target:nil
+                                            action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
+    }
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     
     self.tripsToCheck = [[NSMutableArray alloc]init];
     self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
-    
-    
-    //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
-    NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
+        
+        //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
+//        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
+        
 
     
 }

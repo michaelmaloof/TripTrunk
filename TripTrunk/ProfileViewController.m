@@ -12,6 +12,7 @@
 
 #import "FriendsListViewController.h"
 #import "FindFriendsViewController.h"
+#import "HomeMapViewController.h"
 
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
@@ -80,6 +81,11 @@
              
          }
      }];
+}
+- (IBAction)seeUsersMapTapped:(id)sender {
+    HomeMapViewController *vc = [[HomeMapViewController alloc]init];
+    vc.user = [PFUser currentUser];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 /*
