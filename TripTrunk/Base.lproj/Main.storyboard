@@ -363,7 +363,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="seeUsersMapTapped:" destination="WBZ-Fv-Hv8" eventType="touchUpInside" id="nHD-Fg-u4M"/>
+                                    <segue destination="BYZ-38-t0r" kind="show" identifier="globe" id="tGf-tl-EVA"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -473,7 +473,7 @@
         <scene sceneID="Q2p-hJ-OYc">
             <objects>
                 <navigationController id="zJ1-9f-Iue" userLabel="Profile" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="2" title="" image="themSquare" id="m6t-2j-eOc">
+                    <tabBarItem key="tabBarItem" tag="2" title="" image="meSwquare" id="m6t-2j-eOc">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GHy-xS-Jwt">
@@ -586,7 +586,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="455" y="-1159"/>
+            <point key="canvasLocation" x="376.5" y="-1167"/>
         </scene>
         <!--Trunk List View Controller-->
         <scene sceneID="x3T-wA-FQC">
@@ -2503,18 +2503,19 @@
         <image name="Glass" width="1002" height="1002"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
-        <image name="add_trunk" width="40" height="40"/>
+        <image name="add_trunk" width="31" height="25"/>
         <image name="lock" width="200" height="200"/>
-        <image name="map" width="40" height="40"/>
+        <image name="map" width="26" height="24"/>
+        <image name="meSwquare" width="26" height="24"/>
         <image name="members" width="200" height="200"/>
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="540" height="960"/>
         <image name="save" width="200" height="200"/>
         <image name="saveSmall" width="24" height="17"/>
-        <image name="searchGlass" width="40" height="40"/>
-        <image name="themSquare" width="40" height="40"/>
+        <image name="searchGlass" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="tGf-tl-EVA"/>
         <segue reference="5P2-gM-OYf"/>
         <segue reference="yXb-jN-ymd"/>
     </inferredMetricsTieBreakers>

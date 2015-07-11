@@ -82,10 +82,17 @@
          }
      }];
 }
-- (IBAction)seeUsersMapTapped:(id)sender {
-    HomeMapViewController *vc = [[HomeMapViewController alloc]init];
-    vc.user = [PFUser currentUser];
-    [self.navigationController pushViewController:vc animated:YES];
+//- (IBAction)seeUsersMapTapped:(id)sender {
+//    HomeMapViewController *vc = [[HomeMapViewController alloc]init];
+//    vc.user = [PFUser currentUser];
+//    [self.navigationController pushViewController:vc animated:YES];
+//}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"globe"]) {
+        HomeMapViewController *vc = segue.destinationViewController;
+        vc.user = [PFUser currentUser];
+    }
 }
 
 /*
@@ -99,3 +106,36 @@
 */
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

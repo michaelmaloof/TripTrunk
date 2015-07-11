@@ -90,8 +90,11 @@
         [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
             
     }
-    else {
+    else if (self.user == nil) {
         [self queryParseMethodEveryone];
+    } else {
+        [self queryParseMethodForUser:self.user];
+
     }
 }
 
@@ -117,6 +120,71 @@
 //            
 //        }];
 //}
+
+-(void)queryParseMethodForUser:(PFUser*)user
+{
+    if (self.loadedOnce == NO){
+        self.loadedOnce = YES;
+    }
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"toUser" equalTo:user]; 
+    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [followingQuery includeKey:@"trip"];
+    [followingQuery includeKey:@"toUser"];
+    
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if (self.loadedOnce == NO)
+        {
+            self.title = @"Loading Trunks...";
+            self.loadedOnce = YES;
+        }
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            self.title = @"TripTrunk";
+            [ParseErrorHandlingController handleError:error];
+        }
+        else
+        {
+            int count = 0;
+            self.parseLocations = [[NSMutableArray alloc]init];
+            for (PFObject *activity in objects)
+            {
+                Trip *trip = activity[@"trip"];
+                PFUser *user = activity[@"toUser"];
+                
+                if (trip.name != nil)
+                {
+                    
+                    if (trip.isPrivate == YES)
+                    {
+                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+                        {
+                            [self.parseLocations addObject:trip];
+                            
+                        }
+                        
+                    } else
+                    {
+                        [self.parseLocations addObject:trip];
+                    }
+                    
+                }
+                count += 1;
+                if(count == objects.count){
+                    [self placeTrips];
+                }
+            }
+        }
+        
+    }];
+
+
+}
+
+
 
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
 
