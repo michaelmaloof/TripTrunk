@@ -450,6 +450,7 @@
     {
         TrunkListViewController *trunkView = segue.destinationViewController;
         trunkView.city = self.pinCityName;
+        trunkView.user = self.user;
         self.pinCityName = nil;
     }
 }

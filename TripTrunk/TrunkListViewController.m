@@ -27,29 +27,9 @@
 @implementation TrunkListViewController
 
 -(void)viewDidLoad {
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
-    self.filter =
-    [[UIBarButtonItem alloc] initWithTitle:@"Me"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(rightBarItemWasTapped)];
-    [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-    
-
     self.today = [NSDate date];
-
+    
     self.title = self.city;
     
     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"night"]];
@@ -57,15 +37,81 @@
     
     self.tableView.backgroundView = tempImageView;
     
-    self.filter.tag = 1;
-    
     self.objectIDs = [[NSMutableArray alloc]init];
     
-    [self rightBarItemWasTapped];
-    
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-
     
+    if (self.user == nil) {
+    
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+        
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
+        self.filter =
+        [[UIBarButtonItem alloc] initWithTitle:@"Me"
+                                         style:UIBarButtonItemStylePlain
+                                        target:self
+                                        action:@selector(rightBarItemWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+        
+        self.filter.tag = 1;
+        [self rightBarItemWasTapped];
+
+        
+    } else {
+        [self loadUserTrunks];
+    }
+    
+    
+}
+
+-(void)loadUserTrunks
+{
+    if (self.meParseLocations == nil) {
+        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [followingQuery whereKey:@"toUser" equalTo:self.user];
+        [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
+        [followingQuery whereKey:@"content" equalTo:self.city];
+        [followingQuery includeKey:@"trip"];
+        [followingQuery orderByDescending:@"mostRecentPhoto"];
+        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            else
+            {
+                int count = 0;
+                self.meParseLocations = [[NSMutableArray alloc]init];
+                for (PFObject *activity in objects){
+                    
+                    Trip *trip = activity[@"trip"];
+                    if (trip.name != nil){
+                        [self.meParseLocations addObject:trip];
+                        
+                    }
+                    count += 1;
+                    if(count == objects.count){
+                        self.filter.tag = 1;
+                        [self.tableView reloadData];
+                    }
+                }
+            }
+            
+        }];
+    } else
+    {
+        [self.tableView reloadData];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -90,7 +136,9 @@
     }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
         return self.meParseLocations.count;
     }
-    else {
+    else  if (self.user != nil){
+        return self.meParseLocations.count;
+    } else {
         return 0;
     }
 }
@@ -101,7 +149,7 @@
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     
-    if (self.filter.tag == 0) {
+    if (self.filter.tag == 0 && self.user == nil) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
 
     } else {

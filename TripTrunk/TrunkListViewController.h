@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
+
 
 @interface TrunkListViewController : UIViewController
 @property NSString *city;
+@property PFUser *user;
 
 @end
