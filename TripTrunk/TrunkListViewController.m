@@ -314,8 +314,14 @@
     if ([segue.identifier isEqualToString:@"TrunkView"])
     {
         TrunkViewController *trunkView = segue.destinationViewController;
-        Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
-        trunkView.trip =trip;
+        
+        if (self.parseLocations) {
+            Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
+            trunkView.trip =trip;
+        } else if (self.meParseLocations){
+            Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
+            trunkView.trip =trip;
+        }
         self.path = nil;
     }
 }
