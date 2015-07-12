@@ -9,10 +9,13 @@
 #import "ProfileViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Parse/Parse.h>
-
 #import "FriendsListViewController.h"
 #import "FindFriendsViewController.h"
 #import "HomeMapViewController.h"
+#import "TTUtility.h"
+#import "Photo.h"
+#import <Photos/Photos.h>
+
 
 @interface ProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
@@ -111,29 +114,31 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    //    Photo *photo = [Photo object];
-    //    photo.image = info[UIImagePickerControllerOriginalImage];
-    //
-    //    // set the reference URL now so we have it for uploading the raw image data
-    //    photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
-    //
-    //    // Set all the generic trip info on the Photo object
-    //    PFUser *user = [PFUser currentUser];
-    //    photo.likes = 0;
-    //    photo.trip = self.trip;
-    //    photo.userName = user.username;
-    //    photo.user = user;
-    //    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
-    //    photo.tripName = self.trip.name;
-    //    photo.city = self.trip.city;
-    //
-    //
-    //    [self.photos addObject:photo];
-    //
-    //    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    //    [picker dismissViewControllerAnimated:YES completion:NULL];
-    //    [self.tripCollectionView reloadData];
     
+    //FIXME: Matt, im kind of confused. I believe the method I'm doing below saves the image in Parse as Photo as opposed to saving it as the user's profile image property in the User class. How are you saving the profile image currenty? I'm assuming you're using something close to this right? Also, should we use a super low quality thumbnail for profile picture? Yes right?
+    
+    self.profilePicImageView.image = info[UIImagePickerControllerOriginalImage];
+    
+    // set the reference URL now so we have it for uploading the raw image data
+    
+    NSString *imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
+    NSURL *assetUrl = [NSURL URLWithString:imageUrl];
+    NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
+    PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    [options setVersion:PHImageRequestOptionsVersionOriginal];
+    [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
+    
+    [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
+                                                      options:options
+                                                resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+                                                    // Calls the method to actually upload the image and save the Photo to parse
+                                                    [[TTUtility sharedInstance] uploadPhoto:info[UIImagePickerControllerOriginalImage] withImageData:imageData];
+                                                }];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+
 }
 
 

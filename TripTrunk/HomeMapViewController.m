@@ -397,9 +397,18 @@
     if ([self.hotDots containsObject:annotation.title]) {
         startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
+        startAnnotation.alpha = 1.0;
+//        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
+        startAnnotation.layer.zPosition = 1;
+
     } else {
         startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
+        startAnnotation.alpha = .9;
+//        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
+        startAnnotation.layer.zPosition = .9;
+
+
     }
     
     startAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
