@@ -47,7 +47,6 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    self.title = @"Trip Details";
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -71,6 +70,7 @@
     self.locationManager.delegate = self;
     
     if (self.trip) {
+        self.title = @"Trunk Details";
         self.tripNameTextField.text = self.trip.name;
         self.countryTextField.text = self.trip.country;
         self.stateTextField.text= self.trip.state;
@@ -91,6 +91,8 @@
     
     else {
         // initialize the trip object
+        self.title = @"New Trunk";
+
         self.trip = [[Trip alloc] init];
         self.cancelBar.title = @"";
         self.cancelBar.enabled = FALSE;

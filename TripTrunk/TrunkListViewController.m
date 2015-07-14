@@ -71,6 +71,15 @@
         [self loadUserTrunks];
     }
     
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
     
 }
 

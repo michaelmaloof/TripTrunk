@@ -41,7 +41,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"TripTrunk";
 
     if (self.user == nil) {
     
@@ -53,18 +52,25 @@
         self.tabBarController.tabBar.translucent = false;
         [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
 
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-            
-            
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                             style:UIBarButtonItemStylePlain
-                                            target:nil
-                                            action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
         
     }
+
     
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+
+    
+    if (self.user == nil){
+        self.title = @"TripTrunk";
+    } else {
+        self.title = self.user.username;
+    }
     
     self.tripsToCheck = [[NSMutableArray alloc]init];
     self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
@@ -143,7 +149,12 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
-            self.title = @"TripTrunk";
+            
+            if (self.user == nil){
+                self.title = @"TripTrunk";
+            } else {
+                self.title = self.user.username;
+            }
             [ParseErrorHandlingController handleError:error];
         }
         else
@@ -205,8 +216,11 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
-            self.title = @"TripTrunk";
-            [ParseErrorHandlingController handleError:error];
+            if (self.user == nil){
+                self.title = @"TripTrunk";
+            } else {
+                self.title = self.user.username;
+            }            [ParseErrorHandlingController handleError:error];
         }
         else
         {
@@ -265,7 +279,11 @@
             
                 if (error)
                 {
-                    self.title = @"TripTrunk";
+                    if (self.user == nil){
+                        self.title = @"TripTrunk";
+                    } else {
+                        self.title = self.user.username;
+                    }
                     [ParseErrorHandlingController handleError:error];
 
                 } else if (objects.count == 0) {
@@ -366,7 +384,11 @@
 //            [self fitPins]; showing hometown now
             self.dropped = 0;
             self.notDropped = 0;
-            self.title = @"TripTrunk";
+            if (self.user == nil){
+                self.title = @"TripTrunk";
+            } else {
+                self.title = self.user.username;
+            }
         }
 
     }];

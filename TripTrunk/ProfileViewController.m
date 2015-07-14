@@ -32,6 +32,18 @@
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     NSURL *pictureURL = [NSURL URLWithString:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
     [self setProfilePic:pictureURL];
+    
+    self.title = @"Profile";
+    
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+
 }
 
 - (void)didReceiveMemoryWarning {

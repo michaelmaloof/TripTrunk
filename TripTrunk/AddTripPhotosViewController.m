@@ -47,7 +47,7 @@
         self.alreadyTrip = NO;
         
     }
-    self.title = @"Add Photos to Trip";
+    self.title = @"Add Photos";
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
@@ -106,6 +106,7 @@
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.allowsEditing = NO;
+        [picker setTitle:@"Select Photo"];
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         picker.navigationBar.tintColor = [UIColor whiteColor];
