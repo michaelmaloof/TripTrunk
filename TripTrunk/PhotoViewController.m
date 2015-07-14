@@ -14,7 +14,7 @@
 #import "TTUtility.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -67,6 +67,8 @@
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swiperight];
     
+    self.textView.delegate = self;
+    
     
     // Load initial data (photo and comments)
     [self loadImageForPhoto:self.photo];
@@ -86,6 +88,18 @@
                       placeholderImage:placeholderImage
                                success:nil failure:nil];
 }
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
+    if ([text length] == 1 && resultRange.location != NSNotFound) {
+        [textView resignFirstResponder];
+        [self onAddCommentsTapped:self];
+        return NO;
+    }
+    
+    return YES;
+}
+
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
