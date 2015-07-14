@@ -15,7 +15,7 @@
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
 
-@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate >
+@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate >
 @property UIImagePickerController *PickerController;
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
@@ -67,7 +67,7 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    
+    self.caption.delegate = self;
 }
 
 //-(void)viewDidAppear:(BOOL)animated{
@@ -248,6 +248,18 @@
 {
     [self.view endEditing:YES];
     
+}
+
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
+    if ([text length] == 1 && resultRange.location != NSNotFound) {
+        [textView resignFirstResponder];
+        [self onAddCaptionTapped:self];
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - Collection View
