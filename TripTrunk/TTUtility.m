@@ -54,13 +54,16 @@ CLCloudinary *cloudinary;
 {
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-            HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-            HUD.labelText = @"Uploading Memories";
-            HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
-
-    });
+    // Initialize the progressView if it isn't initialized already
+    if (!progressView) {
+        progressView = [[MSFloatingProgressView alloc] init];
+        [progressView addToWindow];
+    }
+    // Already initialized, so tell it that we're uploading another photo
+    else {
+        [progressView incrementTaskCount];
+    }
+    
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -227,28 +230,28 @@ CLCloudinary *cloudinary;
 - (void)uploaderSuccess:(NSDictionary*)result context:(id)context {
     NSString* publicId = [result valueForKey:@"public_id"];
     NSLog(@"Upload success. Public ID=%@, Full result=%@", publicId, result);
-    
-    // Hide HUD spinner
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        [HUD hide:YES];
-    });
+
+    // Mark the task as completed in the progressview -- if all uploads are finished, it will remove from the screen
+    if ([progressView taskCompleted]) {
+        // Uploading is totally complete, so nil the progress view
+        progressView = nil;
+    }
 }
 
 -(void)uploaderError:(NSString *)result code:(NSInteger)code context:(id)context {
     NSLog(@"Upload error: %@, %ld", result, (long)code);
     
-    // Hide HUD spinner
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-    });
+    // Get rid of the progress view
+    [progressView removeFromWindow];
+    progressView = nil;
 }
 
 - (void)uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
     float divide = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
-    NSString *string =  [NSString stringWithFormat:@"written:%ld    totalwritten:%ld    expectedToWrite:%ld   divided:%f", (long)bytesWritten, (long)totalBytesWritten, (long)totalBytesExpectedToWrite, divide];
-    NSLog(@"%@", string);
-    HUD.progress = divide;
+//    NSString *string =  [NSString stringWithFormat:@"written:%ld    totalwritten:%ld    expectedToWrite:%ld   divided:%f", (long)bytesWritten, (long)totalBytesWritten, (long)totalBytesExpectedToWrite, divide];
+//    NSLog(@"%@", string);
+    
+    [progressView setProgress:divide];
 }
 
 
@@ -260,6 +263,9 @@ CLCloudinary *cloudinary;
     HUD = nil;
 }
 
+
+
+// TEMPRORARY METHODS - DELTE WHEN FINISHED
 - (void)addUploaderProgressView {
     
     progressView = [[MSFloatingProgressView alloc] init];
@@ -269,6 +275,7 @@ CLCloudinary *cloudinary;
         [[[[UIApplication sharedApplication] delegate] window] addSubview:progressView];
 
     });
+    [progressView setProgress:0.5];
 }
 
 - (void)removeUploaderProgressView {

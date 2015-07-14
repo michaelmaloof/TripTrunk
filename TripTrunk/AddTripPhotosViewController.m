@@ -232,10 +232,14 @@
              
              if (!self.isTripCreation) {
                  // This came from the Trunk view, so pop back to it.
+                 NSLog(@"Trip Photos Added, not trip creation so pop back one view");
                  [self.navigationController popViewControllerAnimated:YES];
                  [[self navigationController] setNavigationBarHidden:NO animated:YES];
              }
              else {
+                 NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
+                 //TODO: This pops to the root view incorrectly
+                 // Well, with the new tab bar, the root view isnt the map. So we need to actually pop to the map tab.
                  [self.navigationController popToRootViewControllerAnimated:NO];
                  [self.tabBarController setSelectedIndex:0];
              }

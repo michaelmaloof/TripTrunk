@@ -8,6 +8,14 @@
 
 #import "MSFloatingProgressView.h"
 
+@interface MSFloatingProgressView ()
+@property (strong, nonatomic)UIProgressView *progressView;
+@property (strong, nonatomic)UILabel *titleLabel;
+@property (nonatomic)int taskCount;
+@property (nonatomic)int completedTaskCount;
+
+@end
+
 @implementation MSFloatingProgressView
 
 /*
@@ -22,6 +30,8 @@
     CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, 40);
     self = [super initWithFrame:rect];
     if (self) {
+        _taskCount = 1;
+        _completedTaskCount = 0;
         [self setBackgroundColor:[UIColor whiteColor]];
         [self setupUI];
     }
@@ -31,6 +41,8 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _taskCount = 1;
+        _completedTaskCount = 0;
         [self setBackgroundColor:[UIColor whiteColor]];
         [self setupUI];
     }
@@ -42,6 +54,8 @@
     CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, height);
     self = [super initWithFrame:rect];
     if (self) {
+        _taskCount = 1;
+        _completedTaskCount = 0;
         [self setBackgroundColor:[UIColor whiteColor]];
         [self setupUI];
     }
@@ -49,25 +63,77 @@
 }
 
 - (void)setupUI {
-    //Add cancel/close button
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 40, 0, 40, 40)];
-    [closeButton setTitle:@"X" forState:UIControlStateNormal];
-    [closeButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-
-    [self addSubview:closeButton];
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 100, 20)];
-    [titleLabel setText:@"Uploading..."];
-    [titleLabel setTextColor:[UIColor blackColor]];
-    [self addSubview:titleLabel];
+//    //Add cancel/close button
+//    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 40, 0, 40, 40)];
+//    [closeButton setTitle:@"X" forState:UIControlStateNormal];
+//    [closeButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+//    [closeButton addTarget:self action:@selector(cancelButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//
+//    [self addSubview:closeButton];
     
-    //TODO: Implement the actual progress bar
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 100, 20)];
+    [_titleLabel setFont:[UIFont systemFontOfSize:9]];
+    [_titleLabel setTextColor:[UIColor blackColor]];
+    [self addSubview:_titleLabel];
+    [self updateLabel:_completedTaskCount + 1 of:_taskCount];
+    
+    //TODO: Implement the actual progress bar UI
+    _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(10, 10, self.frame.size.width - 60, 2)];
+    [_progressView setProgressTintColor:[UIColor blueColor]];
+    [self addSubview:_progressView];
 }
 
-- (void)setProgress:(CGFloat)progress {
-    //TODO: implement methods for updating the progress view
-    
+- (void)updateLabel:(int)current of:(int)total {
+    [_titleLabel setText:[NSString stringWithFormat:@"Uploading %i of %i", current, total]];
 }
 
+- (void)cancelButtonPressed {
+    NSLog(@"Cancel Button Pressed");
+}
+
+- (void)incrementTaskCount {
+    _taskCount++;
+    [self updateLabel:_completedTaskCount + 1 of:_taskCount];
+}
+
+- (int)remainingTasks {
+    return _taskCount - _completedTaskCount;
+}
+
+- (void)setProgress:(float)progress {
+    // Progress can't go down, so only set progress if either the current progress is already complete (meaning a previous task is done) or the progress is an increase
+    if (_progressView.progress >= 1 || _progressView.progress < progress) {
+        [_progressView setProgress:progress];
+    }
+}
+
+- (BOOL)taskCompleted {
+    _completedTaskCount++;
+    [self setProgress:0];
+        
+    if (_completedTaskCount == _taskCount) {
+        [self removeFromWindow];
+        return true;
+    }
+    else {
+        [self updateLabel:_completedTaskCount + 1 of:_taskCount];
+    }
+    return false;
+
+}
+
+- (void)addToWindow {
+    // Add the progress bar to the Window so it should stay up front
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[[UIApplication sharedApplication] delegate] window] addSubview:self];
+    });
+}
+
+- (void)removeFromWindow {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self removeFromSuperview];
+    });
+}
 
 
 @end

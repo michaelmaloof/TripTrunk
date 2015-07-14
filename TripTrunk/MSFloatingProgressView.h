@@ -12,5 +12,16 @@
 
 - (id)initWithHeight:(CGFloat)height;
 
+- (int)remainingTasks;
+
+- (void)incrementTaskCount;
+
+- (void)setProgress:(float)progress;
+
+- (void)addToWindow;
+
+- (void)removeFromWindow;
+
+- (BOOL)taskCompleted;
 
 @end

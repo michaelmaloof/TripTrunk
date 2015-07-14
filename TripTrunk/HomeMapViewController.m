@@ -15,7 +15,6 @@
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 
-
 #define METERS_PER_MILE 1609.344
 
 @interface HomeMapViewController () <MKMapViewDelegate>
@@ -78,7 +77,7 @@
         //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
 //        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
         
-
+//    [[TTUtility sharedInstance] addUploaderProgressView];
     
 }
 
