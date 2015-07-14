@@ -11,6 +11,7 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "AddTripFriendsViewController.h"
+#import "MSTextField.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
@@ -33,6 +34,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *private;
 @property BOOL isPrivate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBar;
+@property (strong, nonatomic) UIDatePicker *datePicker;
 
 @end
 
@@ -93,6 +95,10 @@
         // initialize the trip object
         self.title = @"New Trunk";
 
+        // Set initial date to the field - should be Today's date.
+        self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
+        self.endTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
+
         self.trip = [[Trip alloc] init];
         self.cancelBar.title = @"";
         self.cancelBar.enabled = FALSE;
@@ -110,9 +116,32 @@
     self.delete.hidden = YES;
     
     }
+    
+    [self setupDatePicker];
 
     [self checkPublicPrivate];
 
+}
+
+- (void)setupDatePicker {
+    self.datePicker = [[UIDatePicker alloc] init];
+    [self.datePicker setDatePickerMode:UIDatePickerModeDate];
+    
+    [self.datePicker addTarget:self
+                        action:@selector(dateChanged:)
+              forControlEvents:UIControlEventValueChanged];
+    
+    // Create a toolbar so the picker has a "Done" button
+    UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
+    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                      style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
+    toolBar.items = [[NSArray alloc] initWithObjects:barButtonDone,nil];
+    barButtonDone.tintColor=[UIColor blackColor];
+    
+    self.startTripTextField.inputView = self.datePicker; // set the textfield to use the picker instead of a keyboard
+    self.startTripTextField.inputAccessoryView = toolBar;
+    self.endTripTextField.inputView = self.datePicker;
+    self.endTripTextField.inputAccessoryView = toolBar;
 }
 
 -(void)checkPublicPrivate{
@@ -132,7 +161,87 @@
     }
 }
 
+#pragma mark - Keyboard delegate methods
 
+// The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touchesBegan:withEvent:");
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+    self.startTripTextField.backgroundColor = [UIColor whiteColor];
+    self.endTripTextField.backgroundColor = [UIColor whiteColor];
+}
+
+// Go to the next textfield or close the keyboard when the return button is pressed
+
+- (BOOL)textFieldShouldReturn:(UITextField *) textField {
+    
+    BOOL didResign = [textField resignFirstResponder];
+    if (!didResign) return NO;
+    
+    if ([textField isKindOfClass:[MSTextField class]])
+        dispatch_async(dispatch_get_main_queue(),
+                       ^ { [[(MSTextField *)textField nextField] becomeFirstResponder]; });
+    
+    return YES;
+    
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if (textField == self.endTripTextField) {
+//        [self.view endEditing:YES];
+        self.datePicker.tag = 1;
+        self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
+        self.datePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
+        self.startTripTextField.backgroundColor = [UIColor whiteColor];
+        return YES;
+    }
+    
+    else if (textField == self.startTripTextField){
+//        [self.view endEditing:YES];
+        self.datePicker.tag = 0;
+        self.startTripTextField.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.datePicker.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.endTripTextField.backgroundColor = [UIColor whiteColor];
+        return YES;
+    }
+    
+    else {
+        self.startTripTextField.backgroundColor = [UIColor whiteColor];
+        self.endTripTextField.backgroundColor = [UIColor whiteColor];
+        return  YES;
+    }
+}
+
+#pragma mark - Date Picker
+
+- (void)dateChanged:(id)sender {
+    
+    if (self.datePicker.tag == 0) {
+        self.startTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
+        self.startDate = self.datePicker.date;
+    }
+    else if (self.datePicker.tag == 1) {
+        self.endTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
+        self.endDate = self.datePicker.date;
+    }
+}
+
+-(void)dismissPickerView:(id)sender
+{
+    if (self.datePicker.tag == 0) {
+        [self.endTripTextField becomeFirstResponder];
+    }
+    else {
+        [self.view endEditing:YES];
+        self.startTripTextField.backgroundColor = [UIColor whiteColor];
+        self.endTripTextField.backgroundColor = [UIColor whiteColor];
+    }
+}
+
+#pragma mark - Button Actions
 
 - (IBAction)onCancelTapped:(id)sender {
     if (self.navigationItem.leftBarButtonItem.tag == 0)
@@ -143,53 +252,7 @@
     else {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    
 }
-
-
-#pragma keyboard
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.view endEditing:YES];
-    self.tripDatePicker.hidden = YES;
-    self.startTripTextField.backgroundColor = [UIColor whiteColor];
-    self.endTripTextField.backgroundColor = [UIColor whiteColor];
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (textField == self.endTripTextField) {
-        [self.view endEditing:YES];
-        self.tripDatePicker.hidden = NO;
-        self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
-        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.tripDatePicker.tag = 1;
-        return NO;
-    }
-    
-    else if (textField == self.startTripTextField){
-        [self.view endEditing:YES];
-        self.tripDatePicker.hidden = NO;
-        self.startTripTextField.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-        self.tripDatePicker.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
-        self.tripDatePicker.tag = 0;
-        return NO;
-    }
-    
-    else {
-        self.tripDatePicker.hidden = YES;
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
-        return  YES;
-    }
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self.view endEditing:YES];
-    return YES;
-}
-
 
 - (IBAction)onNextTapped:(id)sender
 {
@@ -255,100 +318,22 @@
     }];
 
 }
-    
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-  AddTripFriendsViewController *vc = segue.destinationViewController;
-    vc.trip = self.trip;
-    vc.isTripCreation = YES;
-}
 
 
-- (void)notEnoughInfo:(NSString*)message {
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    alertView.delegate = self;
-    alertView.title = message;
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Ok"];
-    [alertView show];
-}
-
-- (IBAction)datePickerTapped:(id)sender {
-    
-    if (self.tripDatePicker.tag == 0){
-        self.startTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
-        self.startDate = self.tripDatePicker.date;
-
-    }
-    
-    else if (self.tripDatePicker.tag == 1){
-        self.endTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
-        self.endDate = self.tripDatePicker.date;
-    }
-    
-}
-
--(void)parseTrip {
-    
-//FIXME Should only parse if things have been changed
-    
-    self.trip.name = self.tripNameTextField.text;
-    self.trip.country = self.country;
-    self.trip.state = self.state;
-    self.trip.city = self.city;
-    self.trip.startDate = self.startTripTextField.text;
-    self.trip.endDate = self.endTripTextField.text;
-    self.trip.isPrivate = self.isPrivate;
-    self.trip.user = [PFUser currentUser].username;
-    self.trip.start = [self.formatter dateFromString:self.trip.startDate];
-    self.trip.creator = [PFUser currentUser];
-    
-    if (self.trip.mostRecentPhoto == nil){
-        NSString *date = @"01/01/1200";
-        NSDateFormatter *format = [[NSDateFormatter alloc]init];
-        [format setDateFormat:@"yyyy-MM-dd"];
-        self.trip.mostRecentPhoto = [format dateFromString:date];
-    }
-
-    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         
-             if(error) {
-                 //FIXME Check to see if actually works
-                 UIAlertView *alertView = [[UIAlertView alloc] init];
-                 alertView.delegate = self;
-                 alertView.title = @"No internet connection.";
-                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                 [alertView addButtonWithTitle:@"OK"];
-                 [alertView show];
-                 self.title = @"TripTrunk";
-
-             }
-             else
-             {                 
-             //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
-              //   vc.trip = self.trip;
-               //  vc.isTripCreation = YES;
-               //  [self.navigationController pushViewController:vc animated:YES];
-                 self.title = @"TripTrunk";
-                 
-                 
-                 if (self.navigationItem.leftBarButtonItem.tag == 0)
-                 {
-                     [self performSegueWithIdentifier:@"addFriends" sender:self];
-                 }
-                 
-                 else {
-                     [self.navigationController popViewControllerAnimated:YES];
-                 }
-                 
-                  // Save Successful - push to Add Friends screen
-
-             }
-             
-         }];
-}
+//- (IBAction)datePickerTapped:(id)sender {
+//    
+//    if (self.tripDatePicker.tag == 0){
+//        self.startTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
+//        self.startDate = self.tripDatePicker.date;
+//
+//    }
+//    
+//    else if (self.tripDatePicker.tag == 1){
+//        self.endTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
+//        self.endDate = self.tripDatePicker.date;
+//    }
+//    
+//}
 
 - (IBAction)onDeleteWasTapped:(id)sender {
     
@@ -390,7 +375,14 @@
 
 }
 
-
+- (void)notEnoughInfo:(NSString*)message {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = message;
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"Ok"];
+    [alertView show];
+}
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -409,5 +401,80 @@
     
 
 }
+
+#pragma mark - Parse
+
+-(void)parseTrip {
+    
+    //FIXME Should only parse if things have been changed
+    
+    self.trip.name = self.tripNameTextField.text;
+    self.trip.country = self.country;
+    self.trip.state = self.state;
+    self.trip.city = self.city;
+    self.trip.startDate = self.startTripTextField.text;
+    self.trip.endDate = self.endTripTextField.text;
+    self.trip.isPrivate = self.isPrivate;
+    self.trip.user = [PFUser currentUser].username;
+    self.trip.start = [self.formatter dateFromString:self.trip.startDate];
+    self.trip.creator = [PFUser currentUser];
+    
+    if (self.trip.mostRecentPhoto == nil){
+        NSString *date = @"01/01/1200";
+        NSDateFormatter *format = [[NSDateFormatter alloc]init];
+        [format setDateFormat:@"yyyy-MM-dd"];
+        self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
+    
+    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+         
+         if(error) {
+             //FIXME Check to see if actually works
+             UIAlertView *alertView = [[UIAlertView alloc] init];
+             alertView.delegate = self;
+             alertView.title = @"No internet connection.";
+             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+             [alertView addButtonWithTitle:@"OK"];
+             [alertView show];
+             self.title = @"TripTrunk";
+             
+         }
+         else
+         {
+             //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
+             //   vc.trip = self.trip;
+             //  vc.isTripCreation = YES;
+             //  [self.navigationController pushViewController:vc animated:YES];
+             self.title = @"TripTrunk";
+             
+             
+             if (self.navigationItem.leftBarButtonItem.tag == 0)
+             {
+                 [self performSegueWithIdentifier:@"addFriends" sender:self];
+             }
+             
+             else {
+                 [self.navigationController popViewControllerAnimated:YES];
+             }
+             
+             // Save Successful - push to Add Friends screen
+             
+         }
+         
+     }];
+}
+
+
+#pragma mark - Navigation
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    AddTripFriendsViewController *vc = segue.destinationViewController;
+    vc.trip = self.trip;
+    vc.isTripCreation = YES;
+}
+
+
 
 @end

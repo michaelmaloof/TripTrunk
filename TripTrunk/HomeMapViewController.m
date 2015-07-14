@@ -76,9 +76,7 @@
         
         //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
 //        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
-        
-//    [[TTUtility sharedInstance] addUploaderProgressView];
-    
+            
 }
 
 -(void)viewDidAppear:(BOOL)animated {

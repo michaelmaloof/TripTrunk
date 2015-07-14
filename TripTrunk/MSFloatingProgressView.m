@@ -7,6 +7,7 @@
 //
 
 #import "MSFloatingProgressView.h"
+#import "UIColor+HexColors.h"
 
 @interface MSFloatingProgressView ()
 @property (strong, nonatomic)UIProgressView *progressView;
@@ -27,7 +28,7 @@
 */
 
 - (id)init {
-    CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, 40);
+    CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, 30);
     self = [super initWithFrame:rect];
     if (self) {
         _taskCount = 1;
@@ -71,15 +72,15 @@
 //
 //    [self addSubview:closeButton];
     
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 100, 20)];
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 20)];
     [_titleLabel setFont:[UIFont systemFontOfSize:9]];
     [_titleLabel setTextColor:[UIColor blackColor]];
     [self addSubview:_titleLabel];
     [self updateLabel:_completedTaskCount + 1 of:_taskCount];
     
     //TODO: Implement the actual progress bar UI
-    _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(10, 10, self.frame.size.width - 60, 2)];
-    [_progressView setProgressTintColor:[UIColor blueColor]];
+    _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, 2)];
+    [_progressView setProgressTintColor:[UIColor colorWithHexString:@"FF6666"]];
     [self addSubview:_progressView];
 }
 
