@@ -365,8 +365,7 @@
                                         <exclude reference="giU-9U-IKx"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="150" y="99" width="76" height="73"/>
+                                <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="3lI-71-uJE"/>
                                         <exclude reference="giU-9U-IKx"/>
@@ -439,14 +438,6 @@
                                 <exclude reference="rcs-LE-WpV"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Cc2-AB-qRV"/>
-                                <exclude reference="OwL-fF-j9P"/>
-                                <exclude reference="W7t-K1-GRi"/>
-                                <exclude reference="WVo-1x-H5Y"/>
-                                <exclude reference="ath-Cr-Kpr"/>
-                                <exclude reference="eMZ-VQ-G4x"/>
-                                <exclude reference="guu-TK-aLj"/>
-                                <exclude reference="9u3-9a-GxH"/>
                                 <exclude reference="KtP-yj-lqU"/>
                                 <exclude reference="YmX-ut-bvY"/>
                                 <exclude reference="xRB-ak-OSq"/>
@@ -459,13 +450,21 @@
                                 <exclude reference="e5V-DC-Kfb"/>
                                 <exclude reference="mqo-yb-hRr"/>
                                 <exclude reference="sVz-rl-0U3"/>
+                                <exclude reference="0MS-cH-4Zj"/>
+                                <exclude reference="D7f-6D-3ts"/>
                                 <exclude reference="EaD-U6-EtH"/>
                                 <exclude reference="cfr-UG-rqM"/>
                                 <exclude reference="ehA-NN-eNn"/>
                                 <exclude reference="iKN-ph-Ec0"/>
                                 <exclude reference="w88-wS-jzh"/>
-                                <exclude reference="0MS-cH-4Zj"/>
-                                <exclude reference="D7f-6D-3ts"/>
+                                <exclude reference="9u3-9a-GxH"/>
+                                <exclude reference="Cc2-AB-qRV"/>
+                                <exclude reference="OwL-fF-j9P"/>
+                                <exclude reference="W7t-K1-GRi"/>
+                                <exclude reference="WVo-1x-H5Y"/>
+                                <exclude reference="ath-Cr-Kpr"/>
+                                <exclude reference="eMZ-VQ-G4x"/>
+                                <exclude reference="guu-TK-aLj"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -479,14 +478,6 @@
                                 <include reference="rcs-LE-WpV"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Cc2-AB-qRV"/>
-                                <include reference="OwL-fF-j9P"/>
-                                <include reference="W7t-K1-GRi"/>
-                                <exclude reference="WVo-1x-H5Y"/>
-                                <include reference="ath-Cr-Kpr"/>
-                                <exclude reference="eMZ-VQ-G4x"/>
-                                <include reference="guu-TK-aLj"/>
-                                <include reference="9u3-9a-GxH"/>
                                 <include reference="KtP-yj-lqU"/>
                                 <include reference="YmX-ut-bvY"/>
                                 <include reference="xRB-ak-OSq"/>
@@ -499,13 +490,21 @@
                                 <include reference="e5V-DC-Kfb"/>
                                 <include reference="mqo-yb-hRr"/>
                                 <include reference="sVz-rl-0U3"/>
+                                <include reference="0MS-cH-4Zj"/>
+                                <include reference="D7f-6D-3ts"/>
                                 <include reference="EaD-U6-EtH"/>
                                 <include reference="cfr-UG-rqM"/>
                                 <include reference="ehA-NN-eNn"/>
                                 <include reference="iKN-ph-Ec0"/>
                                 <include reference="w88-wS-jzh"/>
-                                <include reference="0MS-cH-4Zj"/>
-                                <include reference="D7f-6D-3ts"/>
+                                <include reference="9u3-9a-GxH"/>
+                                <exclude reference="Cc2-AB-qRV"/>
+                                <include reference="OwL-fF-j9P"/>
+                                <include reference="W7t-K1-GRi"/>
+                                <exclude reference="WVo-1x-H5Y"/>
+                                <include reference="ath-Cr-Kpr"/>
+                                <exclude reference="eMZ-VQ-G4x"/>
+                                <include reference="guu-TK-aLj"/>
                             </mask>
                         </variation>
                     </view>
@@ -778,8 +777,8 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="o2X-FD-baW">
-                                <rect key="frame" x="0.0" y="203" width="600" height="347.5"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="o2X-FD-baW">
+                                <rect key="frame" x="0.0" y="203" width="600" height="348"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Gcj-np-kwU">
                                     <size key="itemSize" width="80" height="80"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1158,7 +1157,7 @@
                                     <action selector="privateTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="fkT-Oa-BGr"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
                                 <rect key="frame" x="208" y="112" width="185" height="30"/>
                                 <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -1168,13 +1167,16 @@
                                     <constraint firstAttribute="height" constant="30" id="prq-uU-HbS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="070-8L-ZMm"/>
                                         <exclude reference="Red-eG-cqz"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="nextField" destination="Qk9-ii-Rz5" id="RBz-hC-cGQ"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3w3-mT-drZ">
                                 <rect key="frame" x="251" y="268" width="97" height="30"/>
@@ -1185,7 +1187,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="State (recommended)" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N9W-Ie-2VI">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="State (recommended)" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N9W-Ie-2VI" customClass="MSTextField">
                                 <rect key="frame" x="234" y="191" width="130" height="30"/>
                                 <color key="tintColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -1193,7 +1195,10 @@
                                     <constraint firstAttribute="height" constant="30" id="fH1-Tz-NI4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                <connections>
+                                    <outlet property="nextField" destination="def-GX-Qcc" id="IIC-4f-LgG"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dxi-2n-K02">
                                 <rect key="frame" x="252" y="308" width="97" height="30"/>
@@ -1204,7 +1209,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="def-GX-Qcc">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="def-GX-Qcc" customClass="MSTextField">
                                 <rect key="frame" x="235" y="230" width="130" height="30"/>
                                 <color key="tintColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -1212,7 +1217,10 @@
                                     <constraint firstAttribute="width" constant="130" id="LId-Wm-EWL"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                <connections>
+                                    <outlet property="nextField" destination="3w3-mT-drZ" id="W58-ST-EEA"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wse-wM-OZQ" userLabel="delete">
                                 <rect key="frame" x="274" y="390" width="50" height="50"/>
@@ -1233,7 +1241,7 @@
                                     <action selector="onDeleteWasTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="TlC-OW-EaS"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Country" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qk9-ii-Rz5">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="United States" borderStyle="roundedRect" placeholder="Country" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qk9-ii-Rz5" customClass="MSTextField">
                                 <rect key="frame" x="235" y="150" width="130" height="30"/>
                                 <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -1243,13 +1251,16 @@
                                     <constraint firstAttribute="height" constant="30" id="iLn-2e-iJ4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="Ehx-sK-tPR"/>
                                         <exclude reference="KS1-le-usi"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="nextField" destination="N9W-Ie-2VI" id="0bd-hO-MUA"/>
+                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1659,7 +1670,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgM-K6-At2" customClass="TripImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JgM-K6-At2" customClass="TripImageView">
                                                     <rect key="frame" x="7" y="8" width="75" height="75"/>
                                                     <gestureRecognizers/>
                                                 </imageView>

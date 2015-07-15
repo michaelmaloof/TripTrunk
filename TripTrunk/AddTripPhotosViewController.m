@@ -232,12 +232,27 @@
              
              if (!self.isTripCreation) {
                  // This came from the Trunk view, so pop back to it.
+                 NSLog(@"Trip Photos Added, not trip creation so pop back one view");
                  [self.navigationController popViewControllerAnimated:YES];
                  [[self navigationController] setNavigationBarHidden:NO animated:YES];
              }
              else {
-                 [self.navigationController popToRootViewControllerAnimated:NO];
-                 [self.tabBarController setSelectedIndex:0];
+                 NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
+                 // Pop to the root view controller of THIS tab - which is the initial trip creation screen
+                 dispatch_async(dispatch_get_main_queue(), ^{
+//                     [self.navigationController popToRootViewControllerAnimated:NO];
+                     // Now pop to the root view of the other map view controller and set that as the selected tab.
+                     
+                     // TODO: this doesn't work properly. It doesn't actually pop both tabs back to their roots.
+                     UIViewController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
+                     [target.navigationController popToRootViewControllerAnimated:YES];
+                     [self.tabBarController setSelectedIndex:0];
+
+                     
+                 });
+                 
+
+                 
              }
          }
      }];
