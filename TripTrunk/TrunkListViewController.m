@@ -165,9 +165,10 @@
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
 
     }
-    cell.detailTextLabel.hidden = YES;
     cell.trip = trip;
     cell.textLabel.text = trip.name;
+    
+    cell.detailTextLabel.text = cell.trip.user;
     
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
