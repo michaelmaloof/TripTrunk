@@ -61,7 +61,7 @@
                         <action selector="followingButtonPressed:" destination="-1" eventType="touchUpInside" id="tS2-RS-JGR"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9aU-WR-LRD">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultProfile" translatesAutoresizingMaskIntoConstraints="NO" id="9aU-WR-LRD">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="9aU-WR-LRD" secondAttribute="height" multiplier="1:1" id="BAv-3O-gaE"/>
@@ -279,4 +279,7 @@
             </variation>
         </view>
     </objects>
+    <resources>
+        <image name="defaultProfile" width="150" height="150"/>
+    </resources>
 </document>

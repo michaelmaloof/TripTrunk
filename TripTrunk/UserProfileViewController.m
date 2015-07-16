@@ -11,6 +11,7 @@
 
 #import "FriendsListViewController.h"
 #import "SocialUtility.h"
+#import "TTUtility.h"
 
 @interface UserProfileViewController ()
 
@@ -40,8 +41,7 @@
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:_user[@"username"]];
     
-    NSURL *pictureURL = [NSURL URLWithString:[_user valueForKey:@"profilePicUrl"]];
-    [self setProfilePic:pictureURL];
+    [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     
     // Disable the find friends button and hide the logout button
     // These buttons still exist in case we want to just use this one viewcontroller for MY profile or a FRIEND profile
@@ -161,8 +161,11 @@
     
 }
 
-- (void)setProfilePic:(NSURL *)pictureURL {
-    // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
+- (void)setProfilePic:(NSString *)urlString {
+    // Facebook Photo should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
+    
+    NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
+
     
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
     

@@ -30,8 +30,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    NSURL *pictureURL = [NSURL URLWithString:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
-    [self setProfilePic:pictureURL];
+    [self setProfilePic:[[PFUser currentUser] valueForKey:@"profilePicUrl"]];
     
     self.title = @"Profile";
     
@@ -76,8 +75,11 @@
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
 }
 
-- (void)setProfilePic:(NSURL *)pictureURL {
+- (void)setProfilePic:(NSString *)urlString {
     // URL should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
+    NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
+    
+
 
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
     
@@ -144,8 +146,8 @@
     [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
                                                       options:options
                                                 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
-                                                    // Calls the method to actually upload the image and save the Photo to parse
-                                                    [[TTUtility sharedInstance] uploadPhoto:info[UIImagePickerControllerOriginalImage] withImageData:imageData];
+                                                    // Calls the method to actually upload the image and save the User to parse
+                                                    [[TTUtility sharedInstance] uploadProfilePic:imageData forUser:[PFUser currentUser]];
                                                 }];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;

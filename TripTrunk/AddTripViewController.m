@@ -12,8 +12,11 @@
 #import <CoreLocation/CoreLocation.h>
 #import "AddTripFriendsViewController.h"
 #import "MSTextField.h"
+#import "SocialUtility.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate>
+
+// Text Fields
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *cityNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
@@ -21,19 +24,22 @@
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
 @property (weak, nonatomic) IBOutlet UITextField *countryTextField;
 @property (weak, nonatomic) IBOutlet UITextField *stateTextField;
-@property NSDateFormatter *formatter;
-@property NSDate *startDate;
-@property NSDate *endDate;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
-@property NSString *country;
-@property NSString *city;
-@property NSString *state;
 @property (weak, nonatomic) IBOutlet UIButton *public;
 @property (weak, nonatomic) IBOutlet UIButton *private;
 @property BOOL isPrivate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBar;
+@property BOOL needsCityUpdate; // if the trunk already exists and we changed the city of the trip
+@property BOOL needsNameUpdate; // if the trunk already exists and we changed the name of the trip
+@property BOOL isEditing; // if the trunk already exists and we're editing it
+
+// Date Properties
+@property NSDateFormatter *formatter;
+@property NSDate *startDate;
+@property NSDate *endDate;
 @property (strong, nonatomic) UIDatePicker *datePicker;
 
 @end
@@ -72,6 +78,7 @@
     self.locationManager.delegate = self;
     
     if (self.trip) {
+        _isEditing = YES;
         self.title = @"Trunk Details";
         self.tripNameTextField.text = self.trip.name;
         self.countryTextField.text = self.trip.country;
@@ -92,6 +99,8 @@
     }
     
     else {
+        _isEditing = NO;
+
         // initialize the trip object
         self.title = @"New Trunk";
 
@@ -283,14 +292,14 @@
                         // Trip Input has correct data - save the trip!
                     
                         CLPlacemark *placemark= placemarks.firstObject;
-                        self.country = placemark.country;
+                        self.trip.country = placemark.country;
                         
                         if (placemark.locality == nil){
-                            self.city = placemark.administrativeArea;
-                            self.state = placemark.administrativeArea;
+                            [self setTripCityName:placemark.administrativeArea];
+                            self.trip.state = placemark.administrativeArea;
                         } else{
-                            self.city = placemark.locality;
-                            self.state = placemark.administrativeArea;
+                            [self setTripCityName:placemark.locality];
+                            self.trip.state = placemark.administrativeArea;
                         }
                         [self parseTrip];
                         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -319,21 +328,31 @@
 
 }
 
+// Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
+// This is mainly so we know if we need to update the Activity models with a new city or not.
+- (BOOL)setTripCityName:(NSString *)cityName
+{
+    if (![self.trip.city isEqualToString:cityName]) {
+        self.trip.city = cityName;
+        _needsCityUpdate = YES;
+    }
+    else{
+        return NO;
+    }
+    return YES;
+}
 
-//- (IBAction)datePickerTapped:(id)sender {
-//    
-//    if (self.tripDatePicker.tag == 0){
-//        self.startTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
-//        self.startDate = self.tripDatePicker.date;
-//
-//    }
-//    
-//    else if (self.tripDatePicker.tag == 1){
-//        self.endTripTextField.text = [self.formatter stringFromDate:self.tripDatePicker.date];
-//        self.endDate = self.tripDatePicker.date;
-//    }
-//    
-//}
+- (BOOL)setTripName:(NSString *)name
+{
+    if (![self.trip.name isEqualToString:name]) {
+        self.trip.name = name;
+        _needsNameUpdate = YES;
+    }
+    else{
+        return NO;
+    }
+    return YES;
+}
 
 - (IBAction)onDeleteWasTapped:(id)sender {
     
@@ -408,10 +427,7 @@
     
     //FIXME Should only parse if things have been changed
     
-    self.trip.name = self.tripNameTextField.text;
-    self.trip.country = self.country;
-    self.trip.state = self.state;
-    self.trip.city = self.city;
+    [self setTripName: self.tripNameTextField.text];
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
     self.trip.isPrivate = self.isPrivate;
@@ -424,6 +440,16 @@
         NSDateFormatter *format = [[NSDateFormatter alloc]init];
         [format setDateFormat:@"yyyy-MM-dd"];
         self.trip.mostRecentPhoto = [format dateFromString:date];
+    }
+    
+    // If we're editing an existing trip AND we changed the city, we need to update any Activities for this trip to include the new city name.
+    if (_isEditing && _needsCityUpdate) {
+        [SocialUtility updateActivityContent:self.trip.city forTrip:self.trip];
+    }
+    
+    // If we're editing an existing trip AND we changed the name, we need to update any Photos for this trip to include the new name.
+    if (_isEditing && _needsNameUpdate) {
+        [SocialUtility updatePhotosForTrip:self.trip];
     }
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
@@ -442,10 +468,6 @@
          }
          else
          {
-             //   AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc]init];
-             //   vc.trip = self.trip;
-             //  vc.isTripCreation = YES;
-             //  [self.navigationController pushViewController:vc animated:YES];
              self.title = @"TripTrunk";
              
              
@@ -457,9 +479,6 @@
              else {
                  [self.navigationController popViewControllerAnimated:YES];
              }
-             
-             // Save Successful - push to Add Friends screen
-             
          }
          
      }];

@@ -14,6 +14,7 @@
 
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
+#import "TTUtility.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -25,7 +26,8 @@
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
-@property (strong, nonatomic) NSArray *existingMembers;
+// Array of PFUser objects that are already part of the trip
+@property (strong, nonatomic) NSMutableArray *existingMembers;
 
 @end
 
@@ -36,7 +38,7 @@
     self = [super init]; // nil is ok if the nib is included in the main bundle
     if (self) {
         self.trip = trip;
-        self.existingMembers = members;
+        self.existingMembers = [[NSMutableArray alloc] initWithArray:members];
     }
     return self;
 }
@@ -49,7 +51,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     if (!self.existingMembers) {
-        self.existingMembers = [[NSArray alloc] init]; // init so no crash
+        self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
     
     self.title = @"Add Friends";
@@ -111,6 +113,8 @@
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
     
+    [[self.searchController searchBar] setValue:@"Done" forKey:@"_cancelButtonText"];
+    
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
 
@@ -123,7 +127,7 @@
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
     [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
-    [followingQuery whereKey:@"toUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
+//    [followingQuery whereKey:@"toUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"toUser"];
     
@@ -243,9 +247,8 @@
     
     [cell.followButton setSelected:_isFollowing];
     
-    
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-    NSURL *picUrl = [NSURL URLWithString:possibleFriend[@"profilePicUrl"]];
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
     
@@ -260,6 +263,12 @@
     
     return weakCell;
 
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Set selection of existing members
+    [cell setSelected:[self userExists:cell.user inArray:self.existingMembers]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -309,6 +318,49 @@
             }
             else
             {
+            }
+        }];
+    }
+}
+
+- (BOOL)userExists:(PFUser *)user inArray:(NSArray *)userList
+{
+    BOOL exists = NO;
+    for (PFUser *existing in userList) {
+        if ([[existing objectId] isEqualToString:[user objectId]]) {
+            exists = YES;
+        }
+    }
+    return exists;
+}
+
+- (void)saveFriends
+{
+    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
+    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+    
+
+
+    if (selectedRows.count > 0)
+    {
+        
+        for (NSIndexPath *indexPath in selectedRows) {
+            PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
+            if (![self userExists:user inArray:self.existingMembers]) {
+                PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
+                [tripUsers addObject:tripUser];
+                [self.existingMembers addObject:user];
+            }
+        }
+        [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
+            if (error || !succeeded) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saving Frinds Failed"
+                                                                message:@"Please try again"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil, nil];
+                [alert show];
+                
             }
         }];
     }
@@ -422,6 +474,15 @@
     NSArray *results  = [query findObjects];
         
     [self.searchResults addObjectsFromArray:results];
+}
+
+/**
+ *  Delegate method executed when the "Done" button is pressed
+ */
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    NSLog(@"cancel button pressed: %lu", (unsigned long)[self.tableView indexPathsForSelectedRows].count);
+    [self saveFriends];
+    [self.tableView reloadData];
 }
 
 #pragma mark - UISearchResultsUpdating
