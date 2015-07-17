@@ -117,6 +117,11 @@
 }
 - (IBAction)logOutButtonPressed:(id)sender {
     NSLog(@"Logout Button Pressed");
+    
+    // Unsubscribe from push notifications by removing the user association from the current installation.
+    [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
+    [[PFInstallation currentInstallation] saveInBackground];
+    
     [PFUser logOut];
     
     // This pushes the user back to the map view, which should then show the loginview
