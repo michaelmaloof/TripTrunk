@@ -95,10 +95,23 @@
     }
     else if (self.user == nil) {
         [self queryParseMethodEveryone];
+        
+        [self registerNotifications];
+
     } else {
         [self queryParseMethodForUser:self.user];
-
+        
+        [self registerNotifications];
     }
+}
+
+- (void)registerNotifications {
+    UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+    
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+    
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 //-(void)queryTrunks

@@ -49,6 +49,73 @@ CLCloudinary *cloudinary;
     return self;
 }
 
+- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user;
+{
+    CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+    // Initialize the progressView if it isn't initialized already
+    if (!progressView) {
+        progressView = [[MSFloatingProgressView alloc] init];
+        [progressView addToWindow];
+    }
+    // Already initialized, so tell it that we're uploading another photo
+    else {
+        [progressView incrementTaskCount];
+    }
+    
+    [uploader upload:imageData
+             options:@{@"type":@"upload"}
+      withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+          if (successResult) {
+              NSString* publicId = [successResult valueForKey:@"public_id"];
+              NSLog(@"Block upload success. Public ID=%@, Full result=%@", publicId, successResult);
+              NSString* url = [successResult valueForKey:@"url"];
+              
+              [user setObject:url forKey:@"profilePicUrl"];
+              
+              [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                  
+                  if(error) {
+                      NSLog(@"error saving user to parse: %@", error);
+                  }
+                  else {
+                      NSLog(@"Saved Successfully to parse");
+                      // post the notification so that the ProfileViewController can know to reload the data
+//                      [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                  }
+              }];
+              
+          } else {
+              NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+              
+          }
+          
+      } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+          
+          
+      }];
+}
+
+- (NSString *)profileImageUrl:(NSString *)urlString;
+{
+    // If it's a facebook url, just return that url, no transformation
+    if (!urlString || [urlString rangeOfString:@"graph.facebook.com"].length > 0) {
+        return urlString;
+    }
+    
+    CLTransformation *transformation = [CLTransformation transformation];
+    [transformation setWidthWithInt: 200];
+    [transformation setHeightWithInt: 200];
+    [transformation setCrop: @"fill"];
+    [transformation setQualityWithFloat:60];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
 {
@@ -276,14 +343,6 @@ CLCloudinary *cloudinary;
 
     });
     [progressView setProgress:0.5];
-}
-
-- (void)removeUploaderProgressView {
-    //TODO: This doesn't work
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [progressView removeFromSuperview];
-    });
-    progressView = nil;
 }
 
 @end

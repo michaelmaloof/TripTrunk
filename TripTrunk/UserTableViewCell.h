@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UIButton *followButton;
+@property (nonatomic, strong, readonly) PFUser *user;
 
 
 - (void)setUser:(PFUser *)user;

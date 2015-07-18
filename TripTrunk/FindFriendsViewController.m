@@ -14,6 +14,7 @@
 #import "UserTableViewCell.h"
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
+#import "TTUtility.h"
 
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
@@ -214,7 +215,8 @@
     }];
 
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-    NSURL *picUrl = [NSURL URLWithString:possibleFriend[@"profilePicUrl"]];
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
     

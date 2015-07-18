@@ -136,8 +136,52 @@
              completionBlock(NO, error);
          }
      }];
-    
+}
 
++ (void)updateActivityContent:(NSString *)string forTrip:(Trip *)trip;
+{
+    PFQuery *updateQuery = [PFQuery queryWithClassName:@"Activity"];
+    [updateQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [updateQuery whereKey:@"trip" equalTo:trip];
+    [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+    {
+        if (!error) {
+            NSLog(@"Successfully found Trip activities");
+            // Delete the found objects
+            NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
+            for (PFObject *object in objects) {
+                [object setValue:string forKey:@"content"];
+                [objectsToUpdate addObject:object];
+            }
+            [PFObject saveAllInBackground:objectsToUpdate];
+            
+        } else {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+        }
+    }];
+}
+
++ (void)updatePhotosForTrip:(Trip *)trip;
+{
+    PFQuery *updateQuery = [PFQuery queryWithClassName:@"Photo"];
+    [updateQuery whereKey:@"trip" equalTo:trip];
+    [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             NSLog(@"Successfully found Trip activities");
+             // Delete the found objects
+             NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
+             for (PFObject *object in objects) {
+                 [object setValue:trip.name forKey:@"tripName"];
+                 [object setValue:trip.city forKey:@"city"];
+                 [objectsToUpdate addObject:object];
+             }
+             [PFObject saveAllInBackground:objectsToUpdate];
+             
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
 }
 
 

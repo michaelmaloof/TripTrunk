@@ -61,5 +61,8 @@
  */
 + (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
++ (void)updateActivityContent:(NSString *)string forTrip:(Trip *)trip;
+
++ (void)updatePhotosForTrip:(Trip *)trip;
 
 @end

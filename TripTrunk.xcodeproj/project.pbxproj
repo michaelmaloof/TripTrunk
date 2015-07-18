@@ -36,7 +36,6 @@
 		224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */; };
 		224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FED1AE1E589003A1DEB /* QuartzCore.framework */; };
 		224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEF1AE1E590003A1DEB /* Security.framework */; };
-		224F3FF21AE1E59E003A1DEB /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF11AE1E59E003A1DEB /* StoreKit.framework */; };
 		224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */; };
 		224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF51AE1E5AE003A1DEB /* libz.dylib */; };
 		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
@@ -145,7 +144,6 @@
 		224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		224F3FED1AE1E589003A1DEB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		224F3FEF1AE1E590003A1DEB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		224F3FF11AE1E59E003A1DEB /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		224F3FF51AE1E5AE003A1DEB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -247,7 +245,6 @@
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */,
 				C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */,
-				224F3FF21AE1E59E003A1DEB /* StoreKit.framework in Frameworks */,
 				224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */,
 				2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */,
 				224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */,
@@ -447,7 +444,6 @@
 				2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */,
 				223547E51AE2BB92001FE916 /* Bolts.framework */,
 				224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */,
-				224F3FF11AE1E59E003A1DEB /* StoreKit.framework */,
 				224F3FEF1AE1E590003A1DEB /* Security.framework */,
 				224F3FED1AE1E589003A1DEB /* QuartzCore.framework */,
 				224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */,
@@ -567,7 +563,12 @@
 				TargetAttributes = {
 					224F3F8B1AE1D35E003A1DEB = {
 						CreatedOnToolsVersion = 6.3;
-						DevelopmentTeam = 2FMA362958;
+						DevelopmentTeam = 8WCRSCZ8NE;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 					224F3FA41AE1D35E003A1DEB = {
 						CreatedOnToolsVersion = 6.3;
@@ -813,7 +814,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1d0dce19-dbcd-4255-810d-8232304b6364";
 			};
 			name = Debug;
 		};

@@ -13,6 +13,7 @@
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
+#import "TTUtility.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -124,7 +125,7 @@
         }
         else
         {
-            NSLog(@"%@", object);
+            NSLog(@"Trip Creator: %@", object);
             
             _tripCreator = (PFUser *)object;
             
@@ -198,7 +199,8 @@
     switch (indexPath.section) {
         case 0: {
             if (indexPath.row >= 0) {
-                picUrl = [NSURL URLWithString:_tripCreator[@"profilePicUrl"]];
+                picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:_tripCreator[@"profilePicUrl"]]];
+
                 [cell setUser:_tripCreator];
             }
             break;
@@ -207,7 +209,8 @@
         case 1: {
             if (indexPath.row >= 0) {
                 PFUser *user = [_tripMembers objectAtIndex:indexPath.row];
-                picUrl = [NSURL URLWithString:user[@"profilePicUrl"]];
+                picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
+
                 [cell setUser:user];
             }
             break;

@@ -26,6 +26,23 @@
 + (TTUtility *)sharedInstance;
 
 /**
+ *  Uploads a photo to Cloudinary and sets the url as the profilepic on the User object.
+ *
+ *  @param imageData NSData of a raw image
+ *  @param user  User whose profile pic it is
+ */
+- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user;
+
+/**
+ *  Takes a user's profilePicUrl and alters it to be a Cloudinary url with 200x200 dimensions
+ *
+ *  @param urlString imageUrl of a User ProfilePic on Cloudinary
+ *
+ *  @return String of a transformed imageUrl
+ */
+- (NSString *)profileImageUrl:(NSString *)urlString;
+
+/**
  *  Uploads a Photo to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse
  *
  *  @param photo     TripTrunk parse Photo object
@@ -73,6 +90,8 @@
  *  @return String of a transformed imageUrl
  */
 - (NSString *)mediumQualityScaledDownImageUrl:(NSString *)urlString;
+
+
 - (void)addUploaderProgressView;
 
 
