@@ -107,10 +107,18 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
-    //TODO: Don't push if app is running
-    // this pushes to the notification's screen, but if the app is open then we don't want to do that. We just want to tell the user they got a notification
-    [self handlePush:userInfo];
+    
+    if (application.applicationState == UIApplicationStateActive ) {
+        // Let Parse handle the push notificatin -- they'll display a popup
+        [PFPush handlePush:userInfo];
+        
+        //TODO: Present an Alert with the notification and let the user choose to "view" it.
+    }
+    else {
+        // this pushes to the notification's screen, but if the app is open then we don't want to do that. We just want to tell the user they got a notification
+        [self handlePush:userInfo];
+    }
+
 }
 
 #pragma mark - Push Notification Handler
@@ -137,26 +145,42 @@
     // Push the referenced photo/trip into view
     NSString *photoId = [payload objectForKey:@"pid"];
     
-    // TODO: do we actually need tripId at all?
-//    NSString *tripId = [payload objectForKey:@"tid"];
+    NSString *tripId = [payload objectForKey:@"tid"];
     
-    if (photoId && photoId.length != 0) {
-        NSLog(@"GOT PHOTO ADDED PUSH NOTIFICATION: %@", payload);
-        
-        PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
-        [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
+    if (tripId && tripId.length != 0) {
+        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+        [query getObjectInBackgroundWithId:tripId block:^(PFObject *trip, NSError *error) {
             if (!error) {
                 
                 UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-                photoViewController.photo = (Photo *)photo;
+                TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+                trunkViewController.trip = (Trip *)trip;
                 UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
                 UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
                 [tabbarcontroller setSelectedIndex:0];
-                [homeNavController pushViewController:photoViewController animated:YES];
+                [homeNavController pushViewController:trunkViewController animated:NO];
+                
+                if (photoId && photoId.length != 0) {
+                    NSLog(@"GOT PHOTO ADDED PUSH NOTIFICATION: %@", payload);
+                    
+                    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+                    [photoQuery getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
+                        if (!error) {
+                            
+                            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                            PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+                            photoViewController.photo = (Photo *)photo;
+
+                            [homeNavController pushViewController:photoViewController animated:YES];
+                        }
+                    }];
+                }
             }
         }];
+
     }
+    
+
 
 }
 
