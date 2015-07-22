@@ -103,6 +103,11 @@
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
+    if (!self.photos || self.photos.count == 0) {
+        return;
+    }
+    
     NSLog(@"check 1 = %ld", (long)self.arrayInt);
     if (self.tableView.hidden == YES && self.arrayInt > 0)
     {
@@ -126,6 +131,10 @@
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    if (!self.photos || self.photos.count == 0) {
+        return;
+    }
+    
     if (self.tableView.hidden == YES && self.arrayInt != self.photos.count - 1)
     {
         self.arrayInt = self.arrayInt + 1;
