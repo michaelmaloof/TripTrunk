@@ -257,6 +257,29 @@
             }];
         }
     }
+    // it's a Comment on Photo notification, so display the Photo View
+    else if ([[payload objectForKey:@"t"] isEqualToString:@"c"]) {
+        NSLog(@"GOT PHOTO COMMENT PUSH NOTIFICATION: %@", payload);
+
+        // Push to the referenced Photo
+        NSString *photoId = [payload objectForKey:@"pid"];
+        if (photoId && photoId.length != 0) {
+            PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
+            [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
+                if (!error) {
+                    
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+                    photoViewController.photo = (Photo *)photo;
+                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
+                    [tabbarcontroller setSelectedIndex:0];
+                    [homeNavController pushViewController:photoViewController animated:YES];
+                }
+            }];
+        }
+
+    }
 }
 
 @end
