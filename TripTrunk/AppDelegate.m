@@ -15,6 +15,7 @@
 #import "UserProfileViewController.h"
 #import "PhotoViewController.h"
 #import "TrunkViewController.h"
+#import "FindFriendsViewController.h"
 
 @interface AppDelegate ()
 
@@ -45,6 +46,8 @@
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
+    
+    [self setupSearchTabBar];
     
     return YES;
 }
@@ -91,6 +94,32 @@
                                                           openURL:url
                                                 sourceApplication:sourceApplication
                                                        annotation:annotation];
+}
+
+#pragma mark - Tab Bar
+
+/**
+ *  Creates the Search Tab as the last tab in the tab bar.
+ *  This is necessary because the FindFriendsViewController does not use the storyboard, and so does not work correctly in a storyboard-managed tab bar
+ */
+- (void)setupSearchTabBar {
+    // Set up search tab
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    FindFriendsViewController *ffvc = [[FindFriendsViewController alloc] init];
+    UINavigationController *searchNavController = [[UINavigationController alloc] initWithRootViewController:ffvc];
+    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass"] tag:3];
+    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    
+    [searchNavController setTabBarItem:searchItem];
+    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+    if (vcs.count > 3) {
+        [vcs replaceObjectAtIndex:3 withObject:searchNavController];
+    }
+    else {
+        [vcs addObject:searchNavController];
+    }
+    [tabbarcontroller setViewControllers:vcs];
+    
 }
 
 #pragma mark - Remote Notifications
