@@ -12,6 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Comment.h"
 #import "TTUtility.h"
+#import "SocialUtility.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
@@ -103,6 +104,11 @@
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
+    if (!self.photos || self.photos.count == 0) {
+        return;
+    }
+    
     NSLog(@"check 1 = %ld", (long)self.arrayInt);
     if (self.tableView.hidden == YES && self.arrayInt > 0)
     {
@@ -126,6 +132,10 @@
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    if (!self.photos || self.photos.count == 0) {
+        return;
+    }
+    
     if (self.tableView.hidden == YES && self.arrayInt != self.photos.count - 1)
     {
         self.arrayInt = self.arrayInt + 1;
@@ -199,10 +209,10 @@
     
     else if (indexPath.row > 0) {
     
-        Comment *comment = [self.commentsArray objectAtIndex:indexPath.row -1];
-        cell.textLabel.text = comment.user;
-        cell.detailTextLabel.text = comment.comment;
+        PFObject *commentActivity = [self.commentsArray objectAtIndex:indexPath.row -1];
         
+        cell.textLabel.text = [[commentActivity valueForKey:@"fromUser"] valueForKey:@"username"];
+        cell.detailTextLabel.text = [commentActivity valueForKey:@"content"];
     }
 
     
@@ -243,16 +253,8 @@
 }
 
 -(void)parseComment {
-    Comment *comment = [[Comment alloc]init];
-    comment.comment = self.textView.text;
-    comment.user = [PFUser currentUser].username;
-    comment.datePosted = [NSDate date];
-    comment.photo = self.photo.objectId;
-    comment.trip = self.photo.tripName;
-    comment.city = self.photo.city;
     
-    [comment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
+    [SocialUtility addComment:self.textView.text forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
         if(error)
         {
             UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -261,23 +263,16 @@
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
             [alertView addButtonWithTitle:@"OK"];
             [alertView show];
-        } else if (!error)
-        {
+        }
+        else {
             [self queryParseMethod];
         }
     }];
-
 }
 
 -(void)queryParseMethod {
 
-    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Comment"];
-    [findPhotosUser whereKey:@"trip" equalTo:self.photo.tripName];
-    [findPhotosUser whereKey:@"city" equalTo:self.photo.city];
-    [findPhotosUser whereKey:@"photo" equalTo:self.photo.objectId];
-    [findPhotosUser orderByAscending:@"createdAt"];
-    
-    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [SocialUtility getCommentsForPhoto:self.photo block:^(NSArray *objects, NSError *error) {
         if(!error)
         {
             self.commentsArray = [NSArray arrayWithArray:objects];
@@ -288,9 +283,8 @@
         {
             NSLog(@"Error: %@",error);
         }
-        
+
     }];
-    
 }
 
 -(void)textViewDidBeginEditing:(UITextView *)textView

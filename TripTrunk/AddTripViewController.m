@@ -140,17 +140,41 @@
                         action:@selector(dateChanged:)
               forControlEvents:UIControlEventValueChanged];
     
-    // Create a toolbar so the picker has a "Done" button
-    UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+    // Generic Flexible Space
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    // Start Date Toolbar
+    UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
+    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:@"Next"
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
-    toolBar.items = [[NSArray alloc] initWithObjects:barButtonDone,nil];
-    barButtonDone.tintColor=[UIColor blackColor];
+    UILabel *startLabel = [[UILabel alloc] init];
+    [startLabel setText:@"Start Date"];
+    [startLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [startLabel setTextColor:[UIColor blackColor]];
+    [startLabel sizeToFit];
+    UIBarButtonItem *labelbutton = [[UIBarButtonItem alloc] initWithCustomView:startLabel];
+    startTripToolbar.items = [[NSArray alloc] initWithObjects:labelbutton, space, barButtonNext,nil];
+    barButtonNext.tintColor=[UIColor blackColor];
     
     self.startTripTextField.inputView = self.datePicker; // set the textfield to use the picker instead of a keyboard
-    self.startTripTextField.inputAccessoryView = toolBar;
+    self.startTripTextField.inputAccessoryView = startTripToolbar;
+
+    // End Date Toolbar
+    UIToolbar *endTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
+    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                      style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
+    
+    UILabel *endLabel = [[UILabel alloc] init];
+    [endLabel setText:@"Start Date"];
+    [endLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [endLabel setTextColor:[UIColor blackColor]];
+    [endLabel sizeToFit];
+    UIBarButtonItem *endLabelButton = [[UIBarButtonItem alloc] initWithCustomView:endLabel];
+    endTripToolbar.items = [[NSArray alloc] initWithObjects:endLabelButton, space, barButtonDone, nil];
+    barButtonDone.tintColor=[UIColor blackColor];
+
     self.endTripTextField.inputView = self.datePicker;
-    self.endTripTextField.inputAccessoryView = toolBar;
+    self.endTripTextField.inputAccessoryView = endTripToolbar;
 }
 
 -(void)checkPublicPrivate{

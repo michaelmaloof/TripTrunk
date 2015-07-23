@@ -184,5 +184,42 @@
      }];
 }
 
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    PFObject *commentActivity = [PFObject objectWithClassName:@"Activity"];
+    [commentActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [commentActivity setObject:photo.user forKey:@"toUser"];
+    [commentActivity setObject:photo forKey:@"photo"];
+    [commentActivity setObject:@"comment" forKey:@"type"];
+    [commentActivity setObject:comment forKey:@"content"];
+    
+    
+    PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [commentACL setPublicReadAccess:YES];
+    commentActivity.ACL = commentACL;
+    
+    [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            completionBlock(succeeded, error);
+        }
+    }];
+}
+
++ (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
+{
+    // Query all user's that
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"photo" equalTo:photo];
+    [query whereKey:@"type" equalTo:@"comment"];
+    [query includeKey:@"fromUser"];
+    [query orderByAscending:@"createdAt"];
+
+    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        completionBlock(objects, error);
+    }];
+}
+
 
 @end

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Trip.h"
+#import "Photo.h"
 
 #import <Parse/Parse.h>
 
@@ -61,8 +62,38 @@
  */
 + (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
+/**
+ *  Updates the Content field of all addToTrip Activity objects on Parse for the given Trip
+ *
+ *  @param string new content string
+ *  @param trip   Trip needing update
+ */
 + (void)updateActivityContent:(NSString *)string forTrip:(Trip *)trip;
 
+/**
+ *  Update the Photo objects on Parse for the given trip
+ *  Useful when the Trip has been updated and we need to make sure the Photo objects reference the same trip info
+ *
+ *  @param trip Trip needing the update
+ */
 + (void)updatePhotosForTrip:(Trip *)trip;
+
+/**
+ *  Adds a comment on the given photo
+ *
+ *  @param comment         Comment string
+ *  @param photo           Photo object on which the comment is being written
+ *  @param completionBlock completion handler callback
+ */
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  Retrieves the all of the Comment Activity objects for the given Photo
+ *
+ *  @param photo           Photo that we want the comments for
+ *  @param completionBlock completion block with Activity object array and nullable error
+ */
++ (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
+
 
 @end

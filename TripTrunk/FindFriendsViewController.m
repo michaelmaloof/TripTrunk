@@ -31,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = @"Find Friends";
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
