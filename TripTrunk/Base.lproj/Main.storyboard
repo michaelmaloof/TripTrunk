@@ -1237,11 +1237,37 @@
                                     <action selector="privateTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="fkT-Oa-BGr"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viD-Vo-BWz">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="HyX-tD-t0u"/>
+                                    <constraint firstAttribute="height" constant="30" id="cE3-Mk-6ty"/>
+                                </constraints>
+                                <state key="normal" title="Clear">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="HyX-tD-t0u"/>
+                                        <exclude reference="cE3-Mk-6ty"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="HyX-tD-t0u"/>
+                                        <include reference="cE3-Mk-6ty"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="clearButtonPressed:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="0vt-eG-i9H"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Qk9-ii-Rz5" secondAttribute="centerX" id="1Bg-hF-Kb6"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="f19-nT-nsy" secondAttribute="bottom" constant="27" id="27b-8K-oYh"/>
+                            <constraint firstItem="viD-Vo-BWz" firstAttribute="trailing" secondItem="zdV-NN-4Zp" secondAttribute="trailing" id="2j2-EF-jAN"/>
                             <constraint firstItem="zdV-NN-4Zp" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="48" id="3IG-Lt-ykC"/>
                             <constraint firstItem="def-GX-Qcc" firstAttribute="top" secondItem="N9W-Ie-2VI" secondAttribute="bottom" constant="9" id="420-xS-FHp"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="leading" secondItem="zdV-NN-4Zp" secondAttribute="trailing" constant="13" id="4wm-fE-Shw"/>
@@ -1262,6 +1288,7 @@
                             <constraint firstItem="Ev9-DG-Eco" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="70" id="SCN-yI-Ta5">
                                 <variation key="heightClass=regular-widthClass=compact" constant="90"/>
                             </constraint>
+                            <constraint firstItem="zdV-NN-4Zp" firstAttribute="top" secondItem="viD-Vo-BWz" secondAttribute="bottom" constant="2" id="SFZ-Bd-hdr"/>
                             <constraint firstItem="Lbp-ko-ErL" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" id="Sro-IN-K7V"/>
                             <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="Lbp-ko-ErL" secondAttribute="bottom" constant="151" id="T7M-sL-O1k">
                                 <variation key="heightClass=regular-widthClass=compact" constant="50"/>
@@ -1281,13 +1308,18 @@
                             <constraint firstAttribute="centerX" secondItem="zdV-NN-4Zp" secondAttribute="centerX" id="xwW-gt-DRc"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="viD-Vo-BWz"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="9D1-Kk-s5m"/>
                                 <exclude reference="Sro-IN-K7V"/>
                                 <exclude reference="eDO-Qc-POO"/>
                                 <exclude reference="fUf-xG-K5D"/>
+                                <exclude reference="SFZ-Bd-hdr"/>
                                 <exclude reference="cxp-PQ-Qm4"/>
                                 <exclude reference="N09-So-zDL"/>
+                                <exclude reference="2j2-EF-jAN"/>
                                 <exclude reference="A13-xK-rs2"/>
                                 <exclude reference="DYO-s8-Lam"/>
                                 <exclude reference="gUj-8z-cXY"/>
@@ -1300,11 +1332,16 @@
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="viD-Vo-BWz"/>
+                            </mask>
                             <mask key="constraints">
                                 <include reference="9D1-Kk-s5m"/>
                                 <include reference="Sro-IN-K7V"/>
                                 <include reference="eDO-Qc-POO"/>
                                 <exclude reference="fUf-xG-K5D"/>
+                                <include reference="SFZ-Bd-hdr"/>
+                                <include reference="2j2-EF-jAN"/>
                                 <include reference="A13-xK-rs2"/>
                                 <exclude reference="SCN-yI-Ta5"/>
                                 <include reference="DYO-s8-Lam"/>
@@ -1344,7 +1381,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kJ6-HM-5XW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="455" y="-421"/>
+            <point key="canvasLocation" x="454.5" y="-421.5"/>
         </scene>
         <!--Photo View Controller-->
         <scene sceneID="7it-gC-gg0">

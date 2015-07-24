@@ -56,22 +56,9 @@
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
-    
-    if (self.trip.isPrivate) {
-        self.lock.hidden = NO;
-    }
-    else {
-        self.lock.hidden = YES;
-    }
-    self.title = self.trip.name;
-    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
-    self.startDate.text = self.trip.startDate;
-    
-    self.endDate.text = @"";
-    if (![self.trip.startDate isEqualToString:self.trip.endDate]){
-        self.endDate.text = self.trip.endDate;
-    }
-    
+
+    [self refreshTripDataViews];
+
     [[self navigationItem] setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@""
                                                                                  style:UIBarButtonItemStylePlain
                                                                                 target:nil
@@ -89,6 +76,8 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
+    [self refreshTripDataViews];
+
     // Add observer for when uploading is finished.
     // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
     
@@ -97,6 +86,24 @@
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
     
+}
+
+- (void)refreshTripDataViews {
+    // Putting all this here so that if the trip is Edited then the UI will refresh
+    self.title = self.trip.name;
+    if (self.trip.isPrivate) {
+        self.lock.hidden = NO;
+    }
+    else {
+        self.lock.hidden = YES;
+    }
+    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
+    self.startDate.text = self.trip.startDate;
+    
+    self.endDate.text = @"";
+    if (![self.trip.startDate isEqualToString:self.trip.endDate]){
+        self.endDate.text = self.trip.endDate;
+    }
 }
 
 #pragma mark - Queries
