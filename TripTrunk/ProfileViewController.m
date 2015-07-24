@@ -132,9 +132,6 @@
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    
-    //FIXME: Matt, im kind of confused. I believe the method I'm doing below saves the image in Parse as Photo as opposed to saving it as the user's profile image property in the User class. How are you saving the profile image currenty? I'm assuming you're using something close to this right? Also, should we use a super low quality thumbnail for profile picture? Yes right?
-    
     self.profilePicImageView.image = info[UIImagePickerControllerOriginalImage];
     
     // set the reference URL now so we have it for uploading the raw image data

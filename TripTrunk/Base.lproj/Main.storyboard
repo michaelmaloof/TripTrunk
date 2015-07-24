@@ -542,7 +542,7 @@
         <!--Home Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeMapViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeMapView" id="BYZ-38-t0r" customClass="HomeMapViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -2575,8 +2575,8 @@
         <image name="searchGlass" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Con-SE-XM1"/>
         <segue reference="5P2-gM-OYf"/>
+        <segue reference="tGf-tl-EVA"/>
         <segue reference="JSU-Dg-jAI"/>
     </inferredMetricsTieBreakers>
 </document>
