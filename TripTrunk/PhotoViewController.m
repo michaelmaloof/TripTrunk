@@ -17,14 +17,17 @@
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
-@property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIButton *addComment;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property NSArray *commentsArray;
-@property BOOL viewMoved;
+@property (weak, nonatomic) IBOutlet UIButton *addComment;
+@property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIButton *like;
+
+@property NSMutableArray *commentActivities;
+@property NSMutableArray *likeActivities;
+@property BOOL isLikedByCurrentUser;
+@property BOOL viewMoved;
 
 @end
 
@@ -53,11 +56,9 @@
     }
     [self.textView setDelegate:self];
     
-    NSString *likeString = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-    [self.like setTitle:likeString forState:UIControlStateNormal];
-    
-    self.commentsArray = [[NSArray alloc]init];
-
+    self.commentActivities = [[NSMutableArray alloc] init];
+    self.likeActivities = [[NSMutableArray alloc] init];
+    [self.like setTitle:[NSString stringWithFormat:@"%ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
 
     // Add swipe gestures
     UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
@@ -74,7 +75,7 @@
     // Load initial data (photo and comments)
     [self loadImageForPhoto:self.photo];
     
-    [self queryParseMethod];
+    [self refreshPhotoActivities];
 
 }
 
@@ -117,8 +118,8 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-        [self.like setTitle:string forState:UIControlStateNormal];
+        [self.like setTitle:@"0" forState:UIControlStateNormal];
+
         
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = NO;
@@ -126,7 +127,7 @@
             self.delete.hidden = YES;
         }
 
-        [self queryParseMethod];
+        [self refreshPhotoActivities];
     }
 }
 
@@ -143,16 +144,15 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-        [self.like setTitle:string forState:UIControlStateNormal];
-        
+        [self.like setTitle:@"0" forState:UIControlStateNormal];
+
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = NO;
         } else {
             self.delete.hidden = YES;
         }
         
-        [self queryParseMethod];
+        [self refreshPhotoActivities];
 
     }
 }
@@ -193,7 +193,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.commentsArray.count +1;
+    return self.commentActivities.count +1;
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -209,7 +209,7 @@
     
     else if (indexPath.row > 0) {
     
-        PFObject *commentActivity = [self.commentsArray objectAtIndex:indexPath.row -1];
+        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
         
         cell.textLabel.text = [[commentActivity valueForKey:@"fromUser"] valueForKey:@"username"];
         cell.detailTextLabel.text = [commentActivity valueForKey:@"content"];
@@ -259,31 +259,62 @@
         {
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"No internet connection.";
+            alertView.title = @"Check internet connection.";
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
             [alertView addButtonWithTitle:@"OK"];
             [alertView show];
         }
         else {
-            [self queryParseMethod];
+            [self refreshPhotoActivities];
         }
     }];
 }
 
--(void)queryParseMethod {
+-(void)refreshPhotoActivities {
+    
+    self.likeActivities = [[NSMutableArray alloc] init];
+    self.commentActivities = [[NSMutableArray alloc] init];
+    
+    self.isLikedByCurrentUser = NO;
 
-    [SocialUtility getCommentsForPhoto:self.photo block:^(NSArray *objects, NSError *error) {
-        if(!error)
-        {
-            self.commentsArray = [NSArray arrayWithArray:objects];
+    // Get Activities for Photo
+    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in objects) {
+                // Separate the Activities into Likes and Comments
+                if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
+                    [self.likeActivities addObject: activity];
+                }
+                else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
+                    [self.commentActivities addObject:activity];
+                }
+                
+                if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                    if ([[activity objectForKey:@"type"] isEqualToString:@"like"]) {
+                        self.isLikedByCurrentUser = YES;
+                    }
+                }
+            }
             [self.tableView reloadData];
             self.textView.text = nil;
             
-        }else
-        {
-            NSLog(@"Error: %@",error);
-        }
+            // Update number of likes
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.isLikedByCurrentUser) {
+                    self.like.tag = 1;
+                    [self.like setTitle:[NSString stringWithFormat:@"Liked: %ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
+                }
+                else {
+                    self.like.tag = 0;
+                    [self.like setTitle:[NSString stringWithFormat:@"Likes: %ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
+                }
+            });
 
+        }
+        else {
+            NSLog(@"Error loading photo Activities: %@", error);
+        }
     }];
 }
 
@@ -359,49 +390,39 @@
 
 - (IBAction)onLikeTapped:(id)sender {
     
-    NSMutableArray *likesArray = [[NSMutableArray alloc]init];
-    NSString *objectID = [PFUser currentUser].objectId;
-    
+    self.like.enabled = NO;
+
+    // Like Photo
     if (self.like.tag == 0)
     {
-        self.like.tag = 1;
-        self.photo.favorite = YES;
-        self.photo.likes ++;
-        [likesArray addObject:objectID];
-        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            self.like.enabled = YES;
+            if (succeeded) {
+                self.like.tag = 1;
+                self.photo.favorite = YES;
+                
+                [self refreshPhotoActivities];
+            }
+            else {
+                NSLog(@"Error liking photo: %@", error);
+            }
         }];
-        NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-        [self.like setTitle:string forState:UIControlStateNormal];
-
     }
-
-    else if (self.like.tag == 1){
-    
-    self.like.tag = 0;
-    self.photo.likes --;
-    if (self.photo.likes == 0)
-    {
-        self.photo.favorite = NO;
-    }
-    
-    [likesArray removeObject:objectID];
-    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-        {
+    // Unlike Photo
+    else if (self.like.tag == 1) {
+        
+        [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            self.like.enabled = YES;
+            
+            if (succeeded) {
+                self.like.tag = 0;
+                self.photo.favorite = NO;
+                [self refreshPhotoActivities];
+            }
         }];
-    NSString *string = [NSString stringWithFormat:@"%ld", (long)self.photo.likes];
-    [self.like setTitle:string forState:UIControlStateNormal];
-    
+    }
 }
-
-
-}
-
-
-
-
-
-
-
 
 @end
 

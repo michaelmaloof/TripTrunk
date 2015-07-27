@@ -258,8 +258,8 @@
         }
     }
     // it's a Comment on Photo notification, so display the Photo View
-    else if ([[payload objectForKey:@"t"] isEqualToString:@"c"]) {
-        NSLog(@"GOT PHOTO COMMENT PUSH NOTIFICATION: %@", payload);
+    else if ([[payload objectForKey:@"t"] isEqualToString:@"c"] || [[payload objectForKey:@"t"] isEqualToString:@"l"]) {
+        NSLog(@"GOT PHOTO COMMENT OR LIKE PUSH NOTIFICATION: %@", payload);
 
         // Push to the referenced Photo
         NSString *photoId = [payload objectForKey:@"pid"];

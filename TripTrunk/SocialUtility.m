@@ -221,5 +221,81 @@
     }];
 }
 
++ (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryExistingLikes whereKey:@"photo" equalTo:photo];
+    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
+    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+        }
+        
+        // proceed to creating new like
+        PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
+        [likeActivity setObject:@"like" forKey:@"type"];
+        [likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+        [likeActivity setObject:photo.user forKey:@"toUser"];
+        [likeActivity setObject:photo forKey:@"photo"];
+        
+        PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [likeACL setPublicReadAccess:YES];
+        [likeACL setWriteAccess:YES forUser:photo.user];
+        likeActivity.ACL = likeACL;
+        
+        [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (completionBlock) {
+                completionBlock(succeeded,error);
+            }
+        }];
+    }];
+
+}
+
++ (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryExistingLikes whereKey:@"photo" equalTo:photo];
+    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
+    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+            
+            if (completionBlock) {
+                completionBlock(YES,nil);
+            }
+        }
+        else if (completionBlock) {
+            completionBlock(NO,error);
+        }
+    }];
+}
+
++ (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
+{
+    PFQuery *queryLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryLikes whereKey:@"photo" equalTo:photo];
+    [queryLikes whereKey:@"type" equalTo:@"like"];
+    
+    PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKey:@"photo" equalTo:photo];
+    [queryComments whereKey:@"type" equalTo:@"comment"];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:queryLikes,queryComments,nil]];
+    [query setCachePolicy:cachePolicy];
+    [query includeKey:@"fromUser"];
+    [query includeKey:@"photo"];
+    
+    return query;
+}
+
 
 @end
