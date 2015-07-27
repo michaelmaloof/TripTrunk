@@ -13,17 +13,21 @@
 #import "Comment.h"
 #import "TTUtility.h"
 #import "SocialUtility.h"
+#import "ActivityListViewController.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
+// IBOutlets
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIButton *addComment;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
-@property (weak, nonatomic) IBOutlet UIButton *like;
+@property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
+@property (strong, nonatomic) IBOutlet UIButton *likeButton;
 
+// Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
 @property BOOL isLikedByCurrentUser;
@@ -58,7 +62,7 @@
     
     self.commentActivities = [[NSMutableArray alloc] init];
     self.likeActivities = [[NSMutableArray alloc] init];
-    [self.like setTitle:[NSString stringWithFormat:@"%ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
 
     // Add swipe gestures
     UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
@@ -79,6 +83,8 @@
 
 }
 
+#pragma mark - Photo Data
+
 - (void)loadImageForPhoto: (Photo *)photo {
     
     NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
@@ -91,17 +97,49 @@
                                success:nil failure:nil];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
-    if ([text length] == 1 && resultRange.location != NSNotFound) {
-        [textView resignFirstResponder];
-        [self onAddCommentsTapped:self];
-        return NO;
-    }
+-(void)refreshPhotoActivities {
     
-    return YES;
+    self.likeActivities = [[NSMutableArray alloc] init];
+    self.commentActivities = [[NSMutableArray alloc] init];
+    
+    self.isLikedByCurrentUser = NO;
+    
+    // Get Activities for Photo
+    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in objects) {
+                // Separate the Activities into Likes and Comments
+                if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
+                    [self.likeActivities addObject: activity];
+                }
+                else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
+                    [self.commentActivities addObject:activity];
+                }
+                
+                if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                    if ([[activity objectForKey:@"type"] isEqualToString:@"like"]) {
+                        self.isLikedByCurrentUser = YES;
+                    }
+                }
+            }
+            [self.tableView reloadData];
+            self.textView.text = nil;
+            
+            // Update number of likes
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.likeButton setSelected:self.isLikedByCurrentUser];
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+            });
+            
+        }
+        else {
+            NSLog(@"Error loading photo Activities: %@", error);
+        }
+    }];
 }
 
+#pragma mark - Gestures
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
@@ -118,7 +156,7 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        [self.like setTitle:@"0" forState:UIControlStateNormal];
+        [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
 
         
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
@@ -144,7 +182,7 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        [self.like setTitle:@"0" forState:UIControlStateNormal];
+        [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
 
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = NO;
@@ -157,6 +195,7 @@
     }
 }
 
+#pragma mark - Button Actions
 
 - (IBAction)onSavePhotoTapped:(id)sender {
     
@@ -176,7 +215,8 @@
     self.tableView.hidden = !self.tableView.hidden;
     self.addComment.hidden = !self.addComment.hidden;
     self.textView.hidden = !self.textView.hidden;
-    self.like.hidden = !self.like.hidden;
+    self.likeCountButton.hidden = !self.likeCountButton.hidden;
+    self.likeButton.hidden = !self.likeButton.hidden;
     
     if ([self.comments.titleLabel.text isEqualToString:@"Comments"]){
         [self.comments setTitle:@"Dismiss" forState:UIControlStateNormal];
@@ -191,168 +231,45 @@
 
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.commentActivities.count +1;
+- (IBAction)likeCountButtonPressed:(id)sender {
+    
+    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
+- (IBAction)likeButtonPressed:(id)sender {
     
-    if (indexPath.row == 0) {
-        cell.textLabel.text = self.photo.userName;
-        cell.detailTextLabel.text = self.photo.caption;
-        if (self.photo.caption == nil){
-            cell.hidden = YES;
-        }
-    }
+    self.likeButton.enabled = NO;
     
-    else if (indexPath.row > 0) {
-    
-        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
-        
-        cell.textLabel.text = [[commentActivity valueForKey:@"fromUser"] valueForKey:@"username"];
-        cell.detailTextLabel.text = [commentActivity valueForKey:@"content"];
-    }
-
-    
-    return  cell;
-}
-- (IBAction)onAddCommentsTapped:(id)sender {
-    
-    if(![self.textView.text isEqualToString:@""])
+    // Like Photo
+    if (!self.likeButton.selected)
     {
-        [self parseComment];
-        [self moveUpTextBox];
-        
-    }
-}
-
-
--(void)moveUpTextBox{
-    
-    if (self.viewMoved == YES) {
-            [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
-        self.comments.hidden = NO;
-        self.addComment.hidden = NO;
-        [UIView commitAnimations];
-        self.viewMoved = NO;
-        [self.textView endEditing:YES];
-
-    }
-
-}
-
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self textViewDidEndEditing:self.textView];
-
-}
-
--(void)parseComment {
-    
-    [SocialUtility addComment:self.textView.text forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-        if(error)
-        {
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = @"Check internet connection.";
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"OK"];
-            [alertView show];
-        }
-        else {
-            [self refreshPhotoActivities];
-        }
-    }];
-}
-
--(void)refreshPhotoActivities {
-    
-    self.likeActivities = [[NSMutableArray alloc] init];
-    self.commentActivities = [[NSMutableArray alloc] init];
-    
-    self.isLikedByCurrentUser = NO;
-
-    // Get Activities for Photo
-    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *activity in objects) {
-                // Separate the Activities into Likes and Comments
-                if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
-                    [self.likeActivities addObject: activity];
-                }
-                else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
-                    [self.commentActivities addObject:activity];
-                }
-                
-                if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
-                    if ([[activity objectForKey:@"type"] isEqualToString:@"like"]) {
-                        self.isLikedByCurrentUser = YES;
-                    }
-                }
+        [self.likeButton setSelected:YES];
+        [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            self.likeButton.enabled = YES;
+            if (succeeded) {
+                self.photo.favorite = YES;
+                [self refreshPhotoActivities];
             }
-            [self.tableView reloadData];
-            self.textView.text = nil;
+            else {
+                NSLog(@"Error liking photo: %@", error);
+            }
+        }];
+    }
+    // Unlike Photo
+    else if (self.likeButton.selected) {
+        [self.likeButton setSelected:NO];
+        [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            self.likeButton.enabled = YES;
             
-            // Update number of likes
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.isLikedByCurrentUser) {
-                    self.like.tag = 1;
-                    [self.like setTitle:[NSString stringWithFormat:@"Liked: %ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
-                }
-                else {
-                    self.like.tag = 0;
-                    [self.like setTitle:[NSString stringWithFormat:@"Likes: %ld", (long)self.likeActivities.count] forState:UIControlStateNormal];
-                }
-            });
-
-        }
-        else {
-            NSLog(@"Error loading photo Activities: %@", error);
-        }
-    }];
-}
-
--(void)textViewDidBeginEditing:(UITextView *)textView
-{
-    if (textView == self.textView)
-    {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y - 230), self.view.frame.size.width, self.view.frame.size.height);
-        self.comments.hidden = NO;
-        self.addComment.hidden = NO;
-        self.viewMoved = YES;
-        [UIView commitAnimations];
+            if (succeeded) {
+                self.photo.favorite = NO;
+                [self refreshPhotoActivities];
+            }
+        }];
     }
-}
-
-
-
--(void)textViewDidEndEditing:(UITextView *)textView
-{
-    if (textView == self.textView)
-    {
-//        [UIView beginAnimations:nil context:NULL];
-//        [UIView setAnimationDelegate:self];
-//        [UIView setAnimationDuration:0.5];
-//        [UIView setAnimationBeginsFromCurrentState:YES];
-//        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
-//        self.comments.hidden = NO;
-//        self.addComment.hidden = NO;
-//        self.viewMoved = NO;
-//        [UIView commitAnimations];
-        [self.textView endEditing:YES];
-        [self moveUpTextBox];
-
-    }
+    
 }
 
 - (IBAction)onDeleteWasTapped:(id)sender {
@@ -364,7 +281,7 @@
     [alertView addButtonWithTitle:@"Yes"];
     alertView.tag = 0;
     [alertView show];
-
+    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -388,91 +305,121 @@
     }
 }
 
-- (IBAction)onLikeTapped:(id)sender {
-    
-    self.like.enabled = NO;
+#pragma mark - UITableView Data Source
 
-    // Like Photo
-    if (self.like.tag == 0)
-    {
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.commentActivities.count +1;
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
+    
+    if (indexPath.row == 0) {
+        cell.textLabel.text = self.photo.userName;
+        cell.detailTextLabel.text = self.photo.caption;
+        if (self.photo.caption == nil){
+            cell.hidden = YES;
+        }
+    }
+    
+    else if (indexPath.row > 0) {
+    
+        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
         
-        [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.like.enabled = YES;
-            if (succeeded) {
-                self.like.tag = 1;
-                self.photo.favorite = YES;
-                
-                [self refreshPhotoActivities];
+        cell.textLabel.text = [[commentActivity valueForKey:@"fromUser"] valueForKey:@"username"];
+        cell.detailTextLabel.text = [commentActivity valueForKey:@"content"];
+    }
+
+    
+    return  cell;
+}
+
+#pragma mark - Comments View
+
+- (IBAction)onAddCommentsTapped:(id)sender {
+    
+    if(![self.textView.text isEqualToString:@""])
+    {
+        [SocialUtility addComment:self.textView.text forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            if(error)
+            {
+                UIAlertView *alertView = [[UIAlertView alloc] init];
+                alertView.delegate = self;
+                alertView.title = @"Check internet connection.";
+                alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                [alertView addButtonWithTitle:@"OK"];
+                [alertView show];
             }
             else {
-                NSLog(@"Error liking photo: %@", error);
-            }
-        }];
-    }
-    // Unlike Photo
-    else if (self.like.tag == 1) {
-        
-        [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.like.enabled = YES;
-            
-            if (succeeded) {
-                self.like.tag = 0;
-                self.photo.favorite = NO;
                 [self refreshPhotoActivities];
             }
         }];
+        
+        [self moveUpTextBox];
+        
+    }
+}
+
+-(void)moveUpTextBox{
+    
+    if (self.viewMoved == YES) {
+            [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
+        self.comments.hidden = NO;
+        self.addComment.hidden = NO;
+        [UIView commitAnimations];
+        self.viewMoved = NO;
+        [self.textView endEditing:YES];
+
+    }
+
+}
+
+#pragma mark - Text View Editing
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
+    if ([text length] == 1 && resultRange.location != NSNotFound) {
+        [textView resignFirstResponder];
+        [self onAddCommentsTapped:self];
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self textViewDidEndEditing:self.textView];
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if (textView == self.textView)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y - 230), self.view.frame.size.width, self.view.frame.size.height);
+        self.comments.hidden = NO;
+        self.addComment.hidden = NO;
+        self.viewMoved = YES;
+        [UIView commitAnimations];
+    }
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (textView == self.textView)
+    {
+        [self.textView endEditing:YES];
+        [self moveUpTextBox];
     }
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
