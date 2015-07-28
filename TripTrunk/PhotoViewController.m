@@ -352,16 +352,19 @@
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-       
+        
         [SocialUtility deleteComment:[self.commentActivities objectAtIndex:indexPath.row - 1] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            
             if (error) {
-                NSLog(@"Error deleting comment: %@", error) ;
+                NSLog(@"Error deleting comment: %@", error);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [alert show];
+                    [self refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
+                });
             }
             else {
                 NSLog(@"Comment Deleted");
             }
-            
         }];
         
         // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.

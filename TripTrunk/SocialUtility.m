@@ -105,16 +105,10 @@
 {
     // If the user isn't currentUser AND the user isn't the trip creator, don't let them remove people.
     // They can remove themselves no matter what, but only the creator can remove others.
-    if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[user objectId] isEqualToString:[trip.creator objectId]]) {
+    if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[[PFUser currentUser] objectId] isEqualToString:[trip.creator objectId]]) {
         return;
     }
-    
-    PFObject *removeFromTripActivity = [PFObject objectWithClassName:@"Activity"];
-    [removeFromTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-    [removeFromTripActivity setObject:user forKey:@"toUser"];
-    [removeFromTripActivity setObject:@"addToTrip" forKey:@"type"];
-    [removeFromTripActivity setObject:trip forKey:@"trip"];
-    
+
     PFQuery *removeFromTripQuery = [PFQuery queryWithClassName:@"Activity"];
     [removeFromTripQuery whereKey:@"toUser" equalTo:user];
     [removeFromTripQuery whereKey:@"type" equalTo:@"addToTrip"];
