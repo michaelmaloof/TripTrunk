@@ -96,6 +96,16 @@
 + (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
 
 /**
+ *  Deletes a Comment Activity object on the given photo
+ *
+ *  @param commentActivity Activity for the comment that needs to be deleted
+ *  @param photo           Photo containing the Activity
+ *  @param completionBlock completion block with Success or Error
+ */
++ (void)deleteComment:(PFObject *)commentActivity forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+
+/**
  *  Adds a Like Activity from the current user on the given photo
  *
  *  @param photo           Photo that the user likes

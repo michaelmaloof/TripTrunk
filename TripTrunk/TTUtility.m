@@ -141,6 +141,11 @@ CLCloudinary *cloudinary;
 
               photo.imageUrl = url;
               
+              PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
+              [photoACL setPublicReadAccess:YES];
+              [photoACL setWriteAccess:YES forUser:photo.user];
+              photo.ACL = photoACL;
+              
               [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                   
                   if(error) {

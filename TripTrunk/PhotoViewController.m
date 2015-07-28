@@ -336,6 +336,44 @@
     return  cell;
 }
 
+#pragma mark - UITableView Delegate
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row > 0) {
+        
+        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
+        // You can delete comments if you're the commenter, photo creator
+        // TODO: or trip creator
+        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
+            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+       
+        [SocialUtility deleteComment:[self.commentActivities objectAtIndex:indexPath.row - 1] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            
+            if (error) {
+                NSLog(@"Error deleting comment: %@", error) ;
+            }
+            else {
+                NSLog(@"Comment Deleted");
+            }
+            
+        }];
+        
+        // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
+        [self.commentActivities removeObjectAtIndex:indexPath.row - 1];
+        [tableView reloadData];
+        
+    }
+    else {
+        NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
+    }
+}
+
 #pragma mark - Comments View
 
 - (IBAction)onAddCommentsTapped:(id)sender {

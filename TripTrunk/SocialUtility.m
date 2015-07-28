@@ -193,8 +193,9 @@
     [commentActivity setObject:@"comment" forKey:@"type"];
     [commentActivity setObject:comment forKey:@"content"];
     
-    
+    // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [commentACL setWriteAccess:YES forUser:photo.user];
     [commentACL setPublicReadAccess:YES];
     commentActivity.ACL = commentACL;
     
@@ -218,6 +219,13 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
+    }];
+}
+
++ (void)deleteComment:(PFObject *)commentActivity forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    [commentActivity deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        completionBlock(succeeded, error);
     }];
 }
 

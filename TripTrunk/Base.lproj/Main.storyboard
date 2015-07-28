@@ -1630,6 +1630,9 @@
                                 <exclude reference="Azv-Ms-g16"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="BZI-RL-cQO"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
                                 <exclude reference="6K6-Av-aLt"/>
                                 <exclude reference="9F6-xa-xn3"/>
                                 <exclude reference="eM5-dd-VFF"/>
@@ -1649,6 +1652,11 @@
                                 <exclude reference="XYb-Jl-Zld"/>
                                 <exclude reference="pYh-Xm-hXg"/>
                                 <exclude reference="txF-zF-8Ic"/>
+                                <exclude reference="5Ay-Gt-LWp"/>
+                                <exclude reference="IS2-U2-WGB"/>
+                                <exclude reference="XDa-lf-byT"/>
+                                <exclude reference="tOb-Bv-AkR"/>
+                                <exclude reference="xg1-WI-6zO"/>
                                 <exclude reference="4qb-lc-nvi"/>
                                 <exclude reference="9sA-WQ-aAs"/>
                                 <exclude reference="LEQ-eQ-eBV"/>
@@ -1656,14 +1664,6 @@
                                 <exclude reference="bUH-qH-ciH"/>
                                 <exclude reference="c0C-Qg-TMO"/>
                                 <exclude reference="eWq-O1-cg6"/>
-                                <exclude reference="BZI-RL-cQO"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="5Ay-Gt-LWp"/>
-                                <exclude reference="IS2-U2-WGB"/>
-                                <exclude reference="XDa-lf-byT"/>
-                                <exclude reference="tOb-Bv-AkR"/>
-                                <exclude reference="xg1-WI-6zO"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
