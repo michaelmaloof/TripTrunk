@@ -352,6 +352,24 @@
 
 }
 
+- (IBAction)clearButtonPressed:(id)sender {
+    
+    // Initialize the view with no data
+    self.tripNameTextField.text = @"";
+    self.countryTextField.text = @"";
+    self.stateTextField.text= @"";
+    self.cityNameTextField.text = @"";
+    
+    // Set initial date to the field - should be Today's date.
+    self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
+    self.endTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
+    
+    if (!_isEditing) {
+        self.trip = [[Trip alloc] init];
+    }
+
+}
+
 // Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
 // This is mainly so we know if we need to update the Activity models with a new city or not.
 - (BOOL)setTripCityName:(NSString *)cityName
@@ -472,7 +490,7 @@
     }
     
     // If we're editing an existing trip AND we changed the name, we need to update any Photos for this trip to include the new name.
-    if (_isEditing && _needsNameUpdate) {
+    if (_isEditing && (_needsNameUpdate || _needsCityUpdate)) {
         [SocialUtility updatePhotosForTrip:self.trip];
     }
     

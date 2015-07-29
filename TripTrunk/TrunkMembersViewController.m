@@ -261,6 +261,53 @@
     
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == 0) {
+        // You can't remove the trip creator. If they want to leave, they have to delete the trip
+        return NO;
+    }
+    else
+    {
+        // User's can delete themselves, and trip creators can delete anyone.
+        PFUser *user = [_tripMembers objectAtIndex:indexPath.row];
+        if ([user.objectId isEqualToString:[[PFUser currentUser] objectId]]
+            || [[PFUser currentUser].objectId isEqualToString:self.tripCreator.objectId]) {
+            return YES;
+        }
+    }
+    // Otherwise, no deleting
+    return NO;
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        if (indexPath.section > 0) {
+            [SocialUtility removeUser:[_tripMembers objectAtIndex:indexPath.row] fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
+                if (error) {
+                    NSLog(@"Error removing user: %@", error);
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't remove user, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [alert show];
+                        [self loadUsers]; // reload the data so we still show the attempted-to-delete comment
+                    });
+                }
+                else {
+                    NSLog(@"User Deleted");
+                }
+            }];
+            // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
+            [_tripMembers removeObjectAtIndex:indexPath.row];
+            [tableView reloadData];
+        }
+    }
+    else {
+        NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
+    }
+}
+
+
 #pragma mark - UserTableViewCellDelegate
 
 - (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user;

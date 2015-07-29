@@ -105,16 +105,10 @@
 {
     // If the user isn't currentUser AND the user isn't the trip creator, don't let them remove people.
     // They can remove themselves no matter what, but only the creator can remove others.
-    if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[user objectId] isEqualToString:[trip.creator objectId]]) {
+    if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[[PFUser currentUser] objectId] isEqualToString:[trip.creator objectId]]) {
         return;
     }
-    
-    PFObject *removeFromTripActivity = [PFObject objectWithClassName:@"Activity"];
-    [removeFromTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-    [removeFromTripActivity setObject:user forKey:@"toUser"];
-    [removeFromTripActivity setObject:@"addToTrip" forKey:@"type"];
-    [removeFromTripActivity setObject:trip forKey:@"trip"];
-    
+
     PFQuery *removeFromTripQuery = [PFQuery queryWithClassName:@"Activity"];
     [removeFromTripQuery whereKey:@"toUser" equalTo:user];
     [removeFromTripQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -193,8 +187,9 @@
     [commentActivity setObject:@"comment" forKey:@"type"];
     [commentActivity setObject:comment forKey:@"content"];
     
-    
+    // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [commentACL setWriteAccess:YES forUser:photo.user];
     [commentACL setPublicReadAccess:YES];
     commentActivity.ACL = commentACL;
     
@@ -219,6 +214,89 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
     }];
+}
+
++ (void)deleteComment:(PFObject *)commentActivity forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    [commentActivity deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        completionBlock(succeeded, error);
+    }];
+}
+
++ (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryExistingLikes whereKey:@"photo" equalTo:photo];
+    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
+    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+        }
+        
+        // proceed to creating new like
+        PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
+        [likeActivity setObject:@"like" forKey:@"type"];
+        [likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+        [likeActivity setObject:photo.user forKey:@"toUser"];
+        [likeActivity setObject:photo forKey:@"photo"];
+        
+        PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [likeACL setPublicReadAccess:YES];
+        [likeACL setWriteAccess:YES forUser:photo.user];
+        likeActivity.ACL = likeACL;
+        
+        [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (completionBlock) {
+                completionBlock(succeeded,error);
+            }
+        }];
+    }];
+
+}
+
++ (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryExistingLikes whereKey:@"photo" equalTo:photo];
+    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
+    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+            
+            if (completionBlock) {
+                completionBlock(YES,nil);
+            }
+        }
+        else if (completionBlock) {
+            completionBlock(NO,error);
+        }
+    }];
+}
+
++ (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
+{
+    PFQuery *queryLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryLikes whereKey:@"photo" equalTo:photo];
+    [queryLikes whereKey:@"type" equalTo:@"like"];
+    
+    PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKey:@"photo" equalTo:photo];
+    [queryComments whereKey:@"type" equalTo:@"comment"];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:queryLikes,queryComments,nil]];
+    [query setCachePolicy:cachePolicy];
+    [query includeKey:@"fromUser"];
+    [query includeKey:@"photo"];
+    
+    return query;
 }
 
 

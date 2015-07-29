@@ -68,7 +68,7 @@
     if (self.user == nil){
         self.title = @"TripTrunk";
     } else {
-        self.title = self.user.username;
+        self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
     }
     
     self.tripsToCheck = [[NSMutableArray alloc]init];
@@ -163,7 +163,7 @@
             if (self.user == nil){
                 self.title = @"TripTrunk";
             } else {
-                self.title = self.user.username;
+                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
             [ParseErrorHandlingController handleError:error];
         }
@@ -201,8 +201,6 @@
         }
         
     }];
-
-
 }
 
 
@@ -229,8 +227,9 @@
             if (self.user == nil){
                 self.title = @"TripTrunk";
             } else {
-                self.title = self.user.username;
-            }            [ParseErrorHandlingController handleError:error];
+                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
+            }
+            [ParseErrorHandlingController handleError:error];
         }
         else
         {
@@ -292,7 +291,7 @@
                     if (self.user == nil){
                         self.title = @"TripTrunk";
                     } else {
-                        self.title = self.user.username;
+                        self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
                     }
                     [ParseErrorHandlingController handleError:error];
 
@@ -397,7 +396,7 @@
             if (self.user == nil){
                 self.title = @"TripTrunk";
             } else {
-                self.title = self.user.username;
+                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
         }
 

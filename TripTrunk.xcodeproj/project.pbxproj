@@ -65,6 +65,7 @@
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
 		C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
+		C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C910B1931B66B97700788BE0 /* ActivityListViewController.m */; };
 		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
@@ -190,6 +191,8 @@
 		C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
 		C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
+		C910B1921B66B97700788BE0 /* ActivityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityListViewController.h; sourceTree = "<group>"; };
+		C910B1931B66B97700788BE0 /* ActivityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityListViewController.m; sourceTree = "<group>"; };
 		C9525A331B251FC100185713 /* libCloudinary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCloudinary.a; sourceTree = "<group>"; };
 		C9525A371B251FD400185713 /* CLCloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLCloudinary.h; sourceTree = "<group>"; };
 		C9525A381B251FD400185713 /* CLEagerTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLEagerTransformation.h; sourceTree = "<group>"; };
@@ -301,6 +304,8 @@
 				C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */,
 				220408EF1AF1C1EA009DB060 /* PhotoViewController.h */,
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
+				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
+				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
 				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
@@ -660,6 +665,7 @@
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
+				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,

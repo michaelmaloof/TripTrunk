@@ -95,5 +95,42 @@
  */
 + (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
 
+/**
+ *  Deletes a Comment Activity object on the given photo
+ *
+ *  @param commentActivity Activity for the comment that needs to be deleted
+ *  @param photo           Photo containing the Activity
+ *  @param completionBlock completion block with Success or Error
+ */
++ (void)deleteComment:(PFObject *)commentActivity forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+
+/**
+ *  Adds a Like Activity from the current user on the given photo
+ *
+ *  @param photo           Photo that the user likes
+ *  @param completionBlock completion block with success or error
+ */
++ (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  Unlikes the given photo if the user already liked it
+ *
+ *  @param photo           Photo the user no longer likes
+ *  @param completionBlock completion block with success or error
+ */
++ (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  Creates a PFQuery for all activities on the given photo
+ *
+ *  @param photo       Photo to get activities for
+ *  @param cachePolicy should we query the cache or just get from the internet?
+ *
+ *  @return PFQuery ready to execute
+ */
++ (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
+
+
 
 @end

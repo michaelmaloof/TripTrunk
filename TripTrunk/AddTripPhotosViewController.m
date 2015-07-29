@@ -238,16 +238,17 @@
              }
              else {
                  NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
-                 // Pop to the root view controller of THIS tab - which is the initial trip creation screen
                  dispatch_async(dispatch_get_main_queue(), ^{
-//                     [self.navigationController popToRootViewControllerAnimated:NO];
-                     // Now pop to the root view of the other map view controller and set that as the selected tab.
                      
-                     // TODO: this doesn't work properly. It doesn't actually pop both tabs back to their roots.
-                     UIViewController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
-                     [target.navigationController popToRootViewControllerAnimated:YES];
+                     // Now pop to the root view of the other map view controller and set that as the selected tab.
+                     UINavigationController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
+                     [target popToRootViewControllerAnimated:YES];
                      [self.tabBarController setSelectedIndex:0];
 
+                     // Pop to the root view controller of the add Trip tab as well
+                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:1];
+                     [triptab popToRootViewControllerAnimated:NO];
+                     
                      
                  });
                  

@@ -12,6 +12,7 @@
 #import "FriendsListViewController.h"
 #import "SocialUtility.h"
 #import "TTUtility.h"
+#import "HomeMapViewController.h"
 
 @interface UserProfileViewController ()
 
@@ -164,6 +165,13 @@
         }];
     }
     
+}
+
+- (IBAction)mapButtonPressed:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+    vc.user = self.user;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)setProfilePic:(NSString *)urlString {
