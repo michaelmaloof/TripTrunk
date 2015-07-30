@@ -13,6 +13,7 @@
 #import "Comment.h"
 #import "TTUtility.h"
 #import "SocialUtility.h"
+#import "UserProfileViewController.h"
 #import "ActivityListViewController.h"
 
 
@@ -306,6 +307,9 @@
 }
 
 #pragma mark - UITableView Data Source
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 100;
+}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -337,6 +341,28 @@
 }
 
 #pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFUser *user;
+    
+    if (indexPath.row == 0) {
+        user = self.photo.user;
+    }
+    else if (indexPath.row > 0) {
+        
+        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
+        
+        user = [commentActivity valueForKey:@"fromUser"];
+    }
+    
+    // If there's a username, then we have the full object populated
+    if (user) {
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row > 0) {
         

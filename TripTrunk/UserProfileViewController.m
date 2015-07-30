@@ -33,12 +33,27 @@
     return self;
 }
 
+- (id)initWithUserId:(NSString *)userId;
+{
+    self = [super initWithNibName:@"ProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    if (self) {
+        _user = [PFUser user];
+        [_user setObjectId:userId];
+;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
+    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
+    [_user fetchIfNeeded];
+    
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:_user[@"username"]];
     
