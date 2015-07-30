@@ -299,5 +299,76 @@
     return query;
 }
 
+//+ (void)addToTripActivities:(PFUser *)user forCity:(NSString*)city  {
+//    
+//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//    [query whereKey:@"toUser" equalTo:user];
+//    [query whereKey:@"type" equalTo:@"addToTrip"];
+//    [query includeKey:@"trip"];
+//    
+//    if (city && ![city isEqualToString: @""]) {
+//        [query whereKey:@"content" equalTo:city];
+//    }
+//    
+//}
+
++ (void)followingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;{
+    NSMutableArray *friends = [[NSMutableArray alloc] init];
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"fromUser" equalTo:user];
+    [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    [followingQuery includeKey:@"toUser"];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }
+        else if (!error)
+        {
+            // Map the activity users into the friends array
+            for (PFObject *activity in objects)
+            {
+                PFUser *user = activity[@"toUser"];
+                [friends addObject:user];
+            }
+            completionBlock(friends, error);
+        }
+        
+    }];
+}
+
++ (void)followers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
+{
+    NSMutableArray *friends = [[NSMutableArray alloc] init];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"type" equalTo:@"follow"];
+    [query whereKeyExists:@"fromUser"];
+    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    [query includeKey:@"fromUser"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }
+        else if (!error)
+        {
+            // Map the activity users into the friends array
+            for (PFObject *activity in objects)
+            {
+                PFUser *user = activity[@"fromUser"];
+                NSLog(@"name: %@", user.username);
+                [friends addObject:user];
+            }
+            completionBlock(friends, error);
+        }
+        
+    }];
+}
 
 @end

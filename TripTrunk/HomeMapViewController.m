@@ -12,6 +12,7 @@
 #import "Trip.h"
 #import "TrunkListViewController.h"
 #import "TTUtility.h"
+#import "SocialUtility.h"
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 
@@ -143,13 +144,13 @@
         self.loadedOnce = YES;
     }
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:user]; 
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery includeKey:@"toUser"];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query includeKey:@"trip"];
+    [query includeKey:@"toUser"];
     
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         if (self.loadedOnce == NO)
         {
@@ -208,13 +209,14 @@
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
 
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" containedIn:self.friends];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery includeKey:@"toUser"];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" containedIn:self.friends];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query includeKey:@"trip"];
+    [query includeKey:@"toUser"];
 
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 
         if (self.loadedOnce == NO)
         {
@@ -275,46 +277,28 @@
     }
         self.friends = [[NSMutableArray alloc]init];
         [self.friends addObject:[PFUser currentUser]];
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-        [followingQuery whereKey:@"type" equalTo:@"follow"];
-        [followingQuery includeKey:@"toUser"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (self.loadedOnce == NO){
+            self.title = @"Loading Trunks...";
+            self.loadedOnce = YES;
+        }
+
+        if (!error) {
+            [self.friends addObjectsFromArray:users];
             
-            if (self.loadedOnce == NO){
-                self.title = @"Loading Trunks...";
-                self.loadedOnce = YES;
+            [self queryForTrunks];
+        }
+        else {
+            if (self.user == nil){
+                self.title = @"TripTrunk";
+            } else {
+                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
-            
-                if (error)
-                {
-                    if (self.user == nil){
-                        self.title = @"TripTrunk";
-                    } else {
-                        self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
-                    }
-                    [ParseErrorHandlingController handleError:error];
+            [ParseErrorHandlingController handleError:error];
 
-                } else if (objects.count == 0) {
-                    [self queryForTrunks];
-
-                }
-                else if (!error)
-                {
-                    int count = 0;
-                    for (PFObject *activity in objects)
-                    {
-                        PFUser *user = activity[@"toUser"];
-                        [self.friends addObject:user];
-                        count += 1;
-                        
-                        if(count == objects.count)
-                        {
-                            [self queryForTrunks];
-                        }
-                    }
-                }
-        }];
+        }
+    }];
 }
 
 - (IBAction)zoomOut:(id)sender {

@@ -131,6 +131,21 @@
  */
 + (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
 
+/**
+ *  Gets the list of users that the given user follows
+ *
+ *  @param user            User of which we want their following list
+ *  @param completionBlock completion block with users array or error
+ */
++ (void)followingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
+
+/**
+ *  Gets the list of users that follow a given user
+ *
+ *  @param user            User to find the followers of
+ *  @param completionBlock completion block with users array or error
+ */
++ (void)followers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
 
 
 @end
