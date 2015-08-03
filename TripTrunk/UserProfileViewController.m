@@ -134,8 +134,9 @@
     
     [PFUser logOut];
     
-    // This pushes the user back to the map view, which should then show the loginview
-    [self.navigationController popViewControllerAnimated:YES];
+    // This pushes the user back to the map view, on the map tab, which should then show the loginview
+    [[[self.tabBarController viewControllers] objectAtIndex:0] popToRootViewControllerAnimated:YES];
+    [self.tabBarController setSelectedIndex:0];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
 }
