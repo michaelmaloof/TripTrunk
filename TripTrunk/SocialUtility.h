@@ -132,6 +132,15 @@
 + (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
 
 /**
+ *  Gets the following status of one user to another
+ *
+ *  @param fromUser        User doing the following
+ *  @param toUser          User to check if the other user follows
+ *  @param completionBlock BOOL for following status or Error
+ */
++ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(BOOL isFollowing, NSError *error))completionBlock;
+
+/**
  *  Gets the list of users that the given user follows
  *
  *  @param user            User of which we want their following list

@@ -80,6 +80,7 @@
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
 		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
+		C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F0D66A1B73D15900957F59 /* TTCache.m */; };
 		C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */; };
 		C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F6B4F71B5575E8003BD4D5 /* UIColor+HexColors.m */; };
 		C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F9177B1B4ECFDC00AE8953 /* MSFloatingProgressView.m */; };
@@ -218,6 +219,8 @@
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextField.h; sourceTree = "<group>"; };
 		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
+		C9F0D6691B73D15900957F59 /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
+		C9F0D66A1B73D15900957F59 /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
 		C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo134.png; path = Images.xcassets/photo134.imageset/photo134.png; sourceTree = "<group>"; };
 		C9F6B4F61B5575E8003BD4D5 /* UIColor+HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColors.h"; sourceTree = "<group>"; };
 		C9F6B4F71B5575E8003BD4D5 /* UIColor+HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColors.m"; sourceTree = "<group>"; };
@@ -391,6 +394,8 @@
 				C9C7299F1B0248D900BA68D2 /* SocialUtility.m */,
 				C9525A3C1B25218800185713 /* TTUtility.h */,
 				C9525A3D1B25218800185713 /* TTUtility.m */,
+				C9F0D6691B73D15900957F59 /* TTCache.h */,
+				C9F0D66A1B73D15900957F59 /* TTCache.m */,
 				C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */,
 				C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
@@ -657,6 +662,7 @@
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
+				C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */,
 				C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */,
 				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,

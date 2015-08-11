@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
 #import "ActivityListViewController.h"
+#import "TTCache.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
@@ -124,6 +125,11 @@
                     }
                 }
             }
+            
+            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
+            
+            //TODO: update cached photo attributes, i.e. likers, commenters, etc.
+            
             [self.tableView reloadData];
             self.textView.text = nil;
             
@@ -246,6 +252,8 @@
     // Like Photo
     if (!self.likeButton.selected)
     {
+        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
+        
         [self.likeButton setSelected:YES];
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
@@ -260,6 +268,9 @@
     }
     // Unlike Photo
     else if (self.likeButton.selected) {
+        
+        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
+        
         [self.likeButton setSelected:NO];
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
@@ -270,6 +281,8 @@
             }
         }];
     }
+    
+    [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
     
 }
 

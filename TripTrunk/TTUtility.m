@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking/AFNetworking.h"
 #import "MSFloatingProgressView.h"
+#import "TTCache.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
@@ -152,6 +153,9 @@ CLCloudinary *cloudinary;
                       NSLog(@"error saving photo to parse: %@", error);
                   }
                   else {
+                      // Add photo to the cache
+                      [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                      
                       NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];

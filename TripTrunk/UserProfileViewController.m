@@ -12,6 +12,7 @@
 #import "FriendsListViewController.h"
 #import "SocialUtility.h"
 #import "TTUtility.h"
+#import "TTCache.h"
 #import "HomeMapViewController.h"
 
 @interface UserProfileViewController ()
@@ -73,34 +74,47 @@
         [self.followButton setHidden:YES];
     }
     else {
-        [self.followButton setHidden:NO];
-    
         // Refresh the following status of this user
         
-        [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-            if (!error) {
-                // If we have anything in Objects, then we're following the user.
-                if (users.count > 0)
-                {
-                    // We have the following status, so update the Selected status and enable the button
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.followButton setEnabled:YES];
-                        [self.followButton setSelected:YES];
-                    });
+        if ([[TTCache sharedCache] followStatusForUser:self.user]) {
+            // We have the following status, so update the Selected status and enable the button
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.followButton setEnabled:YES];
+                [self.followButton setSelected:YES];
+            });
+        }
+        else
+        {
+            
+            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(BOOL isFollowing, NSError *error) {
+                if (!error) {
+                    if (isFollowing)
+                    {
+                        // We have the following status, so update the Selected status and enable the button
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:YES];
+                        });
+                    }
+                    else {
+                        // Not following this user, enable the button and set the selected status
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:NO];
+                        });
+                    }
                 }
                 else {
-                    // Not following this user, enable the button and set the selected status
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.followButton setEnabled:YES];
-                        [self.followButton setSelected:NO];
-                    });
+                    NSLog(@"Error: %@",error);
                 }
-            }
-            else {
-                NSLog(@"Error: %@",error);
-            }
-        }];
 
+            }];
+
+        }
+        
+        // Show the button
+        [self.followButton setHidden:NO];
+        
     }
 
 }

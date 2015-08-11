@@ -15,6 +15,7 @@
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
+#import "TTCache.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -32,7 +33,6 @@
 {
     self = [super initWithNibName:@"FriendsListViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
-        _friends = [[NSMutableArray alloc] init];
         _isFollowing = isFollowing;
         _thisUser = user;
     }
@@ -51,11 +51,13 @@
     self.tableView.sectionHeaderHeight = 0;
     
     if (_isFollowing) {
+        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
         [self loadFollowing];
         self.title = @"Following";
     }
     else
     {
+        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
         [self loadFollowers];
         self.title = @"Followers";
     }
@@ -67,7 +69,9 @@
     
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            [_friends addObjectsFromArray:users];
+            _friends = nil;
+            _friends = [[NSMutableArray alloc] initWithArray:users];
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -84,7 +88,9 @@
 {
     [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            [_friends addObjectsFromArray:users];
+            _friends = nil;
+            _friends = [[NSMutableArray alloc] initWithArray:users];
+
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];

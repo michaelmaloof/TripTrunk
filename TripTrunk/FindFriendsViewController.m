@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
+#import "TTCache.h"
 
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
@@ -43,8 +44,9 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
-    [self getFacebookFriendList];
     _friends = [[NSMutableArray alloc] init];
+
+    [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
 
     self.searchResults = [NSMutableArray array];
     
@@ -62,9 +64,36 @@
 
 }
 
+- (void)getFriendsFromFbids:(NSArray *)fbids {
+    
+    if (fbids.count == 0) {
+        [self refreshFacebookFriends];
+        return;
+    }
+    
+    // Get the TripTrunk user objects with the list of cached fbid's
+    PFQuery *friendsQuery = [PFUser query];
+    [friendsQuery whereKey:@"fbid" containedIn:fbids];
+    
+    [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
 
-- (void)getFacebookFriendList {
+            _friends = [NSMutableArray arrayWithArray:objects];
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+    }];
 
+}
+
+- (void)refreshFacebookFriends {
     if ([FBSDKAccessToken currentAccessToken]) {
         
         // Get the user's Facebook Friends who are already on TripTrunk
@@ -79,33 +108,19 @@
                     [friendList addObject:friend[@"id"]];
                 }
                 
-                // Now get the TripTrunk user objects
-                PFQuery *friendsQuery = [PFUser query];
-                [friendsQuery whereKey:@"fbid" containedIn:friendList];
+                // Cache the facebook ID's
+                [[TTCache sharedCache] setFacebookFriends:friendList];
                 
-               [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                    if(error)
-                    {
-                        NSLog(@"Error: %@",error);
-                    }
-                    else
-                    {
-                        _friends = [NSMutableArray arrayWithArray:objects];
-                        
-                        // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.tableView reloadData];
-                        });
-                    }
-                    
-                    
-                }];
+                if (friendList.count != 0) {
+                    [self getFriendsFromFbids:friendList];
+                }
             }
         }];
     }
     else {
         NSLog(@"No Facebook Access Token");
     }
+
 }
 
 - (void)filterResults:(NSString *)searchTerm {
@@ -203,18 +218,28 @@
     
     cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
     
-    // Determine the follow status of the user
-    PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-    [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
-    [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
-    [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-    [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (cell.tag == indexPath.row) {
-            [cell.followButton setHidden:NO];
-            [cell.followButton setSelected:(!error && number > 0)];
-        }
-    }];
+    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
+    BOOL isFollowing = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+    if (isFollowing) {
+        [cell.followButton setHidden:NO];
+        [cell.followButton setSelected:YES];
+    }
+    else {
+        // Determine the follow status of the user
+        PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
+        [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+        [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
+        [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
+        [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
+        [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            if (cell.tag == indexPath.row) {
+                [cell.followButton setHidden:NO];
+                [cell.followButton setSelected:(!error && number > 0)];
+                // Cache the user's follow status
+                [[TTCache sharedCache] setFollowStatus:(!error && number > 0) user:possibleFriend];
+            }
+        }];
+    }
 
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];

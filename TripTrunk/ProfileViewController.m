@@ -15,6 +15,7 @@
 #import "TTUtility.h"
 #import "Photo.h"
 #import <Photos/Photos.h>
+#import "TTCache.h"
 
 
 @interface ProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -78,6 +79,8 @@
     [self.tabBarController setSelectedIndex:0];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
+    // clear cache
+    [[TTCache sharedCache] clear];
 }
 
 - (void)setProfilePic:(NSString *)urlString {
