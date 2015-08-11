@@ -137,6 +137,7 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     self.profilePicImageView.image = info[UIImagePickerControllerOriginalImage];
+    [self.profilePicImageView setClipsToBounds:YES];
     
     // set the reference URL now so we have it for uploading the raw image data
     

@@ -56,7 +56,7 @@
     [_user fetchIfNeeded];
     
     [self.nameLabel setText:_user[@"name"]];
-    [self.usernameLabel setText:_user[@"username"]];
+    [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     
