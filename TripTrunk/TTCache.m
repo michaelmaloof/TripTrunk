@@ -24,6 +24,9 @@ NSString *const kTTPhotoAttributesCommentersKey           = @"commenters";
 NSString *const kTTUserAttributesPhotoCountKey                 = @"photoCount";
 NSString *const kTTUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
 
+NSString *const kTTTripAttributesMembers                    = @"tripMembers";
+
+
 
 @interface TTCache ()
 
@@ -274,6 +277,11 @@ NSString *const kTTUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByC
 
 #pragma mark - Trips
 
+- (NSDictionary *)attributesForTrip:(Trip *)trip {
+    NSString *key = [self keyForTrip:trip];
+    return [self.cache objectForKey:key];
+}
+
 - (void)setTrips:(NSArray *)trips {
     NSString *key = kTTUserTripsKey;
     [self.cache setObject:trips forKey:key];
@@ -290,6 +298,22 @@ NSString *const kTTUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByC
     return trips;
 }
 
+- (void)setMembers:(NSArray *)members forTrip:(Trip *)trip;
+{
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForTrip:trip]];
+    [attributes setObject:members forKey:kTTTripAttributesMembers];
+    [self setAttributes:attributes forTrip:trip];
+}
+
+- (NSArray *)membersForTrip:(Trip *)trip;
+{
+    NSDictionary *attributes = [self attributesForTrip:trip];
+    if (attributes) {
+        return [attributes objectForKey:kTTTripAttributesMembers];
+    }
+    
+    return [NSArray array];
+}
 
 #pragma mark - ()
 
@@ -303,12 +327,21 @@ NSString *const kTTUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByC
     [self.cache setObject:attributes forKey:key];
 }
 
+- (void)setAttributes:(NSDictionary *)attributes forTrip:(Trip *)trip {
+    NSString *key = [self keyForTrip:trip];
+    [self.cache setObject:attributes forKey:key];
+}
+
 - (NSString *)keyForPhoto:(Photo *)photo {
     return [NSString stringWithFormat:@"photo_%@", [photo objectId]];
 }
 
 - (NSString *)keyForUser:(PFUser *)user {
     return [NSString stringWithFormat:@"user_%@", [user objectId]];
+}
+
+- (NSString *)keyForTrip:(Trip *)trip {
+    return [NSString stringWithFormat:@"trip_%@", [trip objectId]];
 }
 
 @end

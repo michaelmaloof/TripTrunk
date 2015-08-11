@@ -118,4 +118,21 @@
  */
 - (NSArray *)trips;
 
+/**
+ *  Set the cache of trip members on a trip
+ *
+ *  @param members Array of PFUser objects who are part of the trip
+ *  @param trip    Trip object
+ */
+- (void)setMembers:(NSArray *)members forTrip:(Trip *)trip;
+
+/**
+ *  Get the cached members for the trip
+ *
+ *  @param trip trip
+ *
+ *  @return Array of PFUser objects
+ */
+- (NSArray *)membersForTrip:(Trip *)trip;
+
 @end
