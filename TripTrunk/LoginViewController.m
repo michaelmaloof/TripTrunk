@@ -85,7 +85,7 @@
             NSLog(@"User logged in through Facebook!");
             
             // Make sure the user has a TripTrunk username
-            if (!user.username) {
+            if (![user valueForKey:@"completedRegistration"]) {
                 [self showSetUsernameView];
             }
             else

@@ -52,6 +52,9 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+
+    
     // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
     [_user fetchIfNeeded];
     

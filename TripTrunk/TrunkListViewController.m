@@ -58,7 +58,7 @@
         [[self navigationItem] setBackBarButtonItem:newBackButton];
         
         self.filter =
-        [[UIBarButtonItem alloc] initWithTitle:@"Me"
+        [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
                                          style:UIBarButtonItemStylePlain
                                         target:self
                                         action:@selector(rightBarItemWasTapped)];
@@ -127,10 +127,10 @@
 
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:@"Everyone"];
+        [self.filter setTitle:@"All Trunks"];
         [self queryParseMethodMe];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:@"Me"];
+        [self.filter setTitle:@"My Trunks"];
         [self queryParseMethodEveryone];
     }
 }

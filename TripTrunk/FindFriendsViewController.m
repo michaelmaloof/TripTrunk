@@ -131,11 +131,14 @@
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
     [usernameQuery whereKey:@"username" containsString:searchTerm];
     [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
+    [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     
     PFQuery *nameQuery = [PFUser query];
     [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
     [nameQuery whereKey:@"name" containsString:searchTerm];
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
+    [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
+
 
     
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];

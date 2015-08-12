@@ -249,6 +249,9 @@
                      UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:1];
                      [triptab popToRootViewControllerAnimated:NO];
                      
+                     // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
+                     
                      
                  });
                  

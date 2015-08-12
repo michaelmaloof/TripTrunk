@@ -89,21 +89,41 @@
     self.parseLocations = [[NSMutableArray alloc]init];
     
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-    if(![PFUser currentUser])
+    if([self checkUserRegistration])
     {
-        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+        if (self.user == nil) {
+            [self queryParseMethodEveryone];
             
+            [self registerNotifications];
+            
+        } else {
+            [self queryParseMethodForUser:self.user];
+            
+            [self registerNotifications];
+        }
     }
-    else if (self.user == nil) {
-        [self queryParseMethodEveryone];
-        
-        [self registerNotifications];
+}
 
-    } else {
-        [self queryParseMethodForUser:self.user];
-        
-        [self registerNotifications];
+/**
+ *  Determine the user status
+ *
+ *  @return YES if user is logged in and we should continue. NO if we are displaying a different view to do/finish login
+ */
+- (BOOL)checkUserRegistration {
+    // No logged-in user
+    if (![PFUser currentUser]) {
+        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+        return NO;
     }
+    // User is logged in, but hasn't completed registration (i.e. hasn't set a username or hometown, etc.)
+    else if (![[PFUser currentUser] valueForKey:@"completedRegistration"] || [[[PFUser currentUser] valueForKey:@"completedRegistration"] boolValue] == FALSE) {
+        
+        [self.navigationController performSegueWithIdentifier:@"presentUsernameSegue" sender:nil];
+
+        return NO;
+    }
+    // User is logged in and good-to-go
+    return YES;
 }
 
 - (void)registerNotifications {

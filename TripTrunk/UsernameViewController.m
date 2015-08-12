@@ -11,6 +11,7 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MSTextField.h"
+#import "MBProgressHUD.h"
 
 @interface UsernameViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
@@ -31,6 +32,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+
+    
     _fullnameTextField.delegate = self;
     _emailTextField.delegate = self;
     _usernameTextField.delegate = self;
@@ -104,10 +107,14 @@
     NSString *email = _emailTextField.text;
     NSString *password = _passwordTextField.text;
     NSString *hometown = _hometownTextField.text;
+    
 
     
     if ((username || ![username isEqualToString:@""])
         && fullName && email && password && hometown) {
+        
+        // Show a progress hud
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
         // Init the user ONLY if it doesn't exist. If we're logging in with FB, _user is already populated
         if (!_user) {
@@ -122,7 +129,10 @@
         _user.email = email;
         [_user setPassword:password];
         [_user setValue:hometown forKey:@"hometown"];
-
+        
+        // Set that the user has completed registration
+        [_user setValue:[NSNumber numberWithBool:YES] forKey:@"completedRegistration"];
+        
         NSError *error;
         // fb user exists so save, signup if it's a new user
         if (_isFBUser) {
@@ -135,6 +145,8 @@
         {
            [_user signUp:&error];
         }
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         
         if (error) {
             NSLog(@"Error: %@",error);

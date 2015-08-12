@@ -165,7 +165,7 @@
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     
     UILabel *endLabel = [[UILabel alloc] init];
-    [endLabel setText:@"Start Date"];
+    [endLabel setText:@"End Date"];
     [endLabel setFont:[UIFont systemFontOfSize:12.0]];
     [endLabel setTextColor:[UIColor blackColor]];
     [endLabel sizeToFit];
@@ -354,6 +354,11 @@
 
 - (IBAction)clearButtonPressed:(id)sender {
     
+    [self resetForm];
+
+}
+
+- (void)resetForm {
     // Initialize the view with no data
     self.tripNameTextField.text = @"";
     self.countryTextField.text = @"";
@@ -367,7 +372,6 @@
     if (!_isEditing) {
         self.trip = [[Trip alloc] init];
     }
-
 }
 
 // Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
@@ -529,11 +533,26 @@
 
 #pragma mark - Navigation
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     AddTripFriendsViewController *vc = segue.destinationViewController;
     vc.trip = self.trip;
     vc.isTripCreation = YES;
+    
+    // Set up an observer that will be used to reset the form after trip completion
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetForm)
+                                                 name:@"resetTripFromNotification"
+                                               object:nil];
+
+}
+
+#pragma mark - Dealloc
+
+- (void)dealloc {
+    
+    // Remove any observers
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
