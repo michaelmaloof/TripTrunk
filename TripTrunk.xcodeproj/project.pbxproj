@@ -71,6 +71,7 @@
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A401B25297300185713 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
+		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
@@ -202,6 +203,8 @@
 		C9525A3B1B251FD400185713 /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
+		C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
+		C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
 		C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
@@ -510,6 +513,8 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
+				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
 				C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */,
 				C90552151B3C3ABC007B5946 /* MBProgressHUD.h */,
@@ -654,6 +659,7 @@
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
+				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,

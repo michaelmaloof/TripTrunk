@@ -16,8 +16,9 @@
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
 #import "TTCache.h"
+#import "UIScrollView+EmptyDataSet.h"
 
-@interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+@interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) UISearchController *searchController;
 
@@ -60,7 +61,9 @@
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
     
-
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
 
 }
 
@@ -149,7 +152,6 @@
     [self.searchResults addObjectsFromArray:results];
 }
 
-
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
@@ -157,7 +159,6 @@
     [self filterResults:searchString];
     [self.tableView reloadData];
 }
-
 
 #pragma mark - UITableViewDataSource
 
@@ -336,6 +337,106 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - DZNEmptyDataSetSource
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Users Found";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor blackColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"";
+    
+    if (self.searchController.active) {
+        text = @"Are you sure a user exists with this name?";
+    }
+    else {
+        text = @"Invite some Facebook friends to TripTrunk!";
+    }
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+
+        //TODO: Add a facebook invite button - commented code creates the button
+    
+//    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+//                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+//    
+//    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
+    return nil;
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor colorWithWhite:1.0 alpha:1.0];
+}
+
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
+//{
+//    return [UIImage imageNamed:@"ticketIcon"];
+//}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, 20);
+}
+
+#pragma mark - DZNEmptyDataSetDelegate
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    
+    // Search Controller and the regular table view have different data sources
+    if ((self.searchController.active && self.searchResults.count == 0) || (!self.searchController.active && _friends.count == 0)) {
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
+{
+    return YES;
+}
+
+- (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
+{
+    return NO;
+}
+
+- (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
+{
+    //TODO: Implement this
+    
+}
+
+
+- (void)dealloc
+{
+    self.tableView.emptyDataSetSource = nil;
+    self.tableView.emptyDataSetDelegate = nil;
+}
+
 
 
 

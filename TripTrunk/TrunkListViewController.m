@@ -13,7 +13,9 @@
 #import "TrunkViewController.h"
 #import "SocialUtility.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource>
+#import "UIScrollView+EmptyDataSet.h"
+
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;
 
@@ -81,7 +83,9 @@
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
 }
 
 -(void)loadUserTrunks
@@ -326,6 +330,106 @@
     self.path = indexPath;
     [self performSegueWithIdentifier:@"TrunkView" sender:self];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+#pragma mark - DZNEmptyDataSetSource
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Trunks Here";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"Have you visisted this city? Create a trunk now!";
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor colorWithWhite:0.0 alpha:0.5];
+}
+
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
+//{
+//    return [UIImage imageNamed:@"ticketIcon"];
+//}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, 20);
+}
+
+#pragma mark - DZNEmptyDataSetDelegate
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    if (self.filter.tag == 0 && self.parseLocations.count == 0) {
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }else if (self.filter.tag == 1 && self.meParseLocations.count == 0){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    else  if (self.user == nil){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+
+    return NO;
+}
+
+- (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
+{
+    return YES;
+}
+
+- (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
+{
+    return NO;
+}
+
+- (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.tabBarController setSelectedIndex:1];
+        
+    });
+
+}
+
+
+- (void)dealloc
+{
+    self.tableView.emptyDataSetSource = nil;
+    self.tableView.emptyDataSetDelegate = nil;
 }
 
 

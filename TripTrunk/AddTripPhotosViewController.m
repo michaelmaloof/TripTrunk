@@ -209,7 +209,7 @@
         NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
         PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        [options setVersion:PHImageRequestOptionsVersionOriginal];
+        [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
         
         [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
