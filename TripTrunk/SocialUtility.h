@@ -52,6 +52,17 @@
 + (PFObject *)createAddToTripObjectForUser:(PFUser *)user onTrip:(Trip *)trip;
 
 /**
+ *  Delete the trip and all related objects
+ *  Everything is set to deleteEventually so it may take some time to actually delete
+ *  Notifications are sent for each completed deletion with the names:
+ *  "PhotoObjectsDeleted", "ActivityObjectsDeleted", and "TripDeleted"
+ *  The controller calling deleteTrip should observe these notifications and reload the UI components accordingly
+ *
+ *  @param trip            Trip to delete
+ */
++ (void)deleteTrip:(Trip *)trip;
+
+/**
  *  Removes the Parse Activity that added the given user to the given trip
  *  Enforces that a user can only remove themself unless they are the creator
  *  Does not enforce preventing creators from leaving their own trip--that must be done elsewhere

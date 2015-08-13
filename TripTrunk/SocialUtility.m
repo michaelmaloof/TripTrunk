@@ -108,6 +108,61 @@
     return addToTripActivity;
 }
 
++ (void)deleteTrip:(Trip *)trip;
+{
+    // If the user isn't the trip creator, don't let them delete this trip
+    if (![[[PFUser currentUser] objectId] isEqualToString:[trip.creator objectId]]) {
+        return;
+    }
+    
+    // Delete any activities that directly references this trip
+    // That SHOULD include all addToTrip, like, and comment activities
+    PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+    [deleteActivitiesQuery whereKey:@"trip" equalTo:trip];
+
+    [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             // Delete the found objects
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+             
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+    
+    // Delete all the photos for this trip
+    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+    [photoQuery whereKey:@"trip" equalTo:trip];
+    [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             
+             // Delete the found Photos
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoObjectsDeleted" object:nil];
+
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+
+    // Delete the trip itself
+    [trip deleteEventually];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TripDeleted" object:nil];
+
+
+}
+
 + (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
     // If the user isn't currentUser AND the user isn't the trip creator, don't let them remove people.
@@ -195,6 +250,7 @@
     [commentActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
     [commentActivity setObject:photo.user forKey:@"toUser"];
     [commentActivity setObject:photo forKey:@"photo"];
+    [commentActivity setObject:photo.trip forKey:@"trip"];
     [commentActivity setObject:@"comment" forKey:@"type"];
     [commentActivity setObject:comment forKey:@"content"];
     
@@ -258,6 +314,7 @@
         [likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
         [likeActivity setObject:photo.user forKey:@"toUser"];
         [likeActivity setObject:photo forKey:@"photo"];
+        [likeActivity setObject:photo.trip forKey:@"trip"];
         
         PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
         [likeACL setPublicReadAccess:YES];

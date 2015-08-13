@@ -451,16 +451,15 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
+
     if (alertView.tag == 0)
     {
         if (buttonIndex == 1)
         {
-            [self.trip deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                }
-            }];
+            [SocialUtility deleteTrip:self.trip];
+            
+            [self.navigationController popToRootViewControllerAnimated:YES];
+
         }
     }
     
