@@ -343,7 +343,7 @@
 
 - (IBAction)onAddCaptionTapped:(id)sender
 {
-    
+    [self.view endEditing:YES];
     if (![self.caption.text isEqual: @""])
     {
 
@@ -384,6 +384,8 @@
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
+    [self.view endEditing:YES];
+    
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
@@ -400,6 +402,9 @@
 }
 
 - (IBAction)onRemoveTapped:(id)sender { //FIXME Doesn't remove caption
+    
+    [self.view endEditing:YES];
+    
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
@@ -421,6 +426,8 @@
 }
 
 - (IBAction)onDeleteTapped:(id)sender {
+    [self.view endEditing:YES];
+    
     self.tripCollectionView.hidden = NO;
     self.selectedPhoto.hidden = YES;
     [self.photos removeObjectAtIndex:self.path];
