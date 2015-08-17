@@ -20,6 +20,7 @@
 @dynamic country;
 @dynamic mostRecentPhoto;
 @dynamic isPrivate;
+@dynamic start;
 
 +(NSString *)parseClassName
 {
