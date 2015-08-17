@@ -304,12 +304,11 @@
         // Delete
         if (alertView.tag == 0) {
             
-            [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded)
-                {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-            }];
+            [[TTUtility sharedInstance] deletePhoto:self.photo];
+
+            // pop the view
+            [self.navigationController popViewControllerAnimated:YES];
+
             
         }
         // Download Photo

@@ -248,6 +248,40 @@ CLCloudinary *cloudinary;
     
 }
 
+- (void)deletePhoto:(Photo *)photo;
+{
+    // If the user isn't the trip creator, don't let them delete this trip
+    if (![[[PFUser currentUser] objectId] isEqualToString:[photo.user objectId]]) {
+        return;
+    }
+    
+    // Delete any activities that directly references this photo
+    // That SHOULD include all like, and comment activities
+    PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+    [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
+    
+    [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             // Delete the found objects
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+             
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+    
+    [photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+    }];
+}
+
 - (NSString *)thumbnailImageUrl:(NSString *)urlString;
 {
     CLTransformation *transformation = [CLTransformation transformation];

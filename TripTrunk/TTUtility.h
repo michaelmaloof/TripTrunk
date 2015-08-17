@@ -65,6 +65,17 @@
 - (void)downloadPhotos:(NSArray *)photos;
 
 /**
+ *  Deletes the photo and all Activities that reference the photo
+ *  Everything deletes in the background so it may take some time to actually delete
+ *  Notifications are sent for each completed deletion with the names:
+ *  "parsePhotosUpdatedNotification" and "ActivityObjectsDeleted"
+ *  The controller calling deleteTrip should observe these notifications and reload the UI components accordingly
+ *
+ *  @param photo Photo object
+ */
+- (void)deletePhoto:(Photo *)photo;
+
+/**
  *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with thumbnail transformations
  *
  *  @param urlString imageUrl of a Photo on Cloudinary
