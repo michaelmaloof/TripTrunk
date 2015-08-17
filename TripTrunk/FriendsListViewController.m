@@ -147,7 +147,7 @@
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    
+        
     [cell.followButton setSelected:_isFollowing];
     
     

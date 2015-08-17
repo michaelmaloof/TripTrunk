@@ -12,14 +12,23 @@
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
+#import "CommentTableViewCell.h"
 #import "TTUtility.h"
 #import "UIScrollView+EmptyDataSet.h"
 
 #define USER_CELL @"user_table_view_cell"
+#define COMMENT_CELL @"comment_table_view_cell"
+
+enum TTActivityViewType : NSUInteger {
+    TTActivityViewAllActivities = 1,
+    TTActivityViewLikes = 2,
+    TTActivityViewComments = 3
+};
 
 @interface ActivityListViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) NSArray *activities;
+@property NSUInteger viewType;
 
 @end
 
@@ -31,6 +40,7 @@
     if (self) {
         _activities = [[NSArray alloc] initWithArray:likes];
         self.title = @"Likers";
+        _viewType = TTActivityViewLikes;
     }
     return self;
 }
@@ -40,6 +50,8 @@
     self = [super init];
     if (self) {
         _activities = [[NSArray alloc] initWithArray:comments];
+        self.title = @"Comments";
+        _viewType = TTActivityViewComments;
     }
     return self;
 }
@@ -49,6 +61,8 @@
     self = [super init];
     if (self) {
         _activities = [[NSArray alloc] initWithArray:activities];
+        self.title = @"Activity";
+        _viewType = TTActivityViewAllActivities;
     }
     return self;
 }
@@ -57,6 +71,9 @@
     [super viewDidLoad];
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+    [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:COMMENT_CELL];
+
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(closeView)];
@@ -87,32 +104,47 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (_viewType == TTActivityViewLikes) {
+        
     
-    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
-//    [cell setDelegate:self];
-    
-    // We assume fromUser contains the full PFUser object
-    PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
-    [cell setUser:user];
-    
-    [cell.followButton setHidden:YES];
+        UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    //    [cell setDelegate:self];
+        
+        // We assume fromUser contains the full PFUser object
+        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
+        [cell setUser:user];
+        
+        [cell.followButton setHidden:YES];
 
+        
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+        __weak UserTableViewCell *weakCell = cell;
+        
+        [cell.profilePicImageView setImageWithURLRequest:request
+                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                     
+                                                     [weakCell.profilePicImageView setImage:image];
+                                                     [weakCell setNeedsLayout];
+                                                     
+                                                 } failure:nil];
+        return weakCell;
+    }
+    else if (_viewType == TTActivityViewComments) {
+        CommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:COMMENT_CELL forIndexPath:indexPath];
+        // We assume fromUser contains the full PFUser object
+        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+//        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
+        [commentCell setUser:user];
+        
+        NSString *comment = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
+        [commentCell.commentLabel setText:comment];
+    }
     
-    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    __weak UserTableViewCell *weakCell = cell;
     
-    [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
-                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                 
-                                                 [weakCell.profilePicImageView setImage:image];
-                                                 [weakCell setNeedsLayout];
-                                                 
-                                             } failure:nil];
-    return weakCell;
-    
+    return [UITableViewCell new];
 }
 
 #pragma mark - Table view delegate

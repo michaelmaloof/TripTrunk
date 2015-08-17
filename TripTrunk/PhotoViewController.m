@@ -219,6 +219,14 @@
 
 
 - (IBAction)onCommentsTapped:(id)sender {
+    
+    
+    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navController animated:YES completion:nil];
+    return;
+    
+    // NONE OF THIS EXECUTES ANYMORE - MS
     self.tableView.hidden = !self.tableView.hidden;
     self.addComment.hidden = !self.addComment.hidden;
     self.textView.hidden = !self.textView.hidden;

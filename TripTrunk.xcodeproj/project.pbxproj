@@ -87,6 +87,8 @@
 		C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F9177B1B4ECFDC00AE8953 /* MSFloatingProgressView.m */; };
 		C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */; };
 		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
+		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
+		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,6 +235,9 @@
 		C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripFriendsViewController.m; sourceTree = "<group>"; };
 		C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkMembersViewController.h; sourceTree = "<group>"; };
 		C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkMembersViewController.m; sourceTree = "<group>"; };
+		C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTableViewCell.h; sourceTree = "<group>"; };
+		C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentTableViewCell.m; sourceTree = "<group>"; };
+		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -342,6 +347,9 @@
 				C90C3CF31B04F45500CABBC9 /* UserTableViewCell.h */,
 				C90C3CF41B04F45500CABBC9 /* UserTableViewCell.m */,
 				C90C3CF51B04F45500CABBC9 /* UserTableViewCell.xib */,
+				C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */,
+				C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */,
+				C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */,
 			);
 			name = ViewCells;
 			sourceTree = "<group>";
@@ -622,6 +630,7 @@
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
+				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,6 +655,7 @@
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
+				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
