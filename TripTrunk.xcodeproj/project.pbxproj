@@ -89,6 +89,7 @@
 		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
 		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
 		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
+		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +239,8 @@
 		C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTableViewCell.h; sourceTree = "<group>"; };
 		C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentTableViewCell.m; sourceTree = "<group>"; };
 		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
+		C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCommentInputView.h; sourceTree = "<group>"; };
+		C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCommentInputView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,6 +320,8 @@
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
+				C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */,
+				C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
 				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
@@ -657,6 +662,7 @@
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
+				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,

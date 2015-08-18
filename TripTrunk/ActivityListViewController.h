@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ActivityListViewController : UITableViewController
+@interface ActivityListViewController : UIViewController
 
 - (id)initWithLikes:(NSArray *)likes;
 

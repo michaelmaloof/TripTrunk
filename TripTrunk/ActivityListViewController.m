@@ -14,6 +14,7 @@
 #import "UserProfileViewController.h"
 #import "CommentTableViewCell.h"
 #import "TTUtility.h"
+#import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
 
 #define USER_CELL @"user_table_view_cell"
@@ -25,10 +26,13 @@ enum TTActivityViewType : NSUInteger {
     TTActivityViewComments = 3
 };
 
-@interface ActivityListViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) NSArray *activities;
 @property NSUInteger viewType;
+
+@property (strong, nonatomic) UIView *commentInputView;
+@property (strong, nonatomic) UITableView *tableView;
 
 @end
 
@@ -67,6 +71,23 @@ enum TTActivityViewType : NSUInteger {
     return self;
 }
 
+- (void)loadView {
+    
+    // Initialize the view & tableview
+    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    self.tableView = [[UITableView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    [self.view addSubview:self.tableView];
+    
+    // Setup the comment overlay if it's the Comments view
+    if (_viewType == TTActivityViewComments) {
+        TTCommentInputView *commentView = [[TTCommentInputView alloc] init];
+        [self.view addSubview:commentView];
+        [commentView setupConstraintsWithView:self.view];
+        
+        //TODO: constrain the tableview to not go under the comments otherwise we'll have cut-off comments
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -76,10 +97,15 @@ enum TTActivityViewType : NSUInteger {
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
+                             
                                                                                            action:@selector(closeView)];
+    // Setup tableview delegate/datasource
+    [self.tableView setDelegate:self];
+    [self.tableView setDataSource:self];
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -146,6 +172,17 @@ enum TTActivityViewType : NSUInteger {
     
     return [UITableViewCell new];
 }
+//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+//    return 50;
+//}
+//- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+//    // set up comment input box view
+//    _commentInputView = [[UIView alloc] init];
+//    [_commentInputView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    _commentInputView.backgroundColor = [UIColor redColor];
+//    
+//    return _commentInputView;
+//}
 
 #pragma mark - Table view delegate
 
@@ -170,8 +207,13 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    // TODO: change the text based on Activity Screen Type
-    NSString *text = @"No Likers";
+    NSString *text = @"No Activity";
+    if (_viewType == TTActivityViewComments) {
+        text = @"No Comments";
+    }
+    else if (_viewType == TTActivityViewLikes) {
+        text = @"No Likers";
+    }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor blackColor]};
@@ -181,8 +223,13 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"You could be the first to like this photo";
-
+    NSString *text = @"You could be the first to like or comment on this photo";
+    if (_viewType == TTActivityViewComments) {
+        text = @"You could be the first to comment on this photo";
+    }
+    else if (_viewType == TTActivityViewLikes) {
+        text = @"You could be the first to like this photo";
+    }
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
