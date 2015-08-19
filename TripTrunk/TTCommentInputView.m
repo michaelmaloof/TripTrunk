@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic)UITextField *commentField;
 @property (strong, nonatomic)UIButton *submitButton;
+@property (weak, nonatomic)NSLayoutConstraint *bottomConstraint;
 
 @end
 
@@ -54,10 +55,20 @@
         [_submitButton setBackgroundColor:[UIColor colorWithHexString:@"00b300"]];
         _submitButton.layer.cornerRadius = 4.0;
         
+        [_submitButton addTarget:self
+                          action:@selector(submitButtonPressed)
+                forControlEvents:UIControlEventTouchUpInside];
+        
 
         [self addSubview:_commentField];
         [self addSubview:_submitButton];
         [self setupInternalContraints];
+        
+        
+        // Listen for keyboard notifications
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+
     }
     return self;
 }
@@ -188,14 +199,64 @@
                                                            constant:0.0]];
     
     // vertical algin bottom
-    [view addConstraint:[NSLayoutConstraint constraintWithItem:self
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:view
-                                                          attribute:NSLayoutAttributeBottom
-                                                         multiplier:1.0
-                                                           constant:0.0]];
     
+     _bottomConstraint = [NSLayoutConstraint constraintWithItem:self
+                                                      attribute:NSLayoutAttributeBottom
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:view
+                                                      attribute:NSLayoutAttributeBottom
+                                                     multiplier:1.0
+                                                       constant:0.0];
+    // Center Vertically
+    [view addConstraint:_bottomConstraint];
+    
+}
+
+- (void)keyboardWillShowNotification:(NSNotification *)notification {
+    [self updateBottomLayoutConstraintWithNotification:notification];
+}
+
+- (void)keyboardWillHideNotification:(NSNotification *)notification {
+//    [self updateBottomLayoutConstraintWithNotification:notification];
+    
+    NSDictionary *userInfo = notification.userInfo;
+    NSTimeInterval animationDuration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    _bottomConstraint.constant = 0;
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self layoutIfNeeded];
+    }];
+}
+
+- (void)updateBottomLayoutConstraintWithNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSTimeInterval animationDuration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect keyboardEndFrame = [[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat height = keyboardEndFrame.size.height;
+    
+    if (height > 0) {
+        _bottomConstraint.constant = -height;
+    }
+    else {
+        _bottomConstraint.constant = 0;
+    }
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self layoutIfNeeded];
+    }];
+    
+}
+
+- (void)submitButtonPressed {
+    [self endEditing:YES];
+}
+
+#pragma mark - dealloc
+
+- (void)dealloc {
+    // Remove keyboard notification observers when the view is dealloc'd
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

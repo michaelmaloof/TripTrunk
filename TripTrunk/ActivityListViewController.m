@@ -26,7 +26,7 @@ enum TTActivityViewType : NSUInteger {
     TTActivityViewComments = 3
 };
 
-@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UITextFieldDelegate>
 
 @property (strong, nonatomic) NSArray *activities;
 @property NSUInteger viewType;
@@ -106,6 +106,8 @@ enum TTActivityViewType : NSUInteger {
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
 
+    // Add a gesture recognizer so we can dismiss the keyboard on taps.
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -195,6 +197,7 @@ enum TTActivityViewType : NSUInteger {
     
 }
 
+
 #pragma mark - Dismiss View
 
 - (void)closeView
@@ -202,6 +205,13 @@ enum TTActivityViewType : NSUInteger {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Gesture Recognizers
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer {
+    NSLog(@"handleTap");
+    // Dismiss the keyboard when a tap occurs anywhere
+    [self.view endEditing:YES];
+}
 
 #pragma mark - DZNEmptyDataSetSource
 
