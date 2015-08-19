@@ -8,6 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TTCommentInputViewDelegate;
+
 @interface TTCommentInputView : UIView
+
+@property (nonatomic, weak) id<TTCommentInputViewDelegate> delegate;
+
 - (void)setupConstraintsWithView:(UIView *)view;
+@end
+
+@protocol TTCommentInputViewDelegate <NSObject>
+
+@required
+- (void)commentSubmitButtonPressedWithComment:(NSString *)comment;
+
 @end

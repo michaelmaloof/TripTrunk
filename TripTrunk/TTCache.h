@@ -44,6 +44,7 @@
 - (NSNumber *)photoCountForUser:(PFUser *)user;
 - (void)setPhotoCount:(NSNumber *)count user:(PFUser *)user;
 
+#pragma mark - fully implemented
 
 /**
  *  Set the cache for the current user's following status of another user

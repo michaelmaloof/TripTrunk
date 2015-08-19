@@ -26,13 +26,15 @@ enum TTActivityViewType : NSUInteger {
     TTActivityViewComments = 3
 };
 
-@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UITextFieldDelegate>
+@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate>
 
 @property (strong, nonatomic) NSArray *activities;
 @property NSUInteger viewType;
 
-@property (strong, nonatomic) UIView *commentInputView;
+@property (strong, nonatomic) TTCommentInputView *commentInputView;
 @property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) Photo *photo;
+
 
 @end
 
@@ -49,11 +51,12 @@ enum TTActivityViewType : NSUInteger {
     return self;
 }
 
-- (id)initWithComments:(NSArray *)comments;
+- (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
 {
     self = [super init];
     if (self) {
         _activities = [[NSArray alloc] initWithArray:comments];
+        _photo = photo;
         self.title = @"Comments";
         _viewType = TTActivityViewComments;
     }
@@ -75,17 +78,21 @@ enum TTActivityViewType : NSUInteger {
     
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    self.tableView = [[UITableView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    self.tableView = [[UITableView alloc] init];
+    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
     [self.view addSubview:self.tableView];
     
     // Setup the comment overlay if it's the Comments view
     if (_viewType == TTActivityViewComments) {
-        TTCommentInputView *commentView = [[TTCommentInputView alloc] init];
-        [self.view addSubview:commentView];
-        [commentView setupConstraintsWithView:self.view];
-        
-        //TODO: constrain the tableview to not go under the comments otherwise we'll have cut-off comments
+        _commentInputView = [[TTCommentInputView alloc] init];
+        [self.view addSubview:_commentInputView];
+        [_commentInputView setupConstraintsWithView:self.view];
+        _commentInputView.delegate = self;
     }
+
+    [self setupTableViewConstraints];
+
 }
 
 - (void)viewDidLoad {
@@ -107,12 +114,76 @@ enum TTActivityViewType : NSUInteger {
     self.tableView.emptyDataSetSource = self;
 
     // Add a gesture recognizer so we can dismiss the keyboard on taps.
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)]];
+//    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // reload the table every time it appears or we get weird results
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setupTableViewConstraints {
+    
+    // Width constraint, full width of view
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.view
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:1
+                                                      constant:0]];
+
+    
+    // Center horizontally
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.view
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0.0]];
+    
+    
+    // vertical algin top of tableview to view
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    
+    if (_viewType == TTActivityViewComments) {
+        // vertical algin bottom to comment box
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                              attribute:NSLayoutAttributeBottom
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.commentInputView
+                                                              attribute:NSLayoutAttributeTop
+                                                             multiplier:1.0
+                                                               constant:0.0]];
+        
+        //TODO: black shows when keyboard opens because this constraint isn't animated
+        // The CommentBox constraint animates with the keyboard, so there's a glitch.
+        // This should either animate, or better
+    }
+    else {
+        // vertical algin bottom to view
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                              attribute:NSLayoutAttributeBottom
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.view
+                                                              attribute:NSLayoutAttributeBottom
+                                                             multiplier:1.0
+                                                               constant:0.0]];
+    }
+    
+
 }
 
 #pragma mark - Table view data source
@@ -171,11 +242,13 @@ enum TTActivityViewType : NSUInteger {
         [commentCell.commentLabel setText:comment];
     }
     
-    
     return [UITableViewCell new];
 }
 //-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-//    return 50;
+//    if (_viewType == TTActivityViewComments) {
+//        return _commentInputView.frame.size.height;
+//    }
+//    return 0;
 //}
 //- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
 //    // set up comment input box view
@@ -194,22 +267,76 @@ enum TTActivityViewType : NSUInteger {
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    // Dismiss the keyboard when scrolling starts
+    [self.view endEditing:YES];
+}
+
+-(BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    //TODO: swipe pushes over the full table view, not just the editing cell. Probably due to layout constraint.
+    
+    // Only comment lists can be deleted, Likes and such don't allow deleting
+    if (_viewType != TTActivityViewComments) {
+        return NO;
+    }
+    
+    if (indexPath.row > 0) {
+        
+        PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
+        // You can delete comments if you're the commenter, photo creator
+        // TODO: or trip creator
+        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
+            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        // TODO: refresh the activities from the server after comment is deleted
+
+        [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                NSLog(@"Error deleting comment: %@", error);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [alert show];
+                    
+//                    [super refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
+                });
+            }
+            else {
+                NSLog(@"Comment Deleted");
+            }
+        }];
+        
+        // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
+        NSMutableArray *updated = [NSMutableArray arrayWithArray:_activities];
+        [updated removeObjectAtIndex:indexPath.row];
+        _activities = [NSArray arrayWithArray:updated];
+        [self.tableView reloadData];
+        
+    }
+    else {
+        NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
+    }
+}
 
 #pragma mark - Dismiss View
 
 - (void)closeView
 {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - Gesture Recognizers
-
-- (void)handleTap:(UITapGestureRecognizer *)recognizer {
-    // Dismiss the keyboard when a tap occurs anywhere
-    [self.view endEditing:YES];
 }
 
 #pragma mark - DZNEmptyDataSetSource
@@ -308,6 +435,39 @@ enum TTActivityViewType : NSUInteger {
     //TODO: Implement this
 }
 
+#pragma mark - TTCommentInputViewDelegate
+
+- (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
+    if (comment && ![comment isEqualToString: @""] ) {
+        if (_photo) {
+            NSDictionary *activity = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      [PFUser currentUser], @"fromUser",
+                                      comment, @"content",
+                                      _photo, @"photo",
+                                      nil];
+            NSMutableArray *updated = [NSMutableArray arrayWithArray:_activities];
+            [updated addObject:activity];
+            _activities = [NSArray arrayWithArray:updated];
+            [self.tableView reloadData];
+            [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
+                if (!error) {
+                    NSLog(@"Comment Saved Success");
+                }
+                else {
+                    UIAlertView *alertView = [[UIAlertView alloc] init];
+                    alertView.delegate = self;
+                    alertView.title = @"Error adding comment. Please try again";
+                    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                    [alertView addButtonWithTitle:@"OK"];
+                    [alertView show];
+                }
+            }];
+            
+        }
+    }
+}
+
+#pragma mark -
 - (void)dealloc
 {
     self.tableView.emptyDataSetSource = nil;

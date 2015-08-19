@@ -221,7 +221,7 @@
 - (IBAction)onCommentsTapped:(id)sender {
     
     
-    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities];
+    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navController animated:YES completion:nil];
     return;

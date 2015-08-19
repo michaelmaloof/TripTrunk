@@ -54,7 +54,6 @@
         [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_submitButton setBackgroundColor:[UIColor colorWithHexString:@"00b300"]];
         _submitButton.layer.cornerRadius = 4.0;
-//        _submitButton.enabled = NO;
         [_submitButton addTarget:self
                           action:@selector(submitButtonPressed)
                 forControlEvents:UIControlEventTouchUpInside];
@@ -250,7 +249,15 @@
 
 - (void)submitButtonPressed {
     NSLog(@"Submit Button Pressed");
-//    [self endEditing:YES];
+    
+    // Let the delegate handle the submit button press
+    if (self.delegate && [self.delegate respondsToSelector:@selector(commentSubmitButtonPressedWithComment:)]) {
+        [self.delegate commentSubmitButtonPressedWithComment:self.commentField.text];
+    }
+    self.commentField.text = @"";
+    // hide the keyboard
+    [self endEditing:YES];
+
 }
 
 #pragma mark - UITextView Delegate Methods
