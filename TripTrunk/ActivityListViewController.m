@@ -208,7 +208,6 @@ enum TTActivityViewType : NSUInteger {
 #pragma mark - Gesture Recognizers
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer {
-    NSLog(@"handleTap");
     // Dismiss the keyboard when a tap occurs anywhere
     [self.view endEditing:YES];
 }

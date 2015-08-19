@@ -9,7 +9,7 @@
 #import "TTCommentInputView.h"
 #import "UIColor+HexColors.h"
 
-@interface TTCommentInputView ()
+@interface TTCommentInputView () <UITextFieldDelegate>
 
 @property (strong, nonatomic)UITextField *commentField;
 @property (strong, nonatomic)UIButton *submitButton;
@@ -54,7 +54,7 @@
         [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_submitButton setBackgroundColor:[UIColor colorWithHexString:@"00b300"]];
         _submitButton.layer.cornerRadius = 4.0;
-        
+//        _submitButton.enabled = NO;
         [_submitButton addTarget:self
                           action:@selector(submitButtonPressed)
                 forControlEvents:UIControlEventTouchUpInside];
@@ -249,8 +249,12 @@
 }
 
 - (void)submitButtonPressed {
-    [self endEditing:YES];
+    NSLog(@"Submit Button Pressed");
+//    [self endEditing:YES];
 }
+
+#pragma mark - UITextView Delegate Methods
+
 
 #pragma mark - dealloc
 
