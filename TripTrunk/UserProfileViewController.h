@@ -20,6 +20,15 @@
  */
 - (id)initWithUser:(PFUser *)user;
 
+/**
+ *  Initialize the view controller and load the user from a given userId
+ *
+ *  @param userId userId of a PFUser
+ *
+ *  @return self
+ */
+- (id)initWithUserId:(NSString *)userId;
+
 
 @property (strong, nonatomic) IBOutlet UIButton *followersButton;
 @property (strong, nonatomic) IBOutlet UIButton *followingButton;

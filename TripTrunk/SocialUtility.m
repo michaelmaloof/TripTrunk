@@ -7,10 +7,9 @@
 //
 
 #import "SocialUtility.h"
+#import "TTCache.h"
 
 @implementation SocialUtility
-
-#pragma mark User Following
 
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock
 {
@@ -28,6 +27,10 @@
     followActivity.ACL = followACL;
     
     [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        // Cache the following status
+        [[TTCache sharedCache] setFollowStatus:succeeded user:user];
+        
         if (completionBlock) {
             completionBlock(succeeded, error);
         }
@@ -45,6 +48,10 @@
         // While normally there should only be one follow activity returned, we can't guarantee that.
         
         if (!error) {
+            
+            // Cache the following status
+            [[TTCache sharedCache] setFollowStatus:NO user:user];
+            
             for (PFObject *followActivity in followActivities) {
                 [followActivity deleteEventually];
             }
@@ -99,6 +106,61 @@
     
     
     return addToTripActivity;
+}
+
++ (void)deleteTrip:(Trip *)trip;
+{
+    // If the user isn't the trip creator, don't let them delete this trip
+    if (![[[PFUser currentUser] objectId] isEqualToString:[trip.creator objectId]]) {
+        return;
+    }
+    
+    // Delete any activities that directly references this trip
+    // That SHOULD include all addToTrip, like, and comment activities
+    PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+    [deleteActivitiesQuery whereKey:@"trip" equalTo:trip];
+
+    [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             // Delete the found objects
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+             
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+    
+    // Delete all the photos for this trip
+    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+    [photoQuery whereKey:@"trip" equalTo:trip];
+    [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             
+             // Delete the found Photos
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoObjectsDeleted" object:nil];
+
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+
+    // Delete the trip itself
+    [trip deleteEventually];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TripDeleted" object:nil];
+
+
 }
 
 + (void)removeUser:(PFUser *)user fromTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
@@ -180,10 +242,15 @@
 
 + (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
+    // Increment the cache count.
+    [[TTCache sharedCache] incrementCommentCountForPhoto:photo];
+    
+    
     PFObject *commentActivity = [PFObject objectWithClassName:@"Activity"];
     [commentActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
     [commentActivity setObject:photo.user forKey:@"toUser"];
     [commentActivity setObject:photo forKey:@"photo"];
+    [commentActivity setObject:photo.trip forKey:@"trip"];
     [commentActivity setObject:@"comment" forKey:@"type"];
     [commentActivity setObject:comment forKey:@"content"];
     
@@ -196,6 +263,10 @@
     [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             completionBlock(succeeded, error);
+        }
+        else {
+            // Error, so decrement the cache count again.
+            [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
         }
     }];
 }
@@ -243,6 +314,7 @@
         [likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
         [likeActivity setObject:photo.user forKey:@"toUser"];
         [likeActivity setObject:photo forKey:@"photo"];
+        [likeActivity setObject:photo.trip forKey:@"trip"];
         
         PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
         [likeACL setPublicReadAccess:YES];
@@ -299,5 +371,107 @@
     return query;
 }
 
+//+ (void)addToTripActivities:(PFUser *)user forCity:(NSString*)city  {
+//    
+//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//    [query whereKey:@"toUser" equalTo:user];
+//    [query whereKey:@"type" equalTo:@"addToTrip"];
+//    [query includeKey:@"trip"];
+//    
+//    if (city && ![city isEqualToString: @""]) {
+//        [query whereKey:@"content" equalTo:city];
+//    }
+//    
+//}
+
++ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(BOOL isFollowing, NSError *error))completionBlock; {
+    // Determine the follow status of the user
+    PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [isFollowingQuery whereKey:@"fromUser" equalTo:fromUser];
+    [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
+    [isFollowingQuery whereKey:@"toUser" equalTo:toUser];
+    [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        
+        // Cache the user's follow status since we're checking if the current user follows someone else.
+        // We don't cache if fromUser isn't the currentUser
+        if ([fromUser.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            [[TTCache sharedCache] setFollowStatus:(!error && number > 0) user:toUser];
+        }
+        
+        // returns true if the user is following the user.
+        completionBlock((!error && number > 0), error);
+
+    }];
+}
+
++ (void)followingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;{
+    NSMutableArray *friends = [[NSMutableArray alloc] init];
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"fromUser" equalTo:user];
+    [followingQuery whereKey:@"type" equalTo:@"follow"];
+    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    [followingQuery includeKey:@"toUser"];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }
+        else if (!error)
+        {
+            // Map the activity users into the friends array
+            for (PFObject *activity in objects)
+            {
+                PFUser *user = activity[@"toUser"];
+                [friends addObject:user];
+            }
+            // Update the cache
+            if (friends.count > 0) {
+                [[TTCache sharedCache] setFollowing:friends];
+            }
+            
+            completionBlock(friends, error);
+        }
+        
+    }];
+}
+
++ (void)followers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
+{
+    NSMutableArray *friends = [[NSMutableArray alloc] init];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"type" equalTo:@"follow"];
+    [query whereKeyExists:@"fromUser"];
+    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    [query includeKey:@"fromUser"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }
+        else if (!error)
+        {
+            // Map the activity users into the friends array
+            for (PFObject *activity in objects)
+            {
+                PFUser *user = activity[@"fromUser"];
+                NSLog(@"name: %@", user.username);
+                [friends addObject:user];
+            }
+            // Update the cache
+            if (friends.count > 0) {
+                [[TTCache sharedCache] setFollowers:friends];
+            }
+            
+            completionBlock(friends, error);
+        }
+        
+    }];
+}
 
 @end

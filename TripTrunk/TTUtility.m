@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking/AFNetworking.h"
 #import "MSFloatingProgressView.h"
+#import "TTCache.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
@@ -152,6 +153,9 @@ CLCloudinary *cloudinary;
                       NSLog(@"error saving photo to parse: %@", error);
                   }
                   else {
+                      // Add photo to the cache
+                      [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                      
                       NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
@@ -242,6 +246,40 @@ CLCloudinary *cloudinary;
         [request start];
     }
     
+}
+
+- (void)deletePhoto:(Photo *)photo;
+{
+    // If the user isn't the trip creator, don't let them delete this trip
+    if (![[[PFUser currentUser] objectId] isEqualToString:[photo.user objectId]]) {
+        return;
+    }
+    
+    // Delete any activities that directly references this photo
+    // That SHOULD include all like, and comment activities
+    PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+    [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
+    
+    [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+     {
+         if (!error) {
+             // The find succeeded.
+             // Delete the found objects
+             for (PFObject *object in objects) {
+                 [object deleteEventually];
+             }
+             
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+             
+         } else {
+             NSLog(@"Error: %@ %@", error, [error userInfo]);
+         }
+     }];
+    
+    [photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+    }];
 }
 
 - (NSString *)thumbnailImageUrl:(NSString *)urlString;

@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Photo.h"
 
-@interface ActivityListViewController : UITableViewController
+@interface ActivityListViewController : UIViewController
 
 - (id)initWithLikes:(NSArray *)likes;
 
-- (id)initWithComments:(NSArray *)comments;
+- (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
 
 - (id)initWithActivities:(NSArray *)activities;
 

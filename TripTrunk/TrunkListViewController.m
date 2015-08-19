@@ -11,8 +11,11 @@
 #import "Trip.h"
 #import "TrunkTableViewCell.h"
 #import "TrunkViewController.h"
+#import "SocialUtility.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource>
+#import "UIScrollView+EmptyDataSet.h"
+
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;
 
@@ -57,7 +60,7 @@
         [[self navigationItem] setBackBarButtonItem:newBackButton];
         
         self.filter =
-        [[UIBarButtonItem alloc] initWithTitle:@"Me"
+        [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
                                          style:UIBarButtonItemStylePlain
                                         target:self
                                         action:@selector(rightBarItemWasTapped)];
@@ -80,19 +83,22 @@
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
 }
 
 -(void)loadUserTrunks
 {
     if (self.meParseLocations == nil) {
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"toUser" equalTo:self.user];
-        [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-        [followingQuery whereKey:@"content" equalTo:self.city];
-        [followingQuery includeKey:@"trip"];
-        [followingQuery orderByDescending:@"mostRecentPhoto"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        [query whereKey:@"toUser" equalTo:self.user];
+        [query whereKey:@"type" equalTo:@"addToTrip"];
+        [query whereKey:@"content" equalTo:self.city];
+        [query includeKey:@"trip"];
+        [query orderByDescending:@"mostRecentPhoto"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
                 NSLog(@"Error: %@",error);
@@ -123,79 +129,28 @@
     }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-}
-
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:@"Everyone"];
+        [self.filter setTitle:@"All Trunks"];
         [self queryParseMethodMe];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:@"Me"];
+        [self.filter setTitle:@"My Trunks"];
         [self queryParseMethodEveryone];
     }
 }
 
-
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    if (self.filter.tag == 0 && self.parseLocations !=nil) {
-        return self.parseLocations.count;
-    }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
-        return self.meParseLocations.count;
-    }
-    else  if (self.user != nil){
-        return self.meParseLocations.count;
-    } else {
-        return 0;
-    }
-}
-
--(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-
-{
-    TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
-    Trip *trip = [[Trip alloc]init];
-    
-    if (self.filter.tag == 0 && self.user == nil) {
-        trip = [self.parseLocations objectAtIndex:indexPath.row];
-
-    } else {
-        trip = [self.meParseLocations objectAtIndex:indexPath.row];
-
-    }
-    cell.trip = trip;
-    cell.textLabel.text = trip.name;
-    
-    cell.detailTextLabel.text = cell.trip.user;
-    
-
-    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
-
-
-    if (tripInterval < 86400 && trip.mostRecentPhoto != NULL) {
-        cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
-    }
-    else
-    {
-        cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-    }
-
-
-    return cell;
-}
+#pragma mark - Parse Queries
 
 -(void)queryParseMethodMe
 {
     if (self.meParseLocations == nil) {
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-        [followingQuery whereKey:@"content" equalTo:self.city];
-        [followingQuery includeKey:@"trip"];
-        [followingQuery orderByDescending:@"mostRecentPhoto"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [query whereKey:@"type" equalTo:@"addToTrip"];
+        [query whereKey:@"content" equalTo:self.city];
+        [query includeKey:@"trip"];
+        [query orderByDescending:@"mostRecentPhoto"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
                 NSLog(@"Error: %@",error);
@@ -231,32 +186,17 @@
     if (self.parseLocations == nil)
     {
         self.friends = [[NSMutableArray alloc]init];
+        
+        // Add self to the friends array so that we query for our own trunks
         [self.friends addObject:[PFUser currentUser]];
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-        [followingQuery whereKey:@"type" equalTo:@"follow"];
-        [followingQuery includeKey:@"toUser"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else if (!error)
-        {
-            
-            int count = 0;
-            for (PFObject *activity in objects)
-            {
-                PFUser *user = activity[@"toUser"];
-                [self.friends addObject:user];
-                count += 1;
-                
-                if(count == objects.count){
-                    [self queryForTrunks];
-                }
+        
+        [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+            if (!error) {
+                [self.friends addObjectsFromArray:users];
+                [self queryForTrunks];
+
             }
-        }
-    }];
+        }];
         
     } else
     {
@@ -266,25 +206,19 @@
 
 }
 
--(void)queryForTrunks{
+- (void)queryForTrunks{
 
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" containedIn:self.friends];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery whereKey:@"content" equalTo:self.city];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery includeKey:@"toUser"];
-    [followingQuery orderByDescending:@"mostRecentPhoto"];
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" containedIn:self.friends];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query whereKey:@"content" equalTo:self.city];
+    [query includeKey:@"trip"];
+    [query includeKey:@"toUser"];
+    [query orderByDescending:@"mostRecentPhoto"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
             int count = 0;
-            self.parseLocations = [[NSMutableArray alloc]init];
+            self.parseLocations = [[NSMutableArray alloc] init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
@@ -315,9 +249,14 @@
                 }
             }
         }
+        else {
+            NSLog(@"Error: %@",error);
+        }
         
     }];
 }
+
+#pragma mark - Navigation
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -336,10 +275,161 @@
     }
 }
 
+#pragma mark - UITableView Data Source
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (self.filter.tag == 0 && self.parseLocations !=nil) {
+        return self.parseLocations.count;
+    }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
+        return self.meParseLocations.count;
+    }
+    else  if (self.user != nil){
+        return self.meParseLocations.count;
+    } else {
+        return 0;
+    }
+}
+
+-(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
+    Trip *trip = [[Trip alloc]init];
+    
+    if (self.filter.tag == 0 && self.user == nil) {
+        trip = [self.parseLocations objectAtIndex:indexPath.row];
+        
+    } else {
+        trip = [self.meParseLocations objectAtIndex:indexPath.row];
+        
+    }
+    cell.trip = trip;
+    cell.textLabel.text = trip.name;
+    
+    cell.detailTextLabel.text = cell.trip.user;
+    
+    
+    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
+    
+    
+    if (tripInterval < 86400 && trip.mostRecentPhoto != NULL) {
+        cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
+    }
+    else
+    {
+        cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+    }
+    
+    
+    return cell;
+}
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.path = indexPath;
     [self performSegueWithIdentifier:@"TrunkView" sender:self];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+#pragma mark - DZNEmptyDataSetSource
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Trunks Here";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"Have you visisted this city? Create a trunk now!";
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor colorWithWhite:0.0 alpha:0.5];
+}
+
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
+//{
+//    return [UIImage imageNamed:@"ticketIcon"];
+//}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, 20);
+}
+
+#pragma mark - DZNEmptyDataSetDelegate
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    if (self.filter.tag == 0 && self.parseLocations.count == 0) {
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }else if (self.filter.tag == 1 && self.meParseLocations.count == 0){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    else  if (self.user == nil){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+
+    return NO;
+}
+
+- (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
+{
+    return YES;
+}
+
+- (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
+{
+    return NO;
+}
+
+- (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.tabBarController setSelectedIndex:1];
+        
+    });
+
+}
+
+
+- (void)dealloc
+{
+    self.tableView.emptyDataSetSource = nil;
+    self.tableView.emptyDataSetDelegate = nil;
 }
 
 

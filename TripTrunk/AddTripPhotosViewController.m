@@ -209,7 +209,7 @@
         NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
         PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        [options setVersion:PHImageRequestOptionsVersionOriginal];
+        [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
         
         [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
@@ -248,6 +248,9 @@
                      // Pop to the root view controller of the add Trip tab as well
                      UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:1];
                      [triptab popToRootViewControllerAnimated:NO];
+                     
+                     // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
                      
                      
                  });
@@ -340,7 +343,7 @@
 
 - (IBAction)onAddCaptionTapped:(id)sender
 {
-    
+    [self.view endEditing:YES];
     if (![self.caption.text isEqual: @""])
     {
 
@@ -381,6 +384,8 @@
 }
 
 - (IBAction)onCancelCaptionTapped:(id)sender {
+    [self.view endEditing:YES];
+    
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
@@ -397,6 +402,9 @@
 }
 
 - (IBAction)onRemoveTapped:(id)sender { //FIXME Doesn't remove caption
+    
+    [self.view endEditing:YES];
+    
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
     self.plusPhoto.hidden = NO;
@@ -418,6 +426,8 @@
 }
 
 - (IBAction)onDeleteTapped:(id)sender {
+    [self.view endEditing:YES];
+    
     self.tripCollectionView.hidden = NO;
     self.selectedPhoto.hidden = YES;
     [self.photos removeObjectAtIndex:self.path];

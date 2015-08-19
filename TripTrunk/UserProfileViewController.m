@@ -12,6 +12,7 @@
 #import "FriendsListViewController.h"
 #import "SocialUtility.h"
 #import "TTUtility.h"
+#import "TTCache.h"
 #import "HomeMapViewController.h"
 
 @interface UserProfileViewController ()
@@ -33,14 +34,32 @@
     return self;
 }
 
+- (id)initWithUserId:(NSString *)userId;
+{
+    self = [super initWithNibName:@"ProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    if (self) {
+        _user = [PFUser user];
+        [_user setObjectId:userId];
+;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+
+    
+    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
+    [_user fetchIfNeeded];
+    
     [self.nameLabel setText:_user[@"name"]];
-    [self.usernameLabel setText:_user[@"username"]];
+    [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     
@@ -58,40 +77,47 @@
         [self.followButton setHidden:YES];
     }
     else {
-        [self.followButton setHidden:NO];
-    
         // Refresh the following status of this user
         
-        // Query all user's that
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-        [followingQuery whereKey:@"type" equalTo:@"follow"];
-        [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-        [followingQuery whereKey:@"toUser" equalTo:_user];
-        
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if(error)
-            {
-                NSLog(@"Error: %@",error);
-            }
-            // If we have anything in Objects, then we're following the user.
-            else if (objects.count > 0)
-            {
-                // We have the following status, so update the Selected status and enable the button
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.followButton setEnabled:YES];
-                    [self.followButton setSelected:YES];
-                });
-            }
-            else {
-                // Not following this user, enable the button and set the selected status
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.followButton setEnabled:YES];
-                    [self.followButton setSelected:NO];
-                });
-            }
+        if ([[TTCache sharedCache] followStatusForUser:self.user]) {
+            // We have the following status, so update the Selected status and enable the button
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.followButton setEnabled:YES];
+                [self.followButton setSelected:YES];
+            });
+        }
+        else
+        {
             
-        }];
+            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(BOOL isFollowing, NSError *error) {
+                if (!error) {
+                    if (isFollowing)
+                    {
+                        // We have the following status, so update the Selected status and enable the button
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:YES];
+                        });
+                    }
+                    else {
+                        // Not following this user, enable the button and set the selected status
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:NO];
+                        });
+                    }
+                }
+                else {
+                    NSLog(@"Error: %@",error);
+                }
+
+            }];
+
+        }
+        
+        // Show the button
+        [self.followButton setHidden:NO];
+        
     }
 
 }
@@ -125,8 +151,9 @@
     
     [PFUser logOut];
     
-    // This pushes the user back to the map view, which should then show the loginview
-    [self.navigationController popViewControllerAnimated:YES];
+    // This pushes the user back to the map view, on the map tab, which should then show the loginview
+    [[[self.tabBarController viewControllers] objectAtIndex:0] popToRootViewControllerAnimated:YES];
+    [self.tabBarController setSelectedIndex:0];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
 }

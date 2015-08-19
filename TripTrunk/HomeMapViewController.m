@@ -12,6 +12,7 @@
 #import "Trip.h"
 #import "TrunkListViewController.h"
 #import "TTUtility.h"
+#import "SocialUtility.h"
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 
@@ -88,21 +89,41 @@
     self.parseLocations = [[NSMutableArray alloc]init];
     
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-    if(![PFUser currentUser])
+    if([self checkUserRegistration])
     {
-        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+        if (self.user == nil) {
+            [self queryParseMethodEveryone];
             
+            [self registerNotifications];
+            
+        } else {
+            [self queryParseMethodForUser:self.user];
+            
+            [self registerNotifications];
+        }
     }
-    else if (self.user == nil) {
-        [self queryParseMethodEveryone];
-        
-        [self registerNotifications];
+}
 
-    } else {
-        [self queryParseMethodForUser:self.user];
-        
-        [self registerNotifications];
+/**
+ *  Determine the user status
+ *
+ *  @return YES if user is logged in and we should continue. NO if we are displaying a different view to do/finish login
+ */
+- (BOOL)checkUserRegistration {
+    // No logged-in user
+    if (![PFUser currentUser]) {
+        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
+        return NO;
     }
+    // User is logged in, but hasn't completed registration (i.e. hasn't set a username or hometown, etc.)
+    else if (![[PFUser currentUser] valueForKey:@"completedRegistration"] || [[[PFUser currentUser] valueForKey:@"completedRegistration"] boolValue] == FALSE) {
+        
+        [self.navigationController performSegueWithIdentifier:@"presentUsernameSegue" sender:nil];
+
+        return NO;
+    }
+    // User is logged in and good-to-go
+    return YES;
 }
 
 - (void)registerNotifications {
@@ -143,13 +164,13 @@
         self.loadedOnce = YES;
     }
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:user]; 
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery includeKey:@"toUser"];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query includeKey:@"trip"];
+    [query includeKey:@"toUser"];
     
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         if (self.loadedOnce == NO)
         {
@@ -208,13 +229,14 @@
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
 
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" containedIn:self.friends];
-    [followingQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [followingQuery includeKey:@"trip"];
-    [followingQuery includeKey:@"toUser"];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" containedIn:self.friends];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query includeKey:@"trip"];
+    [query includeKey:@"toUser"];
 
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 
         if (self.loadedOnce == NO)
         {
@@ -275,46 +297,28 @@
     }
         self.friends = [[NSMutableArray alloc]init];
         [self.friends addObject:[PFUser currentUser]];
-        PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [followingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-        [followingQuery whereKey:@"type" equalTo:@"follow"];
-        [followingQuery includeKey:@"toUser"];
-        [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (self.loadedOnce == NO){
+            self.title = @"Loading Trunks...";
+            self.loadedOnce = YES;
+        }
+
+        if (!error) {
+            [self.friends addObjectsFromArray:users];
             
-            if (self.loadedOnce == NO){
-                self.title = @"Loading Trunks...";
-                self.loadedOnce = YES;
+            [self queryForTrunks];
+        }
+        else {
+            if (self.user == nil){
+                self.title = @"TripTrunk";
+            } else {
+                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
-            
-                if (error)
-                {
-                    if (self.user == nil){
-                        self.title = @"TripTrunk";
-                    } else {
-                        self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
-                    }
-                    [ParseErrorHandlingController handleError:error];
+            [ParseErrorHandlingController handleError:error];
 
-                } else if (objects.count == 0) {
-                    [self queryForTrunks];
-
-                }
-                else if (!error)
-                {
-                    int count = 0;
-                    for (PFObject *activity in objects)
-                    {
-                        PFUser *user = activity[@"toUser"];
-                        [self.friends addObject:user];
-                        count += 1;
-                        
-                        if(count == objects.count)
-                        {
-                            [self queryForTrunks];
-                        }
-                    }
-                }
-        }];
+        }
+    }];
 }
 
 - (IBAction)zoomOut:(id)sender {

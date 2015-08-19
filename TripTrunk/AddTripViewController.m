@@ -38,8 +38,7 @@
 
 // Date Properties
 @property NSDateFormatter *formatter;
-@property NSDate *startDate;
-@property NSDate *endDate;
+
 @property (strong, nonatomic) UIDatePicker *datePicker;
 
 @end
@@ -165,7 +164,7 @@
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     
     UILabel *endLabel = [[UILabel alloc] init];
-    [endLabel setText:@"Start Date"];
+    [endLabel setText:@"End Date"];
     [endLabel setFont:[UIFont systemFontOfSize:12.0]];
     [endLabel setTextColor:[UIColor blackColor]];
     [endLabel sizeToFit];
@@ -240,7 +239,7 @@
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
-    
+     
     else {
         self.startTripTextField.backgroundColor = [UIColor whiteColor];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
@@ -254,11 +253,11 @@
     
     if (self.datePicker.tag == 0) {
         self.startTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
-        self.startDate = self.datePicker.date;
+        self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
     }
     else if (self.datePicker.tag == 1) {
         self.endTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
-        self.endDate = self.datePicker.date;
+        self.trip.endDate = [self.formatter stringFromDate:self.datePicker.date];
     }
 }
 
@@ -308,34 +307,20 @@
 
                 if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
                 {
-                    NSTimeInterval startTimeInterval = [self.startDate timeIntervalSince1970];
-                    NSTimeInterval endTimeInterval = [self.endDate timeIntervalSince1970];
+                    // Trip Input has correct data - save the trip!
                     
-                    if(startTimeInterval <= endTimeInterval)
-                    {
-                        // Trip Input has correct data - save the trip!
+                    CLPlacemark *placemark= placemarks.firstObject;
+                    self.trip.country = placemark.country;
                     
-                        CLPlacemark *placemark= placemarks.firstObject;
-                        self.trip.country = placemark.country;
-                        
-                        if (placemark.locality == nil){
-                            [self setTripCityName:placemark.administrativeArea];
-                            self.trip.state = placemark.administrativeArea;
-                        } else{
-                            [self setTripCityName:placemark.locality];
-                            self.trip.state = placemark.administrativeArea;
-                        }
-                        [self parseTrip];
-                        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
- 
-
+                    if (placemark.locality == nil){
+                        [self setTripCityName:placemark.administrativeArea];
+                        self.trip.state = placemark.administrativeArea;
+                    } else{
+                        [self setTripCityName:placemark.locality];
+                        self.trip.state = placemark.administrativeArea;
                     }
-                    else
-                    {
-                        [self notEnoughInfo:@"Your start date must happen before the end date"];
-                        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                        
-                    }
+                    [self parseTrip];
+                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
                 }
             
@@ -354,6 +339,11 @@
 
 - (IBAction)clearButtonPressed:(id)sender {
     
+    [self resetForm];
+
+}
+
+- (void)resetForm {
     // Initialize the view with no data
     self.tripNameTextField.text = @"";
     self.countryTextField.text = @"";
@@ -367,7 +357,6 @@
     if (!_isEditing) {
         self.trip = [[Trip alloc] init];
     }
-
 }
 
 // Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
@@ -447,16 +436,15 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
+
     if (alertView.tag == 0)
     {
         if (buttonIndex == 1)
         {
-            [self.trip deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                }
-            }];
+            [SocialUtility deleteTrip:self.trip];
+            
+            [self.navigationController popToRootViewControllerAnimated:YES];
+
         }
     }
     
@@ -476,6 +464,17 @@
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
+    
+    // Ensure start date is after end date
+    NSTimeInterval startTimeInterval = [[self.formatter dateFromString:self.trip.startDate] timeIntervalSince1970];
+    NSTimeInterval endTimeInterval = [[self.formatter dateFromString:self.trip.endDate] timeIntervalSince1970];
+    if(startTimeInterval > endTimeInterval)
+    {
+        [self notEnoughInfo:@"Your start date must happen on or before the end date"];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        return;
+    }
+    
     
     if (self.trip.mostRecentPhoto == nil){
         NSString *date = @"01/01/1200";
@@ -529,11 +528,26 @@
 
 #pragma mark - Navigation
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     AddTripFriendsViewController *vc = segue.destinationViewController;
     vc.trip = self.trip;
     vc.isTripCreation = YES;
+    
+    // Set up an observer that will be used to reset the form after trip completion
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetForm)
+                                                 name:@"resetTripFromNotification"
+                                               object:nil];
+
+}
+
+#pragma mark - Dealloc
+
+- (void)dealloc {
+    
+    // Remove any observers
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

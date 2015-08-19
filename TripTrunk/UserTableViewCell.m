@@ -18,6 +18,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [self.profilePicImageView setClipsToBounds:YES];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

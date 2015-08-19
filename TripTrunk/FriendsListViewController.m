@@ -15,10 +15,12 @@
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
+#import "TTCache.h"
+#import "UIScrollView+EmptyDataSet.h"
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface FriendsListViewController () <UserTableViewCellDelegate>
+@interface FriendsListViewController () <UserTableViewCellDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
@@ -32,7 +34,6 @@
 {
     self = [super initWithNibName:@"FriendsListViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
-        _friends = [[NSMutableArray alloc] init];
         _isFollowing = isFollowing;
         _thisUser = user;
     }
@@ -51,80 +52,59 @@
     self.tableView.sectionHeaderHeight = 0;
     
     if (_isFollowing) {
+        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
         [self loadFollowing];
         self.title = @"Following";
     }
     else
     {
+        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
         [self loadFollowers];
         self.title = @"Followers";
     }
+    
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
     
 }
 
 - (void)loadFollowing
 {
     
-    // Query all user's that
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
-    [followingQuery whereKey:@"type" equalTo:@"follow"];
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-    [followingQuery includeKey:@"toUser"];
-    
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
-            for (PFObject *activity in objects) {
-                PFUser *user = activity[@"toUser"];
-                [_friends addObject: user];
-            }
+    [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            _friends = nil;
+            _friends = [[NSMutableArray alloc] initWithArray:users];
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
         }
-        
+        else {
+            NSLog(@"Error: %@",error);
+        }
     }];
 
 }
 
 - (void)loadFollowers
 {
-    
-    // Query all user's that
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:_thisUser];
-    [followingQuery whereKey:@"type" equalTo:@"follow"];
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-    [followingQuery includeKey:@"fromUser"];
-    
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            
-            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
-            for (PFObject *activity in objects) {
-                PFUser *user = activity[@"fromUser"];
-                [_friends addObject: user];
-            }
+    [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            _friends = nil;
+            _friends = [[NSMutableArray alloc] initWithArray:users];
+
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
         }
-        
+        else {
+            NSLog(@"Error: %@",error);
+        }
     }];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -167,7 +147,7 @@
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    
+        
     [cell.followButton setSelected:_isFollowing];
     
     
@@ -238,6 +218,103 @@
             }
         }];
     }
+}
+
+#pragma mark - DZNEmptyDataSetSource
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Users Found";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor blackColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"";
+    
+    if (_isFollowing) {
+        text = @"Follow some users to see what other people are sharing";
+    }
+    else {
+        text = @"You have no followers. Invite some friends to TripTrunk";
+    }
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+    
+    //TODO: Implement a facebook invite button - commented out code creates a button
+    
+    //    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+    //                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    //
+    //    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
+    return nil;
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor colorWithWhite:1.0 alpha:1.0];
+}
+
+//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
+//{
+//    return [UIImage imageNamed:@"ticketIcon"];
+//}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, 20);
+}
+
+#pragma mark - DZNEmptyDataSetDelegate
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    
+    // Search Controller and the regular table view have different data sources
+    if (self.friends.count == 0) {
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
+{
+    return YES;
+}
+
+- (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
+{
+    return NO;
+}
+
+- (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
+{
+    //TODO: Implement this
+}
+
+- (void)dealloc
+{
+    self.tableView.emptyDataSetSource = nil;
+    self.tableView.emptyDataSetDelegate = nil;
 }
 
 

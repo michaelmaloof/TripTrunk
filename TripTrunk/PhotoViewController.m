@@ -13,10 +13,12 @@
 #import "Comment.h"
 #import "TTUtility.h"
 #import "SocialUtility.h"
+#import "UserProfileViewController.h"
 #import "ActivityListViewController.h"
+#import "TTCache.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UITextViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 // IBOutlets
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -123,6 +125,11 @@
                     }
                 }
             }
+            
+            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
+            
+            //TODO: update cached photo attributes, i.e. likers, commenters, etc.
+            
             [self.tableView reloadData];
             self.textView.text = nil;
             
@@ -212,6 +219,14 @@
 
 
 - (IBAction)onCommentsTapped:(id)sender {
+    
+    
+    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navController animated:YES completion:nil];
+    return;
+    
+    // NONE OF THIS EXECUTES ANYMORE - MS
     self.tableView.hidden = !self.tableView.hidden;
     self.addComment.hidden = !self.addComment.hidden;
     self.textView.hidden = !self.textView.hidden;
@@ -245,6 +260,8 @@
     // Like Photo
     if (!self.likeButton.selected)
     {
+        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
+        
         [self.likeButton setSelected:YES];
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
@@ -259,6 +276,9 @@
     }
     // Unlike Photo
     else if (self.likeButton.selected) {
+        
+        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
+        
         [self.likeButton setSelected:NO];
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
@@ -269,6 +289,8 @@
             }
         }];
     }
+    
+    [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
     
 }
 
@@ -290,12 +312,11 @@
         // Delete
         if (alertView.tag == 0) {
             
-            [self.photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded)
-                {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-            }];
+            [[TTUtility sharedInstance] deletePhoto:self.photo];
+
+            // pop the view
+            [self.navigationController popViewControllerAnimated:YES];
+
             
         }
         // Download Photo
@@ -306,6 +327,9 @@
 }
 
 #pragma mark - UITableView Data Source
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 100;
+}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -337,6 +361,28 @@
 }
 
 #pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFUser *user;
+    
+    if (indexPath.row == 0) {
+        user = self.photo.user;
+    }
+    else if (indexPath.row > 0) {
+        
+        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
+        
+        user = [commentActivity valueForKey:@"fromUser"];
+    }
+    
+    // If there's a username, then we have the full object populated
+    if (user) {
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row > 0) {
         
@@ -434,7 +480,7 @@
     return YES;
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self textViewDidEndEditing:self.textView];
 }
 

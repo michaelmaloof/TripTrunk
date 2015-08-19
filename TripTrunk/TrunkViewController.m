@@ -70,21 +70,20 @@
     // Load initial data
     [self checkIfIsMember];
     [self queryParseMethod];
+    
 
-
+    // Add observer for when uploading is finished.
+    // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
+    // Notification is also used if a photo is deleted.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(queryParseMethod)
+                                                 name:@"parsePhotosUpdatedNotification"
+                                               object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     
     [self refreshTripDataViews];
-
-    // Add observer for when uploading is finished.
-    // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(queryParseMethod)
-                                                 name:@"parsePhotosUpdatedNotification"
-                                               object:nil];
     
 }
 
@@ -346,15 +345,10 @@
     
 }
 
-
-#pragma mark - viewWillDissappear
-
-- (void)viewWillDisappear:(BOOL)animated {
+-(void)dealloc {
+    // remove the observer here so it keeps listening for it until the view is dealloc'd, not just when it disappears
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-
-
 @end
 
 

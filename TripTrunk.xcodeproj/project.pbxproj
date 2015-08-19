@@ -71,6 +71,7 @@
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A401B25297300185713 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
+		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
@@ -80,11 +81,15 @@
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
 		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
+		C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F0D66A1B73D15900957F59 /* TTCache.m */; };
 		C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */; };
 		C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F6B4F71B5575E8003BD4D5 /* UIColor+HexColors.m */; };
 		C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F9177B1B4ECFDC00AE8953 /* MSFloatingProgressView.m */; };
 		C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */; };
 		C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */; };
+		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
+		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
+		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,6 +206,8 @@
 		C9525A3B1B251FD400185713 /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
+		C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
+		C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
 		C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
@@ -218,6 +225,8 @@
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextField.h; sourceTree = "<group>"; };
 		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
+		C9F0D6691B73D15900957F59 /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
+		C9F0D66A1B73D15900957F59 /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
 		C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo134.png; path = Images.xcassets/photo134.imageset/photo134.png; sourceTree = "<group>"; };
 		C9F6B4F61B5575E8003BD4D5 /* UIColor+HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColors.h"; sourceTree = "<group>"; };
 		C9F6B4F71B5575E8003BD4D5 /* UIColor+HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColors.m"; sourceTree = "<group>"; };
@@ -227,6 +236,11 @@
 		C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTripFriendsViewController.m; sourceTree = "<group>"; };
 		C9FAB7AB1B1B9FC600282EA3 /* TrunkMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkMembersViewController.h; sourceTree = "<group>"; };
 		C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkMembersViewController.m; sourceTree = "<group>"; };
+		C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTableViewCell.h; sourceTree = "<group>"; };
+		C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentTableViewCell.m; sourceTree = "<group>"; };
+		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
+		C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCommentInputView.h; sourceTree = "<group>"; };
+		C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCommentInputView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +320,8 @@
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
+				C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */,
+				C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */,
 				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
 				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
@@ -336,6 +352,9 @@
 				C90C3CF31B04F45500CABBC9 /* UserTableViewCell.h */,
 				C90C3CF41B04F45500CABBC9 /* UserTableViewCell.m */,
 				C90C3CF51B04F45500CABBC9 /* UserTableViewCell.xib */,
+				C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */,
+				C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */,
+				C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */,
 			);
 			name = ViewCells;
 			sourceTree = "<group>";
@@ -391,6 +410,8 @@
 				C9C7299F1B0248D900BA68D2 /* SocialUtility.m */,
 				C9525A3C1B25218800185713 /* TTUtility.h */,
 				C9525A3D1B25218800185713 /* TTUtility.m */,
+				C9F0D6691B73D15900957F59 /* TTCache.h */,
+				C9F0D66A1B73D15900957F59 /* TTCache.m */,
 				C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */,
 				C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
@@ -505,6 +526,8 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
+				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
 				C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */,
 				C90552151B3C3ABC007B5946 /* MBProgressHUD.h */,
@@ -612,6 +635,7 @@
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
+				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,7 +660,9 @@
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
+				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
+				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
@@ -649,6 +675,7 @@
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
+				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
@@ -657,6 +684,7 @@
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
+				C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */,
 				C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */,
 				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
@@ -802,6 +830,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -821,6 +850,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1d0dce19-dbcd-4255-810d-8232304b6364";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -828,8 +858,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -847,6 +878,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

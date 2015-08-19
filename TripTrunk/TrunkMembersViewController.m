@@ -14,6 +14,7 @@
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
+#import "TTCache.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -61,7 +62,7 @@
     
     
     // initialize array for table view data source
-    _tripMembers = [[NSMutableArray alloc] init];
+    _tripMembers = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] membersForTrip:self.trip]];
     
 
     
@@ -82,6 +83,7 @@
  */
 - (void)loadUsers
 {
+    
     
     // Query all user's that are in this trip
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
@@ -105,6 +107,10 @@
                 PFUser *user = activity[@"toUser"];
                 [_tripMembers addObject: user];
             }
+            
+            // Cache the members
+            [[TTCache sharedCache] setMembers:_tripMembers forTrip:self.trip];
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -220,7 +226,6 @@
     //TODO: Get follow status asynchronously and display the correct follow button whenever we get the result back.
     [cell.followButton setHidden:YES]; // Hide the follow button until we get the correct status
     [cell.followButton setSelected:_isFollowing];
-
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];

@@ -120,71 +120,44 @@
 
 }
 
+
+
+
 - (void)loadFollowing
 {
     
-    // Query all user's that
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"fromUser" equalTo:_thisUser];
-    [followingQuery whereKey:@"type" equalTo:@"follow"];
-//    [followingQuery whereKey:@"toUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-    [followingQuery includeKey:@"toUser"];
-    
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
-            for (PFObject *activity in objects) {
-                PFUser *user = activity[@"toUser"];
-                [[_friends objectAtIndex:0] addObject: user];
-            }
+    [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            [[_friends objectAtIndex:0] addObjectsFromArray:users];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
         }
-        
+        else {
+            NSLog(@"Error: %@",error);
+        }
     }];
     
 }
 
 - (void)loadFollowers
 {
-    
-    // Query all user's that
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
-    [followingQuery whereKey:@"toUser" equalTo:_thisUser];
-    [followingQuery whereKey:@"type" equalTo:@"follow"];
-    [followingQuery whereKey:@"fromUser" notContainedIn:self.existingMembers]; // make sure we don't show anyone already in the trip
-    [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-    [followingQuery includeKey:@"fromUser"];
-    
-    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
-            for (PFObject *activity in objects) {
-                PFUser *user = activity[@"fromUser"];
-                [[_friends objectAtIndex:1] addObject: user];
-            }
+    [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            [[_friends objectAtIndex:1] addObjectsFromArray:users];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
         }
-        
+        else {
+            NSLog(@"Error: %@",error);
+        }
     }];
-    
 }
+
+
 
 #pragma mark - Table view data source
 
@@ -211,7 +184,6 @@
     }
     return nil;
 }
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     

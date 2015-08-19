@@ -15,6 +15,7 @@
 #import "TTUtility.h"
 #import "Photo.h"
 #import <Photos/Photos.h>
+#import "TTCache.h"
 
 
 @interface ProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -73,10 +74,13 @@
     
     [PFUser logOut];
     
-    // This pushes the user back to the map view, which should then show the loginview
-    [self.navigationController popViewControllerAnimated:YES];
+    // This pushes the user back to the map view, on the map tab, which should then show the loginview
+    [[[self.tabBarController viewControllers] objectAtIndex:0] popToRootViewControllerAnimated:YES];
+    [self.tabBarController setSelectedIndex:0];
     
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
+    // clear cache
+    [[TTCache sharedCache] clear];
 }
 
 - (void)setProfilePic:(NSString *)urlString {
@@ -133,6 +137,7 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     self.profilePicImageView.image = info[UIImagePickerControllerOriginalImage];
+    [self.profilePicImageView setClipsToBounds:YES];
     
     // set the reference URL now so we have it for uploading the raw image data
     
