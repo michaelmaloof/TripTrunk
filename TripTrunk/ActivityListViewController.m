@@ -78,6 +78,7 @@ enum TTActivityViewType : NSUInteger {
     
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    [self.view setBackgroundColor:[UIColor whiteColor]]; // make the view bg white to avoid the black glitch if a keyboard appears - for CommentView
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
@@ -93,6 +94,12 @@ enum TTActivityViewType : NSUInteger {
 
     [self setupTableViewConstraints];
 
+    
+    // Set Done button
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(closeView)];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 }
 
 - (void)viewDidLoad {
@@ -102,19 +109,12 @@ enum TTActivityViewType : NSUInteger {
     [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:COMMENT_CELL];
 
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                           target:self
-                             
-                                                                                           action:@selector(closeView)];
     // Setup tableview delegate/datasource
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-
-    // Add a gesture recognizer so we can dismiss the keyboard on taps.
-//    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -167,10 +167,6 @@ enum TTActivityViewType : NSUInteger {
                                                               attribute:NSLayoutAttributeTop
                                                              multiplier:1.0
                                                                constant:0.0]];
-        
-        //TODO: black shows when keyboard opens because this constraint isn't animated
-        // The CommentBox constraint animates with the keyboard, so there's a glitch.
-        // This should either animate, or better
     }
     else {
         // vertical algin bottom to view
@@ -198,6 +194,29 @@ enum TTActivityViewType : NSUInteger {
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (_viewType == TTActivityViewComments) {
+        
+        // Get a variable cell height to make sure we can fit long comments
+        
+        NSString *cellText = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
+        UIFont *cellFont = [UIFont boldSystemFontOfSize:12.0];
+        CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
+        
+        NSMutableDictionary *attr = [NSMutableDictionary dictionary];
+        NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        [attr setObject:paraStyle forKey:NSParagraphStyleAttributeName];
+        [attr setObject:cellFont forKey:NSFontAttributeName];
+        
+        CGSize labelSize = [cellText boundingRectWithSize:constraintSize
+                                             options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                          attributes:attr
+                                             context:nil].size;
+
+        return labelSize.height + 40;
+    }
+    
     return 66;
 }
 
@@ -215,7 +234,6 @@ enum TTActivityViewType : NSUInteger {
         [cell setUser:user];
         
         [cell.followButton setHidden:YES];
-
         
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -232,11 +250,14 @@ enum TTActivityViewType : NSUInteger {
         return weakCell;
     }
     else if (_viewType == TTActivityViewComments) {
+        
         CommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:COMMENT_CELL forIndexPath:indexPath];
         // We assume fromUser contains the full PFUser object
         PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
 //        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
         [commentCell setUser:user];
+        
+        //TODO: Add time of comment
         
         NSString *comment = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
         [commentCell.commentLabel setText:comment];
@@ -381,7 +402,7 @@ enum TTActivityViewType : NSUInteger {
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
 {
     
-    //TODO: Implement a facebook invite button - commented out code creates a button
+    //TODO: commented out code creates a button
     
     //    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
     //                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -452,6 +473,7 @@ enum TTActivityViewType : NSUInteger {
             [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
                 if (!error) {
                     NSLog(@"Comment Saved Success");
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
                 }
                 else {
                     UIAlertView *alertView = [[UIAlertView alloc] init];

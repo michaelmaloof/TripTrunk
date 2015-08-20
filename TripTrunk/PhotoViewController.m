@@ -18,16 +18,15 @@
 #import "TTCache.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate>
 // IBOutlets
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet UIButton *addComment;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
+@property (strong, nonatomic) IBOutlet UIButton *closeButton;
+@property (strong, nonatomic) IBOutlet UIButton *saveButton;
 
 // Data Properties
 @property NSMutableArray *commentActivities;
@@ -49,23 +48,33 @@
     
     // Set initial UI
     self.title = self.photo.userName;
-    self.tableView.hidden = YES;
-    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-    self.tableView.contentInset = UIEdgeInsetsMake(-36, 0, 0, 0);
-    
-    self.addComment.hidden = YES;
-    self.textView.hidden = YES;
     
     self.delete.hidden = YES;
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         self.delete.hidden = NO;
     }
-    [self.textView setDelegate:self];
     
     self.commentActivities = [[NSMutableArray alloc] init];
+    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
+    
     self.likeActivities = [[NSMutableArray alloc] init];
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+    
+    [self addGestureRecognizers];
+    
+    // Load initial data (photo and comments)
+    [self loadImageForPhoto:self.photo];
+    
+    [self refreshPhotoActivities];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPhotoActivities)
+                                                 name:@"commentAddedToPhoto"
+                                               object:nil];
 
+}
+
+- (void)addGestureRecognizers {
     // Add swipe gestures
     UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
@@ -75,13 +84,29 @@
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swiperight];
     
-    self.textView.delegate = self;
+    UISwipeGestureRecognizer *swipeDown =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeVertical:)];
+    swipeDown.direction=UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeDown];
     
+    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.view addGestureRecognizer:tapGesture];
+}
+
+- (void)toggleButtonVisibility {
     
-    // Load initial data (photo and comments)
-    [self loadImageForPhoto:self.photo];
+    [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
+        _closeButton.hidden = !_closeButton.hidden;
+        _saveButton.hidden = !_saveButton.hidden;
+        _likeButton.hidden = !_likeButton.hidden;
+        _likeCountButton.hidden = !_likeCountButton.hidden;
+        _comments.hidden = !_comments.hidden;
+        
+        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            self.delete.hidden = !self.delete.hidden;
+        }
+        
+    } completion:nil];
     
-    [self refreshPhotoActivities];
 
 }
 
@@ -130,13 +155,13 @@
             
             //TODO: update cached photo attributes, i.e. likers, commenters, etc.
             
-            [self.tableView reloadData];
-            self.textView.text = nil;
             
-            // Update number of likes
+            // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.likeButton setSelected:self.isLikedByCurrentUser];
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+                
+                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
             });
             
         }
@@ -148,7 +173,7 @@
 
 #pragma mark - Gestures
 
--(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
+- (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
     if (!self.photos || self.photos.count == 0) {
@@ -156,7 +181,7 @@
     }
     
     NSLog(@"check 1 = %ld", (long)self.arrayInt);
-    if (self.tableView.hidden == YES && self.arrayInt > 0)
+    if (self.arrayInt > 0)
     {
         self.arrayInt = self.arrayInt - 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
@@ -164,9 +189,10 @@
         self.title = self.photo.userName;
         
         [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
-
+        [self.comments setTitle:@"0 Comments" forState:UIControlStateNormal];
         
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
+        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
             self.delete.hidden = NO;
         } else {
             self.delete.hidden = YES;
@@ -176,13 +202,13 @@
     }
 }
 
--(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
+- (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (!self.photos || self.photos.count == 0) {
         return;
     }
     
-    if (self.tableView.hidden == YES && self.arrayInt != self.photos.count - 1)
+    if (self.arrayInt != self.photos.count - 1)
     {
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
@@ -190,8 +216,10 @@
         self.title = self.photo.userName;
         
         [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
+        [self.comments setTitle:@"0 Comments" forState:UIControlStateNormal];
 
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
+        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
             self.delete.hidden = NO;
         } else {
             self.delete.hidden = YES;
@@ -200,6 +228,16 @@
         [self refreshPhotoActivities];
 
     }
+}
+
+- (void)swipeVertical:(UISwipeGestureRecognizer*)gestureRecognizer
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
+{
+    [self toggleButtonVisibility];
 }
 
 #pragma mark - Button Actions
@@ -224,26 +262,6 @@
     ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navController animated:YES completion:nil];
-    return;
-    
-    // NONE OF THIS EXECUTES ANYMORE - MS
-    self.tableView.hidden = !self.tableView.hidden;
-    self.addComment.hidden = !self.addComment.hidden;
-    self.textView.hidden = !self.textView.hidden;
-    self.likeCountButton.hidden = !self.likeCountButton.hidden;
-    self.likeButton.hidden = !self.likeButton.hidden;
-    
-    if ([self.comments.titleLabel.text isEqualToString:@"Comments"]){
-        [self.comments setTitle:@"Dismiss" forState:UIControlStateNormal];
-
-    }
-    
-    else if ([self.comments.titleLabel.text isEqualToString:@"Dismiss"]){
-        [self.comments setTitle:@"Comments" forState:UIControlStateNormal];
-        [self moveUpTextBox];
-
-    }
-
 }
 
 - (IBAction)likeCountButtonPressed:(id)sender {
@@ -314,8 +332,8 @@
             
             [[TTUtility sharedInstance] deletePhoto:self.photo];
 
-            // pop the view
-            [self.navigationController popViewControllerAnimated:YES];
+            // dismiss the view
+            [self dismissViewControllerAnimated:YES completion:nil];
 
             
         }
@@ -325,188 +343,8 @@
         }
     }
 }
-
-#pragma mark - UITableView Data Source
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 100;
-}
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.commentActivities.count +1;
-}
-
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
-    
-    if (indexPath.row == 0) {
-        cell.textLabel.text = self.photo.userName;
-        cell.detailTextLabel.text = self.photo.caption;
-        if (self.photo.caption == nil){
-            cell.hidden = YES;
-        }
-    }
-    
-    else if (indexPath.row > 0) {
-    
-        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
-        
-        cell.textLabel.text = [[commentActivity valueForKey:@"fromUser"] valueForKey:@"username"];
-        cell.detailTextLabel.text = [commentActivity valueForKey:@"content"];
-    }
-
-    
-    return  cell;
-}
-
-#pragma mark - UITableView Delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFUser *user;
-    
-    if (indexPath.row == 0) {
-        user = self.photo.user;
-    }
-    else if (indexPath.row > 0) {
-        
-        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
-        
-        user = [commentActivity valueForKey:@"fromUser"];
-    }
-    
-    // If there's a username, then we have the full object populated
-    if (user) {
-        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row > 0) {
-        
-        PFObject *commentActivity = [self.commentActivities objectAtIndex:indexPath.row -1];
-        // You can delete comments if you're the commenter, photo creator
-        // TODO: or trip creator
-        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
-            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        [SocialUtility deleteComment:[self.commentActivities objectAtIndex:indexPath.row - 1] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                NSLog(@"Error deleting comment: %@", error);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [alert show];
-                    [self refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
-                });
-            }
-            else {
-                NSLog(@"Comment Deleted");
-            }
-        }];
-        
-        // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
-        [self.commentActivities removeObjectAtIndex:indexPath.row - 1];
-        [tableView reloadData];
-        
-    }
-    else {
-        NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
-    }
-}
-
-#pragma mark - Comments View
-
-- (IBAction)onAddCommentsTapped:(id)sender {
-    
-    if(![self.textView.text isEqualToString:@""])
-    {
-        [SocialUtility addComment:self.textView.text forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            if(error)
-            {
-                UIAlertView *alertView = [[UIAlertView alloc] init];
-                alertView.delegate = self;
-                alertView.title = @"Check internet connection.";
-                alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                [alertView addButtonWithTitle:@"OK"];
-                [alertView show];
-            }
-            else {
-                [self refreshPhotoActivities];
-            }
-        }];
-        
-        [self moveUpTextBox];
-        
-    }
-}
-
--(void)moveUpTextBox{
-    
-    if (self.viewMoved == YES) {
-            [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y + 230), self.view.frame.size.width, self.view.frame.size.height);
-        self.comments.hidden = NO;
-        self.addComment.hidden = NO;
-        [UIView commitAnimations];
-        self.viewMoved = NO;
-        [self.textView endEditing:YES];
-
-    }
-
-}
-
-#pragma mark - Text View Editing
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
-    if ([text length] == 1 && resultRange.location != NSNotFound) {
-        [textView resignFirstResponder];
-        [self onAddCommentsTapped:self];
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self textViewDidEndEditing:self.textView];
-}
-
--(void)textViewDidBeginEditing:(UITextView *)textView
-{
-    if (textView == self.textView)
-    {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x , (self.view.frame.origin.y - 230), self.view.frame.size.width, self.view.frame.size.height);
-        self.comments.hidden = NO;
-        self.addComment.hidden = NO;
-        self.viewMoved = YES;
-        [UIView commitAnimations];
-    }
-}
-
--(void)textViewDidEndEditing:(UITextView *)textView
-{
-    if (textView == self.textView)
-    {
-        [self.textView endEditing:YES];
-        [self moveUpTextBox];
-    }
+- (IBAction)closeButtonPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
