@@ -28,7 +28,7 @@ enum TTActivityViewType : NSUInteger {
 
 @interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate>
 
-@property (strong, nonatomic) NSArray *activities;
+@property (strong, nonatomic) NSMutableArray *activities;
 @property NSUInteger viewType;
 
 @property (strong, nonatomic) TTCommentInputView *commentInputView;
@@ -44,7 +44,7 @@ enum TTActivityViewType : NSUInteger {
 {
     self = [super init];
     if (self) {
-        _activities = [[NSArray alloc] initWithArray:likes];
+        _activities = [[NSMutableArray alloc] initWithArray:likes];
         self.title = @"Likers";
         _viewType = TTActivityViewLikes;
     }
@@ -55,7 +55,7 @@ enum TTActivityViewType : NSUInteger {
 {
     self = [super init];
     if (self) {
-        _activities = [[NSArray alloc] initWithArray:comments];
+        _activities = [[NSMutableArray alloc] initWithArray:comments];
         _photo = photo;
         self.title = @"Comments";
         _viewType = TTActivityViewComments;
@@ -67,7 +67,7 @@ enum TTActivityViewType : NSUInteger {
 {
     self = [super init];
     if (self) {
-        _activities = [[NSArray alloc] initWithArray:activities];
+        _activities = [[NSMutableArray alloc] initWithArray:activities];
         self.title = @"Activity";
         _viewType = TTActivityViewAllActivities;
     }
@@ -338,14 +338,19 @@ enum TTActivityViewType : NSUInteger {
             }
             else {
                 NSLog(@"Comment Deleted");
+                // Post a notification so that the data is reloaded in the Photo View
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
+
             }
         }];
         
         // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
-        NSMutableArray *updated = [NSMutableArray arrayWithArray:_activities];
-        [updated removeObjectAtIndex:indexPath.row];
-        _activities = [NSArray arrayWithArray:updated];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+           
+            [_activities removeObjectAtIndex:indexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                
+        });
         
     }
     else {
@@ -466,10 +471,9 @@ enum TTActivityViewType : NSUInteger {
                                       comment, @"content",
                                       _photo, @"photo",
                                       nil];
-            NSMutableArray *updated = [NSMutableArray arrayWithArray:_activities];
-            [updated addObject:activity];
-            _activities = [NSArray arrayWithArray:updated];
+            [_activities addObject:activity];
             [self.tableView reloadData];
+            
             [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
                 if (!error) {
                     NSLog(@"Comment Saved Success");
