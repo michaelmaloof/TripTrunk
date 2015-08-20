@@ -18,8 +18,9 @@
 #import "TTCache.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate>
 // IBOutlets
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
@@ -40,6 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Tab Bar Initializiation
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
@@ -71,7 +73,41 @@
                                              selector:@selector(refreshPhotoActivities)
                                                  name:@"commentAddedToPhoto"
                                                object:nil];
+    
+    // Setup the scroll view - needed for Zooming
+    self.scrollView.minimumZoomScale = 1.0;
+    self.scrollView.maximumZoomScale = 6.0;
+    self.scrollView.contentSize = self.imageView.bounds.size;
+    self.scrollView.delegate = self;
+    [self centerScrollViewContents];
 
+
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+}
+
+- (void)centerScrollViewContents {
+    CGSize boundsSize = self.scrollView.bounds.size;
+    CGRect contentsFrame = self.imageView.frame;
+    
+    if (contentsFrame.size.width < boundsSize.width) {
+        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
+    } else {
+        contentsFrame.origin.x = 0.0f;
+    }
+    
+    if (contentsFrame.size.height < boundsSize.height) {
+        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f;
+    } else {
+        contentsFrame.origin.y = 0.0f;
+    }
+    
+    self.imageView.frame = contentsFrame;
 }
 
 - (void)addGestureRecognizers {
@@ -105,8 +141,9 @@
             self.delete.hidden = !self.delete.hidden;
         }
         
+
+        
     } completion:nil];
-    
 
 }
 
@@ -345,6 +382,21 @@
 }
 - (IBAction)closeButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIScrollViewDelegate Methods
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.imageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    // The scroll view has zoomed, so you need to re-center the contents
+    [self centerScrollViewContents];
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self centerScrollViewContents];
 }
 
 @end
