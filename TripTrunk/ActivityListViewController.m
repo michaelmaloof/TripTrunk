@@ -115,6 +115,7 @@ enum TTActivityViewType : NSUInteger {
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -265,43 +266,11 @@ enum TTActivityViewType : NSUInteger {
     
     return [UITableViewCell new];
 }
-//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-//    if (_viewType == TTActivityViewComments) {
-//        return _commentInputView.frame.size.height;
-//    }
-//    return 0;
-//}
-//- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-//    // set up comment input box view
-//    _commentInputView = [[UIView alloc] init];
-//    [_commentInputView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//    _commentInputView.backgroundColor = [UIColor redColor];
-//    
-//    return _commentInputView;
-//}
 
-#pragma mark - Table view delegate
-
-// On Row Selection, push to the user's profile
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-}
-
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    // Dismiss the keyboard when scrolling starts
-    [self.view endEditing:YES];
-}
-
--(BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     //TODO: swipe pushes over the full table view, not just the editing cell. Probably due to layout constraint.
-    
+
     // Only comment lists can be deleted, Likes and such don't allow deleting
     if (_viewType != TTActivityViewComments) {
         return NO;
@@ -323,39 +292,60 @@ enum TTActivityViewType : NSUInteger {
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        NSLog(@"DELETEROW");
+//        [_activities removeObjectAtIndex:indexPath.row];
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+//        [self.tableView reloadData];
+//
+//        return;
+//         TODO: refresh the activities from the server after comment is deleted
         
-        // TODO: refresh the activities from the server after comment is deleted
-
-        [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                NSLog(@"Error deleting comment: %@", error);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+                    if (error) {
+                        NSLog(@"Error deleting comment: %@", error);
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [alert show];
+        
+        //                    [super refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
+                        });
+                    }
+                    else {
+                        NSLog(@"Comment Deleted");
+                        // Post a notification so that the data is reloaded in the Photo View
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
+        
+                    }
+                }];
+        
+                // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [alert show];
-                    
-//                    [super refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
-                });
-            }
-            else {
-                NSLog(@"Comment Deleted");
-                // Post a notification so that the data is reloaded in the Photo View
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
-
-            }
-        }];
         
-        // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
-        dispatch_async(dispatch_get_main_queue(), ^{
-           
-            [_activities removeObjectAtIndex:indexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                
-        });
+                    [_activities removeObjectAtIndex:indexPath.row];
+                    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [self.tableView reloadData];
+                });
         
     }
     else {
         NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
     }
+}
+
+
+#pragma mark - Table view delegate
+
+// On Row Selection, push to the user's profile
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    // Dismiss the keyboard when scrolling starts
+    [self.view endEditing:YES];
 }
 
 #pragma mark - Dismiss View
