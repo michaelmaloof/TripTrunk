@@ -128,6 +128,9 @@ enum TTActivityViewType : NSUInteger {
     // Dispose of any resources that can be recreated.
 }
 
+/**
+ *  Adds AutoLayout constraints on the tableview so that it can adjust for the comment box on commentview.
+ */
 - (void)setupTableViewConstraints {
     
     // Width constraint, full width of view
@@ -262,6 +265,8 @@ enum TTActivityViewType : NSUInteger {
         
         NSString *comment = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
         [commentCell.commentLabel setText:comment];
+        
+        return commentCell;
     }
     
     return [UITableViewCell new];
@@ -276,54 +281,41 @@ enum TTActivityViewType : NSUInteger {
         return NO;
     }
     
-    if (indexPath.row > 0) {
-        
-        PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
-        // You can delete comments if you're the commenter, photo creator
-        // TODO: or trip creator
-        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
-            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-            return YES;
-        }
+    PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
+    // You can delete comments if you're the commenter, photo creator
+    // TODO: or trip creator
+    if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
+        || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        return YES;
     }
+    
     return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        NSLog(@"DELETEROW");
-//        [_activities removeObjectAtIndex:indexPath.row];
-//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-//        [self.tableView reloadData];
-//
-//        return;
-//         TODO: refresh the activities from the server after comment is deleted
-        
+
                 [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
                     if (error) {
                         NSLog(@"Error deleting comment: %@", error);
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [alert show];
-        
-        //                    [super refreshPhotoActivities]; // reload the data so we still show the attempted-to-delete comment
                         });
                     }
                     else {
                         NSLog(@"Comment Deleted");
                         // Post a notification so that the data is reloaded in the Photo View
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
         
                     }
                 }];
         
                 // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
                 dispatch_async(dispatch_get_main_queue(), ^{
-        
                     [_activities removeObjectAtIndex:indexPath.row];
                     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                    [self.tableView reloadData];
                 });
         
     }
@@ -467,7 +459,7 @@ enum TTActivityViewType : NSUInteger {
             [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
                 if (!error) {
                     NSLog(@"Comment Saved Success");
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"commentAddedToPhoto" object:_photo];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {
                     UIAlertView *alertView = [[UIAlertView alloc] init];

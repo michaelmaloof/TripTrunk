@@ -71,7 +71,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshPhotoActivities)
-                                                 name:@"commentAddedToPhoto"
+                                                 name:@"commentUpdatedOnPhoto"
                                                object:nil];
     
     
@@ -443,6 +443,10 @@
     zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0);
     
     return zoomRect;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
