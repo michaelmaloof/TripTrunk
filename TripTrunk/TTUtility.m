@@ -12,6 +12,7 @@
 #import "AFNetworking/AFNetworking.h"
 #import "MSFloatingProgressView.h"
 #import "TTCache.h"
+#import "SocialUtility.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
@@ -155,6 +156,14 @@ CLCloudinary *cloudinary;
                   else {
                       // Add photo to the cache
                       [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                      
+                      // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
+                      if (photo.caption && ![photo.caption isEqualToString:@""]) {
+                          [SocialUtility addComment:photo.caption forPhoto:photo block:^(BOOL succeeded, NSError *error) {
+                              NSLog(@"caption saved as comment");
+                          }];
+                      }
+
                       
                       NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data

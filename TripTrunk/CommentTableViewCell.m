@@ -16,7 +16,9 @@
 @implementation CommentTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    // This enables multi-line comments of varying size
+    [self.commentLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [self.commentLabel setNumberOfLines:0];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

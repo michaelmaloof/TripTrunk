@@ -349,6 +349,7 @@
     // remove the observer here so it keeps listening for it until the view is dealloc'd, not just when it disappears
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 @end
 
 

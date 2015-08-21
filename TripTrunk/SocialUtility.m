@@ -242,6 +242,12 @@
 
 + (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
+    if ([comment isEqualToString:@""]) {
+        if (completionBlock) {
+            return completionBlock(false, nil);
+        }
+    }
+    
     // Increment the cache count.
     [[TTCache sharedCache] incrementCommentCountForPhoto:photo];
     
@@ -262,7 +268,9 @@
     
     [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            completionBlock(succeeded, error);
+            if (completionBlock) {
+                completionBlock(succeeded, error);
+            }
         }
         else {
             // Error, so decrement the cache count again.
@@ -367,6 +375,7 @@
     [query setCachePolicy:cachePolicy];
     [query includeKey:@"fromUser"];
     [query includeKey:@"photo"];
+    [query orderByAscending:@"createdAt"];
     
     return query;
 }
