@@ -96,8 +96,14 @@
     else {
         self.lock.hidden = YES;
     }
-    self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
-    self.startDate.text = self.trip.startDate;
+    
+    self.stateCountryLabel.adjustsFontSizeToFitWidth = YES;
+    if ([self.trip.country isEqualToString:@"United States"]){
+        self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@ %@",self.trip.city, self.trip.state, self.trip.country];
+    } else {
+        self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
+    }
+        self.startDate.text = self.trip.startDate;
     
     self.endDate.text = @"";
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
