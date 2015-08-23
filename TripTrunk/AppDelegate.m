@@ -200,7 +200,7 @@
                             PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
                             photoViewController.photo = (Photo *)photo;
 
-                            [homeNavController pushViewController:photoViewController animated:YES];
+                            [homeNavController presentViewController:photoViewController animated:YES completion:nil];
                         }
                     }];
                 }
