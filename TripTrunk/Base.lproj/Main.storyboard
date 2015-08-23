@@ -891,6 +891,9 @@
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="Lbp-ko-ErL">
                                 <rect key="frame" x="-1" y="64" width="601" height="536"/>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="-1" y="64" width="402" height="637"/>
+                                </variation>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ev9-DG-Eco">
                                 <rect key="frame" x="229" y="352" width="66" height="30"/>
@@ -1098,6 +1101,7 @@
                             </constraint>
                             <constraint firstItem="dxi-2n-K02" firstAttribute="top" secondItem="3w3-mT-drZ" secondAttribute="bottom" constant="10" id="UQ0-VU-TA4"/>
                             <constraint firstAttribute="centerX" secondItem="def-GX-Qcc" secondAttribute="centerX" id="Y0w-4S-mTT"/>
+                            <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="Lbp-ko-ErL" secondAttribute="bottom" constant="100" id="aKb-DZ-bgp"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="38" id="b5g-tD-xrW"/>
                             <constraint firstAttribute="centerX" secondItem="zdV-NN-4Zp" secondAttribute="centerX" id="cxp-PQ-Qm4"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="f19-nT-nsy" secondAttribute="bottom" constant="8" id="d0j-xH-c6n"/>
@@ -1115,7 +1119,6 @@
                                 <exclude reference="viD-Vo-BWz"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="2j2-EF-jAN"/>
                                 <exclude reference="9D1-Kk-s5m"/>
                                 <exclude reference="Sro-IN-K7V"/>
                                 <exclude reference="eDO-Qc-POO"/>
@@ -1123,6 +1126,7 @@
                                 <exclude reference="SFZ-Bd-hdr"/>
                                 <exclude reference="cxp-PQ-Qm4"/>
                                 <exclude reference="N09-So-zDL"/>
+                                <exclude reference="2j2-EF-jAN"/>
                                 <exclude reference="A13-xK-rs2"/>
                                 <exclude reference="DYO-s8-Lam"/>
                                 <exclude reference="gUj-8z-cXY"/>
@@ -1132,6 +1136,7 @@
                                 <exclude reference="b5g-tD-xrW"/>
                                 <exclude reference="gvm-gh-PHP"/>
                                 <exclude reference="T7M-sL-O1k"/>
+                                <exclude reference="aKb-DZ-bgp"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1139,17 +1144,18 @@
                                 <include reference="viD-Vo-BWz"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="2j2-EF-jAN"/>
                                 <include reference="9D1-Kk-s5m"/>
                                 <include reference="Sro-IN-K7V"/>
                                 <include reference="eDO-Qc-POO"/>
                                 <exclude reference="fUf-xG-K5D"/>
                                 <include reference="SFZ-Bd-hdr"/>
+                                <include reference="2j2-EF-jAN"/>
                                 <include reference="A13-xK-rs2"/>
                                 <exclude reference="SCN-yI-Ta5"/>
                                 <include reference="DYO-s8-Lam"/>
                                 <exclude reference="FNq-54-0De"/>
-                                <include reference="T7M-sL-O1k"/>
+                                <exclude reference="T7M-sL-O1k"/>
+                                <include reference="aKb-DZ-bgp"/>
                             </mask>
                         </variation>
                     </view>
