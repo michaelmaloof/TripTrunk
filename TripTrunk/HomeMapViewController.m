@@ -41,6 +41,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
 
     if (self.user == nil) {
     
@@ -78,6 +83,13 @@
         //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
 //        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
             
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
