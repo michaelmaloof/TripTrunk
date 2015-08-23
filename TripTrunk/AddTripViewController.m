@@ -131,6 +131,18 @@
 
 }
 
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -75, self.view.frame.size.width, self.view.frame.size.height);
+    
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 75, self.view.frame.size.width, self.view.frame.size.height);
+    
+}
+
 - (void)setupDatePicker {
     self.datePicker = [[UIDatePicker alloc] init];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
