@@ -46,7 +46,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
-    self.title = @"Trip Members";
+    self.title = @"Trunk Members";
     
     if (self.isMember == YES) {
         
@@ -131,7 +131,7 @@
         }
         else
         {
-            NSLog(@"Trip Creator: %@", object);
+            NSLog(@"Trunk Creator: %@", object);
             
             _tripCreator = (PFUser *)object;
             
@@ -180,10 +180,10 @@
 {
     switch (section) {
         case 0:
-            return @"Trip Creator";
+            return @"Trunk Creator";
             break;
         case 1:
-            return @"Trip Members";
+            return @"Trunk Members";
         default:
             break;
     }
