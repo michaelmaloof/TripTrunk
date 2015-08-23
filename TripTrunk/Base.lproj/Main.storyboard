@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -566,7 +566,7 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="State, Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YXB-LB-7B6">
                                 <rect key="frame" x="241" y="71" width="111" height="21"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="18"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
@@ -600,9 +600,6 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="204" width="400" height="547"/>
-                                </variation>
                                 <connections>
                                     <outlet property="dataSource" destination="XRX-XO-YxQ" id="w45-xP-6rF"/>
                                     <outlet property="delegate" destination="XRX-XO-YxQ" id="PZa-RC-PG0"/>
@@ -610,7 +607,7 @@
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Start" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zUW-ht-yVP">
                                 <rect key="frame" x="272" y="93" width="49" height="21"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="16"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
@@ -619,7 +616,7 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="End" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nRB-Dp-eMo">
                                 <rect key="frame" x="272" y="114" width="39" height="20"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="16"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
@@ -644,9 +641,6 @@
                                         <exclude reference="9H6-UJ-QXk"/>
                                         <exclude reference="tUX-og-Wzn"/>
                                     </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="166" y="146" width="50" height="50"/>
                                 </variation>
                                 <connections>
                                     <action selector="onPhotoTapped:" destination="XRX-XO-YxQ" eventType="touchUpInside" id="fwL-Zg-tHc"/>
@@ -674,9 +668,6 @@
                                         <exclude reference="Xux-0A-NaY"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="106" y="146" width="50" height="50"/>
-                                </variation>
                                 <connections>
                                     <action selector="membersButtonPressed:" destination="XRX-XO-YxQ" eventType="touchUpInside" id="vAp-RH-zCw"/>
                                 </connections>
@@ -698,9 +689,6 @@
                                         <exclude reference="ml7-b2-fQ4"/>
                                         <exclude reference="wKH-Kc-sjF"/>
                                     </mask>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="339" y="151" width="40" height="40"/>
                                 </variation>
                             </imageView>
                         </subviews>
@@ -1441,6 +1429,17 @@
                                 <exclude reference="Jam-2M-aGA"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="BZI-RL-cQO"/>
+                                <exclude reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <exclude reference="Xip-Bo-EFR"/>
+                                <exclude reference="vgv-Uw-e8W"/>
+                                <exclude reference="wWr-dg-wwy"/>
+                                <exclude reference="9bp-La-UMY"/>
+                                <exclude reference="rNc-b8-30a"/>
+                                <exclude reference="36I-Tl-NU0"/>
                                 <exclude reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <exclude reference="OlX-6N-agJ"/>
@@ -1449,22 +1448,11 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
-                                <exclude reference="9bp-La-UMY"/>
-                                <exclude reference="rNc-b8-30a"/>
-                                <exclude reference="36I-Tl-NU0"/>
-                                <exclude reference="Xip-Bo-EFR"/>
-                                <exclude reference="vgv-Uw-e8W"/>
-                                <exclude reference="wWr-dg-wwy"/>
                                 <exclude reference="IS2-U2-WGB"/>
                                 <exclude reference="XDa-lf-byT"/>
                                 <exclude reference="l10-8j-xzO"/>
                                 <exclude reference="tOb-Bv-AkR"/>
                                 <exclude reference="xg1-WI-6zO"/>
-                                <exclude reference="BZI-RL-cQO"/>
-                                <exclude reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1476,6 +1464,17 @@
                                 <include reference="Jam-2M-aGA"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="gcu-A7-CvH"/>
+                                <include reference="BZI-RL-cQO"/>
+                                <include reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <include reference="Xip-Bo-EFR"/>
+                                <include reference="vgv-Uw-e8W"/>
+                                <include reference="wWr-dg-wwy"/>
+                                <include reference="9bp-La-UMY"/>
+                                <include reference="rNc-b8-30a"/>
+                                <include reference="36I-Tl-NU0"/>
                                 <include reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <include reference="OlX-6N-agJ"/>
@@ -1484,22 +1483,11 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
-                                <include reference="9bp-La-UMY"/>
-                                <include reference="rNc-b8-30a"/>
-                                <include reference="36I-Tl-NU0"/>
-                                <include reference="Xip-Bo-EFR"/>
-                                <include reference="vgv-Uw-e8W"/>
-                                <include reference="wWr-dg-wwy"/>
+                                <exclude reference="g3C-me-yTw"/>
+                                <exclude reference="bkC-tY-ajN"/>
                                 <exclude reference="B3V-u8-bsl"/>
                                 <include reference="l10-8j-xzO"/>
                                 <include reference="tOb-Bv-AkR"/>
-                                <include reference="BZI-RL-cQO"/>
-                                <include reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="g3C-me-yTw"/>
-                                <exclude reference="bkC-tY-ajN"/>
-                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                     </view>
