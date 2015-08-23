@@ -38,7 +38,7 @@
 @property PFImageView *imageview;
 @property int photosOriginal;
 @property BOOL isMember;
-@property (weak, nonatomic) IBOutlet UIImageView *lock;
+@property (weak, nonatomic) IBOutlet UIButton *lock;
 
 @end
 
@@ -94,6 +94,16 @@
 }
 
 
+- (IBAction)lockTapped:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = @"Private Trunk";
+    alertView.message = @"Only the Trunk Creator and Trunk Members can see that this trunk exists";
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:@"Ok"];
+    alertView.tag = 4;
+    [alertView show];
+}
 
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
