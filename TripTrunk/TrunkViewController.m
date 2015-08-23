@@ -21,7 +21,7 @@
 #import "UIImageView+AFNetworking.h"
 
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -56,7 +56,7 @@
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
-
+    
     [self refreshTripDataViews];
 
     [[self navigationItem] setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@""
@@ -81,11 +81,19 @@
                                                object:nil];
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(0, 0, -10, -10);
+}
+
+
 -(void)viewDidAppear:(BOOL)animated{
     
     [self refreshTripDataViews];
     
 }
+
+
 
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
@@ -260,6 +268,8 @@
 - (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+    
+    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
     
     if(indexPath.item == 0)
     {
