@@ -875,6 +875,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="xSk-Pn-g4X"/>
                     <connections>
+                        <outlet property="cloud" destination="1Ke-o6-NYh" id="QQg-j8-ueb"/>
                         <outlet property="collectionView" destination="o2X-FD-baW" id="Jet-Bo-c2M"/>
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
                         <outlet property="lock" destination="uTu-gi-m3c" id="dAX-ff-Ptd"/>

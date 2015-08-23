@@ -39,6 +39,7 @@
 @property int photosOriginal;
 @property BOOL isMember;
 @property (weak, nonatomic) IBOutlet UIButton *lock;
+@property (weak, nonatomic) IBOutlet UIButton *cloud;
 
 @end
 
@@ -47,7 +48,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"Trip Name is: %@", self.trip.name);
+    self.cloud.hidden = YES;
 
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
@@ -188,6 +189,11 @@
         {
             // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
+            
+            if (self.photos.count > 0){
+                self.cloud.hidden = NO;
+            }
+            
             [self.collectionView reloadData];
             
         }else
@@ -259,7 +265,10 @@
         }
         // DOWNLOADING IMAGES
         else if (alertView.tag == 3) {
-            [[TTUtility sharedInstance] downloadPhotos:self.photos];
+            
+            if (self.photos.count > 0){
+                [[TTUtility sharedInstance] downloadPhotos:self.photos];
+            }
         }
     }
 }
