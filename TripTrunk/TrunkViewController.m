@@ -288,7 +288,11 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.photos.count + 1;
+    if (self.isMember == NO) {
+       return self.photos.count;
+    } else {
+        return self.photos.count + 1;
+    }
 }
 
 - (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -297,14 +301,19 @@
     
     cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
     
-    if(indexPath.item == 0)
+    if(indexPath.item == 0 && self.isMember == YES)
     {
         cell.photo.image = [UIImage imageNamed:@"Plus Square"];
     }
     // This is the images
-    else if (indexPath.item > 0)
+//    else if (indexPath.item > 0)
+    else
     {
-        cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
+        if (self.isMember == YES) {
+            cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
+        } else {
+             cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+        }
         
         // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
         //        [self convertPhoto:cell indexPath:indexPath];
@@ -322,7 +331,14 @@
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
 
                                        // Set the image to the Photo object in the array
-                                       [(Photo *)[self.photos objectAtIndex:indexPath.item - 1] setImage:image];
+                                       
+                                       if (self.isMember == YES) {
+                                           [(Photo *)[self.photos objectAtIndex:indexPath.item - 1] setImage:image];
+
+                                       } else {
+                                           [(Photo *)[self.photos objectAtIndex:indexPath.item ] setImage:image];
+
+                                       }
                                        
                                        weakCell.photo.image = image;
                                        [weakCell setNeedsLayout];
@@ -338,7 +354,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (indexPath.item > 0)
+    if (indexPath.item == 0 && self.isMember == YES)
+    {
+        [self performSegueWithIdentifier:@"addPhotos" sender:self];
+    }
+    
+    else
     {
         self.path = indexPath;
         NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
@@ -346,20 +367,6 @@
         [self performSegueWithIdentifier:@"photo" sender:self];
     }
     
-    else if (indexPath.item == 0 && self.isMember == NO)
-    {
-        UIAlertView *alertView = [[UIAlertView alloc] init];
-        alertView.delegate = self;
-        alertView.title = [NSString stringWithFormat:@"Only members may add photos. Contact %@ to be made a member of this trunk", self.trip.user];
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"OK"];
-        [alertView show];
-    }
-    
-    else if (indexPath.item == 0 && self.isMember == YES)
-    {
-        [self performSegueWithIdentifier:@"addPhotos" sender:self];
-    }
 }
 
 
@@ -374,7 +381,11 @@
     
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
+        if (self.isMember == YES) {
         vc.photo = [self.photos objectAtIndex:self.path.item -1];
+        } else {
+            vc.photo = [self.photos objectAtIndex:self.path.item];
+        }
         vc.photos = self.photos;
         vc.arrayInt = self.path.item - 1;
         self.path = nil;
