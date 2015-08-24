@@ -11,6 +11,7 @@
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "MSTextField.h"
+
 @interface LoginViewController ()
 
 @property (strong, nonatomic) IBOutlet MSTextField *usernameTextField;
@@ -27,6 +28,9 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    
+    _usernameTextField.delegate = self;
+    _passwordTextField.delegate = self;
     
 }
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
@@ -92,7 +96,7 @@
             NSLog(@"User logged in through Facebook!");
             
             // Make sure the user has a TripTrunk username
-            if (![user valueForKey:@"completedRegistration"]) {
+            if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
                 [self showSetUsernameView];
             }
             else
@@ -109,6 +113,37 @@
     [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
     
 }
+
+#pragma mark - Keyboard delegate methods
+
+// The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+// Go to the next textfield or close the keyboard when the return button is pressed
+
+- (BOOL) textFieldShouldReturn:(UITextField *) textField {
+    
+    BOOL didResign = [textField resignFirstResponder];
+    if (!didResign) return NO;
+    
+    if ([textField isKindOfClass:[MSTextField class]])
+        dispatch_async(dispatch_get_main_queue(),
+                       ^ { [[(MSTextField *)textField nextField] becomeFirstResponder]; });
+    
+    return YES;
+    
+}
+
+// This is needed for the username cancel button to work properly
+// DO NOT DELETE
+-(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+}
+
 
 
 

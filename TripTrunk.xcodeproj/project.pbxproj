@@ -837,7 +837,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FacebookSDK",
-					"$(PROJECT_DIR)/ParseSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
@@ -865,7 +864,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FacebookSDK",
-					"$(PROJECT_DIR)/ParseSDK",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
