@@ -208,9 +208,6 @@
         }];
 
     }
-    
-
-
 }
 
 - (void)handleActivityPush:(NSDictionary *)payload {
