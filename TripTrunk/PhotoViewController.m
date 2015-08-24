@@ -389,7 +389,18 @@
         // Delete
         if (alertView.tag == 0) {
             
-            [[TTUtility sharedInstance] deletePhoto:self.photo];
+            if (self.photos.count == 1) {
+                [[TTUtility sharedInstance] deletePhoto:self.photo];
+                NSDate *date = [NSDate date];
+                date = [date dateByAddingTimeInterval:-90400];
+                self.photo.trip.mostRecentPhoto = date;
+                [self.photo.trip saveInBackground];
+
+            } else {
+            
+                [[TTUtility sharedInstance] deletePhoto:self.photo];
+                
+            }
 
             // dismiss the view
             [self dismissViewControllerAnimated:YES completion:nil];
