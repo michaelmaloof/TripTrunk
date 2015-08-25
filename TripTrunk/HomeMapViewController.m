@@ -23,6 +23,7 @@
 @property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *tripsToCheck;
+@property NSMutableArray *justMadeTrunk;
 @property NSMutableArray *hotDots;
 @property NSString *pinCityName;
 @property NSInteger originalCount;
@@ -33,6 +34,7 @@
 @property BOOL loadedOnce;
 @property MKAnnotationView *photoPin;
 @property NSMutableArray *friends;
+@property BOOL isNew;
 
 @end
 
@@ -41,12 +43,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
-
     if (self.user == nil) {
             
         self.tabBarController.tabBar.translucent = false;
@@ -88,12 +90,17 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+
     self.hotDots = nil;
     self.hotDots = [[NSMutableArray alloc]init];
     self.locations = nil;
     self.locations = [[NSMutableArray alloc]init];
     self.parseLocations = nil;
     self.parseLocations = [[NSMutableArray alloc]init];
+    self.justMadeTrunk = nil;
+    self.justMadeTrunk = [[NSMutableArray alloc]init];
+    self.isNew= NO;
+
     
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
     if([self checkUserRegistration])
@@ -340,6 +347,10 @@
     self.mapView.camera.altitude *= 3.5;
 }
 
+-(void)zoomTrunkOut{
+    
+}
+
 -(void)placeTrips
 {
     if (self.parseLocations.count < self.originalCount )
@@ -392,6 +403,14 @@
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
+        
+        NSDate *date = trip.createdAt;
+        NSTimeInterval interval = [date timeIntervalSinceNow];
+        
+        if (interval > -12 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            self.isNew = YES;
+            [self.justMadeTrunk addObject:annotation];
+        }
 
         if (hot == YES)
         {
@@ -436,7 +455,9 @@
     self.zoomOut.hidden = NO;
 
     
-    [self.mapView setRegion:region animated:YES];}
+    [self.mapView setRegion:region animated:YES];
+}
+
 
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -472,14 +493,14 @@
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
     [self.locations addObject:startAnnotation];
-//    self.dropped = self.dropped + 1;
-//
-//    
-//    if (self.dropped + self.notDropped == self.parseLocations.count){
-//        [self fitPins];
-//        self.dropped = 0;
-//        self.notDropped = 0;
-//    }
+
+    
+    if (self.isNew == YES) {
+        self.isNew = NO;
+        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
+
+    }
+
     return startAnnotation;
 }
 -(void)fitPins

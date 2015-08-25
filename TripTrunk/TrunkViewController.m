@@ -141,7 +141,7 @@
 
 -(void)checkIfIsMember{
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user])
+    if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
@@ -151,7 +151,7 @@
     }
     else
     {
-    
+        self.collectionView.hidden = YES;
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -164,8 +164,11 @@
                 NSMutableArray *members = [NSMutableArray arrayWithArray:objects];
                 if (members.count == 0 || members == nil){
                     self.isMember = NO;
+                    self.collectionView.hidden = NO;
                 } else {
                     self.isMember = YES;
+                    [self.collectionView reloadData];
+                    self.collectionView.hidden = NO;
                     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
                                                                                               style:UIBarButtonItemStyleBordered
                                                                                              target:self
@@ -322,7 +325,7 @@
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        UIImage *placeholderImage = [UIImage imageNamed:@"photo134"];
+        UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         __weak TrunkCollectionViewCell *weakCell = cell;
         
