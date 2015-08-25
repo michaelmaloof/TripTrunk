@@ -322,7 +322,7 @@
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        UIImage *placeholderImage = [UIImage imageNamed:@"photo134"];
+        UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         __weak TrunkCollectionViewCell *weakCell = cell;
         
