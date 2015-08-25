@@ -141,7 +141,7 @@
 
 -(void)checkIfIsMember{
     
-    if ([[PFUser currentUser].username isEqualToString:self.trip.user])
+    if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"

@@ -48,13 +48,18 @@
     
     self.title = @"Trunk Members";
     
-    if (self.isMember == YES) {
+    if (self.isMember == YES && self.trip.isPrivate == NO) {
         
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add"
                                                                                   style:UIBarButtonItemStyleBordered
                                                                                  target:self
                                                                                  action:@selector(addMembers)];
 
+    } else if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add"
+                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                 target:self
+                                                                                 action:@selector(addMembers)];
     }
     
     
