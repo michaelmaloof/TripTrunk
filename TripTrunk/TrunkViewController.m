@@ -151,7 +151,7 @@
     }
     else
     {
-    
+        self.collectionView.hidden = YES;
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -164,8 +164,11 @@
                 NSMutableArray *members = [NSMutableArray arrayWithArray:objects];
                 if (members.count == 0 || members == nil){
                     self.isMember = NO;
+                    self.collectionView.hidden = NO;
                 } else {
                     self.isMember = YES;
+                    [self.collectionView reloadData];
+                    self.collectionView.hidden = NO;
                     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
                                                                                               style:UIBarButtonItemStyleBordered
                                                                                              target:self
