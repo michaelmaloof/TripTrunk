@@ -328,7 +328,7 @@
                 {
                     // Trip Input has correct data - save the trip!
                     
-                    CLPlacemark *placemark= placemarks.firstObject;
+                    CLPlacemark *placemark = placemarks.firstObject;
                     self.trip.country = placemark.country;
                     
                     if (placemark.locality == nil){

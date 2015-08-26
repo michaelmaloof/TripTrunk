@@ -12,6 +12,7 @@
 
 @interface TrunkListViewController : UIViewController
 @property NSString *city;
+@property NSString *state;
 @property PFUser *user;
 
 @end

@@ -207,14 +207,20 @@
 }
 
 - (void)queryForTrunks{
-
+    
+    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+    [trunkQuery whereKey:@"city" equalTo:self.city];
+    [trunkQuery whereKey:@"state" equalTo: self.state];
+    
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
     [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query whereKey:@"content" equalTo:self.city];
+    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
     [query orderByDescending:@"mostRecentPhoto"];
+    
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.parseLocations = [[NSMutableArray alloc] init];
