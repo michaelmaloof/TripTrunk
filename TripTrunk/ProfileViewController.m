@@ -72,7 +72,6 @@
     
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
 
-
 }
 
 - (void)setProfilePic:(NSString *)urlString {
@@ -170,7 +169,6 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     
 }
 

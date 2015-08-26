@@ -86,8 +86,8 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     // Setup Empty Datasets
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.emptyDataSetSource = self;
+//    self.tableView.emptyDataSetDelegate = self;
+//    self.tableView.emptyDataSetSource = self;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -111,9 +111,17 @@
             if(error)
             {
                 NSLog(@"Error: %@",error);
+                    self.tableView.emptyDataSetDelegate = self;
+                    self.tableView.emptyDataSetSource = self;
             }
             else
             {
+                
+                if (objects.count == 0 || objects == nil){
+                    self.tableView.emptyDataSetDelegate = self;
+                    self.tableView.emptyDataSetSource = self;
+                }
+                
                 int count = 0;
                 self.meParseLocations = [[NSMutableArray alloc]init];
                 for (PFObject *activity in objects){
@@ -140,10 +148,10 @@
 
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:@"All Trunks"];
+        [self.filter setTitle:@"My Trunks"];
         [self queryParseMethodMe];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:@"My Trunks"];
+        [self.filter setTitle:@"All Trunks"];
         [self queryParseMethodEveryone];
     }
 }
@@ -162,10 +170,16 @@
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
-                NSLog(@"Error: %@",error);
+                self.tableView.emptyDataSetDelegate = self;
+                self.tableView.emptyDataSetSource = self;
             }
             else
             {
+                if (objects.count == 0 || objects == nil){
+                    self.tableView.emptyDataSetDelegate = self;
+                    self.tableView.emptyDataSetSource = self;
+                }
+                
                 int count = 0;
                 self.meParseLocations = [[NSMutableArray alloc]init];
                 for (PFObject *activity in objects){
