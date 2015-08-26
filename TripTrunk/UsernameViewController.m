@@ -102,6 +102,9 @@
     
 }
 
+- (IBAction)cancelButtonPressed:(id)sender {
+
+}
 #pragma mark - Navigation
 
 /**
@@ -109,17 +112,48 @@
  */
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    NSString *username = _usernameTextField.text;
-    NSString *fullName = _fullnameTextField.text;
-    NSString *email = _emailTextField.text;
-    NSString *password = _passwordTextField.text;
-    NSString *hometown = _hometownTextField.text;
     
-
-    
-    if ((username || ![username isEqualToString:@""])
-        && fullName && email && password && hometown) {
+    if ([identifier isEqualToString:@"cancelUnwind"]) {
         
+        if (_user) {
+            // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
+                                                            message:@"You must set a Username and Hometown"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay"
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            return NO;
+            
+        }
+        else {
+            // No user, so they're here to create a username/password account. Let them go back.
+            return YES;
+        }
+    }
+    else if ([identifier isEqualToString:@"submitUnwind"])
+    {
+    
+    
+        NSString *username = _usernameTextField.text;
+        NSString *fullName = _fullnameTextField.text;
+        NSString *email = _emailTextField.text;
+        NSString *password = _passwordTextField.text;
+        NSString *hometown = _hometownTextField.text;
+        
+        if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || fullName.length == 0) {
+            NSLog(@"Empty Field");
+
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:@"Please fill out all fields"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay"
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            
+            return NO;
+        }
+            
         // Show a progress hud
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
@@ -168,10 +202,9 @@
         
         NSLog(@"Username Saved");
         return YES;
+
     }
     else {
-        NSLog(@"No Username Entered");
-
         return NO;
     }
 }
@@ -182,7 +215,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"touchesBegan:withEvent:");
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }

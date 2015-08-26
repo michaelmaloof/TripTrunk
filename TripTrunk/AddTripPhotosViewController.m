@@ -216,9 +216,12 @@
         NSURL *assetUrl = [NSURL URLWithString:photo.imageUrl];
         NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
         PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
+//        PHAsset *imageAsset = [[PHAsset fetchAssetsWithLocalIdentifiers:urlArray options:nil] firstObject];
+
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
+        [options setNetworkAccessAllowed:YES];
         
         [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
                                                           options:options

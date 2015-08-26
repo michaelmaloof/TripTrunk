@@ -9,6 +9,7 @@
 #import "ProfileViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Parse/Parse.h>
+#import "AppDelegate.h"
 #import "FriendsListViewController.h"
 #import "FindFriendsViewController.h"
 #import "HomeMapViewController.h"
@@ -69,23 +70,7 @@
 }
 - (IBAction)logOutButtonPressed:(id)sender {
     
-    //TODO: clear any cached data, clear userdefaults, and display loginViewController
-    // clear cache
-    [[TTCache sharedCache] clear];
-    
-    // Unsubscribe from push notifications by removing the user association from the current installation.
-    [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
-    [[PFInstallation currentInstallation] saveInBackground];
-    
-    [PFQuery clearAllCachedResults];
-    
-    [PFUser logOut];
-    
-    
-    // This pushes the user back to the map view, on the map tab, which should then show the loginview
-    [[[self.tabBarController viewControllers] objectAtIndex:0] popToRootViewControllerAnimated:YES];
-    [self.tabBarController setSelectedIndex:0];
-    
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
 
 }
 
@@ -184,7 +169,6 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    
     
 }
 
