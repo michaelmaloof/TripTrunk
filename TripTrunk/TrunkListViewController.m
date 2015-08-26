@@ -61,15 +61,15 @@
                                         action:nil];
         [[self navigationItem] setBackBarButtonItem:newBackButton];
         
-        self.filter =
-        [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
-                                         style:UIBarButtonItemStylePlain
-                                        target:self
-                                        action:@selector(rightBarItemWasTapped)];
+        self.filter = [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
-        self.filter.tag = 1;
-        [self rightBarItemWasTapped];
+        self.filter.tag = 0;
+        [self.filter setTitle:@"All Trunks"];
+        [self queryParseMethodEveryone];
 
         
     } else {
@@ -86,8 +86,8 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     // Setup Empty Datasets
-//    self.tableView.emptyDataSetDelegate = self;
-//    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -101,28 +101,23 @@
 {
     if (self.meParseLocations == nil) {
         
+        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+        [trunkQuery whereKey:@"city" equalTo:self.city];
+        [trunkQuery whereKey:@"state" equalTo: self.state];
+        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:self.user];
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content" equalTo:self.city];
+        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
         [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
                 NSLog(@"Error: %@",error);
-                    self.tableView.emptyDataSetDelegate = self;
-                    self.tableView.emptyDataSetSource = self;
             }
             else
             {
-                
-                if (objects.count == 0 || objects == nil){
-                    self.tableView.emptyDataSetDelegate = self;
-                    self.tableView.emptyDataSetSource = self;
-                }
-                
-                int count = 0;
                 self.meParseLocations = [[NSMutableArray alloc]init];
                 for (PFObject *activity in objects){
                     
@@ -131,12 +126,9 @@
                         [self.meParseLocations addObject:trip];
                         
                     }
-                    count += 1;
-                    if(count == objects.count){
-                        self.filter.tag = 1;
-                        [self.tableView reloadData];
-                    }
                 }
+//                self.filter.tag = 1;
+                [self.tableView reloadData];
             }
             
         }];
@@ -160,27 +152,22 @@
 
 -(void)queryParseMethodMe
 {
+    self.filter.tag = 1;
+
     if (self.meParseLocations == nil) {
+        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+        [trunkQuery whereKey:@"city" equalTo:self.city];
+        [trunkQuery whereKey:@"state" equalTo: self.state];
+        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content" equalTo:self.city];
+        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
         [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if(error)
+            if(!error)
             {
-                self.tableView.emptyDataSetDelegate = self;
-                self.tableView.emptyDataSetSource = self;
-            }
-            else
-            {
-                if (objects.count == 0 || objects == nil){
-                    self.tableView.emptyDataSetDelegate = self;
-                    self.tableView.emptyDataSetSource = self;
-                }
-                
-                int count = 0;
                 self.meParseLocations = [[NSMutableArray alloc]init];
                 for (PFObject *activity in objects){
                     
@@ -189,25 +176,23 @@
                         [self.meParseLocations addObject:trip];
 
                     }
-                    count += 1;
-                    if(count == objects.count){
-                            self.filter.tag = 1;
-                            [self.tableView reloadData];
-                    }
                 }
             }
+            self.filter.tag = 1;
+            [self.tableView reloadData];
+
             
         }];
     } else{
-        self.filter.tag = 1;
         [self.tableView reloadData];
     }
 }
 
 -(void)queryParseMethodEveryone{
-    
+
     if (self.parseLocations == nil)
     {
+
         self.friends = [[NSMutableArray alloc]init];
         
         // Add self to the friends array so that we query for our own trunks
@@ -217,7 +202,7 @@
             if (!error) {
                 [self.friends addObjectsFromArray:users];
                 [self queryForTrunks];
-
+                
             }
         }];
         
@@ -230,17 +215,22 @@
 }
 
 - (void)queryForTrunks{
-
+    
+    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+    [trunkQuery whereKey:@"city" equalTo:self.city];
+    [trunkQuery whereKey:@"state" equalTo: self.state];
+    
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
     [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query whereKey:@"content" equalTo:self.city];
+    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
     [query orderByDescending:@"mostRecentPhoto"];
+    
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            int count = 0;
             self.parseLocations = [[NSMutableArray alloc] init];
             for (PFObject *activity in objects)
             {
@@ -265,12 +255,9 @@
                     }
   
                 }
-                count += 1;
-                if(count == objects.count){
-                    self.filter.tag = 0;
-                    [self.tableView reloadData];
-                }
             }
+            self.filter.tag = 0;
+            [self.tableView reloadData];
         }
         else {
             NSLog(@"Error: %@",error);
@@ -287,12 +274,12 @@
     {
         TrunkViewController *trunkView = segue.destinationViewController;
         
-        if (self.parseLocations) {
+        if (self.filter.tag == 0 && self.parseLocations != nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
-            trunkView.trip =trip;
-        } else if (self.meParseLocations){
+            trunkView.trip = trip;
+        } else if (self.filter.tag == 1 && self.meParseLocations != nil){
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
-            trunkView.trip =trip;
+            trunkView.trip = trip;
         }
         self.path = nil;
     }
@@ -393,7 +380,7 @@
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIColor colorWithWhite:0.0 alpha:0.5];
+    return [UIColor colorWithWhite:0.0 alpha:0.0];
 }
 
 //- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
@@ -410,20 +397,19 @@
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    if (self.filter.tag == 0 && self.parseLocations.count == 0) {
-        // A little trick for removing the cell separators
-        self.tableView.tableFooterView = [UIView new];
-        return YES;
-    }else if (self.filter.tag == 1 && self.meParseLocations.count == 0){
-        // A little trick for removing the cell separators
-        self.tableView.tableFooterView = [UIView new];
-        return YES;
-    }
-    else  if (self.user == nil){
+    // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
+    // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
+    // Either they can't get to this page, or something is in the All Trunks list, so the user's list is the only possible empty list.
+    if (self.filter.tag == 1 && self.meParseLocations.count == 0){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
     }
+//    else  if (self.user == nil){
+//        // A little trick for removing the cell separators
+//        self.tableView.tableFooterView = [UIView new];
+//        return YES;
+//    }
 
     return NO;
 }

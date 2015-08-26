@@ -26,6 +26,7 @@
 @property NSMutableArray *justMadeTrunk;
 @property NSMutableArray *hotDots;
 @property NSString *pinCityName;
+@property NSString *pinStateName;
 @property NSInteger originalCount;
 @property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 @property (weak, nonatomic) IBOutlet UIButton *mapFilter;
@@ -142,19 +143,12 @@
 
 - (void)registerNotifications {
 
-    
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
         UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
         
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else
-    {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
-    }
+
 }
 
 //-(void)queryTrunks
@@ -512,11 +506,20 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    self.pinCityName = view.annotation.title;
-    [self performSegueWithIdentifier:@"Trunk" sender:self];
-    self.pinCityName = nil;
-    self.photoPin = view;
-
+    // TODO: Get the state in a more elloquent way. This is hacky.
+    CLGeocoder *cod = [[CLGeocoder alloc] init];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+    [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        
+        CLPlacemark *placemark = [placemarks firstObject];
+        
+        self.pinCityName = view.annotation.title;
+        self.pinStateName = placemark.administrativeArea;
+        [self performSegueWithIdentifier:@"Trunk" sender:self];
+        self.pinCityName = nil;
+        self.pinStateName = nil;
+        self.photoPin = view;
+    }];
 }
 
 
@@ -533,6 +536,7 @@
     {
         TrunkListViewController *trunkView = segue.destinationViewController;
         trunkView.city = self.pinCityName;
+        trunkView.state = self.pinStateName;
         trunkView.user = self.user;
         self.pinCityName = nil;
     }

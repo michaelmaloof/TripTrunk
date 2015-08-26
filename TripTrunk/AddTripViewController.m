@@ -328,7 +328,7 @@
                 {
                     // Trip Input has correct data - save the trip!
                     
-                    CLPlacemark *placemark= placemarks.firstObject;
+                    CLPlacemark *placemark = placemarks.firstObject;
                     self.trip.country = placemark.country;
                     
                     if (placemark.locality == nil){
@@ -516,12 +516,12 @@
      {
          
          if(error) {
-             //FIXME Check to see if actually works
-             UIAlertView *alertView = [[UIAlertView alloc] init];
-             alertView.delegate = self;
-             alertView.title = @"No internet connection.";
+             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                 message:@"Please Try Again"
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Okay"
+                                                       otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-             [alertView addButtonWithTitle:@"OK"];
              [alertView show];
              self.title = @"TripTrunk";
              
