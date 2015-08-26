@@ -148,10 +148,10 @@
 
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:@"All Trunks"];
+        [self.filter setTitle:@"My Trunks"];
         [self queryParseMethodMe];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:@"My Trunks"];
+        [self.filter setTitle:@"All Trunks"];
         [self queryParseMethodEveryone];
     }
 }
