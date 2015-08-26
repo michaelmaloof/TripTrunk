@@ -260,12 +260,12 @@
     {
         TrunkViewController *trunkView = segue.destinationViewController;
         
-        if (self.parseLocations) {
+        if (self.filter.tag == 0 && self.parseLocations != nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
-            trunkView.trip =trip;
-        } else if (self.meParseLocations){
+            trunkView.trip = trip;
+        } else if (self.filter.tag == 1 && self.meParseLocations != nil){
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
-            trunkView.trip =trip;
+            trunkView.trip = trip;
         }
         self.path = nil;
     }

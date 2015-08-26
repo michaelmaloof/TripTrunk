@@ -190,8 +190,7 @@
     NSLog(@"TrunkViewController - queryParseMethod");
     
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
-    [findPhotosUser whereKey:@"tripName" equalTo:self.trip.name];
-    [findPhotosUser whereKey:@"city" equalTo:self.trip.city];
+    [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
