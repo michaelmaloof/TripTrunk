@@ -145,7 +145,7 @@
     {
         self.isMember = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
-                                                                                  style:UIBarButtonItemStyleBordered
+                                                                                  style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(editTapped)];
     }
@@ -170,7 +170,7 @@
                     [self.collectionView reloadData];
                     self.collectionView.hidden = NO;
                     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
-                                                                                              style:UIBarButtonItemStyleBordered
+                                                                                              style:UIBarButtonItemStylePlain
                                                                                              target:self
                                                                                              action:@selector(leaveTrunk)];
                 }

@@ -101,10 +101,14 @@
 {
     if (self.meParseLocations == nil) {
         
+        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+        [trunkQuery whereKey:@"city" equalTo:self.city];
+        [trunkQuery whereKey:@"state" equalTo: self.state];
+        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:self.user];
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content" equalTo:self.city];
+        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
         [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -151,10 +155,14 @@
     self.filter.tag = 1;
 
     if (self.meParseLocations == nil) {
+        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+        [trunkQuery whereKey:@"city" equalTo:self.city];
+        [trunkQuery whereKey:@"state" equalTo: self.state];
+        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content" equalTo:self.city];
+        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
         [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
