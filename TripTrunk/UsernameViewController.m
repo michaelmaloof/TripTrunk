@@ -103,7 +103,7 @@
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
-
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
 
@@ -128,12 +128,11 @@
         }
         else {
             // No user, so they're here to create a username/password account. Let them go back.
-            return YES;
+            return NO;
         }
     }
     else if ([identifier isEqualToString:@"submitUnwind"])
     {
-    
     
         NSString *username = _usernameTextField.text;
         NSString *fullName = _fullnameTextField.text;
