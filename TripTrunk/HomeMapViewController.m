@@ -513,7 +513,7 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-//    [view.annotation  ]
+    // TODO: Get the state in a more elloquent way. This is hacky.
     CLGeocoder *cod = [[CLGeocoder alloc] init];
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
     [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -526,10 +526,7 @@
         self.pinCityName = nil;
         self.pinStateName = nil;
         self.photoPin = view;
-        
     }];
-
-
 }
 
 
