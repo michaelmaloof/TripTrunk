@@ -129,7 +129,7 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     Photo *photo = [Photo object];
-    photo.image = info[UIImagePickerControllerEditedImage];
+    photo.image = info[UIImagePickerControllerOriginalImage];
     
     // set the reference URL now so we have it for uploading the raw image data
     photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
@@ -216,6 +216,8 @@
         NSURL *assetUrl = [NSURL URLWithString:photo.imageUrl];
         NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
         PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
+//        PHAsset *imageAsset = [[PHAsset fetchAssetsWithLocalIdentifiers:urlArray options:nil] firstObject];
+
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
