@@ -294,8 +294,8 @@ CLCloudinary *cloudinary;
 - (NSString *)thumbnailImageUrl:(NSString *)urlString;
 {
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 160];
-    [transformation setHeightWithInt: 160];
+    [transformation setWidthWithInt: 220];
+    [transformation setHeightWithInt: 220];
     [transformation setCrop: @"fill"];
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];

@@ -88,6 +88,16 @@
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
+    // Initialize the refresh control.
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(refresh:)
+             forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refreshControl];
+    refreshControl.tintColor = [UIColor whiteColor];
+    [refreshControl endRefreshing];
+    self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -148,9 +158,34 @@
     }
 }
 
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    
+    
+    if (self.filter.tag == 1) {
+        [self queryParseMethodMe];
+    } else if (self.filter.tag == 0) {
+        [self queryParseMethodEveryone];
+    }
+    
+    // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
+    // End the refreshing & update the timestamp
+    if (refreshControl) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"MMM d, h:mm a"];
+        NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+        NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                    forKey:NSForegroundColorAttributeName];
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+        refreshControl.attributedTitle = attributedTitle;
+        
+        [refreshControl endRefreshing];
+    }
+
+}
+
 #pragma mark - Parse Queries
 
--(void)queryParseMethodMe
+- (void)queryParseMethodMe
 {
     self.filter.tag = 1;
 
@@ -188,7 +223,7 @@
     }
 }
 
--(void)queryParseMethodEveryone{
+- (void)queryParseMethodEveryone{
 
     if (self.parseLocations == nil)
     {
