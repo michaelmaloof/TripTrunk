@@ -151,6 +151,14 @@
 
 }
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // Okay button pressed - They want to add some friends
+    if (buttonIndex == 1) {
+        [self.tabBarController setSelectedIndex:3];
+    }
+}
+
 //-(void)queryTrunks
 //{
 //    PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
@@ -324,6 +332,12 @@
             [self.friends addObjectsFromArray:users];
             
             [self queryForTrunks];
+            
+            if (users.count == 0) {
+                NSLog(@"Not following any users");
+                [self displayFollowUserAlertIfNeeded];
+                
+            }
         }
         else {
             if (self.user == nil){
@@ -335,6 +349,24 @@
 
         }
     }];
+}
+
+- (void)displayFollowUserAlertIfNeeded {
+    NSUInteger timesShown = [[[NSUserDefaults standardUserDefaults] valueForKey:@"shownFollowUserAlert"] integerValue];
+    if (!timesShown) {
+        timesShown = 1;
+    }
+    // Show it every other time. After a few visits, then we'll pester them because they need to add friends.
+    if (timesShown != 2 && timesShown != 4 && timesShown != 6 && timesShown != 8) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Follow Some Users" message:@"TripTrunk is more fun with friends. Start following some users now!" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"Okay", nil];
+            [alertView show];
+        });
+    }
+    timesShown++;
+    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithInteger:timesShown] forKey:@"shownFollowUserAlert"];
+
+
 }
 
 - (IBAction)zoomOut:(id)sender {

@@ -355,7 +355,6 @@
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
             if (succeeded) {
-//                self.photo.favorite = YES;
                 [self refreshPhotoActivities];
             }
             else {
@@ -373,7 +372,6 @@
             self.likeButton.enabled = YES;
             
             if (succeeded) {
-//                self.photo.favorite = NO;
                 [self refreshPhotoActivities];
             }
             else {
