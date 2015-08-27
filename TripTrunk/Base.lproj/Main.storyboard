@@ -1326,8 +1326,12 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BL7-tA-HXj">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="AdA-UO-P44"/>
-                                    <constraint firstAttribute="width" constant="44" id="OmA-V0-eNf"/>
+                                    <constraint firstAttribute="height" constant="44" id="AdA-UO-P44">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="22"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="44" id="OmA-V0-eNf">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="31"/>
+                                    </constraint>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="saveSmall">
@@ -1438,7 +1442,9 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                             </constraint>
                             <constraint firstItem="BL7-tA-HXj" firstAttribute="trailing" secondItem="s0j-au-kD5" secondAttribute="trailingMargin" id="vgv-Uw-e8W"/>
-                            <constraint firstItem="BL7-tA-HXj" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="wWr-dg-wwy"/>
+                            <constraint firstItem="BL7-tA-HXj" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="wWr-dg-wwy">
+                                <variation key="heightClass=regular-widthClass=compact" constant="12"/>
+                            </constraint>
                             <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="65" id="xg1-WI-6zO"/>
                         </constraints>
                         <variation key="default">
@@ -2549,12 +2555,12 @@
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="540" height="960"/>
         <image name="save" width="200" height="200"/>
-        <image name="saveSmall" width="24" height="17"/>
+        <image name="saveSmall" width="116" height="71"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5P2-gM-OYf"/>
-        <segue reference="yXb-jN-ymd"/>
         <segue reference="Con-SE-XM1"/>
-        <segue reference="UVS-2K-sz0"/>
+        <segue reference="bhX-wL-LGH"/>
+        <segue reference="JSU-Dg-jAI"/>
+        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>

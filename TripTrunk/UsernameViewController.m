@@ -61,6 +61,20 @@
                 NSString *facebookID = userData[@"id"];
                 NSString *name = userData[@"name"];
                 NSString *email = userData[@"email"];
+                
+                if (email == nil){
+                    email = @"";
+                }
+                
+                if (facebookID == nil){
+                    facebookID = @"";
+                }
+                
+                if (name == nil){
+                    name = @"";
+                }
+
+                
                 [_user setObject:facebookID forKey:@"fbid"];
                 [_user setObject:name forKey:@"name"];
                 [_user setObject:email forKey:@"email"];
@@ -80,6 +94,7 @@
 
 
 }
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
@@ -103,7 +118,19 @@
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (_user) {
+        // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
+                                                        message:@"You must set a Username and Hometown"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else {
+        // No user, so they're here to create a username/password account. Let them go back.
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 #pragma mark - Navigation
 
@@ -114,22 +141,7 @@
 {
     
     if ([identifier isEqualToString:@"cancelUnwind"]) {
-        
-        if (_user) {
-            // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
-                                                            message:@"You must set a Username and Hometown"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Okay"
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
-            return NO;
-            
-        }
-        else {
-            // No user, so they're here to create a username/password account. Let them go back.
-            return NO;
-        }
+        return NO;
     }
     else if ([identifier isEqualToString:@"submitUnwind"])
     {
