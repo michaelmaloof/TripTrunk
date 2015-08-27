@@ -61,6 +61,20 @@
                 NSString *facebookID = userData[@"id"];
                 NSString *name = userData[@"name"];
                 NSString *email = userData[@"email"];
+                
+                if (email == nil){
+                    email = @"";
+                }
+                
+                if (facebookID == nil){
+                    facebookID = @"";
+                }
+                
+                if (name == nil){
+                    name = @"";
+                }
+
+                
                 [_user setObject:facebookID forKey:@"fbid"];
                 [_user setObject:name forKey:@"name"];
                 [_user setObject:email forKey:@"email"];
@@ -80,6 +94,7 @@
 
 
 }
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
