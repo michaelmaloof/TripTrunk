@@ -27,16 +27,9 @@
 - (void)clear;
 
 
-- (void)setAttributesForPhoto:(Photo *)photo likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
 - (NSDictionary *)attributesForPhoto:(Photo *)photo;
-- (NSNumber *)likeCountForPhoto:(Photo *)photo;
-- (NSNumber *)commentCountForPhoto:(Photo *)photo;
-- (NSArray *)likersForPhoto:(Photo *)photo;
 - (NSArray *)commentersForPhoto:(Photo *)photo;
-- (void)setPhotoIsLikedByCurrentUser:(Photo *)photo liked:(BOOL)liked;
-- (BOOL)isPhotoLikedByCurrentUser:(Photo *)photo;
-- (void)incrementLikerCountForPhoto:(Photo *)photo;
-- (void)decrementLikerCountForPhoto:(Photo *)photo;
+
 - (void)incrementCommentCountForPhoto:(Photo *)photo;
 - (void)decrementCommentCountForPhoto:(Photo *)photo;
 
@@ -45,6 +38,16 @@
 - (void)setPhotoCount:(NSNumber *)count user:(PFUser *)user;
 
 #pragma mark - fully implemented
+- (void)setAttributesForPhoto:(Photo *)photo likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
+- (NSNumber *)likeCountForPhoto:(Photo *)photo;
+- (NSArray *)likersForPhoto:(Photo *)photo;
+- (void)setPhotoIsLikedByCurrentUser:(Photo *)photo liked:(BOOL)liked;
+- (BOOL)isPhotoLikedByCurrentUser:(Photo *)photo;
+- (void)incrementLikerCountForPhoto:(Photo *)photo;
+- (void)decrementLikerCountForPhoto:(Photo *)photo;
+
+- (NSNumber *)commentCountForPhoto:(Photo *)photo;
+
 
 /**
  *  Set the cache for the current user's following status of another user

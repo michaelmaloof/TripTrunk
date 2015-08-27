@@ -57,10 +57,10 @@
     }
     
     self.commentActivities = [[NSMutableArray alloc] init];
-    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
+//    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
     
     self.likeActivities = [[NSMutableArray alloc] init];
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+//    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
     
     [self addGestureRecognizers];
     
@@ -94,6 +94,11 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+
 
 }
 
@@ -210,17 +215,22 @@
                 }
             }
             
-            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
+//            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
             //TODO: update cached photo attributes, i.e. likers, commenters, etc.
+            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
             
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.likeButton setSelected:self.isLikedByCurrentUser];
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
-                
-                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
+//                [self.likeButton setSelected:self.isLikedByCurrentUser];
+//                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+//                
+//                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
+//            
+                [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+                [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
         }
@@ -247,8 +257,9 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
-        [self.comments setTitle:@"0 Comments" forState:UIControlStateNormal];
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         
         // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
@@ -274,8 +285,9 @@
         [self loadImageForPhoto:self.photo];
         self.title = self.photo.userName;
         
-        [self.likeCountButton setTitle:@"0 Likes" forState:UIControlStateNormal];
-        [self.comments setTitle:@"0 Comments" forState:UIControlStateNormal];
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
         // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
@@ -332,12 +344,13 @@
 
 - (IBAction)likeButtonPressed:(id)sender {
     
-    self.likeButton.enabled = NO;
+//    self.likeButton.enabled = NO;
     
     // Like Photo
     if (!self.likeButton.selected)
     {
         [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
+        
         
         [self.likeButton setSelected:YES];
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
@@ -355,7 +368,7 @@
     else if (self.likeButton.selected) {
         
         [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-        
+
         [self.likeButton setSelected:NO];
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
@@ -368,6 +381,9 @@
     }
     
     [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
 
