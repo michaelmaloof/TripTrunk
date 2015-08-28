@@ -118,7 +118,19 @@
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
-
+    if (_user) {
+        // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
+                                                        message:@"You must set a Username and Hometown"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else {
+        // No user, so they're here to create a username/password account. Let them go back.
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 #pragma mark - Navigation
 
@@ -129,26 +141,10 @@
 {
     
     if ([identifier isEqualToString:@"cancelUnwind"]) {
-        
-        if (_user) {
-            // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
-                                                            message:@"You must set a Username and Hometown"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Okay"
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
-            return NO;
-            
-        }
-        else {
-            // No user, so they're here to create a username/password account. Let them go back.
-            return YES;
-        }
+        return NO;
     }
     else if ([identifier isEqualToString:@"submitUnwind"])
     {
-    
     
         NSString *username = _usernameTextField.text;
         NSString *fullName = _fullnameTextField.text;

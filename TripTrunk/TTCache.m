@@ -81,15 +81,6 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     return [self.cache objectForKey:key];
 }
 
-- (NSNumber *)likeCountForPhoto:(Photo *)photo {
-    NSDictionary *attributes = [self attributesForPhoto:photo];
-    if (attributes) {
-        return [attributes objectForKey:kTTPhotoAttributesLikeCountKey];
-    }
-    
-    return [NSNumber numberWithInt:0];
-}
-
 - (NSNumber *)commentCountForPhoto:(Photo *)photo {
     NSDictionary *attributes = [self attributesForPhoto:photo];
     if (attributes) {
@@ -97,15 +88,6 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     }
     
     return [NSNumber numberWithInt:0];
-}
-
-- (NSArray *)likersForPhoto:(Photo *)photo {
-    NSDictionary *attributes = [self attributesForPhoto:photo];
-    if (attributes) {
-        return [attributes objectForKey:kTTPhotoAttributesLikersKey];
-    }
-    
-    return [NSArray array];
 }
 
 - (NSArray *)commentersForPhoto:(Photo *)photo {
@@ -116,39 +98,6 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     
     return [NSArray array];
 }
-
-- (void)setPhotoIsLikedByCurrentUser:(Photo *)photo liked:(BOOL)liked {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
-    [attributes setObject:[NSNumber numberWithBool:liked] forKey:kTTPhotoAttributesIsLikedByCurrentUserKey];
-    [self setAttributes:attributes forPhoto:photo];
-}
-
-- (BOOL)isPhotoLikedByCurrentUser:(Photo *)photo {
-    NSDictionary *attributes = [self attributesForPhoto:photo];
-    if (attributes) {
-        return [[attributes objectForKey:kTTPhotoAttributesIsLikedByCurrentUserKey] boolValue];
-    }
-    
-    return NO;
-}
-
-- (void)incrementLikerCountForPhoto:(Photo *)photo {
-    NSNumber *likerCount = [NSNumber numberWithInt:[[self likeCountForPhoto:photo] intValue] + 1];
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
-    [attributes setObject:likerCount forKey:kTTPhotoAttributesLikeCountKey];
-    [self setAttributes:attributes forPhoto:photo];
-}
-
-- (void)decrementLikerCountForPhoto:(Photo *)photo {
-    NSNumber *likerCount = [NSNumber numberWithInt:[[self likeCountForPhoto:photo] intValue] - 1];
-    if ([likerCount intValue] < 0) {
-        return;
-    }
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
-    [attributes setObject:likerCount forKey:kTTPhotoAttributesLikeCountKey];
-    [self setAttributes:attributes forPhoto:photo];
-}
-
 - (void)incrementCommentCountForPhoto:(Photo *)photo {
     NSNumber *commentCount = [NSNumber numberWithInt:[[self commentCountForPhoto:photo] intValue] + 1];
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
@@ -196,6 +145,60 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     [attributes setObject:count forKey:kTTUserAttributesPhotoCountKey];
     [self setAttributes:attributes forUser:user];
 }
+
+
+#pragma mark - Photo Likes
+
+- (NSNumber *)likeCountForPhoto:(Photo *)photo {
+    NSDictionary *attributes = [self attributesForPhoto:photo];
+    if (attributes) {
+        return [attributes objectForKey:kTTPhotoAttributesLikeCountKey];
+    }
+    
+    return [NSNumber numberWithInt:0];
+}
+
+- (NSArray *)likersForPhoto:(Photo *)photo {
+    NSDictionary *attributes = [self attributesForPhoto:photo];
+    if (attributes) {
+        return [attributes objectForKey:kTTPhotoAttributesLikersKey];
+    }
+    
+    return [NSArray array];
+}
+
+- (void)setPhotoIsLikedByCurrentUser:(Photo *)photo liked:(BOOL)liked {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
+    [attributes setObject:[NSNumber numberWithBool:liked] forKey:kTTPhotoAttributesIsLikedByCurrentUserKey];
+    [self setAttributes:attributes forPhoto:photo];
+}
+
+- (BOOL)isPhotoLikedByCurrentUser:(Photo *)photo {
+    NSDictionary *attributes = [self attributesForPhoto:photo];
+    if (attributes) {
+        return [[attributes objectForKey:kTTPhotoAttributesIsLikedByCurrentUserKey] boolValue];
+    }
+    
+    return NO;
+}
+
+- (void)incrementLikerCountForPhoto:(Photo *)photo {
+    NSNumber *likerCount = [NSNumber numberWithInt:[[self likeCountForPhoto:photo] intValue] + 1];
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
+    [attributes setObject:likerCount forKey:kTTPhotoAttributesLikeCountKey];
+    [self setAttributes:attributes forPhoto:photo];
+}
+
+- (void)decrementLikerCountForPhoto:(Photo *)photo {
+    NSNumber *likerCount = [NSNumber numberWithInt:[[self likeCountForPhoto:photo] intValue] - 1];
+    if ([likerCount intValue] < 0) {
+        return;
+    }
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForPhoto:photo]];
+    [attributes setObject:likerCount forKey:kTTPhotoAttributesLikeCountKey];
+    [self setAttributes:attributes forPhoto:photo];
+}
+
 
 #pragma mark - Follower/following
 
