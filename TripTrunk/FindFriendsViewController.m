@@ -73,10 +73,10 @@
         [self refreshFacebookFriends];
         return;
     }
-    
     // Get the TripTrunk user objects with the list of cached fbid's
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
+    [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
