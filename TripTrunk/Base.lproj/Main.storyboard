@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -1299,8 +1299,12 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CmI-e7-SWG">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Dfg-ZM-dUC"/>
-                                    <constraint firstAttribute="width" constant="44" id="odW-5p-M80"/>
+                                    <constraint firstAttribute="height" constant="44" id="Dfg-ZM-dUC">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="35"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="44" id="odW-5p-M80">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="39"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="23"/>
                                 <state key="normal" title="X">
@@ -1313,7 +1317,8 @@
                                         <exclude reference="odW-5p-M80"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="16" y="20" width="39" height="35"/>
                                     <mask key="constraints">
                                         <include reference="Dfg-ZM-dUC"/>
                                         <include reference="odW-5p-M80"/>
@@ -1384,7 +1389,9 @@
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="g0k-n4-hcD" secondAttribute="centerY" id="1qM-to-aaD"/>
                             <constraint firstItem="Jam-2M-aGA" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="36I-Tl-NU0"/>
-                            <constraint firstItem="CmI-e7-SWG" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" id="9bp-La-UMY"/>
+                            <constraint firstItem="CmI-e7-SWG" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" id="9bp-La-UMY">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-15"/>
+                            </constraint>
                             <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="20" id="B3V-u8-bsl">
                                 <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                             </constraint>
@@ -1437,7 +1444,9 @@
                             <constraint firstItem="g0k-n4-hcD" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="q7U-o2-Oxu">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
                             </constraint>
-                            <constraint firstItem="CmI-e7-SWG" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="rNc-b8-30a"/>
+                            <constraint firstItem="CmI-e7-SWG" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="rNc-b8-30a">
+                                <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                            </constraint>
                             <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Azv-Ms-g16" secondAttribute="trailing" id="tOb-Bv-AkR">
                                 <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                             </constraint>
