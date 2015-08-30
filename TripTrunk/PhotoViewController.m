@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
 
 // Data Properties
 @property NSMutableArray *commentActivities;
@@ -49,7 +50,9 @@
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     // Set initial UI
-    self.title = self.photo.userName;
+    self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
+    //FIXME: if I self.photo.user.username it crashes thee app
+    self.photoTakenBy.text = self.photo.userName;
     
     self.delete.hidden = YES;
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
@@ -163,6 +166,7 @@
         _likeButton.hidden = !_likeButton.hidden;
         _likeCountButton.hidden = !_likeCountButton.hidden;
         _comments.hidden = !_comments.hidden;
+        self.photoTakenBy.hidden =! self.photoTakenBy.hidden;
         
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = !self.delete.hidden;

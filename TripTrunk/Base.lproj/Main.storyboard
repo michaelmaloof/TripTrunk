@@ -1229,15 +1229,54 @@
                                             <rect key="frame" x="0.0" y="0.0" width="400" height="800"/>
                                         </variation>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yMo-MM-Gxc">
+                                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="iYY-gb-sKu"/>
+                                            <constraint firstAttribute="height" constant="21" id="wqh-3j-DCo"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="iYY-gb-sKu"/>
+                                                <exclude reference="wqh-3j-DCo"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="iYY-gb-sKu"/>
+                                                <include reference="wqh-3j-DCo"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="yMo-MM-Gxc" secondAttribute="centerX" id="GlU-ve-rrA"/>
+                                    <constraint firstItem="yMo-MM-Gxc" firstAttribute="top" secondItem="g0k-n4-hcD" secondAttribute="top" constant="26" id="bE7-n2-UaP">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="20"/>
+                                    </constraint>
+                                </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
                                         <exclude reference="ozt-n1-1q6"/>
+                                        <exclude reference="yMo-MM-Gxc"/>
+                                    </mask>
+                                    <mask key="constraints">
+                                        <exclude reference="GlU-ve-rrA"/>
+                                        <exclude reference="bE7-n2-UaP"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="800"/>
                                     <mask key="subviews">
                                         <include reference="ozt-n1-1q6"/>
+                                        <include reference="yMo-MM-Gxc"/>
+                                    </mask>
+                                    <mask key="constraints">
+                                        <include reference="GlU-ve-rrA"/>
+                                        <include reference="bE7-n2-UaP"/>
                                     </mask>
                                 </variation>
                             </scrollView>
@@ -1534,6 +1573,7 @@
                         <outlet property="imageView" destination="ozt-n1-1q6" id="q8g-bw-hQo"/>
                         <outlet property="likeButton" destination="Azv-Ms-g16" id="MQw-ce-Y2u"/>
                         <outlet property="likeCountButton" destination="VAb-3S-Guy" id="MNv-X7-3F8"/>
+                        <outlet property="photoTakenBy" destination="yMo-MM-Gxc" id="mUc-kD-ya7"/>
                         <outlet property="saveButton" destination="BL7-tA-HXj" id="YzY-gH-fEI"/>
                         <outlet property="scrollView" destination="g0k-n4-hcD" id="9vF-FK-Tbf"/>
                     </connections>
