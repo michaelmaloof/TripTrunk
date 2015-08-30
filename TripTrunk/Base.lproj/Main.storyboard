@@ -2097,24 +2097,6 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="6gD-pN-UMN">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t8J-WJ-AZA">
-                                <rect key="frame" x="222" y="278" width="156" height="44"/>
-                                <color key="backgroundColor" red="0.86647224759999997" green="1" blue="0.74299708909999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="EOV-LM-gca"/>
-                                    <constraint firstAttribute="width" constant="156" id="Rx9-8o-z7E">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
-                                    </constraint>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
-                                <state key="normal" title="Login With Facebook">
-                                    <color key="titleColor" red="0.23137254900000001" green="0.34901960780000002" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onLoginTapped:" destination="Wau-uW-rbx" eventType="touchUpInside" id="FdW-jf-nkC"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tIf-eK-RIY">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
@@ -2131,7 +2113,8 @@
                                         <exclude reference="whK-Am-Qd8"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="125" y="477" width="151" height="49"/>
                                     <mask key="constraints">
                                         <include reference="aRe-df-T5Y"/>
                                         <include reference="whK-Am-Qd8"/>
@@ -2206,18 +2189,48 @@
                                     <action selector="loginWithUsernameButtonPressed:" destination="Wau-uW-rbx" eventType="touchUpInside" id="fIH-3A-rrK"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t8J-WJ-AZA">
+                                <rect key="frame" x="222" y="278" width="156" height="44"/>
+                                <color key="backgroundColor" red="0.86647224759999997" green="1" blue="0.74299708909999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="EOV-LM-gca"/>
+                                    <constraint firstAttribute="width" constant="156" id="Rx9-8o-z7E">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
+                                <state key="normal" title="Login With Facebook">
+                                    <color key="titleColor" red="0.23137254900000001" green="0.34901960780000002" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="106" y="411" width="201" height="44"/>
+                                </variation>
+                                <connections>
+                                    <action selector="onLoginTapped:" destination="Wau-uW-rbx" eventType="touchUpInside" id="FdW-jf-nkC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.32156862749999998" green="0.48627450979999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="t8J-WJ-AZA" secondAttribute="centerX" id="38C-oL-Szd"/>
                             <constraint firstAttribute="centerX" secondItem="AzN-pd-PID" secondAttribute="centerX" id="6cl-IT-xca"/>
                             <constraint firstAttribute="centerY" secondItem="6gD-pN-UMN" secondAttribute="centerY" constant="47" id="9D5-2N-qjb">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="sQV-bh-HVU" firstAttribute="trailing" secondItem="ozA-ub-LQ8" secondAttribute="trailingMargin" id="AeB-B5-AsN"/>
-                            <constraint firstItem="AzN-pd-PID" firstAttribute="top" secondItem="sQV-bh-HVU" secondAttribute="bottom" constant="13" id="BOI-1k-zf4"/>
-                            <constraint firstItem="vRa-e1-FEv" firstAttribute="top" secondItem="Mrf-K2-Hwv" secondAttribute="bottom" constant="135" id="LTW-Hy-p3A"/>
+                            <constraint firstItem="t8J-WJ-AZA" firstAttribute="top" secondItem="AzN-pd-PID" secondAttribute="bottom" constant="8" id="Avq-zo-STG"/>
+                            <constraint firstItem="AzN-pd-PID" firstAttribute="top" secondItem="sQV-bh-HVU" secondAttribute="bottom" constant="13" id="BOI-1k-zf4">
+                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                            </constraint>
+                            <constraint firstItem="vRa-e1-FEv" firstAttribute="top" secondItem="Mrf-K2-Hwv" secondAttribute="bottom" constant="135" id="LTW-Hy-p3A">
+                                <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                            </constraint>
                             <constraint firstAttribute="centerX" secondItem="tIf-eK-RIY" secondAttribute="centerX" constant="-0.5" id="Paf-KQ-Eyf"/>
                             <constraint firstItem="sQV-bh-HVU" firstAttribute="leading" secondItem="ozA-ub-LQ8" secondAttribute="leadingMargin" id="Rne-Zd-AAW"/>
+                            <constraint firstItem="t8J-WJ-AZA" firstAttribute="top" secondItem="sQV-bh-HVU" secondAttribute="bottom" constant="45" id="SfC-oY-Uee">
+                                <variation key="heightClass=regular-widthClass=compact" constant="70"/>
+                            </constraint>
                             <constraint firstAttribute="centerY" secondItem="t8J-WJ-AZA" secondAttribute="centerY" id="Sns-dO-TEi"/>
                             <constraint firstAttribute="centerX" secondItem="t8J-WJ-AZA" secondAttribute="centerX" id="VQ8-bj-VMV"/>
                             <constraint firstAttribute="centerX" secondItem="6gD-pN-UMN" secondAttribute="centerX" id="Xaa-zt-dGw"/>
@@ -2238,21 +2251,24 @@
                                 <exclude reference="AzN-pd-PID"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="AeB-B5-AsN"/>
-                                <exclude reference="Rne-Zd-AAW"/>
-                                <exclude reference="tCc-nM-9gq"/>
-                                <exclude reference="LTW-Hy-p3A"/>
-                                <exclude reference="ec5-ro-B7N"/>
-                                <exclude reference="j1u-IU-ydY"/>
-                                <exclude reference="mXW-Sk-Z51"/>
-                                <exclude reference="6cl-IT-xca"/>
-                                <exclude reference="BOI-1k-zf4"/>
-                                <exclude reference="Paf-KQ-Eyf"/>
-                                <exclude reference="fLc-Ei-4ML"/>
                                 <exclude reference="9D5-2N-qjb"/>
                                 <exclude reference="Xaa-zt-dGw"/>
                                 <exclude reference="nw0-al-uji"/>
                                 <exclude reference="tbF-M1-KPe"/>
+                                <exclude reference="LTW-Hy-p3A"/>
+                                <exclude reference="ec5-ro-B7N"/>
+                                <exclude reference="j1u-IU-ydY"/>
+                                <exclude reference="mXW-Sk-Z51"/>
+                                <exclude reference="AeB-B5-AsN"/>
+                                <exclude reference="Rne-Zd-AAW"/>
+                                <exclude reference="tCc-nM-9gq"/>
+                                <exclude reference="6cl-IT-xca"/>
+                                <exclude reference="BOI-1k-zf4"/>
+                                <exclude reference="38C-oL-Szd"/>
+                                <exclude reference="Avq-zo-STG"/>
+                                <exclude reference="SfC-oY-Uee"/>
+                                <exclude reference="Paf-KQ-Eyf"/>
+                                <exclude reference="fLc-Ei-4ML"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -2264,21 +2280,26 @@
                                 <include reference="AzN-pd-PID"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="AeB-B5-AsN"/>
-                                <include reference="Rne-Zd-AAW"/>
-                                <include reference="tCc-nM-9gq"/>
-                                <include reference="LTW-Hy-p3A"/>
-                                <exclude reference="ec5-ro-B7N"/>
-                                <include reference="j1u-IU-ydY"/>
-                                <include reference="mXW-Sk-Z51"/>
-                                <include reference="6cl-IT-xca"/>
-                                <include reference="BOI-1k-zf4"/>
-                                <include reference="Paf-KQ-Eyf"/>
-                                <include reference="fLc-Ei-4ML"/>
                                 <include reference="9D5-2N-qjb"/>
                                 <include reference="Xaa-zt-dGw"/>
                                 <include reference="nw0-al-uji"/>
                                 <include reference="tbF-M1-KPe"/>
+                                <include reference="LTW-Hy-p3A"/>
+                                <exclude reference="ec5-ro-B7N"/>
+                                <include reference="j1u-IU-ydY"/>
+                                <include reference="mXW-Sk-Z51"/>
+                                <include reference="AeB-B5-AsN"/>
+                                <include reference="Rne-Zd-AAW"/>
+                                <include reference="tCc-nM-9gq"/>
+                                <include reference="6cl-IT-xca"/>
+                                <include reference="BOI-1k-zf4"/>
+                                <include reference="38C-oL-Szd"/>
+                                <include reference="Avq-zo-STG"/>
+                                <exclude reference="SfC-oY-Uee"/>
+                                <exclude reference="Sns-dO-TEi"/>
+                                <exclude reference="VQ8-bj-VMV"/>
+                                <include reference="Paf-KQ-Eyf"/>
+                                <include reference="fLc-Ei-4ML"/>
                             </mask>
                         </variation>
                     </view>
@@ -2649,8 +2670,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Con-SE-XM1"/>
-        <segue reference="UVS-2K-sz0"/>
         <segue reference="JSU-Dg-jAI"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
