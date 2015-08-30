@@ -1962,7 +1962,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="C1o-nu-Z6O" userLabel="Home" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="map" id="nak-Ev-x9h">
-                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-5"/>
+                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="cf5-8f-zW5">
@@ -1985,7 +1985,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xW8-rG-HSM" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1" title="" image="add_trunk" id="Hnp-GQ-egK">
-                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-5"/>
+                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="WHY-MW-Yo5">
@@ -2567,9 +2567,9 @@
         <image name="saveSmall" width="116" height="71"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="5P2-gM-OYf"/>
         <segue reference="Con-SE-XM1"/>
-        <segue reference="bhX-wL-LGH"/>
+        <segue reference="UVS-2K-sz0"/>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>
