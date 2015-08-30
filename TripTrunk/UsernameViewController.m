@@ -121,7 +121,7 @@
     if (_user) {
         // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
-                                                        message:@"You must set a Username and Hometown"
+                                                        message:@"You must set a Username and Current City"
                                                        delegate:self
                                               cancelButtonTitle:@"Okay"
                                               otherButtonTitles:nil, nil];
