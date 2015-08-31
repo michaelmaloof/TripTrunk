@@ -315,6 +315,10 @@
         } else if (self.filter.tag == 1 && self.meParseLocations != nil){
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
+        } else if (self.user != nil) {
+            // This is a User Globe Map, so there is no self.filter.tag, and it uses the meParseLocations object.
+            Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
+            trunkView.trip = trip;
         }
         self.path = nil;
     }
