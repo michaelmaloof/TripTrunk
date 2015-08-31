@@ -65,7 +65,6 @@
                                                                                 target:nil
                                                                                 action:nil]];
     
-    self.photos = nil;
     self.photos = [[NSArray alloc] init];
     
     // Load initial data
