@@ -297,7 +297,7 @@
                     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
                     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
                     [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController pushViewController:photoViewController animated:YES];
+                    [homeNavController presentViewController:photoViewController animated:YES completion:nil];
                 }
             }];
         }
