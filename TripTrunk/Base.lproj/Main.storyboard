@@ -1498,6 +1498,19 @@
                                 <exclude reference="Jam-2M-aGA"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="Kev-Ur-cMc"/>
+                                <exclude reference="ZPZ-7l-gi3"/>
+                                <exclude reference="BZI-RL-cQO"/>
+                                <exclude reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <exclude reference="Xip-Bo-EFR"/>
+                                <exclude reference="vgv-Uw-e8W"/>
+                                <exclude reference="wWr-dg-wwy"/>
+                                <exclude reference="9bp-La-UMY"/>
+                                <exclude reference="rNc-b8-30a"/>
+                                <exclude reference="36I-Tl-NU0"/>
                                 <exclude reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <exclude reference="OlX-6N-agJ"/>
@@ -1506,24 +1519,11 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
-                                <exclude reference="9bp-La-UMY"/>
-                                <exclude reference="rNc-b8-30a"/>
-                                <exclude reference="Kev-Ur-cMc"/>
-                                <exclude reference="ZPZ-7l-gi3"/>
-                                <exclude reference="36I-Tl-NU0"/>
-                                <exclude reference="Xip-Bo-EFR"/>
-                                <exclude reference="vgv-Uw-e8W"/>
-                                <exclude reference="wWr-dg-wwy"/>
                                 <exclude reference="IS2-U2-WGB"/>
                                 <exclude reference="XDa-lf-byT"/>
                                 <exclude reference="l10-8j-xzO"/>
                                 <exclude reference="tOb-Bv-AkR"/>
                                 <exclude reference="xg1-WI-6zO"/>
-                                <exclude reference="BZI-RL-cQO"/>
-                                <exclude reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1536,6 +1536,19 @@
                                 <include reference="Jam-2M-aGA"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="gcu-A7-CvH"/>
+                                <include reference="Kev-Ur-cMc"/>
+                                <include reference="ZPZ-7l-gi3"/>
+                                <include reference="BZI-RL-cQO"/>
+                                <include reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <include reference="Xip-Bo-EFR"/>
+                                <include reference="vgv-Uw-e8W"/>
+                                <include reference="wWr-dg-wwy"/>
+                                <include reference="9bp-La-UMY"/>
+                                <include reference="rNc-b8-30a"/>
+                                <include reference="36I-Tl-NU0"/>
                                 <include reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <include reference="OlX-6N-agJ"/>
@@ -1544,24 +1557,11 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
-                                <include reference="9bp-La-UMY"/>
-                                <include reference="rNc-b8-30a"/>
-                                <include reference="Kev-Ur-cMc"/>
-                                <include reference="ZPZ-7l-gi3"/>
-                                <include reference="36I-Tl-NU0"/>
-                                <include reference="Xip-Bo-EFR"/>
-                                <include reference="vgv-Uw-e8W"/>
-                                <include reference="wWr-dg-wwy"/>
+                                <exclude reference="g3C-me-yTw"/>
+                                <exclude reference="bkC-tY-ajN"/>
                                 <exclude reference="B3V-u8-bsl"/>
                                 <include reference="l10-8j-xzO"/>
                                 <include reference="tOb-Bv-AkR"/>
-                                <include reference="BZI-RL-cQO"/>
-                                <include reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="g3C-me-yTw"/>
-                                <exclude reference="bkC-tY-ajN"/>
-                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                     </view>

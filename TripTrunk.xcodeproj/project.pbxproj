@@ -74,6 +74,9 @@
 		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */; };
+		C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */; };
+		C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
@@ -212,6 +215,11 @@
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		C977065A1B9754B000FB11B2 /* ActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityTableViewCell.h; sourceTree = "<group>"; };
+		C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityTableViewCell.m; sourceTree = "<group>"; };
+		C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
+		C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseErrorHandlingController.h; sourceTree = "<group>"; };
 		C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseErrorHandlingController.m; sourceTree = "<group>"; };
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -355,6 +363,9 @@
 				C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */,
 				C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */,
 				C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */,
+				C977065A1B9754B000FB11B2 /* ActivityTableViewCell.h */,
+				C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */,
+				C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */,
 			);
 			name = ViewCells;
 			sourceTree = "<group>";
@@ -538,6 +549,8 @@
 				C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */,
 				C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
 				C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+				C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */,
+				C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */,
 			);
 			name = "Third Party";
 			sourceTree = "<group>";
@@ -629,6 +642,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */,
+				C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */,
 				C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
@@ -655,6 +669,7 @@
 			files = (
 				C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */,
 				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
+				C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */,
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
@@ -667,6 +682,7 @@
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
+				C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */,
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,

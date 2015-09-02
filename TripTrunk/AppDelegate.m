@@ -16,6 +16,7 @@
 #import "PhotoViewController.h"
 #import "TrunkViewController.h"
 #import "FindFriendsViewController.h"
+#import "ActivityListViewController.h"
 #import "TTCache.h"
 
 @interface AppDelegate ()
@@ -53,6 +54,7 @@
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
     
     [self setupSearchTabBar];
+    [self setupActivityTabBar];
     
     return YES;
 }
@@ -148,6 +150,24 @@
     
 }
 
+- (void)setupActivityTabBar {
+    // Set up Activity tab
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
+    UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
+    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass"] tag:3];
+    [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    
+    [activityNavController setTabBarItem:activityItem];
+    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+    if (vcs.count > 4) {
+        [vcs replaceObjectAtIndex:4 withObject:activityNavController];
+    }
+    else {
+        [vcs addObject:activityNavController];
+    }
+    [tabbarcontroller setViewControllers:vcs];
+}
 #pragma mark - Remote Notifications
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

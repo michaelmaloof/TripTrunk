@@ -13,12 +13,14 @@
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
 #import "CommentTableViewCell.h"
+#import "ActivityTableViewCell.h"
 #import "TTUtility.h"
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
 
 #define USER_CELL @"user_table_view_cell"
 #define COMMENT_CELL @"comment_table_view_cell"
+#define ACTIVITY_CELL @"activity_table_view_cell"
 
 enum TTActivityViewType : NSUInteger {
     TTActivityViewAllActivities = 1,
@@ -26,7 +28,7 @@ enum TTActivityViewType : NSUInteger {
     TTActivityViewComments = 3
 };
 
-@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate>
+@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, ActivityTableViewCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property NSUInteger viewType;
@@ -94,12 +96,13 @@ enum TTActivityViewType : NSUInteger {
 
     [self setupTableViewConstraints];
 
-    
-    // Set Done button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                           target:self
-                                                                                           action:@selector(closeView)];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    if (_viewType != TTActivityViewAllActivities) {
+        // Set Done button for all but the All Activity view
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                               target:self
+                                                                                               action:@selector(closeView)];
+        [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    }
 }
 
 - (void)viewDidLoad {
@@ -112,6 +115,7 @@ enum TTActivityViewType : NSUInteger {
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:COMMENT_CELL];
+    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
 
     
     // Setup tableview delegate/datasource
@@ -120,6 +124,17 @@ enum TTActivityViewType : NSUInteger {
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
+    
+    if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+        // Query for activities for user
+        [SocialUtility queryForAllActivities:^(NSArray *activities, NSError *error) {
+            _activities = [NSMutableArray arrayWithArray:activities];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }];
+    }
     
 }
 
@@ -281,6 +296,46 @@ enum TTActivityViewType : NSUInteger {
         
         return commentCell;
     }
+    else if (_viewType == TTActivityViewAllActivities) {
+        ActivityTableViewCell *activityCell = [self.tableView dequeueReusableCellWithIdentifier:ACTIVITY_CELL forIndexPath:indexPath];
+        [activityCell setDelegate:self];
+        NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
+        [activityCell setActivity:activity];
+        
+        // We assume fromUser contains the full PFUser object
+        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+        __weak ActivityTableViewCell *weakCell = activityCell;
+        
+        [activityCell.profilePicImageView setImageWithURLRequest:request
+                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                     
+                                                     [weakCell.profilePicImageView setImage:image];
+                                                     [weakCell setNeedsLayout];
+                                                     
+                                                 } failure:nil];
+        
+        if ([activity valueForKey:@"photo"]) {
+            NSURL *photoUrl = [NSURL URLWithString:[[TTUtility sharedInstance] thumbnailImageUrl:[[activity valueForKey:@"photo"] valueForKey:@"imageUrl"]]];
+            NSURLRequest *photoRequest = [NSURLRequest requestWithURL:photoUrl];
+            
+            [activityCell.photoImageView setImageWithURLRequest:photoRequest
+                                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                                 
+                                                                 [weakCell.photoImageView setImage:image];
+                                                                 [weakCell setNeedsLayout];
+                                                                 
+                                                             } failure:nil];
+        }
+        
+        return weakCell;
+
+        
+    }
     
     return [UITableViewCell new];
 }
@@ -342,6 +397,12 @@ enum TTActivityViewType : NSUInteger {
 
 // On Row Selection, push to the user's profile
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (_viewType == TTActivityViewAllActivities) {
+        // Don't allow row selection for All Activities--usernames and photos have different links.
+        return;
+    }
+    
     UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];
@@ -351,6 +412,19 @@ enum TTActivityViewType : NSUInteger {
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     // Dismiss the keyboard when scrolling starts
     [self.view endEditing:YES];
+}
+
+#pragma mark - ActivityTableViewCell delegate
+
+-(void)activityCell:(ActivityTableViewCell *)cellView didPressPhoto:(Photo *)photo {
+    NSLog(@"cell did press photo");
+}
+
+- (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 #pragma mark - Dismiss View
@@ -365,6 +439,7 @@ enum TTActivityViewType : NSUInteger {
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
     NSString *text = @"No Activity";
+    
     if (_viewType == TTActivityViewComments) {
         text = @"No Comments";
     }
