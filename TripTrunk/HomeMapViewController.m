@@ -77,6 +77,17 @@
     }
     
     self.tripsToCheck = [[NSMutableArray alloc]init];
+    
+    self.hotDots = nil;
+    self.hotDots = [[NSMutableArray alloc]init];
+    self.locations = nil;
+    self.locations = [[NSMutableArray alloc]init];
+    self.parseLocations = nil;
+    self.parseLocations = [[NSMutableArray alloc]init];
+    self.justMadeTrunk = nil;
+    self.justMadeTrunk = [[NSMutableArray alloc]init];
+    self.isNew= NO;
+    
     self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
     self.originalArray = [[NSMutableArray alloc]init];
         
@@ -93,17 +104,6 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-
-    self.hotDots = nil;
-    self.hotDots = [[NSMutableArray alloc]init];
-    self.locations = nil;
-    self.locations = [[NSMutableArray alloc]init];
-    self.parseLocations = nil;
-    self.parseLocations = [[NSMutableArray alloc]init];
-    self.justMadeTrunk = nil;
-    self.justMadeTrunk = [[NSMutableArray alloc]init];
-    self.isNew= NO;
-
     
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
     if([self checkUserRegistration])
@@ -119,6 +119,9 @@
             [self registerNotifications];
         }
     }
+    
+    NSLog(@"count = %lu", (unsigned long)self.mapView.annotations.count);
+    
 }
 
 /**
@@ -426,7 +429,7 @@
             Trip *tripTwo = [self.originalArray objectAtIndex:indexCount];
             indexCount += 1;
             
-            if (![trip.objectId isEqualToString:tripTwo.objectId])
+            if (![trip.objectId isEqualToString:tripTwo.objectId] || ![trip.city isEqualToString:tripTwo.city])
             {
                 update = YES;
                 break;
@@ -439,10 +442,16 @@
             self.tripsToCheck = nil;
             self.tripsToCheck = [[NSMutableArray alloc]init];
             self.originalCount = 0;
-            [self viewDidAppear:YES];
-        }
-        else
-        {
+//            [self viewDidAppear:YES];
+            
+            self.hotDots = nil;
+            self.hotDots = [[NSMutableArray alloc]init];
+            self.locations = nil;
+            self.locations = [[NSMutableArray alloc]init];
+            self.justMadeTrunk = nil;
+            self.justMadeTrunk = [[NSMutableArray alloc]init];
+            self.isNew= NO;
+
             for (Trip *trip in self.parseLocations)
             {
 
@@ -472,7 +481,6 @@
             }
         }
     }
-
 }
 
 -(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
