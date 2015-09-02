@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
@@ -21,26 +20,24 @@
                         <constraint firstAttribute="height" constant="110" id="vzd-MQ-CHk"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="TripTrunk" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bjC-WY-93W">
-                    <rect key="frame" x="189" y="449" width="102" height="21"/>
-                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                    <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="tripTrunkTitle" translatesAutoresizingMaskIntoConstraints="NO" id="EfB-bH-lR1">
+                    <rect key="frame" x="157" y="405" width="179" height="57"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="57" id="HK0-i3-as8"/>
+                        <constraint firstAttribute="width" constant="179" id="Mzr-oW-NIi"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.36862745098039218" green="0.58039215686274503" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="bhu-yy-h3K" secondAttribute="centerX" id="1DB-4c-5vf"/>
-                <constraint firstAttribute="centerX" secondItem="bjC-WY-93W" secondAttribute="centerX" id="3Ix-iz-XAI"/>
                 <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="9R7-jj-MQP"/>
                 <constraint firstAttribute="trailing" secondItem="iDn-Rh-3lx" secondAttribute="trailing" id="BVA-pF-ORs"/>
                 <constraint firstAttribute="bottom" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="58" id="O6H-PL-bpR"/>
+                <constraint firstAttribute="centerX" secondItem="EfB-bH-lR1" secondAttribute="centerX" id="U0q-FS-vnl"/>
                 <constraint firstItem="iDn-Rh-3lx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Xp5-fP-Mna"/>
+                <constraint firstItem="EfB-bH-lR1" firstAttribute="top" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="150" id="gx5-PX-Ha7"/>
                 <constraint firstAttribute="bottom" secondItem="iDn-Rh-3lx" secondAttribute="bottom" id="hUW-YE-OAg"/>
-                <constraint firstItem="bjC-WY-93W" firstAttribute="top" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="100" id="mFI-v0-f7n"/>
-                <constraint firstAttribute="bottom" secondItem="bjC-WY-93W" secondAttribute="bottom" constant="10" id="rtp-dZ-e7n"/>
                 <constraint firstItem="iDn-Rh-3lx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="sOo-4B-4Xh"/>
                 <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="xzn-gN-cIP"/>
             </constraints>
@@ -50,7 +47,6 @@
                 <mask key="constraints">
                     <exclude reference="O6H-PL-bpR"/>
                     <exclude reference="xzn-gN-cIP"/>
-                    <exclude reference="mFI-v0-f7n"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="548" y="455"/>
@@ -59,5 +55,6 @@
     <resources>
         <image name="logo_large" width="830" height="722"/>
         <image name="mountain2" width="1080" height="1920"/>
+        <image name="tripTrunkTitle" width="286" height="78"/>
     </resources>
 </document>
