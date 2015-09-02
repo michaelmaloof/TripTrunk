@@ -36,6 +36,7 @@
 @property MKAnnotationView *photoPin;
 @property NSMutableArray *friends;
 @property BOOL isNew;
+@property NSMutableArray *originalArray;
 
 @end
 
@@ -77,6 +78,7 @@
     
     self.tripsToCheck = [[NSMutableArray alloc]init];
     self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
+    self.originalArray = [[NSMutableArray alloc]init];
         
         //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
 //        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
@@ -193,6 +195,7 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query orderByDescending:@"createdAt"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
@@ -258,6 +261,8 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query orderByDescending:@"createdAt"];
+
 
 
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -379,7 +384,56 @@
 
 -(void)placeTrips
 {
-    if (self.parseLocations.count < self.originalCount )
+
+    if (self.originalArray.count == 0)
+    {
+        
+        for (Trip *trip in self.parseLocations)
+        {
+            
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+            
+            
+            NSDate *today = [NSDate date];
+            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+            
+            
+            BOOL color = 0;
+            if (tripInterval < 86400)
+            {
+                color = 1;
+            } else{
+                color = 0;
+            }
+            
+            if(![self.tripsToCheck containsObject:address] || color == 1)
+            {
+                [self addTripToMap:trip dot:color];
+                self.originalCount = self.parseLocations.count;
+                self.originalArray = self.parseLocations;
+            } else {
+                self.notDropped = self.notDropped +1;
+            }
+        }
+    }
+    else
+    {
+        int indexCount = 0;
+        BOOL update = NO;
+        
+        for (Trip *trip in self.parseLocations)
+        {
+            Trip *tripTwo = [self.originalArray objectAtIndex:indexCount];
+            indexCount += 1;
+            
+            if (![trip.objectId isEqualToString:tripTwo.objectId])
+            {
+                update = YES;
+                break;
+            }
+        }
+        
+        if (update == YES)
         {
             [self.mapView removeAnnotations:self.mapView.annotations];
             self.tripsToCheck = nil;
@@ -387,31 +441,34 @@
             self.originalCount = 0;
             [self viewDidAppear:YES];
         }
-    else
-    {
-        for (Trip *trip in self.parseLocations)
+        else
         {
-
-            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-            
-            
-            NSDate *today = [NSDate date];
-            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
-        
-            
-            BOOL color = 0;
-            if (tripInterval < 86400) {
-                color = 1;
-            } else{
-                color = 0;
-            }
-
-            if(![self.tripsToCheck containsObject:address] || color == 1)
+            for (Trip *trip in self.parseLocations)
             {
-                [self addTripToMap:trip dot:color];
-                self.originalCount = self.parseLocations.count;
-            } else {
-                self.notDropped = self.notDropped +1;
+
+                NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+                
+                
+                NSDate *today = [NSDate date];
+                NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+            
+                
+                BOOL color = 0;
+                if (tripInterval < 86400)
+                {
+                    color = 1;
+                } else{
+                    color = 0;
+                }
+
+                if(![self.tripsToCheck containsObject:address] || color == 1)
+                {
+                    [self addTripToMap:trip dot:color];
+                    self.originalCount = self.parseLocations.count;
+                    self.originalArray = self.parseLocations;
+                } else {
+                    self.notDropped = self.notDropped +1;
+                }
             }
         }
     }
