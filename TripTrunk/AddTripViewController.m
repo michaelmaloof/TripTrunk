@@ -317,7 +317,17 @@
     {
         if (error)
         {
-            self.title = @"TripTrunk";
+            UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+            CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+            UIGraphicsBeginImageContext( rect.size );
+            [image drawInRect:rect];
+            UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            NSData *imageData = UIImagePNGRepresentation(picture1);
+            UIImage *img=[UIImage imageWithData:imageData];
+            
+            self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -523,12 +533,32 @@
                                                        otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
-             self.title = @"TripTrunk";
+             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+             UIGraphicsBeginImageContext( rect.size );
+             [image drawInRect:rect];
+             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+             UIGraphicsEndImageContext();
+             
+             NSData *imageData = UIImagePNGRepresentation(picture1);
+             UIImage *img=[UIImage imageWithData:imageData];
+             
+             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
              
          }
          else
          {
-             self.title = @"TripTrunk";
+             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+             UIGraphicsBeginImageContext( rect.size );
+             [image drawInRect:rect];
+             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+             UIGraphicsEndImageContext();
+             
+             NSData *imageData = UIImagePNGRepresentation(picture1);
+             UIImage *img=[UIImage imageWithData:imageData];
+             
+             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
              
              
              if (self.navigationItem.leftBarButtonItem.tag == 0)

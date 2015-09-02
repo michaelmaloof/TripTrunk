@@ -364,7 +364,17 @@
     if (selectedRows.count == 0 && !self.isTripCreation) {
         // Adding friends to an existing trip, so pop back
         [self.navigationController popViewControllerAnimated:YES];
-        self.title = @"TripTrunk";
+        UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+        CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+        UIGraphicsBeginImageContext( rect.size );
+        [image drawInRect:rect];
+        UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *imageData = UIImagePNGRepresentation(picture1);
+        UIImage *img=[UIImage imageWithData:imageData];
+        
+        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
         return; // make sureit doesn't execute further.
 
     }
@@ -388,7 +398,17 @@
                                                   otherButtonTitles:nil, nil];
             
             [alert show];
-            self.title = @"TripTrunk";
+            UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+            CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+            UIGraphicsBeginImageContext( rect.size );
+            [image drawInRect:rect];
+            UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            NSData *imageData = UIImagePNGRepresentation(picture1);
+            UIImage *img=[UIImage imageWithData:imageData];
+            
+            self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
 
         }
         if (!succeeded) {
@@ -399,12 +419,32 @@
                                                   otherButtonTitles:nil, nil];
             
             [alert show];
-            self.title = @"TripTrunk";
+            UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+            CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+            UIGraphicsBeginImageContext( rect.size );
+            [image drawInRect:rect];
+            UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            NSData *imageData = UIImagePNGRepresentation(picture1);
+            UIImage *img=[UIImage imageWithData:imageData];
+            
+            self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
 
         }
         else
         {
-            self.title = @"TripTrunk";
+            UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
+            CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
+            UIGraphicsBeginImageContext( rect.size );
+            [image drawInRect:rect];
+            UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            NSData *imageData = UIImagePNGRepresentation(picture1);
+            UIImage *img=[UIImage imageWithData:imageData];
+            
+            self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
 
         }
         
