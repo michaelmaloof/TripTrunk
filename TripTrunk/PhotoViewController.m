@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
 #import "ActivityListViewController.h"
+#import "CommentListViewController.h"
 #import "TTCache.h"
 
 
@@ -334,7 +335,7 @@
 - (IBAction)onCommentsTapped:(id)sender {
     
     
-    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
+    CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:navController animated:YES completion:nil];
 }

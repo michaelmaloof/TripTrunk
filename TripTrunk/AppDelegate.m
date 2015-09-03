@@ -11,11 +11,13 @@
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "Flurry.h"
 
 #import "UserProfileViewController.h"
 #import "PhotoViewController.h"
 #import "TrunkViewController.h"
 #import "FindFriendsViewController.h"
+#import "ActivityListViewController.h"
 #import "TTCache.h"
 
 @interface AppDelegate ()
@@ -46,13 +48,17 @@
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
+    [Flurry startSession:@"Q24ZNWCGM36CGJ2CDMSC"];
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
-    
     [self setupSearchTabBar];
+    [self setupActivityTabBar];
+    [self setupProfileTabBar];
+
     
     return YES;
 }
@@ -125,7 +131,7 @@
 #pragma mark - Tab Bar
 
 /**
- *  Creates the Search Tab as the last tab in the tab bar.
+ *  Creates the Search Tab in the tab bar.
  *  This is necessary because the FindFriendsViewController does not use the storyboard, and so does not work correctly in a storyboard-managed tab bar
  */
 - (void)setupSearchTabBar {
@@ -138,11 +144,55 @@
     
     [searchNavController setTabBarItem:searchItem];
     NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    if (vcs.count > 3) {
-        [vcs replaceObjectAtIndex:3 withObject:searchNavController];
+    
+    if (vcs.count == 2) {
+        // While we still have 2 tabs created in Storyboard, then this is the one that SHOULD always be true. The other 2 if-cases are just in case.
+        [vcs insertObject:searchNavController atIndex:1];
+    }
+    else if (vcs.count > 2) {
+        [vcs replaceObjectAtIndex:2 withObject:searchNavController];
     }
     else {
         [vcs addObject:searchNavController];
+    }
+    [tabbarcontroller setViewControllers:vcs];
+    
+}
+
+- (void)setupActivityTabBar {
+    // Set up Activity tab
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
+    UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
+    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass"] tag:3];
+    [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    
+    [activityNavController setTabBarItem:activityItem];
+    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+    if (vcs.count > 3) {
+        [vcs replaceObjectAtIndex:3 withObject:activityNavController];
+    }
+    else {
+        [vcs addObject:activityNavController];
+    }
+    [tabbarcontroller setViewControllers:vcs];
+}
+
+- (void)setupProfileTabBar {
+    // Set up search tab
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"meSwquare"] tag:3];
+    [item setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    item.title = @"";
+    [navController setTabBarItem:item];
+    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+    if (vcs.count > 4) {
+        [vcs replaceObjectAtIndex:4 withObject:navController];
+    }
+    else {
+        [vcs addObject:navController];
     }
     [tabbarcontroller setViewControllers:vcs];
     
@@ -159,9 +209,14 @@
         [currentInstallation setObject:[PFUser currentUser] forKey:@"user"];
     }
     [currentInstallation saveInBackground];
+    
+    
+    [Flurry logEvent:@"Registered_Push_Notifications"];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    [Flurry logEvent:@"Got_Push_Notification"];
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup

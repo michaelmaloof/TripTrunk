@@ -380,6 +380,25 @@
     return query;
 }
 
++ (void)queryForAllActivities:(void (^)(NSArray *activities, NSError *error))completionBlock;
+{
+    // Query all user's that
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:@"fromUser"];
+    [query includeKey:@"fromUser"];
+    [query includeKey:@"photo"];
+    [query includeKey:@"trip"];
+    [query orderByDescending:@"createdAt"];
+    
+    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        completionBlock(objects, error);
+    }];
+}
+
 //+ (void)addToTripActivities:(PFUser *)user forCity:(NSString*)city  {
 //    
 //    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
