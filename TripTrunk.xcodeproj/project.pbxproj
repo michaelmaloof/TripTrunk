@@ -77,6 +77,7 @@
 		C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */; };
 		C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */; };
 		C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */; };
+		C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
@@ -220,6 +221,8 @@
 		C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
 		C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		C97706621B97C7C000FB11B2 /* TTTTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTTimeIntervalFormatter.h; sourceTree = "<group>"; };
+		C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTTimeIntervalFormatter.m; sourceTree = "<group>"; };
 		C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseErrorHandlingController.h; sourceTree = "<group>"; };
 		C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseErrorHandlingController.m; sourceTree = "<group>"; };
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -551,6 +554,8 @@
 				C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
 				C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */,
 				C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */,
+				C97706621B97C7C000FB11B2 /* TTTTimeIntervalFormatter.h */,
+				C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */,
 			);
 			name = "Third Party";
 			sourceTree = "<group>";
@@ -680,6 +685,7 @@
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
+				C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
 				C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */,

@@ -14,9 +14,11 @@
 #import "UserProfileViewController.h"
 #import "CommentTableViewCell.h"
 #import "ActivityTableViewCell.h"
+#import "PhotoViewController.h"
 #import "TTUtility.h"
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "TrunkViewController.h"
 
 #define USER_CELL @"user_table_view_cell"
 #define COMMENT_CELL @"comment_table_view_cell"
@@ -102,6 +104,19 @@ enum TTActivityViewType : NSUInteger {
                                                                                                target:self
                                                                                                action:@selector(closeView)];
         [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    }
+    // Else, it's the All Activities list
+    else {
+        // Initialize the refresh control.
+        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self
+                           action:@selector(refresh:)
+                 forControlEvents:UIControlEventValueChanged];
+        [self.tableView addSubview:refreshControl];
+        UIColor *ttBlueColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+
+        refreshControl.tintColor = ttBlueColor;
+        [refreshControl endRefreshing];
     }
 }
 
@@ -211,7 +226,32 @@ enum TTActivityViewType : NSUInteger {
                                                                constant:0.0]];
     }
     
+}
 
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    
+    // Query for activities for user
+    [SocialUtility queryForAllActivities:^(NSArray *activities, NSError *error) {
+        _activities = [NSMutableArray arrayWithArray:activities];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // End the refreshing & update the timestamp
+            if (refreshControl) {
+                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                [formatter setDateFormat:@"MMM d, h:mm a"];
+                NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+                NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                            forKey:NSForegroundColorAttributeName];
+                NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                refreshControl.attributedTitle = attributedTitle;
+                
+                [refreshControl endRefreshing];
+            }
+            
+            [self.tableView reloadData];
+
+        });
+    }];
+    
 }
 
 #pragma mark - Table view data source
@@ -246,6 +286,18 @@ enum TTActivityViewType : NSUInteger {
                                           attributes:attr
                                              context:nil].size;
 
+        return labelSize.height + 40;
+    }
+    
+    if (_viewType == TTActivityViewAllActivities) {
+        
+        // Get a variable cell height to make sure we can fit long comments
+        NSAttributedString *cellText = [[TTUtility sharedInstance] attributedStringForActivity:[_activities objectAtIndex:indexPath.row]];
+        CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
+        
+        CGSize labelSize = [cellText boundingRectWithSize:constraintSize
+                                                  options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                                  context:nil].size;
         return labelSize.height + 40;
     }
     
@@ -319,6 +371,7 @@ enum TTActivityViewType : NSUInteger {
                                                  } failure:nil];
         
         if ([activity valueForKey:@"photo"]) {
+            
             NSURL *photoUrl = [NSURL URLWithString:[[TTUtility sharedInstance] thumbnailImageUrl:[[activity valueForKey:@"photo"] valueForKey:@"imageUrl"]]];
             NSURLRequest *photoRequest = [NSURLRequest requestWithURL:photoUrl];
             
@@ -417,7 +470,11 @@ enum TTActivityViewType : NSUInteger {
 #pragma mark - ActivityTableViewCell delegate
 
 -(void)activityCell:(ActivityTableViewCell *)cellView didPressPhoto:(Photo *)photo {
-    NSLog(@"cell did press photo");
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
 }
 
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
@@ -427,6 +484,12 @@ enum TTActivityViewType : NSUInteger {
     }
 }
 
+- (void)activityCell:(ActivityTableViewCell *)cellView didPressTrip:(Trip *)trip {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
 #pragma mark - Dismiss View
 
 - (void)closeView

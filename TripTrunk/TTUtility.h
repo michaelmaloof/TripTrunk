@@ -106,6 +106,9 @@
 - (void)addUploaderProgressView;
 
 
+- (NSAttributedString *)attributedStringForActivity:(NSDictionary *)activity;
+    
+
 @end
 
 

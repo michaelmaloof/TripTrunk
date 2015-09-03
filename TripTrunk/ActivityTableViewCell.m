@@ -7,6 +7,12 @@
 //
 
 #import "ActivityTableViewCell.h"
+#import "UIColor+HexColors.h"
+#import "TTUtility.h"
+
+#define USER_ACTIVITY_URL @"activity://user"
+#define TRIP_ACTIVITY_URL @"activity://trip"
+
 
 @interface ActivityTableViewCell () <TTTAttributedLabelDelegate>
 
@@ -19,15 +25,41 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+
     [self.profilePicImageView setClipsToBounds:YES];
     [self.photoImageView setClipsToBounds:YES];
+    [self.contentLabel setLineSpacing:5.0];
+    
+    self.contentLabel.delegate = self;
 
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
-    self.contentLabel.delegate = self;
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 
-
+    
+    // Set up Link Attributes (bold and colored)
+    UIColor *ttBlueColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+    NSDictionary *linkAttributes = @{
+                                     (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
+                                     NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                     };
+    NSDictionary *activeLinkAttributes = @{
+                                           (id)kCTForegroundColorAttributeName : (id)[UIColor darkGrayColor].CGColor,
+                                           NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                           };
+    
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = activeLinkAttributes;
+    
+    UITapGestureRecognizer *photoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoImageViewTapped:)];
+    photoTap.numberOfTapsRequired = 1;
+    self.photoImageView.userInteractionEnabled = YES;
+    [self.photoImageView addGestureRecognizer:photoTap];
+    
+    UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+    profileTap.numberOfTapsRequired = 1;
+    self.profilePicImageView.userInteractionEnabled = YES;
+    [self.profilePicImageView addGestureRecognizer:profileTap];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -41,45 +73,53 @@
     _activity = activity;
     _user = activity[@"fromUser"];
     
-    NSString *type = activity[@"type"];
+    if (!activity[@"photo"]) {
+        [self.photoImageView setHidden:YES];
+    }
+    else {
+        [self.photoImageView setHidden:NO];
+    }
     
-    NSString *content = @"";
+    
+    [self updateContentLabel];
 
-    
-    if ([type isEqualToString:@"like"]) {
-        content = @"liked your photo.";
-    }
-    else if ([type isEqualToString:@"comment"]) {
-        content = [NSString stringWithFormat:@"commented on your photo: %@", activity[@"content"]];
-    }
-    else if ([type isEqualToString:@"addToTrip"]) {
-        content = @"added you to a trip.";
-    }
-    else if ([type isEqualToString:@"follow"]) {
-        content = @"followed you.";
-    }
-    
-    [self updateLabelWithString:content];
 }
 
-- (void)updateLabelWithString:(NSString *)content {
-//    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:_user.username];
-//    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:fullString
-//                                                                    attributes:@{
-//                                                                                 (id)kCTForegroundColorAttributeName : (id)[UIColor redColor].CGColor,
-//                                                                                 NSFontAttributeName : [UIFont boldSystemFontOfSize:16],
-//                                                                                 NSKernAttributeName : [NSNull null],
-//                                                                                 (id)kTTTBackgroundFillColorAttributeName : (id)[UIColor greenColor].CGColor
-//                                                                                 }];
+- (void)updateContentLabel {
+    NSAttributedString *attString = [[TTUtility sharedInstance] attributedStringForActivity:_activity];
+    [self.contentLabel setAttributedText:attString];
     
-    NSString *fullString = [NSString stringWithFormat:@"%@ %@", _user.username, content];
-    self.contentLabel.text = fullString;
-    
+    // Set up a link for the username
     NSRange range = [self.contentLabel.text rangeOfString:_user.username];
-    [self.contentLabel addLinkToURL:[NSURL URLWithString:@"activity://user"] withRange:range]; // Embedding a custom link in a substring
+    [self.contentLabel addLinkToURL:[NSURL URLWithString:USER_ACTIVITY_URL] withRange:range]; // Embedding a custom link in a substring
+    
+    // If it'as an addToTrip activity, set the Trip Name as a URL
+    if ([_activity[@"type"] isEqualToString:@"addToTrip"] && _activity[@"trip"] && [_activity[@"trip"] valueForKey:@"name"]) {
+        // Set up a link for the username
+        NSRange tripRange = [self.contentLabel.text rangeOfString:[_activity[@"trip"] valueForKey:@"name"]];
+        [self.contentLabel addLinkToURL:[NSURL URLWithString:TRIP_ACTIVITY_URL] withRange:tripRange]; // Embedding a custom link in a substring
+    }
 
 }
 
+- (void)photoImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
+    // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+    if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressPhoto:)]) {
+        [self.delegate activityCell:self didPressPhoto:[_activity valueForKey:@"photo"]];
+    }
+}
+
+- (void)profileImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
+    
+    //We use the same delegate method here as for pressing the username, since both go to the same place.
+    
+    // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+    if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
+        [self.delegate activityCell:self didPressUsernameForUser:_user];
+    }
+}
+
+#pragma mark - TTTAttributedLabelDelegate methods
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     
     if ([[url scheme] hasPrefix:@"activity"]) {
@@ -90,6 +130,15 @@
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
                 [self.delegate activityCell:self didPressUsernameForUser:_user];
+            }
+        }
+        else if([[url host] hasPrefix:@"trip"]) {
+            /* load user profile screen */
+            NSLog(@"Trip tapped");
+            Trip *trip = (Trip *)_activity[@"trip"];
+            // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+            if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressTrip:)]) {
+                [self.delegate activityCell:self didPressTrip:trip];
             }
         }
     } else {
