@@ -91,8 +91,6 @@ CLCloudinary *cloudinary;
                   }
                   else {
                       NSLog(@"Saved Successfully to parse");
-                      // post the notification so that the ProfileViewController can know to reload the data
-//                      [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
                   }
               }];
               
@@ -115,8 +113,8 @@ CLCloudinary *cloudinary;
     }
     
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 200];
-    [transformation setHeightWithInt: 200];
+    [transformation setWidthWithInt: 300];
+    [transformation setHeightWithInt: 300];
     [transformation setCrop: @"fill"];
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];
