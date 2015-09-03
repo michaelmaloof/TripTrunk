@@ -236,12 +236,24 @@
 {
     NSString *text = @"";
     
-    if (_isFollowing) {
-        text = @"Follow some users to see what other people are sharing";
+    if ([_thisUser.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        if (_isFollowing) {
+            text = @"Follow some users to see what other people are sharing";
+        }
+        else {
+            text = @"You have no followers. Invite some friends to TripTrunk";
+        }
     }
     else {
-        text = @"You have no followers. Invite some friends to TripTrunk";
+        if (_isFollowing) {
+            text = [NSString stringWithFormat:@"%@ is not following anyone yet.", [_thisUser valueForKey:@"name"]];
+        }
+        else {
+            text = [NSString stringWithFormat:@"%@ They have you followers yet. :( You could be their first!", [_thisUser valueForKey:@"name"]];
+        }
     }
+    
+
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;

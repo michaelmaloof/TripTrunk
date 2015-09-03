@@ -94,6 +94,7 @@
 		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
 		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
 		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
+		C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,6 +253,9 @@
 		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
 		C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCommentInputView.h; sourceTree = "<group>"; };
 		C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCommentInputView.m; sourceTree = "<group>"; };
+		C9FE41F91B98E28E00376F2C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
+		C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.0.0.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +266,7 @@
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
+				C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */,
 				2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
 				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
@@ -540,6 +545,7 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C9FE41F81B98E28E00376F2C /* Flurry */,
 				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
 				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
@@ -558,6 +564,16 @@
 				C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */,
 			);
 			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		C9FE41F81B98E28E00376F2C /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				C9FE41F91B98E28E00376F2C /* Flurry.h */,
+				C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */,
+				C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */,
+			);
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -866,6 +882,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -893,6 +910,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";

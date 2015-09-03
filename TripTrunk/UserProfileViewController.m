@@ -18,9 +18,11 @@
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
+@property (strong, nonatomic) IBOutlet UIButton *editButton;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
+@property (weak, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) PFUser *user;
 @end
 
@@ -53,19 +55,28 @@
     
     // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
     [_user fetchIfNeeded];
-    
+    self.title = _user.username;
+
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
-    self.title = _user.username;
+    
+    if (_user[@"bio"]) {
+        [self.bioTextView setText:_user[@"bio"]];
+    }
+    else {
+        [self.bioTextView setText:@"A true world traveler"];
+    }
 
     [self.logoutButton setHidden:YES];
-    
+    [self.editButton setHidden:YES];
+
     // If it's the current user, set up their profile a bit differently.
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
         [self.logoutButton setHidden:NO];
+        [self.editButton setHidden:NO];
         
         UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
         picTap.numberOfTapsRequired = 1;
@@ -197,6 +208,46 @@
     HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
     vc.user = self.user;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)editButtonPressed:(id)sender {
+    // Selected means we're IN editing mode.
+    if (self.editButton.selected) {
+        [self.bioTextView setEditable:NO];
+        [self.bioTextView setSelectable:NO];
+        
+        // Save it to parse
+        [self updateUserBio:self.bioTextView.text];
+    }
+    else {
+        [self.bioTextView setEditable:YES];
+        [self.bioTextView setSelectable:YES];
+        [self.bioTextView becomeFirstResponder];
+
+    }
+    // Toggle selection
+    [_editButton setSelected:!self.editButton.selected];
+
+    
+}
+
+- (void)updateUserBio:(NSString *)bio {
+    // Ensure it's the current user so we don't accidentally let people change other people's bios
+    if ([_user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        if (![_user[@"bio"] isEqualToString:bio]) {
+            [_user setValue:bio forKey:@"bio"];
+            [_user saveInBackground];
+            NSLog(@"Bio Updated");
+        }
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touchesBegan:withEvent:");
+    [self.bioTextView resignFirstResponder];
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)setProfilePic:(NSString *)urlString {

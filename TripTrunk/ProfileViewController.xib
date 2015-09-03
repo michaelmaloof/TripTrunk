@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserProfileViewController">
             <connections>
+                <outlet property="bioTextView" destination="orB-1O-uVU" id="zaP-Ux-pyz"/>
+                <outlet property="editButton" destination="jfE-6G-KiF" id="AcS-ag-DFr"/>
                 <outlet property="followButton" destination="aRY-W6-WrA" id="slI-Ri-nsN"/>
                 <outlet property="followersButton" destination="e88-F3-dQC" id="gb6-Ws-3KP"/>
                 <outlet property="followingButton" destination="l8b-fX-Vja" id="Yko-0o-ACv"/>
@@ -72,8 +74,7 @@
                             <exclude reference="oR1-iY-JQl"/>
                         </mask>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="133" y="83" width="150" height="150"/>
+                    <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
                             <exclude reference="BAv-3O-gaE"/>
                             <include reference="Ml9-Ff-4bC"/>
@@ -147,8 +148,7 @@
                             <exclude reference="kT7-qc-wTe"/>
                         </mask>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="164" y="374" width="94" height="43"/>
+                    <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
                             <include reference="LMp-aP-Wcv"/>
                             <include reference="kT7-qc-wTe"/>
@@ -182,8 +182,7 @@
                             <exclude reference="xEY-sM-SH7"/>
                         </mask>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="111" y="463" width="200" height="100"/>
+                    <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
                             <include reference="Mgw-OO-4j0"/>
                             <include reference="xEY-sM-SH7"/>
@@ -191,6 +190,36 @@
                     </variation>
                     <connections>
                         <action selector="mapButtonPressed:" destination="-1" eventType="touchUpInside" id="PZs-Mc-WtS"/>
+                    </connections>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="A true world traveler." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="orB-1O-uVU">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="250" id="kUg-vI-Bjb">
+                            <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="kUg-vI-Bjb"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="kUg-vI-Bjb"/>
+                        </mask>
+                    </variation>
+                </textView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jfE-6G-KiF">
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                    <state key="normal" title="Edit">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" title="Done"/>
+                    <connections>
+                        <action selector="editButtonPressed:" destination="-1" eventType="touchUpInside" id="lQJ-gk-jgD"/>
                     </connections>
                 </button>
             </subviews>
@@ -203,12 +232,16 @@
                 <constraint firstItem="QbL-KF-0wc" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="6lM-lj-xjh"/>
                 <constraint firstItem="l8b-fX-Vja" firstAttribute="leading" secondItem="N0n-ZZ-bdB" secondAttribute="trailing" id="7D4-UF-WPn"/>
                 <constraint firstItem="9aU-WR-LRD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="250" constant="83" id="AbC-oO-RJ6"/>
+                <constraint firstItem="orB-1O-uVU" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="32" id="BRd-Yd-20j"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="2dd-sb-Fv2" secondAttribute="bottom" constant="-115" id="Cf4-zz-S0e">
                     <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                 </constraint>
                 <constraint firstItem="l8b-fX-Vja" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="267" id="DTd-ir-ZuN"/>
+                <constraint firstAttribute="trailing" secondItem="orB-1O-uVU" secondAttribute="trailing" constant="32" id="DqM-z1-sYm"/>
+                <constraint firstItem="jfE-6G-KiF" firstAttribute="leading" secondItem="2dd-sb-Fv2" secondAttribute="trailing" constant="15" id="Hz3-yZ-0gs"/>
                 <constraint firstItem="aRY-W6-WrA" firstAttribute="centerX" secondItem="2dd-sb-Fv2" secondAttribute="centerX" id="L6U-SM-625"/>
                 <constraint firstItem="N0n-ZZ-bdB" firstAttribute="leading" secondItem="e88-F3-dQC" secondAttribute="trailing" id="LNA-2s-dP5"/>
+                <constraint firstItem="orB-1O-uVU" firstAttribute="top" secondItem="2dd-sb-Fv2" secondAttribute="bottom" constant="16" id="NCL-Ny-5xZ"/>
                 <constraint firstAttribute="trailing" secondItem="l8b-fX-Vja" secondAttribute="trailing" id="Nlw-RC-SFe"/>
                 <constraint firstItem="e88-F3-dQC" firstAttribute="centerY" secondItem="N0n-ZZ-bdB" secondAttribute="centerY" id="OhW-ML-nf3"/>
                 <constraint firstItem="QbL-KF-0wc" firstAttribute="top" secondItem="9aU-WR-LRD" secondAttribute="bottom" priority="250" constant="10" id="Qof-qo-Rq0">
@@ -240,6 +273,7 @@
                 <constraint firstAttribute="trailing" secondItem="QbL-KF-0wc" secondAttribute="trailing" constant="8" id="tsh-Dl-scC"/>
                 <constraint firstItem="e88-F3-dQC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="uUN-LA-qEW"/>
                 <constraint firstItem="aRY-W6-WrA" firstAttribute="top" secondItem="N0n-ZZ-bdB" secondAttribute="bottom" constant="16" id="v0g-d9-dpu"/>
+                <constraint firstItem="orB-1O-uVU" firstAttribute="top" secondItem="jfE-6G-KiF" secondAttribute="bottom" constant="8" id="wvr-Rh-T4d"/>
                 <constraint firstItem="e88-F3-dQC" firstAttribute="top" secondItem="9aU-WR-LRD" secondAttribute="bottom" constant="23" id="zGI-PN-HOv"/>
             </constraints>
             <variation key="default">
@@ -253,6 +287,8 @@
                     <exclude reference="QbL-KF-0wc"/>
                     <exclude reference="aRY-W6-WrA"/>
                     <exclude reference="2dd-sb-Fv2"/>
+                    <exclude reference="orB-1O-uVU"/>
+                    <exclude reference="jfE-6G-KiF"/>
                 </mask>
                 <mask key="constraints">
                     <exclude reference="2jm-t0-yiR"/>
@@ -290,6 +326,11 @@
                     <exclude reference="v0g-d9-dpu"/>
                     <exclude reference="Cf4-zz-S0e"/>
                     <exclude reference="lRq-fw-Ndi"/>
+                    <exclude reference="BRd-Yd-20j"/>
+                    <exclude reference="DqM-z1-sYm"/>
+                    <exclude reference="NCL-Ny-5xZ"/>
+                    <exclude reference="wvr-Rh-T4d"/>
+                    <exclude reference="Hz3-yZ-0gs"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -303,6 +344,8 @@
                     <include reference="QbL-KF-0wc"/>
                     <include reference="aRY-W6-WrA"/>
                     <include reference="2dd-sb-Fv2"/>
+                    <include reference="orB-1O-uVU"/>
+                    <include reference="jfE-6G-KiF"/>
                 </mask>
                 <mask key="constraints">
                     <include reference="2jm-t0-yiR"/>
@@ -340,6 +383,11 @@
                     <include reference="v0g-d9-dpu"/>
                     <include reference="Cf4-zz-S0e"/>
                     <include reference="lRq-fw-Ndi"/>
+                    <include reference="BRd-Yd-20j"/>
+                    <include reference="DqM-z1-sYm"/>
+                    <include reference="NCL-Ny-5xZ"/>
+                    <include reference="wvr-Rh-T4d"/>
+                    <include reference="Hz3-yZ-0gs"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="336" y="555"/>

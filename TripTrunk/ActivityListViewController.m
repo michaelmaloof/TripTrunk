@@ -8,7 +8,6 @@
 
 #import "ActivityListViewController.h"
 #import "UIImageView+AFNetworking.h"
-
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"

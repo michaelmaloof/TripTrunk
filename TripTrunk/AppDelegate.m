@@ -11,6 +11,7 @@
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "Flurry.h"
 
 #import "UserProfileViewController.h"
 #import "PhotoViewController.h"
@@ -46,6 +47,8 @@
     [PFImageView class];
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
+    
+    [Flurry startSession:@"Q24ZNWCGM36CGJ2CDMSC"];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
@@ -206,9 +209,14 @@
         [currentInstallation setObject:[PFUser currentUser] forKey:@"user"];
     }
     [currentInstallation saveInBackground];
+    
+    
+    [Flurry logEvent:@"Registered_Push_Notifications"];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    [Flurry logEvent:@"Got_Push_Notification"];
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup
