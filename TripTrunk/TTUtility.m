@@ -462,4 +462,37 @@ CLCloudinary *cloudinary;
     return str;
 }
 
+- (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity {
+    
+    NSString *content = activity[@"content"];
+    PFUser *user = activity[@"fromUser"];
+    NSString *time = @"";
+    
+    if ([activity valueForKey:@"createdAt"]) {
+        NSDate *created = [activity valueForKey:@"createdAt"];
+        time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
+    }
+    
+    NSString *contentString = [NSString stringWithFormat:@"%@ %@ ", user.username, content];
+    
+    NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
+                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                                         NSParagraphStyleAttributeName: paraStyle,
+                                                                                         NSKernAttributeName : [NSNull null]
+                                                                                         }];
+    
+    NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
+                                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
+                                                                               NSParagraphStyleAttributeName: paraStyle,
+                                                                               NSKernAttributeName : [NSNull null],
+                                                                               (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
+                                                                               }];
+    [str appendAttributedString:timeStr];
+    return str;
+}
+
 @end

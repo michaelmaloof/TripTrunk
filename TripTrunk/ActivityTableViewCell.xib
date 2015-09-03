@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -58,7 +59,7 @@
                     <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVZ-AV-qdA" customClass="TTTAttributedLabel">
                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="lineHeightMultiple">
@@ -67,6 +68,7 @@
                         </userDefinedRuntimeAttributes>
                     </label>
                 </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 <constraints>
                     <constraint firstItem="ecP-7E-Mzb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="7WR-gh-226"/>
                     <constraint firstItem="fVZ-AV-qdA" firstAttribute="leading" secondItem="ecP-7E-Mzb" secondAttribute="trailing" constant="8" id="CUR-82-SSw"/>
@@ -90,16 +92,16 @@
                         <exclude reference="fVZ-AV-qdA"/>
                     </mask>
                     <mask key="constraints">
-                        <exclude reference="7WR-gh-226"/>
-                        <exclude reference="Qhd-4W-V9V"/>
-                        <exclude reference="V0Z-uI-yvG"/>
-                        <exclude reference="fcV-vk-TAZ"/>
-                        <exclude reference="gvn-IQ-ByH"/>
                         <exclude reference="CUR-82-SSw"/>
                         <exclude reference="MVq-Dt-arn"/>
                         <exclude reference="P4a-Tz-aG2"/>
                         <exclude reference="T1k-mQ-vdb"/>
                         <exclude reference="qA1-4W-Ufq"/>
+                        <exclude reference="7WR-gh-226"/>
+                        <exclude reference="Qhd-4W-V9V"/>
+                        <exclude reference="V0Z-uI-yvG"/>
+                        <exclude reference="fcV-vk-TAZ"/>
+                        <exclude reference="gvn-IQ-ByH"/>
                     </mask>
                 </variation>
                 <variation key="heightClass=regular-widthClass=compact">
@@ -109,16 +111,16 @@
                         <include reference="fVZ-AV-qdA"/>
                     </mask>
                     <mask key="constraints">
-                        <exclude reference="7WR-gh-226"/>
-                        <include reference="Qhd-4W-V9V"/>
-                        <include reference="V0Z-uI-yvG"/>
-                        <exclude reference="fcV-vk-TAZ"/>
-                        <exclude reference="gvn-IQ-ByH"/>
                         <include reference="CUR-82-SSw"/>
                         <include reference="MVq-Dt-arn"/>
                         <include reference="P4a-Tz-aG2"/>
                         <include reference="T1k-mQ-vdb"/>
                         <include reference="qA1-4W-Ufq"/>
+                        <exclude reference="7WR-gh-226"/>
+                        <include reference="Qhd-4W-V9V"/>
+                        <include reference="V0Z-uI-yvG"/>
+                        <exclude reference="fcV-vk-TAZ"/>
+                        <exclude reference="gvn-IQ-ByH"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>

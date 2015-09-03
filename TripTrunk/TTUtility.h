@@ -107,7 +107,8 @@
 
 
 - (NSAttributedString *)attributedStringForActivity:(NSDictionary *)activity;
-    
+
+- (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity;
 
 @end
 

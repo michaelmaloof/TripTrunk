@@ -12,33 +12,26 @@
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
-#import "CommentTableViewCell.h"
 #import "ActivityTableViewCell.h"
 #import "PhotoViewController.h"
 #import "TTUtility.h"
-#import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TrunkViewController.h"
 
 #define USER_CELL @"user_table_view_cell"
-#define COMMENT_CELL @"comment_table_view_cell"
 #define ACTIVITY_CELL @"activity_table_view_cell"
 
 enum TTActivityViewType : NSUInteger {
     TTActivityViewAllActivities = 1,
-    TTActivityViewLikes = 2,
-    TTActivityViewComments = 3
+    TTActivityViewLikes = 2
 };
 
-@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, ActivityTableViewCellDelegate>
+@interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, ActivityTableViewCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property NSUInteger viewType;
-
-@property (strong, nonatomic) TTCommentInputView *commentInputView;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
-
 
 @end
 
@@ -51,18 +44,6 @@ enum TTActivityViewType : NSUInteger {
         _activities = [[NSMutableArray alloc] initWithArray:likes];
         self.title = @"Likers";
         _viewType = TTActivityViewLikes;
-    }
-    return self;
-}
-
-- (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
-{
-    self = [super init];
-    if (self) {
-        _activities = [[NSMutableArray alloc] initWithArray:comments];
-        _photo = photo;
-        self.title = @"Comments";
-        _viewType = TTActivityViewComments;
     }
     return self;
 }
@@ -82,19 +63,11 @@ enum TTActivityViewType : NSUInteger {
     
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    [self.view setBackgroundColor:[UIColor whiteColor]]; // make the view bg white to avoid the black glitch if a keyboard appears - for CommentView
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
     [self.view addSubview:self.tableView];
-    
-    // Setup the comment overlay if it's the Comments view
-    if (_viewType == TTActivityViewComments) {
-        _commentInputView = [[TTCommentInputView alloc] init];
-        [self.view addSubview:_commentInputView];
-        [_commentInputView setupConstraintsWithView:self.view];
-        _commentInputView.delegate = self;
-    }
 
     [self setupTableViewConstraints];
 
@@ -129,7 +102,6 @@ enum TTActivityViewType : NSUInteger {
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:COMMENT_CELL];
     [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
 
     
@@ -139,7 +111,6 @@ enum TTActivityViewType : NSUInteger {
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-    
     
     if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
         // Query for activities for user
@@ -172,7 +143,7 @@ enum TTActivityViewType : NSUInteger {
 }
 
 /**
- *  Adds AutoLayout constraints on the tableview so that it can adjust for the comment box on commentview.
+ *  Adds AutoLayout constraints on the tableview
  */
 - (void)setupTableViewConstraints {
     
@@ -204,27 +175,15 @@ enum TTActivityViewType : NSUInteger {
                                                                attribute:NSLayoutAttributeTop
                                                               multiplier:1.0
                                                                 constant:0.0]];
-    
-    if (_viewType == TTActivityViewComments) {
-        // vertical algin bottom to comment box
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
-                                                              attribute:NSLayoutAttributeBottom
-                                                              relatedBy:NSLayoutRelationEqual
-                                                                 toItem:self.commentInputView
-                                                              attribute:NSLayoutAttributeTop
-                                                             multiplier:1.0
-                                                               constant:0.0]];
-    }
-    else {
-        // vertical algin bottom to view
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
-                                                              attribute:NSLayoutAttributeBottom
-                                                              relatedBy:NSLayoutRelationEqual
-                                                                 toItem:self.view
-                                                              attribute:NSLayoutAttributeBottom
-                                                             multiplier:1.0
-                                                               constant:0.0]];
-    }
+
+    // vertical algin bottom to view
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:0.0]];
     
 }
 
@@ -266,28 +225,6 @@ enum TTActivityViewType : NSUInteger {
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (_viewType == TTActivityViewComments) {
-        
-        // Get a variable cell height to make sure we can fit long comments
-        
-        NSString *cellText = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
-        UIFont *cellFont = [UIFont boldSystemFontOfSize:12.0];
-        CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
-        
-        NSMutableDictionary *attr = [NSMutableDictionary dictionary];
-        NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        [attr setObject:paraStyle forKey:NSParagraphStyleAttributeName];
-        [attr setObject:cellFont forKey:NSFontAttributeName];
-        
-        CGSize labelSize = [cellText boundingRectWithSize:constraintSize
-                                             options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-                                          attributes:attr
-                                             context:nil].size;
-
-        return labelSize.height + 40;
-    }
     
     if (_viewType == TTActivityViewAllActivities) {
         
@@ -332,21 +269,7 @@ enum TTActivityViewType : NSUInteger {
                                                      
                                                  } failure:nil];
         return weakCell;
-    }
-    else if (_viewType == TTActivityViewComments) {
         
-        CommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:COMMENT_CELL forIndexPath:indexPath];
-        // We assume fromUser contains the full PFUser object
-        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-//        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
-        [commentCell setUser:user];
-        
-        //TODO: Add time of comment
-        
-        NSString *comment = [[_activities objectAtIndex:indexPath.row] valueForKey:@"content"];
-        [commentCell.commentLabel setText:comment];
-        
-        return commentCell;
     }
     else if (_viewType == TTActivityViewAllActivities) {
         ActivityTableViewCell *activityCell = [self.tableView dequeueReusableCellWithIdentifier:ACTIVITY_CELL forIndexPath:indexPath];
@@ -395,56 +318,9 @@ enum TTActivityViewType : NSUInteger {
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    //TODO: swipe pushes over the full table view, not just the editing cell. Probably due to layout constraint.
-
-    // Only comment lists can be deleted, Likes and such don't allow deleting
-    if (_viewType != TTActivityViewComments) {
-        return NO;
-    }
-    
-    PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
-    // You can delete comments if you're the commenter, photo creator
-    // TODO: or trip creator
-    if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
-        || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-        return YES;
-    }
     
     return NO;
 }
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-
-                [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-                    if (error) {
-                        NSLog(@"Error deleting comment: %@", error);
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [alert show];
-                        });
-                    }
-                    else {
-                        NSLog(@"Comment Deleted");
-                        // Post a notification so that the data is reloaded in the Photo View
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
-        
-                    }
-                }];
-        
-                // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_activities removeObjectAtIndex:indexPath.row];
-                    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                });
-        
-    }
-    else {
-        NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
-    }
-}
-
 
 #pragma mark - Table view delegate
 
@@ -503,10 +379,7 @@ enum TTActivityViewType : NSUInteger {
 {
     NSString *text = @"No Activity";
     
-    if (_viewType == TTActivityViewComments) {
-        text = @"No Comments";
-    }
-    else if (_viewType == TTActivityViewLikes) {
+    if (_viewType == TTActivityViewLikes) {
         text = @"No Likers";
     }
     
@@ -519,10 +392,8 @@ enum TTActivityViewType : NSUInteger {
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
     NSString *text = @"You could be the first to like or comment on this photo";
-    if (_viewType == TTActivityViewComments) {
-        text = @"You could be the first to comment on this photo";
-    }
-    else if (_viewType == TTActivityViewLikes) {
+
+    if (_viewType == TTActivityViewLikes) {
         text = @"You could be the first to like this photo";
     }
     
@@ -592,38 +463,6 @@ enum TTActivityViewType : NSUInteger {
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
 {
     //TODO: Implement this
-}
-
-#pragma mark - TTCommentInputViewDelegate
-
-- (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
-    if (comment && ![comment isEqualToString: @""] ) {
-        if (_photo) {
-            NSDictionary *activity = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [PFUser currentUser], @"fromUser",
-                                      comment, @"content",
-                                      _photo, @"photo",
-                                      nil];
-            [_activities addObject:activity];
-            [self.tableView reloadData];
-            
-            [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    NSLog(@"Comment Saved Success");
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
-                }
-                else {
-                    UIAlertView *alertView = [[UIAlertView alloc] init];
-                    alertView.delegate = self;
-                    alertView.title = @"Error adding comment. Please try again";
-                    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                    [alertView addButtonWithTitle:@"OK"];
-                    [alertView show];
-                }
-            }];
-            
-        }
-    }
 }
 
 #pragma mark -

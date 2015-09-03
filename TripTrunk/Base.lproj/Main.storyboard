@@ -2657,9 +2657,9 @@
         <image name="saveSmall" width="116" height="71"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Con-SE-XM1"/>
+        <segue reference="tGf-tl-EVA"/>
+        <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
         <segue reference="hXf-dS-IMJ"/>
-        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -13,8 +13,6 @@
 
 - (id)initWithLikes:(NSArray *)likes;
 
-- (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
-
 - (id)initWithActivities:(NSArray *)activities;
 
 
