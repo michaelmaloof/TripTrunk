@@ -45,9 +45,9 @@
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
-		C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */; };
 		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
+		C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C903F7131B98885500F56FE1 /* CommentListViewController.m */; };
 		C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C90552161B3C3ABC007B5946 /* MBProgressHUD.m */; };
 		C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3CEF1B04F40000CABBC9 /* FriendsListViewController.m */; };
 		C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */; };
@@ -74,6 +74,10 @@
 		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */; };
+		C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */; };
+		C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */; };
+		C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
@@ -90,6 +94,7 @@
 		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
 		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
 		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
+		C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,10 +165,10 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
-		C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C903F7121B98885500F56FE1 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
+		C903F7131B98885500F56FE1 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
 		C90552151B3C3ABC007B5946 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		C90552161B3C3ABC007B5946 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsListViewController.h; sourceTree = "<group>"; };
@@ -212,6 +217,13 @@
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		C977065A1B9754B000FB11B2 /* ActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityTableViewCell.h; sourceTree = "<group>"; };
+		C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityTableViewCell.m; sourceTree = "<group>"; };
+		C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
+		C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		C97706621B97C7C000FB11B2 /* TTTTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTTimeIntervalFormatter.h; sourceTree = "<group>"; };
+		C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTTimeIntervalFormatter.m; sourceTree = "<group>"; };
 		C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseErrorHandlingController.h; sourceTree = "<group>"; };
 		C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseErrorHandlingController.m; sourceTree = "<group>"; };
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -241,6 +253,9 @@
 		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
 		C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCommentInputView.h; sourceTree = "<group>"; };
 		C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCommentInputView.m; sourceTree = "<group>"; };
+		C9FE41F91B98E28E00376F2C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
+		C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.0.0.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +266,7 @@
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
+				C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */,
 				2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
 				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
@@ -320,10 +336,10 @@
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
 				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
+				C903F7121B98885500F56FE1 /* CommentListViewController.h */,
+				C903F7131B98885500F56FE1 /* CommentListViewController.m */,
 				C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */,
 				C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */,
-				C9026A0C1AF94ED400A617F0 /* ProfileViewController.h */,
-				C9026A0D1AF94ED400A617F0 /* ProfileViewController.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
 				C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */,
 				C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */,
@@ -355,6 +371,9 @@
 				C9FB80881B827CA4008B8A67 /* CommentTableViewCell.h */,
 				C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */,
 				C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */,
+				C977065A1B9754B000FB11B2 /* ActivityTableViewCell.h */,
+				C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */,
+				C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */,
 			);
 			name = ViewCells;
 			sourceTree = "<group>";
@@ -526,6 +545,7 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C9FE41F81B98E28E00376F2C /* Flurry */,
 				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
 				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
@@ -538,8 +558,22 @@
 				C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */,
 				C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
 				C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+				C977065F1B975EC300FB11B2 /* TTTAttributedLabel.h */,
+				C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */,
+				C97706621B97C7C000FB11B2 /* TTTTimeIntervalFormatter.h */,
+				C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */,
 			);
 			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		C9FE41F81B98E28E00376F2C /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				C9FE41F91B98E28E00376F2C /* Flurry.h */,
+				C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */,
+				C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */,
+			);
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -629,6 +663,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */,
+				C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */,
 				C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
@@ -655,7 +690,9 @@
 			files = (
 				C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */,
 				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
+				C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */,
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
+				C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
@@ -665,8 +702,10 @@
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
+				C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
+				C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */,
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
@@ -685,7 +724,6 @@
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
 				C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */,
-				C9026A0E1AF94ED400A617F0 /* ProfileViewController.m in Sources */,
 				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
@@ -844,6 +882,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -871,6 +910,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";

@@ -143,6 +143,13 @@
 + (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
 
 /**
+ *  Gets all Activities for the current user
+ *
+ *  @param completionBlock Array of Activity objects or error
+ */
++ (void)queryForAllActivities:(void (^)(NSArray *activities, NSError *error))completionBlock;
+
+/**
  *  Gets the following status of one user to another
  *
  *  @param fromUser        User doing the following

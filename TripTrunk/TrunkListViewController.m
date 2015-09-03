@@ -98,6 +98,7 @@
     refreshControl.tintColor = [UIColor whiteColor];
     [refreshControl endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {

@@ -10,11 +10,16 @@
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking/AFNetworking.h"
+#import "TTTTimeIntervalFormatter.h"
 #import "MSFloatingProgressView.h"
 #import "TTCache.h"
 #import "SocialUtility.h"
+#import <CoreText/CoreText.h>
+
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
+
+static TTTTimeIntervalFormatter *timeFormatter;
 
 @interface TTUtility () <MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
@@ -46,6 +51,10 @@ CLCloudinary *cloudinary;
         
         // Initialize the base cloudinary object
         cloudinary = [[CLCloudinary alloc] initWithUrl:CLOUDINARY_URL];
+        
+        if (!timeFormatter) {
+            timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
+        }
         
     }
     return self;
@@ -82,8 +91,6 @@ CLCloudinary *cloudinary;
                   }
                   else {
                       NSLog(@"Saved Successfully to parse");
-                      // post the notification so that the ProfileViewController can know to reload the data
-//                      [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
                   }
               }];
               
@@ -106,8 +113,8 @@ CLCloudinary *cloudinary;
     }
     
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 200];
-    [transformation setHeightWithInt: 200];
+    [transformation setWidthWithInt: 300];
+    [transformation setHeightWithInt: 300];
     [transformation setCrop: @"fill"];
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];
@@ -395,6 +402,93 @@ CLCloudinary *cloudinary;
 
     });
     [progressView setProgress:0.5];
+}
+
+#pragma mark - Attributed String
+
+- (NSAttributedString *)attributedStringForActivity:(NSDictionary *)activity {
+    
+    NSString *type = activity[@"type"];
+    
+    NSString *content = @"";
+    
+    if ([type isEqualToString:@"like"]) {
+        content = @"liked your photo.";
+    }
+    else if ([type isEqualToString:@"comment"]) {
+        content = [NSString stringWithFormat:@"commented on your photo: %@", activity[@"content"]];
+    }
+    else if ([type isEqualToString:@"addToTrip"]) {
+        if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
+            content = [NSString stringWithFormat:@"added you to the trip %@", [activity[@"trip"] valueForKey:@"name"]];
+        }
+        else {
+            content = @"added you to a trip.";
+        }
+    }
+    else if ([type isEqualToString:@"follow"]) {
+        content = @"followed you.";
+    }
+    
+    PFUser *user = activity[@"fromUser"];
+    NSString *time = @"";
+
+    if ([activity valueForKey:@"createdAt"]) {
+        NSDate *created = [activity valueForKey:@"createdAt"];
+        time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
+    }
+    
+    NSString *contentString = [NSString stringWithFormat:@"%@ %@ ", user.username, content];
+
+    NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    
+
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
+                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                                         NSParagraphStyleAttributeName: paraStyle,
+                                                                                         NSKernAttributeName : [NSNull null]
+                                                                                         }];
+    
+    NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
+                                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
+                                                                               NSParagraphStyleAttributeName: paraStyle,
+                                                                               NSKernAttributeName : [NSNull null],
+                                                                               (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
+                                                                               }];
+    [str appendAttributedString:timeStr];
+    return str;
+}
+
+- (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity {
+    
+    NSString *time = @"";
+    
+    if ([activity valueForKey:@"createdAt"]) {
+        NSDate *created = [activity valueForKey:@"createdAt"];
+        time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
+    }
+    
+    NSString *contentString = activity[@"content"];
+    
+    NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
+                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                                         NSParagraphStyleAttributeName: paraStyle,
+                                                                                         NSKernAttributeName : [NSNull null]
+                                                                                         }];
+    
+    NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
+                                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
+                                                                               NSParagraphStyleAttributeName: paraStyle,
+                                                                               NSKernAttributeName : [NSNull null],
+                                                                               (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
+                                                                               }];
+    [str appendAttributedString:timeStr];
+    return str;
 }
 
 @end
