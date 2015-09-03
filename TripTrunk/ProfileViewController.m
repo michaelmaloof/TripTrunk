@@ -122,7 +122,8 @@
 
     picker.navigationBar.tintColor = [UIColor whiteColor];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [self presentViewController:picker animated:YES completion:NULL];}
+    [self presentViewController:picker animated:YES completion:NULL];
+}
 
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

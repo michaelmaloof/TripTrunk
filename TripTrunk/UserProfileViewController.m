@@ -7,7 +7,7 @@
 //
 
 #import "UserProfileViewController.h"
-#import <Parse/Parse.h>
+#import <Photos/Photos.h>
 
 #import "AppDelegate.h"
 #import "FriendsListViewController.h"
@@ -16,7 +16,7 @@
 #import "TTCache.h"
 #import "HomeMapViewController.h"
 
-@interface UserProfileViewController ()
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
@@ -48,11 +48,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 
     
@@ -63,12 +58,21 @@
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
-    
-    // Disable the find friends button and hide the logout button
-    // These buttons still exist in case we want to just use this one viewcontroller for MY profile or a FRIEND profile
-    [self.findFriendsButton setEnabled:NO];
-    [self.findFriendsButton setTitle:@"" forState:UIControlStateNormal];
+    self.title = _user.username;
+
     [self.logoutButton setHidden:YES];
+    
+    // If it's the current user, set up their profile a bit differently.
+    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        [self.followButton setHidden:YES];
+        [self.logoutButton setHidden:NO];
+        
+        UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+        picTap.numberOfTapsRequired = 1;
+        self.profilePicImageView.userInteractionEnabled = YES;
+        [self.profilePicImageView addGestureRecognizer:picTap];
+
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -77,6 +81,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
@@ -137,10 +143,7 @@
     FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
     [self.navigationController pushViewController:vc animated:YES];
 }
-- (IBAction)findFriendsButtonPressed:(id)sender {
-    NSLog(@"Find Friends Button Pressed");
-    
-}
+
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
     
@@ -151,6 +154,7 @@
 - (IBAction)logOutButtonPressed:(id)sender {
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
 }
+
 - (IBAction)followButtonPressed:(id)sender {
     
     if ([self.followButton isSelected]) {
@@ -196,13 +200,10 @@
 }
 
 - (void)setProfilePic:(NSString *)urlString {
-    // Facebook Photo should point to https://graph.facebook.com/{facebookId}/picture?type=large&return_ssl_resources=1
-    
     NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
 
     
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
-    
     
     // Run network request asynchronously
     [NSURLConnection sendAsynchronousRequest:urlRequest
@@ -220,7 +221,60 @@
      }];
 }
 
+#pragma mark - Profile Pic Selector
 
+- (void)profileImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.allowsEditing = NO;
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    picker.navigationController.title = @"Select profile picture.";
+    [picker.navigationController setTitle:@"Select profile picture."];
+    
+    picker.navigationBar.tintColor = [UIColor whiteColor];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self presentViewController:picker animated:YES completion:NULL];
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    self.profilePicImageView.image = info[UIImagePickerControllerOriginalImage];
+    [self.profilePicImageView setClipsToBounds:YES];
+    
+    // set the reference URL now so we have it for uploading the raw image data
+    
+    NSString *imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
+    NSURL *assetUrl = [NSURL URLWithString:imageUrl];
+    NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
+    PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    [options setVersion:PHImageRequestOptionsVersionOriginal];
+    [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
+    
+    [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
+                                                      options:options
+                                                resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+                                                    // Calls the method to actually upload the image and save the User to parse
+                                                    [[TTUtility sharedInstance] uploadProfilePic:imageData forUser:[PFUser currentUser]];
+                                                }];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [viewController.navigationItem setTitle:@"Select Profile Image"];
+}
 
 
 @end

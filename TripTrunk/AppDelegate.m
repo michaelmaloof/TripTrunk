@@ -52,9 +52,10 @@
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
-    
     [self setupSearchTabBar];
     [self setupActivityTabBar];
+    [self setupProfileTabBar];
+
     
     return YES;
 }
@@ -127,7 +128,7 @@
 #pragma mark - Tab Bar
 
 /**
- *  Creates the Search Tab as the last tab in the tab bar.
+ *  Creates the Search Tab in the tab bar.
  *  This is necessary because the FindFriendsViewController does not use the storyboard, and so does not work correctly in a storyboard-managed tab bar
  */
 - (void)setupSearchTabBar {
@@ -140,8 +141,13 @@
     
     [searchNavController setTabBarItem:searchItem];
     NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    if (vcs.count > 3) {
-        [vcs replaceObjectAtIndex:3 withObject:searchNavController];
+    
+    if (vcs.count == 2) {
+        // While we still have 2 tabs created in Storyboard, then this is the one that SHOULD always be true. The other 2 if-cases are just in case.
+        [vcs insertObject:searchNavController atIndex:1];
+    }
+    else if (vcs.count > 2) {
+        [vcs replaceObjectAtIndex:2 withObject:searchNavController];
     }
     else {
         [vcs addObject:searchNavController];
@@ -160,14 +166,35 @@
     
     [activityNavController setTabBarItem:activityItem];
     NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    if (vcs.count > 4) {
-        [vcs replaceObjectAtIndex:4 withObject:activityNavController];
+    if (vcs.count > 3) {
+        [vcs replaceObjectAtIndex:3 withObject:activityNavController];
     }
     else {
         [vcs addObject:activityNavController];
     }
     [tabbarcontroller setViewControllers:vcs];
 }
+
+- (void)setupProfileTabBar {
+    // Set up search tab
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"meSwquare"] tag:3];
+    [item setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    item.title = @"";
+    [navController setTabBarItem:item];
+    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+    if (vcs.count > 4) {
+        [vcs replaceObjectAtIndex:4 withObject:navController];
+    }
+    else {
+        [vcs addObject:navController];
+    }
+    [tabbarcontroller setViewControllers:vcs];
+    
+}
+
 #pragma mark - Remote Notifications
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

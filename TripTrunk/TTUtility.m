@@ -464,8 +464,6 @@ CLCloudinary *cloudinary;
 
 - (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity {
     
-    NSString *content = activity[@"content"];
-    PFUser *user = activity[@"fromUser"];
     NSString *time = @"";
     
     if ([activity valueForKey:@"createdAt"]) {
@@ -473,7 +471,7 @@ CLCloudinary *cloudinary;
         time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
     }
     
-    NSString *contentString = [NSString stringWithFormat:@"%@ %@ ", user.username, content];
+    NSString *contentString = activity[@"content"];
     
     NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
