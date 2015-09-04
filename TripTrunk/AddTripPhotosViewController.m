@@ -267,7 +267,7 @@
                      [self.tabBarController setSelectedIndex:0];
 
                      // Pop to the root view controller of the add Trip tab as well
-                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:1];
+                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
                      [triptab popToRootViewControllerAnimated:NO];
                      
                      // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.

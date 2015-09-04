@@ -105,9 +105,24 @@
 
 - (void)addUploaderProgressView;
 
-
+/**
+ *  Takes an Activity Object and converts it into the AttributedString for it's activity type
+ *  (i.e. a Follow activity could return "Matt followed you", with the correct formatting)
+ *
+ *  @param activity Activty parse object
+ *
+ *  @return NSAttributedString to be displayed
+ */
 - (NSAttributedString *)attributedStringForActivity:(NSDictionary *)activity;
 
+/**
+ *  Takes an Activity Object for a comment and converts it to an AttributedString for a photo's comment view
+ *  (i.e. a comment on a picture would return just the comment and time, not the username or extra "commented: " text)
+ *
+ *  @param activity Activity parse object
+ *
+ *  @return Attributed String to be displayed on the comments view
+ */
 - (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity;
 
 @end

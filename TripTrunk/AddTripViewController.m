@@ -489,7 +489,6 @@
     [self setTripName: self.tripNameTextField.text];
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
-    self.trip.isPrivate = self.isPrivate;
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
@@ -521,6 +520,26 @@
     if (_isEditing && (_needsNameUpdate || _needsCityUpdate)) {
         [SocialUtility updatePhotosForTrip:self.trip];
     }
+    
+    PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [tripACL setPublicReadAccess:YES];
+    
+    self.trip.isPrivate = self.isPrivate;
+    
+    // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
+    // TODO: only update ACL if private status changed during editing.
+    if (self.isPrivate) {
+        [tripACL setPublicReadAccess:NO];
+        [tripACL setReadAccess:YES forUser:self.trip.creator];
+        [tripACL setWriteAccess:YES forUser:self.trip.creator];
+        
+        // If this is editing a trip, we need to all existing members to the Read ACL.
+        if (_isEditing) {
+            // TODO: Add all Trunk Members to READ ACL.
+        }
+    }
+
+    self.trip.ACL = tripACL;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {

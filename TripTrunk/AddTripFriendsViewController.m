@@ -329,7 +329,15 @@
                 PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
                 [tripUsers addObject:tripUser];
                 [self.existingMembers addObject:user];
+                
+                // Update the Trip's ACL if it's a private trip.
+                if (self.trip.isPrivate) {
+                    [self.trip.ACL setReadAccess:YES forUser:user];
+                }
             }
+        }
+        if (self.trip.isPrivate) {
+            [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
         }
         [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
             if (error || !succeeded) {
@@ -344,6 +352,7 @@
         }];
     }
 }
+
 
 /**
  *  Save the selected friends to the trip, and close the view so that the map shows again
@@ -385,9 +394,17 @@
             PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
             PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
             [tripUsers addObject:tripUser];
+            
+            // Update the Trip's ACL if it's a private trip.
+            if (self.trip.isPrivate) {
+                [self.trip.ACL setReadAccess:YES forUser:user];
+            }
         }
     }
-
+    
+    if (self.trip.isPrivate) {
+        [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
+    }
     
     [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
         if (error) {

@@ -252,19 +252,19 @@
                 
                 if (trip.name != nil)
                 {
-                    
-                    if (trip.isPrivate == YES)
-                    {
-                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                        {
-                            [self.parseLocations addObject:trip];
-                            
-                        }
-                        
-                    } else
-                    {
-                        [self.parseLocations addObject:trip];
-                    }
+                    [self.parseLocations addObject:trip];
+
+//                    if (trip.isPrivate == YES)
+//                    {
+//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+//                        {
+//                            [self.parseLocations addObject:trip];
+//                            
+//                        }
+//                        
+//                    } else
+//                    {
+//                    }
                     
                 }
                 count += 1;
@@ -329,19 +329,19 @@
 
                 if (trip.name != nil)
                 {
+                    [self.parseLocations addObject:trip];
 
-                    if (trip.isPrivate == YES)
-                    {
-                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                        {
-                            [self.parseLocations addObject:trip];
-
-                        }
-                            
-                    } else
-                    {
-                        [self.parseLocations addObject:trip];
-                    }
+//                    if (trip.isPrivate == YES)
+//                    {
+//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+//                        {
+//                            [self.parseLocations addObject:trip];
+//
+//                        }
+//                            
+//                    } else
+//                    {
+//                    }
                     
                 }
                 count += 1;
