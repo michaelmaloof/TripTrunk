@@ -133,8 +133,25 @@
                 for (PFObject *activity in objects){
                     
                     Trip *trip = activity[@"trip"];
-                    if (trip.name != nil){
-                        [self.meParseLocations addObject:trip];
+                    if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
+                    {
+                        if (trip.isPrivate == YES)
+                        {
+                            PFUser *user = activity[@"toUser"];
+                            if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+                            {
+                                [self.meParseLocations addObject:trip];
+                                [self.objectIDs addObject:trip.objectId];
+
+                            }
+                        }
+                        else
+                        {
+                            [self.meParseLocations addObject:trip];
+                            [self.objectIDs addObject:trip.objectId];
+                        }
+                            
+        
                         
                     }
                 }
@@ -148,6 +165,8 @@
         [self.tableView reloadData];
     }
 }
+
+
 
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
@@ -301,6 +320,7 @@
         
     }];
 }
+
 
 #pragma mark - Navigation
 
