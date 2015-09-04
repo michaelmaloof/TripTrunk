@@ -239,17 +239,8 @@
          
          if (succeeded) {
              
-             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-             UIGraphicsBeginImageContext( rect.size );
-             [image drawInRect:rect];
-             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-             UIGraphicsEndImageContext();
-             
-             NSData *imageData = UIImagePNGRepresentation(picture1);
-             UIImage *img=[UIImage imageWithData:imageData];
-             
-             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+             // TODO: Set title image
+             self.title = @"TripTrunk";
              
              if (!self.isTripCreation) {
                  // This came from the Trunk view, so pop back to it.
