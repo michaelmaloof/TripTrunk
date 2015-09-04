@@ -333,6 +333,7 @@
                 // Update the Trip's ACL if it's a private trip.
                 if (self.trip.isPrivate) {
                     [self.trip.ACL setReadAccess:YES forUser:user];
+                    [self.trip.ACL setWriteAccess:YES forUser:user];
                 }
             }
         }
@@ -398,6 +399,7 @@
             // Update the Trip's ACL if it's a private trip.
             if (self.trip.isPrivate) {
                 [self.trip.ACL setReadAccess:YES forUser:user];
+                [self.trip.ACL setWriteAccess:YES forUser:user];
             }
         }
     }
