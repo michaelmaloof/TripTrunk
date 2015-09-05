@@ -317,17 +317,8 @@
     {
         if (error)
         {
-            UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-            CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-            UIGraphicsBeginImageContext( rect.size );
-            [image drawInRect:rect];
-            UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            NSData *imageData = UIImagePNGRepresentation(picture1);
-            UIImage *img=[UIImage imageWithData:imageData];
-            
-            self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+            // TODO: Set title image
+            self.title = @"TripTrunk";
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -489,7 +480,6 @@
     [self setTripName: self.tripNameTextField.text];
     self.trip.startDate = self.startTripTextField.text;
     self.trip.endDate = self.endTripTextField.text;
-    self.trip.isPrivate = self.isPrivate;
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
@@ -522,6 +512,26 @@
         [SocialUtility updatePhotosForTrip:self.trip];
     }
     
+    PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [tripACL setPublicReadAccess:YES];
+    
+    self.trip.isPrivate = self.isPrivate;
+    
+    // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
+    // TODO: only update ACL if private status changed during editing.
+    if (self.isPrivate) {
+        [tripACL setPublicReadAccess:NO];
+        [tripACL setReadAccess:YES forUser:self.trip.creator];
+        [tripACL setWriteAccess:YES forUser:self.trip.creator];
+        
+        // If this is editing a trip, we need to all existing members to the Read ACL.
+        if (_isEditing) {
+            // TODO: Add all Trunk Members to READ ACL.
+        }
+    }
+
+    self.trip.ACL = tripACL;
+    
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          
@@ -533,33 +543,10 @@
                                                        otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
-             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-             UIGraphicsBeginImageContext( rect.size );
-             [image drawInRect:rect];
-             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-             UIGraphicsEndImageContext();
-             
-             NSData *imageData = UIImagePNGRepresentation(picture1);
-             UIImage *img=[UIImage imageWithData:imageData];
-             
-             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
              
          }
          else
          {
-             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-             UIGraphicsBeginImageContext( rect.size );
-             [image drawInRect:rect];
-             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-             UIGraphicsEndImageContext();
-             
-             NSData *imageData = UIImagePNGRepresentation(picture1);
-             UIImage *img=[UIImage imageWithData:imageData];
-             
-             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
-             
              
              if (self.navigationItem.leftBarButtonItem.tag == 0)
              {
@@ -570,6 +557,8 @@
                  [self.navigationController popViewControllerAnimated:YES];
              }
          }
+         // TODO: Set title image
+         self.title = @"TripTrunk";
          
      }];
 }

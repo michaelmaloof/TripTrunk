@@ -239,17 +239,8 @@
          
          if (succeeded) {
              
-             UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-             CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-             UIGraphicsBeginImageContext( rect.size );
-             [image drawInRect:rect];
-             UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-             UIGraphicsEndImageContext();
-             
-             NSData *imageData = UIImagePNGRepresentation(picture1);
-             UIImage *img=[UIImage imageWithData:imageData];
-             
-             self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+             // TODO: Set title image
+             self.title = @"TripTrunk";
              
              if (!self.isTripCreation) {
                  // This came from the Trunk view, so pop back to it.
@@ -267,7 +258,7 @@
                      [self.tabBarController setSelectedIndex:0];
 
                      // Pop to the root view controller of the add Trip tab as well
-                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:1];
+                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
                      [triptab popToRootViewControllerAnimated:NO];
                      
                      // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.

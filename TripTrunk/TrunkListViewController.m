@@ -135,23 +135,8 @@
                     Trip *trip = activity[@"trip"];
                     if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                     {
-                        if (trip.isPrivate == YES)
-                        {
-                            PFUser *user = activity[@"toUser"];
-                            if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                            {
-                                [self.meParseLocations addObject:trip];
-                                [self.objectIDs addObject:trip.objectId];
-
-                            }
-                        }
-                        else
-                        {
-                            [self.meParseLocations addObject:trip];
-                            [self.objectIDs addObject:trip.objectId];
-                        }
-                            
-        
+                        [self.meParseLocations addObject:trip];
+                        [self.objectIDs addObject:trip.objectId];
                         
                     }
                 }
@@ -248,7 +233,7 @@
     if (self.parseLocations == nil)
     {
 
-        self.friends = [[NSMutableArray alloc]init];
+        self.friends = [[NSMutableArray alloc] init];
         
         // Add self to the friends array so that we query for our own trunks
         [self.friends addObject:[PFUser currentUser]];
@@ -294,20 +279,21 @@
 
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
-                    if (trip.isPrivate == YES)
-                    {
-                        PFUser *user = activity[@"toUser"];
-                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                        {
-                            [self.parseLocations addObject:trip];
-                            [self.objectIDs addObject:trip.objectId];
-                        }
-                    
-                    } else {
-                        [self.parseLocations addObject:trip];
-                        [self.objectIDs addObject:trip.objectId];
-
-                    }
+//                    if (trip.isPrivate == YES)
+//                    {
+//                        PFUser *user = activity[@"toUser"];
+//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+//                        {
+//                            [self.parseLocations addObject:trip];
+//                            [self.objectIDs addObject:trip.objectId];
+//                        }
+//                    
+//                    } else {
+//  
+//
+//                    }
+                    [self.parseLocations addObject:trip];
+                    [self.objectIDs addObject:trip.objectId];
   
                 }
             }

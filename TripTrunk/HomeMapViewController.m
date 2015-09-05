@@ -71,20 +71,7 @@
 
     
     if (self.user == nil){
-//        self.title = @"TripTrunk";
-        
-        UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-        CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-        UIGraphicsBeginImageContext( rect.size );
-        [image drawInRect:rect];
-        UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        NSData *imageData = UIImagePNGRepresentation(picture1);
-        UIImage *img=[UIImage imageWithData:imageData];
-        
-        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
-
+        [self setTitleImage];
     } else {
         self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
     }
@@ -135,6 +122,14 @@
     
     NSLog(@"count = %lu", (unsigned long)self.mapView.annotations.count);
     
+}
+
+- (void)setTitleImage {
+    UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
+    UIImageView *logoView = [[UIImageView alloc] initWithImage:logo];
+    [logoView setContentMode:UIViewContentModeScaleAspectFit];
+    self.navigationItem.titleView = logoView;
+    [self.navigationItem.titleView setContentMode:UIViewContentModeScaleAspectFit];
 }
 
 /**
@@ -225,17 +220,7 @@
             NSLog(@"Error: %@",error);
             
             if (self.user == nil){
-                UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-                CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-                UIGraphicsBeginImageContext( rect.size );
-                [image drawInRect:rect];
-                UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                NSData *imageData = UIImagePNGRepresentation(picture1);
-                UIImage *img=[UIImage imageWithData:imageData];
-                
-                self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+                [self setTitleImage];
             } else {
                 self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
@@ -252,19 +237,19 @@
                 
                 if (trip.name != nil)
                 {
-                    
-                    if (trip.isPrivate == YES)
-                    {
-                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                        {
-                            [self.parseLocations addObject:trip];
-                            
-                        }
-                        
-                    } else
-                    {
-                        [self.parseLocations addObject:trip];
-                    }
+                    [self.parseLocations addObject:trip];
+
+//                    if (trip.isPrivate == YES)
+//                    {
+//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+//                        {
+//                            [self.parseLocations addObject:trip];
+//                            
+//                        }
+//                        
+//                    } else
+//                    {
+//                    }
                     
                 }
                 count += 1;
@@ -302,17 +287,8 @@
         {
             NSLog(@"Error: %@",error);
             if (self.user == nil){
-                UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-                CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-                UIGraphicsBeginImageContext( rect.size );
-                [image drawInRect:rect];
-                UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                NSData *imageData = UIImagePNGRepresentation(picture1);
-                UIImage *img=[UIImage imageWithData:imageData];
-                
-                self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+                [self setTitleImage];
+
             } else {
                 self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
@@ -329,19 +305,19 @@
 
                 if (trip.name != nil)
                 {
+                    [self.parseLocations addObject:trip];
 
-                    if (trip.isPrivate == YES)
-                    {
-                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-                        {
-                            [self.parseLocations addObject:trip];
-
-                        }
-                            
-                    } else
-                    {
-                        [self.parseLocations addObject:trip];
-                    }
+//                    if (trip.isPrivate == YES)
+//                    {
+//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
+//                        {
+//                            [self.parseLocations addObject:trip];
+//
+//                        }
+//                            
+//                    } else
+//                    {
+//                    }
                     
                 }
                 count += 1;
@@ -382,17 +358,8 @@
         }
         else {
             if (self.user == nil){
-                UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-                CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-                UIGraphicsBeginImageContext( rect.size );
-                [image drawInRect:rect];
-                UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                NSData *imageData = UIImagePNGRepresentation(picture1);
-                UIImage *img=[UIImage imageWithData:imageData];
-                
-                self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+                [self setTitleImage];
+
             } else {
                 self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }
@@ -566,17 +533,8 @@
             self.dropped = 0;
             self.notDropped = 0;
             if (self.user == nil){
-                UIImage *image = [UIImage imageNamed:@"tripTrunkTitle"];
-                CGRect rect = CGRectMake(0,0, self.view.frame.size.width/2 ,self.navigationController.navigationBar.frame.size.height/2.8);
-                UIGraphicsBeginImageContext( rect.size );
-                [image drawInRect:rect];
-                UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                NSData *imageData = UIImagePNGRepresentation(picture1);
-                UIImage *img=[UIImage imageWithData:imageData];
-                
-                self.navigationItem.titleView = [[UIImageView alloc] initWithImage:img];
+                [self setTitleImage];
+
             } else {
                 self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
             }

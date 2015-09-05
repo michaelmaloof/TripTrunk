@@ -170,6 +170,11 @@
     if (![[user objectId] isEqualToString:[[PFUser currentUser] objectId]] && ![[[PFUser currentUser] objectId] isEqualToString:[trip.creator objectId]]) {
         return;
     }
+    
+    // Also remove the User from the Trip's ACL.
+    [trip.ACL setReadAccess:NO forUser:user];
+    [trip.ACL setWriteAccess:NO forUser:user];
+    [trip saveInBackground];
 
     PFQuery *removeFromTripQuery = [PFQuery queryWithClassName:@"Activity"];
     [removeFromTripQuery whereKey:@"toUser" equalTo:user];
