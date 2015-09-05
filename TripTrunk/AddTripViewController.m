@@ -35,6 +35,7 @@
 @property BOOL needsCityUpdate; // if the trunk already exists and we changed the city of the trip
 @property BOOL needsNameUpdate; // if the trunk already exists and we changed the name of the trip
 @property BOOL isEditing; // if the trunk already exists and we're editing it
+@property (weak, nonatomic) IBOutlet UIButton *clear;
 
 // Date Properties
 @property NSDateFormatter *formatter;
@@ -50,6 +51,7 @@
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
+    self.clear.hidden = YES;
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];

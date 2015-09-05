@@ -898,6 +898,7 @@
                         <outlet property="backGroundImage" destination="Lbp-ko-ErL" id="Xa1-4P-s58"/>
                         <outlet property="cancelBar" destination="Vnt-qn-Tgn" id="QX2-cn-feN"/>
                         <outlet property="cityNameTextField" destination="def-GX-Qcc" id="AMv-nj-PAV"/>
+                        <outlet property="clear" destination="viD-Vo-BWz" id="GIS-DV-gqq"/>
                         <outlet property="countryTextField" destination="Qk9-ii-Rz5" id="oQz-ih-hTo"/>
                         <outlet property="delete" destination="Wse-wM-OZQ" id="0r7-MR-oBW"/>
                         <outlet property="endTripTextField" destination="dxi-2n-K02" id="n8a-pL-YWx"/>
