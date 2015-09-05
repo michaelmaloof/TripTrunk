@@ -27,6 +27,7 @@
  *  Array holding Photo objects for the photos in this trunk
  */
 @property NSArray *photos;
+@property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
@@ -47,7 +48,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.constraintLabel.hidden = YES;
     self.cloud.hidden = YES;
 
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
