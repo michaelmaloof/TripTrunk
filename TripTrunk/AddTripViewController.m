@@ -103,7 +103,12 @@
         _isEditing = NO;
 
         // initialize the trip object
-        self.title = @"New Trunk";
+        self.title = @"Add New Trunk";
+        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -311,6 +316,11 @@
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
     self.title = @"Verifying Location...";
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -320,7 +330,12 @@
         if (error)
         {
             // TODO: Set title image
-            self.title = @"TripTrunk";
+            self.title = @"Add New Trunk";
+            [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+            [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+            [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+            [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+            [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -349,11 +364,23 @@
                 else
                 {
                     [self notEnoughInfo:@"Please fill out all boxes"];
+                    self.title = @"Add New Trunk";
+                    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+                    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+                    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+                    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+                    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
         
+        self.title = @"Add New Trunk";
+        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
         return;
     }];
 
@@ -560,7 +587,7 @@
              }
          }
          // TODO: Set title image
-         self.title = @"TripTrunk";
+         self.title = @"Add New Trunk";
          
      }];
 }
