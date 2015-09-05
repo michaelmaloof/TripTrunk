@@ -32,6 +32,13 @@
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
     
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
 }
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
     NSError *error;
