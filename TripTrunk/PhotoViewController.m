@@ -260,7 +260,9 @@
         self.arrayInt = self.arrayInt - 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
         [self loadImageForPhoto:self.photo];
-        self.title = self.photo.userName;
+//        self.title = self.photo.userName;
+        self.photoTakenBy.text = self.photo.userName;
+
         
         [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
@@ -288,7 +290,9 @@
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
         [self loadImageForPhoto:self.photo];
-        self.title = self.photo.userName;
+//        self.title = self.photo.userName;
+        self.photoTakenBy.text = self.photo.userName;
+
         
         [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
