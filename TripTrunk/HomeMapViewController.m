@@ -536,7 +536,7 @@
                 [self setTitleImage];
 
             } else {
-                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
+                self.title = [NSString stringWithFormat:@"@%@'s Trunks", self.user.username];
             }
         }
 
