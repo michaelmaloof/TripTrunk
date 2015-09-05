@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property NSInteger path;
 @property BOOL alreadyTrip;
+@property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 
 @end
 
@@ -37,6 +38,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.constraintLabel.hidden = YES;
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
