@@ -2016,7 +2016,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                             </constraint>
                             <constraint firstItem="vRa-e1-FEv" firstAttribute="top" secondItem="Mrf-K2-Hwv" secondAttribute="bottom" constant="135" id="LTW-Hy-p3A">
-                                <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="180"/>
                             </constraint>
                             <constraint firstAttribute="centerX" secondItem="tIf-eK-RIY" secondAttribute="centerX" constant="-0.5" id="Paf-KQ-Eyf"/>
                             <constraint firstItem="sQV-bh-HVU" firstAttribute="leading" secondItem="ozA-ub-LQ8" secondAttribute="leadingMargin" id="Rne-Zd-AAW"/>
@@ -2162,6 +2162,7 @@
                                             <constraint firstAttribute="width" secondItem="cQT-qh-AJZ" secondAttribute="height" multiplier="3:1" id="T38-1X-O4V"/>
                                             <constraint firstAttribute="width" constant="132" id="egy-qq-2nE"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="20"/>
                                         <state key="normal" title="Submit">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -2215,6 +2216,7 @@
                                                 <variation key="heightClass=regular-widthClass=compact" constant="132"/>
                                             </constraint>
                                         </constraints>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="20"/>
                                         <state key="normal" title="Cancel">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
