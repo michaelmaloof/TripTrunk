@@ -40,13 +40,6 @@
     _passwordTextField.delegate = self;
     _hometownTextField.delegate = self;
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
     _user = [PFUser currentUser];
     _isFBUser = NO;
 
