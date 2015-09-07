@@ -33,6 +33,7 @@
                 <constraint firstAttribute="centerX" secondItem="bhu-yy-h3K" secondAttribute="centerX" id="1DB-4c-5vf"/>
                 <constraint firstAttribute="centerY" secondItem="bhu-yy-h3K" secondAttribute="centerY" id="9R7-jj-MQP"/>
                 <constraint firstAttribute="trailing" secondItem="iDn-Rh-3lx" secondAttribute="trailing" id="BVA-pF-ORs"/>
+                <constraint firstAttribute="bottom" secondItem="EfB-bH-lR1" secondAttribute="bottom" constant="18" id="LKG-u6-rqk"/>
                 <constraint firstAttribute="bottom" secondItem="bhu-yy-h3K" secondAttribute="bottom" constant="58" id="O6H-PL-bpR"/>
                 <constraint firstAttribute="centerX" secondItem="EfB-bH-lR1" secondAttribute="centerX" id="U0q-FS-vnl"/>
                 <constraint firstItem="iDn-Rh-3lx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Xp5-fP-Mna"/>
@@ -47,6 +48,7 @@
                 <mask key="constraints">
                     <exclude reference="O6H-PL-bpR"/>
                     <exclude reference="xzn-gN-cIP"/>
+                    <exclude reference="gx5-PX-Ha7"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="548" y="455"/>
