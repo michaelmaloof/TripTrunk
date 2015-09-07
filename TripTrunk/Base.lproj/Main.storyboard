@@ -1879,24 +1879,31 @@
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tIf-eK-RIY">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" red="0.60818034860000003" green="0.80561377310000004" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="49" id="aRe-df-T5Y"/>
+                                    <constraint firstAttribute="height" constant="49" id="aRe-df-T5Y">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="44"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="201" id="otG-9a-1Qe"/>
                                     <constraint firstAttribute="width" constant="151" id="whK-Am-Qd8"/>
                                 </constraints>
-                                <state key="normal" title="Sign Up with Email">
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
+                                <state key="normal" title="Sign Up With Email">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="aRe-df-T5Y"/>
+                                        <exclude reference="otG-9a-1Qe"/>
                                         <exclude reference="whK-Am-Qd8"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="aRe-df-T5Y"/>
-                                        <include reference="whK-Am-Qd8"/>
+                                        <include reference="otG-9a-1Qe"/>
+                                        <exclude reference="whK-Am-Qd8"/>
                                     </mask>
                                 </variation>
                                 <connections>
@@ -1942,12 +1949,37 @@
                                     </mask>
                                 </variation>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t8J-WJ-AZA">
+                                <rect key="frame" x="222" y="278" width="156" height="44"/>
+                                <color key="backgroundColor" red="0.23137254901960785" green="0.34901960784313724" blue="0.59607843137254901" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="EOV-LM-gca"/>
+                                    <constraint firstAttribute="width" constant="156" id="Rx9-8o-z7E">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
+                                <state key="normal" title="Log In With Facebook">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLoginTapped:" destination="Wau-uW-rbx" eventType="touchUpInside" id="FdW-jf-nkC"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AzN-pd-PID">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="0XZ-Ga-EkD"/>
+                                    <constraint firstAttribute="height" constant="40" id="0XZ-Ga-EkD">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="44"/>
+                                    </constraint>
                                     <constraint firstAttribute="width" constant="124" id="0fw-W8-N2V"/>
+                                    <constraint firstAttribute="width" constant="201.5" id="YUg-jL-3wK">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
+                                    </constraint>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="21"/>
                                 <state key="normal" title="Log In">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1956,34 +1988,18 @@
                                     <mask key="constraints">
                                         <exclude reference="0XZ-Ga-EkD"/>
                                         <exclude reference="0fw-W8-N2V"/>
+                                        <exclude reference="YUg-jL-3wK"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="0XZ-Ga-EkD"/>
-                                        <include reference="0fw-W8-N2V"/>
+                                        <exclude reference="0fw-W8-N2V"/>
+                                        <include reference="YUg-jL-3wK"/>
                                     </mask>
                                 </variation>
                                 <connections>
                                     <action selector="loginWithUsernameButtonPressed:" destination="Wau-uW-rbx" eventType="touchUpInside" id="fIH-3A-rrK"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t8J-WJ-AZA">
-                                <rect key="frame" x="222" y="278" width="156" height="44"/>
-                                <color key="backgroundColor" red="0.86647224759999997" green="1" blue="0.74299708909999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="EOV-LM-gca"/>
-                                    <constraint firstAttribute="width" constant="156" id="Rx9-8o-z7E">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="201"/>
-                                    </constraint>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="19"/>
-                                <state key="normal" title="Login With Facebook">
-                                    <color key="titleColor" red="0.23137254900000001" green="0.34901960780000002" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onLoginTapped:" destination="Wau-uW-rbx" eventType="touchUpInside" id="FdW-jf-nkC"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2011,7 +2027,9 @@
                             <constraint firstAttribute="centerX" secondItem="t8J-WJ-AZA" secondAttribute="centerX" id="VQ8-bj-VMV"/>
                             <constraint firstAttribute="centerX" secondItem="6gD-pN-UMN" secondAttribute="centerX" id="Xaa-zt-dGw"/>
                             <constraint firstAttribute="centerX" secondItem="vRa-e1-FEv" secondAttribute="centerX" id="ec5-ro-B7N"/>
-                            <constraint firstItem="tIf-eK-RIY" firstAttribute="top" secondItem="t8J-WJ-AZA" secondAttribute="bottom" constant="30" id="fLc-Ei-4ML"/>
+                            <constraint firstItem="tIf-eK-RIY" firstAttribute="top" secondItem="t8J-WJ-AZA" secondAttribute="bottom" constant="30" id="fLc-Ei-4ML">
+                                <variation key="heightClass=regular-widthClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstItem="vRa-e1-FEv" firstAttribute="leading" secondItem="ozA-ub-LQ8" secondAttribute="leadingMargin" id="j1u-IU-ydY"/>
                             <constraint firstItem="vRa-e1-FEv" firstAttribute="trailing" secondItem="ozA-ub-LQ8" secondAttribute="trailingMargin" id="mXW-Sk-Z51"/>
                             <constraint firstAttribute="width" secondItem="6gD-pN-UMN" secondAttribute="width" id="nw0-al-uji"/>
