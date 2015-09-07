@@ -568,7 +568,7 @@
     startAnnotation.canShowCallout = YES;
     
     if ([self.hotDots containsObject:annotation.title]) {
-        startAnnotation.image = [UIImage imageNamed:@"Trunk Circle"];
+        startAnnotation.image = [UIImage imageNamed:@"RedCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
