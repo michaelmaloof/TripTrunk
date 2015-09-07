@@ -233,7 +233,7 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                PFUser *user = activity[@"toUser"];
+//                PFUser *user = activity[@"toUser"];
                 
                 if (trip.name != nil)
                 {
@@ -301,7 +301,7 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                PFUser *user = activity[@"toUser"];
+//                PFUser *user = activity[@"toUser"];
 
                 if (trip.name != nil)
                 {
