@@ -78,6 +78,7 @@
 		C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */; };
 		C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */; };
 		C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */; };
+		C98FF3861B9F3B110041480E /* CitySearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98FF3851B9F3B110041480E /* CitySearchViewController.m */; };
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
@@ -224,6 +225,8 @@
 		C97706601B975EC300FB11B2 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		C97706621B97C7C000FB11B2 /* TTTTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTTimeIntervalFormatter.h; sourceTree = "<group>"; };
 		C97706631B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTTimeIntervalFormatter.m; sourceTree = "<group>"; };
+		C98FF3841B9F3B110041480E /* CitySearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CitySearchViewController.h; sourceTree = "<group>"; };
+		C98FF3851B9F3B110041480E /* CitySearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CitySearchViewController.m; sourceTree = "<group>"; };
 		C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseErrorHandlingController.h; sourceTree = "<group>"; };
 		C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseErrorHandlingController.m; sourceTree = "<group>"; };
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -350,6 +353,8 @@
 				C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */,
 				C9F9177A1B4ECFDC00AE8953 /* MSFloatingProgressView.h */,
 				C9F9177B1B4ECFDC00AE8953 /* MSFloatingProgressView.m */,
+				C98FF3841B9F3B110041480E /* CitySearchViewController.h */,
+				C98FF3851B9F3B110041480E /* CitySearchViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -706,6 +711,7 @@
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
 				C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */,
+				C98FF3861B9F3B110041480E /* CitySearchViewController.m in Sources */,
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,

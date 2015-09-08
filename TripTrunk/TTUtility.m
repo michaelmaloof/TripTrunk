@@ -491,4 +491,79 @@ CLCloudinary *cloudinary;
     return str;
 }
 
+- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
+    
+    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
+    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
+
+    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (responseObject) {
+            NSLog(@"%@", responseObject);
+            
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                NSLog(@"It's a dictionary");
+                
+            }
+            else if ([responseObject isKindOfClass:[NSArray class]]) {
+                NSLog(@"It's a Array");
+            }
+            
+            NSArray *response = (NSArray *)responseObject;
+            
+            NSLog(@"objects: %lu", (unsigned long)response.count);
+            
+            return completionBlock(response, nil);
+        }
+        return completionBlock(nil, nil);
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error searching for location");
+        return completionBlock(nil, error);
+    }];
+    
+    [request start];
+}
+
+- (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock {
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://getcitydetails.geobytes.com/GetCityDetails?fqcn=%@", str];
+    
+    NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    
+    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
+    
+    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
+    
+    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (responseObject) {
+            NSLog(@"%@", responseObject);
+            
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                NSLog(@"It's a dictionary");
+                
+            }
+            else if ([responseObject isKindOfClass:[NSArray class]]) {
+                NSLog(@"It's a Array");
+            }
+            
+            NSDictionary *response = (NSDictionary *)responseObject;
+            
+            return completionBlock(response, nil);
+        }
+        return completionBlock(nil, nil);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error searching for location");
+        return completionBlock(nil, error);
+    }];
+    
+    [request start];
+}
+
+//http://gd.geobytes.com/AutoCompleteCity?&q=cincinnati
+
+//http://getcitydetails.geobytes.com/GetCityDetails?fqcn=Cincinnati,%20OH,%20United%20States
+
 @end
