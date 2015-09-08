@@ -13,7 +13,6 @@
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
-		223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E51AE2BB92001FE916 /* Bolts.framework */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
 		223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E91AE2BBD0001FE916 /* MapKit.framework */; };
 		223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547EB1AE2BBD8001FE916 /* CoreLocation.framework */; };
@@ -45,6 +44,10 @@
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */; };
+		C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
+		C9021F241B9F876100E2EA96 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F231B9F876100E2EA96 /* Bolts.framework */; };
+		C9021F251B9F885900E2EA96 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F231B9F876100E2EA96 /* Bolts.framework */; };
 		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
 		C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C903F7131B98885500F56FE1 /* CommentListViewController.m */; };
@@ -95,7 +98,6 @@
 		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
 		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
 		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
-		C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +123,6 @@
 		220408F01AF1C1EA009DB060 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		220408F21AF311D6009DB060 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
-		223547E51AE2BB92001FE916 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		223547E91AE2BBD0001FE916 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		223547EB1AE2BBD8001FE916 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -166,6 +167,9 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
+		C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
+		C9021F231B9F876100E2EA96 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C903F7121B98885500F56FE1 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
@@ -256,9 +260,6 @@
 		C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentTableViewCell.xib; sourceTree = "<group>"; };
 		C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCommentInputView.h; sourceTree = "<group>"; };
 		C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCommentInputView.m; sourceTree = "<group>"; };
-		C9FE41F91B98E28E00376F2C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
-		C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.0.0.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,14 +267,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
+				C9021F251B9F885900E2EA96 /* Bolts.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
+				C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */,
+				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
-				C9FE41FC1B98E28E00376F2C /* libFlurry_7.0.0.a in Frameworks */,
 				2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
 				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
-				223547E61AE2BB92001FE916 /* Bolts.framework in Frameworks */,
 				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
 				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
 				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
@@ -289,6 +290,7 @@
 				C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */,
 				224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */,
 				224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */,
+				C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9021F241B9F876100E2EA96 /* Bolts.framework in Frameworks */,
 				C9525A401B25297300185713 /* Parse.framework in Frameworks */,
 				C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */,
 			);
@@ -408,7 +411,6 @@
 		224F3F831AE1D35E003A1DEB = {
 			isa = PBXGroup;
 			children = (
-				C9ABA4D91B4EAC4D006F0625 /* Photos.framework */,
 				224F3F8E1AE1D35E003A1DEB /* TripTrunk */,
 				224F3FA81AE1D35E003A1DEB /* TripTrunkTests */,
 				224F3F8D1AE1D35E003A1DEB /* Products */,
@@ -479,27 +481,30 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C9525A331B251FC100185713 /* libCloudinary.a */,
-				2289D9891B0AAE9200CEECF5 /* ParseUI.framework */,
-				2289D9871B0AAE8100CEECF5 /* Parse.framework */,
-				C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */,
-				C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */,
-				223547ED1AE2BBEE001FE916 /* Social.framework */,
-				223547EB1AE2BBD8001FE916 /* CoreLocation.framework */,
-				223547E91AE2BBD0001FE916 /* MapKit.framework */,
+				C9021F231B9F876100E2EA96 /* Bolts.framework */,
 				223547E71AE2BBAE001FE916 /* Accounts.framework */,
-				224F3FF91AE1E5BE003A1DEB /* UIKit.framework */,
-				224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */,
-				224F3FF51AE1E5AE003A1DEB /* libz.dylib */,
-				2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */,
-				223547E51AE2BB92001FE916 /* Bolts.framework */,
-				224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */,
-				224F3FEF1AE1E590003A1DEB /* Security.framework */,
-				224F3FED1AE1E589003A1DEB /* QuartzCore.framework */,
-				224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */,
-				224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */,
-				224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */,
 				224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */,
+				224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */,
+				224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */,
+				223547EB1AE2BBD8001FE916 /* CoreLocation.framework */,
+				C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */,
+				C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */,
+				C9525A331B251FC100185713 /* libCloudinary.a */,
+				224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */,
+				C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */,
+				224F3FF51AE1E5AE003A1DEB /* libz.dylib */,
+				223547E91AE2BBD0001FE916 /* MapKit.framework */,
+				224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */,
+				2289D9871B0AAE8100CEECF5 /* Parse.framework */,
+				C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */,
+				2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */,
+				2289D9891B0AAE9200CEECF5 /* ParseUI.framework */,
+				C9ABA4D91B4EAC4D006F0625 /* Photos.framework */,
+				224F3FED1AE1E589003A1DEB /* QuartzCore.framework */,
+				224F3FEF1AE1E590003A1DEB /* Security.framework */,
+				223547ED1AE2BBEE001FE916 /* Social.framework */,
+				224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */,
+				224F3FF91AE1E5BE003A1DEB /* UIKit.framework */,
 			);
 			name = Frameworks;
 			path = ..;
@@ -550,7 +555,6 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
-				C9FE41F81B98E28E00376F2C /* Flurry */,
 				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
 				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
@@ -571,16 +575,6 @@
 			name = "Third Party";
 			sourceTree = "<group>";
 		};
-		C9FE41F81B98E28E00376F2C /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				C9FE41F91B98E28E00376F2C /* Flurry.h */,
-				C9FE41FA1B98E28E00376F2C /* FlurryWatch.h */,
-				C9FE41FB1B98E28E00376F2C /* libFlurry_7.0.0.a */,
-			);
-			path = Flurry;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -591,6 +585,7 @@
 				224F3F881AE1D35E003A1DEB /* Sources */,
 				224F3F891AE1D35E003A1DEB /* Frameworks */,
 				224F3F8A1AE1D35E003A1DEB /* Resources */,
+				C9021F1E1B9F81A900E2EA96 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -687,6 +682,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C9021F1E1B9F81A900E2EA96 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/usr/local/bin:$PATH\ncd CloudCode/\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		224F3F881AE1D35E003A1DEB /* Sources */ = {
@@ -888,7 +899,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -916,7 +926,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/TripTrunk/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";

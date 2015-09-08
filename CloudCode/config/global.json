@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.5.0"
+  },
+  "applications": {
+    "TripTrunk": {
+      "applicationId": "jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS",
+      "masterKey": "xXaZ6Q5UgcVdnXSWoXrhMWoCQtQ2xxw8jnO8RTGz"
+    },
+    "_default": {
+      "link": "TripTrunk"
+    }
+  }
+}

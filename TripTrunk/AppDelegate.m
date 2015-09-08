@@ -8,10 +8,10 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "Flurry.h"
 
 #import "UserProfileViewController.h"
 #import "PhotoViewController.h"
@@ -39,6 +39,8 @@
                                                            [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
                                                            [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
     
+
+    [ParseCrashReporting enable];
     
     [Parse setApplicationId:@"jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS"
                   clientKey:@"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"];
@@ -47,8 +49,6 @@
     [PFImageView class];
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
-    
-    [Flurry startSession:@"Q24ZNWCGM36CGJ2CDMSC"];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
@@ -210,13 +210,9 @@
     }
     [currentInstallation saveInBackground];
     
-    
-    [Flurry logEvent:@"Registered_Push_Notifications"];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    
-    [Flurry logEvent:@"Got_Push_Notification"];
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup
