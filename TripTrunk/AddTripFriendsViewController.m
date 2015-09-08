@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "UIImageView+AFNetworking.h"
+#import "UIColor+HexColors.h"
 
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
@@ -85,6 +86,10 @@
                                                                                                target:self
                                                                                                action:@selector(saveFriendsAndClose)];
     }
+    
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    
+    [self.tableView setTintColor:ttBlueColor];
         
     _thisUser = [PFUser currentUser];
     
