@@ -500,20 +500,7 @@ CLCloudinary *cloudinary;
 
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
-            NSLog(@"%@", responseObject);
-            
-            if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                NSLog(@"It's a dictionary");
-                
-            }
-            else if ([responseObject isKindOfClass:[NSArray class]]) {
-                NSLog(@"It's a Array");
-            }
-            
             NSArray *response = (NSArray *)responseObject;
-            
-            NSLog(@"objects: %lu", (unsigned long)response.count);
-            
             return completionBlock(response, nil);
         }
         return completionBlock(nil, nil);
@@ -538,16 +525,6 @@ CLCloudinary *cloudinary;
     
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
-            NSLog(@"%@", responseObject);
-            
-            if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                NSLog(@"It's a dictionary");
-                
-            }
-            else if ([responseObject isKindOfClass:[NSArray class]]) {
-                NSLog(@"It's a Array");
-            }
-            
             NSDictionary *response = (NSDictionary *)responseObject;
             
             return completionBlock(response, nil);
