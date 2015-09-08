@@ -8,8 +8,6 @@
 
 #import "FindFriendsViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
-
 #import "UIImageView+AFNetworking.h"
 #import "UserTableViewCell.h"
 #import "SocialUtility.h"

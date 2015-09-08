@@ -13,8 +13,10 @@
 #import "AddTripFriendsViewController.h"
 #import "MSTextField.h"
 #import "SocialUtility.h"
+#import "TTUtility.h"
+#import "CitySearchViewController.h"
 
-@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate>
+@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate>
 
 // Text Fields
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
@@ -135,7 +137,7 @@
     [self setupDatePicker];
 
     [self checkPublicPrivate];
-
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -143,18 +145,6 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -75, self.view.frame.size.width, self.view.frame.size.height);
-    
-}
-
--(void)textFieldDidEndEditing:(UITextField *)textField{
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 75, self.view.frame.size.width, self.view.frame.size.height);
-    
 }
 
 - (void)setupDatePicker {
@@ -219,17 +209,18 @@
     }
 }
 
-#pragma mark - Keyboard delegate methods
+#pragma mark = TextField Delegate Methods
 
-// The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    NSLog(@"touchesBegan:withEvent:");
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-    self.startTripTextField.backgroundColor = [UIColor whiteColor];
-    self.endTripTextField.backgroundColor = [UIColor whiteColor];
+
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -75, self.view.frame.size.width, self.view.frame.size.height);
+    
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 75, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 // Go to the next textfield or close the keyboard when the return button is pressed
@@ -249,7 +240,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if (textField == self.endTripTextField) {
-//        [self.view endEditing:YES];
+        //        [self.view endEditing:YES];
         self.datePicker.tag = 1;
         self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
         self.datePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
@@ -258,20 +249,63 @@
     }
     
     else if (textField == self.startTripTextField){
-//        [self.view endEditing:YES];
+        //        [self.view endEditing:YES];
         self.datePicker.tag = 0;
         self.startTripTextField.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.datePicker.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
-     
+    else if ([textField isEqual:self.cityNameTextField] || [textField isEqual:self.stateTextField] || [textField isEqual:self.countryTextField]) {
+        [textField resignFirstResponder];
+        
+        CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
+        searchView.delegate = self;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchView];
+        [self presentViewController:navController animated:YES completion:nil];
+        return NO;
+    }
+    
     else {
         self.startTripTextField.backgroundColor = [UIColor whiteColor];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return  YES;
     }
 }
+
+#pragma mark - CitySearchViewController Delegate
+
+- (void)citySearchDidSelectLocation:(NSString *)location {
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    
+    [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
+        NSString *city = locationDetails[@"geobytescity"];
+        NSString *state = locationDetails[@"geobytesregion"];
+        NSString *country = locationDetails[@"geobytescountry"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.cityNameTextField setText:city];
+            [self.stateTextField setText:state];
+            [self.countryTextField setText:country];
+            
+        });
+    }];
+}
+
+#pragma mark - Keyboard delegate methods
+
+// The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touchesBegan:withEvent:");
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+    self.startTripTextField.backgroundColor = [UIColor whiteColor];
+    self.endTripTextField.backgroundColor = [UIColor whiteColor];
+}
+
+
 
 #pragma mark - Date Picker
 

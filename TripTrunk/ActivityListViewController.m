@@ -16,6 +16,7 @@
 #import "TTUtility.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TrunkViewController.h"
+#import "UIColor+HexColors.h"
 
 #define USER_CELL @"user_table_view_cell"
 #define ACTIVITY_CELL @"activity_table_view_cell"
@@ -85,7 +86,7 @@ enum TTActivityViewType : NSUInteger {
                            action:@selector(refresh:)
                  forControlEvents:UIControlEventValueChanged];
         [self.tableView addSubview:refreshControl];
-        UIColor *ttBlueColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
         refreshControl.tintColor = ttBlueColor;
         [refreshControl endRefreshing];

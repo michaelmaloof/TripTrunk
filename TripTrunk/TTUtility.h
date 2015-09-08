@@ -125,6 +125,11 @@
  */
 - (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity;
 
+- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock;
+
+- (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock;
+
+
 @end
 
 

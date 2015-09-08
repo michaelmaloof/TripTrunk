@@ -12,8 +12,10 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MSTextField.h"
 #import "MBProgressHUD.h"
+#import "CitySearchViewController.h"
 
-@interface UsernameViewController ()
+@interface UsernameViewController () <CitySearchViewControllerDelegate>
+
 @property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
@@ -139,6 +141,17 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
+
+#pragma mark - CitySearchViewController Delegate
+
+- (void)citySearchDidSelectLocation:(NSString *)location {
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    
+    // If it's a US city/state, we don't need to display the country, we'll assume United States.
+    
+    [self.hometownTextField setText:[location stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+}
+
 #pragma mark - Navigation
 
 /**
@@ -250,6 +263,20 @@
     
     return YES;
     
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if ([textField isEqual:self.hometownTextField]) {
+        [textField resignFirstResponder];
+        
+        CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
+        searchView.delegate = self;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchView];
+        [self presentViewController:navController animated:YES completion:nil];
+        return NO;
+    }
+    
+    return  YES;
 }
 
 

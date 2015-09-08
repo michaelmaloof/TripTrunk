@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -291,11 +291,6 @@
                     <exclude reference="jfE-6G-KiF"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="2jm-t0-yiR"/>
-                    <exclude reference="AbC-oO-RJ6"/>
-                    <exclude reference="Tpu-8i-Y4D"/>
-                    <exclude reference="XTB-yj-qbw"/>
-                    <exclude reference="h61-m4-fKX"/>
                     <exclude reference="6lM-lj-xjh"/>
                     <exclude reference="Qof-qo-Rq0"/>
                     <exclude reference="aCR-9X-fDn"/>
@@ -303,34 +298,39 @@
                     <exclude reference="UmF-l2-u6p"/>
                     <exclude reference="nld-kW-JY2"/>
                     <exclude reference="oO1-uI-3JJ"/>
-                    <exclude reference="OhW-ML-nf3"/>
-                    <exclude reference="Rvo-md-3lD"/>
-                    <exclude reference="Tek-td-xqO"/>
-                    <exclude reference="uUN-LA-qEW"/>
-                    <exclude reference="zGI-PN-HOv"/>
+                    <exclude reference="hai-9l-N7f"/>
+                    <exclude reference="kOC-fe-Hu0"/>
+                    <exclude reference="Cf4-zz-S0e"/>
+                    <exclude reference="lRq-fw-Ndi"/>
                     <exclude reference="5q9-0P-1t5"/>
                     <exclude reference="LNA-2s-dP5"/>
                     <exclude reference="bcs-Wq-tl3"/>
                     <exclude reference="hQV-Bm-f1B"/>
                     <exclude reference="p3d-uE-FcO"/>
                     <exclude reference="qkQ-B9-M48"/>
-                    <exclude reference="hai-9l-N7f"/>
-                    <exclude reference="kOC-fe-Hu0"/>
+                    <exclude reference="L6U-SM-625"/>
+                    <exclude reference="oA4-2N-KUl"/>
+                    <exclude reference="v0g-d9-dpu"/>
+                    <exclude reference="OhW-ML-nf3"/>
+                    <exclude reference="Rvo-md-3lD"/>
+                    <exclude reference="Tek-td-xqO"/>
+                    <exclude reference="uUN-LA-qEW"/>
+                    <exclude reference="zGI-PN-HOv"/>
+                    <exclude reference="Hz3-yZ-0gs"/>
                     <exclude reference="7D4-UF-WPn"/>
                     <exclude reference="DTd-ir-ZuN"/>
                     <exclude reference="Nlw-RC-SFe"/>
                     <exclude reference="cWR-Hz-Cj4"/>
                     <exclude reference="hhh-IP-7Yy"/>
-                    <exclude reference="L6U-SM-625"/>
-                    <exclude reference="oA4-2N-KUl"/>
-                    <exclude reference="v0g-d9-dpu"/>
-                    <exclude reference="Cf4-zz-S0e"/>
-                    <exclude reference="lRq-fw-Ndi"/>
+                    <exclude reference="2jm-t0-yiR"/>
+                    <exclude reference="AbC-oO-RJ6"/>
+                    <exclude reference="Tpu-8i-Y4D"/>
+                    <exclude reference="XTB-yj-qbw"/>
+                    <exclude reference="h61-m4-fKX"/>
                     <exclude reference="BRd-Yd-20j"/>
                     <exclude reference="DqM-z1-sYm"/>
                     <exclude reference="NCL-Ny-5xZ"/>
                     <exclude reference="wvr-Rh-T4d"/>
-                    <exclude reference="Hz3-yZ-0gs"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -348,11 +348,6 @@
                     <include reference="jfE-6G-KiF"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="2jm-t0-yiR"/>
-                    <include reference="AbC-oO-RJ6"/>
-                    <exclude reference="Tpu-8i-Y4D"/>
-                    <exclude reference="XTB-yj-qbw"/>
-                    <include reference="h61-m4-fKX"/>
                     <include reference="6lM-lj-xjh"/>
                     <include reference="Qof-qo-Rq0"/>
                     <include reference="aCR-9X-fDn"/>
@@ -360,34 +355,39 @@
                     <include reference="UmF-l2-u6p"/>
                     <include reference="nld-kW-JY2"/>
                     <include reference="oO1-uI-3JJ"/>
-                    <include reference="OhW-ML-nf3"/>
-                    <include reference="Rvo-md-3lD"/>
-                    <include reference="Tek-td-xqO"/>
-                    <include reference="uUN-LA-qEW"/>
-                    <exclude reference="zGI-PN-HOv"/>
+                    <include reference="hai-9l-N7f"/>
+                    <include reference="kOC-fe-Hu0"/>
+                    <include reference="Cf4-zz-S0e"/>
+                    <include reference="lRq-fw-Ndi"/>
                     <include reference="5q9-0P-1t5"/>
                     <include reference="LNA-2s-dP5"/>
                     <include reference="bcs-Wq-tl3"/>
                     <exclude reference="hQV-Bm-f1B"/>
                     <include reference="p3d-uE-FcO"/>
                     <exclude reference="qkQ-B9-M48"/>
-                    <include reference="hai-9l-N7f"/>
-                    <include reference="kOC-fe-Hu0"/>
+                    <include reference="L6U-SM-625"/>
+                    <include reference="oA4-2N-KUl"/>
+                    <include reference="v0g-d9-dpu"/>
+                    <include reference="OhW-ML-nf3"/>
+                    <include reference="Rvo-md-3lD"/>
+                    <include reference="Tek-td-xqO"/>
+                    <include reference="uUN-LA-qEW"/>
+                    <exclude reference="zGI-PN-HOv"/>
+                    <include reference="Hz3-yZ-0gs"/>
                     <include reference="7D4-UF-WPn"/>
                     <exclude reference="DTd-ir-ZuN"/>
                     <include reference="Nlw-RC-SFe"/>
                     <include reference="cWR-Hz-Cj4"/>
                     <exclude reference="hhh-IP-7Yy"/>
-                    <include reference="L6U-SM-625"/>
-                    <include reference="oA4-2N-KUl"/>
-                    <include reference="v0g-d9-dpu"/>
-                    <include reference="Cf4-zz-S0e"/>
-                    <include reference="lRq-fw-Ndi"/>
+                    <include reference="2jm-t0-yiR"/>
+                    <include reference="AbC-oO-RJ6"/>
+                    <exclude reference="Tpu-8i-Y4D"/>
+                    <exclude reference="XTB-yj-qbw"/>
+                    <include reference="h61-m4-fKX"/>
                     <include reference="BRd-Yd-20j"/>
                     <include reference="DqM-z1-sYm"/>
                     <include reference="NCL-Ny-5xZ"/>
                     <include reference="wvr-Rh-T4d"/>
-                    <include reference="Hz3-yZ-0gs"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="336" y="555"/>

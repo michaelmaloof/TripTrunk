@@ -38,7 +38,7 @@
 
     
     // Set up Link Attributes (bold and colored)
-    UIColor *ttBlueColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
                                      NSFontAttributeName : [UIFont boldSystemFontOfSize:14]

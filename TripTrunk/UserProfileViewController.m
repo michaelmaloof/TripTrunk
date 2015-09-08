@@ -51,7 +51,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-
+    
+    // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
+    if (!_user) {
+        _user = [PFUser currentUser];
+    }
     
     // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
     [_user fetchIfNeeded];

@@ -26,7 +26,7 @@
     
     NSRange rRange = NSMakeRange(0, 2);
     NSString *rComponent = [hexString substringWithRange:rRange];
-    NSUInteger rVal = 0;
+    unsigned int rVal = 0;
     NSScanner *rScanner = [NSScanner scannerWithString:rComponent];
     [rScanner scanHexInt:&rVal];
     float rRetVal = (float)rVal / 254;
@@ -34,14 +34,14 @@
 
     NSRange gRange = NSMakeRange(2, 2);
     NSString *gComponent = [hexString substringWithRange:gRange];
-    NSUInteger gVal = 0;
+    unsigned int gVal = 0;
     NSScanner *gScanner = [NSScanner scannerWithString:gComponent];
     [gScanner scanHexInt:&gVal];
     float gRetVal = (float)gVal / 254;
 
     NSRange bRange = NSMakeRange(4, 2);
     NSString *bComponent = [hexString substringWithRange:bRange];
-    NSUInteger bVal = 0;
+    unsigned int bVal = 0;
     NSScanner *bScanner = [NSScanner scannerWithString:bComponent];
     [bScanner scanHexInt:&bVal];
     float bRetVal = (float)bVal / 254;
