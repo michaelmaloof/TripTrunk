@@ -9,7 +9,6 @@
 #import "AddTripFriendsViewController.h"
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import "UIImageView+AFNetworking.h"
 #import "UIColor+HexColors.h"
 

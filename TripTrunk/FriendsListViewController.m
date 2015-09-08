@@ -8,7 +8,6 @@
 
 #import "FriendsListViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import "UIImageView+AFNetworking.h"
 
 #import "SocialUtility.h"
