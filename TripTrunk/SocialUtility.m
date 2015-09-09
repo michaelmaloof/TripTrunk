@@ -507,4 +507,44 @@
     }];
 }
 
++ (void)followerCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"fromUser" notEqualTo:user];
+    [query whereKey:@"type" equalTo:@"follow"];
+    [query whereKeyExists:@"fromUser"];
+    [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        
+        completionBlock(number, error);
+        
+    }];
+}
+
++ (void)followingCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"fromUser" equalTo:user];
+    [query whereKey:@"toUser" notEqualTo:user];
+    [query whereKey:@"type" equalTo:@"follow"];
+    [query whereKeyExists:@"toUser"];
+    [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        completionBlock(number, error);
+        
+    }];
+}
+
++ (void)trunkCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        completionBlock(number, error);
+    }];
+}
+
 @end

@@ -66,7 +66,6 @@
 		C90C3D151B04FC2200CABBC9 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0A1B04FC2200CABBC9 /* AFURLRequestSerialization.m */; };
 		C90C3D161B04FC2200CABBC9 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0C1B04FC2200CABBC9 /* AFURLResponseSerialization.m */; };
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
-		C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
 		C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C910B1931B66B97700788BE0 /* ActivityListViewController.m */; };
 		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
@@ -85,6 +84,7 @@
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
+		C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
@@ -203,7 +203,6 @@
 		C90C3D0C1B04FC2200CABBC9 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		C90C3D0D1B04FC2200CABBC9 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
-		C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
 		C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
 		C910B1921B66B97700788BE0 /* ActivityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityListViewController.h; sourceTree = "<group>"; };
@@ -236,6 +235,7 @@
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
+		C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
 		C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsernameViewController.m; sourceTree = "<group>"; };
 		C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFriendsViewController.h; sourceTree = "<group>"; };
@@ -348,7 +348,7 @@
 				C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
 				C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */,
-				C90C3D181B053D4200CABBC9 /* ProfileViewController.xib */,
+				C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */,
 				C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */,
 				C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */,
 				C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */,
@@ -662,11 +662,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C90C3D191B053D4200CABBC9 /* ProfileViewController.xib in Resources */,
 				C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */,
 				C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
+				C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
@@ -686,14 +686,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		C9021F1E1B9F81A900E2EA96 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "export PATH=/usr/local/bin:$PATH\ncd CloudCode/\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
 		};
