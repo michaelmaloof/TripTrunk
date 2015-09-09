@@ -231,7 +231,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="0.94117647059999998" green="0.92156862750000001" blue="0.44705882349999998" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="aRl-Kc-Hyq" firstAttribute="centerY" secondItem="G68-Y4-O01" secondAttribute="centerY" id="0l9-u5-PQP"/>
                                 <constraint firstItem="k8T-73-v3H" firstAttribute="leading" secondItem="aRl-Kc-Hyq" secondAttribute="trailing" priority="250" constant="12" id="39y-Bd-ac6">
@@ -285,7 +284,9 @@
                                     <variation key="heightClass=regular-widthClass=compact" constant="375"/>
                                 </constraint>
                                 <constraint firstAttribute="centerX" secondItem="FVi-Q8-ebI" secondAttribute="centerX" constant="0.5" id="XX5-hZ-eO2"/>
-                                <constraint firstItem="GgT-HY-Vrp" firstAttribute="top" secondItem="5qL-nN-4DZ" secondAttribute="bottom" constant="21" id="aLe-YD-D3D"/>
+                                <constraint firstItem="GgT-HY-Vrp" firstAttribute="top" secondItem="5qL-nN-4DZ" secondAttribute="bottom" constant="21" id="aLe-YD-D3D">
+                                    <variation key="heightClass=regular-widthClass=compact" constant="10"/>
+                                </constraint>
                                 <constraint firstAttribute="trailing" secondItem="lVl-hX-EQv" secondAttribute="trailing" id="aRo-0Z-Z7I"/>
                                 <constraint firstItem="lVl-hX-EQv" firstAttribute="leading" secondItem="5hV-Uf-Is0" secondAttribute="leading" id="aZq-Sn-2hc"/>
                                 <constraint firstItem="aRl-Kc-Hyq" firstAttribute="top" secondItem="8kk-Zi-cae" secondAttribute="bottom" constant="20" id="dBe-xr-zfJ"/>
@@ -445,7 +446,6 @@
                             </variation>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.62069847469999995" blue="0.04560553338" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="5hV-Uf-Is0" firstAttribute="top" secondItem="CuM-0C-e4a" secondAttribute="top" id="M2F-jr-3Z7"/>
                         <constraint firstItem="5hV-Uf-Is0" firstAttribute="leading" secondItem="CuM-0C-e4a" secondAttribute="leading" id="W8c-k3-HjH"/>
