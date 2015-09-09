@@ -60,6 +60,8 @@
     
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    
     // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
     if (!_user) {
         _user = [PFUser currentUser];
@@ -109,7 +111,7 @@
 
     }
     
-
+    [self refreshFollowCounts];
     
 
 }
@@ -175,6 +177,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
+    // We put it here because it's causing a crash in viewDidLoad
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
@@ -183,6 +186,33 @@
                                                          multiplier:1
                                                            constant:0]];
 
+}
+
+- (void)refreshFollowCounts {
+    
+    // If it's the user's profile, then we may have their follow lists cached.
+    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        NSUInteger followersCount = [[TTCache sharedCache] followers].count;
+        NSUInteger followingCount = [[TTCache sharedCache] following].count;
+    }
+    
+    [SocialUtility followerCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i\nFollowers",count] forState:UIControlStateNormal];
+        });
+    }];
+    
+    [SocialUtility followingCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i\nFollowing",count] forState:UIControlStateNormal];
+        });
+    }];
+    
+    [SocialUtility trunkCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+        });
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

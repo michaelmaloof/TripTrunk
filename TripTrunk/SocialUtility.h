@@ -174,5 +174,29 @@
  */
 + (void)followers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
 
+/**
+ *  Gets the count of followers a given user has
+ *
+ *  @param user            User of whom to get their follower count
+ *  @param completionBlock block with count or error
+ */
++ (void)followerCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+
+/**
+ *  Gets the count of users a given user is following
+ *
+ *  @param user            User of whom to get their following count
+ *  @param completionBlock block with count or error
+ */
++ (void)followingCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+
+/**
+ *  Gets the count of trunks a user is part of
+ *
+ *  @param user            User of whom to find their trunk count
+ *  @param completionBlock block with count or error
+ */
++ (void)trunkCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+
 
 @end
