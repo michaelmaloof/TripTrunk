@@ -17,12 +17,15 @@
 #import "HomeMapViewController.h"
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIView *contentView;
 
-@property (strong, nonatomic) IBOutlet UIButton *editButton;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UITextView *bioTextView;
+@property (strong, nonatomic) IBOutlet UIButton *mapButton;
 @property (strong, nonatomic) PFUser *user;
 @end
 
@@ -30,7 +33,7 @@
 
 - (id)initWithUser:(PFUser *)user
 {
-    self = [super initWithNibName:@"ProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = user;
     }
@@ -39,7 +42,7 @@
 
 - (id)initWithUserId:(NSString *)userId;
 {
-    self = [super initWithNibName:@"ProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = [PFUser user];
         [_user setObjectId:userId];
@@ -52,6 +55,11 @@
     [super viewDidLoad];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
     // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
     if (!_user) {
         _user = [PFUser currentUser];
@@ -67,6 +75,8 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    
 
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
@@ -81,13 +91,16 @@
     }
 
     [self.logoutButton setHidden:YES];
-    [self.editButton setHidden:YES];
 
     // If it's the current user, set up their profile a bit differently.
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
         [self.logoutButton setHidden:NO];
-        [self.editButton setHidden:NO];
+
+        // Set Edit button
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                                               target:self
+                                                                                               action:@selector(editButtonPressed:)];
         
         UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
         picTap.numberOfTapsRequired = 1;
@@ -95,6 +108,10 @@
         [self.profilePicImageView addGestureRecognizer:picTap];
 
     }
+    
+
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -153,6 +170,18 @@
         [self.followButton setHidden:NO];
         
     }
+
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1
+                                                           constant:0]];
 
 }
 
@@ -221,23 +250,26 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (IBAction)editButtonPressed:(id)sender {
-    // Selected means we're IN editing mode.
-    if (self.editButton.selected) {
-        [self.bioTextView setEditable:NO];
-        [self.bioTextView setSelectable:NO];
-        
-        // Save it to parse
-        [self updateUserBio:self.bioTextView.text];
-    }
-    else {
-        [self.bioTextView setEditable:YES];
-        [self.bioTextView setSelectable:YES];
-        [self.bioTextView becomeFirstResponder];
+- (void)editButtonPressed:(id)sender {
 
-    }
-    // Toggle selection
-    [_editButton setSelected:!self.editButton.selected];
+    //TODO: display an Edit Profile modal view controller
+    
+//    // Selected means we're IN editing mode.
+//    if (self.editButton.selected) {
+//        [self.bioTextView setEditable:NO];
+//        [self.bioTextView setSelectable:NO];
+//        
+//        // Save it to parse
+//        [self updateUserBio:self.bioTextView.text];
+//    }
+//    else {
+//        [self.bioTextView setEditable:YES];
+//        [self.bioTextView setSelectable:YES];
+//        [self.bioTextView becomeFirstResponder];
+//
+//    }
+//    // Toggle selection
+//    [_editButton setSelected:!self.editButton.selected];
 
     
 }
