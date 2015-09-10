@@ -121,7 +121,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"mostRecentPhoto"];
+        [query orderByDescending:@"updatedAt"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
@@ -204,7 +204,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"mostRecentPhoto"];
+        [query orderByDescending:@"updatedAt"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error)
             {
@@ -266,7 +266,7 @@
     [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
-    [query orderByDescending:@"mostRecentPhoto"];
+    [query orderByDescending:@"updatedAt"];
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -279,19 +279,6 @@
 
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
-//                    if (trip.isPrivate == YES)
-//                    {
-//                        PFUser *user = activity[@"toUser"];
-//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-//                        {
-//                            [self.parseLocations addObject:trip];
-//                            [self.objectIDs addObject:trip.objectId];
-//                        }
-//                    
-//                    } else {
-//  
-//
-//                    }
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];
   

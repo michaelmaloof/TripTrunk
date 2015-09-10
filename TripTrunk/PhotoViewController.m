@@ -414,22 +414,12 @@
         // Delete
         if (alertView.tag == 0) {
             
-            if (self.photos.count == 1) {
-                [[TTUtility sharedInstance] deletePhoto:self.photo];
-                NSDate *date = [NSDate date];
-                date = [date dateByAddingTimeInterval:-90400];
-                self.photo.trip.mostRecentPhoto = date;
-                [self.photo.trip saveInBackground];
-
-            } else {
+            //TODO: What if they're deleting the only photo in the trunk?
             
-                [[TTUtility sharedInstance] deletePhoto:self.photo];
-                
-            }
+            [[TTUtility sharedInstance] deletePhoto:self.photo];
 
             // dismiss the view
             [self dismissViewControllerAnimated:YES completion:nil];
-
             
         }
         // Download Photo
