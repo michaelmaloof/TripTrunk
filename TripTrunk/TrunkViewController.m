@@ -328,6 +328,8 @@
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         __weak TrunkCollectionViewCell *weakCell = cell;
         
+        NSInteger index = indexPath.item;
+        
         [cell.photo setImageWithURLRequest:request
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -335,10 +337,10 @@
                                        // Set the image to the Photo object in the array
                                        
                                        if (self.isMember == YES) {
-                                           [(Photo *)[self.photos objectAtIndex:indexPath.item - 1] setImage:image];
+                                           [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
 
                                        } else {
-                                           [(Photo *)[self.photos objectAtIndex:indexPath.item ] setImage:image];
+                                           [(Photo *)[self.photos objectAtIndex:index] setImage:image];
 
                                        }
                                        

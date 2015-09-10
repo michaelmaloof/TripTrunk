@@ -103,11 +103,13 @@
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Glass" translatesAutoresizingMaskIntoConstraints="NO" id="WiA-Ij-Wsb" userLabel="Location Icon">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location-pin" translatesAutoresizingMaskIntoConstraints="NO" id="WiA-Ij-Wsb" userLabel="Location Icon">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" secondItem="WiA-Ij-Wsb" secondAttribute="height" multiplier="20:17" id="R38-q5-I5x"/>
-                                        <constraint firstAttribute="height" constant="17" id="S4A-J5-tMF"/>
+                                        <constraint firstAttribute="width" secondItem="WiA-Ij-Wsb" secondAttribute="height" multiplier="1:1" id="R38-q5-I5x"/>
+                                        <constraint firstAttribute="height" constant="17" id="S4A-J5-tMF">
+                                            <variation key="heightClass=regular-widthClass=compact" constant="15"/>
+                                        </constraint>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -271,7 +273,9 @@
                                 </constraint>
                                 <constraint firstItem="5qL-nN-4DZ" firstAttribute="top" secondItem="aRl-Kc-Hyq" secondAttribute="bottom" constant="26" id="FyZ-Ko-SIy"/>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="top" secondItem="FVi-Q8-ebI" secondAttribute="bottom" constant="8" id="GKY-dt-nRG"/>
-                                <constraint firstItem="8kk-Zi-cae" firstAttribute="leading" secondItem="WiA-Ij-Wsb" secondAttribute="trailing" constant="4" id="KEZ-JY-Dt4"/>
+                                <constraint firstItem="8kk-Zi-cae" firstAttribute="leading" secondItem="WiA-Ij-Wsb" secondAttribute="trailing" constant="4" id="KEZ-JY-Dt4">
+                                    <variation key="heightClass=regular-widthClass=compact" constant="2"/>
+                                </constraint>
                                 <constraint firstAttribute="trailing" secondItem="GgT-HY-Vrp" secondAttribute="trailing" constant="30" id="Kex-Gl-iHa"/>
                                 <constraint firstItem="G68-Y4-O01" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5hV-Uf-Is0" secondAttribute="leading" constant="23" id="M6P-A9-Q8c">
                                     <variation key="heightClass=regular-widthClass=compact" constant="8"/>
@@ -516,6 +520,7 @@
     <resources>
         <image name="Glass" width="1002" height="1002"/>
         <image name="defaultProfile" width="150" height="150"/>
+        <image name="location-pin" width="30" height="30"/>
         <image name="mountain" width="1080" height="1920"/>
     </resources>
 </document>

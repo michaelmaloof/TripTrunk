@@ -1,4 +1,6 @@
 Parse.Cloud.afterSave('Photo', function(request) {
+  Parse.Cloud.useMasterKey(); // User master key because we want to update the Trip's mostRecentPhoto regardless of the ACL.
+
   // Only send push notifications for new activities
   if (request.object.existed()) {
     return;
@@ -18,9 +20,20 @@ Parse.Cloud.afterSave('Photo', function(request) {
     return;
   }
 
-  // Since Photo.trip is a pointer, we must first fetch the trip object so we can reference the creator field.
-  trip.fetch().then(function(trip){
+  // Since Photo.trip is a pointer, we must first fetch the trip object
+  trip.fetch().then(function(trip) {
 
+    /*
+     * Update the Trip object
+     */
+     trip.set("mostRecentPhoto", new Date());
+     trip.save();
+
+
+    /*
+     * PUSH NOTIFICATIONS
+     */
+    
     // Create the query that finds all members of a trip, except the person who just uploaded the photo
     var memberQuery = new Parse.Query("Activity");
     memberQuery.equalTo('trip', request.object.get("trip"));

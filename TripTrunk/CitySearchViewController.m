@@ -65,7 +65,7 @@
     NSString *searchString = searchController.searchBar.text;
 
     [[TTUtility sharedInstance] locationsForSearch:searchString block:^(NSArray *objects, NSError *error) {
-        NSLog(@"Reponse Object Count: %lu", (unsigned long)objects.count);
+//        NSLog(@"Reponse Object Count: %lu", (unsigned long)objects.count);
 
         if (objects && objects.count > 0) {
             dispatch_async(dispatch_get_main_queue(), ^{

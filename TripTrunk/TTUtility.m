@@ -463,13 +463,13 @@ CLCloudinary *cloudinary;
 - (NSAttributedString *)attributedStringForCommentActivity:(NSDictionary *)activity {
     
     NSString *time = @"";
-    
     if ([activity valueForKey:@"createdAt"]) {
         NSDate *created = [activity valueForKey:@"createdAt"];
         time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
     }
     
-    NSString *contentString = activity[@"content"];
+    NSString *contentString = [NSString stringWithFormat:@"%@ ", activity[@"content"]];
+
     
     NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -481,13 +481,13 @@ CLCloudinary *cloudinary;
                                                                                          NSKernAttributeName : [NSNull null]
                                                                                          }];
     
-    NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
+    NSAttributedString *timestampStr = [[NSAttributedString alloc] initWithString:time
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
                                                                                NSParagraphStyleAttributeName: paraStyle,
                                                                                NSKernAttributeName : [NSNull null],
                                                                                (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
                                                                                }];
-    [str appendAttributedString:timeStr];
+    [str appendAttributedString:timestampStr];
     return str;
 }
 

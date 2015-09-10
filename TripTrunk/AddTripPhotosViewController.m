@@ -91,11 +91,6 @@
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
     
-    if (!self.trip) {
-        // This shouldn't happen, trip should always be set from the previous view controler
-        [self saveParseTrip];
-    }
-//    [[self navigationController] setNavigationBarHidden:YES animated:YES]; we dont need this now 
     [self uploadAllPhotos];
 }
 
@@ -164,52 +159,7 @@
 
 #pragma mark - Saving Photos
 
--(void)saveParseTrip {
-    self.title = @"Uploading Photos..";
-    
-    self.trip = [[Trip alloc]init];
-    self.trip.name = self.tripName;
-    self.trip.city = self.tripCity;
-    self.trip.user = [PFUser currentUser].username;
-    self.trip.creator = [PFUser currentUser];
-    self.trip.startDate = self.startDate;
-    self.trip.endDate = self.endDate;
-    self.trip.state = self.tripState;
-    self.trip.country = self.tripCountry;
-    self.trip.isPrivate = self.isPrivate;
-    
-    if (self.trip.mostRecentPhoto == nil){
-        NSString *date = @"01/01/1200";
-        NSDateFormatter *format = [[NSDateFormatter alloc]init];
-        [format setDateFormat:@"yyyy-MM-dd"];
-        self.trip.mostRecentPhoto = [format dateFromString:date];
-    }
-    
-    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         if(error) {
-             //FIXME Check to see if actually works
-             self.plusPhoto.hidden = NO;
-             self.submitTrunk.hidden = NO;
-             UIAlertView *alertView = [[UIAlertView alloc] init];
-             alertView.delegate = self;
-             alertView.title = @"No internet connection to save trip";
-             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-             [alertView addButtonWithTitle:@"OK"];
-             [alertView show];
-             [[self navigationController] setNavigationBarHidden:NO animated:YES];
-             
-         } else {
-             if (self.photos.count == 0) {
-                 [self dismissViewControllerAnimated:YES completion:NULL];
-                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
-             }
-         }
-     }];
-}
-
 - (void)uploadAllPhotos {
-    self.title = @"Uploading Photos..";
     
     for (Photo *photo in self.photos)
     {
@@ -232,48 +182,77 @@
                                                         [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
                                                     }];
     }
+    // TODO: Set title image
     
-    self.trip.mostRecentPhoto = [NSDate date];
-    
-    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-         if(error) NSLog(@"Error saving trip in uploadAllPhotos: %@", error);
-         
-         if (succeeded) {
-             
-             // TODO: Set title image
-             self.title = @"TripTrunk";
-             
-             if (!self.isTripCreation) {
-                 // This came from the Trunk view, so pop back to it.
-                 NSLog(@"Trip Photos Added, not trip creation so pop back one view");
-                 [self.navigationController popViewControllerAnimated:YES];
-                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
-             }
-             else {
-                 NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     
-                     // Now pop to the root view of the other map view controller and set that as the selected tab.
-                     UINavigationController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
-                     [target popToRootViewControllerAnimated:YES];
-                     [self.tabBarController setSelectedIndex:0];
-
-                     // Pop to the root view controller of the add Trip tab as well
-                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
-                     [triptab popToRootViewControllerAnimated:NO];
-                     
-                     // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
-                     
-                     
-                 });
-                 
-
-                 
-             }
-         }
-     }];
+    if (!self.isTripCreation) {
+        // This came from the Trunk view, so pop back to it.
+        NSLog(@"Trip Photos Added, not trip creation so pop back one view");
+        [self.navigationController popViewControllerAnimated:YES];
+        [[self navigationController] setNavigationBarHidden:NO animated:YES];
+    }
+    else {
+        NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // Now pop to the root view of the other map view controller and set that as the selected tab.
+            UINavigationController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
+            [target popToRootViewControllerAnimated:YES];
+            [self.tabBarController setSelectedIndex:0];
+            
+            // Pop to the root view controller of the add Trip tab as well
+            UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
+            [triptab popToRootViewControllerAnimated:NO];
+            
+            // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
+            
+            
+        });
+        
+        
+        
+    }
+//    self.trip.mostRecentPhoto = [NSDate date];
+//
+//    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+//     {
+//         if(error) NSLog(@"Error saving trip in uploadAllPhotos: %@", error);
+//
+//         if (succeeded) {
+//             
+//             // TODO: Set title image
+//             self.title = @"TripTrunk";
+//             
+//             if (!self.isTripCreation) {
+//                 // This came from the Trunk view, so pop back to it.
+//                 NSLog(@"Trip Photos Added, not trip creation so pop back one view");
+//                 [self.navigationController popViewControllerAnimated:YES];
+//                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
+//             }
+//             else {
+//                 NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
+//                 dispatch_async(dispatch_get_main_queue(), ^{
+//                     
+//                     // Now pop to the root view of the other map view controller and set that as the selected tab.
+//                     UINavigationController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
+//                     [target popToRootViewControllerAnimated:YES];
+//                     [self.tabBarController setSelectedIndex:0];
+//
+//                     // Pop to the root view controller of the add Trip tab as well
+//                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
+//                     [triptab popToRootViewControllerAnimated:NO];
+//                     
+//                     // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
+//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
+//                     
+//                     
+//                 });
+//                 
+//
+//                 
+//             }
+//         }
+//     }];
 }
 
 
