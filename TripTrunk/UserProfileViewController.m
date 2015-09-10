@@ -15,8 +15,9 @@
 #import "TTUtility.h"
 #import "TTCache.h"
 #import "HomeMapViewController.h"
+#import "EditProfileViewController.h"
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
@@ -82,6 +83,7 @@
 
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
+    [self.hometownLabel setText:_user[@"hometown"]];
     
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     
@@ -194,6 +196,10 @@
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         NSUInteger followersCount = [[TTCache sharedCache] followers].count;
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
+        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu\nFollowers",(unsigned long)followersCount] forState:UIControlStateNormal];
+        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu\nFollowing",(unsigned long)followingCount] forState:UIControlStateNormal];
+
+
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
@@ -282,38 +288,26 @@
 
 - (void)editButtonPressed:(id)sender {
 
-    //TODO: display an Edit Profile modal view controller
-    
-//    // Selected means we're IN editing mode.
-//    if (self.editButton.selected) {
-//        [self.bioTextView setEditable:NO];
-//        [self.bioTextView setSelectable:NO];
-//        
-//        // Save it to parse
-//        [self updateUserBio:self.bioTextView.text];
-//    }
-//    else {
-//        [self.bioTextView setEditable:YES];
-//        [self.bioTextView setSelectable:YES];
-//        [self.bioTextView becomeFirstResponder];
-//
-//    }
-//    // Toggle selection
-//    [_editButton setSelected:!self.editButton.selected];
+    EditProfileViewController *vc = [[EditProfileViewController alloc] initWithUser:_user];
+    vc.delegate = self;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 
-    
 }
 
-- (void)updateUserBio:(NSString *)bio {
-    // Ensure it's the current user so we don't accidentally let people change other people's bios
-    if ([_user.objectId isEqualToString:[PFUser currentUser].objectId]) {
-        if (![_user[@"bio"] isEqualToString:bio]) {
-            [_user setValue:bio forKey:@"bio"];
-            [_user saveInBackground];
-            NSLog(@"Bio Updated");
-        }
+-(void)shouldSaveUserAndClose:(PFUser *)user {
+    // Ensure it's the current user so we don't accidentally let people change other people's info. 
+    if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        [_user saveInBackground];
+        NSLog(@"Bio Updated");
+        self.bioTextView.text = user[@"bio"];
+        self.hometownLabel.text = user[@"hometown"];
     }
+    
+    [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
 }
+
+
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

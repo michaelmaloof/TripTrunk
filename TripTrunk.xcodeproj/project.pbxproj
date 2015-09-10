@@ -52,6 +52,8 @@
 		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
 		C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C903F7131B98885500F56FE1 /* CommentListViewController.m */; };
 		C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C90552161B3C3ABC007B5946 /* MBProgressHUD.m */; };
+		C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90ADEAB1BA21F1A000809D0 /* EditProfileViewController.m */; };
+		C90ADEAE1BA21F1A000809D0 /* EditProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90ADEAC1BA21F1A000809D0 /* EditProfileViewController.xib */; };
 		C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3CEF1B04F40000CABBC9 /* FriendsListViewController.m */; };
 		C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */; };
 		C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3CF41B04F45500CABBC9 /* UserTableViewCell.m */; };
@@ -176,6 +178,9 @@
 		C903F7131B98885500F56FE1 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
 		C90552151B3C3ABC007B5946 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		C90552161B3C3ABC007B5946 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		C90ADEAA1BA21F1A000809D0 /* EditProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProfileViewController.h; sourceTree = "<group>"; };
+		C90ADEAB1BA21F1A000809D0 /* EditProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProfileViewController.m; sourceTree = "<group>"; };
+		C90ADEAC1BA21F1A000809D0 /* EditProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditProfileViewController.xib; sourceTree = "<group>"; };
 		C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsListViewController.h; sourceTree = "<group>"; };
 		C90C3CEF1B04F40000CABBC9 /* FriendsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsListViewController.m; sourceTree = "<group>"; };
 		C90C3CF01B04F40000CABBC9 /* FriendsListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListViewController.xib; sourceTree = "<group>"; };
@@ -349,6 +354,9 @@
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
 				C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */,
 				C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */,
+				C90ADEAA1BA21F1A000809D0 /* EditProfileViewController.h */,
+				C90ADEAB1BA21F1A000809D0 /* EditProfileViewController.m */,
+				C90ADEAC1BA21F1A000809D0 /* EditProfileViewController.xib */,
 				C9CD1CA71AFC1E0300D967A5 /* FindFriendsViewController.h */,
 				C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */,
 				C90C3CEE1B04F40000CABBC9 /* FriendsListViewController.h */,
@@ -664,6 +672,7 @@
 			files = (
 				C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */,
 				C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */,
+				C90ADEAE1BA21F1A000809D0 /* EditProfileViewController.xib in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
 				C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */,
@@ -736,6 +745,7 @@
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
+				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
