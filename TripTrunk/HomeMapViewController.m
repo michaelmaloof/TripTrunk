@@ -127,6 +127,7 @@
 - (void)setTitleImage {
     UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
     UIImageView *logoView = [[UIImageView alloc] initWithImage:logo];
+    logoView.frame = CGRectMake(logoView.frame.origin.x, logoView.frame.origin.y,logoView.frame.size.width,self.navigationController.navigationBar.frame.size.height*.6);
     [logoView setContentMode:UIViewContentModeScaleAspectFit];
     self.navigationItem.titleView = logoView;
     [self.navigationItem.titleView setContentMode:UIViewContentModeScaleAspectFit];
