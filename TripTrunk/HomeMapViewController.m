@@ -168,7 +168,7 @@
 {
     // Okay button pressed - They want to add some friends
     if (buttonIndex == 1) {
-        [self.tabBarController setSelectedIndex:3];
+        [self.tabBarController setSelectedIndex:1];
     }
 }
 
