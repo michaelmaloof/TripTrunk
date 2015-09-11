@@ -60,12 +60,12 @@
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    [_locations removeAllObjects];
     
     NSString *searchString = searchController.searchBar.text;
 
     [[TTUtility sharedInstance] locationsForSearch:searchString block:^(NSArray *objects, NSError *error) {
 //        NSLog(@"Reponse Object Count: %lu", (unsigned long)objects.count);
+        [_locations removeAllObjects];
 
         if (objects && objects.count > 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -102,14 +102,14 @@
     if (_locations.count == 1 && [[_locations objectAtIndex:0] isEqualToString:@"%s"]) {
         return 0;
     }
-    
+
     return _locations.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"LocationCell"];
-    
+
     NSString *location = [_locations objectAtIndex:indexPath.row];
     
     if (![location isEqualToString:@"%s"]) {
