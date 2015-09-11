@@ -297,16 +297,19 @@
     }
 }
 
+
+
 - (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    
-    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+
     
     if(indexPath.item == 0 && self.isMember == YES)
     {
         cell.photo.image = [UIImage imageNamed:@"Plus Square"];
     }
+    
     // This is the images
 //    else if (indexPath.item > 0)
     else
@@ -353,6 +356,16 @@
     }
     return cell;
 }
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+}
+
+
 
 #pragma mark - UICollectionView Delegate
 
