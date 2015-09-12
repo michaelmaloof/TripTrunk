@@ -400,7 +400,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <rect key="contentStretch" x="0.0" y="0.0" width="1" height="0.0"/>
                                         <size key="customSize" width="110" height="110"/>
                                         <connections>
                                             <outlet property="photo" destination="ec2-bZ-Qrg" id="WdT-lV-GeJ"/>

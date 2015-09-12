@@ -355,6 +355,7 @@
                                        [weakCell setNeedsLayout];
                                        
                                    } failure:nil];
+        weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
 
         return weakCell;
         
