@@ -654,7 +654,7 @@
                                     <action selector="publicTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="sgB-FP-3w9"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3w3-mT-drZ">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Date" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3w3-mT-drZ">
                                 <rect key="frame" x="251" y="268" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="TTI-9Q-z3e">
@@ -665,7 +665,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dxi-2n-K02">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Date" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dxi-2n-K02">
                                 <rect key="frame" x="252" y="308" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="1nw-Gl-bCq">
@@ -736,7 +736,7 @@
                                     <action selector="clearButtonPressed:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="0vt-eG-i9H"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City, State, Country" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5bM-ax-ZeC" customClass="MSTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City, State, Country" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5bM-ax-ZeC" customClass="MSTextField">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="DwD-p8-o8k"/>
@@ -762,7 +762,7 @@
                                     <outlet property="nextField" destination="3w3-mT-drZ" id="oBD-xW-rmc"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
                                 <rect key="frame" x="208" y="112" width="185" height="30"/>
                                 <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
