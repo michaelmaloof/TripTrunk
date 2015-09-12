@@ -653,78 +653,27 @@
                                     <action selector="publicTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="sgB-FP-3w9"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
-                                <rect key="frame" x="208" y="112" width="185" height="30"/>
-                                <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="97" id="070-8L-ZMm"/>
-                                    <constraint firstAttribute="width" constant="185" id="Kh1-aw-QWA"/>
-                                    <constraint firstAttribute="height" constant="30" id="Red-eG-cqz"/>
-                                    <constraint firstAttribute="height" constant="30" id="prq-uU-HbS"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="070-8L-ZMm"/>
-                                        <exclude reference="Red-eG-cqz"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <outlet property="nextField" destination="Qk9-ii-Rz5" id="RBz-hC-cGQ"/>
-                                </connections>
-                            </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3w3-mT-drZ">
                                 <rect key="frame" x="251" y="268" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="TTI-9Q-z3e">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="185"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="300"/>
                                     </constraint>
                                     <constraint firstAttribute="height" constant="30" id="uWK-Kr-MnT"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="State" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N9W-Ie-2VI" customClass="MSTextField">
-                                <rect key="frame" x="234" y="191" width="130" height="30"/>
-                                <color key="tintColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="130" id="Bkp-x8-GaV">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="185"/>
-                                    </constraint>
-                                    <constraint firstAttribute="height" constant="30" id="fH1-Tz-NI4"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
-                                <connections>
-                                    <outlet property="nextField" destination="def-GX-Qcc" id="IIC-4f-LgG"/>
-                                </connections>
-                            </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Date" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dxi-2n-K02">
                                 <rect key="frame" x="252" y="308" width="97" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="97" id="1nw-Gl-bCq">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="185"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="300"/>
                                     </constraint>
                                     <constraint firstAttribute="height" constant="30" id="ojO-oz-rWZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="def-GX-Qcc" customClass="MSTextField">
-                                <rect key="frame" x="235" y="230" width="130" height="30"/>
-                                <color key="tintColor" red="0.28627450980000002" green="0.75686274509999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="KW1-FC-ZpX"/>
-                                    <constraint firstAttribute="width" constant="130" id="LId-Wm-EWL">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="185"/>
-                                    </constraint>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
-                                <connections>
-                                    <outlet property="nextField" destination="3w3-mT-drZ" id="W58-ST-EEA"/>
-                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wse-wM-OZQ" userLabel="delete">
                                 <rect key="frame" x="274" y="390" width="50" height="50"/>
@@ -745,29 +694,6 @@
                                     <action selector="onDeleteWasTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="TlC-OW-EaS"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="United States" borderStyle="roundedRect" placeholder="Country" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Qk9-ii-Rz5" customClass="MSTextField">
-                                <rect key="frame" x="235" y="150" width="130" height="30"/>
-                                <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Ehx-sK-tPR"/>
-                                    <constraint firstAttribute="width" constant="130" id="KS1-le-usi"/>
-                                    <constraint firstAttribute="width" constant="130" id="SQw-tH-0GV">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="185"/>
-                                    </constraint>
-                                    <constraint firstAttribute="height" constant="30" id="iLn-2e-iJ4"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Ehx-sK-tPR"/>
-                                        <exclude reference="KS1-le-usi"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <outlet property="nextField" destination="N9W-Ie-2VI" id="0bd-hO-MUA"/>
-                                </connections>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f19-nT-nsy">
                                 <rect key="frame" x="298" y="352" width="66" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -809,31 +735,79 @@
                                     <action selector="clearButtonPressed:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="0vt-eG-i9H"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City, State, Country" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5bM-ax-ZeC" customClass="MSTextField">
+                                <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="DwD-p8-o8k"/>
+                                    <constraint firstAttribute="width" constant="185" id="zcW-g7-Sdo">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="300"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="DwD-p8-o8k"/>
+                                        <exclude reference="zcW-g7-Sdo"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="DwD-p8-o8k"/>
+                                        <include reference="zcW-g7-Sdo"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="nextField" destination="3w3-mT-drZ" id="oBD-xW-rmc"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
+                                <rect key="frame" x="208" y="112" width="185" height="30"/>
+                                <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="070-8L-ZMm"/>
+                                    <constraint firstAttribute="width" constant="185" id="Kh1-aw-QWA">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="300"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="30" id="Red-eG-cqz"/>
+                                    <constraint firstAttribute="height" constant="30" id="prq-uU-HbS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="070-8L-ZMm"/>
+                                        <exclude reference="Red-eG-cqz"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="nextField" destination="5bM-ax-ZeC" id="17n-h4-8QZ"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="Qk9-ii-Rz5" secondAttribute="centerX" id="1Bg-hF-Kb6"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="f19-nT-nsy" secondAttribute="bottom" constant="27" id="27b-8K-oYh"/>
                             <constraint firstItem="viD-Vo-BWz" firstAttribute="trailing" secondItem="zdV-NN-4Zp" secondAttribute="trailing" id="2j2-EF-jAN"/>
                             <constraint firstItem="zdV-NN-4Zp" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="48" id="3IG-Lt-ykC">
                                 <variation key="heightClass=regular-widthClass=compact" constant="80"/>
                             </constraint>
-                            <constraint firstItem="def-GX-Qcc" firstAttribute="top" secondItem="N9W-Ie-2VI" secondAttribute="bottom" constant="9" id="420-xS-FHp"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="leading" secondItem="zdV-NN-4Zp" secondAttribute="trailing" constant="13" id="4wm-fE-Shw"/>
+                            <constraint firstItem="3w3-mT-drZ" firstAttribute="top" secondItem="5bM-ax-ZeC" secondAttribute="bottom" constant="8" id="5Hb-vR-Mrx"/>
                             <constraint firstAttribute="centerX" secondItem="Wse-wM-OZQ" secondAttribute="centerX" id="79v-sW-0Wq"/>
-                            <constraint firstItem="N9W-Ie-2VI" firstAttribute="top" secondItem="Qk9-ii-Rz5" secondAttribute="bottom" constant="11" id="8Jo-5I-v5u"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Lbp-ko-ErL" secondAttribute="trailing" constant="-216" id="9D1-Kk-s5m">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-17"/>
                             </constraint>
-                            <constraint firstItem="dxi-2n-K02" firstAttribute="leading" secondItem="Ev9-DG-Eco" secondAttribute="leading" id="A13-xK-rs2"/>
+                            <constraint firstItem="dxi-2n-K02" firstAttribute="leading" secondItem="Ev9-DG-Eco" secondAttribute="leading" id="A13-xK-rs2">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-50"/>
+                            </constraint>
                             <constraint firstAttribute="centerX" secondItem="Wse-wM-OZQ" secondAttribute="centerX" id="C0y-nU-tFr"/>
-                            <constraint firstItem="f19-nT-nsy" firstAttribute="trailing" secondItem="dxi-2n-K02" secondAttribute="trailing" id="DYO-s8-Lam"/>
+                            <constraint firstItem="f19-nT-nsy" firstAttribute="trailing" secondItem="dxi-2n-K02" secondAttribute="trailing" id="DYO-s8-Lam">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-50"/>
+                            </constraint>
                             <constraint firstItem="f19-nT-nsy" firstAttribute="leading" secondItem="Ev9-DG-Eco" secondAttribute="trailing" constant="3" id="FNq-54-0De"/>
                             <constraint firstItem="f19-nT-nsy" firstAttribute="top" secondItem="dxi-2n-K02" secondAttribute="bottom" constant="10" id="Gge-GH-Uni"/>
                             <constraint firstItem="Ev9-DG-Eco" firstAttribute="top" secondItem="dxi-2n-K02" secondAttribute="bottom" constant="10" id="Hfs-He-Ddo"/>
-                            <constraint firstAttribute="centerX" secondItem="N9W-Ie-2VI" secondAttribute="centerX" id="Mwz-xm-1QZ"/>
-                            <constraint firstItem="def-GX-Qcc" firstAttribute="leading" secondItem="Qk9-ii-Rz5" secondAttribute="trailing" constant="16" id="N09-So-zDL"/>
-                            <constraint firstItem="3w3-mT-drZ" firstAttribute="top" secondItem="def-GX-Qcc" secondAttribute="bottom" constant="8" id="OAO-pQ-DWg"/>
                             <constraint firstItem="Ev9-DG-Eco" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="70" id="SCN-yI-Ta5">
                                 <variation key="heightClass=regular-widthClass=compact" constant="90"/>
                             </constraint>
@@ -843,7 +817,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="50"/>
                             </constraint>
                             <constraint firstItem="dxi-2n-K02" firstAttribute="top" secondItem="3w3-mT-drZ" secondAttribute="bottom" constant="10" id="UQ0-VU-TA4"/>
-                            <constraint firstAttribute="centerX" secondItem="def-GX-Qcc" secondAttribute="centerX" id="Y0w-4S-mTT"/>
+                            <constraint firstItem="5bM-ax-ZeC" firstAttribute="top" secondItem="zdV-NN-4Zp" secondAttribute="bottom" constant="8" id="a6x-Ek-WR4"/>
                             <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="Lbp-ko-ErL" secondAttribute="bottom" constant="100" id="aKb-DZ-bgp"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="38" id="b5g-tD-xrW"/>
                             <constraint firstAttribute="centerX" secondItem="zdV-NN-4Zp" secondAttribute="centerX" id="cxp-PQ-Qm4"/>
@@ -852,24 +826,27 @@
                             <constraint firstItem="Lbp-ko-ErL" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" id="fUf-xG-K5D"/>
                             <constraint firstItem="f19-nT-nsy" firstAttribute="top" secondItem="dxi-2n-K02" secondAttribute="bottom" constant="10" id="gUj-8z-cXY"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="f19-nT-nsy" secondAttribute="bottom" constant="27" id="gvm-gh-PHP"/>
-                            <constraint firstItem="Qk9-ii-Rz5" firstAttribute="top" secondItem="zdV-NN-4Zp" secondAttribute="bottom" constant="8" id="hu5-nV-GyO"/>
                             <constraint firstAttribute="centerX" secondItem="3w3-mT-drZ" secondAttribute="centerX" id="k85-Nc-VPp"/>
+                            <constraint firstAttribute="centerX" secondItem="5bM-ax-ZeC" secondAttribute="centerX" constant="-0.5" id="laJ-tb-cL1"/>
                             <constraint firstAttribute="centerX" secondItem="dxi-2n-K02" secondAttribute="centerX" id="tll-UV-1jC"/>
                             <constraint firstAttribute="centerX" secondItem="zdV-NN-4Zp" secondAttribute="centerX" id="xwW-gt-DRc"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="viD-Vo-BWz"/>
+                                <exclude reference="5bM-ax-ZeC"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="2j2-EF-jAN"/>
                                 <exclude reference="9D1-Kk-s5m"/>
                                 <exclude reference="Sro-IN-K7V"/>
                                 <exclude reference="eDO-Qc-POO"/>
                                 <exclude reference="fUf-xG-K5D"/>
                                 <exclude reference="SFZ-Bd-hdr"/>
                                 <exclude reference="cxp-PQ-Qm4"/>
-                                <exclude reference="N09-So-zDL"/>
+                                <exclude reference="a6x-Ek-WR4"/>
+                                <exclude reference="laJ-tb-cL1"/>
+                                <exclude reference="5Hb-vR-Mrx"/>
+                                <exclude reference="2j2-EF-jAN"/>
                                 <exclude reference="A13-xK-rs2"/>
                                 <exclude reference="DYO-s8-Lam"/>
                                 <exclude reference="gUj-8z-cXY"/>
@@ -885,14 +862,18 @@
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="viD-Vo-BWz"/>
+                                <include reference="5bM-ax-ZeC"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="2j2-EF-jAN"/>
                                 <include reference="9D1-Kk-s5m"/>
                                 <include reference="Sro-IN-K7V"/>
                                 <include reference="eDO-Qc-POO"/>
                                 <exclude reference="fUf-xG-K5D"/>
                                 <include reference="SFZ-Bd-hdr"/>
+                                <include reference="a6x-Ek-WR4"/>
+                                <include reference="laJ-tb-cL1"/>
+                                <include reference="5Hb-vR-Mrx"/>
+                                <include reference="2j2-EF-jAN"/>
                                 <include reference="A13-xK-rs2"/>
                                 <exclude reference="SCN-yI-Ta5"/>
                                 <include reference="DYO-s8-Lam"/>
@@ -919,22 +900,20 @@
                     <connections>
                         <outlet property="backGroundImage" destination="Lbp-ko-ErL" id="Xa1-4P-s58"/>
                         <outlet property="cancelBar" destination="Vnt-qn-Tgn" id="QX2-cn-feN"/>
-                        <outlet property="cityNameTextField" destination="def-GX-Qcc" id="AMv-nj-PAV"/>
                         <outlet property="clear" destination="viD-Vo-BWz" id="GIS-DV-gqq"/>
-                        <outlet property="countryTextField" destination="Qk9-ii-Rz5" id="oQz-ih-hTo"/>
                         <outlet property="delete" destination="Wse-wM-OZQ" id="0r7-MR-oBW"/>
                         <outlet property="endTripTextField" destination="dxi-2n-K02" id="n8a-pL-YWx"/>
+                        <outlet property="locationTextField" destination="5bM-ax-ZeC" id="apj-g6-rv0"/>
                         <outlet property="private" destination="f19-nT-nsy" id="dAv-Ho-wVs"/>
                         <outlet property="public" destination="Ev9-DG-Eco" id="mxI-V5-nHv"/>
                         <outlet property="startTripTextField" destination="3w3-mT-drZ" id="19j-k3-iVZ"/>
-                        <outlet property="stateTextField" destination="N9W-Ie-2VI" id="dit-x5-7o9"/>
                         <outlet property="tripNameTextField" destination="zdV-NN-4Zp" id="YUD-JE-9Pu"/>
                         <segue destination="Eme-WN-YvW" kind="show" identifier="addFriends" id="Zqm-R8-ltx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kJ6-HM-5XW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="464" y="-160"/>
+            <point key="canvasLocation" x="463.5" y="-160.5"/>
         </scene>
         <!--Photo View Controller-->
         <scene sceneID="7it-gC-gg0">

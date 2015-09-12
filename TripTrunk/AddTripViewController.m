@@ -20,12 +20,10 @@
 
 // Text Fields
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *cityNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
 @property (weak, nonatomic) IBOutlet UITextField *endTripTextField;
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
-@property (weak, nonatomic) IBOutlet UITextField *countryTextField;
-@property (weak, nonatomic) IBOutlet UITextField *stateTextField;
+@property (strong, nonatomic) IBOutlet UITextField *locationTextField;
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
@@ -43,6 +41,11 @@
 @property NSDateFormatter *formatter;
 
 @property (strong, nonatomic) UIDatePicker *datePicker;
+
+
+@property (strong, nonatomic) NSString *city;
+@property (strong, nonatomic) NSString *state;
+@property (strong, nonatomic) NSString *country;
 
 @end
 
@@ -65,9 +68,7 @@
     self.startTripTextField.delegate = self;
     self.endTripTextField.delegate = self;
     self.tripNameTextField.delegate = self;
-    self.cityNameTextField.delegate = self;
-    self.stateTextField.delegate = self;
-    self.countryTextField.delegate = self;
+    self.locationTextField.delegate = self;
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
     
@@ -84,11 +85,13 @@
         _isEditing = YES;
         self.title = @"Trunk Details";
         self.tripNameTextField.text = self.trip.name;
-        self.countryTextField.text = self.trip.country;
-        self.stateTextField.text= self.trip.state;
-        self.cityNameTextField.text = self.trip.city;
+        self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
         self.startTripTextField.text = self.trip.startDate;
         self.endTripTextField.text = self.trip.endDate;
+        
+        self.city = self.trip.city;
+        self.state = self.trip.state;
+        self.country = self.trip.country;
         
         self.navigationItem.rightBarButtonItem.title = @"Update";
         self.navigationItem.rightBarButtonItem.tag = 1;
@@ -256,7 +259,7 @@
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
-    else if ([textField isEqual:self.cityNameTextField] || [textField isEqual:self.stateTextField] || [textField isEqual:self.countryTextField]) {
+    else if ([textField isEqual:self.locationTextField]) {
         [textField resignFirstResponder];
         
         CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
@@ -279,15 +282,12 @@
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
     [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
-        NSString *city = locationDetails[@"geobytescity"];
-        NSString *state = locationDetails[@"geobytesregion"];
-        NSString *country = locationDetails[@"geobytescountry"];
+        self.city = locationDetails[@"geobytescity"];
+        self.state = locationDetails[@"geobytesregion"];
+        self.country = locationDetails[@"geobytescountry"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.cityNameTextField setText:city];
-            [self.stateTextField setText:state];
-            [self.countryTextField setText:country];
-            
+            self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
         });
     }];
 }
@@ -356,7 +356,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-    NSString *address = [NSString stringWithFormat:@"%@, %@, %@",self.cityNameTextField.text,self.stateTextField.text,self.countryTextField.text];
+    NSString *address = self.locationTextField.text;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
@@ -376,7 +376,7 @@
         else if (!error)
         {
 
-                if (![self.tripNameTextField.text isEqualToString:@""] && ![self.cityNameTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+                if (![self.tripNameTextField.text isEqualToString:@""] && ![self.locationTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
                 {
                     // Trip Input has correct data - save the trip!
                     
@@ -429,9 +429,7 @@
 - (void)resetForm {
     // Initialize the view with no data
     self.tripNameTextField.text = @"";
-    self.countryTextField.text = @"";
-    self.stateTextField.text= @"";
-    self.cityNameTextField.text = @"";
+    self.locationTextField.text = @"";
     
     // Set initial date to the field - should be Today's date.
     self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];

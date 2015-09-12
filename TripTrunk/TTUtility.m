@@ -494,8 +494,10 @@ CLCloudinary *cloudinary;
 - (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
+    NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+
     
-    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
+    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
     [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
 
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
