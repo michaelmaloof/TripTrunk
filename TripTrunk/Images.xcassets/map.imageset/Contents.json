@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "mapeSquare.png"
+      "filename" : "globe_icon.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "mapeSquare@2x.png"
+      "filename" : "globe_icon-1.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "mapeSquare@2x-1.png"
+      "filename" : "globe_icon-2.png"
     }
   ],
   "info" : {

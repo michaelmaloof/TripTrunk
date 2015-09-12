@@ -164,7 +164,7 @@
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
     UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
-    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass"] tag:3];
+    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"comment_icon"] tag:3];
     [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     
     [activityNavController setTabBarItem:activityItem];
