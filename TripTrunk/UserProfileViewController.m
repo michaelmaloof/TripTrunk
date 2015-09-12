@@ -27,6 +27,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
+@property (weak, nonatomic) IBOutlet UILabel *contLabel;
 @property (strong, nonatomic) PFUser *user;
 @end
 
@@ -54,6 +55,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.contLabel.hidden = YES;
+    [self.followingButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.followersButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -180,13 +185,13 @@
 - (void)viewDidAppear:(BOOL)animated {
     // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
     // We put it here because it's causing a crash in viewDidLoad
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1
-                                                           constant:0]];
+//    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
+//                                                          attribute:NSLayoutAttributeWidth
+//                                                          relatedBy:NSLayoutRelationEqual
+//                                                             toItem:self.view
+//                                                          attribute:NSLayoutAttributeWidth
+//                                                         multiplier:1
+//                                                           constant:0]];
 
 }
 
