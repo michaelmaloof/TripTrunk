@@ -59,6 +59,25 @@
     [self.followingButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.followersButton.titleLabel setTextAlignment:UITextAlignmentCenter];
 
+    
+    self.nameLabel.text = @"";
+    self.usernameLabel.text = @"";
+    self.usernameLabel.text = @"";
+    self.hometownLabel.text = @"";
+    self.bioTextView.text = @"";
+    self.mapButton.titleLabel.text = @"";
+
+    self.nameLabel.adjustsFontSizeToFitWidth = YES;
+    self.nameLabel.adjustsFontSizeToFitWidth = YES;
+    self.usernameLabel.adjustsFontSizeToFitWidth = YES;
+    self.usernameLabel.adjustsFontSizeToFitWidth = YES;
+    self.hometownLabel.adjustsFontSizeToFitWidth = YES;
+    self.mapButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.followingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.followersButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.followButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
