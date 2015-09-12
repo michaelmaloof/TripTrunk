@@ -790,7 +790,7 @@
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="f19-nT-nsy" secondAttribute="bottom" constant="27" id="27b-8K-oYh"/>
                             <constraint firstItem="viD-Vo-BWz" firstAttribute="trailing" secondItem="zdV-NN-4Zp" secondAttribute="trailing" id="2j2-EF-jAN"/>
                             <constraint firstItem="zdV-NN-4Zp" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="48" id="3IG-Lt-ykC">
-                                <variation key="heightClass=regular-widthClass=compact" constant="80"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="110"/>
                             </constraint>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="leading" secondItem="zdV-NN-4Zp" secondAttribute="trailing" constant="13" id="4wm-fE-Shw"/>
                             <constraint firstItem="3w3-mT-drZ" firstAttribute="top" secondItem="5bM-ax-ZeC" secondAttribute="bottom" constant="8" id="5Hb-vR-Mrx"/>
@@ -2457,7 +2457,7 @@
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
-        <image name="Glass" width="1002" height="1002"/>
+        <image name="Glass" width="100" height="100"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="Remove Caption" width="340" height="340"/>
         <image name="add_trunk" width="35" height="30"/>
