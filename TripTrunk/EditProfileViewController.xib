@@ -8,6 +8,8 @@
             <connections>
                 <outlet property="bioTextView" destination="OBS-LI-zEV" id="1Im-aL-KHA"/>
                 <outlet property="contentView" destination="crH-IH-0Eg" id="adL-lC-wd3"/>
+                <outlet property="currentCity" destination="CSW-s1-UpQ" id="mTz-Dv-Vzf"/>
+                <outlet property="editBio" destination="McE-0j-nJY" id="2WG-ZU-uId"/>
                 <outlet property="hometownTextField" destination="mEJ-Vd-yxc" id="1ea-tW-lyr"/>
                 <outlet property="saveButton" destination="Vfl-fl-4uL" id="MJJ-al-G4Y"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -73,7 +75,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="mEJ-Vd-yxc" firstAttribute="leading" secondItem="crH-IH-0Eg" secondAttribute="leading" constant="8" id="BXA-j4-1ya"/>
                                 <constraint firstItem="CSW-s1-UpQ" firstAttribute="top" secondItem="crH-IH-0Eg" secondAttribute="top" constant="107" id="Msp-vO-ivP"/>
@@ -150,6 +152,7 @@
                             </variation>
                         </view>
                     </subviews>
+                    <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="crH-IH-0Eg" firstAttribute="leading" secondItem="2Rq-Ac-H5j" secondAttribute="leading" id="bpL-5l-l0p"/>
                         <constraint firstItem="crH-IH-0Eg" firstAttribute="top" secondItem="2Rq-Ac-H5j" secondAttribute="top" id="mYj-RS-857"/>
@@ -180,7 +183,7 @@
                     </variation>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="2Rq-Ac-H5j" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hp6-Hl-9F0"/>
                 <constraint firstAttribute="trailing" secondItem="2Rq-Ac-H5j" secondAttribute="trailing" id="ijS-82-iMc"/>

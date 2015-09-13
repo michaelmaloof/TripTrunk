@@ -17,6 +17,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) PFUser *user;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UILabel *currentCity;
+@property (weak, nonatomic) IBOutlet UILabel *editBio;
 
 @end
 
@@ -33,22 +35,35 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
-    // Set Edit button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelButtonPressed:)];
 
-    _hometownTextField.delegate = self;
-    self.hometownTextField.text = [_user valueForKey:@"hometown"];
-    self.bioTextView.text = [_user valueForKey:@"bio"];
     
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    // Do any additional setup after loading the view from its nib.
+    
+    // Set Edit button
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           target:self
+                                                                                           action:@selector(cancelButtonPressed:)];
+    
+    _hometownTextField.delegate = self;
+    self.hometownTextField.text = [_user valueForKey:@"hometown"];
+    self.bioTextView.text = [_user valueForKey:@"bio"];
+    
+    self.hometownTextField.hidden = YES;
+    self.bioTextView.hidden = YES;
+    self.editBio.hidden = YES;
+    self.currentCity.hidden = YES;
+    self.saveButton.hidden = YES;
+
+
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -61,6 +76,12 @@
                                                           attribute:NSLayoutAttributeWidth
                                                          multiplier:1
                                                            constant:0]];
+    
+    self.hometownTextField.hidden =NO;
+    self.bioTextView.hidden = NO;
+    self.saveButton.hidden = NO;
+    self.currentCity.hidden = NO;
+    self.editBio.hidden = NO;
 }
 
 - (void)cancelButtonPressed:(id)sender {
