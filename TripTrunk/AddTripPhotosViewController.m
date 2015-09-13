@@ -31,6 +31,7 @@
 @property NSInteger path;
 @property BOOL alreadyTrip;
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
+@property (weak, nonatomic) IBOutlet UILabel *borderLabel;
 
 @end
 
@@ -56,6 +57,9 @@
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     self.caption.text = @"";
     self.caption.hidden = YES;
+    self.borderLabel.hidden = YES;
+
+    self.borderLabel.hidden = YES;
     self.cancelCaption.hidden = YES;
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
@@ -319,6 +323,8 @@
     
     self.addCaption.hidden = NO;
     self.caption.hidden = NO;
+    self.borderLabel.hidden = NO;
+
     self.cancelCaption.hidden = NO;
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
@@ -357,6 +363,8 @@
         self.cancelCaption.hidden = YES;
         self.remove.hidden = YES;
         self.caption.hidden = YES;
+        self.borderLabel.hidden = YES;
+
         self.addCaption.hidden = YES;
         [self.tripCollectionView reloadData];
         
@@ -385,6 +393,8 @@
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
+    self.borderLabel.hidden = YES;
+
     self.addCaption.hidden = YES;
     [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
     self.caption.text = @"";
@@ -404,6 +414,8 @@
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
+    self.borderLabel.hidden = YES;
+
     self.addCaption.hidden = YES;
     Photo *photo = [self.photos objectAtIndex:self.path];
     photo.caption = nil;
@@ -429,6 +441,8 @@
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
+    self.borderLabel.hidden = YES;
+
     self.addCaption.hidden = YES;
     self.remove.hidden = YES;
     self.caption.text = nil;
