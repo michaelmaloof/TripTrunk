@@ -25,7 +25,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
-@property (weak, nonatomic) IBOutlet UITextView *bioTextView;
+@property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
 @property (strong, nonatomic) PFUser *user;
 @end
@@ -34,31 +34,38 @@
 
 - (id)initWithUser:(PFUser *)user
 {
-    self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
+    self = [super init];
     if (self) {
         _user = user;
+
     }
     return self;
 }
 
 - (id)initWithUserId:(NSString *)userId;
 {
-    self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
-    if (self) {
+    self = [super init];     if (self) {
         _user = [PFUser user];
         [_user setObjectId:userId];
-;
     }
     return self;
+}
+
+- (void)loadView {
+    self.view = [[[NSBundle mainBundle] loadNibNamed:@"UserProfileViewController" owner:self options:nil] firstObject];
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+
+
     
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -181,6 +188,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
     // We put it here because it's causing a crash in viewDidLoad
+    //TODO: this constraint causes a glitch as the screen loads since the width isn't set yet.
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
@@ -189,9 +197,6 @@
                                                          multiplier:1
                                                            constant:0]];
     
-    
-    
-
 }
 
 - (void)refreshFollowCounts {
@@ -202,6 +207,8 @@
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
         [self.followersButton setTitle:[NSString stringWithFormat:@"%lu Followers",(unsigned long)followersCount] forState:UIControlStateNormal];
         [self.followingButton setTitle:[NSString stringWithFormat:@"%lu Following",(unsigned long)followingCount] forState:UIControlStateNormal];
+        
+
 
 
     }

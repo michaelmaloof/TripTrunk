@@ -403,7 +403,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"You could be the first to like or comment on this photo";
+    NSString *text = @"Keep using TripTrunk!";
 
     if (_viewType == TTActivityViewLikes) {
         text = @"You could be the first to like this photo";
