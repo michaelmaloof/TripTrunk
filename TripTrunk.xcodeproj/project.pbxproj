@@ -593,7 +593,6 @@
 				224F3F881AE1D35E003A1DEB /* Sources */,
 				224F3F891AE1D35E003A1DEB /* Frameworks */,
 				224F3F8A1AE1D35E003A1DEB /* Resources */,
-				C9021F1E1B9F81A900E2EA96 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -691,22 +690,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		C9021F1E1B9F81A900E2EA96 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=/usr/local/bin:$PATH\ncd CloudCode/\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		224F3F881AE1D35E003A1DEB /* Sources */ = {

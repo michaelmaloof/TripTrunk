@@ -55,6 +55,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
@@ -99,6 +101,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
 }
 
 
@@ -302,12 +306,12 @@
 - (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
-
+    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
     
     if(indexPath.item == 0 && self.isMember == YES)
     {
         cell.photo.image = [UIImage imageNamed:@"Plus Square"];
+
     }
     
     // This is the images
@@ -350,14 +354,18 @@
                                            [(Photo *)[self.photos objectAtIndex:index] setImage:image];
 
                                        }
-                                       
+                                       weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
                                        weakCell.photo.image = image;
                                        [weakCell setNeedsLayout];
                                        
                                    } failure:nil];
+        weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+
         return weakCell;
         
     }
+    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+
     return cell;
 }
 

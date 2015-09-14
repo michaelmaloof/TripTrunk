@@ -33,7 +33,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
         [self setupUI];
     }
     return self;
@@ -44,7 +44,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
         [self setupUI];
     }
     return self;
@@ -80,11 +80,12 @@
     
     //TODO: Implement the actual progress bar UI
     _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, 2)];
-    [_progressView setProgressTintColor:[UIColor colorWithHexString:@"FF6666"]];
+    [_progressView setProgressTintColor:[UIColor colorWithHexString:@"F6C530"]];
     [self addSubview:_progressView];
 }
 
 - (void)updateLabel:(int)current of:(int)total {
+    self.titleLabel.textColor = [UIColor whiteColor];
     [_titleLabel setText:[NSString stringWithFormat:@"Uploading %i of %i", current, total]];
 }
 
