@@ -619,7 +619,6 @@
         
         
         [self.mapView setRegion:region animated:YES];
-//        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
 
 
     }
