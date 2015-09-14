@@ -99,6 +99,11 @@
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
     
+    if (self.photos.count > 0){
+        self.trip.mostRecentPhoto = [NSDate date];
+        [self.trip saveInBackground];
+    }
+    
     [self uploadAllPhotos];
 }
 
