@@ -601,9 +601,12 @@
     if (self.isNew == YES) {
         self.isNew = NO;
 
-        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
         
-        CLLocationCoordinate2D center = startAnnotation.annotation.coordinate;
+        CLLocationCoordinate2D center = ((MKPointAnnotation*)self.justMadeTrunk[0]).coordinate;
+        
+        
+        
+//        startAnnotation.annotation.coordinate;
         
         MKCoordinateSpan span;
         span.longitudeDelta = 3.5;
@@ -616,6 +619,8 @@
         
         
         [self.mapView setRegion:region animated:YES];
+//        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
+
 
     }
 
