@@ -574,7 +574,7 @@
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
         startAnnotation.layer.zPosition = 1;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1, startAnnotation.frame.size.height*1);
 
     } else {
         startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
@@ -582,7 +582,7 @@
         startAnnotation.alpha = .9;
 //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
         startAnnotation.layer.zPosition = .9;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.9, startAnnotation.frame.size.height*.9);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.8, startAnnotation.frame.size.height*.8);
 
 
 

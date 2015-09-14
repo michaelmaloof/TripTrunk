@@ -209,8 +209,8 @@
                         <constraint firstAttribute="width" constant="100" id="iCj-0M-70x"/>
                         <constraint firstAttribute="height" constant="100" id="tAT-Tf-WLn"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="50"/>
-                    <state key="normal" backgroundImage="map">
+                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="50"/>
+                    <state key="normal" backgroundImage="globe_color">
                         <color key="titleColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -625,7 +625,7 @@
     <resources>
         <image name="SanFran" width="1080" height="1920"/>
         <image name="defaultProfile" width="150" height="150"/>
+        <image name="globe_color" width="197" height="197"/>
         <image name="location-pin" width="30" height="30"/>
-        <image name="map" width="50" height="50"/>
     </resources>
 </document>
