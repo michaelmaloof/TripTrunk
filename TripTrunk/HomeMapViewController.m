@@ -600,6 +600,7 @@
     
     if (self.isNew == YES) {
         self.isNew = NO;
+
         [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
         
         CLLocationCoordinate2D center = startAnnotation.annotation.coordinate;
@@ -615,6 +616,7 @@
         
         
         [self.mapView setRegion:region animated:YES];
+
     }
 
     return startAnnotation;
