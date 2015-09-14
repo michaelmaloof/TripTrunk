@@ -50,8 +50,6 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
     
     if (self.user == nil) {
             
@@ -99,8 +97,10 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-
-
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -574,7 +574,7 @@
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
         startAnnotation.layer.zPosition = 1;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1, startAnnotation.frame.size.height*1);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
 
     } else {
         startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
@@ -582,7 +582,7 @@
         startAnnotation.alpha = .9;
 //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
         startAnnotation.layer.zPosition = .9;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.8, startAnnotation.frame.size.height*.8);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.9, startAnnotation.frame.size.height*.9);
 
 
 
@@ -600,26 +600,7 @@
     
     if (self.isNew == YES) {
         self.isNew = NO;
-
-        
-        CLLocationCoordinate2D center = ((MKPointAnnotation*)self.justMadeTrunk[0]).coordinate;
-        
-        
-        
-//        startAnnotation.annotation.coordinate;
-        
-        MKCoordinateSpan span;
-        span.longitudeDelta = 3.5;
-        span.latitudeDelta = 3.5;
-        
-        MKCoordinateRegion region;
-        region.center = center;
-        region.span = span;
-        self.zoomOut.hidden = NO;
-        
-        
-        [self.mapView setRegion:region animated:YES];
-
+        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
 
     }
 

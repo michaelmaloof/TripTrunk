@@ -36,7 +36,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    _hometownTextField.delegate = self;
+    self.hometownTextField.text = [_user valueForKey:@"hometown"];
+    self.bioTextView.text = [_user valueForKey:@"bio"];
     
+    // Set Edit button
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           target:self
+                                                                                           action:@selector(cancelButtonPressed:)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,28 +52,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    // Do any additional setup after loading the view from its nib.
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
-    // Set Edit button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelButtonPressed:)];
-    
-    _hometownTextField.delegate = self;
-    self.hometownTextField.text = [_user valueForKey:@"hometown"];
-    self.bioTextView.text = [_user valueForKey:@"bio"];
-    
-    self.hometownTextField.hidden = YES;
-    self.bioTextView.hidden = YES;
-    self.editBio.hidden = YES;
-    self.currentCity.hidden = YES;
-    self.saveButton.hidden = YES;
+
+//    
+//    self.hometownTextField.hidden = YES;
+//    self.bioTextView.hidden = YES;
+//    self.editBio.hidden = YES;
+//    self.currentCity.hidden = YES;
+//    self.saveButton.hidden = YES;
 
 
 
@@ -82,12 +74,12 @@
                                                           attribute:NSLayoutAttributeWidth
                                                          multiplier:1
                                                            constant:0]];
-    
-    self.hometownTextField.hidden =NO;
-    self.bioTextView.hidden = NO;
-    self.saveButton.hidden = NO;
-    self.currentCity.hidden = NO;
-    self.editBio.hidden = NO;
+//    
+//    self.hometownTextField.hidden =NO;
+//    self.bioTextView.hidden = NO;
+//    self.saveButton.hidden = NO;
+//    self.currentCity.hidden = NO;
+//    self.editBio.hidden = NO;
 }
 
 - (void)cancelButtonPressed:(id)sender {

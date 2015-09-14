@@ -27,7 +27,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
-@property (weak, nonatomic) IBOutlet UILabel *contLabel;
 @property (strong, nonatomic) PFUser *user;
 @end
 
@@ -35,11 +34,6 @@
 
 - (id)initWithUser:(PFUser *)user
 {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = user;
@@ -49,11 +43,6 @@
 
 - (id)initWithUserId:(NSString *)userId;
 {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = [PFUser user];
@@ -63,43 +52,82 @@
     return self;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    
+    // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
+    if (!_user) {
+        _user = [PFUser currentUser];
+    }
+    
+    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
+    [_user fetchIfNeeded];
+    self.title = _user.username;
+    
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+
+    [self.nameLabel setText:_user[@"name"]];
+    [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
+    [self.hometownLabel setText:_user[@"hometown"]];
+    
+    [self.profilePicImageView setClipsToBounds:YES];
+    
+    [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
+    
+    if (_user[@"bio"]) {
+        [self.bioTextView setText:_user[@"bio"]];
+    }
+    else {
+        [self.bioTextView setText:@"A true world traveler"];
+    }
+
+    [self.logoutButton setHidden:YES];
+
+    // If it's the current user, set up their profile a bit differently.
+    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        [self.followButton setHidden:YES];
+        [self.logoutButton setHidden:NO];
+
+        // Set Edit button
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                                               target:self
+                                                                                               action:@selector(editButtonPressed:)];
+        
+        UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+        picTap.numberOfTapsRequired = 1;
+        self.profilePicImageView.userInteractionEnabled = YES;
+        [self.profilePicImageView addGestureRecognizer:picTap];
+
+    }
+    
+    [self refreshFollowCounts];
+    
+
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
     
-    self.nameLabel.text = @"";
-    self.usernameLabel.text = @"";
-    self.usernameLabel.text = @"";
-    self.hometownLabel.text = @"";
-    self.bioTextView.text = @"";
-    self.mapButton.titleLabel.text = @"";
-    self.followersButton.titleLabel.text = @"";
-    self.followingButton.titleLabel.text = @"";
-    
-    
-    self.nameLabel.adjustsFontSizeToFitWidth = YES;
-    self.nameLabel.adjustsFontSizeToFitWidth = YES;
-    self.usernameLabel.adjustsFontSizeToFitWidth = YES;
-    self.usernameLabel.adjustsFontSizeToFitWidth = YES;
-    self.hometownLabel.adjustsFontSizeToFitWidth = YES;
-    self.mapButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.followingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.followersButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.followButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
@@ -148,90 +176,21 @@
         [self.followButton setHidden:NO];
         
     }
-
-    
-    self.contLabel.hidden = YES;
-//    [self.followingButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-//    [self.followersButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-
-    
-    
-
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    
-    
-    // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
-    if (!_user) {
-        _user = [PFUser currentUser];
-    }
-    
-    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
-    [_user fetchIfNeeded];
-    self.title = _user.username;
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-    
-
-    [self.nameLabel setText:_user[@"name"]];
-    [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
-    [self.hometownLabel setText:_user[@"hometown"]];
-    
-    [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
-    
-    if (_user[@"bio"]) {
-        [self.bioTextView setText:_user[@"bio"]];
-    }
-    else {
-        [self.bioTextView setText:@"A true world traveler"];
-    }
-
-    [self.logoutButton setHidden:YES];
-
-    // If it's the current user, set up their profile a bit differently.
-    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
-        [self.followButton setHidden:YES];
-        [self.logoutButton setHidden:NO];
-
-        // Set Edit button
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                                                                               target:self
-                                                                                               action:@selector(editButtonPressed:)];
-        
-        UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
-        picTap.numberOfTapsRequired = 1;
-        self.profilePicImageView.userInteractionEnabled = YES;
-        [self.profilePicImageView addGestureRecognizer:picTap];
-
-    }
-    
-    [self refreshFollowCounts];
-    
-
 }
-
 
 - (void)viewDidAppear:(BOOL)animated {
     // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
     // We put it here because it's causing a crash in viewDidLoad
-//    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
-//                                                          attribute:NSLayoutAttributeWidth
-//                                                          relatedBy:NSLayoutRelationEqual
-//                                                             toItem:self.view
-//                                                          attribute:NSLayoutAttributeWidth
-//                                                         multiplier:1
-//                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1
+                                                           constant:0]];
+    
+    
+    
 
 }
 
@@ -350,16 +309,6 @@
     }
     
     [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
-}
-
-
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    NSLog(@"touchesBegan:withEvent:");
-    [self.bioTextView resignFirstResponder];
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)setProfilePic:(NSString *)urlString {
