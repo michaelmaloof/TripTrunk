@@ -53,12 +53,16 @@
     return self;
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.contLabel.hidden = YES;
-    [self.followingButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.followersButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-
+    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
     
     self.nameLabel.text = @"";
     self.usernameLabel.text = @"";
@@ -66,7 +70,10 @@
     self.hometownLabel.text = @"";
     self.bioTextView.text = @"";
     self.mapButton.titleLabel.text = @"";
-
+    self.followersButton.titleLabel.text = @"";
+    self.followingButton.titleLabel.text = @"";
+    
+    
     self.nameLabel.adjustsFontSizeToFitWidth = YES;
     self.nameLabel.adjustsFontSizeToFitWidth = YES;
     self.usernameLabel.adjustsFontSizeToFitWidth = YES;
@@ -76,6 +83,61 @@
     self.followingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.followersButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.followButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    // Don't show the follow button if it's the current user's profile
+    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        [self.followButton setHidden:YES];
+    }
+    else {
+        // Refresh the following status of this user
+        
+        if ([[TTCache sharedCache] followStatusForUser:self.user]) {
+            // We have the following status, so update the Selected status and enable the button
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.followButton setEnabled:YES];
+                [self.followButton setSelected:YES];
+            });
+        }
+        else
+        {
+            
+            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(BOOL isFollowing, NSError *error) {
+                if (!error) {
+                    if (isFollowing)
+                    {
+                        // We have the following status, so update the Selected status and enable the button
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:YES];
+                        });
+                    }
+                    else {
+                        // Not following this user, enable the button and set the selected status
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:NO];
+                        });
+                    }
+                }
+                else {
+                    NSLog(@"Error: %@",error);
+                }
+                
+            }];
+            
+        }
+        
+        // Show the button
+        [self.followButton setHidden:NO];
+        
+    }
+
+    
+    self.contLabel.hidden = YES;
+//    [self.followingButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+//    [self.followersButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+
+    
     
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -144,61 +206,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-    
-    // Don't show the follow button if it's the current user's profile
-    if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
-        [self.followButton setHidden:YES];
-    }
-    else {
-        // Refresh the following status of this user
-        
-        if ([[TTCache sharedCache] followStatusForUser:self.user]) {
-            // We have the following status, so update the Selected status and enable the button
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.followButton setEnabled:YES];
-                [self.followButton setSelected:YES];
-            });
-        }
-        else
-        {
-            
-            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(BOOL isFollowing, NSError *error) {
-                if (!error) {
-                    if (isFollowing)
-                    {
-                        // We have the following status, so update the Selected status and enable the button
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.followButton setEnabled:YES];
-                            [self.followButton setSelected:YES];
-                        });
-                    }
-                    else {
-                        // Not following this user, enable the button and set the selected status
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.followButton setEnabled:YES];
-                            [self.followButton setSelected:NO];
-                        });
-                    }
-                }
-                else {
-                    NSLog(@"Error: %@",error);
-                }
-
-            }];
-
-        }
-        
-        // Show the button
-        [self.followButton setHidden:NO];
-        
-    }
-
+   
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -220,21 +228,21 @@
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         NSUInteger followersCount = [[TTCache sharedCache] followers].count;
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
-        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu\nFollowers",(unsigned long)followersCount] forState:UIControlStateNormal];
-        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu\nFollowing",(unsigned long)followingCount] forState:UIControlStateNormal];
+        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu Followers",(unsigned long)followersCount] forState:UIControlStateNormal];
+        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu Following",(unsigned long)followingCount] forState:UIControlStateNormal];
 
 
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%i\nFollowers",count] forState:UIControlStateNormal];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i Followers",count] forState:UIControlStateNormal];
         });
     }];
     
     [SocialUtility followingCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%i\nFollowing",count] forState:UIControlStateNormal];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i Following",count] forState:UIControlStateNormal];
         });
     }];
     
