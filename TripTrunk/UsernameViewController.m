@@ -34,6 +34,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -106,10 +108,7 @@
 
 
 -(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+
 }
 
 - (void)updateFieldsWithFBInfo:(NSDictionary *)userData {

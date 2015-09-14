@@ -28,6 +28,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
@@ -66,6 +68,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
 }
 
 - (IBAction)onLoginTapped:(id)sender {

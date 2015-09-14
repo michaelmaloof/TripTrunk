@@ -45,6 +45,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -340,6 +342,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
 }
 

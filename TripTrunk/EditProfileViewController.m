@@ -47,6 +47,12 @@
 -(void)viewWillAppear:(BOOL)animated{
     // Do any additional setup after loading the view from its nib.
     
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
     // Set Edit button
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                            target:self

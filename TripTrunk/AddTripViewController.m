@@ -51,18 +51,20 @@
 
 @implementation AddTripViewController
 
+
 - (void)viewDidLoad {
     
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
-    self.clear.hidden = YES;
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
+
+    self.clear.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
     self.startTripTextField.delegate = self;
@@ -113,7 +115,7 @@
         [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
         [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
         [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -148,6 +150,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
 }
 
 - (void)setupDatePicker {
@@ -354,7 +358,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = self.locationTextField.text;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -369,7 +373,7 @@
             [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
             [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
             [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-            [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+            [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -403,7 +407,7 @@
                     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
                     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
                     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-                    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+                    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -414,7 +418,7 @@
         [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
         [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
         [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
         return;
     }];
 

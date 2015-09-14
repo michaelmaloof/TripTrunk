@@ -35,6 +35,11 @@
 
 - (id)initWithUser:(PFUser *)user
 {
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = user;
@@ -44,6 +49,11 @@
 
 - (id)initWithUserId:(NSString *)userId;
 {
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     self = [super initWithNibName:@"UserProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _user = [PFUser user];
@@ -53,6 +63,13 @@
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -62,7 +79,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
+
     
     self.nameLabel.text = @"";
     self.usernameLabel.text = @"";
@@ -204,10 +221,6 @@
 
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
-   
-}
 
 - (void)viewDidAppear:(BOOL)animated {
     // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE

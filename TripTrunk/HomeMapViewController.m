@@ -50,6 +50,8 @@
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+
     
     if (self.user == nil) {
             
@@ -97,10 +99,8 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+
+
 }
 
 -(void)viewDidAppear:(BOOL)animated {
