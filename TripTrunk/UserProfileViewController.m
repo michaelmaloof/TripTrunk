@@ -44,7 +44,8 @@
 
 - (id)initWithUserId:(NSString *)userId;
 {
-    self = [super init];     if (self) {
+    self = [super init];
+    if (self) {
         _user = [PFUser user];
         [_user setObjectId:userId];
     }
@@ -313,6 +314,7 @@
         NSLog(@"Bio Updated");
         self.bioTextView.text = user[@"bio"];
         self.hometownLabel.text = user[@"hometown"];
+        self.nameLabel.text = user[@"name"];
     }
     
     [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];

@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
+@property (strong, nonatomic) IBOutlet UITextField *nameTextView;
 
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) PFUser *user;
@@ -35,15 +36,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.title = @"Edit Profile";
 
     _hometownTextField.delegate = self;
     self.hometownTextField.text = [_user valueForKey:@"hometown"];
     self.bioTextView.text = [_user valueForKey:@"bio"];
+    self.nameTextView.text = _user[@"name"];
     
     // Set Edit button
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                            target:self
                                                                                            action:@selector(cancelButtonPressed:)];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,9 +96,11 @@
     
     NSString *hometown = self.hometownTextField.text;
     NSString *bio = self.bioTextView.text;
-    
+    NSString *name = self.nameTextView.text;
+
     [_user setValue:hometown forKey:@"hometown"];
     [_user setValue:bio forKey:@"bio"];
+    [_user setValue:name forKey:@"name"];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
         [self.delegate shouldSaveUserAndClose:_user];
