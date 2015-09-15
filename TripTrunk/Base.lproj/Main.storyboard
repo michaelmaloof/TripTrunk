@@ -736,7 +736,7 @@
                                     <action selector="clearButtonPressed:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="0vt-eG-i9H"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trip Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Trunk Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdV-NN-4Zp" customClass="MSTextField">
                                 <rect key="frame" x="208" y="112" width="185" height="30"/>
                                 <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.28627450980392155" green="0.75686274509803919" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1129,6 +1129,17 @@
                                     <action selector="onDeleteWasTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Aux-IA-NQz"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HFK-1a-bML" userLabel="Trunk Name Button">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="trunkNameButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Gbv-Md-k4g"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -1152,6 +1163,9 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="-16"/>
                             </constraint>
                             <constraint firstAttribute="centerX" secondItem="yMo-MM-Gxc" secondAttribute="centerX" id="Kev-Ur-cMc"/>
+                            <constraint firstItem="HFK-1a-bML" firstAttribute="top" secondItem="yMo-MM-Gxc" secondAttribute="bottom" constant="43" id="Kr0-mc-gZM">
+                                <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                            </constraint>
                             <constraint firstItem="Azv-Ms-g16" firstAttribute="leading" secondItem="VAb-3S-Guy" secondAttribute="trailing" constant="15" id="Oe7-0d-4ah">
                                 <variation key="heightClass=regular-widthClass=compact" constant="2"/>
                             </constraint>
@@ -1202,6 +1216,9 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="12"/>
                             </constraint>
                             <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="65" id="xg1-WI-6zO"/>
+                            <constraint firstItem="yMo-MM-Gxc" firstAttribute="centerX" secondItem="HFK-1a-bML" secondAttribute="centerX" constant="13" id="z16-Pf-7W2">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -1211,21 +1228,9 @@
                                 <exclude reference="CmI-e7-SWG"/>
                                 <exclude reference="BL7-tA-HXj"/>
                                 <exclude reference="Jam-2M-aGA"/>
+                                <exclude reference="HFK-1a-bML"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gcu-A7-CvH"/>
-                                <exclude reference="Kev-Ur-cMc"/>
-                                <exclude reference="ZPZ-7l-gi3"/>
-                                <exclude reference="BZI-RL-cQO"/>
-                                <exclude reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <exclude reference="Xip-Bo-EFR"/>
-                                <exclude reference="vgv-Uw-e8W"/>
-                                <exclude reference="wWr-dg-wwy"/>
-                                <exclude reference="9bp-La-UMY"/>
-                                <exclude reference="rNc-b8-30a"/>
-                                <exclude reference="36I-Tl-NU0"/>
                                 <exclude reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <exclude reference="OlX-6N-agJ"/>
@@ -1234,11 +1239,26 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="9bp-La-UMY"/>
+                                <exclude reference="rNc-b8-30a"/>
+                                <exclude reference="Kev-Ur-cMc"/>
+                                <exclude reference="ZPZ-7l-gi3"/>
+                                <exclude reference="z16-Pf-7W2"/>
+                                <exclude reference="Kr0-mc-gZM"/>
+                                <exclude reference="36I-Tl-NU0"/>
+                                <exclude reference="Xip-Bo-EFR"/>
+                                <exclude reference="vgv-Uw-e8W"/>
+                                <exclude reference="wWr-dg-wwy"/>
                                 <exclude reference="IS2-U2-WGB"/>
                                 <exclude reference="XDa-lf-byT"/>
                                 <exclude reference="l10-8j-xzO"/>
                                 <exclude reference="tOb-Bv-AkR"/>
                                 <exclude reference="xg1-WI-6zO"/>
+                                <exclude reference="BZI-RL-cQO"/>
+                                <exclude reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1249,21 +1269,9 @@
                                 <include reference="CmI-e7-SWG"/>
                                 <include reference="BL7-tA-HXj"/>
                                 <include reference="Jam-2M-aGA"/>
+                                <include reference="HFK-1a-bML"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gcu-A7-CvH"/>
-                                <include reference="Kev-Ur-cMc"/>
-                                <include reference="ZPZ-7l-gi3"/>
-                                <include reference="BZI-RL-cQO"/>
-                                <include reference="EIG-AR-7Id"/>
-                                <exclude reference="Oe7-0d-4ah"/>
-                                <exclude reference="UXI-ck-ned"/>
-                                <include reference="Xip-Bo-EFR"/>
-                                <include reference="vgv-Uw-e8W"/>
-                                <include reference="wWr-dg-wwy"/>
-                                <include reference="9bp-La-UMY"/>
-                                <include reference="rNc-b8-30a"/>
-                                <include reference="36I-Tl-NU0"/>
                                 <include reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <include reference="OlX-6N-agJ"/>
@@ -1272,11 +1280,26 @@
                                 <exclude reference="gSa-As-mfQ"/>
                                 <exclude reference="hIR-GY-QyD"/>
                                 <exclude reference="q7U-o2-Oxu"/>
-                                <exclude reference="g3C-me-yTw"/>
-                                <exclude reference="bkC-tY-ajN"/>
+                                <include reference="9bp-La-UMY"/>
+                                <include reference="rNc-b8-30a"/>
+                                <include reference="Kev-Ur-cMc"/>
+                                <include reference="ZPZ-7l-gi3"/>
+                                <include reference="z16-Pf-7W2"/>
+                                <include reference="Kr0-mc-gZM"/>
+                                <include reference="36I-Tl-NU0"/>
+                                <include reference="Xip-Bo-EFR"/>
+                                <include reference="vgv-Uw-e8W"/>
+                                <include reference="wWr-dg-wwy"/>
                                 <exclude reference="B3V-u8-bsl"/>
                                 <include reference="l10-8j-xzO"/>
                                 <include reference="tOb-Bv-AkR"/>
+                                <include reference="BZI-RL-cQO"/>
+                                <include reference="EIG-AR-7Id"/>
+                                <exclude reference="Oe7-0d-4ah"/>
+                                <exclude reference="UXI-ck-ned"/>
+                                <exclude reference="g3C-me-yTw"/>
+                                <exclude reference="bkC-tY-ajN"/>
+                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                     </view>
@@ -1290,6 +1313,7 @@
                         <outlet property="photoTakenBy" destination="yMo-MM-Gxc" id="mUc-kD-ya7"/>
                         <outlet property="saveButton" destination="BL7-tA-HXj" id="YzY-gH-fEI"/>
                         <outlet property="scrollView" destination="g0k-n4-hcD" id="9vF-FK-Tbf"/>
+                        <outlet property="trunkNameButton" destination="HFK-1a-bML" id="oRk-p1-U7d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1O6-QX-DAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1975,9 +1999,6 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="99" y="355" width="201" height="44"/>
-                                </variation>
                                 <connections>
                                     <action selector="onLoginTapped:" destination="Wau-uW-rbx" eventType="touchUpInside" id="FdW-jf-nkC"/>
                                 </connections>

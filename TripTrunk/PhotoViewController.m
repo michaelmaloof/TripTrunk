@@ -17,6 +17,7 @@
 #import "ActivityListViewController.h"
 #import "CommentListViewController.h"
 #import "TTCache.h"
+#import "TrunkViewController.h"
 
 
 @interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate>
@@ -30,6 +31,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
+@property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
 
 // Data Properties
 @property NSMutableArray *commentActivities;
@@ -56,6 +58,8 @@
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
     //FIXME: if I self.photo.user.username it crashes thee app
     self.photoTakenBy.text = self.photo.userName;
+    
+    [self.trunkNameButton setHidden:YES];
     
     self.delete.hidden = YES;
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
@@ -175,16 +179,20 @@
         _likeButton.hidden = !_likeButton.hidden;
         _likeCountButton.hidden = !_likeCountButton.hidden;
         _comments.hidden = !_comments.hidden;
-        self.photoTakenBy.hidden =! self.photoTakenBy.hidden;
+        self.photoTakenBy.hidden = !self.photoTakenBy.hidden;
+        self.trunkNameButton.hidden = !self.trunkNameButton.hidden;
         
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = !self.delete.hidden;
-        }
-        
-
-        
+        }   
     } completion:nil];
 
+}
+
+- (void)tripLoaded:(Trip *)trip {
+    
+    [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
+    [self.trunkNameButton setHidden:NO];
 }
 
 #pragma mark - Photo Data
@@ -202,6 +210,10 @@
 }
 
 -(void)refreshPhotoActivities {
+    
+    // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
+    [self.photo.trip fetchInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
+
     
     self.likeActivities = [[NSMutableArray alloc] init];
     self.commentActivities = [[NSMutableArray alloc] init];
@@ -409,6 +421,21 @@
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
+}
+- (IBAction)trunkNameButtonPressed:(id)sender {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)self.photo.trip;
+    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"Photo View DIsmissed");
+        
+        UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+        if (tabbarcontroller.selectedIndex == 3) {
+            [activityNavController pushViewController:trunkViewController animated:YES];
+        }
+    }];
 }
 
 - (IBAction)onDeleteWasTapped:(id)sender {
