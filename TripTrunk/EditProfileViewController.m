@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
+@property (strong, nonatomic) IBOutlet UITextField *nameTextView;
 
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) PFUser *user;
@@ -35,8 +36,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     
+    self.title = @"Edit Profile";
+
+    _hometownTextField.delegate = self;
+    self.hometownTextField.text = [_user valueForKey:@"hometown"];
+    self.bioTextView.text = [_user valueForKey:@"bio"];
+    self.nameTextView.text = _user[@"name"];
+    
+    // Set Edit button
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           target:self
+                                                                                           action:@selector(cancelButtonPressed:)];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,28 +57,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    // Do any additional setup after loading the view from its nib.
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
-    // Set Edit button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelButtonPressed:)];
-    
-    _hometownTextField.delegate = self;
-    self.hometownTextField.text = [_user valueForKey:@"hometown"];
-    self.bioTextView.text = [_user valueForKey:@"bio"];
-    
-    self.hometownTextField.hidden = YES;
-    self.bioTextView.hidden = YES;
-    self.editBio.hidden = YES;
-    self.currentCity.hidden = YES;
-    self.saveButton.hidden = YES;
+
+//    
+//    self.hometownTextField.hidden = YES;
+//    self.bioTextView.hidden = YES;
+//    self.editBio.hidden = YES;
+//    self.currentCity.hidden = YES;
+//    self.saveButton.hidden = YES;
 
 
 
@@ -82,12 +79,12 @@
                                                           attribute:NSLayoutAttributeWidth
                                                          multiplier:1
                                                            constant:0]];
-    
-    self.hometownTextField.hidden =NO;
-    self.bioTextView.hidden = NO;
-    self.saveButton.hidden = NO;
-    self.currentCity.hidden = NO;
-    self.editBio.hidden = NO;
+//    
+//    self.hometownTextField.hidden =NO;
+//    self.bioTextView.hidden = NO;
+//    self.saveButton.hidden = NO;
+//    self.currentCity.hidden = NO;
+//    self.editBio.hidden = NO;
 }
 
 - (void)cancelButtonPressed:(id)sender {
@@ -99,9 +96,11 @@
     
     NSString *hometown = self.hometownTextField.text;
     NSString *bio = self.bioTextView.text;
-    
+    NSString *name = self.nameTextView.text;
+
     [_user setValue:hometown forKey:@"hometown"];
     [_user setValue:bio forKey:@"bio"];
+    [_user setValue:name forKey:@"name"];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
         [self.delegate shouldSaveUserAndClose:_user];
