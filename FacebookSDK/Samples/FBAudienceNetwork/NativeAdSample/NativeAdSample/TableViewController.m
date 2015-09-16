@@ -21,7 +21,7 @@
 static NSInteger const kRowStrideForAdCell = 3;
 static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 
-@interface TableViewController () <UITableViewDataSource, UITableViewDelegate, FBNativeAdsManagerDelegate>
+@interface TableViewController () <UITableViewDataSource, UITableViewDelegate, FBNativeAdsManagerDelegate, FBNativeAdDelegate>
 
 @property (strong, nonatomic) FBNativeAdsManager *_adsManager;
 @property (strong, nonatomic) FBNativeAdTableViewCellProvider *_ads;
@@ -38,8 +38,8 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 {
   if (!self._tableViewContentArray) {
     self._tableViewContentArray = [NSMutableArray array];
-    for (int i = 0; i < 10; i++) {
-      [self._tableViewContentArray addObject:[NSString stringWithFormat:@"TableView Cell #%d", i + 1]];
+    for (NSUInteger i = 0; i < 10; i++) {
+      [self._tableViewContentArray addObject:[NSString stringWithFormat:@"TableView Cell #%lu", (unsigned long)(i + 1)]];
     }
   }
 
@@ -106,6 +106,8 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
   // ad templates in them as well as help with the math to have a consistent distribution of ads within a table.
   FBNativeAdTableViewCellProvider *cellProvider = [[FBNativeAdTableViewCellProvider alloc] initWithManager:manager forType:FBNativeAdViewTypeGenericHeight120];
   self._ads = cellProvider;
+  self._ads.delegate = self;
+
 
   [self.tableView reloadData];
   [self.activityIndicator stopAnimating];
@@ -122,6 +124,23 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
                                         cancelButtonTitle:@"OK"
                                         otherButtonTitles:nil];
   [alert show];
+}
+
+#pragma mark FBNativeAdDelegate
+
+- (void)nativeAdDidClick:(FBNativeAd *)nativeAd
+{
+  NSLog(@"Native ad was clicked.");
+}
+
+- (void)nativeAdDidFinishHandlingClick:(FBNativeAd *)nativeAd
+{
+  NSLog(@"Native ad did finish click handling.");
+}
+
+- (void)nativeAdWillLogImpression:(FBNativeAd *)nativeAd
+{
+  NSLog(@"Native ad impression is being captured.");
 }
 
 #pragma mark - UITableViewDataSource
@@ -158,6 +177,13 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
   } else {
     return 80;
   }
+}
+
+#pragma mark - Orientation
+
+- (FBInterfaceOrientationMask)supportedInterfaceOrientations
+{
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

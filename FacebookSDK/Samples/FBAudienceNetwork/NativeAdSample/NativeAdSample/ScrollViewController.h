@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+@import FBAudienceNetwork;
+
 @interface ScrollViewController : UIViewController
 
 @end

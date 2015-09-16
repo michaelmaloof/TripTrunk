@@ -70,7 +70,7 @@
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
 		C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C910B1931B66B97700788BE0 /* ActivityListViewController.m */; };
-		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
+		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
@@ -881,6 +881,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -908,6 +909,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBAudienceNetwork/FBAudienceNetwork.h>
+@import FBAudienceNetwork;
 
 @interface MediumRectViewController : UIViewController <FBAdViewDelegate>
 

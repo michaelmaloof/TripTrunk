@@ -66,9 +66,9 @@
 
 - (CGRect)frameForSize:(CGSize)size
 {
-  CGFloat xOffset = (size.height > size.width) ? 5 : 60;;
+  CGFloat xOffset = size.width / 2 - 150;
   CGFloat yOffset = (size.height > size.width) ? 100 : 20;
-  return CGRectMake(xOffset, yOffset, size.width - (xOffset * 2.0), 250);
+  return CGRectMake(xOffset, yOffset, 300, 250);
 }
 
 #pragma mark - FBAdViewDelegate implementation

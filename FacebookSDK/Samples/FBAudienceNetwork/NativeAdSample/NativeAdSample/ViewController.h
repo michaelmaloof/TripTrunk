@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBAudienceNetwork/FBAudienceNetwork.h>
+@import FBAudienceNetwork;
 
 @interface ViewController : UIViewController <FBNativeAdDelegate>
 
@@ -30,7 +30,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *adBodyLabel;
 @property (strong, nonatomic) IBOutlet UIButton *adCallToActionButton;
 @property (strong, nonatomic) IBOutlet UILabel *adSocialContextLabel;
-@property (strong, nonatomic) IBOutlet UIView *adStarRatingView;
 @property (strong, nonatomic) IBOutlet UILabel *sponsoredLabel;
 
 @property (strong, nonatomic) IBOutlet UIView *adUIView;

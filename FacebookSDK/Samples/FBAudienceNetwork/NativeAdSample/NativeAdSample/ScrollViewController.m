@@ -18,8 +18,6 @@
 
 #import "ScrollViewController.h"
 
-#import <FBAudienceNetwork/FBAudienceNetwork.h>
-
 @interface ScrollViewController () <FBNativeAdDelegate, FBNativeAdsManagerDelegate>
 
 @property (nonatomic, strong) FBNativeAdsManager *manager;
@@ -91,6 +89,19 @@
 - (void)nativeAdsFailedToLoadWithError:(NSError *)error
 {
   NSLog(@"Native ads failed to load with error: %@", error);
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Native ad failed to load"
+                                                  message:@"Check console for more details"
+                                                 delegate:nil
+                                        cancelButtonTitle:@"OK"
+                                        otherButtonTitles:nil];
+  [alert show];
+}
+
+#pragma mark - Orientation
+
+- (FBInterfaceOrientationMask)supportedInterfaceOrientations
+{
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
