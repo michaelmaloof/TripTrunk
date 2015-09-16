@@ -411,7 +411,7 @@
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
         if (self.isMember == YES) {
-        vc.photo = [self.photos objectAtIndex:self.path.item -1];
+            vc.photo = [self.photos objectAtIndex:self.path.item -1];
         } else {
             vc.photo = [self.photos objectAtIndex:self.path.item];
         }

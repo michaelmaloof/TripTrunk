@@ -34,7 +34,7 @@
 
 - (id)initWithUser:(PFUser *)user
 {
-    self = [super init];
+    self = [super initWithNibName:@"UserProfileViewController" bundle:nil];
     if (self) {
         _user = user;
 
@@ -44,7 +44,7 @@
 
 - (id)initWithUserId:(NSString *)userId;
 {
-    self = [super init];
+    self = [super initWithNibName:@"UserProfileViewController" bundle:nil];
     if (self) {
         _user = [PFUser user];
         [_user setObjectId:userId];
@@ -52,21 +52,15 @@
     return self;
 }
 
-- (void)loadView {
-    self.view = [[[NSBundle mainBundle] loadNibNamed:@"UserProfileViewController" owner:self options:nil] firstObject];
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-
-
-
     
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;

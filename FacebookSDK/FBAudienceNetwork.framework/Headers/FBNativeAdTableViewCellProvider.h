@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "FBAdDefines.h"
 #import "FBNativeAd.h"
 #import "FBNativeAdTableViewAdProvider.h"
 #import "FBNativeAdView.h"
@@ -29,6 +30,7 @@
 
  @abstract Class which assists in putting FBNativeAdViews into UITableViews. This class manages the creation of UITableViewCells which host native ad views. Functionality is provided to create UITableCellViews as needed for a given indexPath as well as computing the height of the cells.
  */
+FB_CLASS_EXPORT
 @interface FBNativeAdTableViewCellProvider : FBNativeAdTableViewAdProvider
 
 /*!
@@ -39,7 +41,7 @@
  @param manager The naitve ad manager consumed by this provider
  @param type The type of this native ad template. For more information, consult FBNativeAdViewType.
  */
-- (instancetype)initWithManager:(FBNativeAdsManager *)manager forType:(FBNativeAdViewType)type;
+- (nonnull instancetype)initWithManager:(nonnull FBNativeAdsManager *)manager forType:(FBNativeAdViewType)type;
 
 /*!
  @method
@@ -50,27 +52,27 @@
  @param type The type of this native ad template. For more information, consult FBNativeAdViewType.
  @param attributes The layout of this native ad template. For more information, consult FBNativeAdViewLayout.
  */
-- (instancetype)initWithManager:(FBNativeAdsManager *)manager forType:(FBNativeAdViewType)type forAttributes:(FBNativeAdViewAttributes *)attributes;
+- (nonnull instancetype)initWithManager:(nonnull FBNativeAdsManager *)manager forType:(FBNativeAdViewType)type forAttributes:(nonnull FBNativeAdViewAttributes *)attributes NS_DESIGNATED_INITIALIZER;
 
 /*!
  @method
 
  @abstract Helper method for implementors of UITableViewDataSource who would like to host native ad UITableViewCells in their table view.
  */
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /*!
  @method
 
  @abstract Helper method for implementors of UITableViewDelegate who would like to host native ad UITableViewCells in their table view.
  */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /*!
  @method
 
  @abstract Helper method for implementors of UITableViewDelegate who would like to host native ad UITableViewCells in their table view.
  */
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)tableView:(nonnull UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 @end

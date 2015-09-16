@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "FBAdDefines.h"
 #import "FBNativeAd.h"
 #import "FBNativeAdsManager.h"
 
@@ -27,7 +28,14 @@
 
  @abstract Additional functionality on top of FBNativeAdsManager to assist in using native ads within a UITableView. This class contains a mechanism to map indexPaths to native ads in a stable manner as well as helpers which assist in doing the math to include ads at a regular interval within a table view.
  */
+FB_CLASS_EXPORT
 @interface FBNativeAdTableViewAdProvider : NSObject
+
+/*!
+ @property
+ @abstract Passes delegate methods from FBNativeAd. Separate delegate calls will be made for each native ad contained.
+ */
+@property (nonatomic, weak, nullable) id<FBNativeAdDelegate> delegate;
 
 /*!
  @method
@@ -36,7 +44,7 @@
 
  @param manager The FBNativeAdsManager which is consumed by this class.
  */
-- (instancetype)initWithManager:(FBNativeAdsManager *)manager;
+- (nonnull instancetype)initWithManager:(nonnull FBNativeAdsManager *)manager NS_DESIGNATED_INITIALIZER;
 
 /*!
  @method
@@ -47,7 +55,7 @@
  @param indexPath The indexPath to use as a key for this native ad
  @return A FBNativeAd which is loaded and ready to be used.
  */
-- (FBNativeAd *)tableView:(UITableView *)tableView nativeAdForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (nonnull FBNativeAd *)tableView:(nonnull UITableView *)tableView nativeAdForRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /*!
  @method
@@ -58,7 +66,7 @@
  @param stride The frequency that native ads are to appear within the table view
  @return Boolean indicating whether the cell at the path is an ad
  */
-- (BOOL)isAdCellAtIndexPath:(NSIndexPath *)indexPath forStride:(NSUInteger)stride;
+- (BOOL)isAdCellAtIndexPath:(nonnull NSIndexPath *)indexPath forStride:(NSUInteger)stride;
 
 /*!
  @method
@@ -69,7 +77,7 @@
  @param stride The frequency that native ads are to appear within the table view
  @return An indexPath adjusted to what it would be in a table view with no ads
  */
-- (NSIndexPath *)adjustNonAdCellIndexPath:(NSIndexPath *)indexPath forStride:(NSUInteger)stride;
+- (nonnull NSIndexPath *)adjustNonAdCellIndexPath:(nonnull NSIndexPath *)indexPath forStride:(NSUInteger)stride;
 
 /*!
  @method

@@ -19,6 +19,8 @@
 		58D92C9D18C751FA0090E7E2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58D92C9718C751FA0090E7E2 /* Default-568h@2x.png */; };
 		58D92C9F18C7525A0090E7E2 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D92C9E18C7525A0090E7E2 /* AdSupport.framework */; };
 		737A56221A5F446200AF33D4 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 737A561E1A5F420C00AF33D4 /* FBAudienceNetwork.framework */; };
+		905E47661B260B4B00EC94D0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73E6A2C71A94145E00938B52 /* AVFoundation.framework */; };
+		905E47681B260BE600EC94D0 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9995321A1AA502290033D3B4 /* CoreMedia.framework */; };
 		90CEE4B31A1BF50A0076D191 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90CEE4B21A1BF50A0076D191 /* MainStoryboard.storyboard */; };
 		90CEE4B61A1BF8E60076D191 /* BannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90CEE4B51A1BF8E60076D191 /* BannerViewController.m */; };
 		90E8740F1A1BF90A00153004 /* MediumRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90E8740E1A1BF90A00153004 /* MediumRectViewController.m */; };
@@ -76,6 +78,8 @@
 				58D92C4A18C750E10090E7E2 /* CoreGraphics.framework in Frameworks */,
 				58D92C4C18C750E10090E7E2 /* UIKit.framework in Frameworks */,
 				58D92C4818C750E10090E7E2 /* Foundation.framework in Frameworks */,
+				905E47661B260B4B00EC94D0 /* AVFoundation.framework in Frameworks */,
+				905E47681B260BE600EC94D0 /* CoreMedia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +186,7 @@
 		58D92C3C18C750E10090E7E2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = 58D92C3F18C750E10090E7E2 /* Build configuration list for PBXProject "AdUnitsSample" */;
@@ -253,6 +257,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -314,11 +319,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdUnitsSample/AdUnitsSample-Prefix.pch";
 				INFOPLIST_FILE = "AdUnitsSample/AdUnitsSample-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.audiencenetwork.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = AdUnitsSample;
 				WRAPPER_EXTENSION = app;
 			};
@@ -331,11 +337,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdUnitsSample/AdUnitsSample-Prefix.pch";
 				INFOPLIST_FILE = "AdUnitsSample/AdUnitsSample-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.audiencenetwork.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = AdUnitsSample;
 				WRAPPER_EXTENSION = app;
 			};

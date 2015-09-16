@@ -105,6 +105,7 @@ typedef void (^RPSBlock)(void);
         _interestedInImplicitShare = YES;
 
         _activeConnections = [[NSMutableSet alloc] init];
+
     }
     return self;
 }
@@ -295,6 +296,7 @@ typedef void (^RPSBlock)(void);
     // update UI and counts based on result
     RPSResult result = [self resultForPlayerCall:_lastPlayerCall
                                     computerCall:_lastComputerCall];
+
     switch (result) {
         case RPSResultWin:
             _wins++;
@@ -317,6 +319,7 @@ typedef void (^RPSBlock)(void);
     if (_interestedInImplicitShare) {
         [self publishResult];
     }
+
 }
 
 - (void)updateScoreLabel {
@@ -363,7 +366,9 @@ typedef void (^RPSBlock)(void);
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
         case 0: { // Share on Facebook
-            if (![self shareWith:[[FBSDKShareDialog alloc] init] content:[self getGameShareContent]]) {
+            FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
+            shareDialog.fromViewController = self;
+            if (![self shareWith:shareDialog content:[self getGameShareContent]]) {
                 [self displayInstallAppWithAppName:@"Facebook"];
             }
             break;
@@ -378,8 +383,9 @@ typedef void (^RPSBlock)(void);
             // app link corresponds to rps-sample-applink-example://
             FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
             content.appLinkURL = [NSURL URLWithString:@"https://fb.me/319673994858989"];
-            [FBSDKAppInviteDialog showWithContent:content
-                                         delegate:self];
+            [FBSDKAppInviteDialog showFromViewController:self
+                                             withContent:content
+                                                delegate:self];
             break;
         }
         case 3: { // See Friends
@@ -443,6 +449,7 @@ typedef void (^RPSBlock)(void);
 
 - (BOOL)shareWith:(id<FBSDKSharingDialog>)dialog content:(id<FBSDKSharingContent>)content{
     dialog.shareContent = content;
+    dialog.delegate = self;
     return [dialog show];
 }
 
@@ -479,6 +486,7 @@ typedef void (^RPSBlock)(void);
     [object setString:builtInOpenGraphObjects[_lastPlayerCall] forKey:@"fb_sample_rps:player_gesture"];
     [object setString:builtInOpenGraphObjects[_lastComputerCall] forKey:@"fb_sample_rps:opponent_gesture"];
     [object setString:resultName forKey:@"fb_sample_rps:result"];
+    [object setString:photoURLs[_lastPlayerCall] forKey:@"og:image"];
     return object;
 }
 
@@ -491,6 +499,7 @@ typedef void (^RPSBlock)(void);
                                         errorHandler:(void (^)(NSError *)) errorHandler{
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     [login logInWithPublishPermissions:@[@"publish_actions"]
+                    fromViewController:self
                                handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                    if (error) {
                                        if (errorHandler) {
@@ -631,10 +640,10 @@ typedef void (^RPSBlock)(void);
 
 - (void)logPlayerCall:(RPSCall)playerCall result:(RPSResult)result timeTaken:(NSTimeInterval)timeTaken {
     // log the user's choice and the respective result
-    NSString *playerChoice = [NSString stringWithFormat:@"Throw %@", callType[playerCall + 1]];
-    [FBSDKAppEvents logEvent:playerChoice
+    NSString *playerChoice = callType[playerCall + 1];
+    [FBSDKAppEvents logEvent:@"Round End"
                   valueToSum:timeTaken
-                  parameters:@{@"Result": kResults[result]}];
+                  parameters:@{@"roundResult": kResults[result], @"playerChoice" : playerChoice}];
 }
 
 - (void)logTimeTaken:(NSTimeInterval)timeTaken {

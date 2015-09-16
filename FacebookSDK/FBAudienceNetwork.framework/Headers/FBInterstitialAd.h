@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 
+#import "FBAdDefines.h"
 #import "FBAdView.h"
 
 @protocol FBInterstitialAdDelegate;
@@ -29,18 +30,19 @@
  @abstract A modal view controller to represent a Facebook interstitial ad. This
  is a full-screen ad shown in your application.
  */
+FB_CLASS_EXPORT
 @interface FBInterstitialAd : UIViewController <FBAdViewDelegate>
 
 /*!
  @property
  @abstract Typed access to the id of the ad placement.
  */
-@property (nonatomic, copy, readonly) NSString *placementID;
+@property (nonatomic, copy, readonly, nonnull) NSString *placementID;
 /*!
  @property
  @abstract the delegate
  */
-@property (nonatomic, weak) id<FBInterstitialAdDelegate> delegate;
+@property (nonatomic, weak, nullable) id<FBInterstitialAdDelegate> delegate;
 
 /*!
  @method
@@ -50,7 +52,7 @@
 
  @param placementID The id of the ad placement. You can create your placement id from Facebook developers page.
  */
-- (instancetype)initWithPlacementID:(NSString *)placementID;
+- (nonnull instancetype)initWithPlacementID:(nonnull NSString *)placementID;
 
 /*!
  @property
@@ -84,7 +86,7 @@
  @discussion You can implement `interstitialAdDidClick:`, `interstitialAdWillClose:` and `interstitialAdWillClose`
  methods of `FBInterstitialAdDelegate` if you would like to stay informed for thoses events
  */
-- (BOOL)showAdFromRootViewController:(UIViewController *)rootViewController;
+- (BOOL)showAdFromRootViewController:(nonnull UIViewController *)rootViewController;
 
 @end
 
@@ -109,7 +111,7 @@
 
  @param interstitialAd An FBInterstitialAd object sending the message.
  */
-- (void)interstitialAdDidClick:(FBInterstitialAd *)interstitialAd;
+- (void)interstitialAdDidClick:(nonnull FBInterstitialAd *)interstitialAd;
 
 /*!
  @method
@@ -120,7 +122,7 @@
 
  @param interstitialAd An FBInterstitialAd object sending the message.
  */
-- (void)interstitialAdDidClose:(FBInterstitialAd *)interstitialAd;
+- (void)interstitialAdDidClose:(nonnull FBInterstitialAd *)interstitialAd;
 
 /*!
  @method
@@ -130,7 +132,7 @@
 
  @param interstitialAd An FBInterstitialAd object sending the message.
  */
-- (void)interstitialAdWillClose:(FBInterstitialAd *)interstitialAd;
+- (void)interstitialAdWillClose:(nonnull FBInterstitialAd *)interstitialAd;
 
 /*!
  @method
@@ -140,7 +142,7 @@
 
  @param interstitialAd An FBInterstitialAd object sending the message.
  */
-- (void)interstitialAdDidLoad:(FBInterstitialAd *)interstitialAd;
+- (void)interstitialAdDidLoad:(nonnull FBInterstitialAd *)interstitialAd;
 
 /*!
  @method
@@ -151,7 +153,7 @@
  @param interstitialAd An FBInterstitialAd object sending the message.
  @param error An error object containing details of the error.
  */
-- (void)interstitialAd:(FBInterstitialAd *)interstitialAd didFailWithError:(NSError *)error;
+- (void)interstitialAd:(nonnull FBInterstitialAd *)interstitialAd didFailWithError:(nonnull NSError *)error;
 
 /*!
  @method
@@ -161,6 +163,6 @@
 
  @param interstitialAd An FBInterstitialAd object sending the message.
  */
-- (void)interstitialAdWillLogImpression:(FBInterstitialAd *)interstitialAd;
+- (void)interstitialAdWillLogImpression:(nonnull FBInterstitialAd *)interstitialAd;
 
 @end

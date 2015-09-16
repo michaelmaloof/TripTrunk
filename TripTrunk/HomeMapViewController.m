@@ -617,7 +617,7 @@
 {
     // TODO: Get the state in a more elloquent way. This is hacky.
     CLGeocoder *cod = [[CLGeocoder alloc] init];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
     [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
         
         CLPlacemark *placemark = [placemarks firstObject];

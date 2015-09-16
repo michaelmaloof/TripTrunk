@@ -24,8 +24,6 @@
 @interface ViewController ()
 
 @property (strong, nonatomic) FBNativeAd *_nativeAd;
-@property (strong, nonatomic) UIImage *_emptyStar;
-@property (strong, nonatomic) UIImage *_fullStar;
 
 @end
 
@@ -46,9 +44,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    self._emptyStar = [UIImage imageNamed:@"empty_star"];
-    self._fullStar = [UIImage imageNamed:@"full_star"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,7 +51,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 #pragma mark - IB Actions
 
@@ -109,8 +103,6 @@
 
     [self setCallToActionButton:self._nativeAd.callToAction];
 
-    [self setStarRating:self._nativeAd.starRating];
-
     NSLog(@"Register UIView for impression and click...");
 
     // Wire up UIView with the native ad; the whole UIView will be clickable.
@@ -155,31 +147,6 @@
                                forState:UIControlStateNormal];
 }
 
-- (void)setStarRating:(struct FBAdStarRating)rating
-{
-    [[self.adStarRatingView subviews] makeObjectsPerformSelector: @selector(removeFromSuperview)];
-
-    if (rating.scale != 0) {
-        int i = 0;
-        for(; i < rating.value; ++i) {
-            [self setStarRatingImage:self._fullStar index:i];
-        }
-        for (; i < rating.scale; ++i) {
-            [self setStarRatingImage:self._emptyStar index:i];
-        }
-    }
-}
-
-- (void)setStarRatingImage:(UIImage *)starImage
-                     index:(int)indexOfStar
-{
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    imageView.image = starImage;
-    imageView.frame = CGRectMake(indexOfStar * 12, 0, 12, 12);
-    [self.adStarRatingView addSubview:imageView];
-}
-
 #pragma mark - IB Actions
 
 - (IBAction)loadNativeAdInTableViewTapped:(id)sender
@@ -191,6 +158,13 @@
 - (IBAction)loadNativeAdInScrollViewTapped:(id)sender {
     ScrollViewController *tableViewController = [[ScrollViewController alloc] init];
     [self presentViewController:tableViewController animated:YES completion:nil];
+}
+
+#pragma mark - Orientation
+
+- (FBInterfaceOrientationMask)supportedInterfaceOrientations
+{
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

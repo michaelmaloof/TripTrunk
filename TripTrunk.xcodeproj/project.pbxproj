@@ -70,7 +70,7 @@
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
 		C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C910B1931B66B97700788BE0 /* ActivityListViewController.m */; };
-		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
+		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
@@ -627,7 +627,7 @@
 		224F3F841AE1D35E003A1DEB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Michael Maloof";
 				TargetAttributes = {
 					224F3F8B1AE1D35E003A1DEB = {
@@ -813,6 +813,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -881,6 +882,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -895,6 +897,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.triptrunk.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -908,6 +911,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -922,6 +926,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.triptrunk.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -947,6 +952,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Maloof.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripTrunk.app/TripTrunk";
 			};
@@ -967,6 +973,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Maloof.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripTrunk.app/TripTrunk";
 			};

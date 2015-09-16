@@ -18,17 +18,19 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FBAdDefines.h"
 #import "FBNativeAdView.h"
 #import "FBNativeAdsManager.h"
 
 @protocol FBNativeAdView;
 
 /*!
- @typedef FBNativeAdScrollView
+ @class FBNativeAdScrollView
  @abstract Contains multiple ads in a scroll view.
  @discussion
  If adding this view to a XIB or Storyboard, you may recieve the error "Unknown class FBNativeAdScrollView in Interface Builder file" in some cases. This error is caused by the linker failing to include FBNativeAdScrollView in your build. To resolve this, call [FBNativeAdScrollView class] in your project, or add "-all_load -ObjC" to "Other Linker Flags" in your project settings.
  */
+FB_CLASS_EXPORT
 @interface FBNativeAdScrollView : UIView
 
 /*!
@@ -59,13 +61,13 @@
  @property
  @abstract A view controller that is used to present modal content. If nil, the view searches for a view controller.
  */
-@property (nonatomic, weak) UIViewController *viewController;
+@property (nonatomic, weak, nullable) UIViewController *viewController;
 
 /*!
  @property
  @abstract Passes delegate methods from FBNativeAd. Separate delegate calls will be made for each native ad contained.
  */
-@property (nonatomic, weak) id<FBNativeAdDelegate> delegate;
+@property (nonatomic, weak, nullable) id<FBNativeAdDelegate> delegate;
 
 /*!
  @method
@@ -73,7 +75,8 @@
  @param manager An instance of FBNativeAdManager. Can be preloaded with ads.
  @param type The type of this native ad template. For more information, consult FBNativeAdViewType.
  */
-- (instancetype)initWithNativeAdsManager:(FBNativeAdsManager *)manager withType:(FBNativeAdViewType)type;
+- (nonnull instancetype)initWithNativeAdsManager:(nonnull FBNativeAdsManager *)manager
+                                        withType:(FBNativeAdViewType)type;
 
 
 /*!
@@ -83,7 +86,9 @@
  @param type The type of this native ad template. For more information, consult FBNativeAdViewType.
  @param attributes The layout of this native ad template. For more information, consult FBNativeAdViewLayout.
  */
-- (instancetype)initWithNativeAdsManager:(FBNativeAdsManager *)manager withType:(FBNativeAdViewType)type withAttributes:(FBNativeAdViewAttributes *)attributes;
+- (nonnull instancetype)initWithNativeAdsManager:(nonnull FBNativeAdsManager *)manager
+                                        withType:(FBNativeAdViewType)type
+                                  withAttributes:(nonnull FBNativeAdViewAttributes *)attributes;
 
 /*!
  @method
@@ -93,7 +98,10 @@
  @param attributes The layout of this native ad template. For more information, consult FBNativeAdViewLayout.
  @param maximumNativeAdCount Maximum native ads to show at once.
  */
-- (instancetype)initWithNativeAdsManager:(FBNativeAdsManager *)manager withType:(FBNativeAdViewType)type withAttributes:(FBNativeAdViewAttributes *)attributes withMaximum:(NSUInteger)maximumNativeAdCount;
+- (nonnull instancetype)initWithNativeAdsManager:(nonnull FBNativeAdsManager *)manager
+                                        withType:(FBNativeAdViewType)type
+                                  withAttributes:(nonnull FBNativeAdViewAttributes *)attributes
+                                     withMaximum:(NSUInteger)maximumNativeAdCount;
 
 
 /*!
@@ -102,7 +110,8 @@
  @param manager An instance of FBNativeAdManager. Can be preloaded with ads.
  @param childViewProvider Block that creates new views for each loaded native ad. Must not reuse the same instance, but return a new view for each call. Views may be arbitrarily resized and should support resizing their content through Auto Layout constraints, autoresizing masks, or manual resizing.
  */
-- (instancetype)initWithNativeAdsManager:(FBNativeAdsManager *)manager withViewProvider:(UIView *(^)(FBNativeAd *nativeAd, NSUInteger position))childViewProvider;
+- (nonnull instancetype)initWithNativeAdsManager:(nonnull FBNativeAdsManager *)manager
+                                withViewProvider:(nonnull UIView * __nonnull(^)( FBNativeAd * __nonnull nativeAd, NSUInteger position))childViewProvider;
 
 /*!
  @method
@@ -111,6 +120,8 @@
  @param childViewProvider Block that creates new views for each loaded native ad. Must not reuse the same instance, but return a new view for each call. Views may be arbitrarily resized and should support resizing their content through Auto Layout constraints, autoresizing masks, or manual resizing.
  @param maximumNativeAdCount Maximum native ads to show at once.
  */
-- (instancetype)initWithNativeAdsManager:(FBNativeAdsManager *)manager withViewProvider:(UIView *(^)(FBNativeAd *nativeAd, NSUInteger position))childViewProvider withMaximum:(NSUInteger)maximumNativeAdCount;
+- (nonnull instancetype)initWithNativeAdsManager:(nonnull FBNativeAdsManager *)manager
+                                withViewProvider:(nonnull UIView * __nonnull(^)(FBNativeAd * __nonnull nativeAd, NSUInteger position))childViewProvider
+                                     withMaximum:(NSUInteger)maximumNativeAdCount NS_DESIGNATED_INITIALIZER;
 
 @end

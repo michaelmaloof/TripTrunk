@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -14,7 +14,6 @@
                 <outlet property="adCoverMediaView" destination="3N8-Y5-Q9P" id="Uda-6q-sEW"/>
                 <outlet property="adIconImageView" destination="CJg-JY-Ymc" id="wov-WA-Gjq"/>
                 <outlet property="adSocialContextLabel" destination="iqp-ac-Djc" id="tlD-lS-HLT"/>
-                <outlet property="adStarRatingView" destination="lke-hk-ZP4" id="gbm-7V-IkX"/>
                 <outlet property="adStatusLabel" destination="bPq-kn-zvF" id="wqb-Jd-dRI"/>
                 <outlet property="adTitleLabel" destination="Nuc-IR-v8t" id="y2T-Jr-e0f"/>
                 <outlet property="adUIView" destination="LHQ-3w-hul" id="Rtt-Kr-dB6"/>
@@ -78,14 +77,11 @@
                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lke-hk-ZP4">
-                            <rect key="frame" x="8" y="218" width="56" height="15"/>
-                        </view>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="iqp-ac-Djc">
-                            <rect key="frame" x="72" y="218" width="236" height="15"/>
+                            <rect key="frame" x="8" y="218" width="300" height="15"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="15" id="5VL-ei-SHT"/>
-                                <constraint firstAttribute="width" constant="236" id="b1M-ya-Zqa"/>
+                                <constraint firstAttribute="width" constant="300" id="b1M-ya-Zqa"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -118,29 +114,25 @@
                         <constraint firstAttribute="height" constant="295" id="434-ic-3k1"/>
                         <constraint firstItem="ZDS-DN-w18" firstAttribute="leading" secondItem="GKx-Wh-B9Y" secondAttribute="trailing" constant="9" id="6e6-wY-OSi"/>
                         <constraint firstAttribute="bottom" secondItem="GKx-Wh-B9Y" secondAttribute="bottom" constant="10" id="8eA-cE-fzE"/>
-                        <constraint firstItem="lke-hk-ZP4" firstAttribute="top" secondItem="3N8-Y5-Q9P" secondAttribute="bottom" constant="8" symbolic="YES" id="AfA-Nq-b5V"/>
+                        <constraint firstAttribute="bottom" secondItem="3N8-Y5-Q9P" secondAttribute="bottom" constant="85" id="8uN-Gc-bdO"/>
                         <constraint firstItem="iqp-ac-Djc" firstAttribute="trailing" secondItem="3N8-Y5-Q9P" secondAttribute="trailing" id="Bf5-yr-4DX"/>
+                        <constraint firstItem="iqp-ac-Djc" firstAttribute="top" secondItem="3N8-Y5-Q9P" secondAttribute="bottom" constant="8" symbolic="YES" id="JEN-Ku-Vsk"/>
                         <constraint firstItem="CJg-JY-Ymc" firstAttribute="bottom" secondItem="0Nz-lH-z66" secondAttribute="bottom" id="Jaz-pi-ILa"/>
-                        <constraint firstItem="GKx-Wh-B9Y" firstAttribute="top" secondItem="lke-hk-ZP4" secondAttribute="bottom" constant="2" id="Jcb-pi-Q3L"/>
                         <constraint firstItem="3N8-Y5-Q9P" firstAttribute="top" secondItem="CJg-JY-Ymc" secondAttribute="bottom" constant="7" id="Jzo-Mj-wIQ"/>
-                        <constraint firstItem="lke-hk-ZP4" firstAttribute="leading" secondItem="LHQ-3w-hul" secondAttribute="leadingMargin" id="TiB-Fg-3N6"/>
                         <constraint firstItem="3N8-Y5-Q9P" firstAttribute="trailing" secondItem="0Nz-lH-z66" secondAttribute="trailing" id="VH2-uG-Qbb"/>
                         <constraint firstAttribute="bottom" secondItem="ZDS-DN-w18" secondAttribute="bottom" constant="32" id="VWf-Cm-rly"/>
-                        <constraint firstItem="3N8-Y5-Q9P" firstAttribute="leading" secondItem="lke-hk-ZP4" secondAttribute="leading" id="YxK-lN-NSX"/>
                         <constraint firstItem="Nuc-IR-v8t" firstAttribute="leading" secondItem="CJg-JY-Ymc" secondAttribute="trailing" constant="6" id="Z0a-a3-dLy"/>
-                        <constraint firstItem="lke-hk-ZP4" firstAttribute="top" secondItem="iqp-ac-Djc" secondAttribute="top" id="ZFI-hR-HU3"/>
-                        <constraint firstItem="lke-hk-ZP4" firstAttribute="leading" secondItem="GKx-Wh-B9Y" secondAttribute="leading" id="b7R-SX-mgV"/>
+                        <constraint firstItem="3N8-Y5-Q9P" firstAttribute="leading" secondItem="GKx-Wh-B9Y" secondAttribute="leading" id="aBO-6m-PSl"/>
+                        <constraint firstItem="3N8-Y5-Q9P" firstAttribute="leading" secondItem="iqp-ac-Djc" secondAttribute="leading" id="c0Q-Bm-4VT"/>
                         <constraint firstItem="0Nz-lH-z66" firstAttribute="trailing" secondItem="Nuc-IR-v8t" secondAttribute="trailing" id="clX-mt-fNL"/>
                         <constraint firstItem="0Nz-lH-z66" firstAttribute="top" secondItem="Nuc-IR-v8t" secondAttribute="bottom" id="dFv-zZ-CIP"/>
                         <constraint firstItem="iqp-ac-Djc" firstAttribute="trailing" secondItem="LHQ-3w-hul" secondAttribute="trailingMargin" id="eww-4P-2fG"/>
                         <constraint firstAttribute="width" secondItem="LHQ-3w-hul" secondAttribute="height" multiplier="316:295" id="gMf-sE-fHp"/>
                         <constraint firstItem="Nuc-IR-v8t" firstAttribute="top" secondItem="CJg-JY-Ymc" secondAttribute="top" id="gkN-nL-Igc"/>
-                        <constraint firstItem="lke-hk-ZP4" firstAttribute="bottom" secondItem="iqp-ac-Djc" secondAttribute="bottom" id="hHa-vo-dJy"/>
                         <constraint firstItem="CJg-JY-Ymc" firstAttribute="leading" secondItem="3N8-Y5-Q9P" secondAttribute="leading" id="j22-T4-0u7"/>
                         <constraint firstItem="ZDS-DN-w18" firstAttribute="trailing" secondItem="iqp-ac-Djc" secondAttribute="trailing" id="jSa-AT-HCd"/>
                         <constraint firstItem="0Nz-lH-z66" firstAttribute="leading" secondItem="Nuc-IR-v8t" secondAttribute="leading" id="lKY-EW-uhs"/>
                         <constraint firstItem="Nuc-IR-v8t" firstAttribute="top" secondItem="LHQ-3w-hul" secondAttribute="topMargin" id="qks-FL-chf"/>
-                        <constraint firstItem="iqp-ac-Djc" firstAttribute="leading" secondItem="lke-hk-ZP4" secondAttribute="trailing" constant="8" symbolic="YES" id="rgF-4t-TTc"/>
                         <constraint firstItem="GKx-Wh-B9Y" firstAttribute="top" secondItem="ZDS-DN-w18" secondAttribute="top" id="sFP-6e-oeW"/>
                         <constraint firstAttribute="width" constant="316" id="uw2-N2-6Su"/>
                     </constraints>

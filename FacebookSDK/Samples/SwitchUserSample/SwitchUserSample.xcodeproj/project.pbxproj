@@ -74,9 +74,9 @@
 		9D70EF281ABBEA9100318B5F /* SUTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUTabBarController.m; sourceTree = "<group>"; };
 		9D9136831ABBFBCC00A51523 /* SUCacheItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUCacheItem.h; sourceTree = "<group>"; };
 		9D9136841ABBFBCC00A51523 /* SUCacheItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUCacheItem.m; sourceTree = "<group>"; };
-		DB3205291A9D3DAB004A7B16 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		DB32052A1A9D3DAB004A7B16 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		DB32052B1A9D3DAB004A7B16 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		DB3205291A9D3DAB004A7B16 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		DB32052A1A9D3DAB004A7B16 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		DB32052B1A9D3DAB004A7B16 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../build/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		DB3205321A9D553C004A7B16 /* SUCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUCache.m; sourceTree = "<group>"; };
 		DB3205341A9D554D004A7B16 /* SUCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUCache.h; sourceTree = "<group>"; };
 		DB3205411A9FB532004A7B16 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -218,7 +218,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SU;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 856DB043153393C3006F6A33 /* Build configuration list for PBXProject "SwitchUserSample" */;
 			compatibilityVersion = "Xcode 3.2";
