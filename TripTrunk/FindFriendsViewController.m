@@ -28,37 +28,28 @@
 
 @implementation FindFriendsViewController
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.title = @"Find Friends";
-    
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
-    
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     _friends = [[NSMutableArray alloc] init];
 
     [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
 
-    self.searchResults = [NSMutableArray array];
+    self.searchResults = [[NSMutableArray alloc] init];
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
-
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
                                      style:UIBarButtonItemStylePlain
@@ -66,12 +57,13 @@
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
     
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    self.definesPresentationContext = YES;
+
     
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 
 }
 
@@ -136,7 +128,6 @@
 
 - (void)filterResults:(NSString *)searchTerm {
     
-    [self.searchResults removeAllObjects];
     
     PFQuery *usernameQuery = [PFUser query];
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
@@ -156,8 +147,10 @@
     
     
     NSArray *results  = [query findObjects];
-    
+    [self.searchResults removeAllObjects];
     [self.searchResults addObjectsFromArray:results];
+    [self.tableView reloadData];
+
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -165,7 +158,6 @@
 {
     NSString *searchString = searchController.searchBar.text;
     [self filterResults:searchString];
-    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -211,15 +203,13 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PFUser *possibleFriend;
-    UserTableViewCell *cell;
+    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
-        cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     }
     else {
-        cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell" forIndexPath:indexPath];
         possibleFriend = [_friends objectAtIndex:indexPath.row];
     }
     
@@ -336,15 +326,7 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - DZNEmptyDataSetSource
 
