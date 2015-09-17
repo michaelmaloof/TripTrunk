@@ -57,7 +57,9 @@
                                         <constraint firstAttribute="width" constant="160" id="3Qd-jQ-agw"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="160" id="83X-0R-QON"/>
                                         <constraint firstAttribute="width" constant="150" id="BgQ-Ag-j75"/>
-                                        <constraint firstAttribute="width" constant="150" id="Cru-Gm-dcn"/>
+                                        <constraint firstAttribute="width" constant="150" id="Cru-Gm-dcn">
+                                            <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                                        </constraint>
                                         <constraint firstAttribute="width" secondItem="FVi-Q8-ebI" secondAttribute="height" multiplier="1:1" id="JH4-xR-tub"/>
                                         <constraint firstAttribute="height" constant="160" id="Wy7-cu-dMl"/>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="kHK-pw-S3N">

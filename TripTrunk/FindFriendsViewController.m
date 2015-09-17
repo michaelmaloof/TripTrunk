@@ -65,6 +65,17 @@
     
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 
+    // Add keyboard notifications so that the keyboard won't cover the table when searching
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+
 }
 
 - (void)getFriendsFromFbids:(NSArray *)fbids {
@@ -158,6 +169,27 @@
 {
     NSString *searchString = searchController.searchBar.text;
     [self filterResults:searchString];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = keyboardSize.height;
+
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = 0;
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+    [self.tableView setNeedsLayout];
 }
 
 #pragma mark - UITableViewDataSource
@@ -425,6 +457,9 @@
 {
     self.tableView.emptyDataSetSource = nil;
     self.tableView.emptyDataSetDelegate = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated {

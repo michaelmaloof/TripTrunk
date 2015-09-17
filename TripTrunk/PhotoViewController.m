@@ -39,6 +39,8 @@
 @property BOOL isLikedByCurrentUser;
 @property BOOL viewMoved;
 
+@property BOOL shouldShowTrunkNameButton;
+
 @end
 
 @implementation PhotoViewController
@@ -59,8 +61,19 @@
     //FIXME: if I self.photo.user.username it crashes thee app
     self.photoTakenBy.text = self.photo.userName;
     
+    // Decide if we should show the trunkNameButton
+    // - If we're on the Activity tab, then we want the user to be able to get to the Trunk from the Photo view
+    // Any other tab, we already know the trunk (we can go back!).
+    // Tab Index 3 is the Activity Tab.
+    // NOTE: just because shouldShowTrunkNameButton = YES, the button may still be hidden if the user toggles it of.
+    self.shouldShowTrunkNameButton = NO;
+    UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    if (tabbarcontroller.selectedIndex == 3) {
+        self.shouldShowTrunkNameButton = YES;
+    }
     [self.trunkNameButton setHidden:YES];
-    
+
+    // Only show the delete button for the owner
     self.delete.hidden = YES;
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         self.delete.hidden = NO;
@@ -180,7 +193,11 @@
         _likeCountButton.hidden = !_likeCountButton.hidden;
         _comments.hidden = !_comments.hidden;
         self.photoTakenBy.hidden = !self.photoTakenBy.hidden;
-        self.trunkNameButton.hidden = !self.trunkNameButton.hidden;
+        
+        // If we are allowing the trunkNameButton to show, then toggle the visibility
+        if (self.shouldShowTrunkNameButton) {
+            self.trunkNameButton.hidden = !self.trunkNameButton.hidden;
+        }
         
         if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
             self.delete.hidden = !self.delete.hidden;
@@ -190,9 +207,10 @@
 }
 
 - (void)tripLoaded:(Trip *)trip {
-    
-    [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
-    [self.trunkNameButton setHidden:NO];
+    if (self.shouldShowTrunkNameButton) {
+        [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
+        [self.trunkNameButton setHidden:NO];
+    }
 }
 
 #pragma mark - Photo Data
@@ -211,8 +229,11 @@
 
 -(void)refreshPhotoActivities {
     
-    // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
-    [self.photo.trip fetchInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
+    if (self.shouldShowTrunkNameButton) {
+        // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
+        // If we aren't going to show the button, dont' worry about populating self.photo.trip
+        [self.photo.trip fetchInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
+    }
 
     
     self.likeActivities = [[NSMutableArray alloc] init];

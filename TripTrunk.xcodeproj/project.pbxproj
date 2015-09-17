@@ -640,6 +640,9 @@
 							com.apple.InAppPurchase = {
 								enabled = 0;
 							};
+							com.apple.Push = {
+								enabled = 0;
+							};
 						};
 					};
 					224F3FA41AE1D35E003A1DEB = {
