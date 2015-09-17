@@ -140,6 +140,15 @@ CLCloudinary *cloudinary;
         [progressView incrementTaskCount];
     }
     
+    
+    // prepare for a background task
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    
+
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -170,11 +179,15 @@ CLCloudinary *cloudinary;
                               NSLog(@"caption saved as comment");
                           }];
                       }
-
+                      
                       
                       NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                      
+
+                      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                      bgTask = UIBackgroundTaskInvalid;
                   }
               }];
               
