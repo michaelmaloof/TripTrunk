@@ -3,12 +3,38 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   var objectUser = request.object.get('fromUser');
 
   if(!currentUser || !objectUser) {
-    response.error('An Activity should have a valid fromUser.');
-  } else if (currentUser.id === objectUser.id) {
-    response.success();
-  } else {
-    response.error('Cannot set fromUser on Activity to a user other than the current user.');
+    return response.error('An Activity should have a valid fromUser.');
+  } else if (currentUser.id !== objectUser.id) {
+    return response.error('Cannot set fromUser on Activity to a user other than the current user.');
   }
+
+  /*
+   * Ensure we aren't adding duplicate users to a Trunk
+   * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+   */
+
+  if (request.object.get("type") === "addToTrip") {
+    var query = new Parse.Query("Activity");
+    query.equalTo("trip", request.object.get("trip"));
+    query.equalTo("toUser", request.object.get("toUser"));
+    query.first({
+      success: function(object) {
+        if (object) {
+          response.error("User already added to trunk");
+        } else {
+          response.success();
+        }
+      },
+      error: function(error) {
+        response.error("Couldn't validate that this user is not already part of the trunk");
+      }
+    });
+  }
+  else {
+      return response.success();
+  }
+
+
 });
 
 Parse.Cloud.afterSave('Activity', function(request) {

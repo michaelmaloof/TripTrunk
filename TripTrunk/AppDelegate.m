@@ -20,6 +20,17 @@
 #import "ActivityListViewController.h"
 #import "TTCache.h"
 
+#if DEBUG == 0 
+// DEBUG is not defined or defined to be 0
+// THIS IS PROD MODE
+#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
+#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+#else
+// THIS IS DEBUG MODE
+#define kPARSE_APP_ID @"jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS"
+#define kPARSE_CLIENT_KEY @"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"
+#endif
+
 @interface AppDelegate ()
 
 @end
@@ -42,8 +53,8 @@
 
     [ParseCrashReporting enable];
     
-    [Parse setApplicationId:@"jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS"
-                  clientKey:@"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"];
+    [Parse setApplicationId:kPARSE_APP_ID
+                  clientKey:kPARSE_CLIENT_KEY];
     [PFUser enableRevocableSessionInBackground];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     [PFImageView class];
@@ -58,7 +69,6 @@
     [self setupSearchTabBar];
     [self setupActivityTabBar];
     [self setupProfileTabBar];
-
     
     return YES;
 }
@@ -216,8 +226,15 @@
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup
-        [PFPush handlePush:userInfo];
-        
+        if (userInfo[@"aps"]) {
+            NSString *alertText = [userInfo[@"aps"] valueForKey:@"alert"];
+            if (alertText && ![alertText isEqualToString:@""]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"TripTrunk" message:alertText delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [alert show];
+                });
+            }
+        }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.
     }
     else {

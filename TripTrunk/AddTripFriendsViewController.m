@@ -412,17 +412,14 @@
     }
     
     [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR"
-                                                            message:@"Please try again"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Okay"
-                                                  otherButtonTitles:nil, nil];
-            
-            [alert show];
+        
+        // We only show an error alert if the error code is not 142
+        // Code 142 means Cloud Code Validation Failed
+        // We run a beforeSave method in cloud code that checks if the user already exists in this trip, to prevent duplicates.
+        // If the user is already found, CC returns an error, with code 142. Since it's not a real error, we move on without an alert.
+        if (error && error.code != 142) {
+            NSLog(@"Error saving users: %@", error);
 
-        }
-        if (!succeeded) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saving Frinds Failed"
                                                             message:@"Please try again"
                                                            delegate:self

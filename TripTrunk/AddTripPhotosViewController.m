@@ -99,11 +99,6 @@
     self.plusPhoto.hidden = YES;
     self.submitTrunk.hidden = YES;
     
-    if (self.photos.count > 0){
-        self.trip.mostRecentPhoto = [NSDate date];
-        [self.trip saveInBackground];
-    }
-    
     [self uploadAllPhotos];
 }
 
@@ -225,47 +220,6 @@
         
         
     }
-//    self.trip.mostRecentPhoto = [NSDate date];
-//
-//    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-//     {
-//         if(error) NSLog(@"Error saving trip in uploadAllPhotos: %@", error);
-//
-//         if (succeeded) {
-//             
-//             // TODO: Set title image
-//             self.title = @"TripTrunk";
-//             
-//             if (!self.isTripCreation) {
-//                 // This came from the Trunk view, so pop back to it.
-//                 NSLog(@"Trip Photos Added, not trip creation so pop back one view");
-//                 [self.navigationController popViewControllerAnimated:YES];
-//                 [[self navigationController] setNavigationBarHidden:NO animated:YES];
-//             }
-//             else {
-//                 NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
-//                 dispatch_async(dispatch_get_main_queue(), ^{
-//                     
-//                     // Now pop to the root view of the other map view controller and set that as the selected tab.
-//                     UINavigationController *target = [[self.tabBarController viewControllers] objectAtIndex:0];
-//                     [target popToRootViewControllerAnimated:YES];
-//                     [self.tabBarController setSelectedIndex:0];
-//
-//                     // Pop to the root view controller of the add Trip tab as well
-//                     UINavigationController *triptab = [[self.tabBarController viewControllers] objectAtIndex:2];
-//                     [triptab popToRootViewControllerAnimated:NO];
-//                     
-//                     // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
-//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
-//                     
-//                     
-//                 });
-//                 
-//
-//                 
-//             }
-//         }
-//     }];
 }
 
 

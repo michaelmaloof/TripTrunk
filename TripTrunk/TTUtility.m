@@ -113,8 +113,8 @@ CLCloudinary *cloudinary;
     }
     
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 300];
-    [transformation setHeightWithInt: 300];
+    [transformation setWidthWithInt: 350];
+    [transformation setHeightWithInt: 350];
     [transformation setCrop: @"fill"];
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];
@@ -140,6 +140,18 @@ CLCloudinary *cloudinary;
         [progressView incrementTaskCount];
     }
     
+    
+    // prepare for a background task
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        //TODO: Locally cache photos here
+        // This block executes if we're notified that iOS will terminate the app because we're out of background time.
+        // Ideally, we cache the photos here, and then when the app starts again we resume uploading.
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    
+
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -170,17 +182,22 @@ CLCloudinary *cloudinary;
                               NSLog(@"caption saved as comment");
                           }];
                       }
-
+                      
                       
                       NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                      
+
+                      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                      bgTask = UIBackgroundTaskInvalid;
                   }
               }];
               
           } else {
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
-              
+              [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+              bgTask = UIBackgroundTaskInvalid;
           }
           
       } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
@@ -199,6 +216,13 @@ CLCloudinary *cloudinary;
         HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
     });
     
+    // prepare for a background task
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    
     AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
     [request setResponseSerializer: [AFImageResponseSerializer serializer]];
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -212,17 +236,24 @@ CLCloudinary *cloudinary;
                 HUD.labelText = @"Complete!";
                 [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
                 
+                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                bgTask = UIBackgroundTaskInvalid;
             });
 
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error downloading photo");
+        
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
     }];
     [request start];
 }
 
 - (void)downloadPhotos:(NSArray *)photos;
 {
+    
+
     // Show HUD spinner
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
@@ -232,6 +263,12 @@ CLCloudinary *cloudinary;
     
     __block int completedDownloads = 0;
     for (Photo *photo in photos) {
+        // prepare for a background task
+        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+        
         AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
         [request setResponseSerializer: [AFImageResponseSerializer serializer]];
         [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -254,10 +291,15 @@ CLCloudinary *cloudinary;
                         HUD.labelText = [NSString stringWithFormat:@"Downloading %i of %lu", completedDownloads + 1, (unsigned long)photos.count];
                     });
                 }
+                
+                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                bgTask = UIBackgroundTaskInvalid;
 
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error downloading photo");
+            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
         }];
         [request start];
     }
