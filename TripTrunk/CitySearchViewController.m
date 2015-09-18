@@ -8,6 +8,7 @@
 
 #import "CitySearchViewController.h"
 #import "TTUtility.h"
+#import "UIColor+HexColors.h"
 
 @interface CitySearchViewController () <UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
@@ -33,6 +34,14 @@
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
     
+    // Make the search Cancel button TTBlue
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                                                  ttBlueColor,
+                                                                                                  NSForegroundColorAttributeName,
+                                                                                                  nil]
+                                                                                        forState:UIControlStateNormal];
+
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
 

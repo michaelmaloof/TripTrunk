@@ -58,7 +58,7 @@
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="160" id="83X-0R-QON"/>
                                         <constraint firstAttribute="width" constant="150" id="BgQ-Ag-j75"/>
                                         <constraint firstAttribute="width" constant="150" id="Cru-Gm-dcn">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                                            <variation key="heightClass=regular-widthClass=compact" constant="175"/>
                                         </constraint>
                                         <constraint firstAttribute="width" secondItem="FVi-Q8-ebI" secondAttribute="height" multiplier="1:1" id="JH4-xR-tub"/>
                                         <constraint firstAttribute="height" constant="160" id="Wy7-cu-dMl"/>
@@ -336,7 +336,9 @@
                                 <constraint firstItem="FVi-Q8-ebI" firstAttribute="centerY" secondItem="jmg-Rj-t7x" secondAttribute="centerY" constant="-185.5" id="I6t-1B-yQk">
                                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                 </constraint>
-                                <constraint firstAttribute="width" constant="375" placeholder="YES" id="Ipy-ap-laY"/>
+                                <constraint firstAttribute="width" constant="375" placeholder="YES" id="Ipy-ap-laY">
+                                    <variation key="heightClass=regular-widthClass=compact" constant="375"/>
+                                </constraint>
                                 <constraint firstAttribute="centerX" secondItem="aRl-Kc-Hyq" secondAttribute="centerX" constant="-0.5" id="IrH-hB-eDf">
                                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                 </constraint>

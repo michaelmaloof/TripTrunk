@@ -216,8 +216,15 @@
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup
-        [PFPush handlePush:userInfo];
-        
+        if (userInfo[@"aps"]) {
+            NSString *alertText = [userInfo[@"aps"] valueForKey:@"alert"];
+            if (alertText && ![alertText isEqualToString:@""]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"TripTrunk" message:alertText delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [alert show];
+                });
+            }
+        }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.
     }
     else {

@@ -113,8 +113,8 @@ CLCloudinary *cloudinary;
     }
     
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 400];
-    [transformation setHeightWithInt: 400];
+    [transformation setWidthWithInt: 350];
+    [transformation setHeightWithInt: 350];
     [transformation setCrop: @"fill"];
     [transformation setQualityWithFloat:60];
     [transformation setFetchFormat:@"jpg"];

@@ -30,6 +30,10 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
       }
     });
   }
+  else {
+      return response.success();
+  }
+
 
 });
 
