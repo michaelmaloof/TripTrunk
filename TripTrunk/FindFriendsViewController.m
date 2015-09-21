@@ -25,6 +25,8 @@
 
 @property (strong, nonatomic) NSMutableArray *friends;
 
+@property (strong, nonatomic) NSMutableArray *promoted;
+
 @end
 
 @implementation FindFriendsViewController
@@ -37,8 +39,10 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     _friends = [[NSMutableArray alloc] init];
+    _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
 
     [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+    [self loadPromotedUsers];
 
     self.searchResults = [[NSMutableArray alloc] init];
     
@@ -47,6 +51,7 @@
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
+    [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     // Make the search Cancel button TTBlue
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -84,6 +89,27 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
 
+}
+
+- (void)loadPromotedUsers {
+    PFQuery *query = [PFQuery queryWithClassName:@"PromotedUser"];
+    [query includeKey:@"user"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error)
+        {
+            _promoted = [NSMutableArray arrayWithArray:objects];
+            [[TTCache sharedCache] setPromotedUsers:_promoted];
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+        else
+        {
+            NSLog(@"Error: %@",error);
+        }
+    }];
 }
 
 - (void)getFriendsFromFbids:(NSArray *)fbids {
@@ -155,8 +181,8 @@
     [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     
     PFQuery *nameQuery = [PFUser query];
-    [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
-    [nameQuery whereKey:@"name" containsString:searchTerm];
+    [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
+    [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
 
@@ -204,7 +230,10 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    if (self.searchController.active) {
+        return 1;
+    }
+    return 2;
 }
 
 //-(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
@@ -225,6 +254,9 @@
     {
         switch (section) {
             case 0:
+                return @"Recommended Users";
+                break;
+            case 1:
                 return @"Facebook Friends on TripTrunk";
                 break;
         }
@@ -235,10 +267,16 @@
 {
     // Search Controller and the regular table view have different data sources
     if (self.searchController.active) {
+        NSLog(@"rows = %lu", (unsigned long)self.searchResults.count);
         return self.searchResults.count;
-    } else {
+    }
+    else if (section == 0) {
+        return _promoted.count;
+    }
+    else if (section == 1) {
         return _friends.count;
     }
+    return 0;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -250,7 +288,12 @@
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
-        possibleFriend = [_friends objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+        }
+        else if (indexPath.section == 1) {
+            possibleFriend = [_friends objectAtIndex:indexPath.row];
+        }
     }
     
     [cell setDelegate:self];
@@ -313,7 +356,12 @@
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
-        possibleFriend = [_friends objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+        }
+        else if (indexPath.section == 1) {
+            possibleFriend = [_friends objectAtIndex:indexPath.row];
+        }
     }
     
     
@@ -436,7 +484,7 @@
 {
     
     // Search Controller and the regular table view have different data sources
-    if ((self.searchController.active && self.searchResults.count == 0) || (!self.searchController.active && _friends.count == 0)) {
+    if ((self.searchController.active && self.searchResults.count == 0) || (!self.searchController.active && _friends.count == 0 && _promoted.count == 0)) {
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;

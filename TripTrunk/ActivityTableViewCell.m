@@ -93,9 +93,11 @@
     NSRange range = [self.contentLabel.text rangeOfString:_user.username];
     [self.contentLabel addLinkToURL:[NSURL URLWithString:USER_ACTIVITY_URL] withRange:range]; // Embedding a custom link in a substring
     
-    // If it'as an addToTrip activity, set the Trip Name as a URL
-    if ([_activity[@"type"] isEqualToString:@"addToTrip"] && _activity[@"trip"] && [_activity[@"trip"] valueForKey:@"name"]) {
-        // Set up a link for the username
+    // If it'as an addToTrip or addedPhoto activity, set the Trip Name as a URL
+    if ( ( [_activity[@"type"] isEqualToString:@"addToTrip"] || [_activity[@"type"] isEqualToString:@"addedPhoto"])
+        && _activity[@"trip"] && [_activity[@"trip"] valueForKey:@"name"])
+    {
+        // Set up a link for the trip name
         NSRange tripRange = [self.contentLabel.text rangeOfString:[_activity[@"trip"] valueForKey:@"name"]];
         [self.contentLabel addLinkToURL:[NSURL URLWithString:TRIP_ACTIVITY_URL] withRange:tripRange]; // Embedding a custom link in a substring
     }

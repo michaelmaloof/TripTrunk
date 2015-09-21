@@ -11,7 +11,7 @@
 
 @interface UserTableViewCell ()
 
-@property (nonatomic, strong) PFUser *user;
+@property (nonatomic, weak) PFUser *user;
 
 @end
 

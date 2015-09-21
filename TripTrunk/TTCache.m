@@ -11,6 +11,7 @@
 #import "TTCache.h"
 
 NSString *const kTTUserDefaultsCacheFacebookFriendsKey      = @"com.triptrunk.TripTrunk.userDefaults.cache.friends";
+NSString *const kTTUserDefaultsCachePromotedUsersKey        = @"com.triptrunk.TripTrunk.userDefaults.cache.promotedUsers";
 NSString *const kTTFollowingKey                             = @"followingUsers";
 NSString *const kTTFollowersKey                             = @"usersWhoFollow";
 NSString *const kTTUserTripsKey                             = @"userTripsKey";
@@ -218,6 +219,40 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     }
     
     return NO;
+}
+
+- (void)setPromotedUsers:(NSArray *)users {
+    return;
+    //TODO: Implement NSCoding so this will work
+    
+    // This should work fine, but it crashes because PFObject doesn't implement NSCoding.
+    // Once that is fixed (we'll need to extend PFObject probably) then this will work fine - just delete the return above.
+    NSString *key = kTTUserDefaultsCachePromotedUsersKey;
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:users];
+
+    [self.cache setObject:data forKey:key];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSArray *)promotedUsers {
+    return [NSArray array];
+    
+    // TODO: implement NSCoding on the user object array so this can work
+    
+    // All this "works", but will crash because PFObject doesn't implement nscoding. If that is fixed then this will work fine, just delete the return above.
+    NSString *key = kTTUserDefaultsCachePromotedUsersKey;
+    if ([self.cache objectForKey:key]) {
+        return [NSKeyedUnarchiver unarchiveObjectWithData:[self.cache objectForKey:key]];
+    }
+    
+    NSArray *users = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:key]];
+    
+    if (users) {
+        [self.cache setObject:users forKey:key];
+    }
+    
+    return users;
 }
 
 - (void)setFacebookFriends:(NSArray *)friends {

@@ -462,7 +462,7 @@ CLCloudinary *cloudinary;
     }
     else if ([type isEqualToString:@"addToTrip"]) {
         if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
-            content = [NSString stringWithFormat:@"added you to the trip %@", [activity[@"trip"] valueForKey:@"name"]];
+            content = [NSString stringWithFormat:@"added you to the trunk %@", [activity[@"trip"] valueForKey:@"name"]];
         }
         else {
             content = @"added you to a trip.";
@@ -470,6 +470,9 @@ CLCloudinary *cloudinary;
     }
     else if ([type isEqualToString:@"follow"]) {
         content = @"followed you.";
+    }
+    else if ([type isEqualToString:@"addedPhoto"]) {
+        content = [NSString stringWithFormat:@"added a photo to %@", [activity[@"trip"] valueForKey:@"name"]];
     }
     
     PFUser *user = activity[@"fromUser"];

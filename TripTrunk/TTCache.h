@@ -67,6 +67,20 @@
 - (BOOL)followStatusForUser:(PFUser *)user;
 
 /**
+ *  Set the cache & user defaults for the promoted user list
+ *
+ *  @param users Array of PFUser objects
+ */
+- (void)setPromotedUsers:(NSArray *)users;
+
+/**
+ *  Get the cached promoted user list
+ *
+ *  @return Array of PFUser objects
+ */
+- (NSArray *)promotedUsers;
+
+/**
  *  Set the cache & user defaults for the user's facebook friend list
  *
  *  @param friends Array of fbid strings

@@ -2,11 +2,11 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   var currentUser = request.user;
   var objectUser = request.object.get('fromUser');
 
-  if(!currentUser || !objectUser) {
-    return response.error('An Activity should have a valid fromUser.');
-  } else if (currentUser.id !== objectUser.id) {
-    return response.error('Cannot set fromUser on Activity to a user other than the current user.');
-  }
+  // if(!currentUser || !objectUser) {
+  //   return response.error('An Activity should have a valid fromUser.');
+  // } else if (currentUser.id !== objectUser.id) {
+  //   return response.error('Cannot set fromUser on Activity to a user other than the current user.');
+  // }
 
   /*
    * Ensure we aren't adding duplicate users to a Trunk
