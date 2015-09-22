@@ -20,7 +20,7 @@
 #import "TrunkViewController.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -398,18 +398,26 @@
 #pragma mark - Button Actions
 
 - (IBAction)onSavePhotoTapped:(id)sender {
+
+    UIActionSheet *actionSheet;
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                    destructiveButtonTitle:@"Delete Photo"
+                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+    }
+    else {
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                    destructiveButtonTitle:nil
+                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+    }
+
     
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    alertView.delegate = self;
-    alertView.title = @"Save photo to phone?";
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Download"];
-    alertView.tag = 1;
-    [alertView show];
+    [actionSheet showInView:self.view];
 }
-
-
 
 - (IBAction)onCommentsTapped:(id)sender {
     
@@ -520,6 +528,63 @@
 }
 - (IBAction)closeButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    // if the user is the photo owner, they have the Delete option
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        if (buttonIndex == 0) {
+            NSLog(@"Delete Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Are you sure you want to delete this photo?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Yes"];
+            alertView.tag = 0;
+            [alertView show];
+            
+        }
+        else if (buttonIndex == 1) {
+            NSLog(@"Report Photo");
+        }
+        else if (buttonIndex == 2 ){
+            NSLog(@"Download Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Save photo to phone?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Download"];
+            alertView.tag = 1;
+            [alertView show];
+            
+        }
+        
+    }
+    // Not photo owner, they can't delete.
+    else {
+        if (buttonIndex == 0) {
+            NSLog(@"Report Photo");
+            
+        }
+        else if (buttonIndex == 1) {
+            NSLog(@"Download Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Save photo to phone?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Download"];
+            alertView.tag = 1;
+            [alertView show];
+            
+        }
+    }
+    
 }
 
 #pragma mark - UIScrollViewDelegate Methods
