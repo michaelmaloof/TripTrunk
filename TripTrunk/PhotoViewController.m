@@ -24,6 +24,8 @@
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIView *topButtonWrapper;
+@property (weak, nonatomic) IBOutlet UIView *bottomButtonWrapper;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
@@ -111,6 +113,37 @@
 
 }
 
+- (CAGradientLayer*) greyGradientForTop:(BOOL)isTop {
+    
+    UIColor *colorOne = [UIColor colorWithWhite:0.0 alpha:0.3];
+    UIColor *colorTwo = [UIColor colorWithWhite:0.0 alpha:0.2];
+    UIColor *colorThree     = [UIColor colorWithWhite:0.0 alpha:0.0];
+    
+    NSArray *colors;
+    NSNumber *stopTwo;
+    if (isTop) {
+        colors =  [NSArray arrayWithObjects:(id)colorOne.CGColor, colorTwo.CGColor, colorThree.CGColor, nil];
+        stopTwo = [NSNumber numberWithFloat:0.3];
+    }
+    else {
+        colors =  [NSArray arrayWithObjects:(id)colorThree.CGColor, colorTwo.CGColor, colorOne.CGColor, nil];
+        stopTwo = [NSNumber numberWithFloat:0.6];
+
+    }
+    
+    NSNumber *stopOne = [NSNumber numberWithFloat:0.0];
+
+    NSNumber *stopThree     = [NSNumber numberWithFloat:0.9];
+    
+    NSArray *locations = [NSArray arrayWithObjects:stopOne, stopTwo, stopThree, nil];
+    CAGradientLayer *headerLayer = [CAGradientLayer layer];
+    headerLayer.colors = colors;
+    headerLayer.locations = locations;
+    
+    return headerLayer;
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
@@ -123,8 +156,6 @@
     [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-
-
 }
 
 
@@ -135,6 +166,15 @@
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
 
     [self centerScrollViewContents];
+    
+    // Set up gradients for top and bottom button wrappers
+    CAGradientLayer *gradient = [self greyGradientForTop:YES];
+    gradient.frame = self.topButtonWrapper.bounds;
+    CAGradientLayer *bottomGradient = [self greyGradientForTop:NO];
+    bottomGradient.frame = self.bottomButtonWrapper.bounds;
+    [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
+    [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -187,21 +227,8 @@
 - (void)toggleButtonVisibility {
     
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
-        _closeButton.hidden = !_closeButton.hidden;
-        _saveButton.hidden = !_saveButton.hidden;
-        _likeButton.hidden = !_likeButton.hidden;
-        _likeCountButton.hidden = !_likeCountButton.hidden;
-        _comments.hidden = !_comments.hidden;
-        self.photoTakenBy.hidden = !self.photoTakenBy.hidden;
-        
-        // If we are allowing the trunkNameButton to show, then toggle the visibility
-        if (self.shouldShowTrunkNameButton) {
-            self.trunkNameButton.hidden = !self.trunkNameButton.hidden;
-        }
-        
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-            self.delete.hidden = !self.delete.hidden;
-        }   
+        self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
+        self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
     } completion:nil];
 
 }
