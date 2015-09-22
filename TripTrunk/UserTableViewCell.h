@@ -12,12 +12,12 @@
 @protocol UserTableViewCellDelegate;
 
 @interface UserTableViewCell : UITableViewCell
-@property (nonatomic, strong) id<UserTableViewCellDelegate> delegate;
+@property (nonatomic, weak) id<UserTableViewCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UIButton *followButton;
-@property (nonatomic, strong, readonly) PFUser *user;
+@property (nonatomic, weak, readonly) PFUser *user;
 
 
 - (void)setUser:(PFUser *)user;

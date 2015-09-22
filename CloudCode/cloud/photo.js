@@ -29,6 +29,16 @@ Parse.Cloud.afterSave('Photo', function(request) {
      trip.set("mostRecentPhoto", new Date());
      trip.save();
 
+    // Create an Activity for addedPhoto
+    var Activity = Parse.Object.extend("Activity");
+    var photoActivity = new Activity();
+    photoActivity.set("type", "addedPhoto");
+    photoActivity.set("photo", request.object);
+    photoActivity.set("trip", trip);
+    photoActivity.set("fromUser", request.user);
+    photoActivity.set("toUser", trip.get("creator"));
+    photoActivity.save();
+
 
     /*
      * PUSH NOTIFICATIONS
