@@ -36,6 +36,7 @@
 @property BOOL needsNameUpdate; // if the trunk already exists and we changed the name of the trip
 @property BOOL isEditing; // if the trunk already exists and we're editing it
 @property (weak, nonatomic) IBOutlet UIButton *clear;
+@property (weak, nonatomic) IBOutlet UILabel *lockLabel;
 
 // Date Properties
 @property NSDateFormatter *formatter;
@@ -57,11 +58,15 @@
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
+    
+    
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
+    self.lockLabel.hidden = YES;
 
 
     self.clear.hidden = YES;
@@ -202,15 +207,21 @@
 -(void)checkPublicPrivate{
     if (self.trip.isPrivate == NO || self.trip == nil)
     {
-        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-        self.private.backgroundColor = [UIColor whiteColor];
+//        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+//        self.private.backgroundColor = [UIColor whiteColor];
+        [self.private setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
+        [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
+
         self.public.tag = 1;
         self.private.tag = 0;
     }
     
     else {
-        self.public.backgroundColor = [UIColor whiteColor];
-        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+//        self.public.backgroundColor = [UIColor whiteColor];
+//        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        [self.private setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
+        [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
+      
         self.public.tag = 0;
         self.private.tag = 1;
     }
@@ -487,10 +498,10 @@
 - (IBAction)publicTapped:(id)sender {
     if (self.public.tag == 0)
     {
+        [self.public setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
+        [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
         self.public.tag = 1;
         self.private.tag = 0;
-        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-        self.private.backgroundColor = [UIColor whiteColor];
         self.isPrivate = NO;
     }
     
@@ -500,10 +511,11 @@
 - (IBAction)privateTapped:(id)sender {
     if (self.private.tag == 0)
     {
+        [self.public setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
+        [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
+        
         self.public.tag = 0;
         self.private.tag = 1;
-        self.public.backgroundColor = [UIColor whiteColor];
-        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         self.isPrivate = YES;
 
     }
