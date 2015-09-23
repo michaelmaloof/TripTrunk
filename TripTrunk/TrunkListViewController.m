@@ -12,6 +12,8 @@
 #import "TrunkTableViewCell.h"
 #import "TrunkViewController.h"
 #import "SocialUtility.h"
+#import "TTUtility.h"
+#import "UIImageView+AFNetworking.h"
 
 #import "UIScrollView+EmptyDataSet.h"
 
@@ -368,8 +370,33 @@
         cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
     }
     
+    [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
+    __weak TrunkTableViewCell *weakCell = cell;
+    cell.profileImage.frame = CGRectMake(cell.frame.origin.x + (cell.frame.size.width*.85), cell.profileImage.frame.origin.y, cell.frame.size.height*.9, cell.frame.size.height*.9);
+    [cell.profileImage.layer setCornerRadius:20.0f];
+    [cell.profileImage.layer setMasksToBounds:YES];
+    [cell.profileImage.layer setBorderWidth:2.0f];
+    cell.profileImage.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    PFUser *possibleFriend = cell.trip.creator;
+    [possibleFriend fetchIfNeeded:nil];
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     
-    return cell;
+    [cell.profileImage setImageWithURLRequest:request
+                             placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                      success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                          
+                                          [weakCell.profileImage setImage:image];
+                                          [weakCell setNeedsLayout];
+                                          
+                                      } failure:nil];
+
+                            return weakCell;
+
+                            return cell;
+
 }
 
 

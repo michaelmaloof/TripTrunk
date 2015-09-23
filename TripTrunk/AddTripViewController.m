@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *endTripTextField;
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
 @property (strong, nonatomic) IBOutlet UITextField *locationTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
@@ -211,6 +212,8 @@
 //        self.private.backgroundColor = [UIColor whiteColor];
         [self.private setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
+        self.backGroundImage.image = [UIImage imageNamed:@"mountain"];
+
 
         self.public.tag = 1;
         self.private.tag = 0;
@@ -221,7 +224,8 @@
 //        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         [self.private setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
-      
+        self.backGroundImage.image = [UIImage imageNamed:@"rev_2"];
+
         self.public.tag = 0;
         self.private.tag = 1;
     }
@@ -500,9 +504,11 @@
     {
         [self.public setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
+        self.backGroundImage.image = [UIImage imageNamed:@"mountain"];
         self.public.tag = 1;
         self.private.tag = 0;
         self.isPrivate = NO;
+
     }
     
 }
@@ -513,6 +519,7 @@
     {
         [self.public setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
+        self.backGroundImage.image = [UIImage imageNamed:@"rev_2"];
         
         self.public.tag = 0;
         self.private.tag = 1;
