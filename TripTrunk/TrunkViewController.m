@@ -195,15 +195,16 @@
     
     if (self.isMember == YES && ![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
-        self.collectionView.hidden = NO;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(leaveTrunk)];
-    } else {
         
+    } else {
+
     }
-    
+    self.collectionView.hidden = NO;
+
     [self.memberCollectionView reloadData];
 
     
@@ -404,6 +405,11 @@
         PFUser *possibleFriend = [self.members objectAtIndex:index];
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
         __weak UserCellCollectionViewCell *weakCell = cell;
+        
+        [cell.layer setCornerRadius:25.0f];
+        [cell.layer setMasksToBounds:YES];
+        [cell.layer setBorderWidth:2.0f];
+        cell.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
 
 
 
@@ -420,7 +426,7 @@
                                                      
                                                  } failure:nil];
         return weakCell;
-
+        
         return cell;
     }
 }
