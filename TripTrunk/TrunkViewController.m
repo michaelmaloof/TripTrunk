@@ -254,11 +254,11 @@
 
 }
 
-- (IBAction)membersButtonPressed:(id)sender {
-    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
-    vc.isMember = self.isMember;
-    [self.navigationController pushViewController:vc animated:YES];
-}
+//- (IBAction)membersButtonPressed:(id)sender {
+//    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+//    vc.isMember = self.isMember;
+//    [self.navigationController pushViewController:vc animated:YES];
+//}
 
 -(void)editTapped{
     [self performSegueWithIdentifier:@"Edit" sender:self];
@@ -325,7 +325,7 @@
             return self.photos.count + 1;
         }
     } else {
-        return self.members.count; //FIXME ADD ONE
+        return self.members.count +2;
     }
 }
 
@@ -401,8 +401,9 @@
     } else {
         
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
+        
+        
         NSInteger index = indexPath.item;
-        PFUser *possibleFriend = [self.members objectAtIndex:index];
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
         __weak UserCellCollectionViewCell *weakCell = cell;
         
@@ -410,21 +411,28 @@
         [cell.layer setMasksToBounds:YES];
         [cell.layer setBorderWidth:2.0f];
         cell.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
-
-
-
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
         
-        [cell.profileImage setImageWithURLRequest:request
-                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
-                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                     
-                                                     [weakCell.profileImage setImage:image];
-                                                     [weakCell setNeedsLayout];
-                                                     
-                                                 } failure:nil];
+        if (indexPath.item == 0){
+            cell.profileImage.image = [UIImage imageNamed:@"members"];
+            
+        } else if (indexPath.item == 1){
+            cell.profileImage.image = [UIImage imageNamed:@"Add Caption"];
+        }else {
+            PFUser *possibleFriend = [self.members objectAtIndex:index -2];
+
+            // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+            NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+            NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+            
+            [cell.profileImage setImageWithURLRequest:request
+                                            placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                     success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                         
+                                                         [weakCell.profileImage setImage:image];
+                                                         [weakCell setNeedsLayout];
+                                                         
+                                                     } failure:nil];
+        }
         return weakCell;
         
         return cell;
@@ -447,18 +455,25 @@
 #pragma mark - UICollectionView Delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    if (indexPath.item == 0 && self.isMember == YES)
-    {
-        [self performSegueWithIdentifier:@"addPhotos" sender:self];
-    }
-    
-    else
-    {
-        self.path = indexPath;
-        NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
+    if (collectionView == self.collectionView){
+        if (indexPath.item == 0 && self.isMember == YES)
+        {
+            [self performSegueWithIdentifier:@"addPhotos" sender:self];
+        }
         
-        [self performSegueWithIdentifier:@"photo" sender:self];
+        else
+        {
+            self.path = indexPath;
+            NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
+            
+            [self performSegueWithIdentifier:@"photo" sender:self];
+        }
+    } else {
+        if (indexPath.item == 0){
+            TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+            vc.isMember = self.isMember;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
     
 }
