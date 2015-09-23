@@ -19,7 +19,7 @@
 #import "SocialUtility.h"
 #import "UserCellCollectionViewCell.h"
 #import "UIImageView+AFNetworking.h"
-
+#import "AddTripFriendsViewController.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -472,6 +472,11 @@
         if (indexPath.item == 0){
             TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
             vc.isMember = self.isMember;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if (indexPath.item == 1){
+            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
+            [members addObject:self.trip.creator];
+            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
             [self.navigationController pushViewController:vc animated:YES];
         }
     }
