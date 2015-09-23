@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface UserCellCollectionViewCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 
 @end
