@@ -162,8 +162,10 @@
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-        [memberQuery includeKey:@"user"];
-        
+        [memberQuery includeKey:@"toUser"];
+        [memberQuery includeKey:@"profilePicUrl"];
+
+    
         [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error)
             {
@@ -396,8 +398,29 @@
         return cell;
         
     } else {
+        
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
-        cell.profileImage.image = [UIImage imageNamed:@"Plus Square"];
+        NSInteger index = indexPath.item;
+        PFUser *possibleFriend = [self.members objectAtIndex:index];
+        [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
+        __weak UserCellCollectionViewCell *weakCell = cell;
+
+
+
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+        
+        [cell.profileImage setImageWithURLRequest:request
+                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                     
+                                                     [weakCell.profileImage setImage:image];
+                                                     [weakCell setNeedsLayout];
+                                                     
+                                                 } failure:nil];
+        return weakCell;
+
         return cell;
     }
 }
