@@ -17,9 +17,10 @@
 #import "TrunkMembersViewController.h"
 #import "TTUtility.h"
 #import "SocialUtility.h"
-
+#import "UserCellCollectionViewCell.h"
 #import "UIImageView+AFNetworking.h"
-
+#import "AddTripFriendsViewController.h"
+#import "UserProfileViewController.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -28,7 +29,7 @@
  */
 @property NSArray *photos;
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
-
+@property NSMutableArray *members;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
@@ -41,6 +42,7 @@
 @property BOOL isMember;
 @property (weak, nonatomic) IBOutlet UIButton *lock;
 @property (weak, nonatomic) IBOutlet UIButton *cloud;
+@property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
 
 @end
 
@@ -60,6 +62,8 @@
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.memberCollectionView.backgroundColor = [UIColor clearColor];
+
     
     [self refreshTripDataViews];
 
@@ -69,6 +73,7 @@
                                                                                 action:nil]];
     
     self.photos = [[NSArray alloc] init];
+    self.members = [[NSMutableArray alloc] init];
     
     // Load initial data
     [self checkIfIsMember];
@@ -83,11 +88,11 @@
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
 }
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(0,0,0, 0);
-}
+//FIXME UNCOMMENT
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0,0,0, 0);
+//}
 
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -153,31 +158,19 @@
                                                                                  target:self
                                                                                  action:@selector(editTapped)];
     }
-    else
-    {
         self.collectionView.hidden = YES;
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-        [memberQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        
+        [memberQuery includeKey:@"toUser"];
+        [memberQuery includeKey:@"profilePicUrl"];
+
+    
         [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error)
             {
-                NSMutableArray *members = [NSMutableArray arrayWithArray:objects];
-                if (members.count == 0 || members == nil){
-                    self.isMember = NO;
-                    self.collectionView.hidden = NO;
-                } else {
-                    self.isMember = YES;
-                    [self.collectionView reloadData];
-                    self.collectionView.hidden = NO;
-                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
-                                                                                              style:UIBarButtonItemStylePlain
-                                                                                             target:self
-                                                                                             action:@selector(leaveTrunk)];
-                }
+                [self memberCollectionViewMethod:objects];
                 
             }else
             {
@@ -185,8 +178,37 @@
             }
             
         }];
-    }
 
+}
+
+-(void)memberCollectionViewMethod:(NSArray*)objects{
+    
+    for (PFObject *activity in objects)
+    {
+        PFUser *ttUser = activity[@"toUser"];
+        [self.members addObject:ttUser];
+        if ([ttUser.objectId isEqualToString:[PFUser currentUser].objectId])
+        {
+            self.isMember = YES;
+        }
+        
+    }
+    
+    if (self.isMember == YES && ![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
+                                                                                  style:UIBarButtonItemStylePlain
+                                                                                 target:self
+                                                                                 action:@selector(leaveTrunk)];
+        
+    } else {
+
+    }
+    self.collectionView.hidden = NO;
+
+    [self.memberCollectionView reloadData];
+
+    
 }
 
 -(void)queryParseMethod{
@@ -202,7 +224,6 @@
         {
             // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
-            
             if (self.photos.count > 0){
                 self.cloud.hidden = NO;
             }
@@ -234,11 +255,11 @@
 
 }
 
-- (IBAction)membersButtonPressed:(id)sender {
-    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
-    vc.isMember = self.isMember;
-    [self.navigationController pushViewController:vc animated:YES];
-}
+//- (IBAction)membersButtonPressed:(id)sender {
+//    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+//    vc.isMember = self.isMember;
+//    [self.navigationController pushViewController:vc animated:YES];
+//}
 
 -(void)editTapped{
     [self performSegueWithIdentifier:@"Edit" sender:self];
@@ -289,92 +310,156 @@
 #pragma mark - UICollectionView Data Source
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
+    if (collectionView == self.collectionView){
+        return 1;
+    } else {
+        return 1;
+    }
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (self.isMember == NO) {
-       return self.photos.count;
+    if (collectionView == self.collectionView){
+        if (self.isMember == NO) {
+            return self.photos.count;
+        } else {
+            return self.photos.count + 1;
+        }
     } else {
-        return self.photos.count + 1;
+        if (self.isMember == YES){
+            return self.members.count +2;
+        } else {
+            return self.members.count +1;
+        }
     }
 }
 
 
 
-- (TrunkCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+    if (collectionView == self.collectionView){
     
-    if(indexPath.item == 0 && self.isMember == YES)
-    {
-        cell.photo.image = [UIImage imageNamed:@"Plus Square"];
-
-    }
-    
-    // This is the images
-//    else if (indexPath.item > 0)
-    else
-    {
-        if (self.isMember == YES) {
-            cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
-        } else {
-             cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+        TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+        cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+        
+        if(indexPath.item == 0 && self.isMember == YES)
+        {
+            cell.photo.image = [UIImage imageNamed:@"Plus Square"];
+            
         }
         
-        // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
-        //        [self convertPhoto:cell indexPath:indexPath];
+        // This is the images
+        //    else if (indexPath.item > 0)
+        else
+        {
+            if (self.isMember == YES) {
+                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
+            } else {
+                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+            }
+            
+            // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
+            //        [self convertPhoto:cell indexPath:indexPath];
+            
+            
+            // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+            NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+            UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
+            [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
+            __weak TrunkCollectionViewCell *weakCell = cell;
+            
+            NSInteger index = indexPath.item;
+            
+            [cell.photo setImageWithURLRequest:request
+                              placeholderImage:placeholderImage
+                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                           
+                                           // Set the image to the Photo object in the array
+                                           
+                                           if (self.isMember == YES) {
+                                               NSLog(@"self.photos count is: %lu", (unsigned long)self.photos.count);
+                                               NSLog(@"index is: %ld and index-1 is: %ld", (long)index, (long)index-1);
+                                               if (index - 1 >= 0) {
+                                                   [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
+                                               }
+                                               
+                                           } else {
+                                               [(Photo *)[self.photos objectAtIndex:index] setImage:image];
+                                               
+                                           }
+                                           weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+                                           weakCell.photo.image = image;
+                                           [weakCell setNeedsLayout];
+                                           
+                                       } failure:nil];
+            weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+            
+            return weakCell;
+            
+        }
+        cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
         
+        return cell;
         
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-        UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
-        [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
-        __weak TrunkCollectionViewCell *weakCell = cell;
+    } else {
+        
+        UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
+        
         
         NSInteger index = indexPath.item;
+        [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
+        __weak UserCellCollectionViewCell *weakCell = cell;
         
-        [cell.photo setImageWithURLRequest:request
-                          placeholderImage:placeholderImage
-                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        [cell.layer setCornerRadius:25.0f];
+        [cell.layer setMasksToBounds:YES];
+        [cell.layer setBorderWidth:2.0f];
+        cell.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        
+        if (indexPath.item == 0){
+            cell.profileImage.image = [UIImage imageNamed:@"members"];
+            
+        } else if (indexPath.item == 1 && self.isMember == YES){
+            cell.profileImage.image = [UIImage imageNamed:@"Add Caption"];
+        }else {
+            PFUser *possibleFriend = [[PFUser alloc]init];
+            if (self.isMember == NO){
+                possibleFriend = [self.members objectAtIndex:index -1];
+            } else {
+                possibleFriend = [self.members objectAtIndex:index -2];
+            }
+            
+       
 
-                                       // Set the image to the Photo object in the array
-                                       
-                                       if (self.isMember == YES) {
-                                           NSLog(@"self.photos count is: %lu", (unsigned long)self.photos.count);
-                                           NSLog(@"index is: %ld and index-1 is: %ld", (long)index, (long)index-1);
-                                           if (index - 1 >= 0) {
-                                               [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
-                                           }
-
-                                       } else {
-                                           [(Photo *)[self.photos objectAtIndex:index] setImage:image];
-
-                                       }
-                                       weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
-                                       weakCell.photo.image = image;
-                                       [weakCell setNeedsLayout];
-                                       
-                                   } failure:nil];
-        weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
-
+            // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+            NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+            NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+            
+            [cell.profileImage setImageWithURLRequest:request
+                                            placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                     success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                         
+                                                         [weakCell.profileImage setImage:image];
+                                                         [weakCell setNeedsLayout];
+                                                         
+                                                     } failure:nil];
+        }
         return weakCell;
         
+        return cell;
     }
-    cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
-
-    return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+    if (collectionView == self.collectionView){
+        return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+    } else {
+        return CGSizeMake(50, 50);
+    }
 }
 
 
@@ -382,18 +467,45 @@
 #pragma mark - UICollectionView Delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    if (indexPath.item == 0 && self.isMember == YES)
-    {
-        [self performSegueWithIdentifier:@"addPhotos" sender:self];
-    }
-    
-    else
-    {
-        self.path = indexPath;
-        NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
+    if (collectionView == self.collectionView){
+        if (indexPath.item == 0 && self.isMember == YES)
+        {
+            [self performSegueWithIdentifier:@"addPhotos" sender:self];
+        }
         
-        [self performSegueWithIdentifier:@"photo" sender:self];
+        else
+        {
+            self.path = indexPath;
+            NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
+            
+            [self performSegueWithIdentifier:@"photo" sender:self];
+        }
+    } else {
+        if (indexPath.item == 0){
+            TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+            vc.isMember = self.isMember;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if (indexPath.item == 1 && self.isMember ==YES){
+            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
+            [members addObject:self.trip.creator];
+            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            PFUser *user = [[PFUser alloc]init];
+
+            if (self.isMember == NO){
+                user = [self.members objectAtIndex:indexPath.row -1];
+            } else {
+                user = [self.members objectAtIndex:indexPath.row -2];
+            }
+            
+            if (user) {
+                UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            
+        }
     }
     
 }
