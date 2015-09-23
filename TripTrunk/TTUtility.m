@@ -586,8 +586,27 @@ CLCloudinary *cloudinary;
     [request start];
 }
 
-//http://gd.geobytes.com/AutoCompleteCity?&q=cincinnati
-
-//http://getcitydetails.geobytes.com/GetCityDetails?fqcn=Cincinnati,%20OH,%20United%20States
+- (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = @"Submitting...";
+        HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
+    });
+    
+    PFObject *report = [PFObject objectWithClassName:@"ReportPhoto"];
+    [report setObject:photo forKey:@"photo"];
+    [report setValue:reason forKey:@"reason"];
+    [report setObject:[PFUser currentUser] forKey:@"user"];
+    [report saveInBackground];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Hide HUD spinner
+        HUD.labelText = @"Submitted!";
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        });
+    });
+    
+}
 
 @end

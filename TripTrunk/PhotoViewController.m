@@ -20,10 +20,12 @@
 #import "TrunkViewController.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIView *topButtonWrapper;
+@property (weak, nonatomic) IBOutlet UIView *bottomButtonWrapper;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
@@ -111,6 +113,37 @@
 
 }
 
+- (CAGradientLayer*) greyGradientForTop:(BOOL)isTop {
+    
+    UIColor *colorOne = [UIColor colorWithWhite:0.0 alpha:0.3];
+    UIColor *colorTwo = [UIColor colorWithWhite:0.0 alpha:0.2];
+    UIColor *colorThree     = [UIColor colorWithWhite:0.0 alpha:0.0];
+    
+    NSArray *colors;
+    NSNumber *stopTwo;
+    if (isTop) {
+        colors =  [NSArray arrayWithObjects:(id)colorOne.CGColor, colorTwo.CGColor, colorThree.CGColor, nil];
+        stopTwo = [NSNumber numberWithFloat:0.3];
+    }
+    else {
+        colors =  [NSArray arrayWithObjects:(id)colorThree.CGColor, colorTwo.CGColor, colorOne.CGColor, nil];
+        stopTwo = [NSNumber numberWithFloat:0.6];
+
+    }
+    
+    NSNumber *stopOne = [NSNumber numberWithFloat:0.0];
+
+    NSNumber *stopThree     = [NSNumber numberWithFloat:0.9];
+    
+    NSArray *locations = [NSArray arrayWithObjects:stopOne, stopTwo, stopThree, nil];
+    CAGradientLayer *headerLayer = [CAGradientLayer layer];
+    headerLayer.colors = colors;
+    headerLayer.locations = locations;
+    
+    return headerLayer;
+    
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
@@ -123,8 +156,6 @@
     [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-
-
 }
 
 
@@ -135,6 +166,15 @@
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
 
     [self centerScrollViewContents];
+    
+    // Set up gradients for top and bottom button wrappers
+    CAGradientLayer *gradient = [self greyGradientForTop:YES];
+    gradient.frame = self.topButtonWrapper.bounds;
+    CAGradientLayer *bottomGradient = [self greyGradientForTop:NO];
+    bottomGradient.frame = self.bottomButtonWrapper.bounds;
+    [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
+    [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -187,21 +227,8 @@
 - (void)toggleButtonVisibility {
     
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
-        _closeButton.hidden = !_closeButton.hidden;
-        _saveButton.hidden = !_saveButton.hidden;
-        _likeButton.hidden = !_likeButton.hidden;
-        _likeCountButton.hidden = !_likeCountButton.hidden;
-        _comments.hidden = !_comments.hidden;
-        self.photoTakenBy.hidden = !self.photoTakenBy.hidden;
-        
-        // If we are allowing the trunkNameButton to show, then toggle the visibility
-        if (self.shouldShowTrunkNameButton) {
-            self.trunkNameButton.hidden = !self.trunkNameButton.hidden;
-        }
-        
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-            self.delete.hidden = !self.delete.hidden;
-        }   
+        self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
+        self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
     } completion:nil];
 
 }
@@ -371,18 +398,26 @@
 #pragma mark - Button Actions
 
 - (IBAction)onSavePhotoTapped:(id)sender {
+
+    UIActionSheet *actionSheet;
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                    destructiveButtonTitle:@"Delete Photo"
+                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+    }
+    else {
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                    destructiveButtonTitle:nil
+                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+    }
+
     
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    alertView.delegate = self;
-    alertView.title = @"Save photo to phone?";
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Download"];
-    alertView.tag = 1;
-    [alertView show];
+    [actionSheet showInView:self.view];
 }
-
-
 
 - (IBAction)onCommentsTapped:(id)sender {
     
@@ -489,10 +524,86 @@
         else if (alertView.tag == 1) {
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
         }
+        // Report Photo
+        else if (alertView.tag == 2) {
+            NSString *reason = [alertView textFieldAtIndex:0].text;
+            [[TTUtility sharedInstance] reportPhoto:self.photo withReason:reason];
+        }
     }
 }
 - (IBAction)closeButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    // if the user is the photo owner, they have the Delete option
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+        if (buttonIndex == 0) {
+            NSLog(@"Delete Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Are you sure you want to delete this photo?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Yes"];
+            alertView.tag = 0;
+            [alertView show];
+            
+        }
+        else if (buttonIndex == 1) {
+            NSLog(@"Report Photo");
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            UITextField * alertTextField = [alert textFieldAtIndex:0];
+            alertTextField.keyboardType = UIKeyboardTypeAlphabet;
+            alertTextField.placeholder = @"Enter photo's violation.";
+            alert.tag = 2;
+            [alert show];
+        }
+        else if (buttonIndex == 2 ){
+            NSLog(@"Download Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Save photo to phone?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Download"];
+            alertView.tag = 1;
+            [alertView show];
+            
+        }
+        
+    }
+    // Not photo owner, they can't delete.
+    else {
+        if (buttonIndex == 0) {
+            NSLog(@"Report Photo");
+            NSLog(@"Report Photo");
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            UITextField * alertTextField = [alert textFieldAtIndex:0];
+            alertTextField.keyboardType = UIKeyboardTypeAlphabet;
+            alertTextField.placeholder = @"Enter photo's violation.";
+            alert.tag = 2;
+            [alert show];
+        }
+        else if (buttonIndex == 1) {
+            NSLog(@"Download Photo");
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.title = @"Save photo to phone?";
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:@"No"];
+            [alertView addButtonWithTitle:@"Download"];
+            alertView.tag = 1;
+            [alertView show];
+            
+        }
+    }
+    
 }
 
 #pragma mark - UIScrollViewDelegate Methods

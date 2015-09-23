@@ -222,26 +222,36 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
 }
 
 - (void)setPromotedUsers:(NSArray *)users {
-    return;
-    //TODO: Implement NSCoding so this will work
+
     
     // This should work fine, but it crashes because PFObject doesn't implement NSCoding.
     // Once that is fixed (we'll need to extend PFObject probably) then this will work fine - just delete the return above.
     NSString *key = kTTUserDefaultsCachePromotedUsersKey;
+
+    [self.cache setObject:users forKey:key];
+    
+    return;
+    //TODO: Implement NSCoding so this will work
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:users];
 
-    [self.cache setObject:data forKey:key];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)promotedUsers {
+    
+
+    NSString *key = kTTUserDefaultsCachePromotedUsersKey;
+    if ([self.cache objectForKey:key]) {
+        return [self.cache objectForKey:key];
+    }
+    
     return [NSArray array];
     
     // TODO: implement NSCoding on the user object array so this can work
     
     // All this "works", but will crash because PFObject doesn't implement nscoding. If that is fixed then this will work fine, just delete the return above.
-    NSString *key = kTTUserDefaultsCachePromotedUsersKey;
+    
     if ([self.cache objectForKey:key]) {
         return [NSKeyedUnarchiver unarchiveObjectWithData:[self.cache objectForKey:key]];
     }
