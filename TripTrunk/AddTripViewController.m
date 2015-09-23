@@ -80,6 +80,9 @@
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
     
+    self.startTripTextField.tintColor = [UIColor clearColor];
+    self.endTripTextField.tintColor = [UIColor clearColor];
+
 
     
 //FIXME Do I even need this?
