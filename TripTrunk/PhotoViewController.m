@@ -524,13 +524,18 @@
         else if (alertView.tag == 1) {
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
         }
+        // Report Photo
+        else if (alertView.tag == 2) {
+            NSString *reason = [alertView textFieldAtIndex:0].text;
+            [[TTUtility sharedInstance] reportPhoto:self.photo withReason:reason];
+        }
     }
 }
 - (IBAction)closeButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma UIActionSheetDelegate
+#pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
@@ -550,6 +555,13 @@
         }
         else if (buttonIndex == 1) {
             NSLog(@"Report Photo");
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            UITextField * alertTextField = [alert textFieldAtIndex:0];
+            alertTextField.keyboardType = UIKeyboardTypeAlphabet;
+            alertTextField.placeholder = @"Enter photo's violation.";
+            alert.tag = 2;
+            [alert show];
         }
         else if (buttonIndex == 2 ){
             NSLog(@"Download Photo");
@@ -569,7 +581,14 @@
     else {
         if (buttonIndex == 0) {
             NSLog(@"Report Photo");
-            
+            NSLog(@"Report Photo");
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            UITextField * alertTextField = [alert textFieldAtIndex:0];
+            alertTextField.keyboardType = UIKeyboardTypeAlphabet;
+            alertTextField.placeholder = @"Enter photo's violation.";
+            alert.tag = 2;
+            [alert show];
         }
         else if (buttonIndex == 1) {
             NSLog(@"Download Photo");

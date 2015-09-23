@@ -129,6 +129,14 @@
 
 - (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock;
 
+/**
+ *  Flags the photo as inappropriate
+ *
+ *  @param photo  Photo to be reported
+ *  @param reason reason why the photo is being reported
+ */
+- (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason;
+
 
 @end
 

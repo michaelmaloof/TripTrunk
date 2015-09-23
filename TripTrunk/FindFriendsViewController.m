@@ -94,6 +94,7 @@
 - (void)loadPromotedUsers {
     PFQuery *query = [PFQuery queryWithClassName:@"PromotedUser"];
     [query includeKey:@"user"];
+    [query orderByAscending:@"priority"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
