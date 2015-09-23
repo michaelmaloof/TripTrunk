@@ -20,6 +20,7 @@
 #import "UserCellCollectionViewCell.h"
 #import "UIImageView+AFNetworking.h"
 #import "AddTripFriendsViewController.h"
+#import "UserProfileViewController.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -478,6 +479,15 @@
             [members addObject:self.trip.creator];
             AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
             [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            PFUser *user = [self.members objectAtIndex:indexPath.row -2];
+            
+            if (user) {
+                UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            
         }
     }
     
