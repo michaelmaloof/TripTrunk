@@ -2867,7 +2867,7 @@
         <image name="lock" width="200" height="200"/>
         <image name="lockedGray" width="88" height="88"/>
         <image name="map" width="50" height="50"/>
-        <image name="moreIcon" width="256" height="256"/>
+        <image name="moreIcon" width="56" height="56"/>
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="1080" height="1920"/>
         <image name="save" width="200" height="200"/>
