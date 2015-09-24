@@ -356,10 +356,8 @@
         
     }
     cell.trip = trip;
-    cell.textLabel.text = trip.name;
-    
-//    cell.detailTextLabel.text = cell.trip.user;
-    
+    cell.titleLabel.text = trip.name;
+        
     
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     
@@ -372,16 +370,10 @@
         cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
     }
     
-    [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
     __weak TrunkTableViewCell *weakCell = cell;
-    cell.profileImage.frame = CGRectMake(cell.frame.origin.x + (cell.frame.size.width*.85), cell.profileImage.frame.origin.y, cell.frame.size.height*.9, cell.frame.size.height*.9);
-    [cell.profileImage.layer setCornerRadius:20.0f];
-    [cell.profileImage.layer setMasksToBounds:YES];
-    [cell.profileImage.layer setBorderWidth:2.0f];
-    cell.profileImage.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+
     PFUser *possibleFriend = cell.trip.creator;
     [possibleFriend fetchIfNeeded:nil];
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -398,15 +390,24 @@
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
     [findPhotosUser whereKey:@"trip" equalTo:cell.trip];
     
-    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [findPhotosUser countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
         if (!error){
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ (%lu)", cell.trip.creator.username,(unsigned long)objects.count];
+            NSString *countString;
+            if (count == 0) {
+                countString = @"No Photos";
+            }
+            else if (count == 1) {
+                countString = @"1 Photo";
+            }
+            else {
+                countString = [NSString stringWithFormat:@"%i Photos", count];
+            }
+            cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
         }
     }];
 
-        return weakCell;
+    return weakCell;
 
-        return cell;
 
 }
 
