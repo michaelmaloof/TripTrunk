@@ -301,6 +301,8 @@
 }
 
 
+
+
 #pragma mark - Navigation
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -356,7 +358,7 @@
     cell.trip = trip;
     cell.textLabel.text = trip.name;
     
-    cell.detailTextLabel.text = cell.trip.user;
+//    cell.detailTextLabel.text = cell.trip.user;
     
     
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
@@ -392,10 +394,19 @@
                                           [weakCell setNeedsLayout];
                                           
                                       } failure:nil];
+    
+    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
+    [findPhotosUser whereKey:@"trip" equalTo:cell.trip];
+    
+    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error){
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ (%lu)", cell.trip.creator.username,(unsigned long)objects.count];
+        }
+    }];
 
-                            return weakCell;
+        return weakCell;
 
-                            return cell;
+        return cell;
 
 }
 
