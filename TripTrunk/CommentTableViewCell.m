@@ -33,7 +33,7 @@
     [self.contentLabel setLineSpacing:5.0];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
-    
+        
     
     // Set up Link Attributes (bold and colored)
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
@@ -49,6 +49,7 @@
     self.usernameLabel.delegate = self;
     self.usernameLabel.linkAttributes = linkAttributes;
     self.usernameLabel.activeLinkAttributes = activeLinkAttributes;
+    
     
     UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
     profileTap.numberOfTapsRequired = 1;

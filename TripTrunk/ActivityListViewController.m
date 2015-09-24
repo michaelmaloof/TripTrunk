@@ -272,6 +272,8 @@ enum TTActivityViewType : NSUInteger {
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
         __weak UserTableViewCell *weakCell = cell;
         
+        
+        
         [cell.profilePicImageView setImageWithURLRequest:request
                                         placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -280,6 +282,13 @@ enum TTActivityViewType : NSUInteger {
                                                      [weakCell setNeedsLayout];
                                                      
                                                  } failure:nil];
+        
+        
+        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
+        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        
         return weakCell;
         
     }
@@ -319,6 +328,16 @@ enum TTActivityViewType : NSUInteger {
                                                                  
                                                              } failure:nil];
         }
+        
+        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
+        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        
+        [activityCell.photoImageView.layer setCornerRadius:20.0f];
+        [activityCell.photoImageView.layer setMasksToBounds:YES];
+        [activityCell.photoImageView.layer setBorderWidth:2.0f];
+        activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
         
         return weakCell;
 

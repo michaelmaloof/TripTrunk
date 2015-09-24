@@ -9,13 +9,13 @@
 #import "FriendsListViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
-
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
 #import "TTCache.h"
 #import "UIScrollView+EmptyDataSet.h"
+
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -163,6 +163,11 @@
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
+    
+    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
+    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
+    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
     
     [cell.profilePicImageView setImageWithURLRequest:request
                                     placeholderImage:[UIImage imageNamed:@"defaultProfile"]
