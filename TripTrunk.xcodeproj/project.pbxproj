@@ -91,6 +91,8 @@
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
+		C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893361BB596FB00259AB4 /* NSObject+Properties.m */; settings = {ASSET_TAGS = (); }; };
+		C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893381BB596FB00259AB4 /* PFObject+NSCoding.m */; settings = {ASSET_TAGS = (); }; };
 		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
 		C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F0D66A1B73D15900957F59 /* TTCache.m */; };
 		C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */; };
@@ -250,6 +252,10 @@
 		C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFriendsViewController.m; sourceTree = "<group>"; };
 		C9CD1CAA1AFC27FA00D967A5 /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
 		C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
+		C9D893351BB596FB00259AB4 /* NSObject+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Properties.h"; sourceTree = "<group>"; };
+		C9D893361BB596FB00259AB4 /* NSObject+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Properties.m"; sourceTree = "<group>"; };
+		C9D893371BB596FB00259AB4 /* PFObject+NSCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PFObject+NSCoding.h"; sourceTree = "<group>"; };
+		C9D893381BB596FB00259AB4 /* PFObject+NSCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PFObject+NSCoding.m"; sourceTree = "<group>"; };
 		C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextField.h; sourceTree = "<group>"; };
 		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
 		C9F0D6691B73D15900957F59 /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
@@ -568,6 +574,10 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C9D893351BB596FB00259AB4 /* NSObject+Properties.h */,
+				C9D893361BB596FB00259AB4 /* NSObject+Properties.m */,
+				C9D893371BB596FB00259AB4 /* PFObject+NSCoding.h */,
+				C9D893381BB596FB00259AB4 /* PFObject+NSCoding.m */,
 				C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */,
 				C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */,
 				C9EC0F601B2A68F8004FFDC3 /* MSTextField.h */,
@@ -735,6 +745,7 @@
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
+				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
@@ -755,6 +766,7 @@
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
+				C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
 				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				C90C3D0F1B04FC2200CABBC9 /* AFHTTPRequestOperation.m in Sources */,

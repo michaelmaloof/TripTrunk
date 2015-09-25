@@ -229,8 +229,9 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     NSString *key = kTTUserDefaultsCachePromotedUsersKey;
 
     [self.cache setObject:users forKey:key];
-    
+//
     return;
+    
     //TODO: Implement NSCoding so this will work
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:users];
 
