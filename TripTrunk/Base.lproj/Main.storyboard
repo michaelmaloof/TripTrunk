@@ -56,7 +56,7 @@
                                     <constraint firstAttribute="width" constant="45" id="lDe-eQ-zQd"/>
                                     <constraint firstAttribute="height" constant="45" id="pYX-Zc-7zh"/>
                                 </constraints>
-                                <state key="normal" image="Glass"/>
+                                <state key="normal" image="zoomGlass"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="4Q6-LS-RyW"/>
@@ -2859,9 +2859,8 @@
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
-        <image name="Glass" width="1080" height="1920"/>
         <image name="Plus Circle" width="340" height="340"/>
-        <image name="addCaption" width="340" height="340"/>
+        <image name="addCaption" width="50" height="50"/>
         <image name="addTrunk_tabIcon" width="35" height="30"/>
         <image name="add_trunk" width="35" height="30"/>
         <image name="beach_background" width="1080" height="1920"/>
@@ -2876,6 +2875,7 @@
         <image name="removeCaption" width="340" height="340"/>
         <image name="save" width="200" height="200"/>
         <image name="unlocked" width="88" height="88"/>
+        <image name="zoomGlass" width="1002" height="1002"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="5P2-gM-OYf"/>
