@@ -458,7 +458,7 @@
                                     <include reference="k8T-73-v3H"/>
                                 </mask>
                                 <mask key="constraints">
-                                    <include reference="Ipy-ap-laY"/>
+                                    <exclude reference="Ipy-ap-laY"/>
                                     <include reference="b98-mZ-osX"/>
                                     <include reference="fEf-gJ-iym"/>
                                     <include reference="wjQ-Wq-V0Y"/>
@@ -498,9 +498,16 @@
                         </view>
                     </subviews>
                     <constraints>
+                        <constraint firstAttribute="width" secondItem="cSp-5v-4If" secondAttribute="width" id="DFD-r1-N3W"/>
+                        <constraint firstItem="cSp-5v-4If" firstAttribute="leading" secondItem="TsW-sg-QxN" secondAttribute="leading" id="EAJ-FR-0Du"/>
+                        <constraint firstAttribute="bottom" secondItem="cSp-5v-4If" secondAttribute="bottom" id="PYX-8X-Ncn"/>
                         <constraint firstAttribute="trailing" secondItem="cSp-5v-4If" secondAttribute="trailing" id="Uyr-Zv-8If"/>
+                        <constraint firstAttribute="height" secondItem="cSp-5v-4If" secondAttribute="height" id="Vu4-6B-LrI"/>
                         <constraint firstItem="cSp-5v-4If" firstAttribute="leading" secondItem="TsW-sg-QxN" secondAttribute="leading" id="Xwz-HT-9Js"/>
+                        <constraint firstItem="cSp-5v-4If" firstAttribute="top" secondItem="TsW-sg-QxN" secondAttribute="top" id="YnM-aB-eG0"/>
+                        <constraint firstItem="cSp-5v-4If" firstAttribute="centerX" secondItem="TsW-sg-QxN" secondAttribute="centerX" id="aXS-UW-eP2"/>
                         <constraint firstAttribute="bottom" secondItem="cSp-5v-4If" secondAttribute="bottom" id="evN-ND-X4Y"/>
+                        <constraint firstAttribute="trailing" secondItem="cSp-5v-4If" secondAttribute="trailing" id="lWS-xS-mgD"/>
                         <constraint firstItem="cSp-5v-4If" firstAttribute="top" secondItem="TsW-sg-QxN" secondAttribute="top" id="zDl-QG-YCD"/>
                     </constraints>
                     <variation key="default">
@@ -508,9 +515,16 @@
                             <exclude reference="cSp-5v-4If"/>
                         </mask>
                         <mask key="constraints">
+                            <exclude reference="DFD-r1-N3W"/>
+                            <exclude reference="EAJ-FR-0Du"/>
+                            <exclude reference="PYX-8X-Ncn"/>
                             <exclude reference="Uyr-Zv-8If"/>
+                            <exclude reference="Vu4-6B-LrI"/>
                             <exclude reference="Xwz-HT-9Js"/>
+                            <exclude reference="YnM-aB-eG0"/>
+                            <exclude reference="aXS-UW-eP2"/>
                             <exclude reference="evN-ND-X4Y"/>
+                            <exclude reference="lWS-xS-mgD"/>
                             <exclude reference="zDl-QG-YCD"/>
                         </mask>
                     </variation>
@@ -519,10 +533,17 @@
                             <include reference="cSp-5v-4If"/>
                         </mask>
                         <mask key="constraints">
-                            <include reference="Uyr-Zv-8If"/>
-                            <include reference="Xwz-HT-9Js"/>
-                            <include reference="evN-ND-X4Y"/>
-                            <include reference="zDl-QG-YCD"/>
+                            <exclude reference="DFD-r1-N3W"/>
+                            <include reference="EAJ-FR-0Du"/>
+                            <include reference="PYX-8X-Ncn"/>
+                            <exclude reference="Uyr-Zv-8If"/>
+                            <exclude reference="Vu4-6B-LrI"/>
+                            <exclude reference="Xwz-HT-9Js"/>
+                            <include reference="YnM-aB-eG0"/>
+                            <include reference="aXS-UW-eP2"/>
+                            <exclude reference="evN-ND-X4Y"/>
+                            <include reference="lWS-xS-mgD"/>
+                            <exclude reference="zDl-QG-YCD"/>
                         </mask>
                     </variation>
                 </scrollView>
@@ -530,12 +551,19 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="AEC-g6-HNd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1b8-YK-dal"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="1fA-R6-xeW"/>
                 <constraint firstAttribute="bottom" secondItem="TsW-sg-QxN" secondAttribute="bottom" id="3jZ-5q-kpx"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="5DD-Ha-UtC"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="width" secondItem="AEC-g6-HNd" secondAttribute="width" id="7DA-Zz-0zt"/>
                 <constraint firstItem="TsW-sg-QxN" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="D3S-Vy-PLL"/>
                 <constraint firstAttribute="bottom" secondItem="AEC-g6-HNd" secondAttribute="bottom" id="DxB-CI-QKs"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Ga2-7f-HrH"/>
                 <constraint firstItem="AEC-g6-HNd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="JU5-uf-kGZ"/>
+                <constraint firstAttribute="trailing" secondItem="cSp-5v-4If" secondAttribute="trailing" id="PZT-dE-lug"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="S5W-CU-Z4e"/>
                 <constraint firstAttribute="trailing" secondItem="TsW-sg-QxN" secondAttribute="trailing" id="hZx-aZ-DNN"/>
                 <constraint firstItem="TsW-sg-QxN" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pN6-hw-sAg"/>
+                <constraint firstItem="cSp-5v-4If" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="vDE-DC-bQu"/>
                 <constraint firstAttribute="trailing" secondItem="AEC-g6-HNd" secondAttribute="trailing" constant="-32" id="wkD-Tn-x75">
                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                 </constraint>
@@ -557,6 +585,13 @@
                     <exclude reference="D3S-Vy-PLL"/>
                     <exclude reference="hZx-aZ-DNN"/>
                     <exclude reference="pN6-hw-sAg"/>
+                    <exclude reference="1fA-R6-xeW"/>
+                    <exclude reference="5DD-Ha-UtC"/>
+                    <exclude reference="7DA-Zz-0zt"/>
+                    <exclude reference="Ga2-7f-HrH"/>
+                    <exclude reference="PZT-dE-lug"/>
+                    <exclude reference="S5W-CU-Z4e"/>
+                    <exclude reference="vDE-DC-bQu"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -573,6 +608,13 @@
                     <include reference="D3S-Vy-PLL"/>
                     <include reference="hZx-aZ-DNN"/>
                     <include reference="pN6-hw-sAg"/>
+                    <exclude reference="1fA-R6-xeW"/>
+                    <exclude reference="5DD-Ha-UtC"/>
+                    <exclude reference="7DA-Zz-0zt"/>
+                    <exclude reference="Ga2-7f-HrH"/>
+                    <exclude reference="PZT-dE-lug"/>
+                    <exclude reference="S5W-CU-Z4e"/>
+                    <include reference="vDE-DC-bQu"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="858.5" y="553.5"/>

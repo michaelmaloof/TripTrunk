@@ -12,5 +12,7 @@
 @interface TrunkTableViewCell : UITableViewCell
 @property Trip *trip;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 
 @end

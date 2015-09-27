@@ -27,7 +27,6 @@
 @property (weak, nonatomic) IBOutlet UIView *topButtonWrapper;
 @property (weak, nonatomic) IBOutlet UIView *bottomButtonWrapper;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
-@property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
@@ -74,12 +73,6 @@
         self.shouldShowTrunkNameButton = YES;
     }
     [self.trunkNameButton setHidden:YES];
-
-    // Only show the delete button for the owner
-    self.delete.hidden = YES;
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-        self.delete.hidden = NO;
-    }
     
     self.commentActivities = [[NSMutableArray alloc] init];
 //    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
@@ -335,13 +328,6 @@
         [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-        
-        // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
-            self.delete.hidden = NO;
-        } else {
-            self.delete.hidden = YES;
-        }
 
         [self refreshPhotoActivities];
     }
@@ -365,13 +351,6 @@
         [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-
-        // Only show the delete button if the user is the photo owner AND the close button isn't hidden, meaning we aren't in pic-only
-        if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] && !self.closeButton.hidden) {
-            self.delete.hidden = NO;
-        } else {
-            self.delete.hidden = YES;
-        }
         
         [self refreshPhotoActivities];
 
@@ -492,18 +471,6 @@
             [activityNavController pushViewController:trunkViewController animated:YES];
         }
     }];
-}
-
-- (IBAction)onDeleteWasTapped:(id)sender {
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    alertView.delegate = self;
-    alertView.title = @"Are you sure you want to delete this photo?";
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Yes"];
-    alertView.tag = 0;
-    [alertView show];
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

@@ -56,7 +56,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+//
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
@@ -178,20 +178,6 @@
         [self.followButton setHidden:NO];
         
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
-    // We put it here because it's causing a crash in viewDidLoad
-    //TODO: this constraint causes a glitch as the screen loads since the width isn't set yet.
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1
-                                                           constant:0]];
-    
 }
 
 - (void)refreshFollowCounts {

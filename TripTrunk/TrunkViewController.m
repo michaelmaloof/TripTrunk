@@ -88,28 +88,12 @@
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
 }
-//FIXME UNCOMMENT
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-//{
-//    return UIEdgeInsetsMake(0,0,0, 0);
-//}
-
 
 -(void)viewDidAppear:(BOOL)animated{
     
     [self refreshTripDataViews];
     
 }
-
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
-
 
 - (IBAction)lockTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -150,6 +134,7 @@
 
 -(void)checkIfIsMember{
     
+    // If the user is the creator, then they see the Edit button, not a Leave button.
     if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
@@ -164,7 +149,6 @@
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
         [memberQuery includeKey:@"toUser"];
-        [memberQuery includeKey:@"profilePicUrl"];
 
     
         [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -205,7 +189,7 @@
 
     }
     self.collectionView.hidden = NO;
-
+    [self.collectionView reloadData];
     [self.memberCollectionView reloadData];
 
     
@@ -341,27 +325,20 @@
     if (collectionView == self.collectionView){
     
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-        cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
-        
+
         if(indexPath.item == 0 && self.isMember == YES)
         {
             cell.photo.image = [UIImage imageNamed:@"Plus Square"];
-            
         }
-        
         // This is the images
         //    else if (indexPath.item > 0)
         else
         {
             if (self.isMember == YES) {
-                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item -1];
+                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item - 1];
             } else {
                 cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
             }
-            
-            // mattschoch 6/10 - commented out because we're setting the photo below with UIKit+AFNetworking method.
-            //        [self convertPhoto:cell indexPath:indexPath];
-            
             
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
@@ -381,7 +358,7 @@
                                            if (self.isMember == YES) {
                                                NSLog(@"self.photos count is: %lu", (unsigned long)self.photos.count);
                                                NSLog(@"index is: %ld and index-1 is: %ld", (long)index, (long)index-1);
-                                               if (index - 1 >= 0) {
+                                               if (index - 1 > 0) {
                                                    [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
                                                }
                                                
@@ -389,18 +366,15 @@
                                                [(Photo *)[self.photos objectAtIndex:index] setImage:image];
                                                
                                            }
-                                           weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
+
                                            weakCell.photo.image = image;
                                            [weakCell setNeedsLayout];
                                            
                                        } failure:nil];
-            weakCell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
             
             return weakCell;
             
         }
-        cell.photo.frame = CGRectMake(cell.photo.frame.origin.x, cell.photo.frame.origin.y, cell.frame.size.height, cell.frame.size.height);
-        
         return cell;
         
     } else {
@@ -425,12 +399,10 @@
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
             if (self.isMember == NO){
-                possibleFriend = [self.members objectAtIndex:index -1];
+                possibleFriend = [self.members objectAtIndex:index - 1];
             } else {
-                possibleFriend = [self.members objectAtIndex:index -2];
+                possibleFriend = [self.members objectAtIndex:index - 2];
             }
-            
-       
 
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
@@ -461,8 +433,6 @@
         return CGSizeMake(50, 50);
     }
 }
-
-
 
 #pragma mark - UICollectionView Delegate
 
