@@ -334,7 +334,8 @@ enum TTActivityViewType : NSUInteger {
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
         weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
         
-        [activityCell.photoImageView.layer setCornerRadius:20.0f];
+        //currently its a square but just change the radius to make it a circle
+        [activityCell.photoImageView.layer setCornerRadius:1.0f];
         [activityCell.photoImageView.layer setMasksToBounds:YES];
         [activityCell.photoImageView.layer setBorderWidth:2.0f];
         activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
