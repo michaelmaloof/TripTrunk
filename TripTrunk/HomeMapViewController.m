@@ -569,7 +569,7 @@
     startAnnotation.canShowCallout = YES;
     
     if ([self.hotDots containsObject:annotation.title]) {
-        startAnnotation.image = [UIImage imageNamed:@"RedCircle"];
+        startAnnotation.image = [UIImage imageNamed:@"redMapCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
@@ -577,7 +577,7 @@
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
 
     } else {
-        startAnnotation.image = [UIImage imageNamed:@"BlueCircle"];
+        startAnnotation.image = [UIImage imageNamed:@"blueMapCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
         startAnnotation.alpha = .9;
 //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];

@@ -273,7 +273,7 @@
     cell.backgroundColor = [UIColor whiteColor];
 
     if(photo.caption){
-        cell.captionImageView.image = [UIImage imageNamed:@"Check circle"];
+        cell.captionImageView.image = [UIImage imageNamed:@"checkCircle"];
     }
     
     else{

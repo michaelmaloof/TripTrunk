@@ -149,7 +149,7 @@
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     FindFriendsViewController *ffvc = [[FindFriendsViewController alloc] init];
     UINavigationController *searchNavController = [[UINavigationController alloc] initWithRootViewController:ffvc];
-    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass"] tag:3];
+    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass_tabIcon"] tag:3];
     [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     
     [searchNavController setTabBarItem:searchItem];
@@ -174,7 +174,7 @@
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
     UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
-    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"comment_icon"] tag:3];
+    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"comment_tabIcon"] tag:3];
     [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     
     [activityNavController setTabBarItem:activityItem];
@@ -193,7 +193,7 @@
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"meSwquare"] tag:3];
+    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:3];
     [item setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     item.title = @"";
     [navController setTabBarItem:item];

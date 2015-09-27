@@ -28,7 +28,7 @@
             <rect key="frame" x="0.0" y="64" width="375" height="554"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SanFran_BG" translatesAutoresizingMaskIntoConstraints="NO" id="AEC-g6-HNd">
+                <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sanFran_background" translatesAutoresizingMaskIntoConstraints="NO" id="AEC-g6-HNd">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                 </imageView>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TsW-sg-QxN">
@@ -621,8 +621,8 @@
         </view>
     </objects>
     <resources>
-        <image name="SanFran_BG" width="640" height="960"/>
         <image name="defaultProfile" width="150" height="150"/>
         <image name="globe_color" width="197" height="197"/>
+        <image name="sanFran_background" width="640" height="960"/>
     </resources>
 </document>

@@ -328,7 +328,7 @@
 
         if(indexPath.item == 0 && self.isMember == YES)
         {
-            cell.photo.image = [UIImage imageNamed:@"Plus Square"];
+            cell.photo.image = [UIImage imageNamed:@"addPhoto"];
         }
         // This is the images
         //    else if (indexPath.item > 0)
@@ -395,7 +395,7 @@
             cell.profileImage.image = [UIImage imageNamed:@"members"];
             
         } else if (indexPath.item == 1 && self.isMember == YES){
-            cell.profileImage.image = [UIImage imageNamed:@"Add Caption"];
+            cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
             if (self.isMember == NO){

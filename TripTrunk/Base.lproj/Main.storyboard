@@ -202,14 +202,14 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Trunk Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="gQe-bu-GJg">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username (5 pictures)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="muc-qy-oH5">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -1422,7 +1422,7 @@
                                             </constraint>
                                         </constraints>
                                         <state key="normal" image="heart"/>
-                                        <state key="selected" image="heart-selected"/>
+                                        <state key="selected" image="heartSelected"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="saC-bi-mNL"/>
@@ -1621,7 +1621,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="Beach" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="beach_background" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" red="0.89411764705882346" green="0.45882352941176469" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
@@ -1787,7 +1787,7 @@
                                     <constraint firstAttribute="height" constant="30" id="xzK-uh-qep"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="Add Caption">
+                                <state key="normal" image="addCaption">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1865,7 +1865,7 @@
                                     <constraint firstAttribute="height" constant="30" id="ptZ-nj-9F5"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" backgroundImage="Remove Caption">
+                                <state key="normal" backgroundImage="removeCaption">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -2205,7 +2205,7 @@
         <scene sceneID="8pL-MB-MjW">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xW8-rG-HSM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="" image="add_trunk" id="Hnp-GQ-egK">
+                    <tabBarItem key="tabBarItem" tag="1" title="" image="addTrunk_tabIcon" id="Hnp-GQ-egK">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
@@ -2856,29 +2856,30 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Add Caption" width="340" height="340"/>
-        <image name="Beach" width="1080" height="1920"/>
         <image name="Cancel" width="340" height="340"/>
         <image name="Check circle" width="340" height="340"/>
         <image name="Delte Photo" width="340" height="340"/>
-        <image name="Glass" width="1002" height="1002"/>
+        <image name="Glass" width="1080" height="1920"/>
         <image name="Plus Circle" width="340" height="340"/>
-        <image name="Remove Caption" width="340" height="340"/>
+        <image name="addCaption" width="340" height="340"/>
+        <image name="addTrunk_tabIcon" width="35" height="30"/>
         <image name="add_trunk" width="35" height="30"/>
+        <image name="beach_background" width="1080" height="1920"/>
         <image name="heart" width="31" height="27"/>
-        <image name="heart-selected" width="31" height="27"/>
+        <image name="heartSelected" width="31" height="27"/>
         <image name="lock" width="200" height="200"/>
         <image name="lockedGray" width="88" height="88"/>
         <image name="map" width="50" height="50"/>
         <image name="moreIcon" width="56" height="56"/>
         <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="1080" height="1920"/>
+        <image name="removeCaption" width="340" height="340"/>
         <image name="save" width="200" height="200"/>
         <image name="unlocked" width="88" height="88"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="5P2-gM-OYf"/>
         <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>
