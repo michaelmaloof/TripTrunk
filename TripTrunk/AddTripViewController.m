@@ -215,7 +215,7 @@
 //        self.private.backgroundColor = [UIColor whiteColor];
         [self.private setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"mountain"];
+        self.backGroundImage.image = [UIImage imageNamed:@"yellowSkyMountain_background"];
 
 
         self.public.tag = 1;
@@ -507,7 +507,7 @@
     {
         [self.public setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"mountain"];
+        self.backGroundImage.image = [UIImage imageNamed:@"yellowSkyMountain_background"];
         self.public.tag = 1;
         self.private.tag = 0;
         self.isPrivate = NO;

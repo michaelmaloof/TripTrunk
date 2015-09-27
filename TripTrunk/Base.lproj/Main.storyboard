@@ -867,7 +867,7 @@
                                     <constraint firstAttribute="width" constant="50" id="qz4-dW-QPC"/>
                                     <constraint firstAttribute="height" constant="50" id="ytO-Dp-BU4"/>
                                 </constraints>
-                                <state key="normal" image="Delte Photo">
+                                <state key="normal" image="deletePhoto">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1633,7 +1633,7 @@
                                     <constraint firstAttribute="height" constant="70" id="ZhN-Qr-4bd"/>
                                     <constraint firstAttribute="width" constant="70" id="bGB-aZ-Zac"/>
                                 </constraints>
-                                <state key="normal" image="Check circle">
+                                <state key="normal" image="checkCircle">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1839,7 +1839,7 @@
                                     <constraint firstAttribute="height" constant="30" id="lqJ-BX-O5t"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" backgroundImage="Delte Photo">
+                                <state key="normal" backgroundImage="deletePhoto">
                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -2234,7 +2234,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="6gD-pN-UMN">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yellowSkyMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="6gD-pN-UMN">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tIf-eK-RIY">
@@ -2501,7 +2501,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain" translatesAutoresizingMaskIntoConstraints="NO" id="tOU-RS-3DX">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yellowSkyMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="tOU-RS-3DX">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sWd-tE-uEx" customClass="TPKeyboardAvoidingScrollView">
@@ -2857,24 +2857,24 @@
     </scenes>
     <resources>
         <image name="Cancel" width="340" height="340"/>
-        <image name="Check circle" width="340" height="340"/>
-        <image name="Delte Photo" width="340" height="340"/>
         <image name="Plus Circle" width="340" height="340"/>
         <image name="addCaption" width="50" height="50"/>
         <image name="addTrunk_tabIcon" width="35" height="30"/>
         <image name="add_trunk" width="35" height="30"/>
-        <image name="beach_background" width="1080" height="1920"/>
+        <image name="beach_background" width="240" height="427"/>
+        <image name="checkCircle" width="340" height="340"/>
+        <image name="deletePhoto" width="340" height="340"/>
         <image name="heart" width="31" height="27"/>
         <image name="heartSelected" width="31" height="27"/>
         <image name="lock" width="200" height="200"/>
         <image name="lockedGray" width="88" height="88"/>
         <image name="map" width="50" height="50"/>
         <image name="moreIcon" width="56" height="56"/>
-        <image name="mountain" width="1080" height="1920"/>
         <image name="night" width="1080" height="1920"/>
         <image name="removeCaption" width="340" height="340"/>
         <image name="save" width="200" height="200"/>
         <image name="unlocked" width="88" height="88"/>
+        <image name="yellowSkyMountain_background" width="1080" height="1920"/>
         <image name="zoomGlass" width="1002" height="1002"/>
     </resources>
     <inferredMetricsTieBreakers>
