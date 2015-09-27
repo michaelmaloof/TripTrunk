@@ -1621,7 +1621,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="beach_background" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="brownMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" red="0.89411764705882346" green="0.45882352941176469" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
@@ -2861,7 +2861,7 @@
         <image name="addCaption" width="50" height="50"/>
         <image name="addTrunk_tabIcon" width="35" height="30"/>
         <image name="add_trunk" width="35" height="30"/>
-        <image name="beach_background" width="240" height="427"/>
+        <image name="brownMountain_background" width="400" height="713"/>
         <image name="checkCircle" width="340" height="340"/>
         <image name="deletePhoto" width="340" height="340"/>
         <image name="heart" width="31" height="27"/>
@@ -2874,7 +2874,7 @@
         <image name="removeCaption" width="340" height="340"/>
         <image name="save" width="200" height="200"/>
         <image name="unlocked" width="88" height="88"/>
-        <image name="yellowSkyMountain_background" width="1080" height="1920"/>
+        <image name="yellowSkyMountain_background" width="400" height="713"/>
         <image name="zoomGlass" width="1002" height="1002"/>
     </resources>
     <inferredMetricsTieBreakers>
