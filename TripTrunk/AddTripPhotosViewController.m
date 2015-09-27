@@ -242,6 +242,19 @@
     return YES;
 }
 
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -120, self.view.frame.size.width, self.view.frame.size.height);
+    
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+}
+
 #pragma mark - Collection View
 
 

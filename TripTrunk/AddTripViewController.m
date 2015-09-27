@@ -239,13 +239,13 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
 
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -75, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
     
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
 
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 75, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 // Go to the next textfield or close the keyboard when the return button is pressed
