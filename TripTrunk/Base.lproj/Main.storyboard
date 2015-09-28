@@ -372,7 +372,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="night" translatesAutoresizingMaskIntoConstraints="NO" id="SkJ-sW-37c">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="nightSkyline_background" translatesAutoresizingMaskIntoConstraints="NO" id="SkJ-sW-37c">
                                 <rect key="frame" x="-7" y="0.0" width="607" height="551"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="State, Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YXB-LB-7B6">
@@ -600,6 +600,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.73333333333333328" green="0.74117647058823533" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="SkJ-sW-37c" firstAttribute="centerX" secondItem="v8I-bb-942" secondAttribute="centerX" id="0B0-xO-xr2"/>
                             <constraint firstItem="o2X-FD-baW" firstAttribute="top" secondItem="68p-fX-An1" secondAttribute="bottom" constant="139" id="2cN-5f-vP4"/>
                             <constraint firstItem="nRB-Dp-eMo" firstAttribute="top" secondItem="zUW-ht-yVP" secondAttribute="bottom" constant="2" id="3iP-oS-A2o"/>
                             <constraint firstItem="nRB-Dp-eMo" firstAttribute="top" secondItem="YXB-LB-7B6" secondAttribute="bottom" constant="20" id="3nK-1X-Iq6"/>
@@ -659,6 +660,7 @@
                             <constraint firstItem="Vaa-OY-0Ij" firstAttribute="centerX" secondItem="v8I-bb-942" secondAttribute="centerX" id="ezF-RW-iqn"/>
                             <constraint firstAttribute="centerX" secondItem="nRB-Dp-eMo" secondAttribute="centerX" id="fOx-pX-Ist"/>
                             <constraint firstItem="zUW-ht-yVP" firstAttribute="top" secondItem="Vaa-OY-0Ij" secondAttribute="bottom" constant="29" id="foh-EQ-rra"/>
+                            <constraint firstItem="SkJ-sW-37c" firstAttribute="width" secondItem="v8I-bb-942" secondAttribute="width" id="gAV-iA-LQX"/>
                             <constraint firstItem="nRB-Dp-eMo" firstAttribute="top" secondItem="zUW-ht-yVP" secondAttribute="bottom" constant="0.5" id="gGw-P0-N0P"/>
                             <constraint firstItem="YXB-LB-7B6" firstAttribute="leading" secondItem="v8I-bb-942" secondAttribute="leadingMargin" id="hSa-CG-hCK"/>
                             <constraint firstAttribute="centerX" secondItem="nRB-Dp-eMo" secondAttribute="centerX" id="hnB-Vb-pFu"/>
@@ -697,7 +699,9 @@
                                 <exclude reference="6TB-0L-jGo"/>
                                 <exclude reference="Mho-9w-Oju"/>
                                 <exclude reference="ezF-RW-iqn"/>
+                                <exclude reference="Dod-X5-hm5"/>
                                 <exclude reference="Ov7-xz-v6M"/>
+                                <exclude reference="YPp-hD-xh2"/>
                                 <exclude reference="z8r-Ga-qLz"/>
                                 <exclude reference="2cN-5f-vP4"/>
                                 <exclude reference="7wJ-dH-xe4"/>
@@ -1621,10 +1625,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="brownMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                                <color key="backgroundColor" red="0.89411764705882346" green="0.45882352941176469" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cif-Kq-aC8">
                                 <rect key="frame" x="296" y="475" width="70" height="70"/>
                                 <constraints>
@@ -1903,6 +1903,10 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="brownMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="ODC-wx-ioq">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <color key="backgroundColor" red="0.89411764705882346" green="0.45882352941176469" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -2857,7 +2861,7 @@
     </scenes>
     <resources>
         <image name="Cancel" width="100" height="100"/>
-        <image name="Plus Circle" width="340" height="340"/>
+        <image name="Plus Circle" width="100" height="100"/>
         <image name="addCaption" width="100" height="100"/>
         <image name="addTrunk_tabIcon" width="35" height="30"/>
         <image name="add_trunk" width="35" height="30"/>
@@ -2868,18 +2872,18 @@
         <image name="heartSelected" width="31" height="27"/>
         <image name="lock" width="100" height="100"/>
         <image name="lockedGray" width="88" height="88"/>
-        <image name="map" width="50" height="50"/>
+        <image name="map" width="25" height="25"/>
         <image name="moreIcon" width="56" height="56"/>
-        <image name="night" width="1080" height="1920"/>
-        <image name="removeCaption" width="340" height="340"/>
-        <image name="save" width="200" height="200"/>
+        <image name="nightSkyline_background" width="500" height="889"/>
+        <image name="removeCaption" width="100" height="100"/>
+        <image name="save" width="100" height="100"/>
         <image name="unlocked" width="88" height="88"/>
         <image name="yellowSkyMountain_background" width="400" height="713"/>
         <image name="zoomGlass" width="1002" height="1002"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5P2-gM-OYf"/>
-        <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
+        <segue reference="hXf-dS-IMJ"/>
+        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
