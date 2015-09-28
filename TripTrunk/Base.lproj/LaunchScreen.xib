@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mountain2" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lake_background" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_large" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
@@ -56,8 +56,8 @@
         </view>
     </objects>
     <resources>
+        <image name="lake_background" width="500" height="889"/>
         <image name="logo_large" width="200" height="174"/>
-        <image name="mountain2" width="1080" height="1920"/>
         <image name="tripTrunkTitle" width="286" height="78"/>
     </resources>
 </document>
