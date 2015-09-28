@@ -8,33 +8,51 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   //   return response.error('Cannot set fromUser on Activity to a user other than the current user.');
   // }
 
-  /*
-   * Ensure we aren't adding duplicate users to a Trunk
-   * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
-   */
+  // MAKE SURE THE USER ISN'T BLOCKED
 
-  if (request.object.get("type") === "addToTrip") {
-    var query = new Parse.Query("Activity");
-    query.equalTo("trip", request.object.get("trip"));
-    query.equalTo("toUser", request.object.get("toUser"));
-    query.first({
-      success: function(object) {
-        if (object) {
-          response.error("User already added to trunk");
-        } else {
-          response.success();
-        }
-      },
-      error: function(error) {
-        response.error("Couldn't validate that this user is not already part of the trunk");
+  var blockQuery = new Parse.Query("Block");
+  blockQuery.equalTo("blockedUser", request.object.get("fromUser"));
+  blockQuery.equalTo("fromUser", request.object.get("toUser"));
+  blockQuery.count({
+    success: function(count) {
+      if (count > 0) {
+        return response.error("User is blocked from performing this action");
       }
-    });
-  }
-  else {
-      return response.success();
-  }
+
+      // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
+
+      /*
+       * Ensure we aren't adding duplicate users to a Trunk
+       * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+       */
+
+      if (request.object.get("type") === "addToTrip") {
+        var query = new Parse.Query("Activity");
+        query.equalTo("trip", request.object.get("trip"));
+        query.equalTo("toUser", request.object.get("toUser"));
+        query.first({
+          success: function(object) {
+            if (object) {
+              response.error("User already added to trunk");
+            } else {
+              response.success();
+            }
+          },
+          error: function(error) {
+            response.error("Couldn't validate that this user is not already part of the trunk");
+          }
+        });
+      }
+      else {
+          return response.success();
+      }
 
 
+    },
+    error: function(error) {
+      response.error("Error validating that the user is allowed to perform action");
+    }
+  });
 });
 
 Parse.Cloud.afterSave('Activity', function(request) {

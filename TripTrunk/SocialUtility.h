@@ -30,6 +30,13 @@
 + (void)unfollowUser:(PFUser *)user;
 
 /**
+ *  The currentUser will block the given user
+ *
+ *  @param user User to block
+ */
++ (void)blockUser:(PFUser *)user;
+
+/**
  *  Adds a single user to a Trip, and also stores which user added them to that trip.
  *  In the future, this can support any user in a trip adding any other user to it, not just trip creators adding friends to the trip
  *
