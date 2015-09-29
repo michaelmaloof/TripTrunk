@@ -17,21 +17,54 @@
     if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
         return;
     }
+    // If the user is private then we should be REQUESTING to follow, not following.
+    if (user[@"private"]) {
+        [self requestToFollowUserInBackground:user block:^(BOOL succeeded, NSError *error) {
+            if (completionBlock) {
+                return completionBlock(succeeded, error);
+            }
+        }];
+    }
+    else {
+        PFObject *followActivity = [PFObject objectWithClassName:@"Activity"];
+        [followActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+        [followActivity setObject:user forKey:@"toUser"];
+        [followActivity setObject:@"follow" forKey:@"type"];
+        
+        PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [followACL setPublicReadAccess:YES];
+        followActivity.ACL = followACL;
+        
+        [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            
+            // Cache the following status
+            [[TTCache sharedCache] setFollowStatus:succeeded user:user];
+            
+            if (completionBlock) {
+                completionBlock(succeeded, error);
+            }
+        }];
+    }
+}
+
++ (void)requestToFollowUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock
+{
+    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+        return;
+    }
     
-    PFObject *followActivity = [PFObject objectWithClassName:@"Activity"];
+    PFObject *followActivity = [PFObject objectWithClassName:@"PendingActivity"];
     [followActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
     [followActivity setObject:user forKey:@"toUser"];
     [followActivity setObject:@"follow" forKey:@"type"];
     
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [followACL setPublicReadAccess:YES];
+    // The user you're trying to follow gets read/write to the activity as well so they can approve/deny it.
+    [followACL setReadAccess:YES forUser:user];
+    [followACL setWriteAccess:YES forUser:user];
     followActivity.ACL = followACL;
     
     [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        // Cache the following status
-        [[TTCache sharedCache] setFollowStatus:succeeded user:user];
-        
         if (completionBlock) {
             completionBlock(succeeded, error);
         }

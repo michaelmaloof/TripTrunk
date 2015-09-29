@@ -9,17 +9,19 @@
 #import "EditProfileViewController.h"
 #import "CitySearchViewController.h"
 
-@interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate>
+@interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UITextField *nameTextView;
 
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) PFUser *user;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UILabel *currentCity;
 @property (weak, nonatomic) IBOutlet UILabel *editBio;
+@property (weak, nonatomic) IBOutlet UISwitch *privateAccountSwitch;
 
 @end
 
@@ -38,11 +40,19 @@
     [super viewDidLoad];
     
     self.title = @"Edit Profile";
-
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    
     _hometownTextField.delegate = self;
     self.hometownTextField.text = [_user valueForKey:@"hometown"];
     self.bioTextView.text = [_user valueForKey:@"bio"];
     self.nameTextView.text = _user[@"name"];
+    if (_user[@"private"] && [_user[@"private"] boolValue] == YES) {
+        self.privateAccountSwitch.on = YES;
+    }
     
     // Set Edit button
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
@@ -56,39 +66,32 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewWillAppear:(BOOL)animated{
-
-//    
-//    self.hometownTextField.hidden = YES;
-//    self.bioTextView.hidden = YES;
-//    self.editBio.hidden = YES;
-//    self.currentCity.hidden = YES;
-//    self.saveButton.hidden = YES;
-
-
-
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    // ADD LAYOUT CONSTRAINT FOR MAKING THE CONTENT VIEW AND SCROLL VIEW THE RIGHT SIZE
-    // We put it here because it's causing a crash in viewDidLoad
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1
-                                                           constant:0]];
-//    
-//    self.hometownTextField.hidden =NO;
-//    self.bioTextView.hidden = NO;
-//    self.saveButton.hidden = NO;
-//    self.currentCity.hidden = NO;
-//    self.editBio.hidden = NO;
-}
+#pragma mark - Actions
 
 - (void)cancelButtonPressed:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)privateSwitchChanged:(id)sender {
+    
+    if (self.privateAccountSwitch.isOn) {
+        // ACCOUNT WAS TURNED TO PRIVATE
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
+                                                        message:@"A private account hides your pictures from anyone who doesn't follow you. Users must request to follow you"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Continue", nil];
+        [alert show];
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
+                                                        message:@"All of your pictures will become visible to anyone on the app, not just your followers"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Continue", nil];
+        [alert show];
+    }
+    
 }
 
 - (IBAction)saveButtonPressed:(id)sender {
@@ -106,6 +109,46 @@
         [self.delegate shouldSaveUserAndClose:_user];
     }
     
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        // Reset the switch they just changed
+        self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
+    }
+    else if (buttonIndex == 1) {
+        NSLog(@"Continue Button Pressedd");
+        if (self.privateAccountSwitch.isOn) {
+            // Become Private
+            NSLog(@"Become Private");
+            [PFCloud callFunctionInBackground:@"becomePrivate" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"Error becoming private: %@", error);
+                }
+                else {
+                    NSLog(@"Successfully privatized");
+                    [[PFUser currentUser] fetchIfNeeded];
+                }
+            }];
+        }
+        else {
+            // Become Public
+            NSLog(@"Become Public");
+            [PFCloud callFunctionInBackground:@"becomePublic" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"Error becoming public: %@", error);
+                }
+                else {
+                    NSLog(@"Successfully publicized");
+                    [[PFUser currentUser] fetchIfNeeded];
+
+                }
+            }];
+            
+        }
+    }
 }
 
 
