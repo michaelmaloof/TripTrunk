@@ -17,6 +17,7 @@
 #import "UIScrollView+EmptyDataSet.h"
 #import "TrunkViewController.h"
 #import "UIColor+HexColors.h"
+#import "MBProgressHUD.h"
 
 #define USER_CELL @"user_table_view_cell"
 #define ACTIVITY_CELL @"activity_table_view_cell"
@@ -398,6 +399,27 @@ enum TTActivityViewType : NSUInteger {
     trunkViewController.trip = (Trip *)trip;
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
+
+- (void)activityCell:(ActivityTableViewCell *)cellView didAcceptFollowRequest:(BOOL)didAccept fromUser:(PFUser *)user {
+    __block MBProgressHUD *HUD;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+
+    [SocialUtility acceptFollowRequest:didAccept fromUser:user block:^(BOOL succeeded, NSError *error) {
+        if (succeeded && !error) {
+            // Successfully accepted/rejected, so let's reload the data
+            [self refresh:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Hide HUD spinner
+                HUD.labelText = @"Done!";
+                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+            });
+        }
+    }];
+}
 #pragma mark - Dismiss View
 
 - (void)closeView
@@ -489,7 +511,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
 {
-    return NO;
+    return YES;
 }
 
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView

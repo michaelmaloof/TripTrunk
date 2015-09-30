@@ -10,7 +10,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   // MAKE SURE THE USER ISN'T BLOCKED
   var blockQuery = new Parse.Query("Block");
   blockQuery.equalTo("blockedUser", fromUser);
-  blockQuery.equalTo("fromUser", touser);
+  blockQuery.equalTo("fromUser", toUser);
 
   blockQuery.count().then(function(count) {
     if (count > 0) {
@@ -46,7 +46,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
     else if (activity.get("type") === "follow") {
 
       // Let's see if we can Friend the toUser by joining their Role.
-      Parse.Cloud.run('approveFriend', {fromUserId: fromUser.id, toUserId, toUser.id}, {
+      addToFriendRole(fromUser.id, toUser.id, {
         success: function(response) {
           // SUCCESS - the friend was Approved
           return;
@@ -55,7 +55,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
           // ERROR - the friend was NOT approved
 
           // TODO: 
-          // if the approveFriend failed, it could be that they are just REQUESTING to follow the toUser.
+          // if the AddToRole failed, it could be that they are just REQUESTING to follow the toUser.
           // So we need to actually set the request.
           // Hopefully that is happening from the client, but just in case it should be handled here
           // otherwise we run the risk of a user getting failed-to-follow over and over and never being able to request to follow someone.
@@ -63,7 +63,6 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
           return Parse.Promise.error(error);
         }
       });
-
     }
     else { 
       return; 
@@ -143,7 +142,13 @@ var alertMessage = function(request) {
     } else {
       message = "You were added to a trunk.";
     }
-  }
+  } else if (request.object.get("type") === "pending_follow") {
+    if (request.user.get('username') && request.user.get('name')) {
+      message = request.user.get('name') + ' (@' + request.user.get('username') + ')' + ' requested to follow you.';
+    } else {
+      message = "You have a new follower request.";
+    }
+  } 
 
   // Trim our message to 140 characters.
   if (message.length > 140) {
@@ -187,44 +192,122 @@ var alertPayload = function(request) {
       t: 'a', // Activity Type: addToTrip
       tid: request.object.get('trip').id // Trip Id
     }
+  } else if (request.object.get("type") === "pending_follow") {
+    return {
+      alert: alertMessage(request), // Set our alert message.
+      p: 'a', // Payload Type: Activity
+      t: 'f', // Activity Type: Pending_Follow
+      fu: request.object.get('fromUser').id // From User
+    };
   }
+}
+
+
+var addToFriendRole = function(fromUserId, toUserId, response) {
+  var userToFriend = new Parse.User();
+  userToFriend.id = fromUserId;
+  var approvingUser = new Parse.User();
+  approvingUser.id = toUserId;
+
+  var roleName = "friendsOf_";
+  // If an ApprovingUser is passed in
+  if (approvingUser.id) {
+    roleName = roleName + approvingUser.id
+  }
+
+  var roleQuery = new Parse.Query(Parse.Role);
+  roleQuery.equalTo("name", roleName);
+
+  roleQuery.first().then(function(role) {
+    if (role) {
+      role.getUsers().add(userToFriend);
+      return role.save();
+
+    }
+    else
+    {
+      return Parse.Promise.error("No Role found for name: " + roleName);
+    }
+
+  }).then(function() {
+    response.success("Success! - Follow Request Approved");
+
+  }, function(error) {
+    response.error(error);
+    
+  });
 }
 
 /*
  * Function to let a user Accept a Follow request - Adds the given user Id into the friend Role for the current User
- * Accepts a userId parameter
+ * Accepts a "fromUserId" parameter and a "accepted" parameter
  */
 
 Parse.Cloud.define("approveFriend", function(request, response) {
   var userToFriend = new Parse.User();
   userToFriend.id = request.params.fromUserId;
-  var approvingUser = new Parse.User();
-  approvingUser.id = request.params.toUserId;
+  var didApprove = request.params.accepted;
 
-  var roleName = "friendsOf_";
-  // If an ApprovingUser is passed in, it's CloudCode trying to follow a user to see if they're public
-  if (approvingUser.id) {
-    roleName = roleName + approvingUser
+  if (!didApprove) {
+    // REJECTED
+    // Delete the pending request.
+    // Get the Pending Follow and change it to a follow
+    var query = new Parse.Query("Activity");
+        query.equalTo("fromUser", userToFriend);
+        query.equalTo("toUser", request.user);
+        query.equalTo("type", "pending_follow");
+        query.first().then(function(activity) {
+          if (activity) {
+            return activity.destroy();
+          }
+          else {
+            return Parse.Promise.error("No Pending Follow Activity Found");
+          }
+          
+        }).then(function() {
+          // Object successfully deleted
+          response.success("Successfully rejected");
+        }, function(error) {
+          response.error(error);
+      });
   }
-  // No Approving User passed in, so the currentUser is approving someone.
   else {
-    roleName = roleName + request.user.id;
+    // ACCEPTED
+    // Get the Pending Follow and change it to a follow
+    var query = new Parse.Query("Activity");
+        query.equalTo("fromUser", userToFriend);
+        query.equalTo("toUser", request.user);
+        query.equalTo("type", "pending_follow");
+        query.first().then(function(activity) {
+          if (activity) {
+            activity.set("type", "follow");
+            return activity.save();
+          }
+          else {
+            return Parse.Promise.error("No Pending Follow Activity Found");
+          }
+          
+        }).then(function(activity) {
+
+          // Finally, call the function to add the new follower to your Role so they have permission to see stuff
+          addToFriendRole(activity.get("fromUser").id, request.user.id, {
+            success: function(message) {
+              // Success!
+              console.log("Last Success Callback: " + message);
+              response.success(message);
+            },
+            error: function(error) {
+              // Error adding to role. Uh oh.
+              return Parse.Promise.error(error);
+            }
+          });
+        }, function(error) {
+          response.error(error);
+      });
   }
-
-  var roleQuery = new Parse.Query("_Role");
-  roleQuery.equalTo("name", roleName);
-
-  roleQuery.first().then(function(role) {
-    
-    role.getUsers().add(userToFriend);
-    return role.save();
-
-  }).then(function() {
-    response.success("Success! - Follow Request Approved");
-  }, function(error) {
-    response.error(error);
-  });
 });
+
+
 
 
 

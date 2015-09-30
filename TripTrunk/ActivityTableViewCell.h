@@ -31,5 +31,7 @@
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressPhoto:(Photo *)photo;
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user;
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressTrip:(Trip *)trip;
+- (void)activityCell:(ActivityTableViewCell *)cellView didAcceptFollowRequest:(BOOL)didAccept fromUser:(PFUser *)user;
+
 
 @end

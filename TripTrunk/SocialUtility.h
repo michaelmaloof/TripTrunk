@@ -38,6 +38,15 @@
 + (void)unfollowUser:(PFUser *)user;
 
 /**
+ *  Accepts or Rejects a pending Follow request
+ *
+ *  @param accepted        BOOL if the user accepts or rejects the request
+ *  @param user            User who made the request
+ *  @param completionBlock block with success or error
+ */
++ (void)acceptFollowRequest:(BOOL)accepted fromUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
  *  The currentUser will block the given user
  *
  *  @param user User to block

@@ -98,6 +98,25 @@
     }];
 }
 
++ (void)acceptFollowRequest:(BOOL)accepted
+                     fromUser:(PFUser *)user
+                        block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            user.objectId, @"fromUserId",
+                            [NSNumber numberWithBool:accepted], @"accepted", nil];
+    
+    [PFCloud callFunctionInBackground:@"approveFriend" withParameters:params
+                                block:^(id  _Nullable success, NSError * _Nullable error) {
+                                    NSLog(@"successs: %@", success);
+                                    
+                                    if (!error) {
+                                        completionBlock(YES, error);
+                                    }
+                                }];
+    
+}
+
 + (void)blockUser:(PFUser *)user;
 {
     __block MBProgressHUD *HUD;
