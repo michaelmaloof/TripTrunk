@@ -174,6 +174,9 @@
 
 - (void)filterResults:(NSString *)searchTerm {
     
+    // Gets all the users who have blocked this user. Hopefully it's 0!
+    PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
+    [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
     
     PFQuery *usernameQuery = [PFUser query];
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
@@ -187,10 +190,7 @@
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
 
-
-    
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-    
     
     NSArray *results  = [query findObjects];
     [self.searchResults removeAllObjects];

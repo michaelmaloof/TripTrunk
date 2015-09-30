@@ -17,7 +17,7 @@
 #import "HomeMapViewController.h"
 #import "EditProfileViewController.h"
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
@@ -114,6 +114,17 @@
         picTap.numberOfTapsRequired = 1;
         self.profilePicImageView.userInteractionEnabled = YES;
         [self.profilePicImageView addGestureRecognizer:picTap];
+
+    }
+    // It's not the current user profile. So let's give them an "options" button that lets the block a user
+    else {
+        // Set More button
+        UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(moreButtonPressed:)];
+        
+        self.navigationItem.rightBarButtonItem = moreButton;
 
     }
     
@@ -287,6 +298,20 @@
 
 }
 
+- (void)moreButtonPressed:(id)sender {
+    
+    NSLog(@"More Button Pressed");
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Block User"
+                                                    otherButtonTitles:nil];
+    
+    [actionSheet showInView:self.view];
+    
+}
+
 -(void)shouldSaveUserAndClose:(PFUser *)user {
     // Ensure it's the current user so we don't accidentally let people change other people's info. 
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
@@ -300,9 +325,37 @@
     [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 0) {
+        NSLog(@"Block User");
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
+                                                            message:@"This user will no longer see your profile or be able to follow you"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"No"
+                                                  otherButtonTitles:@"Yes", nil];
+        alertView.tag = 1;
+        [alertView show];
+        
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1 && alertView.tag == 1) {
+        // BLOCK USER
+        [SocialUtility blockUser:_user];
+    }
+}
+
+
+#pragma mark - Profile Pic Selector
+
 - (void)setProfilePic:(NSString *)urlString {
     NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
-
+    
     
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
     
@@ -321,8 +374,6 @@
          }
      }];
 }
-
-#pragma mark - Profile Pic Selector
 
 - (void)profileImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];

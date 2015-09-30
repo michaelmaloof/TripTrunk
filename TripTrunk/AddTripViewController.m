@@ -372,26 +372,16 @@
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
     self.title = @"Verifying Location...";
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = self.locationTextField.text;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
     {
         if (error)
         {
+            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
             // TODO: Set title image
             self.title = @"Add New Trunk";
-            [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-            [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-            [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-            [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-            [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -421,22 +411,10 @@
                 {
                     [self notEnoughInfo:@"Please fill out all boxes"];
                     self.title = @"Add New Trunk";
-                    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-                    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-                    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-                    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-                    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
         
         self.title = @"Add New Trunk";
-        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
         return;
     }];
 

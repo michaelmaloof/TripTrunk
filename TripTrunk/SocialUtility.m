@@ -8,6 +8,7 @@
 
 #import "SocialUtility.h"
 #import "TTCache.h"
+#import "MBProgressHUD.h"
 
 @implementation SocialUtility
 
@@ -57,6 +58,34 @@
             }
         }
     }];
+}
+
++ (void)blockUser:(PFUser *)user;
+{
+    __block MBProgressHUD *HUD;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = @"Blocking...";
+        HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
+    });
+    
+    PFObject *block = [PFObject objectWithClassName:@"Block"];
+    [block setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [block setObject:user forKey:@"blockedUser"];
+    PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
+    [acl setPublicReadAccess:YES];
+    [acl setWriteAccess:YES forUser:[PFUser currentUser]];
+    [block setACL:acl];
+    
+    [block saveEventually];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Hide HUD spinner
+        HUD.labelText = @"Done!";
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        });
+    });
 }
 
 + (void)addUser:(PFUser *)user toTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock
