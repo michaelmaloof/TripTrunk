@@ -55,16 +55,16 @@
  *  @param following 0, 1, or 2 for isFollowing the user. 0 is no, 1 is yes, 2 is pending request.
  *  @param user      user that might be followed
  */
-- (void)setFollowStatus:(BOOL)following user:(PFUser *)user;
+- (void)setFollowStatus:(NSNumber *)following user:(PFUser *)user;
 
 /**
  *  Get the cached follow status of the current user to another user
  *
  *  @param user user to check follow status
  *
- *  @return NSUInteger for isFollowing: No(0), Yes(1), or Pending(2)
+ *  @return NSNumber for isFollowing: No(0), Yes(1), or Pending(2)
  */
-- (BOOL)followStatusForUser:(PFUser *)user;
+- (NSNumber *)followStatusForUser:(PFUser *)user;
 
 /**
  *  Set the cache & user defaults for the promoted user list

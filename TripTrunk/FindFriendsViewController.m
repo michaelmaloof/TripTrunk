@@ -305,10 +305,13 @@
     cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
     
     // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
-    BOOL isFollowing = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-    if (isFollowing) {
+    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+    if (followStatus.intValue > 0) {
         [cell.followButton setHidden:NO];
         [cell.followButton setSelected:YES];
+        if (followStatus.intValue == 2) {
+            [cell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+        }
     }
     else {
         // Determine the follow status of the user
@@ -322,7 +325,7 @@
                 [cell.followButton setHidden:NO];
                 [cell.followButton setSelected:(!error && number > 0)];
                 // Cache the user's follow status
-                [[TTCache sharedCache] setFollowStatus:(!error && number > 0) user:possibleFriend];
+                [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:possibleFriend];
             }
         }];
     }

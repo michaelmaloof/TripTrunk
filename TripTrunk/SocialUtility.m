@@ -37,8 +37,8 @@
         
         [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             
-            // Cache the following status
-            [[TTCache sharedCache] setFollowStatus:succeeded user:user];
+            // Cache the following status as FOLLOWED
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:succeeded] user:user];
             
             if (completionBlock) {
                 completionBlock(succeeded, error);
@@ -53,10 +53,10 @@
         return;
     }
     
-    PFObject *followActivity = [PFObject objectWithClassName:@"PendingActivity"];
+    PFObject *followActivity = [PFObject objectWithClassName:@"Activity"];
     [followActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
     [followActivity setObject:user forKey:@"toUser"];
-    [followActivity setObject:@"follow" forKey:@"type"];
+    [followActivity setObject:@"pending_follow" forKey:@"type"];
     
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
     // The user you're trying to follow gets read/write to the activity as well so they can approve/deny it.
@@ -65,6 +65,10 @@
     followActivity.ACL = followACL;
     
     [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
+        // Cache the following status as PENDING
+        [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:user];
+        
         if (completionBlock) {
             completionBlock(succeeded, error);
         }
@@ -77,14 +81,15 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"toUser" equalTo:user];
-    [query whereKey:@"type" equalTo:@"follow"];
+//    [query whereKey:@"type" equalTo:@"follow"];
+    [query whereKey:@"type" containedIn:@[@"follow", @"pending_follow" ]]; // Pending Activities get unfollowed
     [query findObjectsInBackgroundWithBlock:^(NSArray *followActivities, NSError *error) {
         // While normally there should only be one follow activity returned, we can't guarantee that.
         
         if (!error) {
             
-            // Cache the following status
-            [[TTCache sharedCache] setFollowStatus:NO user:user];
+            // Cache the following status as NOT FOLLOWING
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:user];
             
             for (PFObject *followActivity in followActivities) {
                 [followActivity deleteEventually];
@@ -479,25 +484,47 @@
 //    
 //}
 
-+ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(BOOL isFollowing, NSError *error))completionBlock; {
++ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock; {
     // Determine the follow status of the user
     PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
     [isFollowingQuery whereKey:@"fromUser" equalTo:fromUser];
     [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
     [isFollowingQuery whereKey:@"toUser" equalTo:toUser];
-    [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-    [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        
-        // Cache the user's follow status since we're checking if the current user follows someone else.
-        // We don't cache if fromUser isn't the currentUser
-        if ([fromUser.objectId isEqualToString:[PFUser currentUser].objectId]) {
-            [[TTCache sharedCache] setFollowStatus:(!error && number > 0) user:toUser];
-        }
-        
-        // returns true if the user is following the user.
-        completionBlock((!error && number > 0), error);
 
+    [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (error) {
+            return completionBlock (0, error);
+        }
+        else if (!error && number > 0) {
+            // Cache the user's follow status since we're checking if the current user follows someone else.
+            // We don't cache if fromUser isn't the currentUser
+            if ([fromUser.objectId isEqualToString:[PFUser currentUser].objectId]) {
+                [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:toUser];
+            }
+            return completionBlock([NSNumber numberWithInt:1], error);
+        }
+        // Not Following, so check if it's Pending before we return.
+        else {
+            PFQuery *isPendingQuery = [PFQuery queryWithClassName:@"Activity"];
+            [isPendingQuery whereKey:@"fromUser" equalTo:fromUser];
+            [isPendingQuery whereKey:@"type" equalTo:@"pending_follow"];
+            [isPendingQuery whereKey:@"toUser" equalTo:toUser];
+            [isPendingQuery countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+                if (!error && number > 0) {
+                    
+                    // Cache the follow status.
+                    if ([fromUser.objectId isEqualToString:[PFUser currentUser].objectId]) {
+                        [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:toUser];
+                    }
+                    
+                    return completionBlock([NSNumber numberWithInt:2], error);
+                }
+                
+                return completionBlock([NSNumber numberWithInt:0], error);
+            }];
+        }
     }];
+    
 }
 
 + (void)followingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;{

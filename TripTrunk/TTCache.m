@@ -203,22 +203,22 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
 
 #pragma mark - Follower/following
 
-- (void)setFollowStatus:(BOOL)following user:(PFUser *)user {
+- (void)setFollowStatus:(NSNumber *)following user:(PFUser *)user {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-    [attributes setObject:[NSNumber numberWithBool:following] forKey:kTTUserAttributesIsFollowedByCurrentUserKey];
+    [attributes setObject:following forKey:kTTUserAttributesIsFollowedByCurrentUserKey];
     [self setAttributes:attributes forUser:user];
 }
 
-- (BOOL)followStatusForUser:(PFUser *)user {
+- (NSNumber *)followStatusForUser:(PFUser *)user {
     NSDictionary *attributes = [self attributesForUser:user];
     if (attributes) {
         NSNumber *followStatus = [attributes objectForKey:kTTUserAttributesIsFollowedByCurrentUserKey];
         if (followStatus) {
-            return [followStatus boolValue];
+            return followStatus;
         }
     }
     
-    return NO;
+    return 0;
 }
 
 - (void)setPromotedUsers:(NSArray *)users {

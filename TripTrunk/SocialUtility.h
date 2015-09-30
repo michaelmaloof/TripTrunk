@@ -169,9 +169,9 @@
  *
  *  @param fromUser        User doing the following
  *  @param toUser          User to check if the other user follows
- *  @param completionBlock BOOL for following status or Error
+ *  @param completionBlock NSNumber for following status(0, 1, or 2 for pending) or Error
  */
-+ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(BOOL isFollowing, NSError *error))completionBlock;
++ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock;
 
 /**
  *  Gets the list of users that the given user follows
