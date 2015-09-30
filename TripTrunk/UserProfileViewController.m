@@ -127,9 +127,6 @@
         self.navigationItem.rightBarButtonItem = moreButton;
 
     }
-    
-    [self refreshFollowCounts];
-    
 
 }
 
@@ -199,6 +196,8 @@
         [self.followButton setHidden:NO];
         
     }
+    
+    [self refreshFollowCounts];
 }
 
 - (void)refreshFollowCounts {

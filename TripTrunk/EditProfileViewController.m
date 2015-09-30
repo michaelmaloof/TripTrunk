@@ -129,7 +129,11 @@
                 }
                 else {
                     NSLog(@"Successfully privatized");
-                    [[PFUser currentUser] fetchIfNeeded];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [[PFUser currentUser] fetch];
+                        NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
+                    });
+
                 }
             }];
         }
@@ -142,8 +146,10 @@
                 }
                 else {
                     NSLog(@"Successfully publicized");
-                    [[PFUser currentUser] fetchIfNeeded];
-
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [[PFUser currentUser] fetch];
+                        NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
+                    });
                 }
             }];
             

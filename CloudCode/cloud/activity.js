@@ -97,7 +97,7 @@ Parse.Cloud.afterSave('Activity', function(request) {
 
   // If the activity is to the user making the request (i.e. toUser and fromUser are the same), don't send a push notification
   // That happens when we add a "addToTrip" Activity for "self" to aid in querying later, so it shouldn't notify the user.
-  if (request.object.get("toUser").id === request.user.id) {
+  if (!request.object.get("toUser") || request.object.get("toUser").id === request.user.id) {
     return;
   };
 
@@ -202,6 +202,45 @@ var alertPayload = function(request) {
   }
 }
 
+/*
+ * Activity AFTER DELETE
+ * used to handle Role Change for an Unfollow activity
+ * It's an AfterDelete because in the case of a failure to either Delete the Activity or Update the Role, it's better to delete the activity
+ * and leave the role (unfollowed user but old follower still has read permission) than to update the role but still have the activity
+ * (still following but can't read data). Hopefully failure doesn't occur, but we use an afterDelete to be safe.
+ */
+Parse.Cloud.afterDelete('Activity', function(request) {
+Parse.Cloud.useMasterKey();
+  // If it's deleting a Follow then it's an Unfollow, so we need to remove them from that user's role as well.
+  if (request.object.get("type") === "follow") {
+    var userToUnfollow = request.object.get("toUser");
+
+    var roleName = "friendsOf_" + userToUnfollow.id;
+    console.log("Unfollowing user and removing role name: " + roleName);
+
+    var roleQuery = new Parse.Query(Parse.Role);
+    roleQuery.equalTo("name", roleName);
+    roleQuery.first({
+      success:function(role) {
+        console.log("Attempt to remove user: " + request.user.id);
+        var currentUser = new Parse.User();
+        currentUser.id = request.user.id;
+        role.getUsers().remove(currentUser);
+
+        console.log(role.getUsers());
+        return role.save();
+      },
+      error: function(error) {
+        console.error("Error updating role: " + error);
+      },
+      useMasterKey: true
+    });
+  }
+});
+
+
+
+
 
 var addToFriendRole = function(fromUserId, toUserId, response) {
   var userToFriend = new Parse.User();
@@ -234,7 +273,7 @@ var addToFriendRole = function(fromUserId, toUserId, response) {
 
   }, function(error) {
     response.error(error);
-    
+
   });
 }
 
