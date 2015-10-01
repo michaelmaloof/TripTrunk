@@ -23,11 +23,28 @@
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
+ *  CurrentUser requests to follow the given user
+ *
+ *  @param user            User to follow
+ *  @param completionBlock callback with success or error of the REQUEST-not followed yet
+ */
++ (void)requestToFollowUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
  *  The Parse CurrentUser will unfollow the given User
  *
  *  @param user the user to unfollow
  */
 + (void)unfollowUser:(PFUser *)user;
+
+/**
+ *  Accepts or Rejects a pending Follow request
+ *
+ *  @param accepted        BOOL if the user accepts or rejects the request
+ *  @param user            User who made the request
+ *  @param completionBlock block with success or error
+ */
++ (void)acceptFollowRequest:(BOOL)accepted fromUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
  *  The currentUser will block the given user
@@ -161,9 +178,9 @@
  *
  *  @param fromUser        User doing the following
  *  @param toUser          User to check if the other user follows
- *  @param completionBlock BOOL for following status or Error
+ *  @param completionBlock NSNumber for following status(0, 1, or 2 for pending) or Error
  */
-+ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(BOOL isFollowing, NSError *error))completionBlock;
++ (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock;
 
 /**
  *  Gets the list of users that the given user follows

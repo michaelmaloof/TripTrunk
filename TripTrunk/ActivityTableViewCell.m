@@ -12,6 +12,8 @@
 
 #define USER_ACTIVITY_URL @"activity://user"
 #define TRIP_ACTIVITY_URL @"activity://trip"
+#define kPENDING_FOLLOW_ACCEPT_URL @"activity://pendingFollow_accept"
+#define kPENDING_FOLLOW_REJECT_URL @"activity://pendingFollow_reject"
 
 
 @interface ActivityTableViewCell () <TTTAttributedLabelDelegate>
@@ -87,7 +89,23 @@
 
 - (void)updateContentLabel {
     NSAttributedString *attString = [[TTUtility sharedInstance] attributedStringForActivity:_activity];
-    [self.contentLabel setAttributedText:attString];
+    
+    NSMutableAttributedString *mut = [[NSMutableAttributedString alloc] initWithAttributedString:attString];
+    
+    if ([_activity[@"type"] isEqualToString:@"pending_follow"]) {
+        NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        NSAttributedString *approval = [[NSMutableAttributedString alloc] initWithString:@"\nApprove | Reject"
+                                        
+                                                                              attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                                                                                NSParagraphStyleAttributeName: paraStyle,
+                                                                                                                                NSKernAttributeName : [NSNull null]
+                                                                                                                                }];
+        [mut appendAttributedString:approval];
+    }
+    
+    
+    [self.contentLabel setAttributedText:mut];
     
     // Set up a link for the username
     NSRange range = [self.contentLabel.text rangeOfString:_user.username];
@@ -100,6 +118,17 @@
         // Set up a link for the trip name
         NSRange tripRange = [self.contentLabel.text rangeOfString:[_activity[@"trip"] valueForKey:@"name"]];
         [self.contentLabel addLinkToURL:[NSURL URLWithString:TRIP_ACTIVITY_URL] withRange:tripRange]; // Embedding a custom link in a substring
+    }
+    else if ([_activity[@"type"] isEqualToString:@"pending_follow"]) {
+        
+        // Set up a link for the Approve and Reject actions
+        NSRange approveRange = [self.contentLabel.text rangeOfString:@"Approve"];
+        [self.contentLabel addLinkToURL:[NSURL URLWithString:kPENDING_FOLLOW_ACCEPT_URL] withRange:approveRange];
+
+        NSRange rejectRange = [self.contentLabel.text rangeOfString:@"Reject"];
+        [self.contentLabel addLinkToURL:[NSURL URLWithString:kPENDING_FOLLOW_REJECT_URL] withRange:rejectRange];
+
+    
     }
 
 }
@@ -141,6 +170,22 @@
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressTrip:)]) {
                 [self.delegate activityCell:self didPressTrip:trip];
+            }
+        }
+        else if([[url host] hasPrefix:@"pendingFollow_accept"]) {
+            /* Approve a Follow Request */
+            NSLog(@"Pending Follow Accept tapped");
+
+            if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didAcceptFollowRequest:fromUser:)]) {
+                [self.delegate activityCell:self didAcceptFollowRequest:YES fromUser:_user];
+            }
+        }
+        else if([[url host] hasPrefix:@"pendingFollow_reject"]) {
+            /* Approve a Follow Request */
+            NSLog(@"Pending Follow Reject tapped");
+            
+            if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didAcceptFollowRequest:fromUser:)]) {
+                [self.delegate activityCell:self didAcceptFollowRequest:NO fromUser:_user];
             }
         }
     } else {

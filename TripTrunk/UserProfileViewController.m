@@ -127,9 +127,6 @@
         self.navigationItem.rightBarButtonItem = moreButton;
 
     }
-    
-    [self refreshFollowCounts];
-    
 
 }
 
@@ -148,25 +145,36 @@
     }
     else {
         // Refresh the following status of this user
-        
-        if ([[TTCache sharedCache] followStatusForUser:self.user]) {
+        NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
+        if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.followButton setEnabled:YES];
                 [self.followButton setSelected:YES];
+                if (followStatus.intValue == 2) {
+                    [self.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+                }
             });
         }
         else
         {
+            // Not following this user, enable the button and set the selected status
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.followButton setSelected:NO];
+            });
             
-            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(BOOL isFollowing, NSError *error) {
+            // No cached follow status, so let's get the follow status from Parse.
+            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error) {
                 if (!error) {
-                    if (isFollowing)
+                    if (followingStatus.intValue > 0)
                     {
                         // We have the following status, so update the Selected status and enable the button
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.followButton setEnabled:YES];
                             [self.followButton setSelected:YES];
+                            if (followingStatus.intValue == 2) {
+                                [self.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+                            }
                         });
                     }
                     else {
@@ -180,7 +188,6 @@
                 else {
                     NSLog(@"Error: %@",error);
                 }
-                
             }];
             
         }
@@ -189,6 +196,8 @@
         [self.followButton setHidden:NO];
         
     }
+    
+    [self refreshFollowCounts];
 }
 
 - (void)refreshFollowCounts {
@@ -257,6 +266,7 @@
         // Follow
         NSLog(@"Attempt to follow %@",_user.username);
         [self.followButton setSelected:YES];
+        [self.followButton setTitle:@"Pending" forState:UIControlStateSelected]; // Set the title to pending, and if it's successful then it'll be set to Following
         
         [SocialUtility followUserInBackground:_user block:^(BOOL succeeded, NSError *error) {
             if (error) {
@@ -273,9 +283,9 @@
                 [self.followButton setSelected:NO];
                 [alert show];
             }
-            else
+            else if (!_user[@"private"])
             {
-                NSLog(@"Follow Succeeded");
+                [self.followButton setTitle:@"Following" forState:UIControlStateSelected];
             }
         }];
     }

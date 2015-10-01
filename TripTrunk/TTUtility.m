@@ -474,6 +474,9 @@ CLCloudinary *cloudinary;
     else if ([type isEqualToString:@"addedPhoto"]) {
         content = [NSString stringWithFormat:@"added a photo to %@", [activity[@"trip"] valueForKey:@"name"]];
     }
+    else if ([type isEqualToString:@"pending_follow"]) {
+        content = @"requested to follow you.";
+    }
     
     PFUser *user = activity[@"fromUser"];
     NSString *time = @"";
@@ -502,6 +505,7 @@ CLCloudinary *cloudinary;
                                                                                (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
                                                                                }];
     [str appendAttributedString:timeStr];
+    
     return str;
 }
 
