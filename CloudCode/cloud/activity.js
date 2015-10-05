@@ -12,7 +12,12 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   blockQuery.equalTo("blockedUser", fromUser);
   blockQuery.equalTo("fromUser", toUser);
 
-  blockQuery.count().then(function(count) {
+
+/*
+ * FOLLOW ACTIVITY FLOW
+ */ 
+  if (activity.get("type") === "follow") {
+    blockQuery.count().then(function(count) {
     if (count > 0) {
       return Parse.Promise.error("User is blocked from performing this action");
     }
@@ -20,31 +25,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
     // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
     return;
 
-  }).then(function() {
-
-    if (activity.get("type") === "addToTrip") {
-    /*
-     * Ensure we aren't adding duplicate users to a Trunk
-     * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
-     */
-
-      var query = new Parse.Query("Activity");
-      query.equalTo("trip", activity.get("trip"));
-      query.equalTo("toUser", toUser);
-      query.first({
-        success: function(object) {
-          if (object) {
-            return Parse.Promise.error("User already added to trunk");
-          } 
-          return;
-        },
-        error: function(error) {
-          return Parse.Promise.error("Couldn't validate that this user is not already part of the trunk");
-        }
-      });
-    }
-    else if (activity.get("type") === "follow") {
-
+    }).then(function() {
       // Let's see if we can Friend the toUser by joining their Role.
       addToFriendRole(fromUser.id, toUser.id, {
         success: function(response) {
@@ -63,19 +44,88 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
           return Parse.Promise.error(error);
         }
       });
-    }
-    else { 
-      return; 
-    }
+    }).then(function() {
+      /* SUCCESS */
+      return response.success();
 
-  }).then(function() {
-    /* SUCCESS */
+    }, function(error) {
+      /* ERROR */
+      return response.error(error);
+    });
+  }
+
+  /*
+   * ADD TO TRIP ACTIVITY FLOW
+   */ 
+  else if (activity.get("type") === "addToTrip") {
+    console.log("Activity Type = AddToTrip");
+    blockQuery.count().then(function(count) {
+      if (count > 0) {
+        return Parse.Promise.error("User is blocked from performing this action");
+      }
+
+      // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
+      return;
+
+    }).then(function() {
+
+      /*
+       * Ensure we aren't adding duplicate users to a Trunk
+       * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+       */
+
+      var query = new Parse.Query("Activity");
+      query.equalTo("trip", activity.get("trip"));
+      query.equalTo("type", "addToTrip");
+      query.equalTo("toUser", toUser);
+      return query.first();
+
+
+    }).then(function(addToTripObject) {
+      console.log(addToTripObject);
+      // If an addToTrip Object, it already exists. 
+      if (addToTripObject) {
+        console.log("ADD TO TRIP OBJECT FOUND SO ALREADY ADDED");
+        return Parse.Promise.error("User already added to trunk");
+      }
+
+      // ADD TRUNK MEMBER TO ROLE
+      var roleName = "trunkMembersOf_";
+      // If an ApprovingUser is passed in
+      if (activity.get("trip").id) {
+        roleName = roleName + activity.get("trip").id
+      }
+
+      var roleQuery = new Parse.Query(Parse.Role);
+      roleQuery.equalTo("name", roleName);
+      console.log("Looking for role name: " + roleName);
+
+      return roleQuery.first();
+
+    }).then(function(role) {
+      console.log("Role FOund: " + role);
+      if (role) {
+        role.getUsers().add(toUser);
+        return role.save();
+      }
+        return Parse.Promise.error("No Role found for name: " + roleName);
+
+    }).then(function() {
+      /* SUCCESS */
+      console.log("Success Block");
+      return response.success();
+
+    }, function(error) {
+      /* ERROR */
+      console.log("Error Block: " + error);
+
+      return response.error(error);
+    });
+
+  }
+  else {
     return response.success();
-
-  }, function(error) {
-    /* ERROR */
-    return response.error(error);
-  });
+  }
 
 });
 

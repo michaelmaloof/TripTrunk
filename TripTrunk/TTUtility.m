@@ -163,8 +163,28 @@ CLCloudinary *cloudinary;
               photo.imageUrl = url;
               
               PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
-              [photoACL setPublicReadAccess:YES];
+              
+              // Friends of the user get Read Access
+              NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
+              [photoACL setReadAccess:YES forRoleWithName:roleName];
+              // Also add ReadAccess for the TRUNK MEMBER role so any members of the trunk get read access
+              NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
+              [photoACL setReadAccess:YES forRoleWithName:trunkRole];
+              
+              // Only the user gets Write Access
               [photoACL setWriteAccess:YES forUser:photo.user];
+              
+              // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
+              NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
+              if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
+                  [photoACL setPublicReadAccess:NO];
+                  NSLog(@"Set private photo read permissions - role name: %@", roleName);
+              }
+              else {
+                  [photoACL setPublicReadAccess:YES];
+              }
+              
+              // Set the ACL.
               photo.ACL = photoACL;
               
               [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
