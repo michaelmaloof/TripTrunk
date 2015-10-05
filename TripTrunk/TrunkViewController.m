@@ -77,7 +77,6 @@
     
     // Load initial data
     [self checkIfIsMember];
-    [self queryParseMethod];
     
 
     // Add observer for when uploading is finished.
@@ -142,6 +141,7 @@
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(editTapped)];
+
     }
         self.collectionView.hidden = YES;
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
@@ -162,6 +162,7 @@
             }
             
         }];
+    
 
 }
 
@@ -189,8 +190,9 @@
 
     }
     self.collectionView.hidden = NO;
-    [self.collectionView reloadData];
+    [self queryParseMethod];
     [self.memberCollectionView reloadData];
+
 
     
 }
