@@ -286,10 +286,28 @@ Parse.Cloud.useMasterKey();
       useMasterKey: true
     });
   }
+  /* REMOVE FROM TRIP */
+  else if (request.object.get("type") === "addToTrip") {
+    var userLeaving = request.object.get("toUser");
+
+    var roleName = "trunkMembersOf_" + request.object.get("trip").id;
+    console.log("Leaving trunk with role name: " + roleName);
+
+    var roleQuery = new Parse.Query(Parse.Role);
+    roleQuery.equalTo("name", roleName);
+    roleQuery.first({
+      success:function(role) {
+        role.getUsers().remove(userLeaving);
+
+        return role.save();
+      },
+      error: function(error) {
+        console.error("Error updating role: " + error);
+      },
+      useMasterKey: true
+    });
+  }
 });
-
-
-
 
 
 var addToFriendRole = function(fromUserId, toUserId, response) {
@@ -378,12 +396,15 @@ Parse.Cloud.define("approveFriend", function(request, response) {
           
         }).then(function(activity) {
 
+
           // Finally, call the function to add the new follower to your Role so they have permission to see stuff
           addToFriendRole(activity.get("fromUser").id, request.user.id, {
             success: function(message) {
               // Success!
               console.log("Last Success Callback: " + message);
-              response.success(message);
+              sendPushNotificationForAcceptedFollowRequest(activity, request);
+              response.success();
+
             },
             error: function(error) {
               // Error adding to role. Uh oh.
@@ -396,7 +417,33 @@ Parse.Cloud.define("approveFriend", function(request, response) {
   }
 });
 
-
-
+// THIS FUNCTION DOESN"T WORK
+// It's supposed to send a push notification to the user who's request is accepted -- the code is correct for that.
+// It doesn't get executed about (line 422) because of the async nature of that code, and the promise structure.
+function sendPushNotificationForAcceptedFollowRequest(activity, request) {
+    // Send the fromUser a push notification telling them that their request was accepted.
+  var  pushMessage = request.user.get('name') + ' (@' + request.user.get('username') + ')' + ' accepted your follow request.';
+  // Trim our message to 140 characters.
+  if (pushMessage.length > 140) {
+    pushMessage = pushMessage.substring(0, 140);
+  }
+  var query = new Parse.Query(Parse.Installation);
+  query.equalTo('user', activity.get('fromUser').id);
+  Parse.Push.send({
+    where: query, // Set our Installation query.
+    data: {
+      alert: pushMessage, // Set our alert message.
+      p: 'a', // Payload Type: Activity
+      t: 'f', // Activity Type: Follow
+      fu: request.user.id // From User - it's actually the toUser in this case since it's an "accepted" notificaiton.
+    }
+  }).then(function() {
+    // Push was successful
+    console.log('Sent push.');
+    return;
+  }, function(error) {
+    throw "Push Error " + error.code + " : " + error.message;
+  });
+}
 
 
