@@ -4,4 +4,7 @@ require('cloud/photo.js');
 require('cloud/user.js');
 require('cloud/report.js');
 require('cloud/block.js');
+require('cloud/trunk.js');
+
+
 

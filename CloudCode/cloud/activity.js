@@ -12,7 +12,12 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
   blockQuery.equalTo("blockedUser", fromUser);
   blockQuery.equalTo("fromUser", toUser);
 
-  blockQuery.count().then(function(count) {
+
+/*
+ * FOLLOW ACTIVITY FLOW
+ */ 
+  if (activity.get("type") === "follow") {
+    blockQuery.count().then(function(count) {
     if (count > 0) {
       return Parse.Promise.error("User is blocked from performing this action");
     }
@@ -20,31 +25,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
     // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
     return;
 
-  }).then(function() {
-
-    if (activity.get("type") === "addToTrip") {
-    /*
-     * Ensure we aren't adding duplicate users to a Trunk
-     * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
-     */
-
-      var query = new Parse.Query("Activity");
-      query.equalTo("trip", activity.get("trip"));
-      query.equalTo("toUser", toUser);
-      query.first({
-        success: function(object) {
-          if (object) {
-            return Parse.Promise.error("User already added to trunk");
-          } 
-          return;
-        },
-        error: function(error) {
-          return Parse.Promise.error("Couldn't validate that this user is not already part of the trunk");
-        }
-      });
-    }
-    else if (activity.get("type") === "follow") {
-
+    }).then(function() {
       // Let's see if we can Friend the toUser by joining their Role.
       addToFriendRole(fromUser.id, toUser.id, {
         success: function(response) {
@@ -63,19 +44,88 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
           return Parse.Promise.error(error);
         }
       });
-    }
-    else { 
-      return; 
-    }
+    }).then(function() {
+      /* SUCCESS */
+      return response.success();
 
-  }).then(function() {
-    /* SUCCESS */
+    }, function(error) {
+      /* ERROR */
+      return response.error(error);
+    });
+  }
+
+  /*
+   * ADD TO TRIP ACTIVITY FLOW
+   */ 
+  else if (activity.get("type") === "addToTrip") {
+    console.log("Activity Type = AddToTrip");
+    blockQuery.count().then(function(count) {
+      if (count > 0) {
+        return Parse.Promise.error("User is blocked from performing this action");
+      }
+
+      // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
+      return;
+
+    }).then(function() {
+
+      /*
+       * Ensure we aren't adding duplicate users to a Trunk
+       * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+       */
+
+      var query = new Parse.Query("Activity");
+      query.equalTo("trip", activity.get("trip"));
+      query.equalTo("type", "addToTrip");
+      query.equalTo("toUser", toUser);
+      return query.first();
+
+
+    }).then(function(addToTripObject) {
+      console.log(addToTripObject);
+      // If an addToTrip Object, it already exists. 
+      if (addToTripObject) {
+        console.log("ADD TO TRIP OBJECT FOUND SO ALREADY ADDED");
+        return Parse.Promise.error("User already added to trunk");
+      }
+
+      // ADD TRUNK MEMBER TO ROLE
+      var roleName = "trunkMembersOf_";
+      // If an ApprovingUser is passed in
+      if (activity.get("trip").id) {
+        roleName = roleName + activity.get("trip").id
+      }
+
+      var roleQuery = new Parse.Query(Parse.Role);
+      roleQuery.equalTo("name", roleName);
+      console.log("Looking for role name: " + roleName);
+
+      return roleQuery.first();
+
+    }).then(function(role) {
+      console.log("Role FOund: " + role);
+      if (role) {
+        role.getUsers().add(toUser);
+        return role.save();
+      }
+        return Parse.Promise.error("No Role found for name: " + roleName);
+
+    }).then(function() {
+      /* SUCCESS */
+      console.log("Success Block");
+      return response.success();
+
+    }, function(error) {
+      /* ERROR */
+      console.log("Error Block: " + error);
+
+      return response.error(error);
+    });
+
+  }
+  else {
     return response.success();
-
-  }, function(error) {
-    /* ERROR */
-    return response.error(error);
-  });
+  }
 
 });
 
@@ -236,10 +286,28 @@ Parse.Cloud.useMasterKey();
       useMasterKey: true
     });
   }
+  /* REMOVE FROM TRIP */
+  else if (request.object.get("type") === "addToTrip") {
+    var userLeaving = request.object.get("toUser");
+
+    var roleName = "trunkMembersOf_" + request.object.get("trip").id;
+    console.log("Leaving trunk with role name: " + roleName);
+
+    var roleQuery = new Parse.Query(Parse.Role);
+    roleQuery.equalTo("name", roleName);
+    roleQuery.first({
+      success:function(role) {
+        role.getUsers().remove(userLeaving);
+
+        return role.save();
+      },
+      error: function(error) {
+        console.error("Error updating role: " + error);
+      },
+      useMasterKey: true
+    });
+  }
 });
-
-
-
 
 
 var addToFriendRole = function(fromUserId, toUserId, response) {
@@ -328,12 +396,15 @@ Parse.Cloud.define("approveFriend", function(request, response) {
           
         }).then(function(activity) {
 
+
           // Finally, call the function to add the new follower to your Role so they have permission to see stuff
           addToFriendRole(activity.get("fromUser").id, request.user.id, {
             success: function(message) {
               // Success!
               console.log("Last Success Callback: " + message);
-              response.success(message);
+              sendPushNotificationForAcceptedFollowRequest(activity, request);
+              response.success();
+
             },
             error: function(error) {
               // Error adding to role. Uh oh.
@@ -346,7 +417,33 @@ Parse.Cloud.define("approveFriend", function(request, response) {
   }
 });
 
-
-
+// THIS FUNCTION DOESN"T WORK
+// It's supposed to send a push notification to the user who's request is accepted -- the code is correct for that.
+// It doesn't get executed about (line 422) because of the async nature of that code, and the promise structure.
+function sendPushNotificationForAcceptedFollowRequest(activity, request) {
+    // Send the fromUser a push notification telling them that their request was accepted.
+  var  pushMessage = request.user.get('name') + ' (@' + request.user.get('username') + ')' + ' accepted your follow request.';
+  // Trim our message to 140 characters.
+  if (pushMessage.length > 140) {
+    pushMessage = pushMessage.substring(0, 140);
+  }
+  var query = new Parse.Query(Parse.Installation);
+  query.equalTo('user', activity.get('fromUser').id);
+  Parse.Push.send({
+    where: query, // Set our Installation query.
+    data: {
+      alert: pushMessage, // Set our alert message.
+      p: 'a', // Payload Type: Activity
+      t: 'f', // Activity Type: Follow
+      fu: request.user.id // From User - it's actually the toUser in this case since it's an "accepted" notificaiton.
+    }
+  }).then(function() {
+    // Push was successful
+    console.log('Sent push.');
+    return;
+  }, function(error) {
+    throw "Push Error " + error.code + " : " + error.message;
+  });
+}
 
 
