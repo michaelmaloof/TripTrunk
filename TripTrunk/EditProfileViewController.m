@@ -8,6 +8,7 @@
 
 #import "EditProfileViewController.h"
 #import "CitySearchViewController.h"
+#import "EULAViewController.h"
 
 @interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 
@@ -109,6 +110,13 @@
         [self.delegate shouldSaveUserAndClose:_user];
     }
     
+}
+- (IBAction)termsOfServiceButtonPressed:(id)sender {
+    EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
+    eula.alreadyAccepted = YES;
+    UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
+    
+    [self presentViewController:homeNavController animated:YES completion:nil];
 }
 
 #pragma mark - UIAlertViewDelegate

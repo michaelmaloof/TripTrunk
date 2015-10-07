@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
+#import "EULAViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -93,7 +94,8 @@
         
         //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
 //        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
-            
+    [self ensureEULA];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -131,6 +133,23 @@
     [logoView setContentMode:UIViewContentModeScaleAspectFit];
     self.navigationItem.titleView = logoView;
     [self.navigationItem.titleView setContentMode:UIViewContentModeScaleAspectFit];
+}
+
+- (void)ensureEULA {
+    BOOL didAgree = [[[NSUserDefaults standardUserDefaults] valueForKey:@"agreedToEULA"] boolValue];
+    
+    // If they've already agreed, AWESOME!
+    // if not, we need to force them into our terms.
+    if (!didAgree) {
+        
+        EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
+        
+        UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
+        
+        [self presentViewController:homeNavController animated:YES completion:nil];
+        
+    }
+    
 }
 
 /**
