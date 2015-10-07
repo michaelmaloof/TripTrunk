@@ -69,7 +69,7 @@
     [self setupSearchTabBar];
     [self setupActivityTabBar];
     [self setupProfileTabBar];
-    
+        
     return YES;
 }
 
@@ -137,6 +137,7 @@
     [homeNavController popToRootViewControllerAnimated:YES];
     [tabbarcontroller setSelectedIndex:0];
 }
+
 
 #pragma mark - Tab Bar
 
