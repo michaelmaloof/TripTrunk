@@ -383,7 +383,9 @@ enum TTActivityViewType : NSUInteger {
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     photoViewController.photo = (Photo *)photo;
     
-    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
+    [self.navigationController showViewController:photoViewController sender:self];
+    
+//    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
 }
 
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {

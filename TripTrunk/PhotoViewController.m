@@ -48,6 +48,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
 
     // Tab Bar Initializiation
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
@@ -55,6 +56,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
 
     
     // Set initial UI
@@ -138,6 +140,9 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    self.navigationController.navigationBarHidden = YES;
+    self.tabBarController.tabBar.hidden = YES;
+    
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
@@ -157,6 +162,8 @@
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
 
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
+    
+    
 
     [self centerScrollViewContents];
     
@@ -172,6 +179,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    self.navigationController.navigationBarHidden = NO;
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)centerScrollViewContents {
@@ -360,13 +369,14 @@
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -402,15 +412,19 @@
     
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)likeCountButtonPressed:(id)sender {
     
     ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)likeButtonPressed:(id)sender {
@@ -458,10 +472,13 @@
     
 }
 - (IBAction)trunkNameButtonPressed:(id)sender {
-    
+        
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
     trunkViewController.trip = (Trip *)self.photo.trip;
+    
+    //FIXME NOT SURE WHATS HAPPENING HERE MATT
+    
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
         NSLog(@"Photo View DIsmissed");
         
@@ -484,7 +501,7 @@
             [[TTUtility sharedInstance] deletePhoto:self.photo];
 
             // dismiss the view
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
             
         }
         // Download Photo
@@ -499,8 +516,11 @@
     }
 }
 - (IBAction)closeButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
+
 
 #pragma mark - UIActionSheetDelegate
 
