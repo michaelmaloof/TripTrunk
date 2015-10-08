@@ -477,6 +477,12 @@
     alertView.tag = 0;
     [alertView show];
     
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
     
 }
 
@@ -517,6 +523,12 @@
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
     [alertView addButtonWithTitle:@"Ok"];
     [alertView show];
+    
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -621,6 +633,12 @@
                                                        otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
+             
+             [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+             [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+             [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+             [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+             [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
              
          }
          else
