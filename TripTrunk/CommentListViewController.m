@@ -60,9 +60,9 @@
     [self setupTableViewConstraints];
     
     // Set Done button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                           target:self
-                                                                                           action:@selector(closeView)];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                                                                           target:self
+//                                                                                           action:@selector(closeView)];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 
 }

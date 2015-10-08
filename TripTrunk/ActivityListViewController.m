@@ -71,12 +71,19 @@ enum TTActivityViewType : NSUInteger {
     [self.view addSubview:self.tableView];
 
     [self setupTableViewConstraints];
+    
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
 
     if (_viewType != TTActivityViewAllActivities) {
         // Set Done button for all but the All Activity view
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                               target:self
-                                                                                               action:@selector(closeView)];
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                                                                               target:self
+//                                                                                               action:@selector(closeView)];
         [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     }
     // Else, it's the All Activities list
