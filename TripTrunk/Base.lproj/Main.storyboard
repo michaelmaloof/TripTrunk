@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -844,7 +844,7 @@
                         <outlet property="memberCollectionView" destination="Vaa-OY-0Ij" id="euj-O5-iW9"/>
                         <outlet property="startDate" destination="zUW-ht-yVP" id="tk4-q5-aiY"/>
                         <outlet property="stateCountryLabel" destination="YXB-LB-7B6" id="qQ4-iH-GXG"/>
-                        <segue destination="aHH-Uj-SSR" kind="presentation" identifier="photo" modalTransitionStyle="crossDissolve" id="8D2-7c-Dcs"/>
+                        <segue destination="aHH-Uj-SSR" kind="show" identifier="photo" id="8D2-7c-Dcs"/>
                         <segue destination="npq-fR-GHM" kind="show" identifier="addPhotos" id="JSU-Dg-jAI"/>
                         <segue destination="VtI-4S-iQ3" kind="show" identifier="Edit" id="hXf-dS-IMJ"/>
                     </connections>

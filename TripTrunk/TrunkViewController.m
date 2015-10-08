@@ -451,6 +451,8 @@
             NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
             
             [self performSegueWithIdentifier:@"photo" sender:self];
+            self.tabBarController.tabBar.hidden = YES;
+
         }
     } else {
         if (indexPath.item == 0){
