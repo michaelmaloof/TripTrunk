@@ -472,22 +472,23 @@
     
 }
 - (IBAction)trunkNameButtonPressed:(id)sender {
+    
+    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
         
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
     trunkViewController.trip = (Trip *)self.photo.trip;
     
-    //FIXME NOT SURE WHATS HAPPENING HERE MATT
+//    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+//        NSLog(@"Photo View DIsmissed");
     
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"Photo View DIsmissed");
-        
         UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
         UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
         if (tabbarcontroller.selectedIndex == 3) {
             [activityNavController pushViewController:trunkViewController animated:YES];
         }
-    }];
+    
+//    }];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
