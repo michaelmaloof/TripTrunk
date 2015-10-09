@@ -38,6 +38,8 @@
 @property NSMutableArray *friends;
 @property BOOL isNew;
 @property NSMutableArray *originalArray;
+@property Trip *tripToCheck;
+
 
 @end
 
@@ -472,7 +474,6 @@
             self.tripsToCheck = nil;
             self.tripsToCheck = [[NSMutableArray alloc]init];
             self.originalCount = 0;
-//            [self viewDidAppear:YES];
             
             self.hotDots = nil;
             self.hotDots = [[NSMutableArray alloc]init];
@@ -528,8 +529,13 @@
         NSDate *date = trip.createdAt;
         NSTimeInterval interval = [date timeIntervalSinceNow];
         
-        if (interval > -12 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        if ([trip.name isEqualToString:@"3"]){
+            
+        }
+        
+        if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
             self.isNew = YES;
+            self.tripToCheck = trip;
             [self.justMadeTrunk addObject:annotation];
         }
 
