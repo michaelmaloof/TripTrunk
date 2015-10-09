@@ -194,7 +194,7 @@
     self.collectionView.hidden = NO;
     
     NSInteger memberWidthTotal = (self.members.count + 2) * 60;
-    NSInteger oneThirdView = self.view.frame.size.width / 2;
+    NSInteger oneThirdView = self.view.frame.size.width / 1.5;
     if (oneThirdView < memberWidthTotal){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
     } else {
