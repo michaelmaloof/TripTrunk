@@ -565,6 +565,7 @@
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="0tt-70-cJm"/>
+                                    <constraint firstAttribute="width" constant="400" id="ccM-m4-mhV"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="9uG-qj-cp1">
                                     <size key="itemSize" width="50" height="50"/>
@@ -610,11 +611,13 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="0tt-70-cJm"/>
+                                        <exclude reference="ccM-m4-mhV"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="0tt-70-cJm"/>
+                                        <include reference="ccM-m4-mhV"/>
                                     </mask>
                                 </variation>
                                 <connections>
@@ -800,7 +803,7 @@
                             </mask>
                             <mask key="constraints">
                                 <include reference="8Md-Vh-Chi"/>
-                                <include reference="6TB-0L-jGo"/>
+                                <exclude reference="6TB-0L-jGo"/>
                                 <include reference="Mho-9w-Oju"/>
                                 <include reference="ezF-RW-iqn"/>
                                 <exclude reference="Dod-X5-hm5"/>
@@ -842,6 +845,7 @@
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
                         <outlet property="lock" destination="uTu-gi-m3c" id="dAX-ff-Ptd"/>
                         <outlet property="memberCollectionView" destination="Vaa-OY-0Ij" id="euj-O5-iW9"/>
+                        <outlet property="memberCollectionWidth" destination="ccM-m4-mhV" id="6QV-e0-bPf"/>
                         <outlet property="startDate" destination="zUW-ht-yVP" id="tk4-q5-aiY"/>
                         <outlet property="stateCountryLabel" destination="YXB-LB-7B6" id="qQ4-iH-GXG"/>
                         <segue destination="aHH-Uj-SSR" kind="show" identifier="photo" id="8D2-7c-Dcs"/>
@@ -2973,6 +2977,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="5P2-gM-OYf"/>
+        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>

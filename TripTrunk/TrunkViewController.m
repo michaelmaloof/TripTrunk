@@ -43,6 +43,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *lock;
 @property (weak, nonatomic) IBOutlet UIButton *cloud;
 @property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *memberCollectionWidth;
 
 @end
 
@@ -189,7 +190,19 @@
     } else {
 
     }
+    
     self.collectionView.hidden = NO;
+    
+    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
+    NSInteger oneThirdView = self.view.frame.size.width / 2;
+    if (oneThirdView < memberWidthTotal){
+        self.memberCollectionWidth.constant = self.view.frame.size.width;
+    } else {
+        self.memberCollectionWidth.constant = memberWidthTotal;
+    }
+    
+    
+    
     [self queryParseMethod];
     [self.memberCollectionView reloadData];
 
