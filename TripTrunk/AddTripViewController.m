@@ -60,13 +60,7 @@
     
     [super viewDidLoad];
     
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
+        
     self.lockLabel.hidden = YES;
 
 
@@ -120,11 +114,6 @@
 
         // initialize the trip object
         self.title = @"Add New Trunk";
-        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -135,12 +124,6 @@
         self.cancelBar.enabled = FALSE;
        
 
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     self.navigationItem.rightBarButtonItem.title = @"Next";
     self.navigationItem.rightBarButtonItem.tag = 0;
     self.navigationItem.leftBarButtonItem.tag = 0;
@@ -154,14 +137,6 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
 
 - (void)setupDatePicker {
     self.datePicker = [[UIDatePicker alloc] init];

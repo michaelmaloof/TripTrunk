@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseViewController.h"
 
-@interface HomeMapViewController : UIViewController 
+
+@interface HomeMapViewController : TTBaseViewController
 @property PFUser *user;
 
 @end

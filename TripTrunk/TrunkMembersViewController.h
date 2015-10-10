@@ -11,6 +11,7 @@
 #import <ParseUI/ParseUI.h>
 #import "Trip.h"
 
+
 @interface TrunkMembersViewController : UITableViewController
 /**
  *  Initializer that sets the currently-being-created Trip so we know what trip to add the friends to

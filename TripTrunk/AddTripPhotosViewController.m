@@ -40,12 +40,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
     if (self.trip){
         self.alreadyTrip = YES;
     } else {
@@ -78,21 +72,7 @@
     self.caption.delegate = self;
 }
 
-//-(void)viewDidAppear:(BOOL)animated{
-//    self.tripCollectionView.hidden = NO;
-//    self.plusPhoto.hidden = NO;
-//    self.submitTrunk.hidden = NO;
-//}
 
-
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {

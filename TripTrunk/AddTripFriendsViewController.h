@@ -11,6 +11,7 @@
 #import <ParseUI/ParseUI.h>
 #import "Trip.h"
 
+
 @interface AddTripFriendsViewController : UITableViewController
 
 /**

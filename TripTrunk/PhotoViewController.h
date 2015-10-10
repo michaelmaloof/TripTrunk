@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "Photo.h"
 #import "Trip.h"
+#import "TTBaseViewController.h"
 
-@interface PhotoViewController : UIViewController
+
+@interface PhotoViewController : TTBaseViewController
 @property Photo *photo; //mattschoch 6/10 - added so that we can pass in the image directly instead of downloading it again
 
 @property NSArray *photos;

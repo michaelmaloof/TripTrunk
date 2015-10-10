@@ -75,14 +75,6 @@
     [_user fetchIfNeeded];
     self.title = _user.username;
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
-
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     [self.hometownLabel setText:_user[@"hometown"]];
@@ -131,13 +123,6 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {

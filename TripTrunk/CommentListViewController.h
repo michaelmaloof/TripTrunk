@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Photo.h"
+#import "TTBaseViewController.h"
 
-@interface CommentListViewController : UIViewController
+
+@interface CommentListViewController : TTBaseViewController
 
 - (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
 

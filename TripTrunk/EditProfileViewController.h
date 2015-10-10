@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseViewController.h"
+
 
 @protocol EditProfileViewControllerDelegate;
 
-@interface EditProfileViewController : UIViewController
+@interface EditProfileViewController : TTBaseViewController
 
 @property (weak, nonatomic) id<EditProfileViewControllerDelegate> delegate;
 

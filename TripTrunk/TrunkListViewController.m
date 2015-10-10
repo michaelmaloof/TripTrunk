@@ -51,20 +51,8 @@
     if (self.user == nil) {
     
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
-        
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
-        
+
         self.filter = [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
@@ -79,13 +67,6 @@
     } else {
         [self loadUserTrunks];
     }
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -105,14 +86,6 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
 
 -(void)loadUserTrunks
 {

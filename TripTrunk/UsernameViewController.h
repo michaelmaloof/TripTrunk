@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTBaseViewController.h"
 
 
-@interface UsernameViewController : UIViewController <UITextFieldDelegate>
+@interface UsernameViewController : TTBaseViewController <UITextFieldDelegate>
 
 @end
