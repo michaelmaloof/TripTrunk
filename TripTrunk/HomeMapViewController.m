@@ -47,43 +47,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self designNavBar];
+    [self setUpArrays];
     
+//This is an old feature that has been removed. It used to let you filter between your trunks and your newsfeeed trunks. We left the code but hide the button in case we ever want this feature
+    self.mapFilter.hidden = YES;
     
-    if (self.user == nil) {
-            
-        self.tabBarController.tabBar.translucent = false;
-        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
-
-        
-    }
-
+//TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
+//NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
     
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-
-    
-    if (self.user == nil){
-        [self setTitleImage];
-    } else {
-        self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
-    }
-    
-    self.tripsToCheck = [[NSMutableArray alloc]init];
-    
-    self.hotDots = nil;
-    self.hotDots = [[NSMutableArray alloc]init];
-    self.locations = nil;
-    self.locations = [[NSMutableArray alloc]init];
-    self.parseLocations = nil;
-    self.parseLocations = [[NSMutableArray alloc]init];
-    self.justMadeTrunk = nil;
-    self.justMadeTrunk = [[NSMutableArray alloc]init];
-    self.isNew= NO;
-    
-    self.mapFilter.hidden = YES; //leave hidden for now. Ill explain if you email me and remind me lol
-    self.originalArray = [[NSMutableArray alloc]init];
-        
-        //TODOSTILL How do I access the hometown property? Also, this should be saved as a geopoint and name
-//        NSString *hometown = [[PFUser currentUser] objectForKey:@"hometown"];
+//Require users to agree to the terms and conditions
     [self ensureEULA];
     
 }
@@ -92,24 +65,77 @@
 -(void)viewDidAppear:(BOOL)animated {
     
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
+    
+//Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
         if (self.user == nil) {
-            [self queryParseMethodEveryone];
             
+//If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
+            [self queryParseMethodEveryone];
+//We're on the home tab so register the user's notifications
             [self registerNotifications];
             
         } else {
+//If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
             [self queryParseMethodForUser:self.user];
-            
-            [self registerNotifications];
         }
     }
-    
-    NSLog(@"count = %lu", (unsigned long)self.mapView.annotations.count);
-    
 }
 
+/**
+ *  Create the navBar with proper design
+ *
+ *
+ */
+-(void)designNavBar{
+    
+//if self.user is not nil then you are looking at a user's profile. Therefore the map will have their name in the title. If self.user is nil then we show the TripTrunk title since you are on the home or newsfeed map.
+    if (self.user == nil) {
+        [self setTitleImage];
+    } else {
+        self.title = [NSString stringWithFormat:@"@%@'s Trunks", self.user.username];
+    }
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.tabBarController.tabBar.translucent = false;
+//TODO We should have TripTrunk blue be in a font class
+    [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+}
+
+/**
+ *  Create the arrays we need for the map
+ *
+ *
+ */
+-(void)setUpArrays{
+//we locate each trunk thats placed o nthe map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
+    self.tripsToCheck = [[NSMutableArray alloc]init];
+    
+//containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
+    self.hotDots = [[NSMutableArray alloc]init];
+    
+//the locations we place on the map
+    self.locations = [[NSMutableArray alloc]init];
+    
+//the trunks we pull down from parse
+    self.parseLocations = [[NSMutableArray alloc]init];
+  
+
+//This just contains the trunk that the current user just made. It needs an array for the map to zoom to. Idk why. There is probably a better way to do that.
+    self.justMadeTrunk = [[NSMutableArray alloc]init];
+    
+//the list of trunks we place on the map originally. We compare this to the trunks will pull down on the view did appear to see if we need to place down new pins
+    self.originalArray = [[NSMutableArray alloc]init];
+
+    self.isNew= NO;
+}
+
+/**
+ *  Make the title the "TripTrunk" image
+ *
+ *
+ */
 - (void)setTitleImage {
     UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
     UIImageView *logoView = [[UIImageView alloc] initWithImage:logo];
@@ -119,21 +145,21 @@
     [self.navigationItem.titleView setContentMode:UIViewContentModeScaleAspectFit];
 }
 
+/**
+ *  Make the user agree to the terms and conditions
+ *
+ *
+ */
 - (void)ensureEULA {
     BOOL didAgree = [[[NSUserDefaults standardUserDefaults] valueForKey:@"agreedToEULA"] boolValue];
     
-    // If they've already agreed, AWESOME!
-    // if not, we need to force them into our terms.
+// If they've already agreed, AWESOME!
+// if not, we need to force them into our terms. Or else...
     if (!didAgree) {
-        
         EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
-        
         UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
-        
         [self presentViewController:homeNavController animated:YES completion:nil];
-        
     }
-    
 }
 
 /**
@@ -158,6 +184,11 @@
     return YES;
 }
 
+/**
+ *  Register user notifications
+ *
+ *
+ */
 - (void)registerNotifications {
 
         UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
@@ -168,43 +199,29 @@
 
 }
 
+//Currently the only alert view that is shown is if you open the homescreen and have no friends. We encourage you to follow people so you won't be such a loser.
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    // Okay button pressed - They want to add some friends
+// Okay button pressed - They want to add some friends
     if (buttonIndex == 1) {
         [self.tabBarController setSelectedIndex:1];
     }
 }
 
-//-(void)queryTrunks
-//{
-//    PFQuery *findTrip = [PFQuery queryWithClassName:@"Trip"];
-//    [findTrip findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (self.loadedOnce == NO){
-//            self.title = @"Loading Trunks...";
-//            self.loadedOnce = YES;
-//        }
-//        if(!error)
-//            {
-//                self.parseLocations = [NSMutableArray arrayWithArray:objects];
-//                [self placeTrips];
-//                
-//            }else
-//            {
-//                NSLog(@"Error: %@",error);
-//                self.title = @"TripTrunk";
-//
-//            }
-//            
-//        }];
-//}
 
+/**
+ *  Load the trunks of a specific user from the trunk since we are looking at a user's profile
+ *
+ *
+ */
 -(void)queryParseMethodForUser:(PFUser*)user
 {
+//We want to know if we have already loaded trunks from parse
     if (self.loadedOnce == NO){
         self.loadedOnce = YES;
     }
-    
+
+//Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
@@ -214,15 +231,17 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
+//If we haven't loaded the user's trunks before then we tell the current user that we are loading in the title of the navBar
         if (self.loadedOnce == NO)
         {
             self.title = @"Loading Trunks...";
             self.loadedOnce = YES;
         }
+
+//If there is an error put the navBar title back to normal so that it isn't still tellign the user we are loading the trunks.
         if(error)
         {
             NSLog(@"Error: %@",error);
-            
             if (self.user == nil){
                 [self setTitleImage];
             } else {
@@ -239,10 +258,12 @@
                 Trip *trip = activity[@"trip"];
 //                PFUser *user = activity[@"toUser"];
                 
+//We make sure the trip has a name. Old trips in the database could be nil for the names. We want to filter these out
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
 
+//We're handing private trunks in parse now so this code is no longer needed. Leave it here in case we switch back
 //                    if (trip.isPrivate == YES)
 //                    {
 //                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
@@ -256,6 +277,8 @@
 //                    }
                     
                 }
+                
+//If we've finished the for loop then we place the trips we loaded from parse to the map. Honestly the count isnt needed but I left it here.
                 count += 1;
                 if(count == objects.count){
                     [self placeTrips];
@@ -267,8 +290,15 @@
 }
 
 
-
+/**
+ *  Load the trunks of the user's who the current user is following. We use the self.friends array to store their following.
+ *
+ *
+ */
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
+    
+//This is documented in the method above.
+//TODO This method and the one above should be merged into one method during refactoring
 
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -334,13 +364,20 @@
     }];
 }
 
-
+/**
+ *  Load the user's who the current user is following
+ *
+ *
+ */
 -(void)queryParseMethodEveryone
 {
     if (self.loadedOnce == NO){
         self.loadedOnce = YES;
     }
+    
+//self.friends will contrain the users that the current user is following.
         self.friends = [[NSMutableArray alloc]init];
+//add the current user to self.friends since we want the current user's trunks too
         [self.friends addObject:[PFUser currentUser]];
 
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
@@ -350,17 +387,20 @@
         }
 
         if (!error) {
+//add the users to self.friends. Now its containing the current user and all the people they are following
             [self.friends addObjectsFromArray:users];
             
+//use parse to download the trunks of the current user and the users they are following
             [self queryForTrunks];
             
             if (users.count == 0) {
-                NSLog(@"Not following any users");
+//They're following no one, tell them to make some friends
                 [self displayFollowUserAlertIfNeeded];
                 
             }
         }
         else {
+            //if we didn't load the users then we set back the correct title.
             if (self.user == nil){
                 [self setTitleImage];
 
@@ -373,6 +413,11 @@
     }];
 }
 
+/**
+ *  The user is following no one so we tell them to follow people
+ *
+ *
+ */
 - (void)displayFollowUserAlertIfNeeded {
     NSUInteger timesShown = [[[NSUserDefaults standardUserDefaults] valueForKey:@"shownFollowUserAlert"] integerValue];
     if (!timesShown) {
@@ -391,26 +436,35 @@
 
 }
 
+/**
+ *  Zoom the map out
+ *
+ *
+ */
 - (IBAction)zoomOut:(id)sender {
     self.mapView.camera.altitude *= 3.5;
 }
 
--(void)zoomTrunkOut{
-    
-}
 
+/**
+ *  Place the trunks we got from parse on the map
+ *
+ *
+ */
 -(void)placeTrips
 {
 
+//If the original array of trunks we loaded when viewDidLoad was called then there are no current trunks on the map. We can just display the new trunks.
     if (self.originalArray.count == 0)
     {
-        
+
+//self.parselocations contains the locations we just pulled down from parse
         for (Trip *trip in self.parseLocations)
         {
-            
+ 
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
             
-            
+//find the last time a user added a photo to this trunk. If it is less than 24 hours the trunk on the map needs to be red instead of blue
             NSDate *today = [NSDate date];
             NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
             
@@ -422,13 +476,17 @@
             } else{
                 color = 0;
             }
-            
+//we make sure that we havent already placed a pin on a city. If the trunk is red (hot) then we place it anyways since we always want red pins showing
             if(![self.tripsToCheck containsObject:address] || color == 1)
             {
+//place the trunk on the map
                 [self addTripToMap:trip dot:color];
+//we want to know how many trunks we originally had
                 self.originalCount = self.parseLocations.count;
+//we then set the orignalarray to parselocations. we use this to compare these trunks with the new ones we pull down from parse later
                 self.originalArray = self.parseLocations;
             } else {
+//we want a tally of the trunks we dropped and didn't drop on the map
                 self.notDropped = self.notDropped +1;
             }
         }
@@ -436,8 +494,10 @@
     else
     {
         int indexCount = 0;
+//update is for us to see if the map needs to be updated
         BOOL update = NO;
-        
+
+//if the parseLocations or orginalArray differes then update ==YES
         for (Trip *trip in self.parseLocations)
         {
             Trip *tripTwo = [self.originalArray objectAtIndex:indexCount];
@@ -449,7 +509,7 @@
                 break;
             }
         }
-        
+//if we need to update the map then we remove the current map pins and add new ones. TODO we should just add/remove the correct pins. Not all of them.
         if (update == YES)
         {
             [self.mapView removeAnnotations:self.mapView.annotations];
@@ -467,7 +527,7 @@
 
             for (Trip *trip in self.parseLocations)
             {
-
+//this code is described above. TODO We need to refactor it and combine them
                 NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
                 
                 
@@ -496,11 +556,20 @@
     }
 }
 
+
+/**
+ *  Turn the trunk into a map annotation and place it on the map
+ *
+ *
+ */
 -(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
 {
+    
+//we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-
     [self.tripsToCheck addObject:string];
+    
+    
     CLGeocoder *geocoder = [[CLGeocoder alloc]init];
     [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
@@ -511,33 +580,28 @@
         NSDate *date = trip.createdAt;
         NSTimeInterval interval = [date timeIntervalSinceNow];
         
-        if ([trip.name isEqualToString:@"3"]){
-            
-        }
-        
+//if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made
         if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
             self.isNew = YES;
             self.tripToCheck = trip;
             [self.justMadeTrunk addObject:annotation];
         }
-
+ //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
         if (hot == YES)
         {
             [self.hotDots addObject:annotation.title];
             [self.mapView addAnnotation:annotation];
 
         }
-        
+// if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
         else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
-
-        [self.mapView addAnnotation:annotation];
+            [self.mapView addAnnotation:annotation];
         }
         
         self.dropped = self.dropped + 1;
         
-        
+//if we placed all the correct pins we're done
         if (self.dropped + self.notDropped == self.parseLocations.count){
-//            [self fitPins]; showing hometown now
             self.dropped = 0;
             self.notDropped = 0;
             if (self.user == nil){
@@ -574,7 +638,8 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
-    
+
+//if the trunk is in the hotDots (meaning its hot) then make it red
     if ([self.hotDots containsObject:annotation.title]) {
         startAnnotation.image = [UIImage imageNamed:@"redMapCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
@@ -613,6 +678,12 @@
 
     return startAnnotation;
 }
+
+/**
+ *  Zoom to show all the pins on the map
+ *
+ *
+ */
 -(void)fitPins
 {
     self.mapView.camera.altitude *= 1.0;
@@ -657,13 +728,9 @@
         self.pinCityName = nil;
     }
 }
-- (IBAction)onProfileTapped:(id)sender {
-
-    
-    
-}
 
 
+// no longer supported as a feature but leave in case we add the feature again
 - (IBAction)mapToggleTapped:(id)sender {
     
     if (self.mapFilter.tag == 0)
