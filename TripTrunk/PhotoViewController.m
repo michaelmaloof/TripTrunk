@@ -354,14 +354,14 @@
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navController animated:YES completion:nil];
+    //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    //    [self presentViewController:navController animated:YES completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
