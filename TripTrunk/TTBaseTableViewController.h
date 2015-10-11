@@ -10,4 +10,11 @@
 
 @interface TTBaseTableViewController : UITableViewController
 
+/**
+ *  Make sure we have no tab bar titles
+ *
+ *
+ */
+-(void)tabBarTitle;
+
 @end
