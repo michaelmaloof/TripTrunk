@@ -211,6 +211,28 @@ enum TTActivityViewType : NSUInteger {
     }];
     
 }
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -50;
+    if(y > h + reload_distance) {
+        [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
+            //        _activities = [NSMutableArray arrayWithArray:activities];
+            [self.activities addObjectsFromArray:activities];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+                
+            });
+        }];
+    }
+}
 
 #pragma mark - Table view data source
 
