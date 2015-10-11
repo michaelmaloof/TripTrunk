@@ -40,6 +40,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
+    
+//if self.trip is valid then we are editing a trip, not creating a new one
     if (self.trip){
         self.alreadyTrip = YES;
     } else {
@@ -51,6 +53,8 @@
     self.photos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+//we hide all these things and only show them if the user has selected a photo to write a caption for
     self.caption.text = @"";
     self.caption.hidden = YES;
     self.borderLabel.hidden = YES;
@@ -62,12 +66,6 @@
     self.delete.hidden = YES;
     self.selectedPhoto.hidden = YES;
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     
     self.caption.delegate = self;
 }
@@ -84,7 +82,7 @@
 
 - (IBAction)libraryTapped:(id)sender {
     
-    // 10 photo upload limit, so make sure they haven't already picked 10 photos.
+    // 10 photo upload limit, so make sure they haven't already picked 10 photos. At some point we should let them load more but warn them if they arent connected to the wifi
     
     if (self.photos.count >= 10) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Limit Reached"
@@ -251,7 +249,8 @@
     cell.tripImageView.image = photo.image;
     cell.tripImageView.caption = photo.caption;
     cell.backgroundColor = [UIColor whiteColor];
-
+    
+//we change the design if the photo has a caption or not
     if(photo.caption){
         cell.captionImageView.image = [UIImage imageNamed:@"checkCircle"];
     }
@@ -276,7 +275,7 @@
         [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
-    
+//we unhide all these so that the user can write and edit captions
     self.addCaption.hidden = NO;
     self.caption.hidden = NO;
     self.borderLabel.hidden = NO;
@@ -296,6 +295,11 @@
 
 #pragma mark - Editing/Adding Caption to Photo
 
+/**
+ *  Add a caption to the photo
+ *
+ *
+ */
 - (IBAction)onAddCaptionTapped:(id)sender
 {
     [self.view endEditing:YES];
@@ -340,6 +344,11 @@
     
 }
 
+/**
+ *  Cancel the changes made to the caption
+ *
+ *
+ */
 - (IBAction)onCancelCaptionTapped:(id)sender {
     [self.view endEditing:YES];
     
@@ -360,7 +369,12 @@
 
 }
 
-- (IBAction)onRemoveTapped:(id)sender { //FIXME Doesn't remove caption
+/**
+ *  Removes the caption
+ *
+ *
+ */
+- (IBAction)onRemoveTapped:(id)sender {
     
     [self.view endEditing:YES];
     
@@ -386,6 +400,11 @@
 
 }
 
+/**
+ * Deletes the photo
+ *
+ *
+ */
 - (IBAction)onDeleteTapped:(id)sender {
     [self.view endEditing:YES];
     

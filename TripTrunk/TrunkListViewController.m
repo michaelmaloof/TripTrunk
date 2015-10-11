@@ -86,7 +86,11 @@
     
 }
 
-
+/**
+ *  Load current user's trunks from parse.
+ *
+ *
+ */
 -(void)loadUserTrunks
 {
     if (self.meParseLocations == nil) {
@@ -131,7 +135,11 @@
 }
 
 
-
+/**
+ *  Toggle between loading all the trunks at this city and just the users trunks
+ *
+ *
+ */
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
         [self.filter setTitle:@"My Trunks"];
@@ -142,6 +150,11 @@
     }
 }
 
+/**
+ *  Refresh the list of trunks
+ *
+ *
+ */
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     
@@ -168,6 +181,7 @@
 }
 
 #pragma mark - Parse Queries
+
 
 - (void)queryParseMethodMe
 {
