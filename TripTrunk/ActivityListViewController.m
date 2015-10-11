@@ -43,7 +43,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:likes];
-        self.title = @"Likers";
+        self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
     }
     return self;
@@ -54,7 +54,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:activities];
-        self.title = @"Activity";
+        self.title = self.title = NSLocalizedString(@"Activity",@"Activity");
         _viewType = TTActivityViewAllActivities;
     }
     return self;
@@ -102,13 +102,6 @@ enum TTActivityViewType : NSUInteger {
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-
     
     // Setup tableview delegate/datasource
     [self.tableView setDelegate:self];
@@ -196,7 +189,8 @@ enum TTActivityViewType : NSUInteger {
             if (refreshControl) {
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                 [formatter setDateFormat:@"MMM d, h:mm a"];
-                NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+                NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
                 NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
                                                                             forKey:NSForegroundColorAttributeName];
                 NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
@@ -441,7 +435,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Activity";
+    NSString *text = NSLocalizedString(@"No Activity",@"No Activity");
     
     if (_viewType == TTActivityViewLikes) {
         text = @"No Likers";
@@ -455,10 +449,10 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Keep using TripTrunk!";
+    NSString *text = NSLocalizedString(@"Keep using TripTrunk!", @"Keep using TripTrunk!");
 
     if (_viewType == TTActivityViewLikes) {
-        text = @"You could be the first to like this photo";
+        text = NSLocalizedString(@"You could be the first to like this photo",@"You could be the first to like this photo");
     }
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
