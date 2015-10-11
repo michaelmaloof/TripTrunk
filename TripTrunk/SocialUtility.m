@@ -471,7 +471,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(void (^)(NSArray *activities, NSError *error))completionBlock;
++ (void)queryForAllActivities:(NSInteger)count query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -482,6 +482,8 @@
     [query includeKey:@"photo"];
     [query includeKey:@"trip"];
     [query orderByDescending:@"createdAt"];
+    query.limit = 20;
+    query.skip = count;
     
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     
