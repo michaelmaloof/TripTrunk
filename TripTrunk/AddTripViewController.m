@@ -88,7 +88,9 @@
     
     if (self.trip) {
         _isEditing = YES;
-        self.title = @"Trunk Details";
+        self.title  = @"Trunk Details";
+        [self tabBarTitle];
+
         self.tripNameTextField.text = self.trip.name;
         self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
         self.startTripTextField.text = self.trip.startDate;
@@ -113,7 +115,8 @@
         _isEditing = NO;
 
         // initialize the trip object
-        self.title = @"Add New Trunk";
+        self.title  = @"Add New Trunk";
+        [self tabBarTitle];
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -347,6 +350,8 @@
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
     self.title = @"Verifying Location...";
+    [self tabBarTitle];
+
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = self.locationTextField.text;
     
@@ -356,7 +361,9 @@
         {
             NSLog(@"Error geocoding address: %@ withError: %@",address, error);
             // TODO: Set title image
-            self.title = @"Add New Trunk";
+            self.title  = @"Add New Trunk";
+            [self tabBarTitle];
+
             [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
         }
         
@@ -385,11 +392,15 @@
                 else
                 {
                     [self notEnoughInfo:@"Please fill out all boxes"];
-                    self.title = @"Add New Trunk";
+                    self.title  = @"Add New Trunk";
+                    [self tabBarTitle];
+
                 }
         }
         
-        self.title = @"Add New Trunk";
+        self.title  = @"Add New Trunk";
+        [self tabBarTitle];
+
         return;
     }];
 
@@ -609,11 +620,6 @@
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
              
-             [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-             [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-             [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-             [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-             [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
              
          }
          else
@@ -629,9 +635,18 @@
              }
          }
          // TODO: Set title image
-         self.title = @"Add New Trunk";
+          self.title  = @"Add New Trunk";
+         [self tabBarTitle];
          
      }];
+}
+
+-(void)tabBarTitle{
+    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 }
 
 

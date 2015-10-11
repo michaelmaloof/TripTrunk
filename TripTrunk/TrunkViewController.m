@@ -97,7 +97,7 @@
 
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
-    self.title = self.trip.name;
+    self.title  = self.trip.name;
     if (self.trip.isPrivate) {
         self.lock.hidden = NO;
     }
