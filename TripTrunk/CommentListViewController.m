@@ -35,7 +35,7 @@
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:comments];
         _photo = photo;
-        self.title = @"Comments";
+        self.title = NSLocalizedString(@"Comments",@"Comments");
     }
     return self;
 }
@@ -220,7 +220,7 @@
         [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             if (error) {
                 NSLog(@"Error deleting comment: %@", error);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't delete comment, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't delete comment, try again",@"Couldn't delete comment, try again") delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [alert show];
                 });
@@ -270,7 +270,7 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Comments";
+    NSString *text = NSLocalizedString(@"No Comments",@"No Comments");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor blackColor]};
@@ -280,7 +280,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"You could be the first to comment on this photo";
+    NSString *text = NSLocalizedString(@"You could be the first to comment on this photo",@"You could be the first to comment on this photo");
 
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
@@ -371,9 +371,9 @@
                 else {
                     UIAlertView *alertView = [[UIAlertView alloc] init];
                     alertView.delegate = self;
-                    alertView.title = @"Error adding comment. Please try again";
+                    alertView.title = NSLocalizedString(@"Error adding comment. Please try again",@"Error adding comment. Please try again");
                     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                    [alertView addButtonWithTitle:@"OK"];
+                    [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 }
             }];
