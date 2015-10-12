@@ -88,7 +88,7 @@
 //if self.trip is not nil then it means the user is editing a trunk and not creating a new one.
     if (self.trip) {
         _isEditing = YES;
-        self.title  = @"Trunk Details";
+        self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
         
 //Not sure why but in this view if we don't call this when we change the nav title then the tab bar title changes too.
         [self tabBarTitle];
@@ -103,14 +103,14 @@
         self.state = self.trip.state;
         self.country = self.trip.country;
         
-        self.navigationItem.rightBarButtonItem.title = @"Update";
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Update",@"Update");
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem.tag = 1;
         self.delete.hidden = NO;
         self.public.hidden = YES;
         self.private.hidden = YES;
         
-        self.cancelBar.title = @"Cancel";
+        self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
         self.cancelBar.enabled = YES;
     }
 //if self.trip is  nil then it means the user is creating a new trunk and not simply editing one
@@ -119,7 +119,7 @@
         _isEditing = NO;
 
         // initialize the trip object
-        self.title  = @"Add New Trunk";
+        self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
         [self tabBarTitle];
 
         // Set initial date to the field - should be Today's date.
@@ -131,7 +131,7 @@
         self.cancelBar.enabled = FALSE;
        
 
-    self.navigationItem.rightBarButtonItem.title = @"Next";
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"Next");
     self.navigationItem.rightBarButtonItem.tag = 0;
     self.navigationItem.leftBarButtonItem.tag = 0;
     self.delete.hidden = YES;
@@ -162,10 +162,10 @@
     
     // Start Date Toolbar
     UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:@"Next"
+    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"Next")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     UILabel *startLabel = [[UILabel alloc] init];
-    [startLabel setText:@"Start Date"];
+    [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
     [startLabel setFont:[UIFont systemFontOfSize:12.0]];
     [startLabel setTextColor:[UIColor blackColor]];
     [startLabel sizeToFit];
@@ -178,11 +178,11 @@
 
     // End Date Toolbar
     UIToolbar *endTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     
     UILabel *endLabel = [[UILabel alloc] init];
-    [endLabel setText:@"End Date"];
+    [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
     [endLabel setFont:[UIFont systemFontOfSize:12.0]];
     [endLabel setTextColor:[UIColor blackColor]];
     [endLabel sizeToFit];
@@ -363,7 +363,7 @@
 - (IBAction)onNextTapped:(id)sender
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
-    self.title = @"Verifying Location...";
+    self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
     [self tabBarTitle];
 //take the location the user typed in, make sure its a real location and meets the correct requirements
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
@@ -375,9 +375,9 @@
         {
             NSLog(@"Error geocoding address: %@ withError: %@",address, error);
             // TODO: Set title image
-            self.title  = @"Add New Trunk";
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
             [self tabBarTitle];
-            [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
+            [self notEnoughInfo:NSLocalizedString(@"Please select a valid location and make sure you have internet connection",@"Please select a valid location and make sure you have internet connection")];
         }
         
         else if (!error)
@@ -404,14 +404,14 @@
             
                 else
                 {
-                    [self notEnoughInfo:@"Please fill out all boxes"];
-                    self.title  = @"Add New Trunk";
+                    [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
+                    self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                     [self tabBarTitle];
 
                 }
         }
         
-        self.title  = @"Add New Trunk";
+        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         [self tabBarTitle];
 
         return;
@@ -479,10 +479,10 @@
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Are you sure you want to delete this Trunk?";
+    alertView.title = NSLocalizedString(@"Are you sure you want to delete this Trunk?",@"Are you sure you want to delete this Trunk?");
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Delete"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete")];
     alertView.tag = 0;
     [alertView show];
     
@@ -526,7 +526,7 @@
     alertView.delegate = self;
     alertView.title = message;
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Ok"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
     [alertView show];
     
     [self tabBarTitle];
@@ -571,7 +571,7 @@
     NSTimeInterval endTimeInterval = [[self.formatter dateFromString:self.trip.endDate] timeIntervalSince1970];
     if(startTimeInterval > endTimeInterval)
     {
-        [self notEnoughInfo:@"Your start date must happen on or before the end date"];
+        [self notEnoughInfo:NSLocalizedString(@"Your start date must happen on or before the end date",@"Your start date must happen on or before the end date")];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         return;
     }
@@ -631,10 +631,10 @@
      {
          
          if(error) {
-             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                 message:@"Please Try Again"
+             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                 message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
                                                                 delegate:self
-                                                       cancelButtonTitle:@"Okay"
+                                                       cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                        otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
@@ -654,7 +654,7 @@
              }
          }
          // TODO: Set title image
-          self.title  = @"Add New Trunk";
+         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
          [self tabBarTitle];
          
      }];
