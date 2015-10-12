@@ -135,9 +135,11 @@
     
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 }
 
@@ -288,8 +290,11 @@
 //                
 //                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
 //            
-                [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+                NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+                [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+                NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -319,8 +324,11 @@
         self.photoTakenBy.text = self.photo.userName;
 
         
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
         [self refreshPhotoActivities];
@@ -342,8 +350,11 @@
         self.photoTakenBy.text = self.photo.userName;
 
         
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         
         [self refreshPhotoActivities];
@@ -377,16 +388,16 @@
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
-                                         cancelButtonTitle:@"Cancel"
-                                    destructiveButtonTitle:@"Delete Photo"
-                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
     }
     else {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
-                                         cancelButtonTitle:@"Cancel"
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
                                     destructiveButtonTitle:nil
-                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
     }
 
     
@@ -451,8 +462,11 @@
     }
     
     [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
@@ -518,21 +532,21 @@
             NSLog(@"Delete Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Are you sure you want to delete this photo?";
+            alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo?",@"Are you sure you want to delete this photo?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Yes"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Yes",@"Yes")];
             alertView.tag = 0;
             [alertView show];
             
         }
         else if (buttonIndex == 1) {
             NSLog(@"Report Photo");
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];
             alertTextField.keyboardType = UIKeyboardTypeAlphabet;
-            alertTextField.placeholder = @"Enter photo's violation.";
+            alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
         }
@@ -540,10 +554,10 @@
             NSLog(@"Download Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Save photo to phone?";
+            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Download"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
             
@@ -555,11 +569,11 @@
         if (buttonIndex == 0) {
             NSLog(@"Report Photo");
             NSLog(@"Report Photo");
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];
             alertTextField.keyboardType = UIKeyboardTypeAlphabet;
-            alertTextField.placeholder = @"Enter photo's violation.";
+            alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
         }
@@ -567,10 +581,10 @@
             NSLog(@"Download Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Save photo to phone?";
+            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Download"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
             
