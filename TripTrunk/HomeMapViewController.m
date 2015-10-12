@@ -245,7 +245,9 @@
             if (self.user == nil){
                 [self setTitleImage];
             } else {
-                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
+                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                NSString *s = NSLocalizedString(@"'s",@"'s");
+                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
             }
             [ParseErrorHandlingController handleError:error];
         }
@@ -314,7 +316,7 @@
                 
         if (self.loadedOnce == NO)
         {
-            self.title = @"Loading Trunks...";
+            self.title = NSLocalizedString(@"Loading Trunks...",@"Loading Trunks...");
             self.loadedOnce = YES;
         }
         if(error)
@@ -324,7 +326,9 @@
                 [self setTitleImage];
 
             } else {
-                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
+                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                NSString *s = NSLocalizedString(@"'s",@"'s");
+                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
             }
             [ParseErrorHandlingController handleError:error];
         }
@@ -382,7 +386,7 @@
 
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (self.loadedOnce == NO){
-            self.title = @"Loading Trunks...";
+            self.title = NSLocalizedString(@"Loading Trunks...",@"Loading Trunks...");
             self.loadedOnce = YES;
         }
 
@@ -405,7 +409,9 @@
                 [self setTitleImage];
 
             } else {
-                self.title = [NSString stringWithFormat:@"@%@'s Trips", self.user.username];
+                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                NSString *s = NSLocalizedString(@"'s",@"'s");
+                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
             }
             [ParseErrorHandlingController handleError:error];
 
@@ -426,7 +432,7 @@
     // Show it every other time. After a few visits, then we'll pester them because they need to add friends.
     if (timesShown != 2 && timesShown != 4 && timesShown != 6 && timesShown != 8) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Follow Some Users" message:@"TripTrunk is more fun with friends. Start following some users now!" delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"Okay", nil];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Follow Some Users",@"Follow Some Users") message:NSLocalizedString(@"TripTrunk is more fun with friends. Start following some users now!",@"TripTrunk is more fun with friends. Start following some users now!") delegate:self cancelButtonTitle:NSLocalizedString(@"Not Now",@"Not Now") otherButtonTitles:NSLocalizedString(@"Okay",@"Okay"), nil];
             [alertView show];
         });
     }
@@ -608,7 +614,9 @@
                 [self setTitleImage];
 
             } else {
-                self.title = [NSString stringWithFormat:@"@%@'s Trunks", self.user.username];
+                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                NSString *s = NSLocalizedString(@"'s",@"'s");
+                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
             }
         }
 
