@@ -48,7 +48,7 @@
         self.alreadyTrip = NO;
         
     }
-    self.title = @"Add Photos";
+    self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
@@ -85,10 +85,10 @@
     // 10 photo upload limit, so make sure they haven't already picked 10 photos. At some point we should let them load more but warn them if they arent connected to the wifi
     
     if (self.photos.count >= 10) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Limit Reached"
-                                                        message:@"You can only upload 10 photos at a time. Upload these first, then you can add more"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Limit Reached",@"Limit Reached")
+                                                        message:NSLocalizedString(@"You can only upload 10 photos at a time. Upload these first, then you can add more",@"You can only upload 10 photos at a time. Upload these first, then you can add more")
                                                        delegate:self
-                                              cancelButtonTitle:@"Okay"
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                               otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -97,7 +97,7 @@
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.allowsEditing = NO;
-        [picker setTitle:@"Select Photo"];
+        [picker setTitle:NSLocalizedString(@"Select Photo",@"Select Photo")];
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         picker.navigationBar.tintColor = [UIColor whiteColor];
@@ -272,7 +272,7 @@
     
     if (photo.caption) {
         self.caption.text = photo.caption;
-        [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
+        [self.addCaption setTitle:NSLocalizedString(@"Update",@"Update") forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
 //we unhide all these so that the user can write and edit captions
@@ -312,7 +312,7 @@
        
         self.caption.text = nil;
         
-        [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+        [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
    
 
         self.selectedPhoto.hidden = YES;
@@ -336,9 +336,9 @@
     {
         UIAlertView *alertView = [[UIAlertView alloc] init];
         alertView.delegate = self;
-        alertView.title = @"No caption is typed";
+        alertView.title = NSLocalizedString(@"No caption is typed",@"No caption is typed");
         alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"OK"];
+        [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }
     
@@ -361,7 +361,7 @@
     self.borderLabel.hidden = YES;
 
     self.addCaption.hidden = YES;
-    [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+    [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
     self.caption.text = @"";
     self.remove.hidden = YES;
     self.delete.hidden = YES;
