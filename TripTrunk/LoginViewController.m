@@ -39,10 +39,10 @@
                         error:&error];
     if (error) {
         NSLog(@"Error: %@",error);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Try again"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Try again",@"Try again")
                                                        delegate:self
-                                              cancelButtonTitle:@"Okay"
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                               otherButtonTitles:nil, nil];
         [alert show];
     }
