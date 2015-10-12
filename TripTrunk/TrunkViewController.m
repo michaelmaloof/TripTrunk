@@ -87,10 +87,10 @@
 - (IBAction)lockTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Private Trunk";
-    alertView.message = @"Only the Trunk Creator and Trunk Members can see that this trunk exists";
+    alertView.title =NSLocalizedString(@"Private Trunk", @"Private Trunk");
+    alertView.message = NSLocalizedString(@"Only the Trunk Creator and Trunk Members can see that this trunk exists",@"Only the Trunk Creator and Trunk Members can see that this trunk exists");
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Ok"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
     alertView.tag = 4;
     [alertView show];
 }
@@ -127,7 +127,7 @@
     if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Edit",@"Edit")
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(editTapped)];
@@ -171,7 +171,7 @@
     
     if (self.isMember == YES && ![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Leave"
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Leave",@"Leave")
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(leaveTrunk)];
@@ -234,10 +234,10 @@
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Save Trunk photos to phone?";
+    alertView.title = NSLocalizedString(@"Save Trunk photos to phone?",@"Save Trunk photos to phone?");
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Download"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
     alertView.tag = 3;
     [alertView show];
 
@@ -250,16 +250,16 @@
 //}
 
 -(void)editTapped{
-    [self performSegueWithIdentifier:@"Edit" sender:self];
+    [self performSegueWithIdentifier:NSLocalizedString(@"Edit",@"Edit") sender:self];
 }
 
 -(void)leaveTrunk{
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = [NSString stringWithFormat:@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited"];
+    alertView.title = [NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited",@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited")];
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Dismiss"];
-    [alertView addButtonWithTitle:@"Leave Trunk"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss",@"Dismiss")];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Leave Trunk",@"Leave Trunk")];
     alertView.tag = 2;
     
     [alertView show];
@@ -276,10 +276,10 @@
                     [self.navigationController popToRootViewControllerAnimated:YES];
                 }
                 else if (error) {
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                        message:@"Failed to leave trunk. Try Again."
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                        message:NSLocalizedString(@"Failed to leave trunk. Try Again.",@"Failed to leave trunk. Try Again.")
                                                                        delegate:self
-                                                              cancelButtonTitle:@"Okay"
+                                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                               otherButtonTitles:nil, nil];
                     [alertView show];
                 }
