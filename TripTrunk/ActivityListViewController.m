@@ -215,7 +215,7 @@ enum TTActivityViewType : NSUInteger {
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = -50;
+    float reload_distance = -250;
     if(y > h + reload_distance) {
         [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
             //        _activities = [NSMutableArray arrayWithArray:activities];
@@ -227,6 +227,8 @@ enum TTActivityViewType : NSUInteger {
         }];
     }
 }
+
+
 
 #pragma mark - Table view data source
 
