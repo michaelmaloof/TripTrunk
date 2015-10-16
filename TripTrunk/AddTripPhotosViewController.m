@@ -97,11 +97,12 @@
     }
     else
     {
+//this presents the imagepicker, which allows users to select the photos they want to add to the trunk
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.allowsEditing = NO;
         [picker setTitle:NSLocalizedString(@"Select Photo",@"Select Photo")];
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; //for now, we only let users upload photos in the library. They can't take a photo within the app
         picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         picker.navigationBar.tintColor = [UIColor whiteColor];
         
@@ -112,17 +113,17 @@
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     UINavigationItem *ipcNavBarTopItem;
     
-    // add done button to right side of nav bar
+// add done button to right side of nav bar
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self
                                                                   action:@selector(photoPickerDoneAction)];
-    
+// add cancel button to left side of nav bar
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self
                                                                     action:@selector(imagePickerControllerDidCancel)];
-    
+
     UINavigationBar *bar = navigationController.navigationBar;
     [bar setHidden:NO];
     ipcNavBarTopItem = bar.topItem;
@@ -133,6 +134,7 @@
 
 
 -(void)photoPickerDoneAction{
+//the user is done selecting photos so we first go through and make sure none of the photos the selected are the same as photos that they've laready selected. This prevents duplicate photos being uploaded. self.currentSelectionPhotos are the photos the user selected while in the image picker. self.photos are the photos that will be uploaded to the trunk and are currently being shown in self.tripCollectionView
     for (Photo *photo in self.currentSelectionPhotos){
         BOOL same = NO;
         for (Photo *forPhoto in self.photos)
@@ -144,18 +146,25 @@
             [self.photos addObject:photo];
         }
     }
+
+//once we add the photos from the image picker (self.currentSelectionPhotos) to the photos that will be uploaded (self.photos) we remove all the photos from self.currentSelectionPhotos since the user has finished and closed the image picker
+    [self.currentSelectionPhotos removeAllObjects];
     
-    [self.currentSelectionPhotos removeAllObjects];;
+//reload the collectionview to show the new photos the user has added to be uploaded
     [self.tripCollectionView reloadData];
+
+//dissmis the imagepicker
     [self.navigationController.viewControllers.lastObject dismissViewControllerAnimated:YES completion:NULL];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
 }
 
 #pragma mark - Image Picker delegates
+//the user has tapped an image in the image picker
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+//first we add the photos the user has already selected to upload (currently showing in the collection view) to the array that will store the photos the user taps from the library. This is so we can indicate later which photos the user has already selected.
     for (Photo *selectedPhoto in self.photos){
         [self.currentSelectionPhotos addObject:selectedPhoto];
     }
@@ -163,10 +172,10 @@
     Photo *photo = [Photo object];
     photo.image = info[UIImagePickerControllerOriginalImage];
     
-    // set the reference URL now so we have it for uploading the raw image data
+// set the reference URL now so we have it for uploading the raw image data
     photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
     
-    // Set all the generic trip info on the Photo object
+// Set all the generic trip info on the Photo object
     PFUser *user = [PFUser currentUser];
     photo.likes = 0;
     photo.trip = self.trip;
@@ -175,8 +184,9 @@
     photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
+
+//if the user has already tapped this image then we want to remove it. This code remebers which photo to remove
     Photo *photoToDelete = [[Photo alloc]init];
-    
     BOOL photoSelected = NO;
     for (Photo *forPhoto in self.currentSelectionPhotos){
         if ([forPhoto.imageUrl isEqualToString:photo.imageUrl]){
@@ -185,9 +195,10 @@
         }
     }
 
-    
+//remove the photo if the user no longer wants to upload it
     if (photoSelected == YES){
         [self.currentSelectionPhotos removeObject:photoToDelete];
+//add the photo if the user wants to upload it
     } else {
         [self.currentSelectionPhotos addObject:photo];
     }
