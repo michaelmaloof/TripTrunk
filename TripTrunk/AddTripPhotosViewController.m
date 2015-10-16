@@ -134,7 +134,15 @@
 
 -(void)photoPickerDoneAction{
     for (Photo *photo in self.currentSelectionPhotos){
-        [self.photos addObject:photo];
+        BOOL same = NO;
+        for (Photo *forPhoto in self.photos)
+            if ([forPhoto.imageUrl isEqualToString:photo.imageUrl]){
+                same = YES;
+            }
+        
+        if (same == NO){
+            [self.photos addObject:photo];
+        }
     }
     
     [self.currentSelectionPhotos removeAllObjects];;
