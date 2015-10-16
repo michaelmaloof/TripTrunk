@@ -87,16 +87,16 @@
     
     // 10 photo upload limit, so make sure they haven't already picked 10 photos. At some point we should let them load more but warn them if they arent connected to the wifi
     
-    if (self.photos.count >= 10) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Limit Reached",@"Limit Reached")
-                                                        message:NSLocalizedString(@"You can only upload 10 photos at a time. Upload these first, then you can add more",@"You can only upload 10 photos at a time. Upload these first, then you can add more")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else
-    {
+//    if (self.photos.count >= 10) {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Limit Reached",@"Limit Reached")
+//                                                        message:NSLocalizedString(@"You can only upload 10 photos at a time. Upload these first, then you can add more",@"You can only upload 10 photos at a time. Upload these first, then you can add more")
+//                                                       delegate:self
+//                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+//                                              otherButtonTitles:nil, nil];
+//        [alert show];
+//    }
+//    else
+//    {
 //this presents the imagepicker, which allows users to select the photos they want to add to the trunk
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
@@ -107,7 +107,7 @@
         picker.navigationBar.tintColor = [UIColor whiteColor];
         
         [self presentViewController:picker animated:YES completion:NULL];
-    }
+//    }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
