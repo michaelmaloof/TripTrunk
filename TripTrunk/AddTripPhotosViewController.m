@@ -206,9 +206,7 @@
     
 }
 
-
-
-
+//the user canceled and doesn't want to upload any of the photos in the image picker
 -(void)imagePickerControllerDidCancel{
     [self.navigationController.viewControllers.lastObject dismissViewControllerAnimated:YES completion:NULL];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
