@@ -32,6 +32,8 @@
 @property BOOL alreadyTrip;
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 @property (weak, nonatomic) IBOutlet UILabel *borderLabel;
+@property NSMutableArray *currentSelectionPhotos;
+
 
 @end
 
@@ -51,6 +53,7 @@
     self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
+    self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     
@@ -101,16 +104,54 @@
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         picker.navigationBar.tintColor = [UIColor whiteColor];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        
         [self presentViewController:picker animated:YES completion:NULL];
     }
 }
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    UINavigationItem *ipcNavBarTopItem;
+    
+    // add done button to right side of nav bar
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(photoPickerDoneAction)];
+    
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                    action:@selector(imagePickerControllerDidCancel)];
+    
+    UINavigationBar *bar = navigationController.navigationBar;
+    [bar setHidden:NO];
+    ipcNavBarTopItem = bar.topItem;
+    ipcNavBarTopItem.title = @"";
+    ipcNavBarTopItem.rightBarButtonItem = doneButton;
+    ipcNavBarTopItem.leftBarButtonItem = cancelButton;
+}
+
+
+-(void)photoPickerDoneAction{
+    for (Photo *photo in self.currentSelectionPhotos){
+        [self.photos addObject:photo];
+    }
+    
+    [self.currentSelectionPhotos removeAllObjects];;
+    [self.tripCollectionView reloadData];
+    [self.navigationController.viewControllers.lastObject dismissViewControllerAnimated:YES completion:NULL];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+}
 
 #pragma mark - Image Picker delegates
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    for (Photo *selectedPhoto in self.photos){
+        [self.currentSelectionPhotos addObject:selectedPhoto];
+    }
+    
     Photo *photo = [Photo object];
     photo.image = info[UIImagePickerControllerOriginalImage];
     
@@ -126,22 +167,38 @@
     photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
     photo.tripName = self.trip.name;
     photo.city = self.trip.city;
+    Photo *photoToDelete = [[Photo alloc]init];
     
-    
-    [self.photos addObject:photo];
-    
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    [self.tripCollectionView reloadData];
+    BOOL photoSelected = NO;
+    for (Photo *forPhoto in self.currentSelectionPhotos){
+        if ([forPhoto.imageUrl isEqualToString:photo.imageUrl]){
+            photoSelected = YES;
+            photoToDelete = forPhoto;
+        }
+    }
 
+    
+    if (photoSelected == YES){
+        [self.currentSelectionPhotos removeObject:photoToDelete];
+    } else {
+        [self.currentSelectionPhotos addObject:photo];
+    }
+    
+    
 }
 
 
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+
+
+-(void)imagePickerControllerDidCancel{
+    [self.navigationController.viewControllers.lastObject dismissViewControllerAnimated:YES completion:NULL];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
 }
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo{
+}
+
 
 #pragma mark - Saving Photos
 
