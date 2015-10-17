@@ -54,12 +54,18 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
     role.setACL(new Parse.ACL(user));
     return role.save();
 
-  }).then(function() {
-  	// TODO: Update any objects with this friendsOf role to be read-only for this role, not public.
-  	// i.e. Photos will be Public and friendsOf read since not everyone who sees the photos will be this persons friend.
-  	// But now only friends can see the photos.
-  	// Maybe this should call a Background Job so we aren't limited to a few seconds.
-  }).then(function() {
+  }).then(function(role) {
+
+    // Add a new job to the Job Queue to turn all photos to private.
+    // We use a queue instead of calling it directly because it could take awhile.
+    var JobQueue = Parse.Object.extend("JobQueue");
+    var job = new JobQueue();
+    job.set("name", "userBecamePrivate");
+    job.set("user", user);
+    job.set("action", "changePhotosToPrivate");
+    return job.save();
+
+  }).then(function(job) {
     response.success("Success! - Account Now Private");
   }, function(error) {
     response.error(error);
@@ -73,7 +79,7 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
 Parse.Cloud.define("becomePublic", function(request, response) {
   var user = request.user;
 
-    user.set("private", false);
+  user.set("private", false);
   user.save();
 
   var roleName = "friendsOf_" + request.user.id;
@@ -87,12 +93,18 @@ Parse.Cloud.define("becomePublic", function(request, response) {
     role.setACL(acl);
     return role.save();
 
-  }).then(function() {
-  	// TODO: Update any objects with this friendsOf role to be public
-  	// i.e. Photos will be friendsOf read but needs to be Public read now that their account is public.
+  }).then(function(role) {
 
-  	// Maybe this should call a Background Job so we aren't limited to a few seconds.
-  }).then(function() {
+    // Add a new job to the Job Queue to turn all photos to public.
+    // We use a queue instead of calling it directly because it could take awhile.
+    var JobQueue = Parse.Object.extend("JobQueue");
+    var job = new JobQueue();
+    job.set("name", "userBecamePublic");
+    job.set("user", user);
+    job.set("action", "changePhotosToPublic"); 
+    return job.save();
+
+  }).then(function(job) {
     response.success("Success! - Account Now Public");
   }, function(error) {
     response.error(error);
