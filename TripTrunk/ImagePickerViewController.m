@@ -32,6 +32,7 @@ static int count=0;
 }
 
 - (IBAction)cancelWasTapped:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 
@@ -42,9 +43,24 @@ static int count=0;
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+    cell.ImageView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
+    [cell.ImageView setContentMode:UIViewContentModeScaleAspectFill];
     cell.ImageView.image = [self.assets objectAtIndex:indexPath.row];
+    [cell setNeedsLayout];
     return cell;
     
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+
 }
 
 
