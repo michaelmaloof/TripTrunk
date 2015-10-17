@@ -43,10 +43,10 @@ static int count=0;
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.ImageView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
+//    cell.ImageView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width/4, cell.frame.size.height/4);
     [cell.ImageView setContentMode:UIViewContentModeScaleAspectFill];
+//    [cell setContentMode:UIViewContentModeScaleAspectFill];
     cell.ImageView.image = [self.assets objectAtIndex:indexPath.row];
-    [cell setNeedsLayout];
     return cell;
     
 }
@@ -59,7 +59,7 @@ static int count=0;
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+    return CGSizeMake(self.view.frame.size.width/4, self.view.frame.size.width/4);
 
 }
 
