@@ -14,6 +14,7 @@
 #import "TTUtility.h"
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
+#import "ImagePickerViewController.h"
 
 @interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate >
 @property UIImagePickerController *PickerController;
@@ -98,15 +99,18 @@
 //    else
 //    {
 //this presents the imagepicker, which allows users to select the photos they want to add to the trunk
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = NO;
-        [picker setTitle:NSLocalizedString(@"Select Photo",@"Select Photo")];
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; //for now, we only let users upload photos in the library. They can't take a photo within the app
-        picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        picker.navigationBar.tintColor = [UIColor whiteColor];
-        
-        [self presentViewController:picker animated:YES completion:NULL];
+
+//imagePicker
+//        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//        picker.delegate = self;
+//        picker.allowsEditing = NO;
+//        [picker setTitle:NSLocalizedString(@"Select Photo",@"Select Photo")];
+//        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; //for now, we only let users upload photos in the library. They can't take a photo within the app
+//        picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//        picker.navigationBar.tintColor = [UIColor whiteColor];
+//        [self presentViewController:picker animated:YES completion:NULL];
+    
+    
 //    }
 }
 

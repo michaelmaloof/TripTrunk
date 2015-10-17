@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */; settings = {ASSET_TAGS = (); }; };
+		2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */; settings = {ASSET_TAGS = (); }; };
 		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
 		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
@@ -120,6 +122,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewController.h; sourceTree = "<group>"; };
+		2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewController.m; sourceTree = "<group>"; };
+		2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerCollectionViewCell.h; sourceTree = "<group>"; };
+		2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerCollectionViewCell.m; sourceTree = "<group>"; };
 		220408D71AEC5475009DB060 /* TrunkListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkListViewController.h; sourceTree = "<group>"; };
 		220408D81AEC5475009DB060 /* TrunkListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkListViewController.m; sourceTree = "<group>"; };
 		220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkTableViewCell.h; sourceTree = "<group>"; };
@@ -359,6 +365,10 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */,
+				2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */,
+				2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */,
+				2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */,
 				C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */,
 				C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */,
 				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
@@ -750,6 +760,7 @@
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
+				2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */,
 				C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
@@ -762,6 +773,7 @@
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
+				2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,

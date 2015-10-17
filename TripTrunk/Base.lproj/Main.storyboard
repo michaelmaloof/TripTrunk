@@ -1728,7 +1728,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="libraryTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="uCz-bi-l7O"/>
+                                    <segue destination="7he-dP-O6h" kind="presentation" id="OG4-hG-bPM"/>
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HJk-qO-N2Z">
@@ -2219,7 +2219,121 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qc3-8Y-lbt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1914" y="-414"/>
+            <point key="canvasLocation" x="2110.5" y="-298.5"/>
+        </scene>
+        <!--Image Picker View Controller-->
+        <scene sceneID="IQ6-KL-uEQ">
+            <objects>
+                <viewController id="jHI-ia-CaE" customClass="ImagePickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oSh-1J-PXm"/>
+                        <viewControllerLayoutGuide type="bottom" id="27k-gb-W1M"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QAv-RT-p8Q">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PPo-84-1ID">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vLb-Jc-94m">
+                                    <size key="itemSize" width="114" height="136"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MyCell" id="pdQ-N2-vbH" customClass="ImagePickerCollectionViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="114" height="136"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rs-Y7-aUD">
+                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="32" y="43" width="50" height="50"/>
+                                                    </variation>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.76470588240000004" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="2rs-Y7-aUD"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <mask key="subviews">
+                                                <include reference="2rs-Y7-aUD"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="ImageView" destination="2rs-Y7-aUD" id="GTD-zc-vNf"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="jHI-ia-CaE" id="KWh-O9-8En"/>
+                                    <outlet property="delegate" destination="jHI-ia-CaE" id="ktg-d6-boZ"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.52941176469999995" green="0.74901960779999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="PPo-84-1ID" firstAttribute="height" secondItem="QAv-RT-p8Q" secondAttribute="height" id="1TD-Dq-x9i"/>
+                            <constraint firstItem="PPo-84-1ID" firstAttribute="width" secondItem="QAv-RT-p8Q" secondAttribute="width" id="IhJ-mH-L3f"/>
+                            <constraint firstItem="PPo-84-1ID" firstAttribute="centerX" secondItem="QAv-RT-p8Q" secondAttribute="centerX" id="XjX-RI-bfO"/>
+                            <constraint firstItem="PPo-84-1ID" firstAttribute="centerY" secondItem="QAv-RT-p8Q" secondAttribute="centerY" id="s48-8F-PMG"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="PPo-84-1ID"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="1TD-Dq-x9i"/>
+                                <exclude reference="IhJ-mH-L3f"/>
+                                <exclude reference="XjX-RI-bfO"/>
+                                <exclude reference="s48-8F-PMG"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="PPo-84-1ID"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="1TD-Dq-x9i"/>
+                                <include reference="IhJ-mH-L3f"/>
+                                <include reference="XjX-RI-bfO"/>
+                                <include reference="s48-8F-PMG"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="ytB-eR-YWv">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="cl5-c1-FhO">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="cancelWasTapped:" destination="jHI-ia-CaE" id="pi4-19-s9w"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="cnm-Ai-yQX">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="doneWasTapped:" destination="jHI-ia-CaE" id="yuz-mM-CeT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="Done" destination="cnm-Ai-yQX" id="Wh9-o1-m7N"/>
+                        <outlet property="cancel" destination="cl5-c1-FhO" id="mUI-Zb-qaH"/>
+                        <outlet property="photoCollectionView" destination="PPo-84-1ID" id="aAa-R7-IdV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WvA-KG-48d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3993" y="-388.5"/>
         </scene>
         <!--Add Trip Friends View Controller-->
         <scene sceneID="aZY-8Z-C80">
@@ -2951,6 +3065,24 @@
             </objects>
             <point key="canvasLocation" x="1182" y="-1863"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="9mk-ug-z4D">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7he-dP-O6h" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="OaO-KM-2xT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="jHI-ia-CaE" kind="relationship" relationship="rootViewController" id="3vb-Oa-gYO"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ozX-JL-Dyg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3075" y="-388.5"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Cancel" width="100" height="100"/>
@@ -2975,8 +3107,8 @@
         <image name="zoomGlass" width="1002" height="1002"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bhX-wL-LGH"/>
-        <segue reference="JSU-Dg-jAI"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="JSU-Dg-jAI"/>
+        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
