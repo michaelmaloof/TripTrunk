@@ -15,6 +15,7 @@
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
+		2225BF091BD2F7760088080F /* PickerImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2225BF081BD2F7760088080F /* PickerImage.m */; settings = {ASSET_TAGS = (); }; };
 		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; settings = {ASSET_TAGS = (); }; };
 		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; settings = {ASSET_TAGS = (); }; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -138,6 +139,8 @@
 		220408F01AF1C1EA009DB060 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		220408F21AF311D6009DB060 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
+		2225BF071BD2F7760088080F /* PickerImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerImage.h; sourceTree = "<group>"; };
+		2225BF081BD2F7760088080F /* PickerImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerImage.m; sourceTree = "<group>"; };
 		22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseViewController.h; sourceTree = "<group>"; };
 		22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseViewController.m; sourceTree = "<group>"; };
 		22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewController.h; sourceTree = "<group>"; };
@@ -367,6 +370,8 @@
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
 				2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */,
 				2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */,
+				2225BF071BD2F7760088080F /* PickerImage.h */,
+				2225BF081BD2F7760088080F /* PickerImage.m */,
 				2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */,
 				2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */,
 				C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */,
@@ -773,6 +778,7 @@
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
+				2225BF091BD2F7760088080F /* PickerImage.m in Sources */,
 				2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,

@@ -10,5 +10,6 @@
 
 @interface ImagePickerCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *ImageView;
+@property BOOL isSelected;
 
 @end

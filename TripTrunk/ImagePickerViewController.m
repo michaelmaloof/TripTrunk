@@ -8,11 +8,15 @@
 
 #import "ImagePickerViewController.h"
 #import "ImagePickerCollectionViewCell.h"
+#import "Photo.h"
+#import <Parse/Parse.h>
+
 
 
 @interface ImagePickerViewController ()
-@property NSArray *assets;
-@property NSMutableArray *photosToAdd;
+@property NSMutableArray *assets;
+@property NSMutableArray *assetURLDictionaries;
+@property NSMutableArray *tappedCells;
 
 @end
 
@@ -23,30 +27,36 @@ static int count=0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.photoCollectionView.delegate = self;
-    self.assets = [[NSArray alloc]init];
+    //REMOVE LATER
     self.photosToAdd = [[NSMutableArray alloc]init];
+    self.photoCollectionView.delegate = self;
+    self.tappedCells = [[NSMutableArray alloc]init];
     [self getAllPictures];
- 
-
 }
 
-- (IBAction)cancelWasTapped:(id)sender {
+- (IBAction)doneTapped:(id)sender {
+    [self.delegate imagesWereSelected:self.photosToAdd];
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
-- (IBAction)doneWasTapped:(id)sender {
-    
+- (IBAction)cancelTapped:(id)sender {
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-//    cell.ImageView.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width/4, cell.frame.size.height/4);
     [cell.ImageView setContentMode:UIViewContentModeScaleAspectFill];
-//    [cell setContentMode:UIViewContentModeScaleAspectFill];
-    cell.ImageView.image = [self.assets objectAtIndex:indexPath.row];
+    Photo *photo = [self.assets objectAtIndex:indexPath.row];
+    cell.ImageView.image = photo.image;
+    NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
+    if ([self.tappedCells containsObject:number]){
+        cell.isSelected = YES;
+        cell.ImageView.alpha = .3;
+    }else {
+        cell.isSelected = NO;
+        cell.ImageView.alpha = 1;
+    }
     return cell;
     
 }
@@ -66,12 +76,27 @@ static int count=0;
 
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    UIImage *image = [self.assets objectAtIndex:indexPath.row];
-    [self.photosToAdd addObject:image];
+    Photo *image = [self.assets objectAtIndex:indexPath.row];
+    BOOL duplicate = NO;
+    NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
+    NSArray *arrayPath = [[NSArray alloc]initWithObjects:indexPath, nil];
+
+    for (Photo *photo in self.photosToAdd){
+        if ([image.imageUrl isEqualToString:photo.imageUrl]){
+            duplicate = YES;
+        }
+    }
+    
+    if (duplicate == NO){
+        [self.photosToAdd addObject:image];
+        [self.tappedCells addObject:number];
+    } else {
+        [self.photosToAdd removeObject:image];
+        [self.tappedCells removeObject:number];
+    }
     
     
-    
-    
+    [self.photoCollectionView reloadItemsAtIndexPaths:arrayPath];
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -81,16 +106,17 @@ static int count=0;
 
 -(void)getAllPictures
 {
+    self.assets = [[NSMutableArray alloc]init];
     imageArray=[[NSArray alloc] init];
     mutableArray =[[NSMutableArray alloc]init];
-    NSMutableArray* assetURLDictionaries = [[NSMutableArray alloc] init];
+    self.assetURLDictionaries = [[NSMutableArray alloc] init];
     
     library = [[ALAssetsLibrary alloc] init];
     
     void (^assetEnumerator)( ALAsset *, NSUInteger, BOOL *) = ^(ALAsset *result, NSUInteger index, BOOL *stop) {
         if(result != nil) {
             if([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-                [assetURLDictionaries addObject:[result valueForProperty:ALAssetPropertyURLs]];
+                [ self.assetURLDictionaries addObject:[result valueForProperty:ALAssetPropertyURLs]];
                 
                 NSURL *url= (NSURL*) [[result defaultRepresentation]url];
                 
@@ -129,9 +155,73 @@ static int count=0;
 
 -(void)allPhotosCollected:(NSArray*)imgArray
 {
-    self.assets = imgArray;
+    int count = 0;
+    for (UIImage *image in imgArray){
+        Photo *photo = [Photo object];
+        photo.image = image;
+        
+        // set the reference URL now so we have it for uploading the raw image data
+        NSDictionary *url  = [self.assetURLDictionaries objectAtIndex:count];
+        photo.imageUrl = [NSString stringWithFormat:@"%@",url];
+            // Set all the generic trip info on the Photo object
+        PFUser *user = [PFUser currentUser];
+        photo.likes = 0;
+        photo.trip = self.trip;
+        photo.userName = user.username;
+        photo.user = user;
+        photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
+        photo.tripName = self.trip.name;
+        photo.city = self.trip.city;
+        count += 1;
+        [self.assets addObject:photo];
+
+    }
     [self.photoCollectionView reloadData];
-    
 }
+
+
+//-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+//{
+//    //first we add the photos the user has already selected to upload (currently showing in the collection view) to the array that will store the photos the user taps from the library. This is so we can indicate later which photos the user has already selected.
+//    for (Photo *selectedPhoto in self.photos){
+//        [self.currentSelectionPhotos addObject:selectedPhoto];
+//    }
+//    
+//    Photo *photo = [Photo object];
+//    photo.image = info[UIImagePickerControllerOriginalImage];
+//    
+//    // set the reference URL now so we have it for uploading the raw image data
+//    photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
+//    
+//    // Set all the generic trip info on the Photo object
+//    PFUser *user = [PFUser currentUser];
+//    photo.likes = 0;
+//    photo.trip = self.trip;
+//    photo.userName = user.username;
+//    photo.user = user;
+//    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
+//    photo.tripName = self.trip.name;
+//    photo.city = self.trip.city;
+//    
+//    //if the user has already tapped this image then we want to remove it. This code remebers which photo to remove
+//    Photo *photoToDelete = [[Photo alloc]init];
+//    BOOL photoSelected = NO;
+//    for (Photo *forPhoto in self.currentSelectionPhotos){
+//        if ([forPhoto.imageUrl isEqualToString:photo.imageUrl]){
+//            photoSelected = YES;
+//            photoToDelete = forPhoto;
+//        }
+//    }
+//    
+//    //remove the photo if the user no longer wants to upload it
+//    if (photoSelected == YES){
+//        [self.currentSelectionPhotos removeObject:photoToDelete];
+//        //add the photo if the user wants to upload it
+//    } else {
+//        [self.currentSelectionPhotos addObject:photo];
+//    }
+//    
+//    
+//}
 
 @end
