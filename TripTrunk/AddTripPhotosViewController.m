@@ -75,7 +75,20 @@
 }
 
 -(void)imagesWereSelected:(NSMutableArray *)images{
+    for (Photo *photo in images){
+        BOOL duplicate = NO;
+        for (Photo *image in self.photos){
+            if ([photo.imageUrl isEqualToString:image.imageUrl]){
+                duplicate = YES;
+            }
+        }
+        
+        if (duplicate == NO){
+            [self.photos addObject:photo];
+        }
+    }
     
+    [self.tripCollectionView reloadData];
 }
 
 #pragma mark - Button Actions
