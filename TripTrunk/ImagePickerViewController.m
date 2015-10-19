@@ -34,12 +34,40 @@ static int count=0;
     [self getAllPictures];
 }
 
-- (IBAction)doneTapped:(id)sender {
+-(void)viewWillAppear:(BOOL)animated{
+    
+    UINavigationBar *myNav = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
+    [UINavigationBar appearance].barTintColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+    [self.view addSubview:myNav];
+    
+    UIBarButtonItem *doneItem =
+    [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:@selector(doneTapped) ];
+    
+    
+    
+    UIBarButtonItem *cancelItem =
+    [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:@selector(cancelTapped)];
+    
+    
+    UINavigationItem *navigItem = [[UINavigationItem alloc] initWithTitle:@"Select Photos"];
+    navigItem.rightBarButtonItem = doneItem;
+    navigItem.leftBarButtonItem = cancelItem;
+    myNav.items = [NSArray arrayWithObjects: navigItem,nil];
+    [UIBarButtonItem appearance].tintColor = [UIColor whiteColor];
+}
+
+-(void)doneTapped{
     [self.delegate imagesWereSelected:self.photosToAdd];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)cancelTapped:(id)sender {
+- (void)cancelTapped {
         [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -174,11 +202,26 @@ static int count=0;
         photo.city = self.trip.city;
         count += 1;
         [self.assets addObject:photo];
+        [self checkDuplicates:photo];
 
     }
     [self.photoCollectionView reloadData];
 }
 
+-(void)checkDuplicates:(Photo*)photo{
+    
+    for (Photo *photo in self.photosToAdd){
+        for (Photo *image in self.photosToAdd){
+            if ([photo.imageUrl isEqualToString:image.imageUrl]){
+                 NSNumber *number =[[NSNumber alloc]initWithInt:(int)[self.photosToAdd indexOfObject:image]];
+                [self.tappedCells addObject:number];
+                break;
+            }
+        }
+        
+
+        }
+}
 
 //-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 //{
