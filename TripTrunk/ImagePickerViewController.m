@@ -27,8 +27,6 @@ static int count=0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //REMOVE LATER
-    self.photosToAdd = [[NSMutableArray alloc]init];
     self.photoCollectionView.delegate = self;
     self.tappedCells = [[NSMutableArray alloc]init];
     [self getAllPictures];
@@ -210,16 +208,14 @@ static int count=0;
 
 -(void)checkDuplicates:(Photo*)photo{
     
-    for (Photo *photo in self.photosToAdd){
+    for (Photo *photo in self.assets){
         for (Photo *image in self.photosToAdd){
             if ([photo.imageUrl isEqualToString:image.imageUrl]){
-                 NSNumber *number =[[NSNumber alloc]initWithInt:(int)[self.photosToAdd indexOfObject:image]];
+                 NSNumber *number =[[NSNumber alloc]initWithInt:(int)[self.assets indexOfObject:photo]];
                 [self.tappedCells addObject:number];
-                break;
             }
         }
         
-
         }
 }
 

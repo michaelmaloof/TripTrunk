@@ -86,8 +86,8 @@
         if (duplicate == NO){
             [self.photos addObject:photo];
         }
+        
     }
-    
     [self.tripCollectionView reloadData];
 }
 
