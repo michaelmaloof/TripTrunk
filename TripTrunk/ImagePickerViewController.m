@@ -142,9 +142,10 @@ static int count=0;
     void (^assetEnumerator)( ALAsset *, NSUInteger, BOOL *) = ^(ALAsset *result, NSUInteger index, BOOL *stop) {
         if(result != nil) {
             if([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]) {
-                [ self.assetURLDictionaries addObject:[result valueForProperty:ALAssetPropertyURLs]];
                 
-                NSURL *url= (NSURL*) [[result defaultRepresentation]url];
+                NSURL *url= result.defaultRepresentation.url;
+                [self.assetURLDictionaries addObject:url];
+
                 
                 [library assetForURL:url
                          resultBlock:^(ALAsset *asset) {
@@ -187,8 +188,8 @@ static int count=0;
         photo.image = image;
         
         // set the reference URL now so we have it for uploading the raw image data
-        NSDictionary *url  = [self.assetURLDictionaries objectAtIndex:count];
-        photo.imageUrl = [NSString stringWithFormat:@"%@",url];
+        NSURL *url  = (NSURL*)[self.assetURLDictionaries objectAtIndex:count];
+        photo.imageUrl = [url absoluteString];
             // Set all the generic trip info on the Photo object
         PFUser *user = [PFUser currentUser];
         photo.likes = 0;
