@@ -1,3 +1,6 @@
+var _ = require("underscore");
+
+
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
   if (request.object.get("name")) {
     request.object.set("lowercaseName", request.object.get("name").toLowerCase())
@@ -41,8 +44,9 @@ Parse.Cloud.afterSave(Parse.User, function(request, response) {
  * No Parameters
  */
 Parse.Cloud.define("becomePrivate", function(request, response) {
-  var user = request.user;
+  Parse.Cloud.useMasterKey();
 
+  var user = request.user;
   user.set("private", true);
   user.save();
 
@@ -55,17 +59,38 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
     return role.save();
 
   }).then(function(role) {
+  
+    console.log("userBecamePrivate");
+    // Query for all of the user's photo
+    var query = new Parse.Query('Photo');
+    query.equalTo('user', user);
+    return query.find()
 
-    // Add a new job to the Job Queue to turn all photos to private.
-    // We use a queue instead of calling it directly because it could take awhile.
-    var JobQueue = Parse.Object.extend("JobQueue");
-    var job = new JobQueue();
-    job.set("name", "userBecamePrivate");
-    job.set("user", user);
-    job.set("action", "changePhotosToPrivate");
-    return job.save();
+  }).then(function(photos) {
 
-  }).then(function(job) {
+    var counter = 0;
+    var photoPromise = Parse.Promise.as();
+    console.log("found photos: " + photos.length);
+
+    _.each(photos, function(photo) {
+      console.log('photo process');
+      photoPromise = photoPromise.then(function() {
+        // Update the photo's ACL to remove public read access
+        var acl = photo.getACL();
+        acl.setPublicReadAccess(false);
+        photo.setACL(acl);
+
+        if (counter % 100 === 0) {
+          // Set the  job's progress status
+          console.log(counter + " photos processed.");
+        }
+        counter += 1;
+        return photo.save();
+      });
+    });
+
+    return photoPromise;
+  }).then(function() {
     response.success("Success! - Account Now Private");
   }, function(error) {
     response.error(error);
@@ -77,6 +102,7 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
  * No Parameters
  */
 Parse.Cloud.define("becomePublic", function(request, response) {
+  Parse.Cloud.useMasterKey();
   var user = request.user;
 
   user.set("private", false);
@@ -95,20 +121,38 @@ Parse.Cloud.define("becomePublic", function(request, response) {
 
   }).then(function(role) {
 
-    // Add a new job to the Job Queue to turn all photos to public.
-    // We use a queue instead of calling it directly because it could take awhile.
-    var JobQueue = Parse.Object.extend("JobQueue");
-    var job = new JobQueue();
-    job.set("name", "userBecamePublic");
-    job.set("user", user);
-    job.set("action", "changePhotosToPublic"); 
-    return job.save();
+    // Query for all of the user's photo
+    var query = new Parse.Query('Photo');
+    query.equalTo('user', user);
+    return query.find();
 
-  }).then(function(job) {
+  }).then(function(photos) {
+    var photoPromise = Parse.Promise.as();
+    var counter = 0;
+
+    _.each(photos, function(photo) {
+      photoPromise = photoPromise.then(function() {
+        // Update the photo's ACL to remove public read access
+        var acl = photo.getACL();
+        acl.setPublicReadAccess(true);
+        photo.setACL(acl);
+
+        if (counter % 100 === 0) {
+          // Set the  job's progress status
+          console.log(counter + " photos processed.");
+        }
+        counter += 1;
+        return photo.save();
+      });
+    });
+
+    return photoPromise;
+  }).then(function() {
     response.success("Success! - Account Now Public");
   }, function(error) {
     response.error(error);
   });
 });
+
 
 
