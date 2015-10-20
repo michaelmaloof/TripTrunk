@@ -73,16 +73,9 @@
     
     // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
     [_user fetchIfNeeded];
-    self.title = _user.username;
+    self.title  = _user.username;
+    [self tabBarTitle];
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
-
     [self.nameLabel setText:_user[@"name"]];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     [self.hometownLabel setText:_user[@"hometown"]];
@@ -95,7 +88,7 @@
         [self.bioTextView setText:_user[@"bio"]];
     }
     else {
-        [self.bioTextView setText:@"A true world traveler"];
+        [self.bioTextView setText:NSLocalizedString(@"A true world traveler",@"A true world traveler")];
     }
 
     [self.logoutButton setHidden:YES];
@@ -132,13 +125,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
-    
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
@@ -152,7 +138,7 @@
                 [self.followButton setEnabled:YES];
                 [self.followButton setSelected:YES];
                 if (followStatus.intValue == 2) {
-                    [self.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+                    [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                 }
             });
         }
@@ -173,7 +159,7 @@
                             [self.followButton setEnabled:YES];
                             [self.followButton setSelected:YES];
                             if (followingStatus.intValue == 2) {
-                                [self.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+                                [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                             }
                         });
                     }
@@ -206,8 +192,11 @@
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         NSUInteger followersCount = [[TTCache sharedCache] followers].count;
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
-        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu Followers",(unsigned long)followersCount] forState:UIControlStateNormal];
-        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu Following",(unsigned long)followingCount] forState:UIControlStateNormal];
+        NSString *followers = NSLocalizedString(@"Followers",@"Followers");
+        NSString *following = NSLocalizedString(@"Following",@"Following");
+
+        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
+        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
         
 
 
@@ -216,13 +205,15 @@
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%i Followers",count] forState:UIControlStateNormal];
+            NSString *followers = NSLocalizedString(@"Followers",@"Followers");
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateNormal];
         });
     }];
     
     [SocialUtility followingCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%i Following",count] forState:UIControlStateNormal];
+            NSString *following = NSLocalizedString(@"Following",@"Following");
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i %@",count,following] forState:UIControlStateNormal];
         });
     }];
     
@@ -266,7 +257,7 @@
         // Follow
         NSLog(@"Attempt to follow %@",_user.username);
         [self.followButton setSelected:YES];
-        [self.followButton setTitle:@"Pending" forState:UIControlStateSelected]; // Set the title to pending, and if it's successful then it'll be set to Following
+        [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected]; // Set the title to pending, and if it's successful then it'll be set to Following
         
         [SocialUtility followUserInBackground:_user block:^(BOOL succeeded, NSError *error) {
             if (error) {
@@ -274,10 +265,10 @@
             }
             if (!succeeded) {
                 NSLog(@"Follow NOT success");
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
-                                                                message:@"Please try again"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Follow Failed",@"Follow Failed")
+                                                                message:NSLocalizedString(@"Please try again",@"Please try again")
                                                                delegate:self
-                                                      cancelButtonTitle:@"Okay"
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                       otherButtonTitles:nil, nil];
                 
                 [self.followButton setSelected:NO];
@@ -285,7 +276,7 @@
             }
             else if (!_user[@"private"])
             {
-                [self.followButton setTitle:@"Following" forState:UIControlStateSelected];
+                [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
             }
         }];
     }
@@ -314,8 +305,8 @@
     
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:@"Block User"
+                                                    cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                               destructiveButtonTitle:NSLocalizedString(@"Block User",@"Block User")
                                                     otherButtonTitles:nil];
     
     [actionSheet showInView:self.view];
@@ -341,11 +332,11 @@
     
     if (buttonIndex == 0) {
         NSLog(@"Block User");
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
-                                                            message:@"This user will no longer see your profile or be able to follow you"
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Are You Sure?",@"Are You Sure?")
+                                                            message:NSLocalizedString(@"This user will no longer see your profile or be able to follow you",@"This user will no longer see your profile or be able to follow you")
                                                            delegate:self
-                                                  cancelButtonTitle:@"No"
-                                                  otherButtonTitles:@"Yes", nil];
+                                                  cancelButtonTitle:NSLocalizedString(@"No",@"No")
+                                                  otherButtonTitles:NSLocalizedString(@"Yes",@"Yes"), nil];
         alertView.tag = 1;
         [alertView show];
         
@@ -391,8 +382,8 @@
     picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    picker.navigationController.title = @"Select profile picture.";
-    [picker.navigationController setTitle:@"Select profile picture."];
+    picker.navigationController.title =NSLocalizedString( @"Select profile picture.",@"Select profile picture.");
+    [picker.navigationController setTitle:NSLocalizedString( @"Select profile picture.",@"Select profile picture.")];
     
     picker.navigationBar.tintColor = [UIColor whiteColor];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
@@ -435,7 +426,7 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [viewController.navigationItem setTitle:@"Select Profile Image"];
+    [viewController.navigationItem setTitle:NSLocalizedString( @"Select Profile Image",@"Select Profile Image")];
 }
 
 

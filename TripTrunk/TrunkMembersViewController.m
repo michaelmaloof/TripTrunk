@@ -41,18 +41,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
     
-    self.title = @"Trunk Members";
+    self.title = NSLocalizedString(@"Trunk Members",@"Trunk Members");
     
     if ((self.isMember == YES && self.trip.isPrivate == NO) || ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])) {
         
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add"
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add",@"Add")
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(addMembers)];
@@ -61,14 +56,7 @@
     
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
+
     
     // initialize array for table view data source
     _tripMembers = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] membersForTrip:self.trip]];
@@ -82,19 +70,7 @@
     [self loadUsers];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 /**
  * Loads all users who are part of this trunk. First, it queries the Activity model to get members in this trunk, then it queries the Trip model to get the trip creator
@@ -198,14 +174,14 @@
 {
     switch (section) {
         case 0:
-            return @"Trunk Creator";
+            return NSLocalizedString(@"Trunk Creator",@"Trunk Creator");
             break;
         case 1:
-            return @"Trunk Members";
+            return NSLocalizedString(@"Trunk Members",@"Trunk Members");
         default:
             break;
     }
-    return @"Users";
+    return NSLocalizedString(@"Users",@"Users");
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -314,7 +290,7 @@
             [SocialUtility removeUser:[_tripMembers objectAtIndex:indexPath.row] fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
                 if (error) {
                     NSLog(@"Error removing user: %@", error);
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Couldn't remove user, try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't remove user, try again",@"Couldn't remove user, try again")  delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [alert show];
@@ -356,10 +332,10 @@
             }
             if (!succeeded) {
                 NSLog(@"Follow NOT success");
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
-                                                                message:@"Please try again"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Follow Failed",@"Follow Failed")
+                                                                message:NSLocalizedString(@"Please try again",@"Please try again")
                                                                delegate:self
-                                                      cancelButtonTitle:@"Okay"
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                       otherButtonTitles:nil, nil];
                 
                 [cellView.followButton setSelected:NO];

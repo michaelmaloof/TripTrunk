@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTBaseViewController.h"
 
-@interface EULAViewController : UIViewController
+
+@interface EULAViewController : TTBaseViewController
 @property (nonatomic) BOOL alreadyAccepted;
 @end

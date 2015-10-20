@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseViewController.h"
 
 
-@interface TrunkListViewController : UIViewController
+
+@interface TrunkListViewController : TTBaseViewController
 @property NSString *city;
 @property NSString *state;
 @property PFUser *user;

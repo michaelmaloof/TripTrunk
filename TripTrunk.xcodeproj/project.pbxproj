@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */; settings = {ASSET_TAGS = (); }; };
+		2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */; settings = {ASSET_TAGS = (); }; };
 		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
 		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
+		2225BF091BD2F7760088080F /* PickerImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2225BF081BD2F7760088080F /* PickerImage.m */; settings = {ASSET_TAGS = (); }; };
+		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; settings = {ASSET_TAGS = (); }; };
+		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; settings = {ASSET_TAGS = (); }; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
 		223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E91AE2BBD0001FE916 /* MapKit.framework */; };
 		223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547EB1AE2BBD8001FE916 /* CoreLocation.framework */; };
@@ -45,6 +50,7 @@
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; settings = {ASSET_TAGS = (); }; };
 		C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */; };
 		C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
 		C9021F241B9F876100E2EA96 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F231B9F876100E2EA96 /* Bolts.framework */; };
@@ -118,6 +124,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewController.h; sourceTree = "<group>"; };
+		2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewController.m; sourceTree = "<group>"; };
+		2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerCollectionViewCell.h; sourceTree = "<group>"; };
+		2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerCollectionViewCell.m; sourceTree = "<group>"; };
 		220408D71AEC5475009DB060 /* TrunkListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkListViewController.h; sourceTree = "<group>"; };
 		220408D81AEC5475009DB060 /* TrunkListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkListViewController.m; sourceTree = "<group>"; };
 		220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkTableViewCell.h; sourceTree = "<group>"; };
@@ -130,6 +140,12 @@
 		220408F01AF1C1EA009DB060 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		220408F21AF311D6009DB060 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
+		2225BF071BD2F7760088080F /* PickerImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerImage.h; sourceTree = "<group>"; };
+		2225BF081BD2F7760088080F /* PickerImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerImage.m; sourceTree = "<group>"; };
+		22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseViewController.h; sourceTree = "<group>"; };
+		22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseViewController.m; sourceTree = "<group>"; };
+		22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewController.h; sourceTree = "<group>"; };
+		22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseTableViewController.m; sourceTree = "<group>"; };
 		223547E71AE2BBAE001FE916 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		223547E91AE2BBD0001FE916 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		223547EB1AE2BBD8001FE916 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -176,6 +192,8 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
+		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
 		C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
 		C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		C9021F231B9F876100E2EA96 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -339,8 +357,14 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */,
+				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
+				22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */,
+				22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */,
 				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
 				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+				22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */,
+				22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */,
 				C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */,
 				C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */,
 				224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */,
@@ -349,6 +373,12 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
+				2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */,
+				2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */,
+				2225BF071BD2F7760088080F /* PickerImage.h */,
+				2225BF081BD2F7760088080F /* PickerImage.m */,
+				2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */,
+				2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */,
 				C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */,
 				C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */,
 				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
@@ -738,8 +768,10 @@
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
+				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
+				2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */,
 				C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
@@ -748,14 +780,18 @@
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
+				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
+				2225BF091BD2F7760088080F /* PickerImage.m in Sources */,
+				2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
+				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,

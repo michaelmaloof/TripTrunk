@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTBaseTableViewController.h"
+
 
 @protocol CitySearchViewControllerDelegate;
 
-@interface CitySearchViewController : UITableViewController
+@interface CitySearchViewController : TTBaseTableViewController
 
 @property (nonatomic, strong) id<CitySearchViewControllerDelegate> delegate;
 

@@ -43,37 +43,21 @@
     return self;
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
-    
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
     
     if (!self.existingMembers) {
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
     
-    self.title = @"Add Friends";
+    self.title = NSLocalizedString(@"Add Friends",@"Add Friends");
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next"
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next",@"Next")
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(saveFriendsAndClose)];
@@ -130,7 +114,7 @@
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
     
-    [[self.searchController searchBar] setValue:@"Done" forKey:@"_cancelButtonText"];
+    [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
     
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
@@ -191,10 +175,10 @@
     
         switch (section) {
             case 0:
-                return @"Following";
+                return NSLocalizedString(@"Following",@"Following");
                 break;
             case 1:
-                return @"Followers";
+                return NSLocalizedString(@"Followers",@"Followers");
             default:
                 break;
         }
@@ -301,10 +285,10 @@
                 NSLog(@"Error: %@", error);
             }
             if (!succeeded) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
-                                                                message:@"Please try again"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Follow Failed",@"Follow Failed")
+                                                                message:NSLocalizedString(@"Please try again",@"Please try again")
                                                                delegate:self
-                                                      cancelButtonTitle:@"Okay"
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                                       otherButtonTitles:nil, nil];
                 
                 [cellView.followButton setSelected:NO];
@@ -357,10 +341,10 @@
         }
         [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
             if (error || !succeeded) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saving Frinds Failed"
-                                                                message:@"Please try again"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed", @"Saving Frinds Failed")
+                                                                message:NSLocalizedString(@"Please try again", @"Please try again")
                                                                delegate:self
-                                                      cancelButtonTitle:@"Okay"
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                                       otherButtonTitles:nil, nil];
                 [alert show];
                 
@@ -375,7 +359,7 @@
  */
 - (void)saveFriendsAndClose
 {
-    self.title = @"Saving Friends...";
+    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
 
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
@@ -425,10 +409,10 @@
         if (error && error.code != 142) {
             NSLog(@"Error saving users: %@", error);
 
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saving Frinds Failed"
-                                                            message:@"Please try again"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed",@"Saving Frinds Failed")
+                                                            message:NSLocalizedString(@"Please try again",@"Please try again")
                                                            delegate:self
-                                                  cancelButtonTitle:@"Okay"
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
             
             [alert show];

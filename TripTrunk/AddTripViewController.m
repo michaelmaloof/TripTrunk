@@ -60,16 +60,10 @@
     
     [super viewDidLoad];
     
-    
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-    
+//currently we don't want users being able to change a trunk tp public or private once the trunk has been created
     self.lockLabel.hidden = YES;
-
-
+    
+//self.clear is just for development. It allows us to quickly clear all the textfields
     self.clear.hidden = YES;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tripDatePicker.hidden = YES;
@@ -79,22 +73,27 @@
     self.locationTextField.delegate = self;
     self.formatter = [[NSDateFormatter alloc]init];
     [self.formatter setDateFormat:@"MM/dd/yyyy"];
-    
     self.startTripTextField.tintColor = [UIColor clearColor];
     self.endTripTextField.tintColor = [UIColor clearColor];
 
 
     
-//FIXME Do I even need this?
+//FIXME This may not be necessary anymore since we no longer need the users location
     [self.locationManager requestWhenInUseAuthorization];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
     self.locationManager.delegate = self;
     
+//if self.trip is not nil then it means the user is editing a trunk and not creating a new one.
     if (self.trip) {
         _isEditing = YES;
-        self.title = @"Trunk Details";
+        self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
+        
+//Not sure why but in this view if we don't call this when we change the nav title then the tab bar title changes too.
+        [self tabBarTitle];
+        
+//if they're editing the trunk we fill in the text fields with the correct info
         self.tripNameTextField.text = self.trip.name;
         self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
         self.startTripTextField.text = self.trip.startDate;
@@ -104,27 +103,24 @@
         self.state = self.trip.state;
         self.country = self.trip.country;
         
-        self.navigationItem.rightBarButtonItem.title = @"Update";
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Update",@"Update");
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem.tag = 1;
         self.delete.hidden = NO;
         self.public.hidden = YES;
         self.private.hidden = YES;
         
-        self.cancelBar.title = @"Cancel";
+        self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
         self.cancelBar.enabled = YES;
     }
+//if self.trip is  nil then it means the user is creating a new trunk and not simply editing one
     
     else {
         _isEditing = NO;
 
         // initialize the trip object
-        self.title = @"Add New Trunk";
-        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+        self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
+        [self tabBarTitle];
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -135,13 +131,7 @@
         self.cancelBar.enabled = FALSE;
        
 
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    self.navigationItem.rightBarButtonItem.title = @"Next";
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"Next");
     self.navigationItem.rightBarButtonItem.tag = 0;
     self.navigationItem.leftBarButtonItem.tag = 0;
     self.delete.hidden = YES;
@@ -154,15 +144,11 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
-
+/**
+ *  Sets up the date pickers design for selecting the start and end dates of the trunks
+ *
+ *
+ */
 - (void)setupDatePicker {
     self.datePicker = [[UIDatePicker alloc] init];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
@@ -176,10 +162,10 @@
     
     // Start Date Toolbar
     UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:@"Next"
+    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"Next")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     UILabel *startLabel = [[UILabel alloc] init];
-    [startLabel setText:@"Start Date"];
+    [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
     [startLabel setFont:[UIFont systemFontOfSize:12.0]];
     [startLabel setTextColor:[UIColor blackColor]];
     [startLabel sizeToFit];
@@ -192,11 +178,11 @@
 
     // End Date Toolbar
     UIToolbar *endTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     
     UILabel *endLabel = [[UILabel alloc] init];
-    [endLabel setText:@"End Date"];
+    [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
     [endLabel setFont:[UIFont systemFontOfSize:12.0]];
     [endLabel setTextColor:[UIColor blackColor]];
     [endLabel sizeToFit];
@@ -208,11 +194,14 @@
     self.endTripTextField.inputAccessoryView = endTripToolbar;
 }
 
+/**
+ *  Update the screen based on if the trunk is private or public
+ *
+ *
+ */
 -(void)checkPublicPrivate{
     if (self.trip.isPrivate == NO || self.trip == nil)
     {
-//        self.public.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-//        self.private.backgroundColor = [UIColor whiteColor];
         [self.private setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
         self.backGroundImage.image = [UIImage imageNamed:@"yellowSkyMountain_background"];
@@ -223,8 +212,6 @@
     }
     
     else {
-//        self.public.backgroundColor = [UIColor whiteColor];
-//        self.private.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
         [self.private setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
         [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
         self.backGroundImage.image = [UIImage imageNamed:@"blueSkyMountain_background"];
@@ -236,6 +223,7 @@
 
 #pragma mark = TextField Delegate Methods
 
+//move the view up and down if the user starts typing to adjust for the keyboard
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
 
@@ -262,10 +250,9 @@
     return YES;
     
 }
-
+//we adjusts the designs of the textfield based on which one the user is typing in
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if (textField == self.endTripTextField) {
-        //        [self.view endEditing:YES];
         self.datePicker.tag = 1;
         self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
         self.datePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
@@ -300,6 +287,7 @@
 
 #pragma mark - CitySearchViewController Delegate
 
+//if they select location we present a view that allows the user to search for locations
 - (void)citySearchDidSelectLocation:(NSString *)location {
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
@@ -330,7 +318,11 @@
 
 
 #pragma mark - Date Picker
-
+/**
+ *  If the user changed the dates of the trip
+ *
+ *
+ */
 - (void)dateChanged:(id)sender {
     
     if (self.datePicker.tag == 0) {
@@ -371,7 +363,9 @@
 - (IBAction)onNextTapped:(id)sender
 {
 //FIXME dont do this every time they click next. only if they changed location text fields
-    self.title = @"Verifying Location...";
+    self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
+    [self tabBarTitle];
+//take the location the user typed in, make sure its a real location and meets the correct requirements
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     NSString *address = self.locationTextField.text;
     
@@ -381,13 +375,14 @@
         {
             NSLog(@"Error geocoding address: %@ withError: %@",address, error);
             // TODO: Set title image
-            self.title = @"Add New Trunk";
-            [self notEnoughInfo:@"Please select a valid location and make sure you have internet connection"];
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            [self tabBarTitle];
+            [self notEnoughInfo:NSLocalizedString(@"Please select a valid location and make sure you have internet connection",@"Please select a valid location and make sure you have internet connection")];
         }
         
         else if (!error)
         {
-
+//make sure the user filled in all the correct text fields
                 if (![self.tripNameTextField.text isEqualToString:@""] && ![self.locationTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
                 {
                     // Trip Input has correct data - save the trip!
@@ -409,23 +404,37 @@
             
                 else
                 {
-                    [self notEnoughInfo:@"Please fill out all boxes"];
-                    self.title = @"Add New Trunk";
+                    [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
+                    self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                    [self tabBarTitle];
+
                 }
         }
         
-        self.title = @"Add New Trunk";
+        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        [self tabBarTitle];
+
         return;
     }];
 
 }
 
+/**
+ *  Clears text fields, no longer used
+ *
+ *
+ */
 - (IBAction)clearButtonPressed:(id)sender {
     
     [self resetForm];
 
 }
 
+/**
+ * Clears textfields
+ *
+ *
+ */
 - (void)resetForm {
     // Initialize the view with no data
     self.tripNameTextField.text = @"";
@@ -470,12 +479,14 @@
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = @"Are you sure you want to delete this Trunk?";
+    alertView.title = NSLocalizedString(@"Are you sure you want to delete this Trunk?",@"Are you sure you want to delete this Trunk?");
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"No"];
-    [alertView addButtonWithTitle:@"Delete"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete")];
     alertView.tag = 0;
     [alertView show];
+    
+    [self tabBarTitle];
     
     
 }
@@ -515,8 +526,10 @@
     alertView.delegate = self;
     alertView.title = message;
     alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-    [alertView addButtonWithTitle:@"Ok"];
+    [alertView addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
     [alertView show];
+    
+    [self tabBarTitle];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -537,7 +550,11 @@
 }
 
 #pragma mark - Parse
-
+/**
+ *  Save the trip to Parse
+ *
+ *
+ */
 -(void)parseTrip {
     
     //FIXME Should only parse if things have been changed
@@ -554,12 +571,12 @@
     NSTimeInterval endTimeInterval = [[self.formatter dateFromString:self.trip.endDate] timeIntervalSince1970];
     if(startTimeInterval > endTimeInterval)
     {
-        [self notEnoughInfo:@"Your start date must happen on or before the end date"];
+        [self notEnoughInfo:NSLocalizedString(@"Your start date must happen on or before the end date",@"Your start date must happen on or before the end date")];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         return;
     }
     
-    
+//if the most recent photo is nil then we set the date to a long time ago. This way we know the dot on the trunk is blue. I didnt want to leave a nil value in parse.
     if (self.trip.mostRecentPhoto == nil){
         NSString *date = @"01/01/1200";
         NSDateFormatter *format = [[NSDateFormatter alloc]init];
@@ -614,13 +631,14 @@
      {
          
          if(error) {
-             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                 message:@"Please Try Again"
+             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                 message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
                                                                 delegate:self
-                                                       cancelButtonTitle:@"Okay"
+                                                       cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                        otherButtonTitles:nil, nil];
              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
              [alertView show];
+             
              
          }
          else
@@ -636,7 +654,8 @@
              }
          }
          // TODO: Set title image
-         self.title = @"Add New Trunk";
+         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+         [self tabBarTitle];
          
      }];
 }

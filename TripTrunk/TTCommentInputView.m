@@ -41,7 +41,7 @@
         _commentField.borderStyle = UITextBorderStyleRoundedRect;
         _commentField.textColor = [UIColor blackColor];
         _commentField.font = [UIFont systemFontOfSize:14.0];
-        _commentField.placeholder = @"Add a comment...";
+        _commentField.placeholder = NSLocalizedString(@"Add a comment...",@"Add a comment...");
         _commentField.autocorrectionType = UITextAutocorrectionTypeYes;
         _commentField.keyboardType = UIKeyboardTypeDefault;
         _commentField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -50,7 +50,7 @@
 
         _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_submitButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [_submitButton setTitle:@"Send" forState:UIControlStateNormal];
+        [_submitButton setTitle:NSLocalizedString(@"Send",@"Send") forState:UIControlStateNormal];
         [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_submitButton setBackgroundColor:[UIColor colorWithHexString:@"00b300"]];
         _submitButton.layer.cornerRadius = 4.0;

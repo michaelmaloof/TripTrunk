@@ -33,13 +33,22 @@
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
+@property UITapGestureRecognizer *doubleTapRecognizer;
+@property UITapGestureRecognizer *tapRecognizer;
+@property CGFloat height;
+@property CGFloat originY;
+@property CGFloat width;
+@property CGFloat originX;
+
+
+
+
 
 // Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
 @property BOOL isLikedByCurrentUser;
 @property BOOL viewMoved;
-
 @property BOOL shouldShowTrunkNameButton;
 
 @end
@@ -48,14 +57,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Tab Bar Initializiation
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
     
     // Set initial UI
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
@@ -93,9 +94,7 @@
                                                object:nil];
     
     
-    
-    
-    
+
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
     // Setup the scroll view - needed for Zooming
@@ -103,7 +102,63 @@
     self.scrollView.maximumZoomScale = 6.0;
     self.scrollView.zoomScale = 1.0;
     [self.scrollView setContentMode:UIViewContentModeScaleAspectFit];
+    
+    self.originY = self.scrollView.frame.origin.y;
+    self.originX = self.scrollView.frame.origin.x;
+    self.width = self.scrollView.frame.size.width;
+    self.height = self.scrollView.frame.size.height;
 
+    
+    
+    [self setupGestureRecognisers:self.scrollView];
+
+}
+
+- (void)setupGestureRecognisers:(UIView *)viewToAttach {
+    
+    UITapGestureRecognizer *dblRecognizer;
+    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(handleDoubleTapFrom:)];
+    [dblRecognizer setNumberOfTapsRequired:2];
+    
+    [viewToAttach addGestureRecognizer:dblRecognizer];
+    self.doubleTapRecognizer = dblRecognizer;
+    
+    UITapGestureRecognizer *recognizer;
+    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                         action:@selector(handleTapFrom:)];
+    [recognizer requireGestureRecognizerToFail:dblRecognizer];
+    
+    [viewToAttach addGestureRecognizer:recognizer];
+    self.tapRecognizer = recognizer;
+}
+
+- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer {
+    
+    // do your single tap
+}
+
+- (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
+    if(self.scrollView.zoomScale > self.scrollView.minimumZoomScale){
+        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
+        _scrollView.scrollEnabled = NO;
+        [self centerScrollViewContents];
+
+    
+    }
+        else {
+        CGPoint touch = [recognizer locationInView:recognizer.view];
+        
+        CGSize scrollViewSize = self.scrollView.bounds.size;
+        
+        CGFloat w = scrollViewSize.width / self.scrollView.maximumZoomScale;
+        CGFloat h = scrollViewSize.height / self.scrollView.maximumZoomScale;
+        CGFloat x = touch.x-(w/2.0);
+        CGFloat y = touch.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [self.scrollView zoomToRect:rectTozoom animated:YES];
+    }
 }
 
 - (CAGradientLayer*) greyGradientForTop:(BOOL)isTop {
@@ -138,16 +193,16 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    self.navigationController.navigationBarHidden = YES;
+    self.tabBarController.tabBar.hidden = YES;
+    
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 }
 
@@ -157,6 +212,8 @@
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
 
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
+    
+    
 
     [self centerScrollViewContents];
     
@@ -172,6 +229,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    self.navigationController.navigationBarHidden = NO;
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)centerScrollViewContents {
@@ -294,8 +353,11 @@
 //                
 //                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
 //            
-                [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+                NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+                [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+                NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -325,8 +387,11 @@
         self.photoTakenBy.text = self.photo.userName;
 
         
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
         [self refreshPhotoActivities];
@@ -348,8 +413,11 @@
         self.photoTakenBy.text = self.photo.userName;
 
         
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         
         [self refreshPhotoActivities];
@@ -360,13 +428,14 @@
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+    //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    //    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -382,16 +451,16 @@
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
-                                         cancelButtonTitle:@"Cancel"
-                                    destructiveButtonTitle:@"Delete Photo"
-                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
     }
     else {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
-                                         cancelButtonTitle:@"Cancel"
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
                                     destructiveButtonTitle:nil
-                                         otherButtonTitles:@"Report Inappropriate", @"Download Photo", nil];
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
     }
 
     
@@ -402,15 +471,19 @@
     
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)likeCountButtonPressed:(id)sender {
     
     ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:navController animated:YES completion:nil];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:navController animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (IBAction)likeButtonPressed:(id)sender {
@@ -452,25 +525,32 @@
     }
     
     [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ Comments", [[TTCache sharedCache] commentCountForPhoto:self.photo]] forState:UIControlStateNormal];
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ Likes", [[TTCache sharedCache] likeCountForPhoto:self.photo]] forState:UIControlStateNormal];
+    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
 - (IBAction)trunkNameButtonPressed:(id)sender {
     
+    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
+        
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
     trunkViewController.trip = (Trip *)self.photo.trip;
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"Photo View DIsmissed");
-        
+    
+//    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+//        NSLog(@"Photo View DIsmissed");
+    
         UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
         UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
         if (tabbarcontroller.selectedIndex == 3) {
             [activityNavController pushViewController:trunkViewController animated:YES];
         }
-    }];
+    
+//    }];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -484,7 +564,7 @@
             [[TTUtility sharedInstance] deletePhoto:self.photo];
 
             // dismiss the view
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
             
         }
         // Download Photo
@@ -499,8 +579,11 @@
     }
 }
 - (IBAction)closeButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
+
 
 #pragma mark - UIActionSheetDelegate
 
@@ -512,21 +595,21 @@
             NSLog(@"Delete Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Are you sure you want to delete this photo?";
+            alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo?",@"Are you sure you want to delete this photo?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Yes"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Yes",@"Yes")];
             alertView.tag = 0;
             [alertView show];
             
         }
         else if (buttonIndex == 1) {
             NSLog(@"Report Photo");
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];
             alertTextField.keyboardType = UIKeyboardTypeAlphabet;
-            alertTextField.placeholder = @"Enter photo's violation.";
+            alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
         }
@@ -534,10 +617,10 @@
             NSLog(@"Download Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Save photo to phone?";
+            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Download"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
             
@@ -549,11 +632,11 @@
         if (buttonIndex == 0) {
             NSLog(@"Report Photo");
             NSLog(@"Report Photo");
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Report Photo" message:@"What is inappropriate about this photo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];
             alertTextField.keyboardType = UIKeyboardTypeAlphabet;
-            alertTextField.placeholder = @"Enter photo's violation.";
+            alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
         }
@@ -561,10 +644,10 @@
             NSLog(@"Download Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = @"Save photo to phone?";
+            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:@"No"];
-            [alertView addButtonWithTitle:@"Download"];
+            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
             

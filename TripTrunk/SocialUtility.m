@@ -123,7 +123,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        HUD.labelText = @"Blocking...";
+        HUD.labelText = NSLocalizedString(@"Blocking...",@"Blocking...");
         HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
     });
     
@@ -138,7 +138,7 @@
     [block saveEventually];
     dispatch_async(dispatch_get_main_queue(), ^{
         // Hide HUD spinner
-        HUD.labelText = @"Done!";
+        HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
         });
@@ -471,7 +471,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(void (^)(NSArray *activities, NSError *error))completionBlock;
++ (void)queryForAllActivities:(NSInteger)count query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -482,6 +482,8 @@
     [query includeKey:@"photo"];
     [query includeKey:@"trip"];
     [query orderByDescending:@"createdAt"];
+    query.limit = 20;
+    query.skip = count;
     
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     

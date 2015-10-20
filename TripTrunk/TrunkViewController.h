@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Trip.h"
+#import "TTBaseViewController.h"
 
-@interface TrunkViewController : UIViewController
+
+@interface TrunkViewController : TTBaseViewController
 @property Trip *trip;
 
 @end

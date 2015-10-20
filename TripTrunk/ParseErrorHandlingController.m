@@ -29,10 +29,10 @@
     //--------------------------------------
     // If the user needs to finish what they were doing, they have the opportunity to do so.
     //
-     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Session"
-                                                         message:@"Session is no longer valid, please log out and log in again."
+     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Session",@"Invalid Session")
+                                                         message:NSLocalizedString(@"Session is no longer valid, please log out and log in again.",@"Session is no longer valid, please log out and log in again.")
                                                         delegate:self
-                                               cancelButtonTitle:@"Okay"
+                                               cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                otherButtonTitles:nil];
      [alertView show];
     

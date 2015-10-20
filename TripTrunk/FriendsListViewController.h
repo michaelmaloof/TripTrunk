@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "TTBaseTableViewController.h"
 
-@interface FriendsListViewController : UITableViewController
+
+@interface FriendsListViewController : TTBaseTableViewController
 - (id)initWithUser:(PFUser *)user andFollowingStatus:(BOOL)isFollowing;
 
 @end

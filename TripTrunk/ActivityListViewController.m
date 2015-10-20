@@ -43,7 +43,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:likes];
-        self.title = @"Likers";
+        self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
     }
     return self;
@@ -54,7 +54,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:activities];
-        self.title = @"Activity";
+        self.title = self.title = NSLocalizedString(@"Activity",@"Activity");
         _viewType = TTActivityViewAllActivities;
     }
     return self;
@@ -71,12 +71,13 @@ enum TTActivityViewType : NSUInteger {
     [self.view addSubview:self.tableView];
 
     [self setupTableViewConstraints];
+    
 
     if (_viewType != TTActivityViewAllActivities) {
         // Set Done button for all but the All Activity view
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                               target:self
-                                                                                               action:@selector(closeView)];
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                                                                               target:self
+//                                                                                               action:@selector(closeView)];
         [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     }
     // Else, it's the All Activities list
@@ -97,24 +98,10 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
-    
-    
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-
     
     // Setup tableview delegate/datasource
     [self.tableView setDelegate:self];
@@ -125,7 +112,7 @@ enum TTActivityViewType : NSUInteger {
     
     if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
         // Query for activities for user
-        [SocialUtility queryForAllActivities:^(NSArray *activities, NSError *error) {
+        [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
             _activities = [NSMutableArray arrayWithArray:activities];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -135,15 +122,6 @@ enum TTActivityViewType : NSUInteger {
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-    
-}
 
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
@@ -203,14 +181,16 @@ enum TTActivityViewType : NSUInteger {
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     // Query for activities for user
-    [SocialUtility queryForAllActivities:^(NSArray *activities, NSError *error) {
-        _activities = [NSMutableArray arrayWithArray:activities];
+    [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
+//        _activities = [NSMutableArray arrayWithArray:activities];
+        [self.activities addObjectsFromArray:activities];
         dispatch_async(dispatch_get_main_queue(), ^{
             // End the refreshing & update the timestamp
             if (refreshControl) {
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                 [formatter setDateFormat:@"MMM d, h:mm a"];
-                NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+                NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
                 NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
                                                                             forKey:NSForegroundColorAttributeName];
                 NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
@@ -225,6 +205,30 @@ enum TTActivityViewType : NSUInteger {
     }];
     
 }
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -250;
+    if(y > h + reload_distance) {
+        [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
+            //        _activities = [NSMutableArray arrayWithArray:activities];
+            [self.activities addObjectsFromArray:activities];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+                
+            });
+        }];
+    }
+}
+
+
 
 #pragma mark - Table view data source
 
@@ -383,7 +387,9 @@ enum TTActivityViewType : NSUInteger {
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     photoViewController.photo = (Photo *)photo;
     
-    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
+    [self.navigationController showViewController:photoViewController sender:self];
+    
+//    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
 }
 
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
@@ -414,7 +420,7 @@ enum TTActivityViewType : NSUInteger {
             [self refresh:nil];
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Hide HUD spinner
-                HUD.labelText = @"Done!";
+                HUD.labelText =NSLocalizedString(@"Done!",@"Done!");
                 [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
             });
         }
@@ -431,10 +437,10 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Activity";
+    NSString *text = NSLocalizedString(@"No Activity",@"No Activity");
     
     if (_viewType == TTActivityViewLikes) {
-        text = @"No Likers";
+        text = NSLocalizedString(@"No Likers",@"No Likers");
     }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
@@ -445,10 +451,10 @@ enum TTActivityViewType : NSUInteger {
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Keep using TripTrunk!";
+    NSString *text = NSLocalizedString(@"Keep using TripTrunk!", @"Keep using TripTrunk!");
 
     if (_viewType == TTActivityViewLikes) {
-        text = @"You could be the first to like this photo";
+        text = NSLocalizedString(@"You could be the first to like this photo",@"You could be the first to like this photo");
     }
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];

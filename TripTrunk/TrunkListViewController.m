@@ -51,41 +51,22 @@
     if (self.user == nil) {
     
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-        [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 
-        
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
-        
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:@"My Trunks"
+
+        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
         self.filter.tag = 0;
-        [self.filter setTitle:@"All Trunks"];
+        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
         [self queryParseMethodEveryone];
 
         
     } else {
         [self loadUserTrunks];
     }
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -105,15 +86,11 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-}
-
+/**
+ *  Load current user's trunks from parse.
+ *
+ *
+ */
 -(void)loadUserTrunks
 {
     if (self.meParseLocations == nil) {
@@ -158,17 +135,26 @@
 }
 
 
-
+/**
+ *  Toggle between loading all the trunks at this city and just the users trunks
+ *
+ *
+ */
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:@"My Trunks"];
+        [self.filter setTitle:NSLocalizedString(@"My Trunks",@"My Trunks")];
         [self queryParseMethodMe];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:@"All Trunks"];
+        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
         [self queryParseMethodEveryone];
     }
 }
 
+/**
+ *  Refresh the list of trunks
+ *
+ *
+ */
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     
@@ -183,7 +169,8 @@
     if (refreshControl) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"MMM d, h:mm a"];
-        NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+        NSString *update = NSLocalizedString(@"Last update",@"Last update");
+        NSString *title = [NSString stringWithFormat:@"%@: %@",update, [formatter stringFromDate:[NSDate date]]];
         NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
                                                                     forKey:NSForegroundColorAttributeName];
         NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
@@ -195,6 +182,7 @@
 }
 
 #pragma mark - Parse Queries
+
 
 - (void)queryParseMethodMe
 {
@@ -400,7 +388,8 @@
                 countString = @"1 Photo";
             }
             else {
-                countString = [NSString stringWithFormat:@"%i Photos", count];
+                NSString *photo = NSLocalizedString(@"Photos",@"Photos");
+                countString = [NSString stringWithFormat:@"%i %@", count, photo];
             }
             cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
         }
@@ -423,7 +412,7 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Trunks Here";
+    NSString *text = NSLocalizedString(@"No Trunks Here",@"No Trunks Here");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -433,7 +422,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Have you visited this city? Create a trunk now!";
+    NSString *text =NSLocalizedString(@"Have you visited this city? Create a trunk now!",@"Have you visited this city? Create a trunk now!");
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
@@ -451,7 +440,7 @@
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
     
-    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
+    return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Create Trunk",@"Create Trunk") attributes:attributes];
 }
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView

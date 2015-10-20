@@ -14,8 +14,9 @@
 #import "TTUtility.h"
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
+#import "ImagePickerViewController.h"
 
-@interface AddTripPhotosViewController ()  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate >
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, ImagePickerDelegate>
 @property UIImagePickerController *PickerController;
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
@@ -32,6 +33,8 @@
 @property BOOL alreadyTrip;
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 @property (weak, nonatomic) IBOutlet UILabel *borderLabel;
+@property NSMutableArray *currentSelectionPhotos;
+
 
 @end
 
@@ -40,23 +43,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
+    
+//if self.trip is valid then we are editing a trip, not creating a new one
     if (self.trip){
         self.alreadyTrip = YES;
     } else {
         self.alreadyTrip = NO;
         
     }
-    self.title = @"Add Photos";
+    self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
+    self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [UIColor clearColor];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+//we hide all these things and only show them if the user has selected a photo to write a caption for
     self.caption.text = @"";
     self.caption.hidden = YES;
     self.borderLabel.hidden = YES;
@@ -68,30 +70,25 @@
     self.delete.hidden = YES;
     self.selectedPhoto.hidden = YES;
     
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
     
     self.caption.delegate = self;
 }
 
-//-(void)viewDidAppear:(BOOL)animated{
-//    self.tripCollectionView.hidden = NO;
-//    self.plusPhoto.hidden = NO;
-//    self.submitTrunk.hidden = NO;
-//}
-
-
--(void)viewWillAppear:(BOOL)animated {
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
+-(void)imagesWereSelected:(NSMutableArray *)images{
+    for (Photo *photo in images){
+        BOOL duplicate = NO;
+        for (Photo *image in self.photos){
+            if ([photo.imageUrl isEqualToString:image.imageUrl]){
+                duplicate = YES;
+            }
+        }
+        
+        if (duplicate == NO){
+            [self.photos addObject:photo];
+        }
+        
+    }
+    [self.tripCollectionView reloadData];
 }
 
 #pragma mark - Button Actions
@@ -102,68 +99,8 @@
     [self uploadAllPhotos];
 }
 
-- (IBAction)libraryTapped:(id)sender {
-    
-    // 10 photo upload limit, so make sure they haven't already picked 10 photos.
-    
-    if (self.photos.count >= 10) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Limit Reached"
-                                                        message:@"You can only upload 10 photos at a time. Upload these first, then you can add more"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Okay"
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else
-    {
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = NO;
-        [picker setTitle:@"Select Photo"];
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-        picker.navigationBar.tintColor = [UIColor whiteColor];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-        [self presentViewController:picker animated:YES completion:NULL];
-    }
-}
 
 
-#pragma mark - Image Picker delegates
-
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    Photo *photo = [Photo object];
-    photo.image = info[UIImagePickerControllerOriginalImage];
-    
-    // set the reference URL now so we have it for uploading the raw image data
-    photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
-    
-    // Set all the generic trip info on the Photo object
-    PFUser *user = [PFUser currentUser];
-    photo.likes = 0;
-    photo.trip = self.trip;
-    photo.userName = user.username;
-    photo.user = user;
-    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
-    photo.tripName = self.trip.name;
-    photo.city = self.trip.city;
-    
-    
-    [self.photos addObject:photo];
-    
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    [self.tripCollectionView reloadData];
-
-}
-
-
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-}
 
 #pragma mark - Saving Photos
 
@@ -271,7 +208,8 @@
     cell.tripImageView.image = photo.image;
     cell.tripImageView.caption = photo.caption;
     cell.backgroundColor = [UIColor whiteColor];
-
+    
+//we change the design if the photo has a caption or not
     if(photo.caption){
         cell.captionImageView.image = [UIImage imageNamed:@"checkCircle"];
     }
@@ -293,10 +231,10 @@
     
     if (photo.caption) {
         self.caption.text = photo.caption;
-        [self.addCaption setTitle:@"Update" forState:UIControlStateNormal];
+        [self.addCaption setTitle:NSLocalizedString(@"Update",@"Update") forState:UIControlStateNormal];
         self.remove.hidden = NO;
     }
-    
+//we unhide all these so that the user can write and edit captions
     self.addCaption.hidden = NO;
     self.caption.hidden = NO;
     self.borderLabel.hidden = NO;
@@ -316,6 +254,11 @@
 
 #pragma mark - Editing/Adding Caption to Photo
 
+/**
+ *  Add a caption to the photo
+ *
+ *
+ */
 - (IBAction)onAddCaptionTapped:(id)sender
 {
     [self.view endEditing:YES];
@@ -328,7 +271,7 @@
        
         self.caption.text = nil;
         
-        [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+        [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
    
 
         self.selectedPhoto.hidden = YES;
@@ -352,14 +295,19 @@
     {
         UIAlertView *alertView = [[UIAlertView alloc] init];
         alertView.delegate = self;
-        alertView.title = @"No caption is typed";
+        alertView.title = NSLocalizedString(@"No caption is typed",@"No caption is typed");
         alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-        [alertView addButtonWithTitle:@"OK"];
+        [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }
     
 }
 
+/**
+ *  Cancel the changes made to the caption
+ *
+ *
+ */
 - (IBAction)onCancelCaptionTapped:(id)sender {
     [self.view endEditing:YES];
     
@@ -372,7 +320,7 @@
     self.borderLabel.hidden = YES;
 
     self.addCaption.hidden = YES;
-    [self.addCaption setTitle:@"Add" forState:UIControlStateNormal];
+    [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
     self.caption.text = @"";
     self.remove.hidden = YES;
     self.delete.hidden = YES;
@@ -380,7 +328,12 @@
 
 }
 
-- (IBAction)onRemoveTapped:(id)sender { //FIXME Doesn't remove caption
+/**
+ *  Removes the caption
+ *
+ *
+ */
+- (IBAction)onRemoveTapped:(id)sender {
     
     [self.view endEditing:YES];
     
@@ -406,6 +359,11 @@
 
 }
 
+/**
+ * Deletes the photo
+ *
+ *
+ */
 - (IBAction)onDeleteTapped:(id)sender {
     [self.view endEditing:YES];
     
@@ -426,6 +384,24 @@
 
     [self.tripCollectionView reloadData];
     
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    if ([segue.identifier isEqualToString:@"photos"]){
+        ImagePickerViewController *vc = segue.destinationViewController;
+        vc.photosToAdd = [[NSMutableArray alloc]init];
+        if (self.photos.count > 0){
+            vc.photosToAdd = self.photos;
+        }
+        vc.delegate = self;
+        vc.trip = self.trip;
+        vc.tripName = self.tripName;
+        vc.tripCity = self.tripCity;
+        vc.tripCountry = self.tripCountry;
+        vc.tripState = self.tripState;
+    }
+
 }
 
 @end

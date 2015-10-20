@@ -10,8 +10,11 @@
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
 #import "Trip.h"
+#import "TTBaseTableViewController.h"
 
-@interface AddTripFriendsViewController : UITableViewController
+
+
+@interface AddTripFriendsViewController : TTBaseTableViewController
 
 /**
  *  Initializer that sets the currently-being-created Trip so we know what trip to add the friends to

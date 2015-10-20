@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Photo.h"
+#import "TTBaseViewController.h"
 
-@interface ActivityListViewController : UIViewController
+
+@interface ActivityListViewController : TTBaseViewController
 
 - (id)initWithLikes:(NSArray *)likes;
 

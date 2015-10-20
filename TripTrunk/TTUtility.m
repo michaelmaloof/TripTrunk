@@ -232,7 +232,7 @@ CLCloudinary *cloudinary;
     // Show HUD spinner
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        HUD.labelText = @"Downloading";
+        HUD.labelText = NSLocalizedString(@"Downloading", @"Downloading");
         HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
     });
     
@@ -253,7 +253,7 @@ CLCloudinary *cloudinary;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 // Hide HUD spinner
-                HUD.labelText = @"Complete!";
+                HUD.labelText = NSLocalizedString(@"Complete!", @"Complete!");
                 [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
                 
                 [[UIApplication sharedApplication] endBackgroundTask:bgTask];
@@ -277,7 +277,8 @@ CLCloudinary *cloudinary;
     // Show HUD spinner
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        HUD.labelText = [NSString stringWithFormat:@"Downloading 1 of %lu", (unsigned long)photos.count];
+        NSString *downloadOneOf = NSLocalizedString(@"Downloading 1 of", "Downloading 1 of");
+        HUD.labelText = [NSString stringWithFormat:@"%@ %lu", downloadOneOf,(unsigned long)photos.count];
         HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
     });
     
@@ -302,13 +303,15 @@ CLCloudinary *cloudinary;
                 if (completedDownloads == photos.count) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         // Hide HUD spinner
-                        HUD.labelText = @"Complete!";
+                        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
                         [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
                     });
                 }
                 else {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        HUD.labelText = [NSString stringWithFormat:@"Downloading %i of %lu", completedDownloads + 1, (unsigned long)photos.count];
+                        NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
+                        NSString *of = NSLocalizedString(@"of", "of");
+                        HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
                     });
                 }
                 
@@ -475,27 +478,30 @@ CLCloudinary *cloudinary;
     NSString *content = @"";
     
     if ([type isEqualToString:@"like"]) {
-        content = @"liked your photo.";
+        content = NSLocalizedString(@"liked your photo.",@"liked your photo.");
     }
     else if ([type isEqualToString:@"comment"]) {
-        content = [NSString stringWithFormat:@"commented on your photo: %@", activity[@"content"]];
+        NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
+        content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
     }
     else if ([type isEqualToString:@"addToTrip"]) {
         if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
-            content = [NSString stringWithFormat:@"added you to the trunk %@", [activity[@"trip"] valueForKey:@"name"]];
+            NSString *added = NSLocalizedString(@"added you to the trunk",@"added you to the trunk");
+            content = [NSString stringWithFormat:@"%@ %@", added,[activity[@"trip"] valueForKey:@"name"]];
         }
         else {
-            content = @"added you to a trip.";
+            content =  NSLocalizedString(@"added you to a trip.",@"added you to a trip.");
         }
     }
     else if ([type isEqualToString:@"follow"]) {
-        content = @"followed you.";
+        content = NSLocalizedString(@"followed you.",@"followed you.");
     }
     else if ([type isEqualToString:@"addedPhoto"]) {
-        content = [NSString stringWithFormat:@"added a photo to %@", [activity[@"trip"] valueForKey:@"name"]];
+        NSString *addedPhoto = NSLocalizedString(@"added a photo to",@"added a photo to");
+        content = [NSString stringWithFormat:@"%@ %@",addedPhoto, [activity[@"trip"] valueForKey:@"name"]];
     }
     else if ([type isEqualToString:@"pending_follow"]) {
-        content = @"requested to follow you.";
+        content =  NSLocalizedString(@"requested to follow you.",@"requested to follow you.");
     }
     
     PFUser *user = activity[@"fromUser"];
@@ -613,7 +619,7 @@ CLCloudinary *cloudinary;
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason {
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        HUD.labelText = @"Submitting...";
+        HUD.labelText = NSLocalizedString(@"Submitting...",@"Submitting...");
         HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
     });
     
@@ -625,7 +631,7 @@ CLCloudinary *cloudinary;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // Hide HUD spinner
-        HUD.labelText = @"Submitted!";
+        HUD.labelText = NSLocalizedString(@"Submitted!",@"Submitted!");
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
         });

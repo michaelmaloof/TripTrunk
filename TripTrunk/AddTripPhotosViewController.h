@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Trip.h"
+#import "TTBaseViewController.h"
 
-@interface AddTripPhotosViewController : UIViewController
+
+@interface AddTripPhotosViewController : TTBaseViewController
 @property Trip *trip;
 @property NSString *tripName;
 @property NSString *tripCity;

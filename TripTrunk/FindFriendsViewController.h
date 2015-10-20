@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
-@interface FindFriendsViewController : UITableViewController
+#import "TTBaseTableViewController.h"
+
+
+@interface FindFriendsViewController : TTBaseTableViewController
 
 @end

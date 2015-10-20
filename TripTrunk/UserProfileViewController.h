@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseViewController.h"
 
-@interface UserProfileViewController : UIViewController
+
+@interface UserProfileViewController : TTBaseViewController
 
 /**
  *  Initialize the view controller for the given user, loads ProfileViewController.xib

@@ -30,20 +30,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
-
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-
     
     _fullnameTextField.delegate = self;
     _emailTextField.delegate = self;
@@ -107,9 +93,6 @@
 }
 
 
--(void)viewWillAppear:(BOOL)animated {
-
-}
 
 - (void)updateFieldsWithFBInfo:(NSDictionary *)userData {
     [self.emailTextField setText:userData[@"email"]];
@@ -128,10 +111,10 @@
 - (IBAction)cancelButtonPressed:(id)sender {
     if (_user) {
         // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create A Username"
-                                                        message:@"You must set a Username and Current City"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Create A Username",@"Create A Username")
+                                                        message:NSLocalizedString(@"You must set a Username and Current City",@"You must set a Username and Current City")
                                                        delegate:self
-                                              cancelButtonTitle:@"Okay"
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                               otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -174,10 +157,10 @@
         if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || fullName.length == 0) {
             NSLog(@"Empty Field");
 
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Please fill out all fields"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Please fill out all fields",@"Please fill out all fields")
                                                            delegate:self
-                                                  cancelButtonTitle:@"Okay"
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
             [alert show];
             
@@ -221,10 +204,10 @@
         
         if (error) {
             NSLog(@"Error: %@",error);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Username Taken, please try another"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Username Taken, please try another",@"Username Taken, please try another")
                                                            delegate:self
-                                                  cancelButtonTitle:@"Okay"
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
             [alert show];
             return NO;
