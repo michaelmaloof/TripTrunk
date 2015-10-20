@@ -33,13 +33,14 @@
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
+@property UITapGestureRecognizer *doubleTapRecognizer;
+@property UITapGestureRecognizer *tapRecognizer;
 
 // Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
 @property BOOL isLikedByCurrentUser;
 @property BOOL viewMoved;
-
 @property BOOL shouldShowTrunkNameButton;
 
 @end
@@ -85,9 +86,7 @@
                                                object:nil];
     
     
-    
-    
-    
+
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
     // Setup the scroll view - needed for Zooming
@@ -95,7 +94,52 @@
     self.scrollView.maximumZoomScale = 6.0;
     self.scrollView.zoomScale = 1.0;
     [self.scrollView setContentMode:UIViewContentModeScaleAspectFit];
+    
+    
+    [self setupGestureRecognisers:self.scrollView];
 
+}
+
+- (void)setupGestureRecognisers:(UIView *)viewToAttach {
+    
+    UITapGestureRecognizer *dblRecognizer;
+    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(handleDoubleTapFrom:)];
+    [dblRecognizer setNumberOfTapsRequired:2];
+    
+    [viewToAttach addGestureRecognizer:dblRecognizer];
+    self.doubleTapRecognizer = dblRecognizer;
+    
+    UITapGestureRecognizer *recognizer;
+    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                         action:@selector(handleTapFrom:)];
+    [recognizer requireGestureRecognizerToFail:dblRecognizer];
+    
+    [viewToAttach addGestureRecognizer:recognizer];
+    self.tapRecognizer = recognizer;
+}
+
+- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer {
+    
+    // do your single tap
+}
+
+- (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
+    if(self.scrollView.zoomScale > self.scrollView.minimumZoomScale)
+        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
+    else {
+        CGPoint touch = [recognizer locationInView:recognizer.view];
+        
+        CGSize scrollViewSize = self.scrollView.bounds.size;
+        
+        CGFloat w = scrollViewSize.width / self.scrollView.maximumZoomScale;
+        CGFloat h = scrollViewSize.height / self.scrollView.maximumZoomScale;
+        CGFloat x = touch.x-(w/2.0);
+        CGFloat y = touch.y-(h/2.0);
+        
+        CGRect rectTozoom=CGRectMake(x, y, w, h);
+        [self.scrollView zoomToRect:rectTozoom animated:YES];
+    }
 }
 
 - (CAGradientLayer*) greyGradientForTop:(BOOL)isTop {
