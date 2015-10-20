@@ -35,6 +35,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
 @property UITapGestureRecognizer *doubleTapRecognizer;
 @property UITapGestureRecognizer *tapRecognizer;
+@property CGFloat height;
+@property CGFloat originY;
+@property CGFloat width;
+@property CGFloat originX;
+
+
+
+
 
 // Data Properties
 @property NSMutableArray *commentActivities;
@@ -95,6 +103,12 @@
     self.scrollView.zoomScale = 1.0;
     [self.scrollView setContentMode:UIViewContentModeScaleAspectFit];
     
+    self.originY = self.scrollView.frame.origin.y;
+    self.originX = self.scrollView.frame.origin.x;
+    self.width = self.scrollView.frame.size.width;
+    self.height = self.scrollView.frame.size.height;
+
+    
     
     [self setupGestureRecognisers:self.scrollView];
 
@@ -125,9 +139,14 @@
 }
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
-    if(self.scrollView.zoomScale > self.scrollView.minimumZoomScale)
-        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
-    else {
+    if(self.scrollView.zoomScale > self.scrollView.minimumZoomScale){
+        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
+        _scrollView.scrollEnabled = NO;
+        [self centerScrollViewContents];
+
+    
+    }
+        else {
         CGPoint touch = [recognizer locationInView:recognizer.view];
         
         CGSize scrollViewSize = self.scrollView.bounds.size;
