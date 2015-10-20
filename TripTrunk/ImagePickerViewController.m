@@ -74,11 +74,10 @@ static int count=0;
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
     Photo *photo = [self.assets objectAtIndex:indexPath.row];
-    cell.ImageView.image = photo.image;
     cell.ImageView.autoresizingMask = NO;
     cell.ImageView.autoresizesSubviews = NO;
-
     cell.ImageView.frame = CGRectMake(cell.ImageView.frame.origin.x, cell.ImageView.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
+    cell.ImageView.image = photo.image;
     cell.ImageView.clipsToBounds = YES;
     NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
     if ([self.tappedCells containsObject:number]){
@@ -125,6 +124,7 @@ static int count=0;
     
     
     [self.photoCollectionView reloadItemsAtIndexPaths:arrayPath];
+    
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -207,6 +207,7 @@ static int count=0;
 
     }
     [self.photoCollectionView reloadData];
+
 }
 
 -(void)checkDuplicates:(Photo*)photo{
