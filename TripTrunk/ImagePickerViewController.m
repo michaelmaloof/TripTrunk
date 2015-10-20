@@ -72,7 +72,6 @@ static int count=0;
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    [cell.ImageView setContentMode:UIViewContentModeScaleAspectFill];
     Photo *photo = [self.assets objectAtIndex:indexPath.row];
     cell.ImageView.image = photo.image;
     NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
@@ -220,48 +219,5 @@ static int count=0;
         }
 }
 
-//-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-//{
-//    //first we add the photos the user has already selected to upload (currently showing in the collection view) to the array that will store the photos the user taps from the library. This is so we can indicate later which photos the user has already selected.
-//    for (Photo *selectedPhoto in self.photos){
-//        [self.currentSelectionPhotos addObject:selectedPhoto];
-//    }
-//    
-//    Photo *photo = [Photo object];
-//    photo.image = info[UIImagePickerControllerOriginalImage];
-//    
-//    // set the reference URL now so we have it for uploading the raw image data
-//    photo.imageUrl = [NSString stringWithFormat:@"%@", info[UIImagePickerControllerReferenceURL]];
-//    
-//    // Set all the generic trip info on the Photo object
-//    PFUser *user = [PFUser currentUser];
-//    photo.likes = 0;
-//    photo.trip = self.trip;
-//    photo.userName = user.username;
-//    photo.user = user;
-//    photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
-//    photo.tripName = self.trip.name;
-//    photo.city = self.trip.city;
-//    
-//    //if the user has already tapped this image then we want to remove it. This code remebers which photo to remove
-//    Photo *photoToDelete = [[Photo alloc]init];
-//    BOOL photoSelected = NO;
-//    for (Photo *forPhoto in self.currentSelectionPhotos){
-//        if ([forPhoto.imageUrl isEqualToString:photo.imageUrl]){
-//            photoSelected = YES;
-//            photoToDelete = forPhoto;
-//        }
-//    }
-//    
-//    //remove the photo if the user no longer wants to upload it
-//    if (photoSelected == YES){
-//        [self.currentSelectionPhotos removeObject:photoToDelete];
-//        //add the photo if the user wants to upload it
-//    } else {
-//        [self.currentSelectionPhotos addObject:photo];
-//    }
-//    
-//    
-//}
 
 @end
