@@ -426,7 +426,7 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    [viewController.navigationItem setTitle:NSLocalizedString( @"Select Profile Image.",@"Select Profile Image.")];
+    [viewController.navigationItem setTitle:NSLocalizedString( @"Select Profile Image",@"Select Profile Image")];
 }
 
 
