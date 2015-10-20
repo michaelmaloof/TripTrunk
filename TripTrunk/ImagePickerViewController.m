@@ -72,8 +72,14 @@ static int count=0;
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
     Photo *photo = [self.assets objectAtIndex:indexPath.row];
     cell.ImageView.image = photo.image;
+    cell.ImageView.autoresizingMask = NO;
+    cell.ImageView.autoresizesSubviews = NO;
+
+    cell.ImageView.frame = CGRectMake(cell.ImageView.frame.origin.x, cell.ImageView.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
+    cell.ImageView.clipsToBounds = YES;
     NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
     if ([self.tappedCells containsObject:number]){
         cell.isSelected = YES;
@@ -86,16 +92,13 @@ static int count=0;
     
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
+
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(self.view.frame.size.width/4, self.view.frame.size.width/4);
-
 }
 
 
