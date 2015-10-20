@@ -7,8 +7,10 @@
 //
 
 #import "TTForgotPasswordViewController.h"
+#import <Parse/Parse.h>
 
-@interface TTForgotPasswordViewController ()
+@interface TTForgotPasswordViewController () <UIAlertViewDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 
 @end
 
@@ -24,14 +26,34 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)resetPassword:(id)sender {
+    if (![self.emailTextField.text containsString:@"@"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please Enter Valid Email",@"Please Enter Valid Email")
+                                                        message:NSLocalizedString(@"",@"")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    } else {
+        [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
+                                                        message:NSLocalizedString(@"If you don't see the email in 24 hours please try to reset the password again",@"If you don't see the email in 24 hours please try to reset the password again")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        alert.tag = 1;
+        [alert show];
+    }
 }
-*/
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+- (IBAction)remembered:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end
