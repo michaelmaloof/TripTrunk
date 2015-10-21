@@ -448,7 +448,7 @@
 - (IBAction)onSavePhotoTapped:(id)sender {
 
     UIActionSheet *actionSheet;
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] || [[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
@@ -590,7 +590,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     // if the user is the photo owner, they have the Delete option
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] || [[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
         if (buttonIndex == 0) {
             NSLog(@"Delete Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
