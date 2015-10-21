@@ -110,7 +110,7 @@
 
     
     
-    [self setupGestureRecognisers:self.scrollView];
+//    [self setupGestureRecognisers:self.scrollView];
 
 }
 
