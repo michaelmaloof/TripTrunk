@@ -431,7 +431,7 @@ function sendPushNotificationForAcceptedFollowRequest(activity, request) {
   }
   var query = new Parse.Query(Parse.Installation);
   console.log("sending push to: " + activity.get('fromUser').id);
-  query.equalTo('user', activity.get('fromUser').id);
+  query.equalTo('user', activity.get('fromUser'));
   Parse.Push.send({
     where: query, // Set our Installation query.
     data: {
