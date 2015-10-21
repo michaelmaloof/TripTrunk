@@ -217,7 +217,7 @@
     else{
          cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
     }
-
+    [cell layoutIfNeeded];
     
     return cell;
     
@@ -389,8 +389,11 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if ([segue.identifier isEqualToString:@"photos"]){
-        ImagePickerViewController *vc = segue.destinationViewController;
-        vc.photosToAdd = [[NSMutableArray alloc]init];
+        
+        UINavigationController *navController = [segue destinationViewController];
+        ImagePickerViewController *vc = (ImagePickerViewController *)([navController viewControllers][0]);
+        
+        vc.photosToAdd = [[NSMutableArray alloc] init];
         if (self.photos.count > 0){
             vc.photosToAdd = self.photos;
         }

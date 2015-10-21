@@ -17,7 +17,7 @@
 
 @end
 
-@interface ImagePickerViewController : TTBaseViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface ImagePickerViewController : TTBaseViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     ALAssetsLibrary *library;
     NSArray *imageArray;
