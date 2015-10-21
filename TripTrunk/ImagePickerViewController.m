@@ -20,7 +20,7 @@
 
 @end
 
-static int count=0;
+static int count = 0;
 
 
 @implementation ImagePickerViewController
@@ -28,36 +28,22 @@ static int count=0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.photoCollectionView.delegate = self;
-    self.tappedCells = [[NSMutableArray alloc]init];
-    [self getAllPictures];
-}
+    self.tappedCells = [[NSMutableArray alloc] init];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(doneTapped)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           target:self
+                                                                                           action:@selector(cancelTapped)];
+    
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
 
--(void)viewWillAppear:(BOOL)animated{
+    self.title = @"Select Photos";
     
-    UINavigationBar *myNav = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
-    [UINavigationBar appearance].barTintColor = [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
-    [self.view addSubview:myNav];
+    [self getAllPictures];
     
-    UIBarButtonItem *doneItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:@selector(doneTapped) ];
-    
-    
-    
-    UIBarButtonItem *cancelItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:@selector(cancelTapped)];
-    
-    
-    UINavigationItem *navigItem = [[UINavigationItem alloc] initWithTitle:@"Select Photos"];
-    navigItem.rightBarButtonItem = doneItem;
-    navigItem.leftBarButtonItem = cancelItem;
-    myNav.items = [NSArray arrayWithObjects: navigItem,nil];
-    [UIBarButtonItem appearance].tintColor = [UIColor whiteColor];
 }
 
 -(void)doneTapped{
@@ -72,13 +58,9 @@ static int count=0;
 -(ImagePickerCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
+
     Photo *photo = [self.assets objectAtIndex:indexPath.row];
-    cell.ImageView.autoresizingMask = NO;
-    cell.ImageView.autoresizesSubviews = NO;
-    cell.ImageView.frame = CGRectMake(cell.ImageView.frame.origin.x, cell.ImageView.frame.origin.y, self.view.frame.size.width/4, self.view.frame.size.width/4);
     cell.ImageView.image = photo.image;
-    cell.ImageView.clipsToBounds = YES;
     NSNumber *number = [NSNumber numberWithInt:(int)indexPath.row];
     if ([self.tappedCells containsObject:number]){
         cell.isSelected = YES;
@@ -87,6 +69,8 @@ static int count=0;
         cell.isSelected = NO;
         cell.ImageView.alpha = 1;
     }
+    [cell layoutIfNeeded];
+
     return cell;
     
 }
@@ -97,6 +81,7 @@ static int count=0;
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"GOT CELL SIZE CORRECT");
     return CGSizeMake(self.view.frame.size.width/4, self.view.frame.size.width/4);
 }
 

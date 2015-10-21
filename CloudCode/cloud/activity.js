@@ -1,3 +1,59 @@
+
+// ASYNC PROMISE FUNCTION
+
+var addToFriendRole = function(fromUserId, toUserId) {
+  var promise = new Parse.Promise();
+  console.log("addToFriendRole starting");
+  console.log("FromUserID: " + fromUserId);
+  console.log("toUserId: " + toUserId);
+
+  var userToFriend = new Parse.User();
+  userToFriend.id = fromUserId;
+  var approvingUser = new Parse.User();
+  approvingUser.id = toUserId;
+
+  var roleName = "friendsOf_";
+  // If an ApprovingUser is passed in
+  if (approvingUser.id) {
+    roleName = roleName + approvingUser.id
+  }
+
+  var roleQuery = new Parse.Query(Parse.Role);
+  roleQuery.equalTo("name", roleName);
+
+  roleQuery.first().then(function(role) {
+    if (role) {
+      console.log("addToFriendRole found Role");
+
+      role.getUsers().add(userToFriend);
+
+      // Returns role in THIS promise chain.
+      return role.save();
+
+    }
+    else
+    {
+      console.log("addToFriendRole no Role found");
+
+      // Returns in THIS promise chain.
+      return Parse.Promise.error("No Role found for name: " + roleName);
+    }
+
+  }).then(function(role) {
+    console.log("addToFriendRole about to resolve");
+    // Resolve the whole function's promise (this is a function embedded in a promise chain)
+    promise.resolve();
+
+  }, function(error) {
+    console.log("addToFriendRole about to reject");
+    // Reject the whole function's promise (this is a function embedded in a promise chain)
+    promise.reject(error);
+
+  });
+
+  return promise;
+}
+
 /*
  * BEFORE SAVE - ACTIVITY
  */
@@ -21,31 +77,17 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
     if (count > 0) {
       return Parse.Promise.error("User is blocked from performing this action");
     }
-
+    console.log(fromUser.id);
+    console.log(toUser.id);
     // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
     return;
 
     }).then(function() {
-      // Let's see if we can Friend the toUser by joining their Role.
-      addToFriendRole(fromUser.id, toUser.id, {
-        success: function(response) {
-          // SUCCESS - the friend was Approved
-          return;
-        },
-        error: function(error) {
-          // ERROR - the friend was NOT approved
-
-          // TODO: 
-          // if the AddToRole failed, it could be that they are just REQUESTING to follow the toUser.
-          // So we need to actually set the request.
-          // Hopefully that is happening from the client, but just in case it should be handled here
-          // otherwise we run the risk of a user getting failed-to-follow over and over and never being able to request to follow someone.
-
-          return Parse.Promise.error(error);
-        }
-      });
+      return addToFriendRole(fromUser.id, toUser.id)
     }).then(function() {
+      console.log("beforeSave Activity Follow - about to finish");
       /* SUCCESS */
+      // Return the beforeSave Function.
       return response.success();
 
     }, function(error) {
@@ -309,42 +351,6 @@ Parse.Cloud.useMasterKey();
   }
 });
 
-
-var addToFriendRole = function(fromUserId, toUserId, response) {
-  var userToFriend = new Parse.User();
-  userToFriend.id = fromUserId;
-  var approvingUser = new Parse.User();
-  approvingUser.id = toUserId;
-
-  var roleName = "friendsOf_";
-  // If an ApprovingUser is passed in
-  if (approvingUser.id) {
-    roleName = roleName + approvingUser.id
-  }
-
-  var roleQuery = new Parse.Query(Parse.Role);
-  roleQuery.equalTo("name", roleName);
-
-  roleQuery.first().then(function(role) {
-    if (role) {
-      role.getUsers().add(userToFriend);
-      return role.save();
-
-    }
-    else
-    {
-      return Parse.Promise.error("No Role found for name: " + roleName);
-    }
-
-  }).then(function() {
-    response.success("Success! - Follow Request Approved");
-
-  }, function(error) {
-    response.error(error);
-
-  });
-}
-
 /*
  * Function to let a user Accept a Follow request - Adds the given user Id into the friend Role for the current User
  * Accepts a "fromUserId" parameter and a "accepted" parameter
@@ -376,7 +382,7 @@ Parse.Cloud.define("approveFriend", function(request, response) {
           response.success("Successfully rejected");
         }, function(error) {
           response.error(error);
-      });
+        });
   }
   else {
     // ACCEPTED
@@ -394,33 +400,29 @@ Parse.Cloud.define("approveFriend", function(request, response) {
             return Parse.Promise.error("No Pending Follow Activity Found");
           }
           
-        }).then(function(activity) {
+        })
+        .then(function(activity) {
 
+          var promises = [];
+          promises.push(addToFriendRole(activity.get("fromUser").id, request.user.id));
+          promises.push(sendPushNotificationForAcceptedFollowRequest(activity, request));
 
-          // Finally, call the function to add the new follower to your Role so they have permission to see stuff
-          addToFriendRole(activity.get("fromUser").id, request.user.id, {
-            success: function(message) {
-              // Success!
-              console.log("Last Success Callback: " + message);
-              sendPushNotificationForAcceptedFollowRequest(activity, request);
-              response.success();
-
-            },
-            error: function(error) {
-              // Error adding to role. Uh oh.
-              return Parse.Promise.error(error);
-            }
-          });
+          return Parse.Promise.when(promises);
+        })
+        .then(function() {
+          console.log("addToFriendRole AND push notification finished in accept request");
+          console.log("Responding success");
+          response.success();
         }, function(error) {
           response.error(error);
       });
   }
 });
 
-// THIS FUNCTION DOESN"T WORK
-// It's supposed to send a push notification to the user who's request is accepted -- the code is correct for that.
-// It doesn't get executed about (line 422) because of the async nature of that code, and the promise structure.
+// THIS FUNCTION DOESN"T WORK YET
 function sendPushNotificationForAcceptedFollowRequest(activity, request) {
+
+  var promise = new Parse.Promise();
     // Send the fromUser a push notification telling them that their request was accepted.
   var  pushMessage = request.user.get('name') + ' (@' + request.user.get('username') + ')' + ' accepted your follow request.';
   // Trim our message to 140 characters.
@@ -428,7 +430,8 @@ function sendPushNotificationForAcceptedFollowRequest(activity, request) {
     pushMessage = pushMessage.substring(0, 140);
   }
   var query = new Parse.Query(Parse.Installation);
-  query.equalTo('user', activity.get('fromUser').id);
+  console.log("sending push to: " + activity.get('fromUser').id);
+  query.equalTo('user', activity.get('fromUser'));
   Parse.Push.send({
     where: query, // Set our Installation query.
     data: {
@@ -439,11 +442,13 @@ function sendPushNotificationForAcceptedFollowRequest(activity, request) {
     }
   }).then(function() {
     // Push was successful
-    console.log('Sent push.');
-    return;
+    console.log('Sent push for acceptance.');
+    promise.resolve();
   }, function(error) {
-    throw "Push Error " + error.code + " : " + error.message;
+    promise.reject(error);
   });
+
+  return promise;
 }
 
 

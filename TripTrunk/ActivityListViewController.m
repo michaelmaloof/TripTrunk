@@ -420,7 +420,14 @@ enum TTActivityViewType : NSUInteger {
             [self refresh:nil];
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Hide HUD spinner
-                HUD.labelText =NSLocalizedString(@"Done!",@"Done!");
+                HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
+                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+            });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Hide HUD spinner
+                HUD.labelText = NSLocalizedString(@"Error",@"Error!");
                 [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
             });
         }

@@ -1,3 +1,6 @@
+var _ = require("underscore");
+
+
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
   if (request.object.get("name")) {
     request.object.set("lowercaseName", request.object.get("name").toLowerCase())
@@ -41,8 +44,9 @@ Parse.Cloud.afterSave(Parse.User, function(request, response) {
  * No Parameters
  */
 Parse.Cloud.define("becomePrivate", function(request, response) {
-  var user = request.user;
+  Parse.Cloud.useMasterKey();
 
+  var user = request.user;
   user.set("private", true);
   user.save();
 
@@ -54,11 +58,38 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
     role.setACL(new Parse.ACL(user));
     return role.save();
 
-  }).then(function() {
-  	// TODO: Update any objects with this friendsOf role to be read-only for this role, not public.
-  	// i.e. Photos will be Public and friendsOf read since not everyone who sees the photos will be this persons friend.
-  	// But now only friends can see the photos.
-  	// Maybe this should call a Background Job so we aren't limited to a few seconds.
+  }).then(function(role) {
+  
+    console.log("userBecamePrivate");
+    // Query for all of the user's photo
+    var query = new Parse.Query('Photo');
+    query.equalTo('user', user);
+    return query.find()
+
+  }).then(function(photos) {
+
+    var counter = 0;
+    var photoPromise = Parse.Promise.as();
+    console.log("found photos: " + photos.length);
+
+    _.each(photos, function(photo) {
+      console.log('photo process');
+      photoPromise = photoPromise.then(function() {
+        // Update the photo's ACL to remove public read access
+        var acl = photo.getACL();
+        acl.setPublicReadAccess(false);
+        photo.setACL(acl);
+
+        if (counter % 100 === 0) {
+          // Set the  job's progress status
+          console.log(counter + " photos processed.");
+        }
+        counter += 1;
+        return photo.save();
+      });
+    });
+
+    return photoPromise;
   }).then(function() {
     response.success("Success! - Account Now Private");
   }, function(error) {
@@ -71,9 +102,10 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
  * No Parameters
  */
 Parse.Cloud.define("becomePublic", function(request, response) {
+  Parse.Cloud.useMasterKey();
   var user = request.user;
 
-    user.set("private", false);
+  user.set("private", false);
   user.save();
 
   var roleName = "friendsOf_" + request.user.id;
@@ -87,16 +119,40 @@ Parse.Cloud.define("becomePublic", function(request, response) {
     role.setACL(acl);
     return role.save();
 
-  }).then(function() {
-  	// TODO: Update any objects with this friendsOf role to be public
-  	// i.e. Photos will be friendsOf read but needs to be Public read now that their account is public.
+  }).then(function(role) {
 
-  	// Maybe this should call a Background Job so we aren't limited to a few seconds.
+    // Query for all of the user's photo
+    var query = new Parse.Query('Photo');
+    query.equalTo('user', user);
+    return query.find();
+
+  }).then(function(photos) {
+    var photoPromise = Parse.Promise.as();
+    var counter = 0;
+
+    _.each(photos, function(photo) {
+      photoPromise = photoPromise.then(function() {
+        // Update the photo's ACL to remove public read access
+        var acl = photo.getACL();
+        acl.setPublicReadAccess(true);
+        photo.setACL(acl);
+
+        if (counter % 100 === 0) {
+          // Set the  job's progress status
+          console.log(counter + " photos processed.");
+        }
+        counter += 1;
+        return photo.save();
+      });
+    });
+
+    return photoPromise;
   }).then(function() {
     response.success("Success! - Account Now Public");
   }, function(error) {
     response.error(error);
   });
 });
+
 
 
