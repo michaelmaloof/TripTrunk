@@ -206,6 +206,7 @@
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
     [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
+    [findPhotosUser includeKey:@"trip.creator"];
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)

@@ -171,8 +171,11 @@ CLCloudinary *cloudinary;
               NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
               [photoACL setReadAccess:YES forRoleWithName:trunkRole];
               
-              // Only the user gets Write Access
+              // Only the user and trunk creator gets Write Access
               [photoACL setWriteAccess:YES forUser:photo.user];
+              [photoACL setWriteAccess:YES forUser:photo.trip.creator];
+
+              
               
               // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
               NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
