@@ -1,4 +1,25 @@
+/**
+ * BEFORE SAVE
+ */
+
+Parse.Cloud.beforeSave('Trip', function(request, response) {
+
+// If the trip is private, we need to REMOVE the friendsOf_ role on the ACL - the app is setting it to READ.
+	var roleName = "friendsOf_" + request.object.get("creator").id;
+	console.log("BeforeSaveTrip - friendsOf role name: " + roleName);
+	if (request.object.get("isPrivate") === true) {
+	  var acl = request.object.getACL();
+	  acl.setRoleReadAccess(roleName, false);
+
+	  request.object.setACL(acl);
+	}
+	
+  response.success();
+
+});
+
 /*
+
  * AFTER SAVE
  */
 Parse.Cloud.afterSave('Trip', function(request) {
