@@ -181,9 +181,8 @@ enum TTActivityViewType : NSUInteger {
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     // Query for activities for user
-    [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
-//        _activities = [NSMutableArray arrayWithArray:activities];
-        [self.activities addObjectsFromArray:activities];
+    [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
+        _activities = [NSMutableArray arrayWithArray:activities];
         dispatch_async(dispatch_get_main_queue(), ^{
             // End the refreshing & update the timestamp
             if (refreshControl) {

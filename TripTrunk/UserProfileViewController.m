@@ -130,7 +130,7 @@
         [self.followButton setHidden:YES];
     }
     else {
-        // Refresh the following status of this user
+        // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
@@ -140,43 +140,49 @@
                 if (followStatus.intValue == 2) {
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                 }
+                else {
+                    [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+                }
             });
         }
         else
         {
-            // Not following this user, enable the button and set the selected status
+            // Not following this user in CACHE, enable the button and set the selected status
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.followButton setSelected:NO];
             });
-            
-            // No cached follow status, so let's get the follow status from Parse.
-            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error) {
-                if (!error) {
-                    if (followingStatus.intValue > 0)
-                    {
-                        // We have the following status, so update the Selected status and enable the button
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.followButton setEnabled:YES];
-                            [self.followButton setSelected:YES];
-                            if (followingStatus.intValue == 2) {
-                                [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
-                            }
-                        });
-                    }
-                    else {
-                        // Not following this user, enable the button and set the selected status
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.followButton setEnabled:YES];
-                            [self.followButton setSelected:NO];
-                        });
-                    }
+        }
+        
+        // Now update the followStatus from Parse to ensure it actually is updated
+        [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error) {
+            if (!error) {
+                if (followingStatus.intValue > 0)
+                {
+                    // We have the following status, so update the Selected status and enable the button
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.followButton setEnabled:YES];
+                        [self.followButton setSelected:YES];
+                        if (followingStatus.intValue == 2) {
+                            [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
+                        }
+                        else {
+                            [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+                        }
+                    });
                 }
                 else {
-                    NSLog(@"Error: %@",error);
+                    // Not following this user, enable the button and set the selected status
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.followButton setEnabled:YES];
+                        [self.followButton setSelected:NO];
+                    });
                 }
-            }];
-            
-        }
+            }
+            else {
+                NSLog(@"Error: %@",error);
+            }
+        }];
+        
         
         // Show the button
         [self.followButton setHidden:NO];
