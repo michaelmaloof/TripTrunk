@@ -202,7 +202,8 @@
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         
-        if (error) {
+        if (error.code == 202)
+        {
             NSLog(@"Error: %@",error);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                             message:NSLocalizedString(@"Username Taken, please try another",@"Username Taken, please try another")
@@ -212,7 +213,18 @@
             [alert show];
             return NO;
         }
-        
+        else if (error.code == 203)
+        {
+            NSLog(@"Error: %@",error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"This email address is linked to an existing account, please try another",@"This email address is linked to an existing account, please try another")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            return NO;
+        }
+
         NSLog(@"Username Saved");
         return YES;
 
