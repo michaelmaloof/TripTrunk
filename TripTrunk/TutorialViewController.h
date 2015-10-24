@@ -9,6 +9,14 @@
 #import <Parse/Parse.h>
 #import "TTBAseViewController.h"
 
+@protocol tutorialViewDelegate
+
+- (void)userCompletedTutorial;
+
+@end
+
 @interface TutorialViewController : TTBaseViewController
+
+@property id <tutorialViewDelegate> delegate;
 
 @end

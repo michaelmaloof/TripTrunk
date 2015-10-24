@@ -153,10 +153,18 @@
         //Update User "Tutorial Viewed" Bool to Yes
         [[PFUser currentUser] setValue:@YES forKeyPath:@"tutorialViewed"];
         [[PFUser currentUser] save];
+        [self.delegate userCompletedTutorial];
 
         //Dismiss View Controller
         [self dismissViewControllerAnimated:YES
                                  completion:nil];
     }
 }
+
+#pragma mark - Tutorial View Delegate Methods
+- (void)userCompletedTutorial
+{
+
+}
+
 @end

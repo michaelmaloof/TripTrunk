@@ -16,7 +16,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="N2w-CA-1PJ">
-            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4wX-Fe-vxS">
@@ -88,6 +88,8 @@
                     <exclude reference="gbU-fy-ibd"/>
                 </mask>
                 <mask key="constraints">
+                    <exclude reference="2bq-nK-JHy"/>
+                    <exclude reference="fjs-ut-2oa"/>
                     <exclude reference="1Pg-V9-t9f"/>
                     <exclude reference="Dke-cT-BDZ"/>
                     <exclude reference="yG9-qY-5Xk"/>
@@ -95,8 +97,6 @@
                     <exclude reference="ngR-Mb-Www"/>
                     <exclude reference="qHv-qm-qb5"/>
                     <exclude reference="u0u-un-jsW"/>
-                    <exclude reference="2bq-nK-JHy"/>
-                    <exclude reference="fjs-ut-2oa"/>
                 </mask>
             </variation>
             <variation key="widthClass=compact">
@@ -106,6 +106,8 @@
                     <include reference="gbU-fy-ibd"/>
                 </mask>
                 <mask key="constraints">
+                    <include reference="2bq-nK-JHy"/>
+                    <include reference="fjs-ut-2oa"/>
                     <include reference="1Pg-V9-t9f"/>
                     <include reference="Dke-cT-BDZ"/>
                     <include reference="yG9-qY-5Xk"/>
@@ -113,8 +115,6 @@
                     <include reference="ngR-Mb-Www"/>
                     <include reference="qHv-qm-qb5"/>
                     <include reference="u0u-un-jsW"/>
-                    <include reference="2bq-nK-JHy"/>
-                    <include reference="fjs-ut-2oa"/>
                 </mask>
             </variation>
         </view>
