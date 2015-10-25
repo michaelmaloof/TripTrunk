@@ -680,9 +680,23 @@
     
     if (self.isNew == YES) {
         self.isNew = NO;
-        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
+        MKPointAnnotation *ann = [self.justMadeTrunk objectAtIndex:0];
+        CLLocationCoordinate2D center = ann.coordinate;
+        
+        MKCoordinateSpan span;
+        span.longitudeDelta = 3.5;
+        span.latitudeDelta = 3.5;
+        
+        MKCoordinateRegion region;
+        region.center = center;
+        region.span = span;
+        self.zoomOut.hidden = NO;
+        
+        
+        [self.mapView setRegion:region animated:YES];
 
     }
+    
 
     return startAnnotation;
 }
