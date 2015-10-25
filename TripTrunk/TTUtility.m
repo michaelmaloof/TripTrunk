@@ -334,12 +334,8 @@ CLCloudinary *cloudinary;
 
 - (void)deletePhoto:(Photo *)photo;
 {
-    // If the user isn't the trip creator, don't let them delete this trip
-<<<<<<< HEAD
-    if (![[[PFUser currentUser] objectId] isEqualToString:[photo.user objectId]] && ![[PFUser currentUser].objectId isEqualToString:photo.trip.creator.objectId]) {
-=======
+    // If the user isn't the trip nor photo creator, don't let them delete this trip
     if (![[[PFUser currentUser] objectId] isEqualToString:photo.user.objectId] && ![[[PFUser currentUser] objectId] isEqualToString:photo.trip.creator.objectId]) {
->>>>>>> 3a9213e0d8c8ef32afb2ed11de1d8b6099f45baf
         return;
     }
     
