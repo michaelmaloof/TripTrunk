@@ -29,65 +29,56 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    //Check to see if user has viewed tutorial
-    if ([[PFUser currentUser] valueForKey:@"tutorialViewed"])
-    {
-        [super dismissViewControllerAnimated:NO
-                                  completion:nil];
-    }
-    else
-    {
-        [super viewWillAppear:animated];
-        //Set Master Scroll Size
-        [self.masterScrollView setFrame:CGRectMake(0.0,
-                                                   0.0,
-                                                   screenWidth,
-                                                   screenHeight)];
-        [self.masterScrollView setContentSize:CGSizeMake(screenWidth * 4,
-                                                         screenHeight)];
+    [super viewWillAppear:animated];
+    //Set Master Scroll Size
+    [self.masterScrollView setFrame:CGRectMake(0.0,
+                                               0.0,
+                                               screenWidth,
+                                               screenHeight)];
+    [self.masterScrollView setContentSize:CGSizeMake(screenWidth * 4,
+                                                     screenHeight)];
 
-        //Create Tutorial Pages
+    //Create Tutorial Pages
 
-        //**Page 1**
-        UIImageView *page1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"keaton"]];
-        [page1Image setContentMode:UIViewContentModeScaleAspectFill];
-        [page1Image setFrame:CGRectMake(0.0, 44.0, screenWidth, visibleScreenHeight)];
-        [self.masterScrollView addSubview:page1Image];
+    //**Page 1**
+    UIImageView *page1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"keaton"]];
+    [page1Image setContentMode:UIViewContentModeScaleAspectFill];
+    [page1Image setFrame:CGRectMake(0.0, 44.0, screenWidth, visibleScreenHeight)];
+    [self.masterScrollView addSubview:page1Image];
 
-        //**Page 2**
-        UIImageView *page2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"kilmer"]];
-        [page2Image setContentMode:UIViewContentModeScaleAspectFill];
-        [page2Image setFrame:CGRectMake(screenWidth, 44.0, screenWidth, visibleScreenHeight)];
-        [self.masterScrollView addSubview:page2Image];
+    //**Page 2**
+    UIImageView *page2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"kilmer"]];
+    [page2Image setContentMode:UIViewContentModeScaleAspectFill];
+    [page2Image setFrame:CGRectMake(screenWidth, 44.0, screenWidth, visibleScreenHeight)];
+    [self.masterScrollView addSubview:page2Image];
 
-        //**Page 3**
-        UIImageView *page3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"clooney"]];
-        [page3Image setContentMode:UIViewContentModeScaleAspectFill];
-        [page3Image setFrame:CGRectMake(screenWidth * 2, 44.0, screenWidth, visibleScreenHeight)];
-        [self.masterScrollView addSubview:page3Image];
+    //**Page 3**
+    UIImageView *page3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"clooney"]];
+    [page3Image setContentMode:UIViewContentModeScaleAspectFill];
+    [page3Image setFrame:CGRectMake(screenWidth * 2, 44.0, screenWidth, visibleScreenHeight)];
+    [self.masterScrollView addSubview:page3Image];
 
-        //**Page 4**
-        UIImageView *page4Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bale"]];
-        [page4Image setContentMode:UIViewContentModeScaleAspectFill];
-        [page4Image setFrame:CGRectMake(screenWidth * 3, 44.0, screenWidth, visibleScreenHeight)];
-        [self.masterScrollView addSubview:page4Image];
+    //**Page 4**
+    UIImageView *page4Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bale"]];
+    [page4Image setContentMode:UIViewContentModeScaleAspectFill];
+    [page4Image setFrame:CGRectMake(screenWidth * 3, 44.0, screenWidth, visibleScreenHeight)];
+    [self.masterScrollView addSubview:page4Image];
 
-        [self.masterScrollView setDelegate:self];
-        [self.masterScrollView setPagingEnabled:YES];
-        [self.masterScrollView setScrollEnabled:YES];
-        [self.masterScrollView setUserInteractionEnabled:YES];
-        [self.masterScrollView setShowsHorizontalScrollIndicator:NO];
-        [self.masterScrollView setShowsVerticalScrollIndicator:NO];
+    [self.masterScrollView setDelegate:self];
+    [self.masterScrollView setPagingEnabled:YES];
+    [self.masterScrollView setScrollEnabled:YES];
+    [self.masterScrollView setUserInteractionEnabled:YES];
+    [self.masterScrollView setShowsHorizontalScrollIndicator:NO];
+    [self.masterScrollView setShowsVerticalScrollIndicator:NO];
 
-        //Configure page indicator dots
-        [self.pageIndicator setNumberOfPages:4];
+    //Configure page indicator dots
+    [self.pageIndicator setNumberOfPages:4];
 
-        //Configure nav bar buttons
-        [self.backButton setTitle:@"Back" ];
-        [self.backButton setTintColor:[UIColor clearColor]];
-        [self.backButton setEnabled:NO];
-        self.nextDoneButton.title = @"Next";
-    }
+    //Configure nav bar buttons
+    [self.backButton setTitle:@"Back" ];
+    [self.backButton setTintColor:[UIColor clearColor]];
+    [self.backButton setEnabled:NO];
+    self.nextDoneButton.title = @"Next";
 }
 
 - (void)viewDidLoad
@@ -152,12 +143,13 @@
     {
         //Update User "Tutorial Viewed" Bool to Yes
         [[PFUser currentUser] setValue:@YES forKeyPath:@"tutorialViewed"];
-        [[PFUser currentUser] save];
-        [self.delegate userCompletedTutorial];
+        [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            [self.delegate userCompletedTutorial];
 
-        //Dismiss View Controller
-        [self dismissViewControllerAnimated:YES
-                                 completion:nil];
+            //Dismiss View Controller
+            [self dismissViewControllerAnimated:YES
+                                     completion:nil];
+        }];
     }
 }
 
