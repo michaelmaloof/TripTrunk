@@ -87,6 +87,8 @@
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
     
+    
+    
     [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -99,7 +101,9 @@
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
                 PFUser *user = activity[@"toUser"];
-                [_tripMembers addObject: user];
+                if (![user[@"fbid"]isEqualToString:user[@"username"]]){
+                    [_tripMembers addObject: user];
+                }
             }
             
             // Cache the members
