@@ -21,11 +21,16 @@
 
 @property (strong, nonatomic) UISearchController *searchController;
 
+@property NSString *searchString;
+
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
 
 @property (strong, nonatomic) NSMutableArray *promoted;
+
+@property BOOL removeResults;
+
 
 @end
 
@@ -164,6 +169,23 @@
 
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -250;
+    if(y > h + reload_distance && self.searchString) {
+        self.removeResults = NO;
+        [self filterResults:self.searchString];
+    }
+}
+
 - (void)filterResults:(NSString *)searchTerm {
     
     // Gets all the users who have blocked this user. Hopefully it's 0!
@@ -183,10 +205,20 @@
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
+    query.limit = 20;
+    
+    if (self.removeResults == NO){
+        query.skip = self.searchResults.count;
+    } else {
+        query.skip = 0;
+    }
     
     NSArray *results  = [query findObjects];
-    [self.searchResults removeAllObjects];
+    if (self.removeResults == YES) {
+        [self.searchResults removeAllObjects];
+    }
     [self.searchResults addObjectsFromArray:results];
+    self.searchString = searchTerm;
     [self.tableView reloadData];
 
 }
@@ -195,7 +227,12 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
     NSString *searchString = searchController.searchBar.text;
-    [self filterResults:searchString];
+    if (![searchString isEqualToString:self.searchString]){
+        self.removeResults = YES;
+        [self filterResults:searchString];
+    } else {
+        self.removeResults = NO;
+    }
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
