@@ -486,7 +486,14 @@
             if(![self.tripsToCheck containsObject:address] || color == 1)
             {
 //place the trunk on the map
-                [self addTripToMap:trip dot:color];
+                
+//if this is a user profile we show the most recent trunk on the map
+                if (self.user && trip == [self.parseLocations objectAtIndex:0]) {
+                    [self addTripToMap:trip dot:color isMostRecent:YES];
+
+                } else{
+                    [self addTripToMap:trip dot:color isMostRecent:NO];
+                }
 //we want to know how many trunks we originally had
                 self.originalCount = self.parseLocations.count;
 //we then set the orignalarray to parselocations. we use this to compare these trunks with the new ones we pull down from parse later
@@ -551,7 +558,7 @@
 
                 if(![self.tripsToCheck containsObject:address] || color == 1)
                 {
-                    [self addTripToMap:trip dot:color];
+                    [self addTripToMap:trip dot:color isMostRecent:NO];
                     self.originalCount = self.parseLocations.count;
                     self.originalArray = self.parseLocations;
                 } else {
@@ -568,7 +575,7 @@
  *
  *
  */
--(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
+-(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent;
 {
     
 //we do this to make sure we dont place two pins down for a city
@@ -586,8 +593,23 @@
         NSDate *date = trip.createdAt;
         NSTimeInterval interval = [date timeIntervalSinceNow];
         
-//if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made
-        if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
+//if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
+        if (isMostRecent == YES){
+            CLLocationCoordinate2D center = annotation.coordinate;
+            
+            MKCoordinateSpan span;
+            span.longitudeDelta = 3.5;
+            span.latitudeDelta = 3.5;
+            
+            MKCoordinateRegion region;
+            region.center = center;
+            region.span = span;
+            self.zoomOut.hidden = NO;
+            
+            
+            [self.mapView setRegion:region animated:YES];
+            
+        } else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
             self.isNew = YES;
             self.tripToCheck = trip;
             [self.justMadeTrunk addObject:annotation];
