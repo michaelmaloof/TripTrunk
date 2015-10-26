@@ -16,6 +16,7 @@
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 #import "EULAViewController.h"
+#import "TutorialViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -39,7 +40,7 @@
 @property BOOL isNew;
 @property NSMutableArray *originalArray;
 @property Trip *tripToCheck;
-
+@property BOOL tutorialComplete;
 
 @end
 
@@ -61,15 +62,19 @@
     
 }
 
-
 -(void)viewDidAppear:(BOOL)animated {
-    
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-    
+
 //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
-        if (self.user == nil) {
+        //If user has not completed tutorial, show tutorial
+        self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
+        if (!self.tutorialComplete)
+        {
+            [self showTutorial];
+        }
+        else if (self.user == nil) {
             
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
             [self queryParseMethodEveryone];
@@ -782,6 +787,14 @@
     self.mapFilter.tag = !self.mapFilter.tag;
     
     
+}
+
+#pragma mark - Tutorial Management
+-(void)showTutorial
+{
+    //Show Tutorial View Controller to User
+    TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
+    [self.navigationController presentViewController:tutorialVC	 animated:YES completion:nil];
 }
 
 // This is needed for the login to work properly
