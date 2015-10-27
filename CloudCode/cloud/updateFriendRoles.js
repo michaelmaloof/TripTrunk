@@ -1,5 +1,10 @@
+// Include underscore because we use it's looping functions.
 var _ = require("underscore");
 
+/**
+ * Takes a User and finds their friendsOf_ role, then adds all of their Followers to that role.
+ * @param {PFUser} user User to update the friendsOf_ role for.
+ */
 var addFollowersToFriendRole = function(user) {
   Parse.Cloud.useMasterKey();
   var promise = new Parse.Promise();
@@ -13,7 +18,7 @@ var addFollowersToFriendRole = function(user) {
   roleQuery.first()
   .then(function(role) {
     if (role) {
-      console.log("Found Role " + role.get('name'));
+      // console.log("Found Role " + role.get('name'));
       
       // Set the userRole equal to the role so we have access to it in the next function
       userRole = role;
@@ -22,6 +27,7 @@ var addFollowersToFriendRole = function(user) {
       var query = new Parse.Query('Activity');
       query.equalTo('toUser', user);
       query.equalTo('type', "follow");
+      query.limit(1000); // set a higher limit otherwise it only does 100.
       return query.find();
     }
     else
@@ -33,8 +39,9 @@ var addFollowersToFriendRole = function(user) {
   })
   .then(function(activities) {
 
-    console.log('FOUND ' + activities.length + ' FOLLOWERS FOR USER ' + user.id);
-    console.log('AND we have the role here ' + userRole.get('name'));
+    // console.log('FOUND ' + activities.length + ' FOLLOWERS FOR USER ' + user.id);
+    // console.log('AND we have the role here ' + userRole.get('name'));
+    
     // For each Follow Activity
     _.each(activities, function(activity) {
       var userToFriend = activity.get('fromUser');
@@ -44,10 +51,10 @@ var addFollowersToFriendRole = function(user) {
     return userRole.save();
   })
   .then(function(role) {
-    console.log("addFollowersToFriendRole about to resolve");
+    // console.log("addFollowersToFriendRole about to resolve");
     promise.resolve();
   }, function(error) {
-    console.log(error);
+    // console.log(error);
     promise.reject(error);
   })
 
@@ -55,35 +62,30 @@ var addFollowersToFriendRole = function(user) {
   return promise;
 }
 
-
+/**
+ * Background Job
+ * Updates ALL user's friendsOf_ role with ALL of their followers
+ * To be used for launching Private accounts since some accounts can be outdated.
+ */
 Parse.Cloud.job("updateFriendRoles", function(request, status) {
   Parse.Cloud.useMasterKey();
   console.log("Begin Background Job - Updating Friend Roles");
-  var totalQueueCount = 0;
-
-
-  // First, get every user.
-
-  // For each user, get all of their followers.
-  // Then, Query for their friendsOf_ role.
-  // Add each Follower to the User's role.
-  // Save the role.
-  // Go to the next user.
-  // 
   
-  var userQuery = new Parse.Query(Parse.User);
+  // Query for all users.
+  var userQuery = new Parse .Query(Parse.User);
+  userQuery.limit(1000); // set a higher limit otherwise it only does 100.
   userQuery.find()
   .then(function(users) {
     console.log("FOUND " + users.length + " USERS");
 
     var promise = Parse.Promise.as();
-
+    // For every user, add a new step in the Promise Sequence to add their followers to role.
     _.each(users, function(user) {
       promise = promise.then(function() {
         return addFollowersToFriendRole(user);
       });
     });
-
+    // Return a promise so that the next step doesn't execute until everything has been updated.
     return promise;
   })
   .then(function() {

@@ -1,6 +1,9 @@
 
-// ASYNC PROMISE FUNCTION
-
+/**
+ * Adds the fromUser to the toUser's friendsOf_ role.
+ * 
+ * Returns a deferred Promise.
+ */
 var addToFriendRole = function(fromUserId, toUserId) {
   var promise = new Parse.Promise();
   console.log("addToFriendRole starting");

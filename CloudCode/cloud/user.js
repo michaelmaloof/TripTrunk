@@ -1,7 +1,12 @@
 var _ = require("underscore");
 
 
+/**
+ * BEFORE SAVE
+ */
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
+
+  // Save the user's name in lowercase also so we can search easier.
   if (request.object.get("name")) {
     request.object.set("lowercaseName", request.object.get("name").toLowerCase())
   }
@@ -18,14 +23,16 @@ Parse.Cloud.afterSave(Parse.User, function(request, response) {
 
 		// First time user is being saved
 		// Set up a Role for their friends. 
-		// Friend Roles are only used if a user sets their account to Private, but we set it up now so it'll be ready if they ever switch their account
+		// Friend Roles are only used if a user sets their account to Private, 
+    // but we set it up now so it'll be ready if they ever switch their account
 
 		var roleName = "friendsOf_" + user.id; // Unique role name
 		var acl = new Parse.ACL(user);
 		acl.setPublicReadAccess(true); // Initially, we set up the Role to have public
 		acl.setPublicWriteAccess(true); // We give public write access to the role also - Anyone can decide to be someone's friend (aka follow them)
 
-		// In the future, if the user makes their account Private, the ACL for their role gets changed. This lets existing followers be part of
+		// In the future, if the user makes their account Private, 
+    // the ACL for their role gets changed. This lets existing followers be part of
 		// the role still even though they didn't have to "request" to follow
 
 		var friendRole = new Parse.Role(roleName, acl); 
@@ -39,8 +46,8 @@ Parse.Cloud.afterSave(Parse.User, function(request, response) {
 });
 
 
-/*
- * Function that changes the request User's role ACL to be private so they must approve new people joining their role.
+/**
+ * Cloud Function that changes the request User's role ACL to be private so they must approve new people joining their role.
  * No Parameters
  */
 Parse.Cloud.define("becomePrivate", function(request, response) {
@@ -98,7 +105,8 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
 });
 
 /*
- * Function that changes the request User's role ACL to be Public so anyone can follow them. This is the default for new users already.
+ * Function that changes the request User's role ACL to be Public so anyone can follow them. 
+ * This is the default for new users already.
  * No Parameters
  */
 Parse.Cloud.define("becomePublic", function(request, response) {
