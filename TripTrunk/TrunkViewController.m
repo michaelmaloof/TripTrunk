@@ -53,6 +53,7 @@
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
     self.cloud.hidden = YES;
+    self.memberCollectionView.hidden = YES;
 
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -186,8 +187,12 @@
     NSInteger oneThirdView = self.view.frame.size.width / 1.5;
     if (oneThirdView < memberWidthTotal){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
+        self.memberCollectionView.hidden = NO;
+
     } else {
         self.memberCollectionWidth.constant = memberWidthTotal;
+        self.memberCollectionView.hidden = NO;
+
     }
     
     
