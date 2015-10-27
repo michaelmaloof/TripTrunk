@@ -316,7 +316,13 @@
         }
     } else {
         if (self.isMember == YES){
-            return self.members.count +2;
+            if (self.trip.isPrivate == NO){
+                return self.members.count +2;
+            } else if (self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+                return self.members.count +2;
+            } else {
+                return self.members.count +1;
+            }
         } else {
             return self.members.count +1;
         }
@@ -399,14 +405,23 @@
         if (indexPath.item == 0){
             cell.profileImage.image = [UIImage imageNamed:@"members"];
             
-        } else if (indexPath.item == 1 && self.isMember == YES){
+        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == NO){
             cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
+            
+        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
+            
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
             if (self.isMember == NO){
                 possibleFriend = [self.members objectAtIndex:index - 1];
-            } else {
+            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
                 possibleFriend = [self.members objectAtIndex:index - 2];
+            } else if (self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+                possibleFriend = [self.members objectAtIndex:index - 2];
+            } else {
+                possibleFriend = [self.members objectAtIndex:index - 1];
+
             }
 
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -461,18 +476,30 @@
             TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
             vc.isMember = self.isMember;
             [self.navigationController pushViewController:vc animated:YES];
-        } else if (indexPath.item == 1 && self.isMember ==YES){
+            
+        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == NO){
             NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
             [members addObject:self.trip.creator];
             AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
             [self.navigationController pushViewController:vc animated:YES];
+            
+        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
+            [members addObject:self.trip.creator];
+            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+            [self.navigationController pushViewController:vc animated:YES];
+            
         } else {
             PFUser *user = [[PFUser alloc]init];
 
             if (self.isMember == NO){
                 user = [self.members objectAtIndex:indexPath.row -1];
-            } else {
+            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
                 user = [self.members objectAtIndex:indexPath.row -2];
+            } else if (self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+                user = [self.members objectAtIndex:indexPath.row -2];
+            } else {
+                user = [self.members objectAtIndex:indexPath.row -1];
             }
             
             if (user) {
