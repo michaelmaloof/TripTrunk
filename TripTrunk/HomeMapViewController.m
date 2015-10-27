@@ -662,7 +662,8 @@
     region.center = center;
     region.span = span;
     self.zoomOut.hidden = NO;
-
+    
+    view.layer.zPosition = 1;
     
     [self.mapView setRegion:region animated:YES];
 }
