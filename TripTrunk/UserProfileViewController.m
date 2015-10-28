@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
 @property (strong, nonatomic) PFUser *user;
+@property UIImageView *privateAccountImageView;
 @end
 
 @implementation UserProfileViewController
@@ -121,6 +122,19 @@
 
     }
 
+    //Check whether user account is private
+    if ([[self.user valueForKey:@"private"] boolValue])
+    {
+        //Add private account icon to user profile pic
+        self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
+        [self.profilePicImageView addSubview:self.privateAccountImageView];
+        [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
+        [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
+        [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
+                                                           self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
+                                                           25.0,
+                                                           25.0)];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
