@@ -16,6 +16,7 @@
 #import "TTUtility.h"
 #import "CitySearchViewController.h"
 
+
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate>
 
 // Text Fields
@@ -300,6 +301,7 @@
             self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
         });
     }];
+    
 }
 
 #pragma mark - Keyboard delegate methods
@@ -388,6 +390,10 @@
                     // Trip Input has correct data - save the trip!
                     
                     CLPlacemark *placemark = placemarks.firstObject;
+                    
+                    self.trip.lat = placemark.location.coordinate.latitude;
+                    self.trip.longitude = placemark.location.coordinate.longitude;
+
                     self.trip.country = placemark.country;
                     
                     if (placemark.locality == nil){
@@ -396,6 +402,7 @@
                     } else{
                         [self setTripCityName:placemark.locality];
                         self.trip.state = placemark.administrativeArea;
+                        
                     }
                     [self parseTrip];
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
