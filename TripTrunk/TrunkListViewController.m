@@ -343,6 +343,13 @@
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
         
     }
+    
+    if (trip.isPrivate == YES){
+        cell.lockImage.image = [UIImage imageNamed:@"lock"];
+    } else {
+        cell.lockImage.image = nil;
+    }
+    
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
         

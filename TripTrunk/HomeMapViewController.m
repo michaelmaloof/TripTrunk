@@ -583,7 +583,7 @@
 -(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent;
 {
     
-//we do this to make sure we dont place two pins down for a city
+    //we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     [self.tripsToCheck addObject:string];
     
@@ -595,58 +595,63 @@
         annotation.coordinate = placemark.location.coordinate;
         annotation.title = trip.city;
         
-        NSDate *date = trip.createdAt;
-        NSTimeInterval interval = [date timeIntervalSinceNow];
-        
-//if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
-        if (isMostRecent == YES){
-            CLLocationCoordinate2D center = annotation.coordinate;
+        if (placemark) {
             
-            MKCoordinateSpan span;
-            span.longitudeDelta = 3.5;
-            span.latitudeDelta = 3.5;
+            NSDate *date = trip.createdAt;
+            NSTimeInterval interval = [date timeIntervalSinceNow];
             
-            MKCoordinateRegion region;
-            region.center = center;
-            region.span = span;
-            self.zoomOut.hidden = NO;
-            
-            
-            [self.mapView setRegion:region animated:YES];
-            
-        } else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
-            self.isNew = YES;
-            self.tripToCheck = trip;
-            [self.justMadeTrunk addObject:annotation];
-        }
- //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
-        if (hot == YES)
-        {
-            [self.hotDots addObject:annotation.title];
-            [self.mapView addAnnotation:annotation];
-
-        }
-// if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
-        else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
-            [self.mapView addAnnotation:annotation];
-        }
-        
-        self.dropped = self.dropped + 1;
-        
-//if we placed all the correct pins we're done
-        if (self.dropped + self.notDropped == self.parseLocations.count){
-            self.dropped = 0;
-            self.notDropped = 0;
-            if (self.user == nil){
-                [self setTitleImage];
-
-            } else {
-                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-                NSString *s = NSLocalizedString(@"'s",@"'s");
-                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+            //if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
+            if (isMostRecent == YES){
+                CLLocationCoordinate2D center = annotation.coordinate;
+                
+                MKCoordinateSpan span;
+                span.longitudeDelta = 3.5;
+                span.latitudeDelta = 3.5;
+                
+                MKCoordinateRegion region;
+                region.center = center;
+                region.span = span;
+                self.zoomOut.hidden = NO;
+                
+                
+                [self.mapView setRegion:region animated:YES];
+                
+            } else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
+                self.isNew = YES;
+                self.tripToCheck = trip;
+                [self.justMadeTrunk addObject:annotation];
             }
+            //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
+            if (hot == YES)
+            {
+                [self.hotDots addObject:annotation.title];
+                [self.mapView addAnnotation:annotation];
+                
+            }
+            // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
+            else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
+                [self.mapView addAnnotation:annotation];
+            }
+            
+            self.dropped = self.dropped + 1;
+            
+            //if we placed all the correct pins we're done
+            if (self.dropped + self.notDropped == self.parseLocations.count){
+                self.dropped = 0;
+                self.notDropped = 0;
+                if (self.user == nil){
+                    [self setTitleImage];
+                    
+                } else {
+                    NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                    NSString *s = NSLocalizedString(@"'s",@"'s");
+                    self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+                }
+            }
+        } else {
+            self.dropped = self.dropped +1;
         }
-
+        
     }];
 }
 
@@ -662,7 +667,8 @@
     region.center = center;
     region.span = span;
     self.zoomOut.hidden = NO;
-
+    
+    view.layer.zPosition = 1;
     
     [self.mapView setRegion:region animated:YES];
 }

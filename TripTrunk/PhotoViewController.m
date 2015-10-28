@@ -40,6 +40,7 @@
 @property CGFloat width;
 @property CGFloat originX;
 
+@property (weak, nonatomic) IBOutlet UITextView *caption;
 
 
 
@@ -60,6 +61,7 @@
     
     // Set initial UI
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
+    
     //FIXME: if I self.photo.user.username it crashes thee app
     self.photoTakenBy.text = self.photo.userName;
     
@@ -201,6 +203,8 @@
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    
+    self.caption.text = self.photo.caption;
 
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -357,7 +361,7 @@
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-
+                self.caption.text = self.photo.caption;
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -391,6 +395,8 @@
         [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
         NSString *likes = NSLocalizedString(@"Likes",@"Likes");
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+        self.caption.text = self.photo.caption;
+
 
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
@@ -417,6 +423,8 @@
         [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
         NSString *likes = NSLocalizedString(@"Likes",@"Likes");
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+        self.caption.text = self.photo.caption;
+
 
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         
@@ -529,6 +537,8 @@
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    self.caption.text = self.photo.caption;
+
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
