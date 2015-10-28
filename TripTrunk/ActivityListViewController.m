@@ -33,6 +33,7 @@ enum TTActivityViewType : NSUInteger {
 @property NSUInteger viewType;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
+@property BOOL activitySearchComplete;
 
 @end
 
@@ -43,6 +44,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:likes];
+        _activitySearchComplete = NO;
         self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
     }
@@ -54,6 +56,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:activities];
+        _activitySearchComplete = NO;
         self.title = self.title = NSLocalizedString(@"Activity",@"Activity");
         _viewType = TTActivityViewAllActivities;
     }
@@ -115,6 +118,7 @@ enum TTActivityViewType : NSUInteger {
         [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
             _activities = [NSMutableArray arrayWithArray:activities];
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.activitySearchComplete = YES;
                 [self.tableView reloadData];
             });
         }];
@@ -508,7 +512,7 @@ enum TTActivityViewType : NSUInteger {
 {
     
     // Search Controller and the regular table view have different data sources
-    if (self.activities.count == 0) {
+    if (self.activities.count == 0 && self.activitySearchComplete) {
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
