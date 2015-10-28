@@ -204,23 +204,38 @@
         
         if (error.code == 202)
         {
+            //Log error
             NSLog(@"Error: %@",error);
+
+            //Create 'username in use' alert view
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                             message:NSLocalizedString(@"Username Taken, please try another",@"Username Taken, please try another")
                                                            delegate:self
                                                   cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
+
+            //Clear user property
+            self.user = nil;
+
+            //Show alert view
             [alert show];
             return NO;
         }
         else if (error.code == 203)
         {
+            //Log error
             NSLog(@"Error: %@",error);
+
+            //Create 'email address in use' alert view
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                             message:NSLocalizedString(@"This email address is linked to an existing account, please try another",@"This email address is linked to an existing account, please try another")
                                                            delegate:self
                                                   cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
+            //Clear user property
+            self.user = nil;
+
+            //Show alert view
             [alert show];
             return NO;
         }
