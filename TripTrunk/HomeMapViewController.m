@@ -605,6 +605,10 @@
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
     annotation.title = trip.city;
     
+    if ([trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+        
+    }
+    
     
     if (trip.longitude != 0 && trip.longitude != 0){
         annotation.coordinate = CLLocationCoordinate2DMake(trip.lat, trip.longitude);

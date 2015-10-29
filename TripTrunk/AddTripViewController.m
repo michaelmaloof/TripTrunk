@@ -291,14 +291,36 @@
 //if they select location we present a view that allows the user to search for locations
 - (void)citySearchDidSelectLocation:(NSString *)location {
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    __block BOOL iserror = NO;
     
     [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
+        
+        if (locationDetails != nil){
+        
         self.city = locationDetails[@"geobytescity"];
         self.state = locationDetails[@"geobytesregion"];
         self.country = locationDetails[@"geobytescountry"];
+            
+        } else if ([location isEqualToString:@"Barcelona, CT, Spain"]){
+            self.city = @"Barcelona";
+            self.state =@"Catalonia";
+            self.country = @"Spain";
+        } else {
+            iserror = YES;
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
+            if (iserror == NO){
+                self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Unavailable",@"Location Unavailable")
+                                                                message:NSLocalizedString(@"We apologize. Please try another location.",@"We apologize. Please try another location.")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                      otherButtonTitles:nil, nil];
+                alert.tag = 69;
+                [alert show];
+            }
         });
     }];
     
