@@ -19,4 +19,7 @@
 @property NSArray *trunkAlbum;
 @property NSInteger arrayInt;
 
+-(void)captionButtonTapped:(int)button caption:(NSString*)text;
+
+
 @end
