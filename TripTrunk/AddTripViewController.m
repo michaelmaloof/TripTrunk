@@ -602,8 +602,6 @@
     }
     
     PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
-    [tripACL setReadAccess:YES forRoleWithName:roleName];
 
     [tripACL setPublicReadAccess:YES];
     
@@ -630,6 +628,12 @@
         if (_isEditing) {
             // TODO: Add all Trunk Members to READ ACL.
         }
+    }
+    else {
+        // Only add the friendsOf_ role to the ACL if the trunk is NOT private! A private trunk shouldn't be visible to followers. just trunk members
+        // This fixes the shitty bug that was live at launch.
+        NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
+        [tripACL setReadAccess:YES forRoleWithName:roleName];
     }
 
     self.trip.ACL = tripACL;
