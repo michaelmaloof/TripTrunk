@@ -72,13 +72,16 @@
 //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
+        
+        //COMMENETED OUT UNTIL AJ MAKES DEISNGS
         //If user has not completed tutorial, show tutorial
-        self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
-        if (!self.tutorialComplete)
-        {
-            [self showTutorial];
-        }
-        else if (self.user == nil) {
+//        self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
+//        if (self.tutorialComplete == NO)
+//        {
+//            [self showTutorial];
+//        }
+        
+        if (self.user == nil) {
             
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
             [self queryParseMethodEveryone];
