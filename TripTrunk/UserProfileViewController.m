@@ -92,7 +92,7 @@
         [self.bioTextView setText:_user[@"bio"]];
     }
     else {
-        [self.bioTextView setText:NSLocalizedString(@"A true world traveler",@"A true world traveler")];
+        [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
 
     [self.logoutButton setHidden:YES];
