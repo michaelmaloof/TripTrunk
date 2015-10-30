@@ -9,6 +9,7 @@
 #import "EditCaptionViewController.h"
 
 @interface EditCaptionViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *hideLabel;
 
 @end
 
@@ -16,13 +17,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.hideLabel.hidden = YES;
+    self.imageView.image = self.image;
+    self.captionBox.text = self.caption;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 /*
 #pragma mark - Navigation
@@ -33,5 +37,25 @@
     // Pass the selected object to the new view controller.
 }
 */
+- (IBAction)backButtonTapped:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
+- (IBAction)addButtonTapped:(id)sender {
+    [self.delegate captionButtonTapped:0 caption:self.captionBox.text];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+}
+
+- (IBAction)removeButtonTapped:(id)sender {
+    self.captionBox.text = @"";
+
+}
+
+- (IBAction)deleteButtonTapped:(id)sender {
+    [self.delegate captionButtonTapped:1 caption:self.captionBox.text];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+
+}
 @end
