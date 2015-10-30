@@ -376,7 +376,7 @@
 
 -(void)increaseLockSize{
     if (self.privateCount < 3){
-        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x, self.privateAccountImageView.frame.origin.y, self.privateAccountImageView.frame.size.width *1.5, self.privateAccountImageView.frame.size.width *1.5);
+        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x - 10, self.privateAccountImageView.frame.origin.y - 10, self.privateAccountImageView.frame.size.width + 10, self.privateAccountImageView.frame.size.width + 10);
         self.privateCount = self.privateCount + 1;
     }
 }
@@ -395,6 +395,7 @@
     } else {
         [self increaseLockSize];
     }
+
 }
 
 - (void)editButtonPressed:(id)sender {
