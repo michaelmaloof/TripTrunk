@@ -312,6 +312,9 @@
     } else if (self.user[@"private"] && self.isFollowing == YES){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
         [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
         [self increaseLockSize];
     }
@@ -325,6 +328,10 @@
     } else if (self.user[@"private"] && self.isFollowing == YES){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
         [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
+        [self.navigationController pushViewController:vc animated:YES];
+
     } else {
         [self increaseLockSize];
     }
@@ -388,6 +395,11 @@
         vc.user = self.user;
         [self.navigationController pushViewController:vc animated:YES];
     } else if (self.user[@"private"] && self.isFollowing == YES){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+        vc.user = self.user;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
         vc.user = self.user;
