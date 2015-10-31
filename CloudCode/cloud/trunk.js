@@ -54,10 +54,17 @@ Parse.Cloud.define("updateTrunkLocation", function(request, response) {
 
   var lat = request.params.latitude;
   var lon = request.params.longitude;
-  var trip = request.params.trip;
+  var Trip = Parse.Object.extend("Trip");
+  var trip = new Trip();
+  trip.id = request.params.tripId;
+
+  if (!lat || !lon || !trip.id) {
+  	response.error('Invalid parameters - Please try again');
+  }
+
 	trip.fetch().then(function(trip) {
 		trip.set('lat', lat);
-		trip.set('longitude', longitude);
+		trip.set('longitude', lon);
 		return trip.save();
 
   }).then(function(trip) {

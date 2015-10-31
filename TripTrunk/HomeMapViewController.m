@@ -819,20 +819,25 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    for (Trip *trip in self.needsUpdates){
-        double lat = trip.lat;
-        double longi = trip.longitude;
-        [PFCloud callFunctionInBackground:@"updateTrunkLocation"
-                           withParameters:@{@"lat": @(lat), @"lon": @(longi), @"trip": trip}
-                                    block:^(NSString *response, NSError *error) {
-                                        if (!error) {
-                                            NSLog(@"%@ upadated with lat %@ and long %@", trip.name, @(trip.lat), @(trip.longitude));
-                                        }
-                                        else {
-                                            NSLog(@"%@", error);
-                                        }
-                                    }];
-    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        for (Trip *trip in self.needsUpdates) {
+            NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
+            NSNumber *lon = [NSNumber numberWithDouble: trip.longitude];
+            [PFCloud callFunctionInBackground:@"updateTrunkLocation"
+                               withParameters:@{@"latitude": lat, @"longitude": lon, @"tripId": trip.objectId}
+                                        block:^(NSString *response, NSError *error) {
+                                            if (!error) {
+                                                NSLog(@"%@ upadated with lat %@ and long %@", trip.name, lat, lon);
+                                            }
+                                            else {
+                                                NSLog(@"Error for %@ : %@", trip.name, error);
+                                            }
+                                        }];
+        }
+
+    });
+    
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
