@@ -413,6 +413,15 @@
         } else {
             [self increaseLockSize];
         }
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && [self.mapButton.titleLabel.text isEqualToString:@""]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
+                                                        message:NSLocalizedString(@"Go create some memories and we will store them here for you.",@"Go create some memories and we will store them here for you.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        
+        alert.tag = 11;
+        [alert show];
     }
 }
 
