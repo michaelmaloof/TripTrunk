@@ -18,9 +18,10 @@
 #import "CommentListViewController.h"
 #import "TTCache.h"
 #import "TrunkViewController.h"
+#import "EditCaptionViewController.h"
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -40,7 +41,9 @@
 @property CGFloat width;
 @property CGFloat originX;
 
+@property (weak, nonatomic) IBOutlet UITextView *caption;
 
+@property (weak, nonatomic) IBOutlet UIButton *addCaption;
 
 
 
@@ -59,7 +62,16 @@
     [super viewDidLoad];
     
     // Set initial UI
+    
+    if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+        self.addCaption.hidden = NO;
+    } else {
+        self.addCaption.hidden = YES;
+
+    }
+    
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
+    
     //FIXME: if I self.photo.user.username it crashes thee app
     self.photoTakenBy.text = self.photo.userName;
     
@@ -201,6 +213,8 @@
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    
+    self.caption.text = self.photo.caption;
 
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -357,7 +371,7 @@
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-
+                self.caption.text = self.photo.caption;
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -385,12 +399,20 @@
         [self loadImageForPhoto:self.photo];
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
+        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            self.addCaption.hidden = NO;
+        } else {
+            self.addCaption.hidden = YES;
+            
+        }
 
         
         NSString *comments = NSLocalizedString(@"Comments",@"Comments");
         [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
         NSString *likes = NSLocalizedString(@"Likes",@"Likes");
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+        self.caption.text = self.photo.caption;
+
 
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
@@ -408,6 +430,12 @@
     {
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
+        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            self.addCaption.hidden = NO;
+        } else {
+            self.addCaption.hidden = YES;
+            
+        }
         [self loadImageForPhoto:self.photo];
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
@@ -417,6 +445,8 @@
         [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
         NSString *likes = NSLocalizedString(@"Likes",@"Likes");
         [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+        self.caption.text = self.photo.caption;
+
 
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         
@@ -448,7 +478,17 @@
 - (IBAction)onSavePhotoTapped:(id)sender {
 
     UIActionSheet *actionSheet;
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] || [[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
+    
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]){
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
+        
+    }
+    
+    else if ([[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
@@ -529,6 +569,8 @@
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    self.caption.text = self.photo.caption;
+
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
@@ -623,7 +665,6 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
-            
         }
         
     }
@@ -706,4 +747,66 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"editCaption"]){
+    
+    EditCaptionViewController *vc = segue.destinationViewController;
+    vc.delegate = self;
+    vc.caption = self.photo.caption;
+    vc.image = self.imageView.image;
+    }
+}
+
+-(void)captionButtonTapped:(int)button caption:(NSString *)text{
+    
+    if (button == 0) {
+        self.photo.caption = text;
+    } else if (button == 1){
+        self.photo.caption = @"";
+    }
+    self.caption.text = self.photo.caption;
+    [self.photo saveInBackground];
+
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

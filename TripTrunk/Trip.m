@@ -21,6 +21,9 @@
 @dynamic mostRecentPhoto;
 @dynamic isPrivate;
 @dynamic start;
+@dynamic lat;
+@dynamic longitude;
+
 
 +(NSString *)parseClassName
 {

@@ -27,8 +27,8 @@
 #define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 #else
 // THIS IS DEBUG MODE
-#define kPARSE_APP_ID @"jyNLO5QRwCCapLfNiTulIDuatHFsBrPkx31xtSGS"
-#define kPARSE_CLIENT_KEY @"aQnBH0OLcCwOhuIZGuBGIqYwW6M5bL4oW6xVze1P"
+#define kPARSE_APP_ID @"3QklLmNuvNlja8tDHbZehATWmVuLIARKY1vMtF9F"
+#define kPARSE_CLIENT_KEY @"0ogKsFKa5fqPdzFpF1deLtFM2SPXmGKtxXlajPeb"
 #endif
 
 @interface AppDelegate ()

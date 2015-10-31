@@ -23,5 +23,9 @@
 @property NSString *endDate;
 @property NSDate *mostRecentPhoto;
 @property BOOL isPrivate;
+@property double lat;
+@property double longitude;
+
+
 
 @end

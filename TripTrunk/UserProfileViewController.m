@@ -28,6 +28,9 @@
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
 @property (strong, nonatomic) PFUser *user;
+@property BOOL isFollowing;
+@property UIImageView *privateAccountImageView;
+@property int privateCount;
 @end
 
 @implementation UserProfileViewController
@@ -57,6 +60,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //
+    self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
@@ -88,7 +92,7 @@
         [self.bioTextView setText:_user[@"bio"]];
     }
     else {
-        [self.bioTextView setText:NSLocalizedString(@"A true world traveler",@"A true world traveler")];
+        [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
 
     [self.logoutButton setHidden:YES];
@@ -121,13 +125,40 @@
 
     }
 
+    //Check whether user account is private
+    if ([[self.user valueForKey:@"private"] boolValue])
+    {
+        //Add private account icon to user profile pic
+        self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
+        [self.profilePicImageView addSubview:self.privateAccountImageView];
+        [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
+        [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
+        [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
+                                                           self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
+                                                           25.0,
+                                                           25.0)];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    self.followButton.enabled = NO;
+    self.followersButton.enabled = NO;
+    self.followingButton.enabled = NO;
+    self.mapButton.enabled = NO;
+    self.followersButton.enabled = NO;
+
+    
+    
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        self.followButton.enabled = YES;
         [self.followButton setHidden:YES];
+        self.followersButton.enabled = YES;
+        self.followingButton.enabled = YES;
+        self.mapButton.enabled = YES;
+        self.followersButton.enabled = YES;
+        
     }
     else {
         // Get the followStatus from the cache so it may be updated already
@@ -138,10 +169,31 @@
                 [self.followButton setEnabled:YES];
                 [self.followButton setSelected:YES];
                 if (followStatus.intValue == 2) {
+                    self.followButton.enabled = YES;
+                    self.followersButton.enabled = YES;
+                    self.followingButton.enabled = YES;
+                    self.mapButton.enabled = YES;
+                    self.followersButton.enabled = YES;
+                    self.isFollowing = NO;
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                 }
                 else {
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+                    if (self.user[@"private"]){
+                        self.isFollowing = YES;
+                        self.followButton.enabled = YES;
+                        self.followersButton.enabled = YES;
+                        self.followingButton.enabled = YES;
+                        self.mapButton.enabled = YES;
+                        self.followersButton.enabled = YES;
+                    } else {
+                        self.isFollowing = NO;
+                        self.followButton.enabled = YES;
+                        self.followersButton.enabled = YES;
+                        self.followingButton.enabled = YES;
+                        self.mapButton.enabled = YES;
+                        self.followersButton.enabled = YES;
+                    }
                 }
             });
         }
@@ -163,9 +215,21 @@
                         [self.followButton setEnabled:YES];
                         [self.followButton setSelected:YES];
                         if (followingStatus.intValue == 2) {
+                            self.isFollowing = NO;
+                            self.followButton.enabled = YES;
+                            self.followersButton.enabled = YES;
+                            self.followingButton.enabled = YES;
+                            self.mapButton.enabled = YES;
+                            self.followersButton.enabled = YES;
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                         }
                         else {
+                            self.isFollowing = YES;
+                            self.followButton.enabled = YES;
+                            self.followersButton.enabled = YES;
+                            self.followingButton.enabled = YES;
+                            self.mapButton.enabled = YES;
+                            self.followersButton.enabled = YES;
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
                         }
                     });
@@ -175,6 +239,12 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.followButton setEnabled:YES];
                         [self.followButton setSelected:NO];
+                        self.isFollowing = NO;
+                        self.followButton.enabled = YES;
+                        self.followersButton.enabled = YES;
+                        self.followingButton.enabled = YES;
+                        self.mapButton.enabled = YES;
+                        self.followersButton.enabled = YES;
                     });
                 }
             }
@@ -236,15 +306,37 @@
 }
 - (IBAction)followersButtonPressed:(id)sender {
     NSLog(@"Followers Button Pressed");
-    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
-    [self.navigationController pushViewController:vc animated:YES];
+    if (!self.user[@"private"]){
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (self.user[@"private"] && self.isFollowing == YES){
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        [self increaseLockSize];
+    }
 }
 
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
+    if (!self.user[@"private"]){
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (self.user[@"private"] && self.isFollowing == YES){
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
+        [self.navigationController pushViewController:vc animated:YES];
+
+    } else {
+        [self increaseLockSize];
+    }
     
-    FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
-    [self.navigationController pushViewController:vc animated:YES];
+
     
 }
 - (IBAction)logOutButtonPressed:(id)sender {
@@ -289,11 +381,33 @@
     
 }
 
+-(void)increaseLockSize{
+    if (self.privateCount < 3){
+        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x - 10, self.privateAccountImageView.frame.origin.y - 10, self.privateAccountImageView.frame.size.width + 10, self.privateAccountImageView.frame.size.width + 10);
+        self.privateCount = self.privateCount + 1;
+    }
+}
+
 - (IBAction)mapButtonPressed:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
-    vc.user = self.user;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (!self.user[@"private"]){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+        vc.user = self.user;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (self.user[@"private"] && self.isFollowing == YES){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+        vc.user = self.user;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+        vc.user = self.user;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        [self increaseLockSize];
+    }
+
 }
 
 - (void)editButtonPressed:(id)sender {

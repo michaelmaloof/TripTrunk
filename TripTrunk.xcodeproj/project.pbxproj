@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */; };
+		2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */; };
 		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
 		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
-		2225BF091BD2F7760088080F /* PickerImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2225BF081BD2F7760088080F /* PickerImage.m */; settings = {ASSET_TAGS = (); }; };
-		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; settings = {ASSET_TAGS = (); }; };
-		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; settings = {ASSET_TAGS = (); }; };
+		2225BF091BD2F7760088080F /* PickerImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2225BF081BD2F7760088080F /* PickerImage.m */; };
+		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; };
+		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
 		223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E91AE2BBD0001FE916 /* MapKit.framework */; };
 		223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547EB1AE2BBD8001FE916 /* CoreLocation.framework */; };
@@ -45,12 +45,15 @@
 		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
 		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
 		2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2268B09D1B32485300C941C4 /* HomeMapViewController.m */; };
-		226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 226AAC0E1BB21CEF0031AF98 /* UserCellCollectionViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 226AAC0E1BB21CEF0031AF98 /* UserCellCollectionViewCell.m */; };
 		2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */; };
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
-		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; settings = {ASSET_TAGS = (); }; };
+		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
+		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
+		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
+		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
 		C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */; };
 		C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
 		C9021F241B9F876100E2EA96 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F231B9F876100E2EA96 /* Bolts.framework */; };
@@ -97,8 +100,8 @@
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
 		C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CAB1AFC27FA00D967A5 /* FriendTableViewCell.m */; };
-		C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893361BB596FB00259AB4 /* NSObject+Properties.m */; settings = {ASSET_TAGS = (); }; };
-		C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893381BB596FB00259AB4 /* PFObject+NSCoding.m */; settings = {ASSET_TAGS = (); }; };
+		C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893361BB596FB00259AB4 /* NSObject+Properties.m */; };
+		C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D893381BB596FB00259AB4 /* PFObject+NSCoding.m */; };
 		C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */; };
 		C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F0D66A1B73D15900957F59 /* TTCache.m */; };
 		C9F4C44E1B46EA6D00EFF6B3 /* photo134.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */; };
@@ -109,8 +112,8 @@
 		C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB80891B827CA4008B8A67 /* CommentTableViewCell.m */; };
 		C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FB808A1B827CA4008B8A67 /* CommentTableViewCell.xib */; };
 		C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */; };
-		C9FC5A221BC49CE200EB5158 /* EULAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FC5A201BC49CE200EB5158 /* EULAViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C9FC5A231BC49CE200EB5158 /* EULAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FC5A211BC49CE200EB5158 /* EULAViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C9FC5A221BC49CE200EB5158 /* EULAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9FC5A201BC49CE200EB5158 /* EULAViewController.m */; };
+		C9FC5A231BC49CE200EB5158 /* EULAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FC5A211BC49CE200EB5158 /* EULAViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,8 +195,13 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCaptionViewController.h; sourceTree = "<group>"; };
+		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
+		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
 		C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
 		C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		C9021F231B9F876100E2EA96 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -389,6 +397,8 @@
 				C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */,
 				220408EF1AF1C1EA009DB060 /* PhotoViewController.h */,
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
+				22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */,
+				22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */,
 				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
 				C903F7121B98885500F56FE1 /* CommentListViewController.h */,
@@ -415,6 +425,9 @@
 				C9FC5A1F1BC49CE200EB5158 /* EULAViewController.h */,
 				C9FC5A201BC49CE200EB5158 /* EULAViewController.m */,
 				C9FC5A211BC49CE200EB5158 /* EULAViewController.xib */,
+				4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */,
+				4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */,
+				4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -734,6 +747,7 @@
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
 				C9FC5A231BC49CE200EB5158 /* EULAViewController.xib in Resources */,
+				4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */,
 				C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
@@ -779,6 +793,7 @@
 				C98FF3861B9F3B110041480E /* CitySearchViewController.m in Sources */,
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
+				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
@@ -805,6 +820,7 @@
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
+				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,

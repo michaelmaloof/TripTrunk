@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TutorialViewController">
+            <connections>
+                <outlet property="backButton" destination="QBa-cd-mba" id="iPj-u6-rbF"/>
+                <outlet property="masterScrollView" destination="4wX-Fe-vxS" id="u36-DQ-bgu"/>
+                <outlet property="nextDoneButton" destination="6Bs-EO-jhG" id="aRf-eW-XG2"/>
+                <outlet property="pageIndicator" destination="gbU-fy-ibd" id="fgi-1l-NMt"/>
+                <outlet property="view" destination="N2w-CA-1PJ" id="uzP-eL-L2c"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="N2w-CA-1PJ">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4wX-Fe-vxS">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                </scrollView>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6K-l7-0wt">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="8cm-1F-8c0"/>
+                    </constraints>
+                    <items>
+                        <navigationItem id="0Hu-in-bJY">
+                            <barButtonItem key="leftBarButtonItem" tag="1" title="Item" id="QBa-cd-mba">
+                                <connections>
+                                    <action selector="scrollTutorialPages:" destination="-1" id="hDF-pf-im0"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem key="rightBarButtonItem" tag="2" title="Item" id="6Bs-EO-jhG" userLabel="Next-Done Button">
+                                <connections>
+                                    <action selector="scrollTutorialPages:" destination="-1" id="HeU-kJ-8Rc"/>
+                                </connections>
+                            </barButtonItem>
+                        </navigationItem>
+                    </items>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="8cm-1F-8c0"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="8cm-1F-8c0"/>
+                        </mask>
+                    </variation>
+                </navigationBar>
+                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="gbU-fy-ibd">
+                    <rect key="frame" x="-19" y="-18" width="39" height="37"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="37" id="ppo-cS-Arq"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="ppo-cS-Arq"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="ppo-cS-Arq"/>
+                        </mask>
+                    </variation>
+                </pageControl>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="F6K-l7-0wt" firstAttribute="top" secondItem="N2w-CA-1PJ" secondAttribute="top" id="1Pg-V9-t9f"/>
+                <constraint firstItem="gbU-fy-ibd" firstAttribute="centerX" secondItem="N2w-CA-1PJ" secondAttribute="centerX" id="2bq-nK-JHy"/>
+                <constraint firstItem="4wX-Fe-vxS" firstAttribute="top" secondItem="N2w-CA-1PJ" secondAttribute="top" id="3Gt-Hb-2GQ"/>
+                <constraint firstAttribute="trailing" secondItem="F6K-l7-0wt" secondAttribute="trailing" id="Dke-cT-BDZ"/>
+                <constraint firstAttribute="bottom" secondItem="gbU-fy-ibd" secondAttribute="bottom" constant="8" id="fjs-ut-2oa"/>
+                <constraint firstItem="4wX-Fe-vxS" firstAttribute="leading" secondItem="N2w-CA-1PJ" secondAttribute="leading" id="ngR-Mb-Www"/>
+                <constraint firstAttribute="trailing" secondItem="4wX-Fe-vxS" secondAttribute="trailing" id="qHv-qm-qb5"/>
+                <constraint firstAttribute="bottom" secondItem="4wX-Fe-vxS" secondAttribute="bottom" id="u0u-un-jsW"/>
+                <constraint firstItem="F6K-l7-0wt" firstAttribute="leading" secondItem="N2w-CA-1PJ" secondAttribute="leading" id="yG9-qY-5Xk"/>
+            </constraints>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="4wX-Fe-vxS"/>
+                    <exclude reference="F6K-l7-0wt"/>
+                    <exclude reference="gbU-fy-ibd"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="2bq-nK-JHy"/>
+                    <exclude reference="fjs-ut-2oa"/>
+                    <exclude reference="1Pg-V9-t9f"/>
+                    <exclude reference="Dke-cT-BDZ"/>
+                    <exclude reference="yG9-qY-5Xk"/>
+                    <exclude reference="3Gt-Hb-2GQ"/>
+                    <exclude reference="ngR-Mb-Www"/>
+                    <exclude reference="qHv-qm-qb5"/>
+                    <exclude reference="u0u-un-jsW"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="4wX-Fe-vxS"/>
+                    <include reference="F6K-l7-0wt"/>
+                    <include reference="gbU-fy-ibd"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="2bq-nK-JHy"/>
+                    <include reference="fjs-ut-2oa"/>
+                    <include reference="1Pg-V9-t9f"/>
+                    <include reference="Dke-cT-BDZ"/>
+                    <include reference="yG9-qY-5Xk"/>
+                    <include reference="3Gt-Hb-2GQ"/>
+                    <include reference="ngR-Mb-Www"/>
+                    <include reference="qHv-qm-qb5"/>
+                    <include reference="u0u-un-jsW"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+</document>

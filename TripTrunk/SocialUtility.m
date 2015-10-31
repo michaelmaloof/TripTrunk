@@ -567,8 +567,10 @@
             // Map the activity users into the friends array
             for (PFObject *activity in objects)
             {
-                PFUser *user = activity[@"toUser"];
-                [friends addObject:user];
+                if (![user[@"fbid"]isEqualToString:user[@"username"]]){
+                    PFUser *user = activity[@"toUser"];
+                    [friends addObject:user];
+                }
             }
             // Update the cache
             if (friends.count > 0) {

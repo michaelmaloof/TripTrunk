@@ -335,6 +335,7 @@
 {
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
+    cell.lockImage.hidden = YES;
     
     if (self.filter.tag == 0 && self.user == nil) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
@@ -343,6 +344,13 @@
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
         
     }
+    
+    if (trip.isPrivate == YES){
+        cell.lockImage.hidden = NO;
+    } else {
+        cell.lockImage.hidden = YES;
+    }
+    
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
         

@@ -16,6 +16,7 @@
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 #import "EULAViewController.h"
+#import "TutorialViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -39,6 +40,8 @@
 @property BOOL isNew;
 @property NSMutableArray *originalArray;
 @property Trip *tripToCheck;
+@property BOOL tutorialComplete;
+@property NSMutableArray *needsUpdates;
 
 
 @end
@@ -61,14 +64,23 @@
     
 }
 
-
 -(void)viewDidAppear:(BOOL)animated {
-    
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-    
+   self.needsUpdates = nil;
+    self.needsUpdates = [[NSMutableArray alloc]init];
+
 //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
+        
+        //COMMENETED OUT UNTIL AJ MAKES DEISNGS
+        //If user has not completed tutorial, show tutorial
+//        self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
+//        if (self.tutorialComplete == NO)
+//        {
+//            [self showTutorial];
+//        }
+        
         if (self.user == nil) {
             
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
@@ -127,7 +139,7 @@
     
 //the list of trunks we place on the map originally. We compare this to the trunks will pull down on the view did appear to see if we need to place down new pins
     self.originalArray = [[NSMutableArray alloc]init];
-
+    
     self.isNew= NO;
 }
 
@@ -227,7 +239,10 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
+    
+    
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
@@ -283,9 +298,12 @@
 //If we've finished the for loop then we place the trips we loaded from parse to the map. Honestly the count isnt needed but I left it here.
                 count += 1;
                 if(count == objects.count){
-                    [self placeTrips];
+//                    [self placeTrips];
                 }
             }
+            
+            [self placeTrips];
+
         }
         
     }];
@@ -308,6 +326,7 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
 
 
@@ -449,6 +468,8 @@
  */
 - (IBAction)zoomOut:(id)sender {
     self.mapView.camera.altitude *= 3.5;
+    
+    
 }
 
 
@@ -486,7 +507,14 @@
             if(![self.tripsToCheck containsObject:address] || color == 1)
             {
 //place the trunk on the map
-                [self addTripToMap:trip dot:color];
+                
+//if this is a user profile we show the most recent trunk on the map
+                if (self.user && trip == [self.parseLocations objectAtIndex:0]) {
+                    [self addTripToMap:trip dot:color isMostRecent:YES];
+
+                } else{
+                    [self addTripToMap:trip dot:color isMostRecent:NO];
+                }
 //we want to know how many trunks we originally had
                 self.originalCount = self.parseLocations.count;
 //we then set the orignalarray to parselocations. we use this to compare these trunks with the new ones we pull down from parse later
@@ -551,7 +579,7 @@
 
                 if(![self.tripsToCheck containsObject:address] || color == 1)
                 {
-                    [self addTripToMap:trip dot:color];
+                    [self addTripToMap:trip dot:color isMostRecent:NO];
                     self.originalCount = self.parseLocations.count;
                     self.originalArray = self.parseLocations;
                 } else {
@@ -568,59 +596,108 @@
  *
  *
  */
--(void)addTripToMap:(Trip*)trip dot:(BOOL)hot;
+-(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent;
 {
     
-//we do this to make sure we dont place two pins down for a city
+    
+    //we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     [self.tripsToCheck addObject:string];
     
+    MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
+    annotation.title = trip.city;
     
-    CLGeocoder *geocoder = [[CLGeocoder alloc]init];
-    [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error) {
-        CLPlacemark *placemark = placemarks.firstObject;
-        MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
-        annotation.coordinate = placemark.location.coordinate;
-        annotation.title = trip.city;
+    if ([trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
         
-        NSDate *date = trip.createdAt;
-        NSTimeInterval interval = [date timeIntervalSinceNow];
-        
-//if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made
-        if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
-            self.isNew = YES;
-            self.tripToCheck = trip;
-            [self.justMadeTrunk addObject:annotation];
-        }
- //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
-        if (hot == YES)
-        {
-            [self.hotDots addObject:annotation.title];
-            [self.mapView addAnnotation:annotation];
+    }
+    
+    
+    if (trip.longitude != 0 && trip.longitude != 0){
+        annotation.coordinate = CLLocationCoordinate2DMake(trip.lat, trip.longitude);
+        [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:NO];
 
-        }
-// if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
-        else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
-            [self.mapView addAnnotation:annotation];
-        }
         
-        self.dropped = self.dropped + 1;
+    } else
+    {
+        CLGeocoder *geocoder = [[CLGeocoder alloc]init];
+        [geocoder geocodeAddressString:string completionHandler:^(NSArray *placemarks, NSError *error)
+         {
+             if (!error)
+             {
+                 CLPlacemark *placemark = placemarks.firstObject;
+                 MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
+                 annotation.coordinate = placemark.location.coordinate;
+                 annotation.title = trip.city;
+                 trip.lat = placemark.location.coordinate.latitude;
+                 trip.longitude = placemark.location.coordinate.longitude;
+                 [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:YES];
+             }
+             
+         }];
+    }
+}
+
+-(void)createTripForMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent annotation:(MKPointAnnotation*)annotation needToSave:(BOOL)isNeeded{
+    NSDate *date = trip.createdAt;
+    NSTimeInterval interval = [date timeIntervalSinceNow];
+    
+    //if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
+    if (isMostRecent == YES){
+        CLLocationCoordinate2D center = annotation.coordinate;
         
-//if we placed all the correct pins we're done
-        if (self.dropped + self.notDropped == self.parseLocations.count){
-            self.dropped = 0;
-            self.notDropped = 0;
-            if (self.user == nil){
-                [self setTitleImage];
-
-            } else {
-                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-                NSString *s = NSLocalizedString(@"'s",@"'s");
-                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
-            }
+        MKCoordinateSpan span;
+        span.longitudeDelta = 3.5;
+        span.latitudeDelta = 3.5;
+        
+        MKCoordinateRegion region;
+        region.center = center;
+        region.span = span;
+        self.zoomOut.hidden = NO;
+        
+        [self.mapView setRegion:region animated:YES];
+        
+    }
+    
+    
+    else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
+        self.isNew = YES;
+        self.tripToCheck = trip;
+        
+        [self.justMadeTrunk addObject:annotation];
+    }
+    //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
+    if (hot == YES)
+    {
+        [self.hotDots addObject:annotation.title];
+        [self.mapView addAnnotation:annotation];
+        
+    }
+    // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
+    else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
+        
+        [self.mapView addAnnotation:annotation];
+    }else {
+    }
+    
+    self.dropped = self.dropped + 1;
+    
+    //if we placed all the correct pins we're done
+    if (self.dropped + self.notDropped == self.parseLocations.count){
+        self.dropped = 0;
+        self.notDropped = 0;
+        if (self.user == nil){
+            [self setTitleImage];
+            
+        } else {
+            NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+            NSString *s = NSLocalizedString(@"'s",@"'s");
+            self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
         }
-
-    }];
+    }
+    
+    if (isNeeded == YES){
+        [self.needsUpdates addObject:trip];
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
@@ -635,7 +712,8 @@
     region.center = center;
     region.span = span;
     self.zoomOut.hidden = NO;
-
+    
+    view.layer.zPosition = 1;
     
     [self.mapView setRegion:region animated:YES];
 }
@@ -646,6 +724,7 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
+    
 
 //if the trunk is in the hotDots (meaning its hot) then make it red
     if ([self.hotDots containsObject:annotation.title]) {
@@ -680,9 +759,23 @@
     
     if (self.isNew == YES) {
         self.isNew = NO;
-        [self.mapView showAnnotations:self.justMadeTrunk animated:YES];
+        MKPointAnnotation *ann = [self.justMadeTrunk objectAtIndex:0];
+        CLLocationCoordinate2D center = ann.coordinate;
+        
+        MKCoordinateSpan span;
+        span.longitudeDelta = 3.5;
+        span.latitudeDelta = 3.5;
+        
+        MKCoordinateRegion region;
+        region.center = center;
+        region.span = span;
+        self.zoomOut.hidden = NO;
+        
+        
+        [self.mapView setRegion:region animated:YES];
 
     }
+    
 
     return startAnnotation;
 }
@@ -723,6 +816,23 @@
 {
     [self.view endEditing:YES];
     
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    for (Trip *trip in self.needsUpdates){
+        double lat = trip.lat;
+        double longi = trip.longitude;
+        [PFCloud callFunctionInBackground:@"updateTrunkLocation"
+                           withParameters:@{@"lat": @(lat), @"lon": @(longi), @"trip": trip}
+                                    block:^(NSString *response, NSError *error) {
+                                        if (!error) {
+                                            NSLog(@"%@ upadated with lat %@ and long %@", trip.name, @(trip.lat), @(trip.longitude));
+                                        }
+                                        else {
+                                            NSLog(@"%@", error);
+                                        }
+                                    }];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -782,6 +892,14 @@
     self.mapFilter.tag = !self.mapFilter.tag;
     
     
+}
+
+#pragma mark - Tutorial Management
+-(void)showTutorial
+{
+    //Show Tutorial View Controller to User
+    TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
+    [self.navigationController presentViewController:tutorialVC	 animated:YES completion:nil];
 }
 
 // This is needed for the login to work properly

@@ -16,6 +16,7 @@
 #import "TTUtility.h"
 #import "CitySearchViewController.h"
 
+
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate>
 
 // Text Fields
@@ -290,16 +291,46 @@
 //if they select location we present a view that allows the user to search for locations
 - (void)citySearchDidSelectLocation:(NSString *)location {
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    __block BOOL iserror = NO;
     
     [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
-        self.city = locationDetails[@"geobytescity"];
-        self.state = locationDetails[@"geobytesregion"];
-        self.country = locationDetails[@"geobytescountry"];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
-        });
+        if (error){
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            [self tabBarTitle];
+            [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
+        }else{
+            
+            if (locationDetails != nil){
+                
+                self.city = locationDetails[@"geobytescity"];
+                self.state = locationDetails[@"geobytesregion"];
+                self.country = locationDetails[@"geobytescountry"];
+                
+            } else if ([location isEqualToString:@"Barcelona, CT, Spain"]){
+                self.city = @"Barcelona";
+                self.state =@"Catalonia";
+                self.country = @"Spain";
+            } else {
+                iserror = YES;
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (iserror == NO){
+                    self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
+                } else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Unavailable",@"Location Unavailable")
+                                                                    message:NSLocalizedString(@"We apologize. Please try another location.",@"We apologize. Please try another location.")
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                          otherButtonTitles:nil, nil];
+                    alert.tag = 69;
+                    [alert show];
+                }
+            });
+        }
     }];
+    
 }
 
 #pragma mark - Keyboard delegate methods
@@ -371,13 +402,25 @@
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
     {
-        if (error)
+        if (placemarks == nil && error)
         {
             NSLog(@"Error geocoding address: %@ withError: %@",address, error);
             // TODO: Set title image
             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
             [self tabBarTitle];
-            [self notEnoughInfo:NSLocalizedString(@"Please select a valid location and make sure you have internet connection",@"Please select a valid location and make sure you have internet connection")];
+            [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
+        } else if (placemarks == nil && !error) {
+            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+            // TODO: Set title image
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            [self tabBarTitle];
+            [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
+        } else if (placemarks.count == 0){
+            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+            // TODO: Set title image
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            [self tabBarTitle];
+            [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
         }
         
         else if (!error)
@@ -388,6 +431,10 @@
                     // Trip Input has correct data - save the trip!
                     
                     CLPlacemark *placemark = placemarks.firstObject;
+                    
+                    self.trip.lat = placemark.location.coordinate.latitude;
+                    self.trip.longitude = placemark.location.coordinate.longitude;
+
                     self.trip.country = placemark.country;
                     
                     if (placemark.locality == nil){
@@ -396,6 +443,7 @@
                     } else{
                         [self setTripCityName:placemark.locality];
                         self.trip.state = placemark.administrativeArea;
+                        
                     }
                     [self parseTrip];
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
