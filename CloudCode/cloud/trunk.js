@@ -46,8 +46,8 @@ Parse.Cloud.afterSave('Trip', function(request) {
 });
 
 /**
- * Cloud Function that changes the request User's role ACL to be private so they must approve new people joining their role.
- * No Parameters
+ * Cloud Function that updates a Trip object with lat and lon coordinates.
+ * Params: {lat (number), lon (number), and trip (object)}
  */
 Parse.Cloud.define("updateTrunkLocation", function(request, response) {
   Parse.Cloud.useMasterKey();
