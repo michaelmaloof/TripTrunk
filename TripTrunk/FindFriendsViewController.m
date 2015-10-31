@@ -205,7 +205,7 @@
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-    query.limit = 20;
+    query.limit = 10;
     
     if (self.removeResults == NO){
         query.skip = self.searchResults.count;
