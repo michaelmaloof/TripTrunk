@@ -468,6 +468,8 @@
  */
 - (IBAction)zoomOut:(id)sender {
     self.mapView.camera.altitude *= 3.5;
+    
+    
 }
 
 
@@ -818,11 +820,19 @@
 
 -(void)viewWillDisappear:(BOOL)animated{
     for (Trip *trip in self.needsUpdates){
-        if ([trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-            [trip saveInBackground];
-        }
+        double lat = trip.lat;
+        double longi = trip.longitude;
+        [PFCloud callFunctionInBackground:@"updateTrunkLocation"
+                           withParameters:@{@"lat": @(lat), @"lon": @(longi), @"trip": trip}
+                                    block:^(NSString *response, NSError *error) {
+                                        if (!error) {
+                                            NSLog(@"%@ upadated with lat %@ and long %@", trip.name, @(trip.lat), @(trip.longitude));
+                                        }
+                                        else {
+                                            NSLog(@"%@", error);
+                                        }
+                                    }];
     }
-    
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
