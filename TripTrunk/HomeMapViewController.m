@@ -239,6 +239,7 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
     
     
@@ -325,6 +326,7 @@
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
 
 
@@ -466,6 +468,8 @@
  */
 - (IBAction)zoomOut:(id)sender {
     self.mapView.camera.altitude *= 3.5;
+    
+    
 }
 
 
@@ -480,7 +484,7 @@
 //If the original array of trunks we loaded when viewDidLoad was called then there are no current trunks on the map. We can just display the new trunks.
     if (self.originalArray.count == 0)
     {
-        NSLog(@"placeTrips called. Location count = %lu",(unsigned long)self.parseLocations.count);
+
 //self.parselocations contains the locations we just pulled down from parse
         for (Trip *trip in self.parseLocations)
         {
@@ -594,7 +598,6 @@
  */
 -(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent;
 {
-    NSLog(@"addtrip for called %@", trip.city);
     
     
     //we do this to make sure we dont place two pins down for a city
@@ -603,6 +606,10 @@
     
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
     annotation.title = trip.city;
+    
+    if ([trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+        
+    }
     
     
     if (trip.longitude != 0 && trip.longitude != 0){
@@ -647,8 +654,6 @@
         region.span = span;
         self.zoomOut.hidden = NO;
         
-        NSLog(@"about to MOSTRECENT %@", annotation.title);
-        
         [self.mapView setRegion:region animated:YES];
         
     }
@@ -657,25 +662,21 @@
     else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
         self.isNew = YES;
         self.tripToCheck = trip;
-        NSLog(@"about to addUNDER30 %@", annotation.title);
         
         [self.justMadeTrunk addObject:annotation];
     }
     //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
     if (hot == YES)
     {
-        NSLog(@"about to HOT %@", annotation.title);
         [self.hotDots addObject:annotation.title];
         [self.mapView addAnnotation:annotation];
         
     }
     // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
     else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
-        NSLog(@"about to COLD %@", annotation.title);
         
         [self.mapView addAnnotation:annotation];
     }else {
-        NSLog(@"non valid %@", annotation.title);
     }
     
     self.dropped = self.dropped + 1;
@@ -724,7 +725,6 @@
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
     
-    NSLog(@"annotation = %@", annotation.title);
 
 //if the trunk is in the hotDots (meaning its hot) then make it red
     if ([self.hotDots containsObject:annotation.title]) {
@@ -819,9 +819,24 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    for (Trip *trip in self.needsUpdates){
-        [trip saveInBackground];
-    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        for (Trip *trip in self.needsUpdates) {
+            NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
+            NSNumber *lon = [NSNumber numberWithDouble: trip.longitude];
+            [PFCloud callFunctionInBackground:@"updateTrunkLocation"
+                               withParameters:@{@"latitude": lat, @"longitude": lon, @"tripId": trip.objectId}
+                                        block:^(NSString *response, NSError *error) {
+                                            if (!error) {
+                                                NSLog(@"%@ upadated with lat %@ and long %@", trip.name, lat, lon);
+                                            }
+                                            else {
+                                                NSLog(@"Error for %@ : %@", trip.name, error);
+                                            }
+                                        }];
+        }
+
+    });
     
 }
 

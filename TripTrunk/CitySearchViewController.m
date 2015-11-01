@@ -49,8 +49,21 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                            target:self
                                                                                            action:@selector(closeView)];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"?" style:UIBarButtonItemStylePlain target:self action:@selector(question)];
+    
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 
+}
+
+-(void)question{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't Find The City You Want?",@"Can't Find The City You Want?")
+                                                    message:NSLocalizedString(@"Email our CEO at austinbarnard@triptrunk.com and he will personally add it for you.",@"Email our CEO at austinbarnard@triptrunk.com and he will personally add it for you.")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                          otherButtonTitles:nil, nil];
+    alert.tag = 69;
+    [alert show];
 }
 
 
@@ -120,7 +133,6 @@
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"LocationCell"];
 
     NSString *location = [_locations objectAtIndex:indexPath.row];
-    
     if (![location isEqualToString:@"%s"]) {
         [cell.textLabel setText:location];
     }

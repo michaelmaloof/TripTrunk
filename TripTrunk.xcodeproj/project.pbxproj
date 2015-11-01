@@ -50,6 +50,7 @@
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
@@ -194,6 +195,8 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCaptionViewController.h; sourceTree = "<group>"; };
+		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
@@ -394,6 +397,8 @@
 				C9FAB7AC1B1B9FC600282EA3 /* TrunkMembersViewController.m */,
 				220408EF1AF1C1EA009DB060 /* PhotoViewController.h */,
 				220408F01AF1C1EA009DB060 /* PhotoViewController.m */,
+				22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */,
+				22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */,
 				C910B1921B66B97700788BE0 /* ActivityListViewController.h */,
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
 				C903F7121B98885500F56FE1 /* CommentListViewController.h */,
@@ -788,6 +793,7 @@
 				C98FF3861B9F3B110041480E /* CitySearchViewController.m in Sources */,
 				C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
+				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,

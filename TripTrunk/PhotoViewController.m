@@ -18,12 +18,13 @@
 #import "CommentListViewController.h"
 #import "TTCache.h"
 #import "TrunkViewController.h"
+#import "EditCaptionViewController.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -64,6 +65,14 @@
     [super viewDidLoad];
     
     // Set initial UI
+    
+    if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+        self.addCaption.hidden = NO;
+    } else {
+        self.addCaption.hidden = YES;
+
+    }
+    
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
     
     //FIXME: if I self.photo.user.username it crashes thee app
@@ -437,6 +446,12 @@
         [self loadImageForPhoto:self.photo];
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
+        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            self.addCaption.hidden = NO;
+        } else {
+            self.addCaption.hidden = YES;
+            
+        }
 
         
         NSString *comments = NSLocalizedString(@"Comments",@"Comments");
@@ -464,6 +479,12 @@
     {
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
+        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            self.addCaption.hidden = NO;
+        } else {
+            self.addCaption.hidden = YES;
+            
+        }
         [self loadImageForPhoto:self.photo];
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
@@ -507,7 +528,17 @@
 - (IBAction)onSavePhotoTapped:(id)sender {
 
     UIActionSheet *actionSheet;
-    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] || [[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
+    
+    if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]){
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
+        
+    }
+    
+    else if ([[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
@@ -684,7 +715,6 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
             alertView.tag = 1;
             [alertView show];
-            
         }
         
     }
@@ -767,4 +797,66 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"editCaption"]){
+    
+    EditCaptionViewController *vc = segue.destinationViewController;
+    vc.delegate = self;
+    vc.caption = self.photo.caption;
+    vc.image = self.imageView.image;
+    }
+}
+
+-(void)captionButtonTapped:(int)button caption:(NSString *)text{
+    
+    if (button == 0) {
+        self.photo.caption = text;
+    } else if (button == 1){
+        self.photo.caption = @"";
+    }
+    self.caption.text = self.photo.caption;
+    [self.photo saveInBackground];
+
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
