@@ -12,7 +12,6 @@
 #import <Parse/Parse.h>
 
 
-
 @interface ImagePickerViewController ()
 @property NSMutableArray *assets;
 @property NSMutableArray *assetURLDictionaries;

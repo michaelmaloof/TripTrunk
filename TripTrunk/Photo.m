@@ -23,6 +23,7 @@
 @dynamic imageUrl;
 
 @synthesize image;
+@synthesize imageAsset;
 
 + (NSString *)parseClassName
 {
