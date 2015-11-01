@@ -19,6 +19,9 @@
 #import "TTCache.h"
 #import "TrunkViewController.h"
 
+#define screenWidth [[UIScreen mainScreen] bounds].size.width
+#define screenHeight [[UIScreen mainScreen] bounds].size.height
+
 
 @interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 // IBOutlets
@@ -42,6 +45,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 
+@property BOOL imageZoomed;
 
 
 
@@ -112,7 +116,7 @@
 
     
     
-//    [self setupGestureRecognisers:self.scrollView];
+    [self setupGestureRecognisers:self.scrollView];
 
 }
 
@@ -141,25 +145,69 @@
 }
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
-    if(self.scrollView.zoomScale > self.scrollView.minimumZoomScale){
-        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
-        _scrollView.scrollEnabled = NO;
-        [self centerScrollViewContents];
 
-    
+    CGFloat originalTouchX, originalTouchY, originalWidth, originalHeight, zoomOriginX, zoomOriginY, zoomTouchX, zoomTouchY, zoomedWidth, zoomedHeight, zoomFactor;
+    CGRect originalImageRect, zoomedImageRect;
+
+    zoomFactor = 3.0;
+
+    //Original image attributes
+    originalWidth = screenWidth;
+    originalHeight = originalWidth * self.imageView.image.size.height / self.imageView.image.size.width;
+    originalImageRect = CGRectMake(0.0, (screenHeight / 2.0) - (originalHeight / 2.0), originalWidth, originalHeight);
+    originalTouchX = [recognizer locationInView:self.scrollView].x;
+    originalTouchY = [recognizer locationInView:self.scrollView].y;
+
+    zoomedWidth = self.imageView.frame.size.width * zoomFactor;
+    zoomedHeight = zoomedWidth * self.imageView.image.size.height / self.imageView.image.size.width;
+    zoomedImageRect = CGRectMake(0.0, self.imageView.frame.size.height - (zoomedHeight / 2.0), zoomedWidth, zoomedHeight);
+
+    if (CGRectContainsPoint(originalImageRect, [recognizer locationInView:self.imageView]) && !self.imageZoomed)
+    {
+        zoomTouchX = [recognizer locationInView:self.imageView].x * zoomFactor;
+        zoomTouchY = ([recognizer locationInView:self.imageView].y - originalImageRect.origin.y) * zoomFactor;
+
+        //Set Zoom Origin
+        if (zoomTouchX < screenWidth)
+        {
+            zoomOriginX = 0.0;
+        }
+        else if (zoomTouchX > zoomedWidth - screenWidth)
+        {
+            zoomOriginX = -(zoomedWidth - screenWidth);
+        }
+        else
+        {
+            zoomOriginX = -zoomTouchX + screenWidth / 2.0;
+        }
+
+        if (zoomTouchY < screenHeight)
+        {
+            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0;
+        }
+        else if (zoomTouchY > zoomedHeight - screenHeight)
+        {
+            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0 - zoomedImageRect.size.height + screenHeight;
+        }
+        else
+        {
+            zoomOriginY = -zoomTouchY + screenHeight / 2.0;
+        }
+
+        [UIView animateWithDuration:0.45 animations:^{
+            [self.imageView setTransform:CGAffineTransformMakeScale(zoomFactor, zoomFactor)];
+            [self.imageView setFrame:CGRectMake(zoomOriginX, zoomOriginY, self.imageView.frame.size.width, self.imageView.frame.size.height)];
+        }];
+        self.imageZoomed = YES;
     }
-        else {
-        CGPoint touch = [recognizer locationInView:recognizer.view];
-        
-        CGSize scrollViewSize = self.scrollView.bounds.size;
-        
-        CGFloat w = scrollViewSize.width / self.scrollView.maximumZoomScale;
-        CGFloat h = scrollViewSize.height / self.scrollView.maximumZoomScale;
-        CGFloat x = touch.x-(w/2.0);
-        CGFloat y = touch.y-(h/2.0);
-        
-        CGRect rectTozoom=CGRectMake(x, y, w, h);
-        [self.scrollView zoomToRect:rectTozoom animated:YES];
+    else
+    {
+        //Zoom Out
+        [UIView animateWithDuration:0.45 animations:^{
+            [self.imageView setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+            [self.imageView setFrame:CGRectMake(0.0, 0.0, screenWidth, screenHeight)];
+        }];
+        self.imageZoomed = NO;
     }
 }
 
@@ -401,6 +449,8 @@
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
 
         [self refreshPhotoActivities];
+
+        self.imageZoomed = NO;
     }
 }
 
@@ -430,6 +480,7 @@
         
         [self refreshPhotoActivities];
 
+        self.imageZoomed = NO;
     }
 }
 
