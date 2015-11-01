@@ -59,6 +59,13 @@
                                                       action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
         self.filter.tag = 0;
         [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
         [self queryParseMethodEveryone];
@@ -104,7 +111,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"updatedAt"];
+        [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {

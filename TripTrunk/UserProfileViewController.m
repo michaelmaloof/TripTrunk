@@ -145,7 +145,7 @@
     self.followButton.enabled = NO;
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
-    self.mapButton.enabled = NO;
+    self.mapButton.userInteractionEnabled = NO;
     self.followersButton.enabled = NO;
 
     
@@ -156,7 +156,7 @@
         [self.followButton setHidden:YES];
         self.followersButton.enabled = YES;
         self.followingButton.enabled = YES;
-        self.mapButton.enabled = YES;
+        self.mapButton.userInteractionEnabled = YES;
         self.followersButton.enabled = YES;
         
     }
@@ -172,7 +172,7 @@
                     self.followButton.enabled = YES;
                     self.followersButton.enabled = YES;
                     self.followingButton.enabled = YES;
-                    self.mapButton.enabled = YES;
+                    self.mapButton.userInteractionEnabled = YES;
                     self.followersButton.enabled = YES;
                     self.isFollowing = NO;
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
@@ -184,14 +184,14 @@
                         self.followButton.enabled = YES;
                         self.followersButton.enabled = YES;
                         self.followingButton.enabled = YES;
-                        self.mapButton.enabled = YES;
+                        self.mapButton.userInteractionEnabled = YES;
                         self.followersButton.enabled = YES;
                     } else {
                         self.isFollowing = NO;
                         self.followButton.enabled = YES;
                         self.followersButton.enabled = YES;
                         self.followingButton.enabled = YES;
-                        self.mapButton.enabled = YES;
+                        self.mapButton.userInteractionEnabled = NO;
                         self.followersButton.enabled = YES;
                     }
                 }
@@ -219,7 +219,7 @@
                             self.followButton.enabled = YES;
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
-                            self.mapButton.enabled = YES;
+                            self.mapButton.userInteractionEnabled = NO;
                             self.followersButton.enabled = YES;
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                         }
@@ -228,7 +228,7 @@
                             self.followButton.enabled = YES;
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
-                            self.mapButton.enabled = YES;
+                            self.mapButton.userInteractionEnabled = YES;
                             self.followersButton.enabled = YES;
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
                         }
@@ -243,7 +243,7 @@
                         self.followButton.enabled = YES;
                         self.followersButton.enabled = YES;
                         self.followingButton.enabled = YES;
-                        self.mapButton.enabled = YES;
+                        self.mapButton.userInteractionEnabled = NO;
                         self.followersButton.enabled = YES;
                     });
                 }
@@ -295,7 +295,12 @@
     
     [SocialUtility trunkCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+            if (count == 0){
+                [self.mapButton setTitle:@"" forState:UIControlStateNormal];
+            }else {
+                     [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+
+                 }
         });
     }];
 }
@@ -389,25 +394,35 @@
 }
 
 - (IBAction)mapButtonPressed:(id)sender {
-    if (!self.user[@"private"]){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
-        vc.user = self.user;
-        [self.navigationController pushViewController:vc animated:YES];
-    } else if (self.user[@"private"] && self.isFollowing == YES){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
-        vc.user = self.user;
-        [self.navigationController pushViewController:vc animated:YES];
-    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
-        vc.user = self.user;
-        [self.navigationController pushViewController:vc animated:YES];
-    } else {
-        [self increaseLockSize];
+    if (![self.mapButton.titleLabel.text isEqualToString:@""]){
+        if (!self.user[@"private"]){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+            vc.user = self.user;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if (self.user[@"private"] && self.isFollowing == YES){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+            vc.user = self.user;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
+            vc.user = self.user;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            [self increaseLockSize];
+        }
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && [self.mapButton.titleLabel.text isEqualToString:@""]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
+                                                        message:NSLocalizedString(@"Go create some memories and we will store them here for you.",@"Go create some memories and we will store them here for you.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        
+        alert.tag = 11;
+        [alert show];
     }
-
 }
 
 - (void)editButtonPressed:(id)sender {
