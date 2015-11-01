@@ -23,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
-@property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
+@property (weak, nonatomic) IBOutlet UIButton *selectPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
@@ -77,7 +77,7 @@
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
-    self.plusPhoto.hidden = YES;
+    self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
     [self uploadAllPhotos];
@@ -275,7 +275,7 @@
     self.borderLabel.hidden = NO;
 
     self.cancelCaption.hidden = NO;
-    self.plusPhoto.hidden = YES;
+    self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     self.delete.hidden = NO;
     self.selectedPhoto.hidden = NO;
@@ -312,7 +312,7 @@
         self.selectedPhoto.hidden = YES;
         self.tripCollectionView.hidden = NO;
         self.delete.hidden = YES;
-        self.plusPhoto.hidden = NO;
+        self.selectPhotosButton.hidden = NO;
         self.submitTrunk.hidden = NO;
         self.cancelCaption.hidden = YES;
         self.remove.hidden = YES;
@@ -348,7 +348,7 @@
     
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
@@ -374,7 +374,7 @@
     
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
@@ -406,7 +406,7 @@
     self.selectedPhoto.hidden = YES;
     [self.photos removeObjectAtIndex:self.path];
     self.delete.hidden = YES;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;

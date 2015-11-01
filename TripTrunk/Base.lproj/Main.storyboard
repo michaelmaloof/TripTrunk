@@ -2435,6 +2435,7 @@
                         <outlet property="constraintLabel" destination="C5x-ui-gKg" id="glB-J1-c4o"/>
                         <outlet property="delete" destination="b0m-io-Uxz" id="ljF-kD-Yle"/>
                         <outlet property="remove" destination="N3C-n6-SAf" id="MdD-M3-wLh"/>
+                        <outlet property="selectPhotosButton" destination="Dep-9d-xf1" id="8CW-lV-WGH"/>
                         <outlet property="selectedPhoto" destination="tUr-gu-lCz" id="AZa-gh-5Jj"/>
                         <outlet property="submitTrunk" destination="Cif-Kq-aC8" id="feN-Cb-que"/>
                         <outlet property="tripCollectionView" destination="HJk-qO-N2Z" id="0Tz-C2-Gka"/>
