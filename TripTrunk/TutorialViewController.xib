@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="backButton" destination="QBa-cd-mba" id="iPj-u6-rbF"/>
                 <outlet property="masterScrollView" destination="4wX-Fe-vxS" id="u36-DQ-bgu"/>
+                <outlet property="navigationBar" destination="F6K-l7-0wt" id="Hiy-KZ-V89"/>
                 <outlet property="nextDoneButton" destination="6Bs-EO-jhG" id="aRf-eW-XG2"/>
                 <outlet property="pageIndicator" destination="gbU-fy-ibd" id="fgi-1l-NMt"/>
                 <outlet property="view" destination="N2w-CA-1PJ" id="uzP-eL-L2c"/>
@@ -25,7 +26,9 @@
                 <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6K-l7-0wt">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="44" id="8cm-1F-8c0"/>
+                        <constraint firstAttribute="height" constant="44" id="8cm-1F-8c0">
+                            <variation key="widthClass=compact" constant="55"/>
+                        </constraint>
                     </constraints>
                     <items>
                         <navigationItem id="0Hu-in-bJY">
