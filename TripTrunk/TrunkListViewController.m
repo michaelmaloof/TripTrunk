@@ -111,7 +111,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"updatedAt"];
+        [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
