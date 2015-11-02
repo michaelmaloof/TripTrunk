@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
+#import <Photos/Photos.h>
 #import "Trip.h"
 
 @interface Photo : PFObject <PFSubclassing>
@@ -30,6 +31,7 @@
  *  Transient image property. This doesn't get saved to Parse, it's used so that we can keep the Image itself with the object after downloading from the URL
  */
 @property UIImage *image;
+@property PHAsset *imageAsset;
 
 
 @end

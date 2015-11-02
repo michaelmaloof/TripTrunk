@@ -14,16 +14,16 @@
 #import "TTUtility.h"
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
-#import "ImagePickerViewController.h"
 
-@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, ImagePickerDelegate>
-@property UIImagePickerController *PickerController;
+#import <CTAssetsPickerController/CTAssetsPickerController.h>
+
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate>
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
-@property (weak, nonatomic) IBOutlet UIButton *plusPhoto;
+@property (weak, nonatomic) IBOutlet UIButton *selectPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
 @property (weak, nonatomic) IBOutlet UIButton *remove;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
@@ -74,33 +74,53 @@
     self.caption.delegate = self;
 }
 
--(void)imagesWereSelected:(NSMutableArray *)images{
-    for (Photo *photo in images){
-        BOOL duplicate = NO;
-        for (Photo *image in self.photos){
-            if ([photo.imageUrl isEqualToString:image.imageUrl]){
-                duplicate = YES;
-            }
-        }
-        
-        if (duplicate == NO){
-            [self.photos addObject:photo];
-        }
-        
-    }
-    [self.tripCollectionView reloadData];
-}
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
-    self.plusPhoto.hidden = YES;
+    self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
     [self uploadAllPhotos];
 }
 
+- (IBAction)selectPhotosButtonPressed:(id)sender {
+    
+    // request authorization status
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Navigation Bar apperance
+            UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
+            
+            // tint color
+            navBar.tintColor = [UIColor whiteColor];
+            
+            // init picker
+            CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+            
+            // set delegate
+            picker.delegate = self;
+            
+            // present picker
+            [self presentViewController:picker animated:YES completion:nil];
+        });
+    }];
+    
+}
 
+#pragma mark - CTAssetsPickerController Delegate Methods
 
+-(void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+
+    for (PHAsset *asset in assets){
+        Photo *photo = [[Photo alloc] init];
+        photo.imageAsset = asset;
+        [self.photos addObject:photo];
+    }
+    [self.tripCollectionView reloadData];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+}
 
 #pragma mark - Saving Photos
 
@@ -108,19 +128,21 @@
     
     for (Photo *photo in self.photos)
     {
-        // Uses the Photos framework to get the raw image data from the local asset library url, then uploads that
-        // This fixes the issue of using UIImageJPEGRepresentation which increases file size
-        NSURL *assetUrl = [NSURL URLWithString:photo.imageUrl];
-        NSArray *urlArray = [[NSArray alloc] initWithObjects:assetUrl, nil];
-        PHAsset *imageAsset = [[PHAsset fetchAssetsWithALAssetURLs:urlArray options:nil] firstObject];
-//        PHAsset *imageAsset = [[PHAsset fetchAssetsWithLocalIdentifiers:urlArray options:nil] firstObject];
+        // Set all the trip info on the Photo object
+        photo.user = [PFUser currentUser];
+        photo.userName = [[PFUser currentUser] username];
+        photo.trip = self.trip;
+        photo.likes = 0;
+        photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
+        photo.tripName = self.trip.name;
+        photo.city = self.trip.city;
 
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
         [options setNetworkAccessAllowed:YES];
         
-        [[PHImageManager defaultManager] requestImageDataForAsset:imageAsset
+        [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset
                                                           options:options
                                                     resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                                                         // Calls the method to actually upload the image and save the Photo to parse
@@ -205,9 +227,22 @@
 {
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     Photo *photo = [self.photos objectAtIndex:indexPath.row];
-    cell.tripImageView.image = photo.image;
     cell.tripImageView.caption = photo.caption;
     cell.backgroundColor = [UIColor whiteColor];
+    
+    
+    [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+                                               targetSize:CGSizeMake(200, 200)
+                                              contentMode:PHImageContentModeAspectFill
+                                                  options:nil
+                                            resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                                                
+                                                // Set the image.
+                                                // TODO: Use a weak cell reference
+                                                cell.tripImageView.image = result;
+
+                                                
+                                            }];
     
 //we change the design if the photo has a caption or not
     if(photo.caption){
@@ -240,7 +275,7 @@
     self.borderLabel.hidden = NO;
 
     self.cancelCaption.hidden = NO;
-    self.plusPhoto.hidden = YES;
+    self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     self.delete.hidden = NO;
     self.selectedPhoto.hidden = NO;
@@ -277,7 +312,7 @@
         self.selectedPhoto.hidden = YES;
         self.tripCollectionView.hidden = NO;
         self.delete.hidden = YES;
-        self.plusPhoto.hidden = NO;
+        self.selectPhotosButton.hidden = NO;
         self.submitTrunk.hidden = NO;
         self.cancelCaption.hidden = YES;
         self.remove.hidden = YES;
@@ -313,7 +348,7 @@
     
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
@@ -339,7 +374,7 @@
     
     self.selectedPhoto.hidden = YES;
     self.tripCollectionView.hidden = NO;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
@@ -371,7 +406,7 @@
     self.selectedPhoto.hidden = YES;
     [self.photos removeObjectAtIndex:self.path];
     self.delete.hidden = YES;
-    self.plusPhoto.hidden = NO;
+    self.selectPhotosButton.hidden = NO;
     self.submitTrunk.hidden = NO;
     self.cancelCaption.hidden = YES;
     self.caption.hidden = YES;
@@ -388,23 +423,6 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
-    if ([segue.identifier isEqualToString:@"photos"]){
-        
-        UINavigationController *navController = [segue destinationViewController];
-        ImagePickerViewController *vc = (ImagePickerViewController *)([navController viewControllers][0]);
-        
-        vc.photosToAdd = [[NSMutableArray alloc] init];
-        if (self.photos.count > 0){
-            vc.photosToAdd = self.photos;
-        }
-        vc.delegate = self;
-        vc.trip = self.trip;
-        vc.tripName = self.tripName;
-        vc.tripCity = self.tripCity;
-        vc.tripCountry = self.tripCountry;
-        vc.tripState = self.tripState;
-    }
-
 }
 
 @end

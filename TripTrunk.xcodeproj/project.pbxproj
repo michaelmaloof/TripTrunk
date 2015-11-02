@@ -7,15 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */; };
-		2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */; };
 		220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408D81AEC5475009DB060 /* TrunkListViewController.m */; };
 		220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408DB1AED52C3009DB060 /* TrunkTableViewCell.m */; };
 		220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E31AED58C0009DB060 /* TrunkViewController.m */; };
 		220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408E61AEDB23F009DB060 /* TrunkCollectionViewCell.m */; };
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
-		2225BF091BD2F7760088080F /* PickerImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2225BF081BD2F7760088080F /* PickerImage.m */; };
 		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; };
 		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -54,6 +51,7 @@
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
+		66ABD90AD9444AC11462D4FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 900CAF97ED54CF7422AA80B6 /* libPods.a */; };
 		C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */; };
 		C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
 		C9021F241B9F876100E2EA96 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F231B9F876100E2EA96 /* Bolts.framework */; };
@@ -96,6 +94,7 @@
 		C9996DD51B45CB2C00326A51 /* ParseErrorHandlingController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */; };
 		C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
 		C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C7299F1B0248D900BA68D2 /* SocialUtility.m */; };
+		C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CA64591BE523A500A25EBC /* PhotosUI.framework */; };
 		C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */; };
 		C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */; };
 		C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CD1CA81AFC1E0300D967A5 /* FindFriendsViewController.m */; };
@@ -127,10 +126,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewController.h; sourceTree = "<group>"; };
-		2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewController.m; sourceTree = "<group>"; };
-		2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerCollectionViewCell.h; sourceTree = "<group>"; };
-		2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerCollectionViewCell.m; sourceTree = "<group>"; };
 		220408D71AEC5475009DB060 /* TrunkListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkListViewController.h; sourceTree = "<group>"; };
 		220408D81AEC5475009DB060 /* TrunkListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrunkListViewController.m; sourceTree = "<group>"; };
 		220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrunkTableViewCell.h; sourceTree = "<group>"; };
@@ -143,8 +138,6 @@
 		220408F01AF1C1EA009DB060 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		220408F21AF311D6009DB060 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
-		2225BF071BD2F7760088080F /* PickerImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerImage.h; sourceTree = "<group>"; };
-		2225BF081BD2F7760088080F /* PickerImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerImage.m; sourceTree = "<group>"; };
 		22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseViewController.h; sourceTree = "<group>"; };
 		22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseViewController.m; sourceTree = "<group>"; };
 		22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewController.h; sourceTree = "<group>"; };
@@ -202,6 +195,9 @@
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
+		4EBC0D545C3FB96C9B7332CD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		5C13C20E9104579183AE0F9F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		900CAF97ED54CF7422AA80B6 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9021F1F1B9F827700E2EA96 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
 		C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		C9021F231B9F876100E2EA96 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -273,6 +269,7 @@
 		C9ABA4D91B4EAC4D006F0625 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		C9C7299E1B0248D900BA68D2 /* SocialUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialUtility.h; sourceTree = "<group>"; };
 		C9C7299F1B0248D900BA68D2 /* SocialUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialUtility.m; sourceTree = "<group>"; };
+		C9CA64591BE523A500A25EBC /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		C9CAE0B61BA0788A00E92A7E /* UserProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileViewController.xib; sourceTree = "<group>"; };
 		C9CD1CA41AFC079600D967A5 /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
 		C9CD1CA51AFC079600D967A5 /* UsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsernameViewController.m; sourceTree = "<group>"; };
@@ -312,10 +309,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */,
+				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				C9021F251B9F885900E2EA96 /* Bolts.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
 				C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */,
-				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
 				2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
@@ -336,6 +334,7 @@
 				224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */,
 				224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */,
 				C9021F201B9F827700E2EA96 /* ParseCrashReporting.framework in Frameworks */,
+				66ABD90AD9444AC11462D4FC /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,12 +380,6 @@
 				223547F01AE320FF001FE916 /* AddTripViewController.m */,
 				223547F81AE5A763001FE916 /* AddTripPhotosViewController.h */,
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
-				2203B4F91BD2BFAD009C2408 /* ImagePickerViewController.h */,
-				2203B4FA1BD2BFAD009C2408 /* ImagePickerViewController.m */,
-				2225BF071BD2F7760088080F /* PickerImage.h */,
-				2225BF081BD2F7760088080F /* PickerImage.m */,
-				2203B4FC1BD2C068009C2408 /* ImagePickerCollectionViewCell.h */,
-				2203B4FD1BD2C068009C2408 /* ImagePickerCollectionViewCell.m */,
 				C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */,
 				C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */,
 				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
@@ -484,6 +477,8 @@
 				224F3F8E1AE1D35E003A1DEB /* TripTrunk */,
 				224F3FA81AE1D35E003A1DEB /* TripTrunkTests */,
 				224F3F8D1AE1D35E003A1DEB /* Products */,
+				57C414E8DF4940DFACCCEA17 /* Pods */,
+				6CF2D92033AF265024ABD54A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -580,6 +575,24 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		57C414E8DF4940DFACCCEA17 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4EBC0D545C3FB96C9B7332CD /* Pods.debug.xcconfig */,
+				5C13C20E9104579183AE0F9F /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		6CF2D92033AF265024ABD54A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C9CA64591BE523A500A25EBC /* PhotosUI.framework */,
+				900CAF97ED54CF7422AA80B6 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C90C3CFB1B04FC2200CABBC9 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -656,9 +669,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 224F3FAF1AE1D35E003A1DEB /* Build configuration list for PBXNativeTarget "TripTrunk" */;
 			buildPhases = (
+				60DD29FF1D116E7F3B1214C6 /* Check Pods Manifest.lock */,
 				224F3F881AE1D35E003A1DEB /* Sources */,
 				224F3F891AE1D35E003A1DEB /* Frameworks */,
 				224F3F8A1AE1D35E003A1DEB /* Resources */,
+				1813B53758C7F0A17E9C4DAE /* Embed Pods Frameworks */,
+				1403A4DFE67D5CE69D660D52 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -765,6 +781,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1403A4DFE67D5CE69D660D52 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1813B53758C7F0A17E9C4DAE /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60DD29FF1D116E7F3B1214C6 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		224F3F881AE1D35E003A1DEB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -785,7 +849,6 @@
 				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
-				2203B4FE1BD2C068009C2408 /* ImagePickerCollectionViewCell.m in Sources */,
 				C97706641B97C7C000FB11B2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C9C729A01B0248D900BA68D2 /* SocialUtility.m in Sources */,
 				C9CD1CA91AFC1E0300D967A5 /* FindFriendsViewController.m in Sources */,
@@ -799,8 +862,6 @@
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
-				2225BF091BD2F7760088080F /* PickerImage.m in Sources */,
-				2203B4FB1BD2BFAD009C2408 /* ImagePickerViewController.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
@@ -963,6 +1024,7 @@
 		};
 		224F3FB01AE1D35E003A1DEB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4EBC0D545C3FB96C9B7332CD /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = launch_background;
@@ -982,7 +1044,7 @@
 					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.triptrunk.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -992,6 +1054,7 @@
 		};
 		224F3FB11AE1D35E003A1DEB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C13C20E9104579183AE0F9F /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = launch_background;
@@ -1011,7 +1074,7 @@
 					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.triptrunk.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
