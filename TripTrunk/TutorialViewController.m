@@ -7,12 +7,15 @@
 //
 
 #import "TutorialViewController.h"
+#import "UIColor+HexColors.h"
 
 @interface TutorialViewController () <UIScrollViewDelegate>
+@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *backButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *nextDoneButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *masterScrollView;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageIndicator;
+@property UIColor *navbarItemTextDefaultColor;
 @end
 
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -30,6 +33,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navbarItemTextDefaultColor = [UIColor whiteColor];
     //Set Master Scroll Size
     [self.masterScrollView setFrame:CGRectMake(0.0,
                                                0.0,
@@ -75,10 +79,13 @@
     [self.pageIndicator setNumberOfPages:4];
 
     //Configure nav bar buttons
-    [self.backButton setTitle:@"Back" ];
+    [self.navigationBar setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
+    [self.backButton setTitle:@"Back"];
+    [self.backButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.navbarItemTextDefaultColor, NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
     [self.backButton setTintColor:[UIColor clearColor]];
     [self.backButton setEnabled:NO];
-    self.nextDoneButton.title = @"Next";
+    [self.nextDoneButton setTitle:@"Next"];
+    [self.nextDoneButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.navbarItemTextDefaultColor, NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
 }
 
 - (void)viewDidLoad
