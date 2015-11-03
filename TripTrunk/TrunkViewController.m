@@ -522,6 +522,7 @@
 
 
 -(void)memberWasAdded:(id)sender{
+    [self.members removeAllObjects];
     [self checkIfIsMember];
 }
 
