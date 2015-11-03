@@ -132,26 +132,8 @@
 
 }
 
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
-    contentInsets.bottom = keyboardSize.height;
-    
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-    
-}
 
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
-    contentInsets.bottom = 0;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-    [self.tableView setNeedsLayout];
-}
+
 
 
 - (void)loadFollowing
