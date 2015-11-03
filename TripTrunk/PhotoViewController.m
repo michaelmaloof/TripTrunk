@@ -127,90 +127,90 @@
 
 
 
-//- (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
-//    CGFloat originalTouchX, originalTouchY, originalWidth, originalHeight, zoomOriginX, zoomOriginY, zoomTouchX, zoomTouchY, zoomedWidth, zoomedHeight, zoomFactor;
-//    CGRect originalImageRect, zoomedImageRect;
-//
-//    zoomFactor = 3.0;
-//
-//    //Original image attributes
-//    originalWidth = screenWidth;
-//    originalHeight = originalWidth * self.imageView.image.size.height / self.imageView.image.size.width;
-//    originalImageRect = CGRectMake(0.0, (screenHeight / 2.0) - (originalHeight / 2.0), originalWidth, originalHeight);
-//    originalTouchX = [recognizer locationInView:self.scrollView].x;
-//    originalTouchY = [recognizer locationInView:self.scrollView].y;
-//
-//    zoomedWidth = self.imageView.frame.size.width * zoomFactor;
-//    zoomedHeight = zoomedWidth * self.imageView.image.size.height / self.imageView.image.size.width;
-//    zoomedImageRect = CGRectMake(0.0, self.imageView.frame.size.height - (zoomedHeight / 2.0), zoomedWidth, zoomedHeight);
-//
-//    if (CGRectContainsPoint(originalImageRect, [recognizer locationInView:self.imageView]) && !self.imageZoomed)
-//    {
-//        zoomTouchX = [recognizer locationInView:self.imageView].x * zoomFactor;
-//        zoomTouchY = ([recognizer locationInView:self.imageView].y - originalImageRect.origin.y) * zoomFactor;
-//
-//        //Set Zoom Origin
-//        if (zoomTouchX < screenWidth)
-//        {
-//            zoomOriginX = 0.0;
-//        }
-//        else if (zoomTouchX > zoomedWidth - screenWidth)
-//        {
-//            zoomOriginX = -(zoomedWidth - screenWidth);
-//        }
-//        else
-//        {
-//            zoomOriginX = -zoomTouchX + screenWidth / 2.0;
-//        }
-//
-//        if (zoomTouchY < screenHeight)
-//        {
-//            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0;
-//        }
-//        else if (zoomTouchY > zoomedHeight - screenHeight)
-//        {
-//            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0 - zoomedImageRect.size.height + screenHeight;
-//        }
-//        else
-//        {
-//            zoomOriginY = -zoomTouchY + screenHeight / 2.0;
-//        }
-//
-//        [UIView animateWithDuration:0.45 animations:^{
-//            [self.imageView setTransform:CGAffineTransformMakeScale(zoomFactor, zoomFactor)];
-//            [self.imageView setFrame:CGRectMake(zoomOriginX, zoomOriginY, self.imageView.frame.size.width, self.imageView.frame.size.height)];
-//        }];
-//        self.imageZoomed = YES;
-//        self.isZoomed = YES;
-//        
-//        
-//        [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
-//            self.topButtonWrapper.hidden = YES;
-//            self.bottomButtonWrapper.hidden = YES;
-//        } completion:nil];
-//        
-//        _scrollView.scrollEnabled = YES;
-//
-//    }
-//    else
-//    {
-//        //Zoom Out
-//        _scrollView.scrollEnabled = NO;
-//        [UIView animateWithDuration:0.45 animations:^{
-//            [self.imageView setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
-//            [self.imageView setFrame:CGRectMake(0.0, 0.0, screenWidth, screenHeight)];
-//            
-//        }];
-//        self.imageZoomed = NO;
-//        self.isZoomed = NO;
-//        
-//        
-//        [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
-//            self.topButtonWrapper.hidden = NO;
-//            self.bottomButtonWrapper.hidden = NO;
-//        } completion:nil];
-//    }
-//}
+- (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
+    CGFloat originalTouchX, originalTouchY, originalWidth, originalHeight, zoomOriginX, zoomOriginY, zoomTouchX, zoomTouchY, zoomedWidth, zoomedHeight, zoomFactor;
+    CGRect originalImageRect, zoomedImageRect;
+
+    zoomFactor = 3.0;
+
+    //Original image attributes
+    originalWidth = screenWidth;
+    originalHeight = originalWidth * self.imageView.image.size.height / self.imageView.image.size.width;
+    originalImageRect = CGRectMake(0.0, (screenHeight / 2.0) - (originalHeight / 2.0), originalWidth, originalHeight);
+    originalTouchX = [recognizer locationInView:self.scrollView].x;
+    originalTouchY = [recognizer locationInView:self.scrollView].y;
+
+    zoomedWidth = self.imageView.frame.size.width * zoomFactor;
+    zoomedHeight = zoomedWidth * self.imageView.image.size.height / self.imageView.image.size.width;
+    zoomedImageRect = CGRectMake(0.0, self.imageView.frame.size.height - (zoomedHeight / 2.0), zoomedWidth, zoomedHeight);
+
+    if (CGRectContainsPoint(originalImageRect, [recognizer locationInView:self.imageView]) && !self.imageZoomed)
+    {
+        zoomTouchX = [recognizer locationInView:self.imageView].x * zoomFactor;
+        zoomTouchY = ([recognizer locationInView:self.imageView].y - originalImageRect.origin.y) * zoomFactor;
+
+        //Set Zoom Origin
+        if (zoomTouchX < screenWidth)
+        {
+            zoomOriginX = 0.0;
+        }
+        else if (zoomTouchX > zoomedWidth - screenWidth)
+        {
+            zoomOriginX = -(zoomedWidth - screenWidth);
+        }
+        else
+        {
+            zoomOriginX = -zoomTouchX + screenWidth / 2.0;
+        }
+
+        if (zoomTouchY < screenHeight)
+        {
+            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0;
+        }
+        else if (zoomTouchY > zoomedHeight - screenHeight)
+        {
+            zoomOriginY = -zoomedImageRect.origin.y - screenHeight / 2.0 - zoomedImageRect.size.height + screenHeight;
+        }
+        else
+        {
+            zoomOriginY = -zoomTouchY + screenHeight / 2.0;
+        }
+
+        [UIView animateWithDuration:0.45 animations:^{
+            [self.imageView setTransform:CGAffineTransformMakeScale(zoomFactor, zoomFactor)];
+            [self.imageView setFrame:CGRectMake(zoomOriginX, zoomOriginY, self.imageView.frame.size.width, self.imageView.frame.size.height)];
+        }];
+        self.imageZoomed = YES;
+        self.isZoomed = YES;
+        
+        
+        [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
+            self.topButtonWrapper.hidden = YES;
+            self.bottomButtonWrapper.hidden = YES;
+        } completion:nil];
+        
+        _scrollView.scrollEnabled = YES;
+
+    }
+    else
+    {
+        //Zoom Out
+        _scrollView.scrollEnabled = NO;
+        [UIView animateWithDuration:0.45 animations:^{
+            [self.imageView setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+            [self.imageView setFrame:CGRectMake(0.0, 0.0, screenWidth, screenHeight)];
+            
+        }];
+        self.imageZoomed = NO;
+        self.isZoomed = NO;
+        
+        
+        [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
+            self.topButtonWrapper.hidden = NO;
+            self.bottomButtonWrapper.hidden = NO;
+        } completion:nil];
+    }
+}
 
 
 
@@ -331,14 +331,14 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [self.view addGestureRecognizer:tapGesture];
     
-    
-    UITapGestureRecognizer *dblRecognizer;
-    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                            action:@selector(handleDoubleTapFrom:)];
-    [dblRecognizer setNumberOfTapsRequired:2];
-    [self.view addGestureRecognizer:dblRecognizer];
-    
-    [tapGesture requireGestureRecognizerToFail:dblRecognizer];
+//    
+//    UITapGestureRecognizer *dblRecognizer;
+//    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                            action:@selector(handleDoubleTapFrom:)];
+//    [dblRecognizer setNumberOfTapsRequired:2];
+//    [self.view addGestureRecognizer:dblRecognizer];
+//    
+//    [tapGesture requireGestureRecognizerToFail:dblRecognizer];
     
 
 }
