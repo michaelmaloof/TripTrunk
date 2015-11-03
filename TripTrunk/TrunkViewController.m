@@ -22,7 +22,7 @@
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -486,12 +486,14 @@
             NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
             [members addObject:self.trip.creator];
             AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+            vc.delegate = self;
             [self.navigationController pushViewController:vc animated:YES];
             
         } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
             NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
             [members addObject:self.trip.creator];
             AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+            vc.delegate = self;
             [self.navigationController pushViewController:vc animated:YES];
             
         } else {
@@ -518,6 +520,10 @@
     
 }
 
+
+-(void)memberWasAdded:(id)sender{
+    [self checkIfIsMember];
+}
 
 #pragma mark - Segue
 
