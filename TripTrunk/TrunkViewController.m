@@ -44,6 +44,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *cloud;
 @property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *memberCollectionWidth;
+@property BOOL firstLoadDone;
 
 @end
 
@@ -197,7 +198,9 @@
     
     
     
-    [self queryParseMethod];
+    if (self.firstLoadDone == NO){
+        [self queryParseMethod];
+    }
     [self.memberCollectionView reloadData];
 
 
@@ -522,6 +525,7 @@
 
 
 -(void)memberWasAdded:(id)sender{
+    self.firstLoadDone = YES;
     [self.members removeAllObjects];
     [self checkIfIsMember];
 }
