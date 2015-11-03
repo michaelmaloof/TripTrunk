@@ -169,6 +169,9 @@
 
 }
 
+
+
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
 {
@@ -188,7 +191,7 @@
 
 - (void)filterResults:(NSString *)searchTerm {
     
-    // Gets all the users who have blocked this user. Hopefully it's 0!
+//     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
     
@@ -223,13 +226,23 @@
 
 }
 
+
+//FIXME: TEMP UNTILL WE SEARCH AS USERS TYPE
+
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
+    self.removeResults = YES;
+    [self filterResults:searchBar.text];
+    return YES;
+}
+
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
     NSString *searchString = searchController.searchBar.text;
     if (![searchString isEqualToString:self.searchString]){
         self.removeResults = YES;
-        [self filterResults:searchString];
+//        [self filterResults:searchString];
     } else {
         self.removeResults = NO;
     }
@@ -271,6 +284,7 @@
 //    [self.tableView scrollRectToVisible:searchBarFrame animated:NO];
 //    return NSNotFound;
 //}
+
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
