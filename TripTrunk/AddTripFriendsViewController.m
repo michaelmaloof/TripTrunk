@@ -98,6 +98,17 @@
     // Get the users for the list
     [self loadFollowing];
     [self loadFollowers];
+    
+    // Add keyboard notifications so that the keyboard won't cover the table when searching
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -121,7 +132,26 @@
 
 }
 
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = keyboardSize.height;
+    
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+    
+}
 
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = 0;
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+    [self.tableView setNeedsLayout];
+}
 
 
 - (void)loadFollowing
@@ -478,6 +508,27 @@
     [self.tableView reloadData];
 }
 
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = keyboardSize.height;
+    
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+    
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    contentInsets.bottom = 0;
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+    [self.tableView setNeedsLayout];
+}
+
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
@@ -498,6 +549,10 @@
     addTripPhotosViewController.trip = self.trip;
     addTripPhotosViewController.isTripCreation = YES;
     
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
