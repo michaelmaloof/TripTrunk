@@ -41,6 +41,7 @@
 @property CGFloat originY;
 @property CGFloat width;
 @property CGFloat originX;
+@property BOOL isZoomed;
 
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 
@@ -127,7 +128,6 @@
 
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
-
     CGFloat originalTouchX, originalTouchY, originalWidth, originalHeight, zoomOriginX, zoomOriginY, zoomTouchX, zoomTouchY, zoomedWidth, zoomedHeight, zoomFactor;
     CGRect originalImageRect, zoomedImageRect;
 
@@ -181,6 +181,8 @@
             [self.imageView setFrame:CGRectMake(zoomOriginX, zoomOriginY, self.imageView.frame.size.width, self.imageView.frame.size.height)];
         }];
         self.imageZoomed = YES;
+        self.isZoomed = YES;
+
     }
     else
     {
@@ -190,6 +192,8 @@
             [self.imageView setFrame:CGRectMake(0.0, 0.0, screenWidth, screenHeight)];
         }];
         self.imageZoomed = NO;
+        self.isZoomed = NO;
+
     }
 }
 
@@ -417,6 +421,8 @@
 
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    if (self.isZoomed == NO){
+
     // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
     if (!self.photos || self.photos.count == 0) {
         return;
@@ -451,10 +457,12 @@
 
         self.imageZoomed = NO;
     }
+    }
 }
 
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    if (self.isZoomed == NO){
     if (!self.photos || self.photos.count == 0) {
         return;
     }
@@ -487,19 +495,25 @@
 
         self.imageZoomed = NO;
     }
+    }
 }
 
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
-{
+{    if (self.isZoomed == NO){
+
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
     //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
     //    [self presentViewController:navController animated:YES completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
+}
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    if (self.isZoomed == NO){
+
     [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -750,10 +764,15 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     if (scale > 1.0) {
         _scrollView.scrollEnabled = YES;
+        self.isZoomed = YES;
     }
     else {
         _scrollView.scrollEnabled = NO;
         [self centerScrollViewContents];
+        self.isZoomed = NO;
+
+        
+        
     }
 }
 //-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
