@@ -71,16 +71,20 @@ Parse.Cloud.afterSave('Photo', function(request) {
         pid: request.object.id // Photo Id
       };
 
-    // Send the push notification to ALL the users!!
-    Parse.Push.send({
-      where: installQuery, // Set our Installation query.
-      data: payload
-    }).then(function() {
-      // Push was successful
-      console.log('Sent push.');
-    }, function(error) {
-      throw "Push Error " + error.code + " : " + error.message;
-    });
+/* COMMENTED OUT on  November 3, 2015
+ * Users get overloaded with notifications from lots of photos being added, so for now it's commented out
+ * until we can group it into "added X photos to the trunk".
+ */
+    // // Send the push notification to ALL the users!!
+    // Parse.Push.send({
+    //   where: installQuery, // Set our Installation query.
+    //   data: payload
+    // }).then(function() {
+    //   // Push was successful
+    //   console.log('Sent push.');
+    // }, function(error) {
+    //   throw "Push Error " + error.code + " : " + error.message;
+    // });
   });
 
 });
