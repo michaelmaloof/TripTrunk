@@ -46,11 +46,11 @@
     self.title = NSLocalizedString(@"Trunk Members",@"Trunk Members");
     
     if ((self.isMember == YES && self.trip.isPrivate == NO) || ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])) {
-        
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add",@"Add")
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(addMembers)];
+        //click plus on addmembers instead of this now
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add",@"Add")
+//                                                                                  style:UIBarButtonItemStylePlain
+//                                                                                 target:self
+//                                                                                 action:@selector(addMembers)];
 
     }
     
