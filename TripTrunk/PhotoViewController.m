@@ -67,9 +67,9 @@
     // Set initial UI
     
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-        self.addCaption.hidden = NO;
+//        self.addCaption.hidden = NO;
     } else {
-        self.addCaption.hidden = YES;
+//        self.addCaption.hidden = YES;
 
     }
     
@@ -447,9 +447,9 @@
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
         if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-            self.addCaption.hidden = NO;
+//            self.addCaption.hidden = NO;
         } else {
-            self.addCaption.hidden = YES;
+//            self.addCaption.hidden = YES;
             
         }
 
@@ -480,9 +480,9 @@
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
         if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-            self.addCaption.hidden = NO;
+//            self.addCaption.hidden = NO;
         } else {
-            self.addCaption.hidden = YES;
+//            self.addCaption.hidden = YES;
             
         }
         [self loadImageForPhoto:self.photo];
