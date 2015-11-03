@@ -37,8 +37,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
-@property UITapGestureRecognizer *doubleTapRecognizer;
-@property UITapGestureRecognizer *tapRecognizer;
 @property CGFloat height;
 @property CGFloat originY;
 @property CGFloat width;
@@ -122,36 +120,11 @@
     self.originX = self.scrollView.frame.origin.x;
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
-
-    
-    
-    [self setupGestureRecognisers:self.scrollView];
-
 }
 
-- (void)setupGestureRecognisers:(UIView *)viewToAttach {
-    
-    UITapGestureRecognizer *dblRecognizer;
-    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                            action:@selector(handleDoubleTapFrom:)];
-    [dblRecognizer setNumberOfTapsRequired:2];
-    
-    [viewToAttach addGestureRecognizer:dblRecognizer];
-    self.doubleTapRecognizer = dblRecognizer;
-    
-    UITapGestureRecognizer *recognizer;
-    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                         action:@selector(handleTapFrom:)];
-    [recognizer requireGestureRecognizerToFail:dblRecognizer];
-    
-    [viewToAttach addGestureRecognizer:recognizer];
-    self.tapRecognizer = recognizer;
-}
 
-- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer {
-    
-    // do your single tap
-}
+
+
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
 
@@ -335,6 +308,17 @@
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [self.view addGestureRecognizer:tapGesture];
+    
+    
+    UITapGestureRecognizer *dblRecognizer;
+    dblRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(handleDoubleTapFrom:)];
+    [dblRecognizer setNumberOfTapsRequired:2];
+    [self.view addGestureRecognizer:dblRecognizer];
+    
+    [tapGesture requireGestureRecognizerToFail:dblRecognizer];
+    
+
 }
 
 - (void)toggleButtonVisibility {
