@@ -17,6 +17,8 @@
 
 @property (weak, nonatomic) id<EditProfileViewControllerDelegate> delegate;
 
+
+
 /**
  *  Initialize the view controller for the given user, loads EditProfileViewController.xib
  *
@@ -31,5 +33,6 @@
 @protocol EditProfileViewControllerDelegate <NSObject>
 
 - (void)shouldSaveUserAndClose:(PFUser *)user;
+- (void)privacyChanged:(PFUser *)user;
 
 @end

@@ -126,17 +126,22 @@
     }
 
     //Check whether user account is private
+    self.privateAccountImageView.hidden = YES;
+    //Add private account icon to user profile pic
+    self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
+    [self.profilePicImageView addSubview:self.privateAccountImageView];
+    [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
+    [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
+                                                       self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
+                                                       25.0,
+                                                       25.0)];
     if ([[self.user valueForKey:@"private"] boolValue])
     {
-        //Add private account icon to user profile pic
-        self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
-        [self.profilePicImageView addSubview:self.privateAccountImageView];
-        [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
-        [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
-        [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
-                                                           self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
-                                                           25.0,
-                                                           25.0)];
+        self.privateAccountImageView.hidden = NO;
+    } else {
+        self.privateAccountImageView.hidden = YES;
+
     }
 }
 
@@ -456,9 +461,19 @@
         self.bioTextView.text = user[@"bio"];
         self.hometownLabel.text = user[@"hometown"];
         self.nameLabel.text = user[@"name"];
+        
     }
     
     [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)privacyChanged:(PFUser *)user{
+    if ([[user valueForKey:@"private"] boolValue])
+    {
+        self.privateAccountImageView.hidden = NO;
+    } else {
+        self.privateAccountImageView.hidden = YES;
+    }
 }
 
 #pragma mark - UIActionSheetDelegate

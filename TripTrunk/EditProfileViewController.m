@@ -140,6 +140,7 @@
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [[PFUser currentUser] fetch];
                         NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
+                        [self.delegate privacyChanged:[PFUser currentUser]];
                     });
 
                 }
@@ -157,6 +158,7 @@
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [[PFUser currentUser] fetch];
                         NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
+                        [self.delegate privacyChanged:[PFUser currentUser]];
                     });
                 }
             }];

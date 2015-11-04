@@ -12,7 +12,10 @@
 #import "Trip.h"
 #import "TTBaseTableViewController.h"
 
+@protocol MemberDelegate
+-(void)memberWasAdded:(id)sender;
 
+@end
 
 @interface AddTripFriendsViewController : TTBaseTableViewController
 
@@ -26,8 +29,15 @@
  */
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
+@property id<MemberDelegate> delegate;
+
+
 @property (strong, nonatomic) Trip *trip;
 
 @property (nonatomic)BOOL isTripCreation;
 
 @end
+
+
+
+

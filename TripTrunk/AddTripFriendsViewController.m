@@ -433,6 +433,7 @@
         }
         // TODO: Set title image
         self.title = @"TripTrunk";
+        [self.delegate memberWasAdded:self];
         
     }];
     
