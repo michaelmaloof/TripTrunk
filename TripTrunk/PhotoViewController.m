@@ -24,7 +24,7 @@
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -41,11 +41,15 @@
 @property CGFloat originY;
 @property CGFloat width;
 @property CGFloat originX;
+@property BOOL isEditingCaption;
+
 @property BOOL isZoomed;
 
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 
 @property BOOL imageZoomed;
+@property (weak, nonatomic) IBOutlet UIButton *addCaption;
+@property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
 
 
 
@@ -62,15 +66,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.deleteCaption.hidden = YES;
     // Set initial UI
     
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-//        self.addCaption.hidden = NO;
+        self.addCaption.hidden = NO;
     } else {
-//        self.addCaption.hidden = YES;
+        self.addCaption.hidden = YES;
 
     }
+    
+    self.caption.delegate = self;
     
     self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
     
@@ -286,6 +292,10 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     self.navigationController.navigationBarHidden = NO;
     self.tabBarController.tabBar.hidden = NO;
+    if (self.isEditingCaption){
+        [self.caption endEditing:YES];
+    }
+
 }
 
 - (void)centerScrollViewContents {
@@ -455,9 +465,9 @@
 //        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
         if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-//            self.addCaption.hidden = NO;
+            self.addCaption.hidden = NO;
         } else {
-//            self.addCaption.hidden = YES;
+            self.addCaption.hidden = YES;
             
         }
 
@@ -490,13 +500,13 @@
         self.arrayInt = self.arrayInt + 1;
         self.photo = [self.photos objectAtIndex:self.arrayInt];
         if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-//            self.addCaption.hidden = NO;
+            self.addCaption.hidden = NO;
         } else {
-//            self.addCaption.hidden = YES;
+            self.addCaption.hidden = YES;
             
         }
         [self loadImageForPhoto:self.photo];
-//        self.title = self.photo.userName;
+        self.title = self.photo.userName;
         self.photoTakenBy.text = self.photo.userName;
 
         
@@ -537,6 +547,10 @@
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     [self toggleButtonVisibility];
+    
+    if (self.isEditingCaption == YES){
+        [self.caption endEditing:YES];
+    }
 }
 
 #pragma mark - Button Actions
@@ -590,6 +604,67 @@
 //    [self presentViewController:navController animated:YES completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
 
+}
+- (IBAction)editCaptionTapped:(id)sender {
+    
+    if (self.addCaption.tag == 0){
+    
+        self.caption.selectable = YES;
+        self.caption.editable = YES;
+        [self.caption becomeFirstResponder];
+        
+    } else {
+        self.photo.caption = self.caption.text;
+        [self.photo saveInBackground];
+        [self.caption endEditing:YES];
+
+    }
+    
+}
+
+
+
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    [self.view endEditing:YES];
+//    [super touchesBegan:touches withEvent:event];
+//}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.isEditingCaption = YES;
+    self.likeButton.hidden = YES;
+    self.likeCountButton.hidden = YES;
+    self.comments.hidden = YES;
+    self.addCaption.tag = 1;
+    [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
+    self.deleteCaption.hidden = NO;
+    self.caption.backgroundColor = [UIColor whiteColor];
+    self.caption.alpha = .7;
+    self.caption.textColor = [UIColor blackColor];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    self.isEditingCaption = NO;
+    [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
+    self.addCaption.tag = 0;
+    self.likeButton.hidden = NO;
+    self.likeCountButton.hidden = NO;
+    self.comments.hidden = NO;
+    self.deleteCaption.hidden = YES;
+    self.caption.alpha = 1.0;
+    self.caption.backgroundColor = [UIColor clearColor];
+    self.caption.textColor = [UIColor whiteColor];
+    self.caption.text = self.photo.caption;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
+
+
+}
+- (IBAction)deleteCaptionTapped:(id)sender {
+    self.photo.caption = @"";
+    self.caption.text = @"";
+    [self.photo saveInBackground];
+    [self.caption endEditing:YES];
 }
 
 - (IBAction)likeButtonPressed:(id)sender {
@@ -825,10 +900,6 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"editCaption"]){
     
-    EditCaptionViewController *vc = segue.destinationViewController;
-    vc.delegate = self;
-    vc.caption = self.photo.caption;
-    vc.image = self.imageView.image;
     }
 }
 
