@@ -69,7 +69,7 @@
     [self setupSearchTabBar];
     [self setupActivityTabBar];
     [self setupProfileTabBar];
-        
+    
     return YES;
 }
 
@@ -295,7 +295,7 @@
                             PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
                             photoViewController.photo = (Photo *)photo;
 
-                            [homeNavController presentViewController:photoViewController animated:YES completion:nil];
+                            [homeNavController pushViewController:photoViewController animated:YES];
                         }
                     }];
                 }
@@ -366,7 +366,7 @@
                     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
                     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
                     [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController presentViewController:photoViewController animated:YES completion:nil];
+                    [homeNavController pushViewController:photoViewController animated:YES];
                 }
             }];
         }
