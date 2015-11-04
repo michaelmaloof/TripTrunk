@@ -81,10 +81,17 @@
     self.tableView.emptyDataSetSource = self;
     
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden = YES;
+}
 - (void)viewDidAppear:(BOOL)animated {
+    
     // reload the table every time it appears or we get weird results
     [self.tableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning {
