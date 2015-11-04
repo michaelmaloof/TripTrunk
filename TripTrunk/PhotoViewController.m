@@ -722,15 +722,17 @@
             [alert show];
         }
         else if (buttonIndex == 2 ){
-            NSLog(@"Download Photo");
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
-            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
-            alertView.tag = 1;
-            [alertView show];
+//            NSLog(@"Download Photo");
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            alertView.delegate = self;
+//            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
+//            alertView.tag = 1;
+//            [alertView show];
+            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+
         }
         
     }
@@ -748,15 +750,17 @@
             [alert show];
         }
         else if (buttonIndex == 1) {
-            NSLog(@"Download Photo");
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
-            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
-            alertView.tag = 1;
-            [alertView show];
+//            NSLog(@"Download Photo");
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            alertView.delegate = self;
+//            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
+//            alertView.tag = 1;
+//            [alertView show];
+            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+
             
         }
     }
