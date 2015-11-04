@@ -449,80 +449,80 @@
 
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    if (self.isZoomed == NO){
-
-    // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
-    if (!self.photos || self.photos.count == 0) {
-        return;
-    }
-    
-    NSLog(@"check 1 = %ld", (long)self.arrayInt);
-    if (self.arrayInt > 0)
-    {
-        self.arrayInt = self.arrayInt - 1;
-        self.photo = [self.photos objectAtIndex:self.arrayInt];
-        [self loadImageForPhoto:self.photo];
-//        self.title = self.photo.userName;
-        self.photoTakenBy.text = self.photo.userName;
-        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-            self.addCaption.hidden = NO;
-        } else {
-            self.addCaption.hidden = YES;
-            
-        }
-
+    if (self.isZoomed == NO && self.isEditingCaption == NO){
         
-        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-        self.caption.text = self.photo.caption;
-
-
-        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-
-        [self refreshPhotoActivities];
-
-        self.imageZoomed = NO;
-    }
+        // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
+        if (!self.photos || self.photos.count == 0) {
+            return;
+        }
+        
+        NSLog(@"check 1 = %ld", (long)self.arrayInt);
+        if (self.arrayInt > 0)
+        {
+            self.arrayInt = self.arrayInt - 1;
+            self.photo = [self.photos objectAtIndex:self.arrayInt];
+            [self loadImageForPhoto:self.photo];
+            //        self.title = self.photo.userName;
+            self.photoTakenBy.text = self.photo.userName;
+            if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                self.addCaption.hidden = NO;
+            } else {
+                self.addCaption.hidden = YES;
+                
+            }
+            
+            
+            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+            NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+            [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+            self.caption.text = self.photo.caption;
+            
+            
+            [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+            
+            [self refreshPhotoActivities];
+            
+            self.imageZoomed = NO;
+        }
     }
 }
 
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    if (self.isZoomed == NO){
-    if (!self.photos || self.photos.count == 0) {
-        return;
-    }
-    
-    if (self.arrayInt != self.photos.count - 1)
-    {
-        self.arrayInt = self.arrayInt + 1;
-        self.photo = [self.photos objectAtIndex:self.arrayInt];
-        if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-            self.addCaption.hidden = NO;
-        } else {
-            self.addCaption.hidden = YES;
-            
+    if (self.isZoomed == NO && self.isEditingCaption == NO){
+        if (!self.photos || self.photos.count == 0) {
+            return;
         }
-        [self loadImageForPhoto:self.photo];
-        self.title = self.photo.userName;
-        self.photoTakenBy.text = self.photo.userName;
-
         
-        NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-        NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-        self.caption.text = self.photo.caption;
-
-
-        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-        
-        [self refreshPhotoActivities];
-
-        self.imageZoomed = NO;
-    }
+        if (self.arrayInt != self.photos.count - 1)
+        {
+            self.arrayInt = self.arrayInt + 1;
+            self.photo = [self.photos objectAtIndex:self.arrayInt];
+            if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                self.addCaption.hidden = NO;
+            } else {
+                self.addCaption.hidden = YES;
+                
+            }
+            [self loadImageForPhoto:self.photo];
+            self.title = self.photo.userName;
+            self.photoTakenBy.text = self.photo.userName;
+            
+            
+            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+            NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+            [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+            self.caption.text = self.photo.caption;
+            
+            
+            [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+            
+            [self refreshPhotoActivities];
+            
+            self.imageZoomed = NO;
+        }
     }
 }
 
@@ -632,6 +632,7 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     self.isEditingCaption = YES;
+    self.scrollView.scrollEnabled = NO;
     self.likeButton.hidden = YES;
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
@@ -646,6 +647,7 @@
 
 -(void)textViewDidEndEditing:(UITextView *)textView{
     self.isEditingCaption = NO;
+    self.scrollView.scrollEnabled = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
     self.addCaption.tag = 0;
     self.likeButton.hidden = NO;
