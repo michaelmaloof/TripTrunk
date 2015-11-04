@@ -738,7 +738,7 @@
     } else {
         startAnnotation.image = [UIImage imageNamed:@"blueMapCircle"];
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
-        startAnnotation.alpha = .9;
+        startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
         startAnnotation.layer.zPosition = .9;
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.9, startAnnotation.frame.size.height*.9);
