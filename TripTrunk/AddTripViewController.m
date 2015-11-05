@@ -393,78 +393,89 @@
 
 - (IBAction)onNextTapped:(id)sender
 {
-//FIXME dont do this every time they click next. only if they changed location text fields
-    self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
-    [self tabBarTitle];
-//take the location the user typed in, make sure its a real location and meets the correct requirements
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-    NSString *address = self.locationTextField.text;
     
-    [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
-    {
-        if (placemarks == nil && error)
-        {
-            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-            // TODO: Set title image
-            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-            [self tabBarTitle];
-            [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
-        } else if (placemarks == nil && !error) {
-            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-            // TODO: Set title image
-            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-            [self tabBarTitle];
-            [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
-        } else if (placemarks.count == 0){
-            NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-            // TODO: Set title image
-            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-            [self tabBarTitle];
-            [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
-        }
-        
-        else if (!error)
-        {
-//make sure the user filled in all the correct text fields
-                if (![self.tripNameTextField.text isEqualToString:@""] && ![self.locationTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
-                {
-                    // Trip Input has correct data - save the trip!
-                    
-                    CLPlacemark *placemark = placemarks.firstObject;
-                    
-                    self.trip.lat = placemark.location.coordinate.latitude;
-                    self.trip.longitude = placemark.location.coordinate.longitude;
-
-                    self.trip.country = placemark.country;
-                    
-                    if (placemark.locality == nil){
-                        [self setTripCityName:placemark.administrativeArea];
-                        self.trip.state = placemark.administrativeArea;
-                    } else{
-                        [self setTripCityName:placemark.locality];
-                        self.trip.state = placemark.administrativeArea;
-                        
-                    }
-                    [self parseTrip];
-                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-                }
-            
-                else
-                {
-                    [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
-                    self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                    [self tabBarTitle];
-
-                }
-        }
-        
+    if ([self.tripNameTextField.text isEqualToString:@""]){
+        [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         [self tabBarTitle];
-
-        return;
-    }];
-
+    } else if ([self.locationTextField.text isEqualToString:@""]){
+        [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a location.",@"Please give your trunk a location.")];
+        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        [self tabBarTitle];
+    } else {
+        //FIXME dont do this every time they click next. only if they changed location text fields
+        self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
+        [self tabBarTitle];
+        //take the location the user typed in, make sure its a real location and meets the correct requirements
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        NSString *address = self.locationTextField.text;
+        
+        [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
+         {
+             if (placemarks == nil && error)
+             {
+                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 // TODO: Set title image
+                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 [self tabBarTitle];
+                 [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
+             } else if (placemarks == nil && !error) {
+                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 // TODO: Set title image
+                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 [self tabBarTitle];
+                 [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
+             } else if (placemarks.count == 0){
+                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 // TODO: Set title image
+                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 [self tabBarTitle];
+                 [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
+             }
+             
+             else if (!error)
+             {
+                 //make sure the user filled in all the correct text fields
+                 if (![self.tripNameTextField.text isEqualToString:@""] && ![self.locationTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+                 {
+                     // Trip Input has correct data - save the trip!
+                     
+                     CLPlacemark *placemark = placemarks.firstObject;
+                     
+                     self.trip.lat = placemark.location.coordinate.latitude;
+                     self.trip.longitude = placemark.location.coordinate.longitude;
+                     
+                     self.trip.country = placemark.country;
+                     
+                     if (placemark.locality == nil){
+                         [self setTripCityName:placemark.administrativeArea];
+                         self.trip.state = placemark.administrativeArea;
+                     } else{
+                         [self setTripCityName:placemark.locality];
+                         self.trip.state = placemark.administrativeArea;
+                         
+                     }
+                     [self parseTrip];
+                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                     
+                 }
+                 
+                 else
+                 {
+                     [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
+                     self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                     [self tabBarTitle];
+                     
+                 }
+             }
+             
+             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+             [self tabBarTitle];
+             
+             return;
+         }];
+        
+    }
 }
 
 /**
