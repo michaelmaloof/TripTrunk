@@ -617,6 +617,10 @@
         self.photo.caption = self.caption.text;
         [self.photo saveInBackground];
         [self.caption endEditing:YES];
+        [SocialUtility addComment:self.photo.caption forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+            NSLog(@"caption saved as comment");
+        }];
+
 
     }
     
@@ -666,6 +670,9 @@
     self.photo.caption = @"";
     self.caption.text = @"";
     [self.photo saveInBackground];
+    [SocialUtility addComment:self.photo.caption forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+        NSLog(@"caption saved as comment");
+    }];
     [self.caption endEditing:YES];
 }
 
