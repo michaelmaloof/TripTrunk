@@ -332,7 +332,7 @@
     [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
     
-    NSDate *lastOpenedApp = [NSDate date]; //last time you opened the app FIXME not today
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"]; //last time you opened the app FIXME not today
     
     
     
@@ -374,6 +374,7 @@
             
             for (Trip *trip in self.parseLocations)
             {
+                
                 NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                 CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
                 if (lastTripInterval > 0)
