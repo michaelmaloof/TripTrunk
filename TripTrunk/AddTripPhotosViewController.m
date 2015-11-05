@@ -126,6 +126,11 @@
 
 - (void)uploadAllPhotos {
     
+    if (self.photos.count > 0){
+        self.trip.mostRecentPhoto = [NSDate date];
+        [self.trip saveInBackground];
+    }
+    
     for (Photo *photo in self.photos)
     {
         // Set all the trip info on the Photo object
