@@ -42,6 +42,7 @@
 @property Trip *tripToCheck;
 @property BOOL tutorialComplete;
 @property NSMutableArray *needsUpdates;
+@property NSMutableArray *haventSeens;
 
 
 @end
@@ -141,6 +142,8 @@
     self.originalArray = [[NSMutableArray alloc]init];
     
     self.isNew= NO;
+    
+    self.haventSeens = [[NSMutableArray alloc]init];
 }
 
 /**
@@ -317,9 +320,9 @@
  */
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
     
-//This is documented in the method above.
-//TODO This method and the one above should be merged into one method during refactoring
-
+    //This is documented in the method above.
+    //TODO This method and the one above should be merged into one method during refactoring
+    
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
@@ -328,11 +331,14 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
-
-
-
+    
+    NSDate *lastOpenedApp = [NSDate date]; //last time you opened the app FIXME not today
+    
+    
+    
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                
+        
         if (self.loadedOnce == NO)
         {
             self.title = NSLocalizedString(@"Loading Trunks...",@"Loading Trunks...");
@@ -341,10 +347,12 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
-            if (self.user == nil){
+            if (self.user == nil)
+            {
                 [self setTitleImage];
-
-            } else {
+                
+            } else
+            {
                 NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
                 NSString *s = NSLocalizedString(@"'s",@"'s");
                 self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
@@ -353,38 +361,30 @@
         }
         else
         {
-            int count = 0;
+            
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-//                PFUser *user = activity[@"toUser"];
-
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
-
-//                    if (trip.isPrivate == YES)
-//                    {
-//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-//                        {
-//                            [self.parseLocations addObject:trip];
-//
-//                        }
-//                            
-//                    } else
-//                    {
-//                    }
-                    
-                }
-                count += 1;
-                if(count == objects.count){
-                    [self placeTrips];
                 }
             }
+            
+            for (Trip *trip in self.parseLocations)
+            {
+                NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+                if (lastTripInterval > 0)
+                {
+                    [self.haventSeens addObject:location];
+                }
+            }
+            
+            [self placeTrips];
         }
-        
-    }];
+     }];
 }
 
 /**
@@ -495,7 +495,6 @@
             NSDate *today = [NSDate date];
             NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
             
-            
             BOOL color = 0;
             if (tripInterval < 86400)
             {
@@ -602,6 +601,9 @@
     
     //we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    
+
+    
     [self.tripsToCheck addObject:string];
     
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
@@ -724,19 +726,36 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
+    BOOL hasSeen = YES;
+    for (CLLocation *loc in self.haventSeens){
+        NSLog(@"i hate xcode %f",(double)annotation.coordinate.longitude);
+        if ((double)loc.coordinate.longitude - (double)annotation.coordinate.longitude < ABS(.0001) && (double)loc.coordinate.latitude - (double)annotation.coordinate.longitude < ABS(.0001)){
+            hasSeen = NO;
+        }
+    }
     
 
 //if the trunk is in the hotDots (meaning its hot) then make it red
     if ([self.hotDots containsObject:annotation.title]) {
-        startAnnotation.image = [UIImage imageNamed:@"redMapCircle"];
+        if (hasSeen == NO){
+            startAnnotation.image = [UIImage imageNamed:@"redMapCircle"];
+        }else {
+            startAnnotation.image = [UIImage imageNamed:@"redTrunk"];
+
+        }
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
         startAnnotation.layer.zPosition = 1;
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
 
-    } else {
-        startAnnotation.image = [UIImage imageNamed:@"blueMapCircle"];
+    } else {        
+        if (hasSeen == NO){
+            startAnnotation.image = [UIImage imageNamed:@"blueMapCircle"];
+        }else {
+            startAnnotation.image = [UIImage imageNamed:@"blueTrunk"];
+            
+        }
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
         startAnnotation.alpha = 1.0;
 //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
