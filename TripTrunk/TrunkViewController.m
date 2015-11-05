@@ -135,7 +135,10 @@
                                                                                  action:@selector(editTapped)];
 
     }
+    
+    if (self.firstLoadDone == NO){
         self.collectionView.hidden = YES;
+    }
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
