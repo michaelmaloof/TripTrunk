@@ -185,7 +185,9 @@
     float reload_distance = -250;
     if(y > h + reload_distance && self.searchString) {
         self.removeResults = NO;
-        [self filterResults:self.searchString];
+        if (![self.searchController.searchBar.text isEqualToString:@""]){
+            [self filterResults:self.searchString];
+        }
     }
 }
 
@@ -231,8 +233,12 @@
 
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
-    self.removeResults = YES;
-    [self filterResults:searchBar.text];
+    if (![searchBar.text isEqualToString:@""]){
+        self.removeResults = YES;
+        if (![searchBar.text isEqualToString:@""]){
+            [self filterResults:searchBar.text];
+        }
+    }
     return YES;
 }
 
@@ -240,7 +246,7 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
     NSString *searchString = searchController.searchBar.text;
-    if (![searchString isEqualToString:self.searchString]){
+    if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
 //        [self filterResults:searchString];
     } else {
@@ -311,8 +317,11 @@
 {
     // Search Controller and the regular table view have different data sources
     if (self.searchController.active) {
-        NSLog(@"rows = %lu", (unsigned long)self.searchResults.count);
-        return self.searchResults.count;
+        if (![self.searchController.searchBar.text isEqualToString:@""]){
+            return self.searchResults.count;
+        } else {
+            return 0;
+        }
     }
     else if (section == 0) {
         return _promoted.count;
@@ -324,78 +333,79 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFUser *possibleFriend;
-    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-    
-    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active) {
-        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
-    }
-    else {
-        if (indexPath.section == 0) {
-            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+        PFUser *possibleFriend;
+        UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+        
+        // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+        if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
+            possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
         }
-        else if (indexPath.section == 1) {
-            possibleFriend = [_friends objectAtIndex:indexPath.row];
-        }
-    }
-    
-    [cell setDelegate:self];
-    [cell.followButton setSelected:NO];
-
-    [cell setUser:possibleFriend];
-    
-    cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
-    
-    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
-    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-    if (followStatus.intValue > 0) {
-        [cell.followButton setHidden:NO];
-        [cell.followButton setSelected:YES];
-        if (followStatus.intValue == 2) {
-            [cell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
-        }
-    }
-    else {
-        // Determine the follow status of the user
-        PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
-        [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-        [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
-        [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
-        [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-        [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-            if (cell.tag == indexPath.row) {
-                [cell.followButton setHidden:NO];
-                [cell.followButton setSelected:(!error && number > 0)];
-                // Cache the user's follow status
-                [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:possibleFriend];
+        else {
+            if (indexPath.section == 0) {
+                possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
             }
-        }];
-    }
+            else if (indexPath.section == 1) {
+                possibleFriend = [_friends objectAtIndex:indexPath.row];
+            }
+        }
+        
+        [cell setDelegate:self];
+        [cell.followButton setSelected:NO];
+        
+        [cell setUser:possibleFriend];
+        
+        cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
+        
+        // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
+        NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+        if (followStatus.intValue > 0) {
+            [cell.followButton setHidden:NO];
+            [cell.followButton setSelected:YES];
+            if (followStatus.intValue == 2) {
+                [cell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+            }
+        }
+        else {
+            // Determine the follow status of the user
+            PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
+            [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+            [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
+            [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
+            [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
+            [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                if (cell.tag == indexPath.row) {
+                    [cell.followButton setHidden:NO];
+                    [cell.followButton setSelected:(!error && number > 0)];
+                    // Cache the user's follow status
+                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:possibleFriend];
+                }
+            }];
+        }
+        
+        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+        __weak UserTableViewCell *weakCell = cell;
+        
+        [cell.profilePicImageView setImageWithURLRequest:request
+                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                     
+                                                     [weakCell.profilePicImageView setImage:image];
+                                                     [weakCell setNeedsLayout];
+                                                     
+                                                 } failure:nil];
+        
+        [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
+        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+        [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        
+        return weakCell;
+        
+        return cell;
 
-    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    __weak UserTableViewCell *weakCell = cell;
-    
-    [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
-                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                 
-                                                 [weakCell.profilePicImageView setImage:image];
-                                                 [weakCell setNeedsLayout];
-                                                 
-                                             } failure:nil];
-    
-    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
-    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
-    
-    return weakCell;
-    
-    return cell;
 }
 
 
