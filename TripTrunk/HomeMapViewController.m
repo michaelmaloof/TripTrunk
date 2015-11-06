@@ -332,7 +332,7 @@
     [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
     
-    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"]; //last time you opened the app FIXME not today
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];  //FIXME ALWAYS RETURNING CURRENT TIME
     
     
     
@@ -377,7 +377,7 @@
                 
                 NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                 CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                if (lastTripInterval > 0)
+                if (lastTripInterval < 0)
                 {
                     [self.haventSeens addObject:location];
                 }
@@ -727,11 +727,11 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
-    BOOL hasSeen = YES;
+    BOOL hasSeen = NO;
     for (CLLocation *loc in self.haventSeens){
         NSLog(@"i hate xcode %f",(double)annotation.coordinate.longitude);
         if ((double)loc.coordinate.longitude - (double)annotation.coordinate.longitude < ABS(.0001) && (double)loc.coordinate.latitude - (double)annotation.coordinate.longitude < ABS(.0001)){
-            hasSeen = NO;
+            hasSeen = YES;
         }
     }
     
