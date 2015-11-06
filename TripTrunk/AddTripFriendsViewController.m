@@ -269,6 +269,7 @@
     return UITableViewCellEditingStyleNone;
 }
 
+
 //-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 //{
 //    
@@ -385,7 +386,8 @@
     if (selectedRows.count == 0 && !self.isTripCreation) {
         // Adding friends to an existing trip, so pop back
         [self.navigationController popViewControllerAnimated:YES];
-        
+        [self.delegate memberWasAdded:self];
+
         // TODO: Set title image
         self.title = @"TripTrunk";
         

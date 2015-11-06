@@ -18,8 +18,7 @@
 #import "UIScrollView+EmptyDataSet.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
-@property NSMutableArray *parseLocations;
-@property NSMutableArray *meParseLocations;
+
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;

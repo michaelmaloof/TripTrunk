@@ -22,7 +22,7 @@
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -135,7 +135,10 @@
                                                                                  action:@selector(editTapped)];
 
     }
+    
+    if (self.firstLoadDone == NO){
         self.collectionView.hidden = YES;
+    }
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
@@ -156,6 +159,17 @@
         }];
     
 
+}
+
+-(void)memberWasRemoved:(PFUser *)sender{
+    PFUser *userCheck;
+    for (PFUser *user in self.members){
+        if ([user.objectId isEqualToString:sender.objectId]){
+            userCheck = user;
+        }
+    }
+    [self.members removeObject:userCheck];
+    [self.memberCollectionView reloadData];
 }
 
 -(void)memberCollectionViewMethod:(NSArray*)objects{
@@ -482,6 +496,7 @@
     } else {
         if (indexPath.item == 0){
             TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
+            vc.delegate = self;
             vc.isMember = self.isMember;
             [self.navigationController pushViewController:vc animated:YES];
             

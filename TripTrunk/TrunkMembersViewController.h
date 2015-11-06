@@ -12,6 +12,10 @@
 #import "Trip.h"
 #import "TTBaseTableViewController.h"
 
+@protocol MemberListDelegate
+-(void)memberWasRemoved:(PFUser*)sender;
+
+@end
 
 
 @interface TrunkMembersViewController : TTBaseTableViewController
@@ -24,4 +28,6 @@
  */
 - (id)initWithTrip:(Trip *)trip;
 @property BOOL isMember;
+@property id<MemberListDelegate> delegate;
+
 @end
