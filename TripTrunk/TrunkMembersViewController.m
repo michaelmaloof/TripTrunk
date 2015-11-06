@@ -289,9 +289,9 @@
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
+        PFUser *user = [_tripMembers objectAtIndex:indexPath.row];
         if (indexPath.section > 0) {
-            [SocialUtility removeUser:[_tripMembers objectAtIndex:indexPath.row] fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
+            [SocialUtility removeUser:user fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
                 if (error) {
                     NSLog(@"Error removing user: %@", error);
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't remove user, try again",@"Couldn't remove user, try again")  delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
@@ -303,6 +303,7 @@
                 }
                 else {
                     NSLog(@"User Deleted");
+                    [self.delegate memberWasRemoved:user];
                 }
             }];
             // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
