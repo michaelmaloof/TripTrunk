@@ -26,6 +26,7 @@
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
+@property NSMutableArray *haventSeens;
 
 @end
 @implementation TrunkListViewController
@@ -35,6 +36,8 @@
     self.today = [NSDate date];
     
     self.title = self.city;
+    
+    self.haventSeens = [[NSMutableArray alloc]init];
     
     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nightSkyline_background"]];
     [tempImageView setFrame:self.tableView.frame];
@@ -73,6 +76,7 @@
     } else {
         [self loadUserTrunks];
     }
+
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -93,7 +97,7 @@
 }
 
 /**
- *  Load current user's trunks from parse.
+ *  Load user's trunks from parse.
  *
  *
  */
@@ -228,7 +232,7 @@
     }
 }
 
-- (void)queryParseMethodEveryone{
+- (void)queryParseMethodEveryone{ //add the list of users that the user follows to then get their trunks
 
     if (self.parseLocations == nil)
     {
@@ -266,8 +270,10 @@
     [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"createdAt"];
     [query orderByDescending:@"updatedAt"];
     
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -281,6 +287,13 @@
                 {
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];
+                    
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    if (lastTripInterval < 0)
+                    {
+                        [self.haventSeens addObject:trip];
+                    }
+
   
                 }
             }
@@ -342,6 +355,7 @@
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.lockImage.hidden = YES;
+    cell.seenLogo.hidden = YES;
     
     if (self.filter.tag == 0 && self.user == nil) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
@@ -355,6 +369,12 @@
         cell.lockImage.hidden = NO;
     } else {
         cell.lockImage.hidden = YES;
+    }
+    
+    if ([self.haventSeens containsObject:trip]){
+        cell.seenLogo.hidden = NO;
+    } else {
+        cell.seenLogo.hidden = YES;
     }
     
     cell.trip = trip;
