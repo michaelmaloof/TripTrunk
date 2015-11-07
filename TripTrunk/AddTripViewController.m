@@ -393,15 +393,18 @@
 
 - (IBAction)onNextTapped:(id)sender
 {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     if ([self.tripNameTextField.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         [self tabBarTitle];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     } else if ([self.locationTextField.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a location.",@"Please give your trunk a location.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         [self tabBarTitle];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
         //FIXME dont do this every time they click next. only if they changed location text fields
         self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
@@ -419,18 +422,21 @@
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks == nil && !error) {
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
                  // TODO: Set title image
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks.count == 0){
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
                  // TODO: Set title image
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
              }
              
              else if (!error)
@@ -457,7 +463,7 @@
                      }
                      [self parseTrip];
                      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                     
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
                  }
                  
                  else
@@ -465,6 +471,7 @@
                      [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
                      self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                      [self tabBarTitle];
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
                      
                  }
              }
@@ -476,6 +483,7 @@
          }];
         
     }
+    
 }
 
 /**
