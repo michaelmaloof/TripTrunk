@@ -104,7 +104,8 @@
 -(void)loadUserTrunks
 {
     if (self.meParseLocations == nil) {
-        
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+
         PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
         [trunkQuery whereKey:@"city" equalTo:self.city];
         [trunkQuery whereKey:@"state" equalTo: self.state];
@@ -130,6 +131,12 @@
                     {
                         [self.meParseLocations addObject:trip];
                         [self.objectIDs addObject:trip.objectId];
+                        
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        if (lastTripInterval < 0)
+                        {
+                            [self.haventSeens addObject:trip];
+                        }
                         
                     }
                 }
@@ -210,6 +217,9 @@
         [query includeKey:@"trip"];
         [query orderByDescending:@"updatedAt"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+
             if(!error)
             {
                 self.meParseLocations = [[NSMutableArray alloc]init];
@@ -218,6 +228,12 @@
                     Trip *trip = activity[@"trip"];
                     if (trip.name != nil){
                         [self.meParseLocations addObject:trip];
+                        
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        if (lastTripInterval < 0)
+                        {
+                            [self.haventSeens addObject:trip];
+                        }
 
                     }
                 }
