@@ -85,6 +85,11 @@
 
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    PFUser *user = [PFUser currentUser];
+    [user setValue:[NSDate date] forKeyPath:@"lastUsed"];
+
+    [user saveInBackground];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -105,6 +110,10 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    PFUser *user = [PFUser currentUser];
+    user[@"lastUsed"] = [NSDate date];
+    [user saveInBackground];
 }
 
 - (BOOL)application:(UIApplication *)application
