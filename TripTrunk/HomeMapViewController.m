@@ -255,6 +255,9 @@
             self.title = @"Loading Trunks...";
             self.loadedOnce = YES;
         }
+        
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+
 
 //If there is an error put the navBar title back to normal so that it isn't still tellign the user we are loading the trunks.
         if(error)
@@ -283,18 +286,12 @@
                 {
                     [self.parseLocations addObject:trip];
 
-//We're handing private trunks in parse now so this code is no longer needed. Leave it here in case we switch back
-//                    if (trip.isPrivate == YES)
-//                    {
-//                        if ([user.objectId isEqualToString:[PFUser currentUser].objectId])
-//                        {
-//                            [self.parseLocations addObject:trip];
-//                            
-//                        }
-//                        
-//                    } else
-//                    {
-//                    }
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+                    if (lastTripInterval < 0)
+                    {
+                        [self.haventSeens addObject:location];
+                    }
                     
                 }
                 
