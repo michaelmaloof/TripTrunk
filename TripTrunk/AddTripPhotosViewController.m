@@ -125,7 +125,7 @@
 
 #pragma mark - Saving Photos
 
-- (void)uploadAllPhotos {
+- (void)uploadAllPhotos { //FIXME: Handle error handling better on lost trunks here
     
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
