@@ -330,9 +330,10 @@
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
+    [query includeKey:@"createdAt"];
     [query orderByDescending:@"createdAt"];
     
-    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];  //FIXME ALWAYS RETURNING CURRENT TIME
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
     
     
@@ -728,9 +729,16 @@
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
     BOOL hasSeen = NO;
-    for (CLLocation *loc in self.haventSeens){
-        NSLog(@"i hate xcode %f",(double)annotation.coordinate.longitude);
-        if ((double)loc.coordinate.longitude - (double)annotation.coordinate.longitude < ABS(.0001) && (double)loc.coordinate.latitude - (double)annotation.coordinate.longitude < ABS(.0001)){
+    for (CLLocation *loc in self.haventSeens){ //Save trip instead
+        NSLog(@"long = %f", annotation.coordinate.longitude);
+        NSLog(@"long = %f", loc.coordinate.longitude);
+
+        NSLog(@"lat = %f", annotation.coordinate.latitude);
+        NSLog(@"lat = %f", loc.coordinate.latitude);
+
+
+
+        if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
             hasSeen = YES;
         }
     }
