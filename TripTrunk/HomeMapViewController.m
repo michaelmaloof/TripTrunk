@@ -816,22 +816,29 @@
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
-
+//FIXME: Lets use the array of parselocations here
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     // TODO: Get the state in a more elloquent way. This is hacky.
+    view.enabled = NO;
+    
     CLGeocoder *cod = [[CLGeocoder alloc] init];
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
     [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
         
-        CLPlacemark *placemark = [placemarks firstObject];
-        
-        self.pinCityName = view.annotation.title;
-        self.pinStateName = placemark.administrativeArea;
-        [self performSegueWithIdentifier:@"Trunk" sender:self];
-        self.pinCityName = nil;
-        self.pinStateName = nil;
-        self.photoPin = view;
+        if (!error){
+            CLPlacemark *placemark = [placemarks firstObject];
+            self.pinCityName = view.annotation.title;
+            self.pinStateName = placemark.administrativeArea;
+            [self performSegueWithIdentifier:@"Trunk" sender:self];
+            self.pinCityName = nil;
+            self.pinStateName = nil;
+            self.photoPin = view;
+            view.enabled = YES;
+
+        } else {
+            view.enabled = YES;
+        }
     }];
 }
 
