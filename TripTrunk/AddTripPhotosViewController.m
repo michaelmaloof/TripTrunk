@@ -77,6 +77,7 @@
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
@@ -128,7 +129,14 @@
     
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
-        [self.trip saveInBackground];
+        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error){
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+            } else {
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+
+            }
+        }];
     }
     
     for (Photo *photo in self.photos)
@@ -161,6 +169,7 @@
         NSLog(@"Trip Photos Added, not trip creation so pop back one view");
         [self.navigationController popViewControllerAnimated:YES];
         [[self navigationController] setNavigationBarHidden:NO animated:YES];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     else {
         NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
@@ -178,12 +187,15 @@
             // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
             [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
             
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             
         });
         
         
-        
     }
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
 }
 
 
