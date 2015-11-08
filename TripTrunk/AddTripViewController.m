@@ -716,13 +716,15 @@
              
              if (self.navigationItem.leftBarButtonItem.tag == 0)
              {
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
                  [self performSegueWithIdentifier:@"addFriends" sender:self];
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
+
              }
              
              else {
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
                  [self.navigationController popViewControllerAnimated:YES];
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
+
              }
          }
          // TODO: Set title image

@@ -130,12 +130,16 @@
 
 - (void)setupMaskViews
 {
-    UIImage *glyphMaskImage = [UIImage ctassetsPickerImageNamed:@"VideoPlayGlyphMask"];
+//    UIImage *glyphMaskImage = [UIImage ctassetsPickerImageNamed:@"VideoPlayGlyphMask"];
+        UIImage *glyphMaskImage = [UIImage ctassetsPickerImageNamed:@""]; //FIXME, ADD BACK WHEN VIDEOS ALLOWED
+
     UIImageView *glyphMask = [[UIImageView alloc] initWithImage:glyphMaskImage];
     glyphMask.userInteractionEnabled = NO;
     self.colorView.maskView = glyphMask;
     
-    UIImage *buttonMaskImage = [UIImage ctassetsPickerImageNamed:@"VideoPlayButtonMask"];
+//    UIImage *buttonMaskImage = [UIImage ctassetsPickerImageNamed:@"VideoPlayButtonMask"];
+    UIImage *buttonMaskImage = [UIImage ctassetsPickerImageNamed:@""]; //FIXME, ADD BACK WHEN VIDEOS ALLOWED
+
     UIImageView *buttonMask = [[UIImageView alloc] initWithImage:buttonMaskImage];
     buttonMask.userInteractionEnabled = NO;
     self.maskView = buttonMask;

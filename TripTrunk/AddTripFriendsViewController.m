@@ -435,7 +435,6 @@
 
 
         } else {
-            self.navigationItem.rightBarButtonItem.enabled = YES;
         }
         // TODO: Set title image
         self.title = @"TripTrunk";
