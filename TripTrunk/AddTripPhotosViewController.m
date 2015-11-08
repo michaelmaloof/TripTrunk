@@ -132,13 +132,21 @@
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
                 self.navigationItem.rightBarButtonItem.enabled = YES;
+                UIAlertView *alertView = [[UIAlertView alloc] init];
+                alertView.delegate = self;
+                alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
+                alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+                [alertView show];
             } else {
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-
+                [self savePhotosToParse];
+    
             }
         }];
     }
-    
+}
+
+-(void)savePhotosToParse{
     for (Photo *photo in self.photos)
     {
         // Set all the trip info on the Photo object
@@ -149,7 +157,7 @@
         photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
         photo.tripName = self.trip.name;
         photo.city = self.trip.city;
-
+        
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
@@ -197,7 +205,6 @@
     self.navigationItem.rightBarButtonItem.enabled = YES;
 
 }
-
 
 #pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
