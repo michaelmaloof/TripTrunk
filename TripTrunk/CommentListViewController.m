@@ -67,7 +67,7 @@
 
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad { //FIXME PHOTO CAPTION NEEDS TO BE THE FIRST COMMENT
     [super viewDidLoad];
     
     [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:COMMENT_CELL];
@@ -370,7 +370,9 @@
             [_activities addObject:activity];
             [self.tableView reloadData];
             
-            [SocialUtility addComment:comment forPhoto:_photo block:^(BOOL succeeded, NSError *error) {
+            [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
+                                block:^(BOOL succeeded, NSError *error) {
+                                    
                 if (!error) {
                     NSLog(@"Comment Saved Success");
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];

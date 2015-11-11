@@ -331,7 +331,7 @@
      }];
 }
 
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL, NSError *))completionBlock
 {
     if ([comment isEqualToString:@""]) {
         if (completionBlock) {
@@ -350,6 +350,7 @@
     [commentActivity setObject:photo.trip forKey:@"trip"];
     [commentActivity setObject:@"comment" forKey:@"type"];
     [commentActivity setObject:comment forKey:@"content"];
+    [commentActivity setObject:[NSNumber numberWithBool:isCaption] forKey:@"isCaption"];
     
     // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -466,8 +467,10 @@
     [query setCachePolicy:cachePolicy];
     [query includeKey:@"fromUser"];
     [query includeKey:@"photo"];
+    //Order by the time and then order by isCaption so that the caption is always first
     [query orderByAscending:@"createdAt"];
-    
+    [query orderByDescending:@"isCaption"];
+
     return query;
 }
 

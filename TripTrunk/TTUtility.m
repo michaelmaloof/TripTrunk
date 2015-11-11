@@ -201,8 +201,9 @@ CLCloudinary *cloudinary;
                       
                       // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
                       if (photo.caption && ![photo.caption isEqualToString:@""]) {
-                          [SocialUtility addComment:photo.caption forPhoto:photo block:^(BOOL succeeded, NSError *error) {
-                              NSLog(@"caption saved as comment");
+                          [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
+                        
+                            NSLog(@"caption saved as comment");
                           }];
                       }
                       
