@@ -821,6 +821,7 @@
 {
     // TODO: Get the state in a more elloquent way. This is hacky.
     view.enabled = NO;
+    view.selected = YES;
     
     CLGeocoder *cod = [[CLGeocoder alloc] init];
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
@@ -835,9 +836,13 @@
             self.pinStateName = nil;
             self.photoPin = view;
             view.enabled = YES;
+            view.selected = NO;
+
 
         } else {
             view.enabled = YES;
+            view.selected = NO;
+
         }
     }];
 }

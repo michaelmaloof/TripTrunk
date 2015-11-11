@@ -624,6 +624,8 @@
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                         NSLog(@"caption saved as comment");
+                        [self refreshPhotoActivities];
+                        [self.caption endEditing:YES];
                     }];
                 } else {
                     __block BOOL save = NO;
@@ -641,14 +643,18 @@
                         
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                             NSLog(@"caption saved as comment");
+                            [self refreshPhotoActivities];
+
                         }];
                         
                     }
                     
                 }
             }
+            
+            [self.caption endEditing:YES];
         }];
-        [self.caption endEditing:YES];
+
         
     }
     
@@ -701,6 +707,7 @@
 }
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
     [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        self.photo.caption = @"";
         if (!error){
             
             NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
@@ -709,8 +716,12 @@
                     [commentToDelete addObject:obj];
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
-                            self.photo.caption = @"";
                             self.caption.text = @"";
+                            [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
+                            [self.caption endEditing:YES];
+                            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
+                            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+                            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                         } else {
                             
                         }
@@ -719,12 +730,10 @@
                 }
             }
             
-            [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
-            [self.caption endEditing:YES];
-            //FIXEME: NEED TO CHANGE CACHED COMMENT COUNT -1
-
         }
     }];
+    
+    
 }
 
 - (IBAction)likeButtonPressed:(id)sender {
