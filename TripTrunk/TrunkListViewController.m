@@ -17,7 +17,7 @@
 
 #import "UIScrollView+EmptyDataSet.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TrunkDelegate>
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -337,7 +337,6 @@
     if ([segue.identifier isEqualToString:@"TrunkView"])
     {
         TrunkViewController *trunkView = segue.destinationViewController;
-        trunkView.delegate = self;
         
         if (self.filter.tag == 0 && self.parseLocations != nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
