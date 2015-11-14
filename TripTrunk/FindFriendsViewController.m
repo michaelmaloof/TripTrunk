@@ -170,7 +170,11 @@
 }
 
 
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    self.searchController.active = NO;
+    [self.tableView reloadData];
 
+}
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
