@@ -311,7 +311,11 @@
                 self.city = @"Barcelona";
                 self.state =@"Catalonia";
                 self.country = @"Spain";
-            } else {
+            } else if ([location isEqualToString:@"Sao Paulo, SP, Brazil"]){
+                self.city = @"Sao Paulo";
+                self.state =@"Sao Paulo";
+                self.country = @"Brazil";
+            }else {
                 iserror = YES;
             }
             
