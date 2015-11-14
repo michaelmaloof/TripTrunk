@@ -244,6 +244,7 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
+    [query setLimit: 10000];
     
     
     
@@ -329,6 +330,7 @@
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
     [query orderByDescending:@"createdAt"];
+    [query setLimit: 10000];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
