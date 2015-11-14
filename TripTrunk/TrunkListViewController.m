@@ -17,7 +17,7 @@
 
 #import "UIScrollView+EmptyDataSet.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TrunkDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -26,6 +26,7 @@
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
+@property NSMutableArray *haventSeens;
 
 @end
 @implementation TrunkListViewController
@@ -36,6 +37,8 @@
     
     self.title = self.city;
     
+    self.haventSeens = [[NSMutableArray alloc]init];
+    
     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nightSkyline_background"]];
     [tempImageView setFrame:self.tableView.frame];
     
@@ -44,35 +47,6 @@
     self.objectIDs = [[NSMutableArray alloc]init];
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-    
-    
-    
-    if (self.user == nil) {
-    
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-
-
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
-                                                       style:UIBarButtonItemStylePlain
-                                                      target:self
-                                                      action:@selector(rightBarItemWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-        
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
-        
-        self.filter.tag = 0;
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
-        [self queryParseMethodEveryone];
-
-        
-    } else {
-        [self loadUserTrunks];
-    }
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -92,15 +66,50 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self.filter setTitle:@""];
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    if (self.user == nil) {
+        
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        
+        
+        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(rightBarItemWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+        
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
+        self.filter.tag = 0;
+        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        [self queryParseMethodEveryone];
+        
+        
+    } else {
+        [self loadUserTrunks];
+    }
+}
+
 /**
- *  Load current user's trunks from parse.
+ *  Load user's trunks from parse.
  *
  *
  */
 -(void)loadUserTrunks
 {
     if (self.meParseLocations == nil) {
-        
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+
         PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
         [trunkQuery whereKey:@"city" equalTo:self.city];
         [trunkQuery whereKey:@"state" equalTo: self.state];
@@ -126,6 +135,12 @@
                     {
                         [self.meParseLocations addObject:trip];
                         [self.objectIDs addObject:trip.objectId];
+                        
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        if (lastTripInterval < 0)
+                        {
+                            [self.haventSeens addObject:trip];
+                        }
                         
                     }
                 }
@@ -206,6 +221,9 @@
         [query includeKey:@"trip"];
         [query orderByDescending:@"updatedAt"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+
             if(!error)
             {
                 self.meParseLocations = [[NSMutableArray alloc]init];
@@ -214,6 +232,12 @@
                     Trip *trip = activity[@"trip"];
                     if (trip.name != nil){
                         [self.meParseLocations addObject:trip];
+                        
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        if (lastTripInterval < 0)
+                        {
+                            [self.haventSeens addObject:trip];
+                        }
 
                     }
                 }
@@ -228,7 +252,7 @@
     }
 }
 
-- (void)queryParseMethodEveryone{
+- (void)queryParseMethodEveryone{ //add the list of users that the user follows to then get their trunks
 
     if (self.parseLocations == nil)
     {
@@ -266,8 +290,10 @@
     [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
+    [query includeKey:@"createdAt"];
     [query orderByDescending:@"updatedAt"];
     
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -281,6 +307,13 @@
                 {
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];
+                    
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    if (lastTripInterval < 0)
+                    {
+                        [self.haventSeens addObject:trip];
+                    }
+
   
                 }
             }
@@ -304,6 +337,7 @@
     if ([segue.identifier isEqualToString:@"TrunkView"])
     {
         TrunkViewController *trunkView = segue.destinationViewController;
+        trunkView.delegate = self;
         
         if (self.filter.tag == 0 && self.parseLocations != nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
@@ -342,6 +376,7 @@
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.lockImage.hidden = YES;
+    cell.seenLogo.hidden = YES;
     
     if (self.filter.tag == 0 && self.user == nil) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
@@ -355,6 +390,12 @@
         cell.lockImage.hidden = NO;
     } else {
         cell.lockImage.hidden = YES;
+    }
+    
+    if ([self.haventSeens containsObject:trip]){
+        cell.seenLogo.hidden = NO;
+    } else {
+        cell.seenLogo.hidden = YES;
     }
     
     cell.trip = trip;
@@ -513,6 +554,9 @@
 
 }
 
+-(void)photoWasAdded:(id)sender{
+    
+}
 
 - (void)dealloc
 {

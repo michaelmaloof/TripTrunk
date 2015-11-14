@@ -77,6 +77,7 @@
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
@@ -124,13 +125,28 @@
 
 #pragma mark - Saving Photos
 
-- (void)uploadAllPhotos {
+- (void)uploadAllPhotos { //FIXME: Handle error handling better on lost trunks here
     
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
-        [self.trip saveInBackground];
-    }
+        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error){
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+                UIAlertView *alertView = [[UIAlertView alloc] init];
+                alertView.delegate = self;
+                alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
+                alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+                [alertView show];
+            } else {
+                [self savePhotosToParse];
     
+            }
+        }];
+    }
+}
+
+-(void)savePhotosToParse{
     for (Photo *photo in self.photos)
     {
         // Set all the trip info on the Photo object
@@ -141,7 +157,7 @@
         photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
         photo.tripName = self.trip.name;
         photo.city = self.trip.city;
-
+        
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
@@ -161,6 +177,7 @@
         NSLog(@"Trip Photos Added, not trip creation so pop back one view");
         [self.navigationController popViewControllerAnimated:YES];
         [[self navigationController] setNavigationBarHidden:NO animated:YES];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     else {
         NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
@@ -178,14 +195,16 @@
             // Tell the AddTripViewController that we've finished so it should now reset the form on that screen.
             [[NSNotificationCenter defaultCenter] postNotificationName:@"resetTripFromNotification" object:nil];
             
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             
         });
         
         
-        
     }
-}
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 
+}
 
 #pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

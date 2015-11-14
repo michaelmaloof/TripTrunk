@@ -120,7 +120,7 @@
  *  @param photo           Photo object on which the comment is being written
  *  @param completionBlock completion handler callback
  */
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
  *  Retrieves the all of the Comment Activity objects for the given Photo

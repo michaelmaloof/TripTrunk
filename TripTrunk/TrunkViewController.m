@@ -177,11 +177,16 @@
     for (PFObject *activity in objects)
     {
         PFUser *ttUser = activity[@"toUser"];
-        [self.members addObject:ttUser];
+        if([ttUser.objectId isEqualToString:self.trip.creator.objectId]){
+            [self.members insertObject:ttUser atIndex:0];
+        } else {
+            [self.members addObject:ttUser];
+        }
         if ([ttUser.objectId isEqualToString:[PFUser currentUser].objectId])
         {
             self.isMember = YES;
         }
+        
         
     }
     

@@ -70,11 +70,14 @@
     // Set initial UI
     
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-        self.addCaption.hidden = YES; //FIX ME TO NO LATER
+        self.addCaption.hidden = NO;
     } else {
         self.addCaption.hidden = YES;
 
     }
+    
+    self.caption.selectable = NO;
+    self.caption.editable = NO;
     
     self.caption.delegate = self;
     
@@ -416,7 +419,7 @@
                     }
                 }
             }
-            
+                        
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
             //TODO: update cached photo attributes, i.e. likers, commenters, etc.
@@ -465,7 +468,7 @@
             //        self.title = self.photo.userName;
             self.photoTakenBy.text = self.photo.userName;
             if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-                self.addCaption.hidden = YES; //FIXME TO NO LATER
+                self.addCaption.hidden = NO;
             } else {
                 self.addCaption.hidden = YES;
                 
@@ -500,7 +503,7 @@
             self.arrayInt = self.arrayInt + 1;
             self.photo = [self.photos objectAtIndex:self.arrayInt];
             if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-                self.addCaption.hidden = YES; //NO LATER
+                self.addCaption.hidden = NO;
             } else {
                 self.addCaption.hidden = YES;
                 
@@ -608,20 +611,51 @@
 - (IBAction)editCaptionTapped:(id)sender {
     
     if (self.addCaption.tag == 0){
-    
-        self.caption.selectable = YES;
+        
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
         
     } else {
         self.photo.caption = self.caption.text;
-        [self.photo saveInBackground];
-        [self.caption endEditing:YES];
-        [SocialUtility addComment:self.photo.caption forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            NSLog(@"caption saved as comment");
+        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (!error){
+                
+                if (self.commentActivities.count == 0){
+                    [self.caption endEditing:YES];
+                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
+                        NSLog(@"caption saved as comment");
+                        [self refreshPhotoActivities];
+                        [self.caption endEditing:YES];
+                    }];
+                } else {
+                    __block BOOL save = NO;
+                    for (PFObject *obj in self.commentActivities){
+                        if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
+                            [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
+                            [obj setObject:self.photo.caption forKey:@"content"];
+                            [obj saveInBackground];
+                            save = YES;
+                            
+                        }
+                    }
+                    
+                    if (save == NO) {
+                        
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
+                            NSLog(@"caption saved as comment");
+                            [self refreshPhotoActivities];
+
+                        }];
+                        
+                    }
+                    
+                }
+            }
+            
+            [self.caption endEditing:YES];
         }];
 
-
+        
     }
     
 }
@@ -635,25 +669,26 @@
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
+    self.caption.editable = YES;
     self.isEditingCaption = YES;
     self.scrollView.scrollEnabled = NO;
     self.likeButton.hidden = YES;
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
-    self.addCaption.tag = 1;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
     self.deleteCaption.hidden = NO;
     self.caption.backgroundColor = [UIColor whiteColor];
     self.caption.alpha = .7;
     self.caption.textColor = [UIColor blackColor];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
+    self.addCaption.tag = 1;
+
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView{
     self.isEditingCaption = NO;
     self.scrollView.scrollEnabled = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    self.addCaption.tag = 0;
     self.likeButton.hidden = NO;
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
@@ -663,17 +698,42 @@
     self.caption.textColor = [UIColor whiteColor];
     self.caption.text = self.photo.caption;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
+    self.addCaption.tag = 0;
+    self.caption.editable = NO;
+
+
 
 
 }
-- (IBAction)deleteCaptionTapped:(id)sender {
-    self.photo.caption = @"";
-    self.caption.text = @"";
-    [self.photo saveInBackground];
-    [SocialUtility addComment:self.photo.caption forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-        NSLog(@"caption saved as comment");
+- (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
+    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        self.photo.caption = @"";
+        if (!error){
+            
+            NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
+            for (PFObject *obj in self.commentActivities){
+                if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
+                    [commentToDelete addObject:obj];
+                    [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if (!error){
+                            self.caption.text = @"";
+                            [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
+                            [self.caption endEditing:YES];
+                            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
+                            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+                            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+                        } else {
+                            
+                        }
+                    }];
+                    break;
+                }
+            }
+            
+        }
     }];
-    [self.caption endEditing:YES];
+    
+    
 }
 
 - (IBAction)likeButtonPressed:(id)sender {

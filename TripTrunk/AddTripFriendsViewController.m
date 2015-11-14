@@ -372,6 +372,7 @@
  */
 - (void)saveFriendsAndClose
 {
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
 
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
@@ -430,12 +431,15 @@
                                                   otherButtonTitles:nil, nil];
             
             [alert show];
+            self.navigationItem.rightBarButtonItem.enabled = YES;
 
 
+        } else {
         }
         // TODO: Set title image
         self.title = @"TripTrunk";
         [self.delegate memberWasAdded:self];
+        
         
     }];
     
@@ -447,12 +451,16 @@
     if (!self.isTripCreation) {
         // Adding friends to an existing trip, so pop back
         [self.navigationController popViewControllerAnimated:YES];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     else {
         // Nex trip creation flow, so push forward
         [self performSegueWithIdentifier:@"photos" sender:self];
-
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
 }
 
 
