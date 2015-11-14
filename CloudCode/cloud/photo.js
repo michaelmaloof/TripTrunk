@@ -1,3 +1,5 @@
+var _ = require("underscore");
+
 /**
  * AFTER SAVE
  */
@@ -75,7 +77,9 @@ Parse.Cloud.afterSave('Photo', function(request) {
  * Users get overloaded with notifications from lots of photos being added, so for now it's commented out
  * until we can group it into "added X photos to the trunk".
  */
-    // Send the push notification to ALL the users!!
+
+     // Send the push notification to ALL the users!!
+     // Throttle it by 3 seconds..?
     Parse.Push.send({
       where: installQuery, // Set our Installation query.
       data: payload
@@ -85,6 +89,7 @@ Parse.Cloud.afterSave('Photo', function(request) {
     }, function(error) {
       throw "Push Error " + error.code + " : " + error.message;
     });
+
   });
 
 });
