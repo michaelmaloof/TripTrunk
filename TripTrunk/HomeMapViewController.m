@@ -244,7 +244,7 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 10000];
+    [query setLimit: 1000];
     
     
     
@@ -330,7 +330,8 @@
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 10000];
+    [query setLimit: 1000]; // DEFAULT IS 100 so trunks get left off.
+
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
