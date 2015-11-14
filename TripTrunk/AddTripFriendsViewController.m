@@ -470,26 +470,33 @@
 - (void)filterResults:(NSString *)searchTerm {
     
     [self.searchResults removeAllObjects];
+
+    //TODO: add NOT IN existingUsers query to both of these
+    
+    //     Gets all the users who have blocked this user. Hopefully it's 0!
+    PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
+    [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
     
     PFQuery *usernameQuery = [PFUser query];
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
     [usernameQuery whereKey:@"username" containsString:searchTerm];
     [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
-    
-    //TODO: add NOT IN existingUsers query to both of these
+    [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     
     PFQuery *nameQuery = [PFUser query];
-    [nameQuery whereKeyExists:@"name"];  //this is based on whatever query you are trying to accomplish
-    [nameQuery whereKey:@"name" containsString:searchTerm];
+    [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
+    [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
-    
+    [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
     
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-    
+    query.limit = 20;
     
     NSArray *results  = [query findObjects];
-        
+
     [self.searchResults addObjectsFromArray:results];
+    
+    
 }
 
 /**

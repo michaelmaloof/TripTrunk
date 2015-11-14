@@ -199,15 +199,39 @@ Parse.Cloud.afterSave('Activity', function(request) {
   var query = new Parse.Query(Parse.Installation);
   query.equalTo('user', toUser);
 
-  Parse.Push.send({
-    where: query, // Set our Installation query.
-    data: alertPayload(request)
-  }).then(function() {
-    // Push was successful
-    console.log('Sent push.');
-  }, function(error) {
-    throw "Push Error " + error.code + " : " + error.message;
-  });
+  var trip;
+
+  // If it's addToTrip, we'll populate the Trip before we call the Push Notification.
+  // It's redundant code, but it saves refactoring everything right now.
+  if (request.object.get('type') === 'addToTrip') {
+      // Check if the trunk is private or not.
+      request.object.get('trip').fetch().then(function(thisTrip) {
+        request.object.set('trip', thisTrip);
+        console.log(trip);
+
+        Parse.Push.send({
+          where: query, // Set our Installation query.
+          data: alertPayload(request)
+        }).then(function() {
+          // Push was successful
+          console.log('Sent push.');
+        }, function(error) {
+          throw "Push Error " + error.code + " : " + error.message;
+        });
+
+      });
+  }
+  else {
+    Parse.Push.send({
+      where: query, // Set our Installation query.
+      data: alertPayload(request)
+    }).then(function() {
+      // Push was successful
+      console.log('Sent push.');
+    }, function(error) {
+      throw "Push Error " + error.code + " : " + error.message;
+    });
+  }
 });
 
 var alertMessage = function(request) {
@@ -233,7 +257,14 @@ var alertMessage = function(request) {
     }
   } else if (request.object.get("type") === "addToTrip") {
     if (request.user.get('username') && request.user.get('name')) {
-      message = request.user.get('username') + ' added you to a trunk.';
+
+        if(request.object.get('trip').get('isPrivate')) {
+          message = request.user.get('username') + ' added you to a private trunk.';
+        }
+        else {
+          message = request.user.get('username') + ' added you to a trunk.';
+        }
+
     } else {
       message = "You were added to a trunk.";
     }
