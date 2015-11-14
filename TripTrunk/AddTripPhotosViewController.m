@@ -129,6 +129,7 @@
     
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
+    }
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
                 self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -143,7 +144,6 @@
     
             }
         }];
-    }
 }
 
 -(void)savePhotosToParse{
