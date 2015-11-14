@@ -17,7 +17,7 @@
 
 #import "UIScrollView+EmptyDataSet.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TrunkDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -48,36 +48,6 @@
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     
-    
-    
-    if (self.user == nil) {
-    
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-
-
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
-                                                       style:UIBarButtonItemStylePlain
-                                                      target:self
-                                                      action:@selector(rightBarItemWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-        
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
-        
-        self.filter.tag = 0;
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
-        [self queryParseMethodEveryone];
-
-        
-    } else {
-        [self loadUserTrunks];
-    }
-
-    
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     // Setup Empty Datasets
@@ -94,6 +64,40 @@
     [refreshControl endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
     
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self.filter setTitle:@""];
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    if (self.user == nil) {
+        
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        
+        
+        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(rightBarItemWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+        
+        UIBarButtonItem *newBackButton =
+        [[UIBarButtonItem alloc] initWithTitle:@""
+                                         style:UIBarButtonItemStylePlain
+                                        target:nil
+                                        action:nil];
+        [[self navigationItem] setBackBarButtonItem:newBackButton];
+        
+        self.filter.tag = 0;
+        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        [self queryParseMethodEveryone];
+        
+        
+    } else {
+        [self loadUserTrunks];
+    }
 }
 
 /**
@@ -333,6 +337,7 @@
     if ([segue.identifier isEqualToString:@"TrunkView"])
     {
         TrunkViewController *trunkView = segue.destinationViewController;
+        trunkView.delegate = self;
         
         if (self.filter.tag == 0 && self.parseLocations != nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
@@ -549,6 +554,9 @@
 
 }
 
+-(void)photoWasAdded:(id)sender{
+    
+}
 
 - (void)dealloc
 {
