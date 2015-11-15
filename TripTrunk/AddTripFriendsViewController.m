@@ -362,12 +362,25 @@
                                                       cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                                       otherButtonTitles:nil, nil];
                 [alert show];
-                self.navigationItem.rightBarButtonItem.enabled = NO;
+                self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
                 
             } else {
-                self.navigationItem.rightBarButtonItem.enabled = NO;
+                self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+                [self.delegate memberWasAdded:self];
+                
+                if (!self.isTripCreation) {
+                    // Adding friends to an existing trip, so pop back
+                    [self.navigationController popViewControllerAnimated:YES];
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                }
+                else {
+                    // Nex trip creation flow, so push forward
+                    [self performSegueWithIdentifier:@"photos" sender:self];
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                }
+
             }
         }];
     }
@@ -444,7 +457,20 @@
 
 
         } else {
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            self.title = @"TripTrunk"; //ToDo Set titleImage
             [self.delegate memberWasAdded:self];
+            
+            if (!self.isTripCreation) {
+                // Adding friends to an existing trip, so pop back
+                [self.navigationController popViewControllerAnimated:YES];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+            }
+            else {
+                // Nex trip creation flow, so push forward
+                [self performSegueWithIdentifier:@"photos" sender:self];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+            }
 
         }
         
@@ -455,16 +481,16 @@
     // We dismiss it outside the save block so that there's no hangup for the user.
     // The downside is, if it fails then they have to redo everything
     //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
-    if (!self.isTripCreation) {
-        // Adding friends to an existing trip, so pop back
-        [self.navigationController popViewControllerAnimated:YES];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }
-    else {
-        // Nex trip creation flow, so push forward
-        [self performSegueWithIdentifier:@"photos" sender:self];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }
+//    if (!self.isTripCreation) {
+//        // Adding friends to an existing trip, so pop back
+//        [self.navigationController popViewControllerAnimated:YES];
+//        self.navigationItem.rightBarButtonItem.enabled = YES;
+//    }
+//    else {
+//        // Nex trip creation flow, so push forward
+//        [self performSegueWithIdentifier:@"photos" sender:self];
+//        self.navigationItem.rightBarButtonItem.enabled = YES;
+//    }
     
 }
 
