@@ -31,8 +31,8 @@ Parse.Cloud.afterSave('Photo', function(request) {
   /*
    * Update the Trip object
    */
-   trip.set("mostRecentPhoto", new Date());
-   trip.save();
+    trip.set("mostRecentPhoto", new Date());
+    trip.save();
 
     // Create an Activity for addedPhoto
     var Activity = Parse.Object.extend("Activity");
@@ -43,52 +43,6 @@ Parse.Cloud.afterSave('Photo', function(request) {
     photoActivity.set("fromUser", request.user);
     photoActivity.set("toUser", trip.get("creator"));
     photoActivity.save();
-
-
-    /*
-     * PUSH NOTIFICATIONS
-     */
-    
-    // Create the query that finds all members of a trip, except the person who just uploaded the photo
-    var memberQuery = new Parse.Query("Activity");
-    memberQuery.equalTo('trip', request.object.get("trip"));
-    memberQuery.equalTo('type', "addToTrip");
-    memberQuery.notEqualTo('toUser', request.user); // creators are members as well, so this line prevents whoever is uploading the photo from getting a push notification for their own photo
-
-    // Find the Installations for all trip members so we know where to send the notification
-    var installQuery = new Parse.Query(Parse.Installation);
-    installQuery.matchesKeyInQuery('user', 'toUser', memberQuery);
-
-    var pushMessage = request.user.get('username') + ' added a photo to the trunk: ' + trip.get("name");
-
-    // Clip message if it's longer than the APNs limit
-    if (pushMessage.length > 140) {
-      pushMessage = message.substring(0, 140);
-    }
-
-    var payload = {
-        alert: pushMessage, // Set our alert message.
-        p: 'p', // Payload Type: Photo
-        tid: request.object.get('trip').id, // Trip Id
-        pid: request.object.id // Photo Id
-      };
-
-/* COMMENTED OUT on  November 3, 2015
- * Users get overloaded with notifications from lots of photos being added, so for now it's commented out
- * until we can group it into "added X photos to the trunk".
- */
-
-     // Send the push notification to ALL the users!!
-     // Throttle it by 3 seconds..?
-    Parse.Push.send({
-      where: installQuery, // Set our Installation query.
-      data: payload
-    }).then(function() {
-      // Push was successful
-      console.log('Sent push.');
-    }, function(error) {
-      throw "Push Error " + error.code + " : " + error.message;
-    });
 
   });
 

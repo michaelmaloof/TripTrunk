@@ -10,4 +10,4 @@ require('cloud/report.js');
 require('cloud/block.js');
 require('cloud/trunk.js');
 require('cloud/updateFriendRoles.js');
-
+require('cloud/pushNotifications.js');

@@ -170,6 +170,22 @@
                                                         [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData];
                                                     }];
     }
+    
+    /* THIS IS A HACK
+     * Because of issues grouping photosAdded notifications (Matt added 5 photos, instead of Matt added a photo, 5 times)
+     * We are just saving an object that will notifiy the server to send the notification
+     * Eventually this should be done properly and the client shouldn't get any say in sending notifications, CloudCode should handle it all.
+     */
+    NSNumber *count = [NSNumber numberWithInteger: self.photos.count];
+    PFObject *photosAddedNotification = [PFObject objectWithClassName:@"PushNotification"];
+    [photosAddedNotification setObject:count forKey:@"photoCount"];
+    [photosAddedNotification setObject:self.trip forKey:@"trip"];
+    [photosAddedNotification setObject:self.trip.name forKey:@"tripName"];
+    [photosAddedNotification setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [photosAddedNotification saveInBackground];
+    
+    
+    
     // TODO: Set title image
     
     if (!self.isTripCreation) {
