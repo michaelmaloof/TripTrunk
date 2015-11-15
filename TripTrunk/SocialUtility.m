@@ -83,6 +83,7 @@
     [query whereKey:@"toUser" equalTo:user];
 //    [query whereKey:@"type" equalTo:@"follow"];
     [query whereKey:@"type" containedIn:@[@"follow", @"pending_follow" ]]; // Pending Activities get unfollowed
+    [query setLimit:10000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *followActivities, NSError *error) {
         // While normally there should only be one follow activity returned, we can't guarantee that.
         
@@ -290,6 +291,7 @@
     PFQuery *updateQuery = [PFQuery queryWithClassName:@"Activity"];
     [updateQuery whereKey:@"type" equalTo:@"addToTrip"];
     [updateQuery whereKey:@"trip" equalTo:trip];
+    [updateQuery setLimit:10000];
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
         if (!error) {
@@ -312,6 +314,7 @@
 {
     PFQuery *updateQuery = [PFQuery queryWithClassName:@"Photo"];
     [updateQuery whereKey:@"trip" equalTo:trip];
+    [updateQuery setLimit:10000];
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
@@ -379,7 +382,7 @@
     [query whereKey:@"type" equalTo:@"comment"];
     [query includeKey:@"fromUser"];
     [query orderByAscending:@"createdAt"];
-
+    [query setLimit:10000];
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -559,6 +562,7 @@
     [followingQuery whereKey:@"type" equalTo:@"follow"];
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [followingQuery includeKey:@"toUser"];
+    [followingQuery setLimit:10000];
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -596,6 +600,7 @@
     [query whereKeyExists:@"fromUser"];
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     [query includeKey:@"fromUser"];
+    [query setLimit:10000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -630,6 +635,7 @@
     [query whereKey:@"type" equalTo:@"follow"];
     [query whereKeyExists:@"fromUser"];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [query setLimit:10000];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         
         completionBlock(number, error);
@@ -644,6 +650,7 @@
     [query whereKey:@"toUser" notEqualTo:user];
     [query whereKey:@"type" equalTo:@"follow"];
     [query whereKeyExists:@"toUser"];
+    [query setLimit:10000];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         completionBlock(number, error);
@@ -657,6 +664,7 @@
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [query setLimit:10000];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         completionBlock(number, error);
     }];
