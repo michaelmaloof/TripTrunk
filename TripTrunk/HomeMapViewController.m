@@ -944,6 +944,14 @@
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
 
+-(void)updateTrunkColor:(Trip *)trip{
+    NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    
+    if ([self.tripsToCheck containsObject:address]){
+        [self addTripToMap:trip dot:YES isMostRecent:YES];
+    }
+}
+
 
 
 @end

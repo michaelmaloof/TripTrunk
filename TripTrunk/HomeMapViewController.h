@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "TTBaseViewController.h"
+#import "Trip.h"
 
 
 @interface HomeMapViewController : TTBaseViewController
 @property PFUser *user;
+
+-(void)updateTrunkColor:(Trip*)trip;
 
 @end
 
