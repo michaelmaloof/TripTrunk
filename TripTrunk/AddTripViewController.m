@@ -311,7 +311,11 @@
                 self.city = @"Barcelona";
                 self.state =@"Catalonia";
                 self.country = @"Spain";
-            } else {
+            } else if ([location isEqualToString:@"Sao Paulo, SP, Brazil"]){
+                self.city = @"Sao Paulo";
+                self.state =@"Sao Paulo";
+                self.country = @"Brazil";
+            }else {
                 iserror = YES;
             }
             
@@ -718,23 +722,22 @@
              {
                  [self performSegueWithIdentifier:@"addFriends" sender:self];
                  self.navigationItem.rightBarButtonItem.enabled = YES;
+                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
 
              }
              
              else {
                  [self.navigationController popViewControllerAnimated:YES];
+                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  self.navigationItem.rightBarButtonItem.enabled = YES;
 
              }
          }
          // TODO: Set title image
-         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
          [self tabBarTitle];
          
      }];
     
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-
 }
 
 

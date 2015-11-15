@@ -149,9 +149,14 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
     if (fabs(seconds) < self.presentTimeIntervalMargin) {
         return self.presentDeicticExpression;
     }
-
+    
     NSDateComponents *components = [self.calendar components:self.significantUnits fromDate:startingDate toDate:endingDate options:0];
-
+    
+    if (seconds > 86400 && components.month == 0){
+        int day = seconds/86400;
+        [components setDay:day];
+    }
+    
     if (self.usesIdiomaticDeicticExpressions) {
         NSString *idiomaticDeicticExpression = [self localizedIdiomaticDeicticExpressionForComponents:components];
         if (idiomaticDeicticExpression) {

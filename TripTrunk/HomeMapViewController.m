@@ -730,14 +730,6 @@
     startAnnotation.canShowCallout = YES;
     BOOL hasSeen = NO;
     for (CLLocation *loc in self.haventSeens){ //Save trip instead
-        NSLog(@"long = %f", annotation.coordinate.longitude);
-        NSLog(@"long = %f", loc.coordinate.longitude);
-
-        NSLog(@"lat = %f", annotation.coordinate.latitude);
-        NSLog(@"lat = %f", loc.coordinate.latitude);
-
-
-
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
             hasSeen = YES;
         }
@@ -950,6 +942,14 @@
 // This is needed for the login to work properly
 // DO NOT DELETE
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+}
+
+-(void)updateTrunkColor:(Trip *)trip{
+    NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    
+    if ([self.tripsToCheck containsObject:address]){
+        [self addTripToMap:trip dot:YES isMostRecent:YES];
+    }
 }
 
 

@@ -327,7 +327,9 @@
 
 - (void)saveFriends
 {
-    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
     
 
@@ -360,7 +362,12 @@
                                                       cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                                       otherButtonTitles:nil, nil];
                 [alert show];
+                self.navigationItem.rightBarButtonItem.enabled = NO;
+                self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
                 
+            } else {
+                self.navigationItem.rightBarButtonItem.enabled = NO;
+                self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
             }
         }];
     }
@@ -372,7 +379,7 @@
  */
 - (void)saveFriendsAndClose
 {
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
 
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
@@ -432,14 +439,14 @@
             
             [alert show];
             self.navigationItem.rightBarButtonItem.enabled = YES;
+            self.title = @"TripTrunk"; //ToDo Set titleImage
+
 
 
         } else {
+            [self.delegate memberWasAdded:self];
+
         }
-        // TODO: Set title image
-        self.title = @"TripTrunk";
-        [self.delegate memberWasAdded:self];
-        
         
     }];
     
@@ -459,8 +466,6 @@
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-
 }
 
 

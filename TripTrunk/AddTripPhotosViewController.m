@@ -14,7 +14,7 @@
 #import "TTUtility.h"
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
-
+#import "HomeMapViewController.h"
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 
 @interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate>
@@ -80,6 +80,20 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        if(controller == self.tabBarController.viewControllers[0])
+        {
+            for (HomeMapViewController *view in controller.viewControllers)
+            {
+                if (view == controller.viewControllers[0])
+                {
+                    [view updateTrunkColor:self.trip];
+                    break;
+                }
+            }
+        }
+    }
     
     [self uploadAllPhotos];
 }
@@ -129,6 +143,7 @@
     
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
+    }
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
                 self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -139,11 +154,11 @@
                 [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                 [alertView show];
             } else {
+                
                 [self savePhotosToParse];
     
             }
         }];
-    }
 }
 
 -(void)savePhotosToParse{

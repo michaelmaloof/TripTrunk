@@ -34,6 +34,7 @@ enum TTActivityViewType : NSUInteger {
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
 @property BOOL activitySearchComplete;
+@property BOOL isLikes;
 
 @end
 
@@ -44,6 +45,7 @@ enum TTActivityViewType : NSUInteger {
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:likes];
+        self.isLikes = YES;
         _activitySearchComplete = NO;
         self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
@@ -183,7 +185,7 @@ enum TTActivityViewType : NSUInteger {
 }
 
 - (void)refresh:(UIRefreshControl *)refreshControl {
-    
+    if (self.isLikes == NO){
     // Query for activities for user
     [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
         _activities = [NSMutableArray arrayWithArray:activities];
@@ -206,6 +208,7 @@ enum TTActivityViewType : NSUInteger {
 
         });
     }];
+    }
     
 }
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
@@ -219,7 +222,7 @@ enum TTActivityViewType : NSUInteger {
     float h = size.height;
     
     float reload_distance = -250;
-    if(y > h + reload_distance) {
+    if(y > h + reload_distance && self.isLikes == NO) {
         [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
             //        _activities = [NSMutableArray arrayWithArray:activities];
             [self.activities addObjectsFromArray:activities];
