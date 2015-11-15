@@ -730,14 +730,6 @@
     startAnnotation.canShowCallout = YES;
     BOOL hasSeen = NO;
     for (CLLocation *loc in self.haventSeens){ //Save trip instead
-        NSLog(@"long = %f", annotation.coordinate.longitude);
-        NSLog(@"long = %f", loc.coordinate.longitude);
-
-        NSLog(@"lat = %f", annotation.coordinate.latitude);
-        NSLog(@"lat = %f", loc.coordinate.latitude);
-
-
-
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
             hasSeen = YES;
         }
