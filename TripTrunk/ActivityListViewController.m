@@ -295,7 +295,7 @@ enum TTActivityViewType : NSUInteger {
                                                  } failure:nil];
         
         
-        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
+        [weakCell.profilePicImageView.layer setCornerRadius:30.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
         weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
@@ -324,6 +324,12 @@ enum TTActivityViewType : NSUInteger {
                                                      [weakCell setNeedsLayout];
                                                      
                                                  } failure:nil];
+        
+        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
+        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+
         
         if ([activity valueForKey:@"photo"]) {
             
