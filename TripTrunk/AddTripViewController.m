@@ -765,6 +765,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (IBAction)questionMarkTapped:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Public vs. Private Trunks",@"Public vs. Private Trunks")
+                                                    message:NSLocalizedString(@"\xF0\x9F\x94\x93 = Public Trunk - anyone can view \n \xF0\x9F\x94\x92= Private Trunk - only members can view",@"\xF0\x9F\x94\x93 = Public Trunk - anyone can view \n \xF0\x9F\x94\x92= Private Trunk - only members can view")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                          otherButtonTitles:nil, nil];
+    [alert show];
+}
 
 
 @end
