@@ -364,7 +364,7 @@
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
         
         cell.logo.hidden = YES;
-
+        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);
         if(indexPath.item == 0 && self.isMember == YES)
         {
             cell.photo.image = [UIImage imageNamed:@"addPhoto"];
