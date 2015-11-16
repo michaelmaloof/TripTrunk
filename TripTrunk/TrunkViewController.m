@@ -55,7 +55,6 @@
     self.constraintLabel.hidden = YES;
     self.cloud.hidden = YES;
     self.memberCollectionView.hidden = YES;
-
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
@@ -363,6 +362,8 @@
     if (collectionView == self.collectionView){
     
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+        
+        cell.logo.hidden = YES;
 
         if(indexPath.item == 0 && self.isMember == YES)
         {
@@ -376,6 +377,15 @@
                 cell.tripPhoto = [self.photos objectAtIndex:indexPath.item - 1];
             } else {
                 cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+            }
+            
+            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+            
+            NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
+            if (lastPhotoInterval < 0)
+            {
+                cell.logo.hidden = NO;
+
             }
             
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image

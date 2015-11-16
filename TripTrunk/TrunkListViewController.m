@@ -137,7 +137,8 @@
                         [self.objectIDs addObject:trip.objectId];
                         
                         NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                        if (lastTripInterval < 0)
+                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
                         {
                             [self.haventSeens addObject:trip];
                         }
@@ -219,7 +220,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"updatedAt"];
+        [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             
             NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -234,7 +235,8 @@
                         [self.meParseLocations addObject:trip];
                         
                         NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                        if (lastTripInterval < 0)
+                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
                         {
                             [self.haventSeens addObject:trip];
                         }
@@ -291,7 +293,7 @@
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
     [query includeKey:@"createdAt"];
-    [query orderByDescending:@"updatedAt"];
+    [query orderByDescending:@"mostRecentPhoto"];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
@@ -307,9 +309,10 @@
                 {
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];
-                    
+
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                    if (lastTripInterval < 0)
+                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+                    if (lastTripInterval < 0 || lastPhotoInterval < 0)
                     {
                         [self.haventSeens addObject:trip];
                     }

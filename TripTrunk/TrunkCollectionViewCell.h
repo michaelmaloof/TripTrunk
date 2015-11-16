@@ -14,5 +14,6 @@
 @interface TrunkCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet PFImageView *photo;
 @property Photo *tripPhoto;
+@property (weak, nonatomic) IBOutlet UIImageView *logo;
 
 @end
