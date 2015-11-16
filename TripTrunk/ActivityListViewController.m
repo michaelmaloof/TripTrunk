@@ -174,13 +174,24 @@ enum TTActivityViewType : NSUInteger {
                                                                 constant:0.0]];
 
     // vertical algin bottom to view
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeBottom
-                                                         multiplier:1.0
-                                                           constant:0.0]];
+    
+    if (self.isLikes == YES) {
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                              attribute:NSLayoutAttributeBottom
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.view
+                                                              attribute:NSLayoutAttributeBottom
+                                                             multiplier:1.0
+                                                               constant:-(self.tabBarController.tabBar.frame.size.height)]];
+    } else {
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+                                                              attribute:NSLayoutAttributeBottom
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.view
+                                                              attribute:NSLayoutAttributeBottom
+                                                             multiplier:1.0
+                                                               constant:0.0]];
+    }
     
 }
 
