@@ -680,13 +680,9 @@
                                         <animations/>
                                         <constraints>
                                             <constraint firstItem="ec2-bZ-Qrg" firstAttribute="leading" secondItem="NyC-Iw-mPD" secondAttribute="leadingMargin" constant="-8" id="7lq-x5-mwt"/>
-                                            <constraint firstItem="ec2-bZ-Qrg" firstAttribute="centerY" secondItem="NyC-Iw-mPD" secondAttribute="centerY" id="Cjp-2J-r2K"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="xY0-aP-yVo" secondAttribute="trailing" constant="-3" id="DU9-j3-NRx"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="ec2-bZ-Qrg" secondAttribute="trailing" constant="-8" id="E2d-SV-Geb"/>
-                                            <constraint firstItem="ec2-bZ-Qrg" firstAttribute="width" secondItem="NyC-Iw-mPD" secondAttribute="width" id="ca1-qY-Phh"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="xY0-aP-yVo" secondAttribute="bottom" constant="-6" id="cye-EJ-qx8"/>
-                                            <constraint firstItem="ec2-bZ-Qrg" firstAttribute="centerX" secondItem="NyC-Iw-mPD" secondAttribute="centerX" id="fVl-2y-LNR"/>
-                                            <constraint firstItem="ec2-bZ-Qrg" firstAttribute="height" secondItem="NyC-Iw-mPD" secondAttribute="height" id="oDz-Vy-6LB"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="ec2-bZ-Qrg" secondAttribute="bottom" constant="-8" id="oOy-xw-v8m"/>
                                             <constraint firstItem="ec2-bZ-Qrg" firstAttribute="top" secondItem="NyC-Iw-mPD" secondAttribute="topMargin" constant="-8" id="umA-oY-rcv"/>
                                         </constraints>
@@ -697,11 +693,7 @@
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="7lq-x5-mwt"/>
-                                                <exclude reference="Cjp-2J-r2K"/>
                                                 <exclude reference="E2d-SV-Geb"/>
-                                                <exclude reference="ca1-qY-Phh"/>
-                                                <exclude reference="fVl-2y-LNR"/>
-                                                <exclude reference="oDz-Vy-6LB"/>
                                                 <exclude reference="oOy-xw-v8m"/>
                                                 <exclude reference="umA-oY-rcv"/>
                                                 <exclude reference="DU9-j3-NRx"/>
@@ -713,14 +705,10 @@
                                                 <include reference="xY0-aP-yVo"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <exclude reference="7lq-x5-mwt"/>
-                                                <include reference="Cjp-2J-r2K"/>
-                                                <exclude reference="E2d-SV-Geb"/>
-                                                <include reference="ca1-qY-Phh"/>
-                                                <include reference="fVl-2y-LNR"/>
-                                                <include reference="oDz-Vy-6LB"/>
-                                                <exclude reference="oOy-xw-v8m"/>
-                                                <exclude reference="umA-oY-rcv"/>
+                                                <include reference="7lq-x5-mwt"/>
+                                                <include reference="E2d-SV-Geb"/>
+                                                <include reference="oOy-xw-v8m"/>
+                                                <include reference="umA-oY-rcv"/>
                                                 <include reference="DU9-j3-NRx"/>
                                                 <include reference="cye-EJ-qx8"/>
                                             </mask>
