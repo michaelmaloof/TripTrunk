@@ -15,7 +15,7 @@
 @interface HomeMapViewController : TTBaseViewController
 @property PFUser *user;
 
--(void)updateTrunkColor:(Trip*)trip;
+-(void)updateTrunkColor:(Trip*)trip isHot:(BOOL)isHot;
 
 @end
 

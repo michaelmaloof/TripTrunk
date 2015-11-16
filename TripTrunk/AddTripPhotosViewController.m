@@ -88,7 +88,11 @@
             {
                 if (view == controller.viewControllers[0])
                 {
-                    [view updateTrunkColor:self.trip];
+                    if (self.photos.count >0){
+                       [view updateTrunkColor:self.trip isHot:YES];
+                    } else {
+                        [view updateTrunkColor:self.trip isHot:NO];
+                    }
                     break;
                 }
             }

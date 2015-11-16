@@ -944,11 +944,15 @@
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
 
--(void)updateTrunkColor:(Trip *)trip{
+-(void)updateTrunkColor:(Trip *)trip isHot:(BOOL)isHot{
     NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     
     if ([self.tripsToCheck containsObject:address]){
-        [self addTripToMap:trip dot:YES isMostRecent:YES];
+        if ([self.hotDots containsObject:address]){
+            [self addTripToMap:trip dot:YES isMostRecent:YES];
+        } else {
+            [self addTripToMap:trip dot:isHot isMostRecent:YES];
+        }
     }
 }
 
