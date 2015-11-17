@@ -308,7 +308,7 @@
     {
         switch (section) {
             case 0:
-                return @"Recommended Users";
+                return @"Featured Travelers";
                 break;
             case 1:
                 return @"Facebook Friends on TripTrunk";
