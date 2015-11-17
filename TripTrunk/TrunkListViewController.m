@@ -26,7 +26,12 @@
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
+@property NSMutableArray *meObjectIDs;
 @property NSMutableArray *haventSeens;
+@property int objectsCountTotal;
+@property int objectsCountMe;
+@property BOOL isMine;
+
 
 @end
 @implementation TrunkListViewController
@@ -35,9 +40,13 @@
     
     self.today = [NSDate date];
     
+    self.parseLocations = [[NSMutableArray alloc]init];
+    self.meParseLocations = [[NSMutableArray alloc]init];
+    self.haventSeens = [[NSMutableArray alloc]init];
+    
     self.title = self.city;
     
-    self.haventSeens = [[NSMutableArray alloc]init];
+    self.isMine = NO;
     
     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nightSkyline_background"]];
     [tempImageView setFrame:self.tableView.frame];
@@ -45,6 +54,8 @@
     self.tableView.backgroundView = tempImageView;
     
     self.objectIDs = [[NSMutableArray alloc]init];
+    self.meObjectIDs = [[NSMutableArray alloc]init];
+
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     
@@ -72,6 +83,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    
     if (self.user == nil) {
         
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -100,6 +112,26 @@
     }
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -250;
+    if(y > h + reload_distance) {
+        if (self.isMine == YES){
+            [self loadUserTrunks];
+        }else {
+            [self queryForTrunks];
+        }
+    }
+}
+
 /**
  *  Load user's trunks from parse.
  *
@@ -107,7 +139,7 @@
  */
 -(void)loadUserTrunks
 {
-    if (self.meParseLocations == nil) {
+    if (self.meParseLocations.count == 0) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
 
 //        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
@@ -124,11 +156,18 @@
 //        [query setLimit:7];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-        [query whereKey:@"toUser" equalTo:self.user];
+        if (!self.user){
+            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+
+        }else{
+            [query whereKey:@"toUser" equalTo:self.user];
+        }
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content"  equalTo:self.city];
+        [query whereKey:@"content" equalTo:self.city];
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
+        query.limit = 50;
+        query.skip = self.objectsCountMe;
 
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
@@ -137,14 +176,14 @@
             }
             else
             {
-                self.meParseLocations = [[NSMutableArray alloc]init];
+                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
                 for (PFObject *activity in objects){
                     
                     Trip *trip = activity[@"trip"];
-                    if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
+                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
                     {
                         [self.meParseLocations addObject:trip];
-                        [self.objectIDs addObject:trip.objectId];
+                        [self.meObjectIDs addObject:trip.objectId];
                         
                         NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                         NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
@@ -175,10 +214,15 @@
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
         [self.filter setTitle:NSLocalizedString(@"My Trunks",@"My Trunks")];
-        [self queryParseMethodMe];
+        self.filter.tag = 1;
+        self.isMine = YES;
+        [self loadUserTrunks];
     } else if (self.filter.tag == 1) {
         [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        self.filter.tag = 0;
+        self.isMine = NO;
         [self queryParseMethodEveryone];
+
     }
 }
 
@@ -191,8 +235,10 @@
     
     
     if (self.filter.tag == 1) {
-        [self queryParseMethodMe];
+        self.filter = 0;
+        [self loadUserTrunks];
     } else if (self.filter.tag == 0) {
+        self.filter.tag = 1;
         [self queryParseMethodEveryone];
     }
     
@@ -216,57 +262,64 @@
 #pragma mark - Parse Queries
 
 
-- (void)queryParseMethodMe
-{
-    self.filter.tag = 1;
-
-    if (self.meParseLocations == nil) {
-        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-        [trunkQuery whereKey:@"city" equalTo:self.city];
-        [trunkQuery whereKey:@"state" equalTo: self.state];
-        [trunkQuery includeKey:@"creator"];
+//- (void)queryParseMethodMe
+//{
+//    if (self.meParseLocations == nil) {
+//        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+//        [trunkQuery whereKey:@"city" equalTo:self.city];
+//        [trunkQuery whereKey:@"state" equalTo: self.state];
+//        [trunkQuery includeKey:@"creator"];
+//        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//        [query whereKey:@"type" equalTo:@"addToTrip"];
+//        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+//        [query includeKey:@"trip"];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
-        [query includeKey:@"trip"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            
-            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-
-            if(!error)
-            {
-                self.meParseLocations = [[NSMutableArray alloc]init];
-                for (PFObject *activity in objects){
-                    
-                    Trip *trip = activity[@"trip"];
-                    if (trip.name != nil){
-                        [self.meParseLocations addObject:trip];
-                        
-                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
-                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
-                        {
-                            [self.haventSeens addObject:trip];
-                        }
-
-                    }
-                }
-            }
-            self.filter.tag = 1;
-            [self.tableView reloadData];
-
-            
-        }];
-    } else{
-        [self.tableView reloadData];
-    }
-}
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        [query whereKey:@"toUser" equalTo:self.user];
+//        [query whereKey:@"type" equalTo:@"addToTrip"];
+//        [query whereKey:@"content"  equalTo:self.city];
+//        [query includeKey:@"trip"];
+//        [query includeKey:@"trip.creator"];
+//        query.limit = 50;
+//        query.skip = self.objectsCountMe;
+//        
+//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            
+//            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+//
+//            if(!error)
+//            {
+//                self.meParseLocations = [[NSMutableArray alloc]init];
+//                for (PFObject *activity in objects){
+//                    
+//                    Trip *trip = activity[@"trip"];
+//                    if (trip.name != nil){
+//                        [self.meParseLocations addObject:trip];
+//                        
+//                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+//                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+//                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
+//                        {
+//                            [self.haventSeens addObject:trip];
+//                        }
+//
+//                    }
+//                }
+//            }
+//            [self.tableView reloadData];
+//
+//            
+//        }];
+//    } else{
+//        [self.tableView reloadData];
+//    }
+//}
 
 - (void)queryParseMethodEveryone{ //add the list of users that the user follows to then get their trunks
 
-    if (self.parseLocations == nil)
+    if (self.parseLocations.count == 0)
     {
 
         self.friends = [[NSMutableArray alloc] init];
@@ -284,7 +337,6 @@
         
     } else
     {
-        self.filter.tag = 0;
         [self.tableView reloadData];
     }
 
@@ -292,19 +344,6 @@
 
 - (void)queryForTrunks{
     
-//    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-//    [trunkQuery whereKey:@"city" equalTo:self.city];
-//    [trunkQuery whereKey:@"state" equalTo: self.state];
-//    [trunkQuery includeKey:@"creator"];
-//    [trunkQuery includeKey:@"creator.username"];
-//    
-//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//    [query whereKey:@"toUser" containedIn:self.friends];
-//    [query whereKey:@"type" equalTo:@"addToTrip"];
-//    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
-//    [query includeKey:@"trip"];
-//    [query includeKey:@"toUser"];
-//    [query includeKey:@"createdAt"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
@@ -312,12 +351,28 @@
     [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
+    query.limit = 50;
+    query.skip = self.objectsCountTotal;
+    
+    //    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+    //    [trunkQuery whereKey:@"city" equalTo:self.city];
+    //    [trunkQuery whereKey:@"state" equalTo: self.state];
+    //    [trunkQuery includeKey:@"creator"];
+    //    [trunkQuery includeKey:@"creator.username"];
+    //
+    //    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    //    [query whereKey:@"toUser" containedIn:self.friends];
+    //    [query whereKey:@"type" equalTo:@"addToTrip"];
+    //    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+    //    [query includeKey:@"trip"];
+    //    [query includeKey:@"toUser"];
+    //    [query includeKey:@"createdAt"];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.parseLocations = [[NSMutableArray alloc] init];
+            self.objectsCountTotal = self.objectsCountTotal + (int)objects.count;
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];

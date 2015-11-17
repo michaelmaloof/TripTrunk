@@ -522,6 +522,7 @@
     
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
     query.limit = 20;
+    //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
     
     NSArray *results  = [query findObjects];
 
