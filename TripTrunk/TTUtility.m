@@ -113,10 +113,10 @@ CLCloudinary *cloudinary;
     }
     
     CLTransformation *transformation = [CLTransformation transformation];
-    [transformation setWidthWithInt: 30];
-    [transformation setHeightWithInt: 30];
+    [transformation setWidthWithInt: 150];
+    [transformation setHeightWithInt: 150];
     [transformation setCrop: @"fill"];
-    [transformation setQualityWithFloat:30];
+    [transformation setQualityWithFloat:10];
     [transformation setFetchFormat:@"jpg"];
     
     NSURL *url = [NSURL URLWithString:urlString];

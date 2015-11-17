@@ -28,7 +28,7 @@
 
 #define kTTTLineBreakWordWrapTextWidthScalingFactor (M_PI / M_E)
 
-static CGFloat const TTTFLOAT_MAX = 100000;
+static CGFloat const TTTFLOAT_MAX = 10000;
 
 NSString * const kTTTStrikeOutAttributeName = @"TTTStrikeOutAttribute";
 NSString * const kTTTBackgroundFillColorAttributeName = @"TTTBackgroundFillColor";

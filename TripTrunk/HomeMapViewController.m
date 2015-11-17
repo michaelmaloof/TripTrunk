@@ -246,7 +246,7 @@
     [query includeKey:@"createdAt"];
     [query includeKey:@"mostRecentPhoto"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 10000];
+    [query setLimit: 1000];
     
     
     
@@ -334,7 +334,7 @@
     [query includeKey:@"createdAt"];
     [query includeKey:@"mostRecentPhoto"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 10000]; // DEFAULT IS 100 so trunks get left off.
+    [query setLimit: 1000]; // DEFAULT IS 100 so trunks get left off.
 
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
