@@ -110,18 +110,26 @@
     if (self.meParseLocations == nil) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
 
-        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-        [trunkQuery whereKey:@"city" equalTo:self.city];
-        [trunkQuery whereKey:@"state" equalTo: self.state];
-        [trunkQuery includeKey:@"creator"];
-        [trunkQuery includeKey:@"creator.username"];
+//        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+//        [trunkQuery whereKey:@"city" equalTo:self.city];
+//        [trunkQuery whereKey:@"state" equalTo: self.state];
+//        [trunkQuery includeKey:@"creator"];
+//        [trunkQuery includeKey:@"creator.username"];
+//        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        [query whereKey:@"toUser" equalTo:self.user];
+//        [query whereKey:@"type" equalTo:@"addToTrip"];
+//        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+//        [query includeKey:@"trip"];
+//        [query setLimit:7];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:self.user];
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+        [query whereKey:@"content"  equalTo:self.city];
         [query includeKey:@"trip"];
-        
+        [query includeKey:@"trip.creator"];
+
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
@@ -217,7 +225,6 @@
         [trunkQuery whereKey:@"city" equalTo:self.city];
         [trunkQuery whereKey:@"state" equalTo: self.state];
         [trunkQuery includeKey:@"creator"];
-        [trunkQuery includeKey:@"creator.username"];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
@@ -285,19 +292,26 @@
 
 - (void)queryForTrunks{
     
-    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-    [trunkQuery whereKey:@"city" equalTo:self.city];
-    [trunkQuery whereKey:@"state" equalTo: self.state];
-    [trunkQuery includeKey:@"creator"];
-    [trunkQuery includeKey:@"creator.username"];
+//    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
+//    [trunkQuery whereKey:@"city" equalTo:self.city];
+//    [trunkQuery whereKey:@"state" equalTo: self.state];
+//    [trunkQuery includeKey:@"creator"];
+//    [trunkQuery includeKey:@"creator.username"];
+//    
+//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//    [query whereKey:@"toUser" containedIn:self.friends];
+//    [query whereKey:@"type" equalTo:@"addToTrip"];
+//    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+//    [query includeKey:@"trip"];
+//    [query includeKey:@"toUser"];
+//    [query includeKey:@"createdAt"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
     [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
+    [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
-    [query includeKey:@"toUser"];
-    [query includeKey:@"createdAt"];
+    [query includeKey:@"trip.creator"];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
@@ -419,9 +433,10 @@
         countString = [NSString stringWithFormat:@"%i %@", cell.trip.photoCount, photo];
     }
     
-    cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.user, countString];
-    
-    
+    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
+    }];
+
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     
     
@@ -433,14 +448,13 @@
         cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
     }
     
-    __weak TrunkTableViewCell *weakCell = cell;
-
     PFUser *possibleFriend = cell.trip.creator;
     [possibleFriend fetchIfNeeded:nil];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    
+    __weak TrunkTableViewCell *weakCell = cell;
+
     [cell.profileImage setImageWithURLRequest:request
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -450,8 +464,11 @@
                                           
                                       } failure:nil];
 
-
+    return cell;
+    
     return weakCell;
+
+
 
 
 }
