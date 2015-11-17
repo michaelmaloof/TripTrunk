@@ -63,8 +63,9 @@
     
     self.descriptionTextView = [[UITextView alloc]init];
     self.descriptionTextView.hidden = YES;
-    self.descriptionTextView.backgroundColor = [UIColor whiteColor];
-    self.descriptionTextView.textColor = [UIColor blackColor];
+    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
+    self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
+    self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
     self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
     self.descriptionTextView.editable = NO;
     self.descriptionTextView.selectable = NO;
