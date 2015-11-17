@@ -831,7 +831,7 @@
         [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
     }
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    //change button image
+    self.title = @"Add New Trunk";
 }
 
 @end
