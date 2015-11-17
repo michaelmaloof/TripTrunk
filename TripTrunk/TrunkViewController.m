@@ -418,6 +418,7 @@
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
         
         cell.logo.hidden = YES;
+        [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
         if(indexPath.item == 0 && self.isMember == YES)
         {
@@ -446,7 +447,6 @@
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
             UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
-            [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
             __weak TrunkCollectionViewCell *weakCell = cell;
             
             NSInteger index = indexPath.item;
