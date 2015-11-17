@@ -17,7 +17,7 @@
 #import "CitySearchViewController.h"
 
 
-@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate>
+@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
 // Text Fields
 @property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
 @property (strong, nonatomic) IBOutlet UITextField *locationTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
+@property (weak, nonatomic) IBOutlet UIButton *helpButton;
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
@@ -39,7 +40,8 @@
 @property BOOL isEditing; // if the trunk already exists and we're editing it
 @property (weak, nonatomic) IBOutlet UIButton *clear;
 @property (weak, nonatomic) IBOutlet UILabel *lockLabel;
-
+@property (weak, nonatomic) IBOutlet UIButton *descriptionButton;
+@property UITextView *descriptionTextView;
 // Date Properties
 @property NSDateFormatter *formatter;
 
@@ -49,6 +51,8 @@
 @property (strong, nonatomic) NSString *city;
 @property (strong, nonatomic) NSString *state;
 @property (strong, nonatomic) NSString *country;
+
+
 
 @end
 
@@ -60,6 +64,17 @@
 //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
+    
+    self.descriptionTextView = [[UITextView alloc]init];
+    self.descriptionTextView.hidden = YES;
+    self.descriptionTextView.backgroundColor = [UIColor whiteColor];
+    self.descriptionTextView.textColor = [UIColor blackColor];
+    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 20, self.view.frame.origin.y + 100, self.view.frame.size.width - 40, self.view.frame.size.height - 200);
+    self.descriptionTextView.editable = YES;
+    self.descriptionTextView.selectable = YES;
+    self.descriptionTextView.scrollEnabled = YES;
+    self.descriptionTextView.delegate = self;
+    [self.view addSubview:self.descriptionTextView];
     
 //currently we don't want users being able to change a trunk tp public or private once the trunk has been created
     self.lockLabel.hidden = YES;
@@ -89,7 +104,16 @@
 //if self.trip is not nil then it means the user is editing a trunk and not creating a new one.
     if (self.trip) {
         _isEditing = YES;
+        self.helpButton.hidden = YES;
         self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
+        
+        self.descriptionTextView.text = self.trip.descriptionStory;
+        
+        if ([self.descriptionTextView.text isEqualToString:@""]){
+            [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
+        } else {
+            [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
+        }
         
 //Not sure why but in this view if we don't call this when we change the nav title then the tab bar title changes too.
         [self tabBarTitle];
@@ -122,6 +146,8 @@
         // initialize the trip object
         self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
         [self tabBarTitle];
+        
+        self.descriptionTextView.text = @"";
 
         // Set initial date to the field - should be Today's date.
         self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -631,6 +657,7 @@
     
     [self setTripName: self.tripNameTextField.text];
     self.trip.startDate = self.startTripTextField.text;
+    self.trip.descriptionStory = self.descriptionTextView.text;
     self.trip.endDate = self.endTripTextField.text;
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
@@ -774,5 +801,37 @@
     [alert show];
 }
 
+- (IBAction)descriptionTapped:(id)sender {
+    self.descriptionTextView.hidden = NO;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    [self.descriptionTextView becomeFirstResponder];
+    self.title = NSLocalizedString(@"Tell This Trunk's Story", @"Tell This Trunk's Story");
+    [self tabBarTitle];
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    self.descriptionTextView.text = self.trip.descriptionStory;
+    
+    if ([self.descriptionTextView.text isEqualToString:@""]){
+        [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
+    } else {
+        [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
+    }
+    
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    self.descriptionTextView.hidden = YES;
+    self.trip.descriptionStory = self.descriptionTextView.text;
+    if ([self.descriptionTextView.text isEqualToString:@""]){
+        [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
+    } else {
+        [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
+    }
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    //change button image
+}
 
 @end

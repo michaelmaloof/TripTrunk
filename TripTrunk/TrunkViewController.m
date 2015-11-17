@@ -22,7 +22,7 @@
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -45,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *memberCollectionWidth;
 @property BOOL firstLoadDone;
+@property UITextView *descriptionTextView;
 
 @end
 
@@ -59,6 +60,17 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.memberCollectionView.backgroundColor = [UIColor clearColor];
+    
+    self.descriptionTextView = [[UITextView alloc]init];
+    self.descriptionTextView.hidden = YES;
+    self.descriptionTextView.backgroundColor = [UIColor whiteColor];
+    self.descriptionTextView.textColor = [UIColor blackColor];
+    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
+    self.descriptionTextView.editable = NO;
+    self.descriptionTextView.selectable = NO;
+    self.descriptionTextView.scrollEnabled = YES;
+    self.descriptionTextView.delegate = self;
+
 
     
     [self refreshTripDataViews];
@@ -99,6 +111,30 @@
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
     self.title  = self.trip.name;
+    
+    if (![self.trip.descriptionStory isEqualToString:@""] ||  self.trip.descriptionStory != nil){
+    
+    UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
+    navButton.frame = CGRectMake(0, 0, 100, 40);
+    [navButton setBackgroundColor:[UIColor colorWithRed:107.0/255.0 green:153.0/255.0 blue:173.0/255.0 alpha:1.0]];
+    [navButton setTitle:self.title forState:UIControlStateNormal];
+    [navButton setTintColor:[UIColor redColor]];
+    [navButton addTarget:self
+                 action:@selector(titleTapped)
+       forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.titleView = navButton;
+        
+    }
+    
+    self.descriptionTextView.hidden = YES;
+    self.descriptionTextView.tag = 0;
+    
+    self.descriptionTextView.text = self.trip.descriptionStory;
+    
+       [self.view addSubview:self.descriptionTextView];
+
+    
+    
     if (self.trip.isPrivate) {
         self.lock.hidden = NO;
     }
@@ -119,6 +155,22 @@
         self.endDate.text = self.trip.endDate;
     }
 }
+
+
+
+-(void)titleTapped{
+    
+    if (self.descriptionTextView.tag == 0){
+        self.descriptionTextView.hidden = NO;
+        self.descriptionTextView.tag = 1;
+    } else {
+        self.descriptionTextView.hidden = YES;
+        self.descriptionTextView.tag = 0;
+
+    }
+}
+
+
 
 #pragma mark - Queries
 
@@ -278,6 +330,8 @@
 
 -(void)editTapped{
     [self performSegueWithIdentifier:NSLocalizedString(@"Edit",@"Edit") sender:self];
+    self.descriptionTextView.hidden = YES;
+    self.descriptionTextView.tag = 0;
 }
 
 -(void)leaveTrunk{
@@ -592,6 +646,7 @@
     // remove the observer here so it keeps listening for it until the view is dealloc'd, not just when it disappears
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 @end
 

@@ -1190,6 +1190,36 @@
                                     <action selector="questionMarkTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="2Wf-Ph-aph"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uky-xM-Wbh">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="2Jx-Rl-SOK"/>
+                                    <constraint firstAttribute="height" constant="34" id="Ish-Up-wWv"/>
+                                    <constraint firstAttribute="height" constant="30" id="OWC-2v-j6R"/>
+                                    <constraint firstAttribute="width" constant="35" id="wYe-NL-X5j"/>
+                                </constraints>
+                                <state key="normal" image="editPencil"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="2Jx-Rl-SOK"/>
+                                        <exclude reference="Ish-Up-wWv"/>
+                                        <exclude reference="OWC-2v-j6R"/>
+                                        <exclude reference="wYe-NL-X5j"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="264" y="399" width="35" height="34"/>
+                                    <mask key="constraints">
+                                        <exclude reference="2Jx-Rl-SOK"/>
+                                        <include reference="Ish-Up-wWv"/>
+                                        <exclude reference="OWC-2v-j6R"/>
+                                        <include reference="wYe-NL-X5j"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="descriptionTapped:" destination="VtI-4S-iQ3" eventType="touchUpInside" id="LTC-Te-BZ6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1234,10 +1264,12 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="-16"/>
                             </constraint>
                             <constraint firstAttribute="centerX" secondItem="zdV-NN-4Zp" secondAttribute="centerX" id="cxp-PQ-Qm4"/>
+                            <constraint firstItem="uky-xM-Wbh" firstAttribute="leading" secondItem="dxi-2n-K02" secondAttribute="trailing" constant="8" id="cyf-Qd-h3b"/>
                             <constraint firstItem="Lbp-ko-ErL" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="-17" id="eDO-Qc-POO"/>
                             <constraint firstItem="Lbp-ko-ErL" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" id="fUf-xG-K5D"/>
                             <constraint firstItem="emj-Ys-Rhz" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="ftq-oT-XoW"/>
                             <constraint firstItem="7qF-bR-mRZ" firstAttribute="top" secondItem="dxi-2n-K02" secondAttribute="bottom" constant="8" id="ilL-RT-4RF"/>
+                            <constraint firstItem="uky-xM-Wbh" firstAttribute="top" secondItem="5bM-ax-ZeC" secondAttribute="bottom" constant="26" id="ivy-7Q-rm2"/>
                             <constraint firstAttribute="centerX" secondItem="3w3-mT-drZ" secondAttribute="centerX" id="k85-Nc-VPp"/>
                             <constraint firstAttribute="centerX" secondItem="5bM-ax-ZeC" secondAttribute="centerX" constant="-0.5" id="laJ-tb-cL1"/>
                             <constraint firstItem="emj-Ys-Rhz" firstAttribute="leading" secondItem="DHN-Iy-6C3" secondAttribute="trailing" constant="8" id="ooQ-8v-2Qw">
@@ -1257,6 +1289,7 @@
                                 <exclude reference="emj-Ys-Rhz"/>
                                 <exclude reference="DHN-Iy-6C3"/>
                                 <exclude reference="6GC-GQ-MoZ"/>
+                                <exclude reference="uky-xM-Wbh"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="2PU-ZI-Q9f"/>
@@ -1276,6 +1309,8 @@
                                 <exclude reference="23H-4l-Fs4"/>
                                 <exclude reference="5Hb-vR-Mrx"/>
                                 <exclude reference="Cfq-y5-HWh"/>
+                                <exclude reference="cyf-Qd-h3b"/>
+                                <exclude reference="ivy-7Q-rm2"/>
                                 <exclude reference="MgI-if-wcs"/>
                                 <exclude reference="2We-7h-nki"/>
                                 <exclude reference="bXi-Mg-mlx"/>
@@ -1303,6 +1338,7 @@
                                 <include reference="emj-Ys-Rhz"/>
                                 <include reference="DHN-Iy-6C3"/>
                                 <include reference="6GC-GQ-MoZ"/>
+                                <include reference="uky-xM-Wbh"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="2PU-ZI-Q9f"/>
@@ -1322,6 +1358,8 @@
                                 <include reference="23H-4l-Fs4"/>
                                 <exclude reference="5Hb-vR-Mrx"/>
                                 <include reference="Cfq-y5-HWh"/>
+                                <include reference="cyf-Qd-h3b"/>
+                                <include reference="ivy-7Q-rm2"/>
                                 <include reference="MgI-if-wcs"/>
                                 <include reference="2We-7h-nki"/>
                                 <exclude reference="bXi-Mg-mlx"/>
@@ -1359,7 +1397,9 @@
                         <outlet property="cancelBar" destination="Vnt-qn-Tgn" id="QX2-cn-feN"/>
                         <outlet property="clear" destination="viD-Vo-BWz" id="GIS-DV-gqq"/>
                         <outlet property="delete" destination="Wse-wM-OZQ" id="0r7-MR-oBW"/>
+                        <outlet property="descriptionButton" destination="uky-xM-Wbh" id="C9x-yJ-E5z"/>
                         <outlet property="endTripTextField" destination="dxi-2n-K02" id="n8a-pL-YWx"/>
+                        <outlet property="helpButton" destination="6GC-GQ-MoZ" id="9y5-Nd-1n5"/>
                         <outlet property="locationTextField" destination="5bM-ax-ZeC" id="apj-g6-rv0"/>
                         <outlet property="lockLabel" destination="emj-Ys-Rhz" id="Eqt-cW-11s"/>
                         <outlet property="private" destination="7qF-bR-mRZ" id="cf2-gO-iL6"/>

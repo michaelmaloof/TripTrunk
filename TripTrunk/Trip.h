@@ -25,6 +25,7 @@
 @property BOOL isPrivate;
 @property double lat;
 @property double longitude;
+@property NSString *descriptionStory;
 
 
 

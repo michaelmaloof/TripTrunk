@@ -23,6 +23,7 @@
 @dynamic start;
 @dynamic lat;
 @dynamic longitude;
+@dynamic descriptionStory;
 
 
 +(NSString *)parseClassName
