@@ -33,6 +33,8 @@
  */
 - (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user;
 
+- (NSString *)profilePreviewImageUrl:(NSString *)urlString;
+
 /**
  *  Takes a user's profilePicUrl and alters it to be a Cloudinary url with 200x200 dimensions
  *
@@ -41,6 +43,9 @@
  *  @return String of a transformed imageUrl
  */
 - (NSString *)profileImageUrl:(NSString *)urlString;
+
+
+
 
 /**
  *  Uploads a Photo to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse
@@ -136,6 +141,8 @@
  *  @param reason reason why the photo is being reported
  */
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason;
+
+
 
 
 @end

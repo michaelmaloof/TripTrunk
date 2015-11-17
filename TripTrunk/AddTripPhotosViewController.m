@@ -148,8 +148,13 @@
     if (self.photos.count > 0){
         self.trip.mostRecentPhoto = [NSDate date];
     }
+    
+    int originalCount = self.trip.photoCount;
+    self.trip.photoCount = self.trip.photoCount + (int)self.photos.count;
+    
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
+                self.trip.photoCount = originalCount;
                 self.navigationItem.rightBarButtonItem.enabled = YES;
                 UIAlertView *alertView = [[UIAlertView alloc] init];
                 alertView.delegate = self;
@@ -158,7 +163,6 @@
                 [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                 [alertView show];
             } else {
-                
                 [self savePhotosToParse];
     
             }
@@ -210,6 +214,7 @@
     if (!self.isTripCreation) {
         // This came from the Trunk view, so pop back to it.
         NSLog(@"Trip Photos Added, not trip creation so pop back one view");
+        
         [self.navigationController popViewControllerAnimated:YES];
         [[self navigationController] setNavigationBarHidden:NO animated:YES];
         self.navigationItem.rightBarButtonItem.enabled = YES;

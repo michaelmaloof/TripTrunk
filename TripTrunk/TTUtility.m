@@ -105,6 +105,27 @@ CLCloudinary *cloudinary;
       }];
 }
 
+- (NSString *)profilePreviewImageUrl:(NSString *)urlString;
+{
+    // If it's a facebook url, just return that url, no transformation
+    if (!urlString || [urlString rangeOfString:@"graph.facebook.com"].length > 0) {
+        return urlString;
+    }
+    
+    CLTransformation *transformation = [CLTransformation transformation];
+    [transformation setWidthWithInt: 30];
+    [transformation setHeightWithInt: 30];
+    [transformation setCrop: @"fill"];
+    [transformation setQualityWithFloat:20];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
+
 - (NSString *)profileImageUrl:(NSString *)urlString;
 {
     // If it's a facebook url, just return that url, no transformation
@@ -365,6 +386,8 @@ CLCloudinary *cloudinary;
      {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
     }];
+    
+  
 }
 
 - (NSString *)thumbnailImageUrl:(NSString *)urlString;

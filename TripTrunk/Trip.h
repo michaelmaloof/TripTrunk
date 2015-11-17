@@ -26,6 +26,7 @@
 @property double lat;
 @property double longitude;
 @property NSString *descriptionStory;
+@property int photoCount;
 
 
 

@@ -298,6 +298,11 @@
             
             [self.collectionView reloadData];
             
+            if ((int)self.photos.count != self.trip.photoCount){
+                self.trip.photoCount =  (int)self.photos.count;
+                [self.trip saveInBackground];
+            }
+            
         }else
         {
             NSLog(@"Error: %@",error);

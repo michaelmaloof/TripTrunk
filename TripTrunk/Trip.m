@@ -24,6 +24,7 @@
 @dynamic lat;
 @dynamic longitude;
 @dynamic descriptionStory;
+@dynamic photoCount;
 
 
 +(NSString *)parseClassName

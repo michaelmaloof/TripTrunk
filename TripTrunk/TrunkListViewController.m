@@ -113,13 +113,15 @@
         PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
         [trunkQuery whereKey:@"city" equalTo:self.city];
         [trunkQuery whereKey:@"state" equalTo: self.state];
+        [trunkQuery includeKey:@"creator"];
+        [trunkQuery includeKey:@"creator.username"];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:self.user];
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"mostRecentPhoto"];
+        
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
@@ -214,13 +216,14 @@
         PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
         [trunkQuery whereKey:@"city" equalTo:self.city];
         [trunkQuery whereKey:@"state" equalTo: self.state];
+        [trunkQuery includeKey:@"creator"];
+        [trunkQuery includeKey:@"creator.username"];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
         [query whereKey:@"type" equalTo:@"addToTrip"];
         [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
         [query includeKey:@"trip"];
-        [query orderByDescending:@"mostRecentPhoto"];
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             
             NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -285,6 +288,8 @@
     PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
     [trunkQuery whereKey:@"city" equalTo:self.city];
     [trunkQuery whereKey:@"state" equalTo: self.state];
+    [trunkQuery includeKey:@"creator"];
+    [trunkQuery includeKey:@"creator.username"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
@@ -293,7 +298,6 @@
     [query includeKey:@"trip"];
     [query includeKey:@"toUser"];
     [query includeKey:@"createdAt"];
-    [query orderByDescending:@"mostRecentPhoto"];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
@@ -402,7 +406,21 @@
     
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
-        
+    
+    NSString *countString;
+    if (cell.trip.photoCount == 0 || !cell.trip.photoCount) {
+        countString = @"No Photos";
+    }
+    else if (cell.trip.photoCount == 1) {
+        countString = @"1 Photo";
+    }
+    else {
+        NSString *photo = NSLocalizedString(@"Photos",@"Photos");
+        countString = [NSString stringWithFormat:@"%i %@", cell.trip.photoCount, photo];
+    }
+    
+    cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.user, countString];
+    
     
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
     
@@ -420,7 +438,7 @@
     PFUser *possibleFriend = cell.trip.creator;
     [possibleFriend fetchIfNeeded:nil];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     
     [cell.profileImage setImageWithURLRequest:request
@@ -431,26 +449,7 @@
                                           [weakCell setNeedsLayout];
                                           
                                       } failure:nil];
-    
-    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
-    [findPhotosUser whereKey:@"trip" equalTo:cell.trip];
-    
-    [findPhotosUser countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
-        if (!error){
-            NSString *countString;
-            if (count == 0) {
-                countString = @"No Photos";
-            }
-            else if (count == 1) {
-                countString = @"1 Photo";
-            }
-            else {
-                NSString *photo = NSLocalizedString(@"Photos",@"Photos");
-                countString = [NSString stringWithFormat:@"%i %@", count, photo];
-            }
-            cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
-        }
-    }];
+
 
     return weakCell;
 
