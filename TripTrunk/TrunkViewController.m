@@ -426,6 +426,9 @@
         cell.logo.hidden = YES;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+        cell.photo.clipsToBounds = YES;
+        cell.photo.translatesAutoresizingMaskIntoConstraints = NO;
+        cell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         if(indexPath.item == 0 && self.isMember == YES)
         {
             cell.photo.image = [UIImage imageNamed:@"addPhoto"];
@@ -454,7 +457,11 @@
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
             UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
             __weak TrunkCollectionViewCell *weakCell = cell;
-            
+            [weakCell.photo setContentMode:UIViewContentModeScaleAspectFill];
+            weakCell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+            weakCell.photo.clipsToBounds = YES;
+            weakCell.photo.translatesAutoresizingMaskIntoConstraints = NO;
+            weakCell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             NSInteger index = indexPath.item;
             
             [cell.photo setImageWithURLRequest:request
@@ -476,14 +483,29 @@
                                            }
 
                                            weakCell.photo.image = image;
-                                           [weakCell setNeedsLayout];
+//                                           [weakCell setNeedsLayout];
+                                           [weakCell layoutIfNeeded];
                                            
                                        } failure:nil];
+            
+            
+            NSLog(@"weak cell height = %f", weakCell.frame.size.height);
+            NSLog(@"weak photo height = %f", weakCell.photo.frame.size.height);
+            NSLog(@"weak cell width = %f", weakCell.frame.size.width);
+            NSLog(@"weak photo width = %f", weakCell.photo.frame.size.width);
             
             return weakCell;
             
         }
+        
+        NSLog(@"cell height = %f", cell.frame.size.height);
+        NSLog(@"photo height = %f", cell.photo.frame.size.height);
+        NSLog(@"cell width = %f", cell.frame.size.width);
+        NSLog(@"photo width = %f", cell.photo.frame.size.width);
+        
         return cell;
+        
+
         
     } else {
         
