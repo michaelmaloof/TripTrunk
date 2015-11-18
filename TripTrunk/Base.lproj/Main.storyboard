@@ -189,7 +189,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="rsa-WS-Nbe" secondAttribute="height" multiplier="1:1" id="CoD-MC-u8w"/>
                                                         <constraint firstAttribute="width" constant="30" id="er3-d5-XIL">
-                                                            <variation key="heightClass=regular-widthClass=compact" constant="40"/>
+                                                            <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                                                         </constraint>
                                                     </constraints>
                                                     <variation key="default">
