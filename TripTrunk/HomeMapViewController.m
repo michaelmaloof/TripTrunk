@@ -241,10 +241,10 @@
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
+    [query includeKey:@"trip.PublicTripDetail"];
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
-    [query includeKey:@"mostRecentPhoto"];
     [query orderByDescending:@"createdAt"];
     [query setLimit: 1000];
     
@@ -288,13 +288,16 @@
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
-
-                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
-                    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                    if (lastTripInterval < 0 || lastPhotoInterval < 0)
-                    {
-                        [self.haventSeens addObject:location];
+                    [trip.publicTripDetail fetchIfNeeded];
+                    if (trip.publicTripDetail.mostRecentPhoto){
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                        CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
+                        {
+                            [self.haventSeens addObject:location];
+                        }
+                        
                     }
                     
                 }
@@ -332,7 +335,7 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
-    [query includeKey:@"mostRecentPhoto"];
+    [query includeKey:@"trip.PublicTripDetail"];
     [query orderByDescending:@"createdAt"];
     [query setLimit: 1000]; // DEFAULT IS 100 so trunks get left off.
 
@@ -379,14 +382,17 @@
             
             for (Trip *trip in self.parseLocations)
             {
-                
-                NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
-                CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                if (lastTripInterval < 0 || lastPhotoInterval < 0)
-                {
-                    [self.haventSeens addObject:location];
+                [trip.publicTripDetail fetchIfNeeded];
+                if (trip.publicTripDetail.mostRecentPhoto){
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+                    if (lastTripInterval < 0 || lastPhotoInterval < 0)
+                    {
+                        [self.haventSeens addObject:location];
+                    }
                 }
+                
             }
             
             [self placeTrips];
@@ -500,7 +506,7 @@
             
 //find the last time a user added a photo to this trunk. If it is less than 24 hours the trunk on the map needs to be red instead of blue
             NSDate *today = [NSDate date];
-            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
             
             BOOL color = 0;
             if (tripInterval < 86400)
@@ -572,7 +578,7 @@
                 
                 
                 NSDate *today = [NSDate date];
-                NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.mostRecentPhoto];
+                NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
             
                 
                 BOOL color = 0;

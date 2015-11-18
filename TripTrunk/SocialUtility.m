@@ -487,6 +487,7 @@
     [query includeKey:@"fromUser"];
     [query includeKey:@"photo"];
     [query includeKey:@"trip"];
+    [query includeKey:@"trip.PublicTripDetail"];
     [query orderByDescending:@"createdAt"];
     query.limit = 20;
     query.skip = count;

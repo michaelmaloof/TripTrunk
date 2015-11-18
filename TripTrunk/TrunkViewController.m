@@ -286,6 +286,8 @@
     [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
     [findPhotosUser includeKey:@"trip.creator"];
+    [findPhotosUser includeKey:@"trip.PublicTripDetail"];
+
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
@@ -298,8 +300,8 @@
             
             [self.collectionView reloadData];
             
-            if ((int)self.photos.count != self.trip.photoCount){
-                self.trip.photoCount =  (int)self.photos.count;
+            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
+                self.trip.publicTripDetail.photoCount =  (int)self.photos.count;
                 [self.trip saveInBackground];
             }
             

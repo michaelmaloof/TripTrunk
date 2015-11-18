@@ -675,11 +675,11 @@
     }
     
 //if the most recent photo is nil then we set the date to a long time ago. This way we know the dot on the trunk is blue. I didnt want to leave a nil value in parse.
-    if (self.trip.mostRecentPhoto == nil){
+    if (self.trip.publicTripDetail.mostRecentPhoto == nil){
         NSString *date = @"01/01/1200";
         NSDateFormatter *format = [[NSDateFormatter alloc]init];
         [format setDateFormat:@"yyyy-MM-dd"];
-        self.trip.mostRecentPhoto = [format dateFromString:date];
+        self.trip.publicTripDetail.mostRecentPhoto = [format dateFromString:date];
     }
     
     // If we're editing an existing trip AND we changed the city, we need to update any Activities for this trip to include the new city name.

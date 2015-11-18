@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
-
+#import "PublicTripDetail.h"
 @interface Trip : PFObject <PFSubclassing>
 
 @property NSString *name;
@@ -17,16 +17,15 @@
 @property NSString *country;
 @property NSString *state;
 @property PFUser *creator;
+@property PublicTripDetail *publicTripDetail;
 @property NSString *user;
 @property NSString *startDate;
 @property NSDate *start;
 @property NSString *endDate;
-@property NSDate *mostRecentPhoto;
 @property BOOL isPrivate;
 @property double lat;
 @property double longitude;
 @property NSString *descriptionStory;
-@property int photoCount;
 
 
 

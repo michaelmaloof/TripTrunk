@@ -18,14 +18,12 @@
 @dynamic endDate;
 @dynamic state;
 @dynamic country;
-@dynamic mostRecentPhoto;
 @dynamic isPrivate;
 @dynamic start;
 @dynamic lat;
 @dynamic longitude;
 @dynamic descriptionStory;
-@dynamic photoCount;
-
+@dynamic publicTripDetail;
 
 +(NSString *)parseClassName
 {

@@ -16,6 +16,7 @@
 #import <Photos/Photos.h>
 #import "HomeMapViewController.h"
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
+#import "PublicTripDetail.h"
 
 @interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate>
 @property NSMutableArray *photos;
@@ -145,16 +146,34 @@
 
 - (void)uploadAllPhotos { //FIXME: Handle error handling better on lost trunks here
     
+    int originalCount = self.trip.publicTripDetail.photoCount;
+
+    
     if (self.photos.count > 0){
-        self.trip.mostRecentPhoto = [NSDate date];
+        if (!self.trip.publicTripDetail){
+            self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+        }
+            self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photos.count;
     }
     
-    int originalCount = self.trip.photoCount;
-    self.trip.photoCount = self.trip.photoCount + (int)self.photos.count;
+    if (![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+        [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error){
+                NSLog(@"Error yo");
+            } else {
+                NSLog(@"Error no");
+
+            }
+            
+        }];
+        [self savePhotosToParse];
+
+    } else {
     
         [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
-                self.trip.photoCount = originalCount;
+                self.trip.publicTripDetail.photoCount = originalCount;
                 self.navigationItem.rightBarButtonItem.enabled = YES;
                 UIAlertView *alertView = [[UIAlertView alloc] init];
                 alertView.delegate = self;
@@ -167,6 +186,8 @@
     
             }
         }];
+    
+    }
 }
 
 -(void)savePhotosToParse{

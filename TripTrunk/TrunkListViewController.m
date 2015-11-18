@@ -166,6 +166,7 @@
         [query whereKey:@"content" equalTo:self.city];
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
+        [query includeKey:@"trip.PublicTripDetail"];
         query.limit = 50;
         query.skip = self.objectsCountMe;
 
@@ -180,13 +181,14 @@
                 for (PFObject *activity in objects){
                     
                     Trip *trip = activity[@"trip"];
+                    [trip.publicTripDetail fetchIfNeeded];
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
                     {
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
                         
                         NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                         if (lastTripInterval < 0 || lastPhotoInterval < 0)
                         {
                             [self.haventSeens addObject:trip];
@@ -351,6 +353,7 @@
     [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
+    [query includeKey:@"trip.PublicTripDetail"];
     query.limit = 50;
     query.skip = self.objectsCountTotal;
     
@@ -384,7 +387,7 @@
                     [self.objectIDs addObject:trip.objectId];
 
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.mostRecentPhoto];
+                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                     if (lastTripInterval < 0 || lastPhotoInterval < 0)
                     {
                         [self.haventSeens addObject:trip];
@@ -477,25 +480,25 @@
     cell.titleLabel.text = trip.name;
     
     NSString *countString;
-    if (cell.trip.photoCount == 0 || !cell.trip.photoCount) {
+    if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
         countString = @"No Photos";
     }
-    else if (cell.trip.photoCount == 1) {
+    else if (cell.trip.publicTripDetail.photoCount == 1) {
         countString = @"1 Photo";
     }
     else {
         NSString *photo = NSLocalizedString(@"Photos",@"Photos");
-        countString = [NSString stringWithFormat:@"%i %@", cell.trip.photoCount, photo];
+        countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photo];
     }
     
     [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
     }];
 
-    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.mostRecentPhoto];
+    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
     
     
-    if (tripInterval < 86400 && trip.mostRecentPhoto != NULL) {
+    if (tripInterval < 86400 && trip.publicTripDetail.mostRecentPhoto != NULL) {
         cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
     }
     else
