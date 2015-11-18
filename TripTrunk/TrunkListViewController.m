@@ -380,7 +380,7 @@
             {
                 Trip *trip = activity[@"trip"];
 
-
+                [trip.publicTripDetail fetchIfNeeded];
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
                     [self.parseLocations addObject:trip];
