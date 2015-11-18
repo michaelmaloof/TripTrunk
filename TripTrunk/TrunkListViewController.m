@@ -433,7 +433,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.filter.tag == 0 && self.parseLocations !=nil) {
+    if (self.filter.tag == 0 && self.parseLocations !=nil && self.user == nil) {
         return self.parseLocations.count;
     }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
         return self.meParseLocations.count;
