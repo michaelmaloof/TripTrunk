@@ -300,9 +300,19 @@
             
             [self.collectionView reloadData];
             
+            if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+            [self.trip.publicTripDetail fetchIfNeeded];
+            
+                if (self.trip.publicTripDetail == nil){
+                    self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+                    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+                }
+                
             if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
-                self.trip.publicTripDetail.photoCount =  (int)self.photos.count;
+                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
                 [self.trip saveInBackground];
+            }
+                
             }
             
         }else
