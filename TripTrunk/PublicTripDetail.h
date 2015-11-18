@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PublicTripDetail : NSObject
+#import <Parse/Parse.h>
+#import <Parse/PFObject+Subclass.h>
+
+@interface PublicTripDetail : PFObject <PFSubclassing>
+@property NSDate *mostRecentPhoto;
+@property int photoCount;
+@property int totalLikes;
+
 
 @end

@@ -9,5 +9,20 @@
 #import "PublicTripDetail.h"
 
 @implementation PublicTripDetail
+@dynamic mostRecentPhoto;
+@dynamic photoCount;
+@dynamic totalLikes;
+
+
++(NSString *)parseClassName
+{
+    return @"PublicTripDetail";
+}
+
+
++(void)load
+{
+    [self registerSubclass];
+}
 
 @end
