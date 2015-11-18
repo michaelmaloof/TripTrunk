@@ -750,6 +750,11 @@
             self.likeButton.enabled = YES;
             if (succeeded) {
                 [self refreshPhotoActivities];
+                [self.photo.trip.publicTripDetail fetchIfNeeded];
+                if (self.photo.trip.publicTripDetail){
+                    self.photo.trip.publicTripDetail.totalLikes += 1;
+                    [self.photo.trip.publicTripDetail saveInBackground];
+                }
             }
             else {
                 NSLog(@"Error liking photo: %@", error);
@@ -767,6 +772,11 @@
             
             if (succeeded) {
                 [self refreshPhotoActivities];
+                [self.photo.trip.publicTripDetail fetchIfNeeded];
+                if (self.photo.trip.publicTripDetail){
+                    self.photo.trip.publicTripDetail.totalLikes -= 1;
+                    [self.photo.trip.publicTripDetail saveInBackground];
+                }
             }
             else {
                 NSLog(@"Error unliking photo: %@", error);

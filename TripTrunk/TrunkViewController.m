@@ -27,6 +27,8 @@
 /**
  *  Array holding Photo objects for the photos in this trunk
  */
+@property (weak, nonatomic) IBOutlet UIImageView *totalLikeHeart;
+@property (weak, nonatomic) IBOutlet UILabel *totalLikeButton;
 @property NSArray *photos;
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 @property NSMutableArray *members;
@@ -54,6 +56,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
+    self.totalLikeButton.hidden = YES;
+    self.totalLikeHeart.hidden = YES;
     self.cloud.hidden = YES;
     self.memberCollectionView.hidden = YES;
     self.navigationController.navigationItem.rightBarButtonItem = nil;
@@ -71,7 +75,7 @@
     self.descriptionTextView.selectable = NO;
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
-
+    self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
 
     
     [self refreshTripDataViews];
@@ -112,6 +116,8 @@
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
     self.title  = self.trip.name;
+    
+    
     
     if (![self.trip.descriptionStory isEqualToString:@""] ||  self.trip.descriptionStory != nil){
     
@@ -154,6 +160,21 @@
     self.endDate.text = @"";
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
         self.endDate.text = self.trip.endDate;
+    }
+    [self.trip.publicTripDetail fetchIfNeeded];
+    
+    if (self.trip.publicTripDetail.totalLikes < 1){
+        self.totalLikeButton.hidden = YES;
+        self.totalLikeHeart.hidden = YES;
+    } else {
+        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+        self.totalLikeButton.textColor = [UIColor whiteColor];
+        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+        self.totalLikeButton.enabled = NO;
+        self.totalLikeButton.hidden = NO;
+        self.totalLikeHeart.hidden = NO;
+
+        
     }
 }
 
