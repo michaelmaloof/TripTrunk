@@ -729,6 +729,12 @@
 
     self.trip.ACL = tripACL;
     
+
+    if(!self.trip.publicTripDetail){
+        self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+    }
+
+    
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
          
