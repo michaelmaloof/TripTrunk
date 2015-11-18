@@ -289,17 +289,16 @@
                 {
                     [self.parseLocations addObject:trip];
                     [trip.publicTripDetail fetchIfNeeded];
-                    if (trip.publicTripDetail.mostRecentPhoto){
                         NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                         NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
+                        if (lastTripInterval < 0)
                         {
                             [self.haventSeens addObject:location];
+                        } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil){
+                            [self.haventSeens addObject:location];
                         }
-                        
-                    }
-                    
+            
                 }
                 
 //If we've finished the for loop then we place the trips we loaded from parse to the map. Honestly the count isnt needed but I left it here.
@@ -383,17 +382,17 @@
             for (Trip *trip in self.parseLocations)
             {
                 [trip.publicTripDetail fetchIfNeeded];
-                if (trip.publicTripDetail.mostRecentPhoto){
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                     CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                    if (lastTripInterval < 0 || lastPhotoInterval < 0)
+                    if (lastTripInterval < 0)
                     {
                         [self.haventSeens addObject:location];
+                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil){
+                        [self.haventSeens addObject:location];
+
                     }
                 }
-                
-            }
             
             [self placeTrips];
         }
