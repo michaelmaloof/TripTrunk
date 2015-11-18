@@ -414,7 +414,7 @@
     {
         TrunkViewController *trunkView = segue.destinationViewController;
         
-        if (self.filter.tag == 0 && self.parseLocations != nil) {
+        if (self.filter.tag == 0 && self.parseLocations != nil && self.user == nil) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
         } else if (self.filter.tag == 1 && self.meParseLocations != nil){

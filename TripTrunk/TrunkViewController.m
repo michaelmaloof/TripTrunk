@@ -489,19 +489,12 @@
                                        } failure:nil];
             
             
-            NSLog(@"weak cell height = %f", weakCell.frame.size.height);
-            NSLog(@"weak photo height = %f", weakCell.photo.frame.size.height);
-            NSLog(@"weak cell width = %f", weakCell.frame.size.width);
-            NSLog(@"weak photo width = %f", weakCell.photo.frame.size.width);
+
             
             return weakCell;
             
         }
         
-        NSLog(@"cell height = %f", cell.frame.size.height);
-        NSLog(@"photo height = %f", cell.photo.frame.size.height);
-        NSLog(@"cell width = %f", cell.frame.size.width);
-        NSLog(@"photo width = %f", cell.photo.frame.size.width);
         
         return cell;
         
