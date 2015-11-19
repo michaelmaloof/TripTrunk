@@ -166,7 +166,7 @@
         [query whereKey:@"content" equalTo:self.city];
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
-        [query includeKey:@"trip.PublicTripDetail"];
+        [query includeKey:@"trip.publicTripDetail"];
         query.limit = 50;
         query.skip = self.objectsCountMe;
 
@@ -181,7 +181,7 @@
                 for (PFObject *activity in objects){
                     
                     Trip *trip = activity[@"trip"];
-                    [trip.publicTripDetail fetchIfNeeded];
+    
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
                     {
                         [self.meParseLocations addObject:trip];
@@ -353,7 +353,7 @@
     [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
-    [query includeKey:@"trip.PublicTripDetail"];
+    [query includeKey:@"trip.publicTripDetail"];
     query.limit = 50;
     query.skip = self.objectsCountTotal;
     
@@ -380,7 +380,6 @@
             {
                 Trip *trip = activity[@"trip"];
 
-                [trip.publicTripDetail fetchIfNeeded];
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
                 {
                     [self.parseLocations addObject:trip];
@@ -491,9 +490,9 @@
         countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photo];
     }
     
-    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
-    }];
+//    }];
 
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
     
@@ -507,7 +506,7 @@
     }
     
     PFUser *possibleFriend = cell.trip.creator;
-    [possibleFriend fetchIfNeeded:nil];
+//    [possibleFriend fetchIfNeeded:nil];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];

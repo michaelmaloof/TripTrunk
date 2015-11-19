@@ -161,7 +161,7 @@
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
         self.endDate.text = self.trip.endDate;
     }
-    [self.trip.publicTripDetail fetchIfNeeded];
+
     
     if (self.trip.publicTripDetail.totalLikes < 1){
         self.totalLikeButton.hidden = YES;
@@ -322,7 +322,8 @@
             [self.collectionView reloadData];
             
             if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-            [self.trip.publicTripDetail fetchIfNeeded];
+                [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                }];
             
                 if (self.trip.publicTripDetail == nil){
                     self.trip.publicTripDetail = [[PublicTripDetail alloc]init];

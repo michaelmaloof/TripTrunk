@@ -241,7 +241,7 @@
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
-    [query includeKey:@"trip.PublicTripDetail"];
+    [query includeKey:@"trip.publicTripDetail"];
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
@@ -288,8 +288,7 @@
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
-                    [trip.publicTripDetail fetchIfNeeded];
-                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                         NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
                         if (lastTripInterval < 0)
@@ -334,7 +333,7 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
-    [query includeKey:@"trip.PublicTripDetail"];
+    [query includeKey:@"trip.publicTripDetail"];
     [query orderByDescending:@"createdAt"];
     [query setLimit: 1000]; // DEFAULT IS 100 so trunks get left off.
 
@@ -381,7 +380,6 @@
             
             for (Trip *trip in self.parseLocations)
             {
-                [trip.publicTripDetail fetchIfNeeded];
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                     CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
