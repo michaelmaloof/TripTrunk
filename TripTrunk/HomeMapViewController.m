@@ -494,6 +494,7 @@
 //If the original array of trunks we loaded when viewDidLoad was called then there are no current trunks on the map. We can just display the new trunks.
     if (self.originalArray.count == 0)
     {
+        NSDate *today = [NSDate date];
 
 //self.parselocations contains the locations we just pulled down from parse
         for (Trip *trip in self.parseLocations)
@@ -502,7 +503,6 @@
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
             
 //find the last time a user added a photo to this trunk. If it is less than 24 hours the trunk on the map needs to be red instead of blue
-            NSDate *today = [NSDate date];
             NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
             
             BOOL color = 0;
