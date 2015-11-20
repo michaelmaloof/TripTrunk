@@ -34,6 +34,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *mapFilter;
 @property int dropped;
 @property int notDropped;
+@property NSDate *today;
 @property BOOL loadedOnce;
 @property MKAnnotationView *photoPin;
 @property NSMutableArray *friends;
@@ -69,7 +70,7 @@
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
    self.needsUpdates = nil;
     self.needsUpdates = [[NSMutableArray alloc]init];
-
+    self.today = [NSDate date];
 //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
@@ -494,7 +495,6 @@
 //If the original array of trunks we loaded when viewDidLoad was called then there are no current trunks on the map. We can just display the new trunks.
     if (self.originalArray.count == 0)
     {
-        NSDate *today = [NSDate date];
 
 //self.parselocations contains the locations we just pulled down from parse
         for (Trip *trip in self.parseLocations)
@@ -503,7 +503,7 @@
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
             
 //find the last time a user added a photo to this trunk. If it is less than 24 hours the trunk on the map needs to be red instead of blue
-            NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+            NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
             
             BOOL color = 0;
             if (tripInterval < 86400)
@@ -567,6 +567,7 @@
             self.justMadeTrunk = nil;
             self.justMadeTrunk = [[NSMutableArray alloc]init];
             self.isNew= NO;
+            
 
             for (Trip *trip in self.parseLocations)
             {
@@ -574,8 +575,7 @@
                 NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
                 
                 
-                NSDate *today = [NSDate date];
-                NSTimeInterval tripInterval = [today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
             
                 
                 BOOL color = 0;
@@ -827,7 +827,7 @@
     view.selected = YES;
     
     CLGeocoder *cod = [[CLGeocoder alloc] init];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
     [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
         
         if (!error){
