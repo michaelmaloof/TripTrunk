@@ -753,6 +753,7 @@
 
                 if (self.photo.trip.publicTripDetail){
                     self.photo.trip.publicTripDetail.totalLikes += 1;
+                    [self.delegate photoWasLiked:sender];
                     [self.photo.trip.publicTripDetail saveInBackground];
                 }
             }
@@ -774,8 +775,11 @@
                 [self refreshPhotoActivities];
  
                 if (self.photo.trip.publicTripDetail){
+                    if (self.photo.trip.publicTripDetail.totalLikes > 0){
                     self.photo.trip.publicTripDetail.totalLikes -= 1;
+                    [self.delegate photoWasDisliked:sender];
                     [self.photo.trip.publicTripDetail saveInBackground];
+                    }
                 }
             }
             else {

@@ -22,7 +22,7 @@
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -79,6 +79,17 @@
 
     
     [self refreshTripDataViews];
+    
+    if (self.trip.publicTripDetail.totalLikes < 1){
+        self.totalLikeButton.hidden = YES;
+        self.totalLikeHeart.hidden = YES;
+    } else {
+        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+        self.totalLikeButton.textColor = [UIColor whiteColor];
+        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+        self.totalLikeButton.hidden = NO;
+        self.totalLikeHeart.hidden = NO;
+    }
     
     self.photos = [[NSArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
@@ -162,20 +173,6 @@
         self.endDate.text = self.trip.endDate;
     }
 
-    
-    if (self.trip.publicTripDetail.totalLikes < 1){
-        self.totalLikeButton.hidden = YES;
-        self.totalLikeHeart.hidden = YES;
-    } else {
-        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-        self.totalLikeButton.textColor = [UIColor whiteColor];
-        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-        self.totalLikeButton.enabled = NO;
-        self.totalLikeButton.hidden = NO;
-        self.totalLikeHeart.hidden = NO;
-
-        
-    }
 }
 
 
@@ -307,7 +304,7 @@
     [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
     [findPhotosUser includeKey:@"trip.creator"];
-    [findPhotosUser includeKey:@"trip.PublicTripDetail"];
+    [findPhotosUser includeKey:@"trip.publicTripDetail"];
 
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -680,6 +677,7 @@
     
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
+        vc.delegate = self;
         if (self.isMember == YES) {
             vc.photo = [self.photos objectAtIndex:self.path.item -1];
         } else {
@@ -700,6 +698,36 @@
 -(void)dealloc {
     // remove the observer here so it keeps listening for it until the view is dealloc'd, not just when it disappears
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)photoWasLiked:(id)sender{
+    int likes = self.trip.publicTripDetail.totalLikes + 1;
+    if (likes < 1){
+        self.totalLikeButton.hidden = YES;
+        self.totalLikeHeart.hidden = YES;
+    } else {
+        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+        self.totalLikeButton.textColor = [UIColor whiteColor];
+        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", likes];
+        self.totalLikeButton.hidden = NO;
+        self.totalLikeHeart.hidden = NO;
+    }
+}
+
+-(void)photoWasDisliked:(id)sender{
+    if (self.trip.publicTripDetail.totalLikes > 0){
+    int likes = self.trip.publicTripDetail.totalLikes - 1;
+    if (likes < 1){
+        self.totalLikeButton.hidden = YES;
+        self.totalLikeHeart.hidden = YES;
+    } else {
+        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+        self.totalLikeButton.textColor = [UIColor whiteColor];
+        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", likes];
+        self.totalLikeButton.hidden = NO;
+        self.totalLikeHeart.hidden = NO;
+    }
+    }
 }
 
 
