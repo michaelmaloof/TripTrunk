@@ -244,11 +244,13 @@
 
 -(void)memberCollectionViewMethod:(NSArray*)objects{
     
+    __block BOOL hasCreator = false;
     for (PFObject *activity in objects)
     {
         PFUser *ttUser = activity[@"toUser"];
         if([ttUser.objectId isEqualToString:self.trip.creator.objectId]){
             [self.members insertObject:ttUser atIndex:0];
+            hasCreator = YES;
         } else {
             [self.members addObject:ttUser];
         }
@@ -257,7 +259,11 @@
             self.isMember = YES;
         }
         
-        
+    }
+    
+    if (hasCreator == NO){
+        [self.members insertObject:self.trip.creator atIndex:0];
+
     }
     
     if (self.isMember == YES && ![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
