@@ -469,6 +469,8 @@
         if(indexPath.item == 0 && self.isMember == YES)
         {
             cell.photo.image = [UIImage imageNamed:@"addPhoto"];
+            [cell layoutIfNeeded];
+
         }
         // This is the images
         //    else if (indexPath.item > 0)
