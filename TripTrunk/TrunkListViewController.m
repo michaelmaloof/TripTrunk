@@ -89,7 +89,7 @@
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         
         
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"My Trunks",@"My Trunks")
+        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All Trunks",@"All Trunks")
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(rightBarItemWasTapped)];
