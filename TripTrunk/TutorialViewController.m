@@ -39,34 +39,45 @@
                                                0.0,
                                                screenWidth,
                                                screenHeight)];
-    [self.masterScrollView setContentSize:CGSizeMake(screenWidth * 4,
+    [self.masterScrollView setContentSize:CGSizeMake(screenWidth * 5,
                                                      screenHeight)];
 
     //Create Tutorial Pages
 
     //**Page 1**
-    UIImageView *page1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"keaton"]];
+    UIImageView *page1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial1"]];
     [page1Image setContentMode:UIViewContentModeScaleAspectFill];
-    [page1Image setFrame:CGRectMake(0.0, 44.0, screenWidth, visibleScreenHeight)];
+    [page1Image setFrame:CGRectMake(0, 44.0, screenWidth - 20, visibleScreenHeight)];
+    page1Image.layer.zPosition = 2;
     [self.masterScrollView addSubview:page1Image];
 
     //**Page 2**
-    UIImageView *page2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"kilmer"]];
+    UIImageView *page2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial2"]];
     [page2Image setContentMode:UIViewContentModeScaleAspectFill];
-    [page2Image setFrame:CGRectMake(screenWidth, 44.0, screenWidth, visibleScreenHeight)];
+    [page2Image setFrame:CGRectMake(screenWidth + 10 , 44.0, screenWidth - 10, visibleScreenHeight)];
     [self.masterScrollView addSubview:page2Image];
+    page2Image.layer.zPosition = 0;
+
 
     //**Page 3**
-    UIImageView *page3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"clooney"]];
+    UIImageView *page3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial3"]];
     [page3Image setContentMode:UIViewContentModeScaleAspectFill];
-    [page3Image setFrame:CGRectMake(screenWidth * 2, 44.0, screenWidth, visibleScreenHeight)];
+    [page3Image setFrame:CGRectMake((screenWidth + 5) * 2, 44.0, screenWidth, visibleScreenHeight)];
+    page3Image.layer.zPosition = 1;
+
     [self.masterScrollView addSubview:page3Image];
 
     //**Page 4**
-    UIImageView *page4Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bale"]];
+    UIImageView *page4Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial4"]];
     [page4Image setContentMode:UIViewContentModeScaleAspectFill];
     [page4Image setFrame:CGRectMake(screenWidth * 3, 44.0, screenWidth, visibleScreenHeight)];
     [self.masterScrollView addSubview:page4Image];
+    
+    //**Page 5**
+    UIImageView *page5Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial5"]];
+    [page5Image setContentMode:UIViewContentModeScaleAspectFill];
+    [page5Image setFrame:CGRectMake((screenWidth +10) * 4, 44.0, screenWidth, visibleScreenHeight)];
+    [self.masterScrollView addSubview:page5Image];
 
     [self.masterScrollView setDelegate:self];
     [self.masterScrollView setPagingEnabled:YES];
@@ -76,7 +87,7 @@
     [self.masterScrollView setShowsVerticalScrollIndicator:NO];
 
     //Configure page indicator dots
-    [self.pageIndicator setNumberOfPages:4];
+    [self.pageIndicator setNumberOfPages:5];
 
     //Configure nav bar buttons
     [self.navigationBar setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
