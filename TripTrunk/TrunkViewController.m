@@ -47,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *memberCollectionWidth;
 @property BOOL firstLoadDone;
+@property int likes;
 @property UITextView *descriptionTextView;
 
 @end
@@ -709,7 +710,8 @@
 }
 
 -(void)photoWasLiked:(id)sender{
-    int likes = self.trip.publicTripDetail.totalLikes + 1;
+    self.likes += 1;
+    int likes = self.trip.publicTripDetail.totalLikes + self.likes;
     if (likes < 1){
         self.totalLikeButton.hidden = YES;
         self.totalLikeHeart.hidden = YES;
@@ -723,8 +725,9 @@
 }
 
 -(void)photoWasDisliked:(id)sender{
-    if (self.trip.publicTripDetail.totalLikes > 0){
-    int likes = self.trip.publicTripDetail.totalLikes - 1;
+    if (self.trip.publicTripDetail.totalLikes > 0 && self.likes > 0){
+        self.likes -= 1;
+        int likes = self.trip.publicTripDetail.totalLikes + self.likes;
     if (likes < 1){
         self.totalLikeButton.hidden = YES;
         self.totalLikeHeart.hidden = YES;
