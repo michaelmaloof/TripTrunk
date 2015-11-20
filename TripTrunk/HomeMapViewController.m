@@ -78,7 +78,7 @@
         //COMMENETED OUT UNTIL AJ MAKES DEISNGS
         //If user has not completed tutorial, show tutorial
         self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
-        if (self.tutorialComplete == YES) //change to no
+        if (self.tutorialComplete == NO) //change to no
         {
             [self showTutorial];
        }

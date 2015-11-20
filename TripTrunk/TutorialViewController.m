@@ -70,14 +70,18 @@
     //**Page 4**
     UIImageView *page4Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial4"]];
     [page4Image setContentMode:UIViewContentModeScaleAspectFill];
-    [page4Image setFrame:CGRectMake(screenWidth * 3, 44.0, screenWidth, visibleScreenHeight)];
+    [page4Image setFrame:CGRectMake((screenWidth* 3) + 6, 44.0, screenWidth, visibleScreenHeight)];
+    page4Image.layer.zPosition = 2;
+
     [self.masterScrollView addSubview:page4Image];
     
     //**Page 5**
     UIImageView *page5Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tutorial5"]];
     [page5Image setContentMode:UIViewContentModeScaleAspectFill];
-    [page5Image setFrame:CGRectMake((screenWidth +10) * 4, 44.0, screenWidth, visibleScreenHeight)];
+    [page5Image setFrame:CGRectMake((screenWidth * 4)+10, 44.0, screenWidth, visibleScreenHeight)];
     [self.masterScrollView addSubview:page5Image];
+    page5Image.layer.zPosition = 3;
+
 
     [self.masterScrollView setDelegate:self];
     [self.masterScrollView setPagingEnabled:YES];
@@ -125,7 +129,7 @@
     }
 
     //Determine whether Right nav bar button is titled "Next" or "Done"
-    if (self.masterScrollView.contentOffset.x / screenWidth == 3)
+    if (self.masterScrollView.contentOffset.x / screenWidth == 4)
     {
         [self.nextDoneButton setStyle:UIBarButtonItemStyleDone];
         [self.nextDoneButton setTitle:@"Done"];
@@ -149,7 +153,7 @@
                                                               screenHeight) animated:YES];
         [self.pageIndicator setCurrentPage:self.pageIndicator.currentPage - 1];
     }
-    else if (tutorialNavButton.tag == 2 && self.masterScrollView.contentOffset.x < screenWidth * 3)
+    else if (tutorialNavButton.tag == 2 && self.masterScrollView.contentOffset.x < screenWidth * 4)
     {
         [self.masterScrollView scrollRectToVisible:CGRectMake(screenWidth * (1 + (self.masterScrollView.contentOffset.x / screenWidth)),
                                                               0.0,
