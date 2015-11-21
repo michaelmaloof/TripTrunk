@@ -200,17 +200,23 @@
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
+    blockQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     
     PFQuery *usernameQuery = [PFUser query];
     [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
     [usernameQuery whereKey:@"username" containsString:searchTerm];
     [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
+    usernameQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     
     PFQuery *nameQuery = [PFUser query];
     [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
     [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
+    nameQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
@@ -222,13 +228,20 @@
         query.skip = 0;
     }
     
-    NSArray *results  = [query findObjects];
-    if (self.removeResults == YES) {
-        [self.searchResults removeAllObjects];
-    }
-    [self.searchResults addObjectsFromArray:results];
-    self.searchString = searchTerm;
-    [self.tableView reloadData];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if (self.removeResults == YES) {
+            [self.searchResults removeAllObjects];
+        }
+        [self.searchResults addObjectsFromArray:objects];
+        self.searchString = searchTerm;
+        [self.tableView reloadData];
+    }];
+//    if (self.removeResults == YES) {
+//        [self.searchResults removeAllObjects];
+//    }
+//    [self.searchResults addObjectsFromArray:results];
+//    self.searchString = searchTerm;
+//    [self.tableView reloadData];
 
 }
 

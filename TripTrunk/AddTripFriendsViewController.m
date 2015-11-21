@@ -524,9 +524,10 @@
     query.limit = 20;
     //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
     
-    NSArray *results  = [query findObjects];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [self.searchResults addObjectsFromArray:objects];
+    }];
 
-    [self.searchResults addObjectsFromArray:results];
     
     
 }
