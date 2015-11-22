@@ -350,79 +350,88 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        PFUser *possibleFriend;
-        UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        
-        // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-        if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
-            possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    PFUser *possibleFriend;
+    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+    __weak UserTableViewCell *weakCell = cell;
+
+    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
+        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    else {
+        if (indexPath.section == 0) {
+            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
         }
-        else {
-            if (indexPath.section == 0) {
-                possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
-            }
-            else if (indexPath.section == 1) {
-                possibleFriend = [_friends objectAtIndex:indexPath.row];
-            }
+        else if (indexPath.section == 1) {
+            possibleFriend = [_friends objectAtIndex:indexPath.row];
         }
-        
-        [cell setDelegate:self];
-        [cell.followButton setSelected:NO];
-        
-        [cell setUser:possibleFriend];
-        
-        cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
-        
-        // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
-        NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-        if (followStatus.intValue > 0) {
-            [cell.followButton setHidden:NO];
-            [cell.followButton setSelected:YES];
-            if (followStatus.intValue == 2) {
-                [cell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
-            }
+    }
+    
+    [weakCell setDelegate:self];
+    
+    [weakCell setUser:possibleFriend];
+    
+    weakCell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
+    
+    
+    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
+    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+    if (followStatus.intValue > 0) {
+        weakCell.followButton.enabled = YES;
+        [weakCell.followButton setSelected:YES];
+        [weakCell.followButton setHidden:NO];
+        if (followStatus.intValue == 2) {
+            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
         }
-        else {
+    }
+    else {
+        [weakCell.followButton setSelected:NO];
+        [weakCell.followButton setHidden:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             // Determine the follow status of the user
             PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
             [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
             [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
             [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
             [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-            [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                if (cell.tag == indexPath.row) {
-                    [cell.followButton setHidden:NO];
-                    [cell.followButton setSelected:(!error && number > 0)];
+            [isFollowingQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                [weakCell.followButton setHidden:NO];
+                weakCell.followButton.enabled = YES;
+                
+                if (objects.count > 0 && !error) {
+                    [weakCell.followButton setSelected:YES];
                     // Cache the user's follow status
-                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:possibleFriend];
+                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
+                }
+                else {
+                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
                 }
             }];
-        }
-        
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
-        
-        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-        __weak UserTableViewCell *weakCell = cell;
-        
-        [cell.profilePicImageView setImageWithURLRequest:request
-                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
-                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                     
-                                                     [weakCell.profilePicImageView setImage:image];
-                                                     [weakCell setNeedsLayout];
-                                                     
-                                                 } failure:nil];
-        
-        [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
-        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-        [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
-        
-        return weakCell;
-        
-        return cell;
 
+        });
+    }
+    
+    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+    
+    [cell.profilePicImageView setImageWithURLRequest:request
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                 
+                                                 [weakCell.profilePicImageView setImage:image];
+                                                 [weakCell setNeedsLayout];
+                                                 
+                                             } failure:nil];
+    
+    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
+    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
+    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    
+    return weakCell;
+    
 }
 
 
@@ -470,21 +479,17 @@
         [cellView.followButton setSelected:YES];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                NSLog(@"Error: %@", error);
-            }
-            if (!succeeded) {
+            if (error || !succeeded) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
                                                                 message:@"Please try again"
                                                                delegate:self
                                                       cancelButtonTitle:@"Okay"
                                                       otherButtonTitles:nil, nil];
-                
-                [cellView.followButton setSelected:NO];
                 [alert show];
-            }
-            else
-            {
+                if (error) {
+                    NSLog(@"Error following user: %@", error);
+                }
+                
             }
         }];
     }
