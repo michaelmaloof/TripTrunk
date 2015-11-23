@@ -26,6 +26,7 @@
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableArray *following; // users this user is already following
 
 @property (strong, nonatomic) NSMutableArray *promoted;
 
@@ -44,10 +45,13 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     _friends = [[NSMutableArray alloc] init];
+    _following = [[NSMutableArray alloc] init];
+
     _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
 
     [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
     [self loadPromotedUsers];
+    [self loadFollowing];
 
     self.searchResults = [[NSMutableArray alloc] init];
     
@@ -137,6 +141,26 @@
         }
     }];
 
+}
+
+- (void)loadFollowing
+{
+    
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            for (PFUser *user in users) {
+                [_following addObject:user.objectId];
+            }
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+        else {
+            NSLog(@"Error loading following: %@",error);
+        }
+    }];
+    
 }
 
 - (void)refreshFacebookFriends {
@@ -387,28 +411,19 @@
     else {
         [weakCell.followButton setSelected:NO];
         [weakCell.followButton setHidden:NO];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            // Determine the follow status of the user
-            PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
-            [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-            [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
-            [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
-            [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-            [isFollowingQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                [weakCell.followButton setHidden:NO];
-                weakCell.followButton.enabled = YES;
-                
-                if (objects.count > 0 && !error) {
-                    [weakCell.followButton setSelected:YES];
-                    // Cache the user's follow status
-                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
-                }
-                else {
-                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
-                }
-            }];
-
-        });
+        
+        if ([_following containsObject:possibleFriend.objectId]) {
+            NSLog(@"FOLLOWING");
+            [weakCell.followButton setHidden:NO];
+            weakCell.followButton.enabled = YES;
+            [weakCell.followButton setSelected:YES];
+            // Cache the user's follow status
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
+        }
+        else {
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
+        }
+        
     }
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -477,6 +492,9 @@
     else {
         // Follow
         [cellView.followButton setSelected:YES];
+        
+        // Add the user to the following array so we have a local copy of who they're following.
+        [_following addObject:user];
         
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (error || !succeeded) {
