@@ -30,6 +30,8 @@
 
 @property (strong, nonatomic) NSMutableArray *promoted;
 
+@property int searchCount;
+
 @property BOOL removeResults;
 
 
@@ -220,7 +222,7 @@
 }
 
 - (void)filterResults:(NSString *)searchTerm {
-    
+    if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
@@ -247,9 +249,12 @@
     query.limit = 10;
     
     if (self.removeResults == NO){
+        self.searchCount = self.searchCount + 10;
         query.skip = self.searchResults.count;
     } else {
         query.skip = 0;
+        self.searchCount = 0;
+
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
@@ -267,6 +272,7 @@
 //    self.searchString = searchTerm;
 //    [self.tableView reloadData];
 
+}
 }
 
 
@@ -289,6 +295,7 @@
     NSString *searchString = searchController.searchBar.text;
     if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.searchCount = 0;
 //        [self filterResults:searchString];
     } else {
         self.removeResults = NO;
