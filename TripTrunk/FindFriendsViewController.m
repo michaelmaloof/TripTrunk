@@ -23,6 +23,8 @@
 
 @property NSString *searchString;
 
+@property int fbCount;
+
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
@@ -33,6 +35,8 @@
 @property int searchCount;
 
 @property BOOL removeResults;
+
+@property BOOL friendsMaxed;
 
 
 @end
@@ -126,6 +130,8 @@
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -136,6 +142,7 @@
         {
 
             _friends = [NSMutableArray arrayWithArray:objects];
+            self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -143,6 +150,35 @@
         }
     }];
 
+}
+
+-(void)searchFacebookFriends:(NSArray *)fbids {
+    // Get the TripTrunk user objects with the list of cached fbid's
+    PFQuery *friendsQuery = [PFUser query];
+    [friendsQuery whereKey:@"fbid" containedIn:fbids];
+    [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
+    
+    [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
+            
+            [_friends addObjectsFromArray:objects];
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.fbCount = self.fbCount + 10;
+                if (objects.count < 10) {
+                    self.friendsMaxed = YES;
+                }
+                [self.tableView reloadData];
+            });
+        }
+    }];
 }
 
 - (void)loadFollowing
@@ -218,6 +254,8 @@
         if (![self.searchController.searchBar.text isEqualToString:@""]){
             [self filterResults:self.searchString];
         }
+    } else if (y > h + reload_distance && self.friendsMaxed == NO){
+        [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
     }
 }
 
@@ -282,6 +320,8 @@
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.fbCount = 0;
+        self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
             [self filterResults:searchBar.text];
         }
