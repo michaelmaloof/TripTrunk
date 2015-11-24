@@ -57,21 +57,49 @@ Parse.Cloud.define("becomePrivate", function(request, response) {
   user.set("private", true);
   user.save();
 
+  var userRole;
+
   var roleName = "friendsOf_" + request.user.id;
   var roleQuery = new Parse.Query("_Role");
   roleQuery.equalTo("name", roleName);
 
   roleQuery.first().then(function(role) {
-    role.setACL(new Parse.ACL(user));
-    return role.save();
+    if (!role) {
+      // If for some reason their role doesn't exist already, create it.
+      var acl = new Parse.ACL(user);
+      role = new Parse.Role(roleName, acl); 
+    }
+    else {
+      // Otherwise, just set the ACL to Private (read/write only by the currentUser)
+      role.setACL(new Parse.ACL(user));
+    }
+
+    userRole = role;
+
+    // Set up the query for finding all Followers & return the results to the next function in the chain.
+    var query = new Parse.Query('Activity');
+    query.equalTo('toUser', user);
+    query.equalTo('type', "follow");
+    query.limit(10000); // set a higher limit otherwise it only does 100.
+    return query.find();
+
+  }).then(function(activities) {
+
+    // For each Follow Activity
+    var usersInRole = userRole.getUsers();
+    _.each(activities, function(activity) {
+      var userToFriend = activity.get('fromUser');
+      usersInRole.add(userToFriend);
+    });
+
+    return userRole.save();
 
   }).then(function(role) {
   
-    console.log("userBecamePrivate");
     // Query for all of the user's photo
     var query = new Parse.Query('Photo');
     query.equalTo('user', user);
-    return query.find()
+    return query.find();
 
   }).then(function(photos) {
 

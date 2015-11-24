@@ -76,22 +76,26 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
  * FOLLOW ACTIVITY FLOW
  */ 
   if (activity.get("type") === "follow") {
-    blockQuery.count().then(function(count) {
-    if (count > 0) {
-      return Parse.Promise.error("User is blocked from performing this action");
-    }
-    console.log(fromUser.id);
-    console.log(toUser.id);
-    // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
-    return;
-
-    }).then(function() {
+    blockQuery.find()
+    .then(function(blocked) {
+      if (blocked.length > 0) {
+        return Parse.Promise.error("User is blocked from performing this action");
+      }
+      // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
+      
+      /* Commented out by mattschoch 11/23
+       * We no longer are adding to friend roles when the follow happens.
+       * Users will be added to the role ONLY when a user switches their account type.
+       * Instead of returning addToFriendRole (promise), we'll just return the success here.
+      
       return addToFriendRole(fromUser.id, toUser.id)
-    }).then(function() {
-      console.log("beforeSave Activity Follow - about to finish");
-      /* SUCCESS */
-      // Return the beforeSave Function.
-      return response.success();
+
+      }).then(function() {
+        console.log("beforeSave Activity Follow - about to finish");
+        return response.success();
+      */
+     
+       return response.success();
 
     }, function(error) {
       /* ERROR */
@@ -104,8 +108,9 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
    */ 
   else if (activity.get("type") === "addToTrip") {
     console.log("Activity Type = AddToTrip");
-    blockQuery.count().then(function(count) {
-      if (count > 0) {
+    blockQuery.find()
+    .then(function(blocked) {
+      if (blocked.length > 0) {
         return Parse.Promise.error("User is blocked from performing this action");
       }
 
