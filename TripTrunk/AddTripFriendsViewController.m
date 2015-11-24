@@ -217,7 +217,7 @@
     PFUser *possibleFriend;
     
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active) {
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
@@ -499,36 +499,40 @@
 #pragma mark - Search Stuff
 
 - (void)filterResults:(NSString *)searchTerm {
-    
-    [self.searchResults removeAllObjects];
-
-    //TODO: add NOT IN existingUsers query to both of these
-    
-    //     Gets all the users who have blocked this user. Hopefully it's 0!
-    PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
-    [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
-    
-    PFQuery *usernameQuery = [PFUser query];
-    [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
-    [usernameQuery whereKey:@"username" containsString:searchTerm];
-    [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
-    [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
-    
-    PFQuery *nameQuery = [PFUser query];
-    [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
-    [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
-    [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
-    [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
-    
-    PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-    query.limit = 20;
-    //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        [self.searchResults addObjectsFromArray:objects];
-    }];
-
-    
+    if (![searchTerm isEqualToString:@""]){
+        [self.searchResults removeAllObjects];
+        
+        //TODO: add NOT IN existingUsers query to both of these
+        
+        //     Gets all the users who have blocked this user. Hopefully it's 0!
+        PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
+        [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
+        
+        PFQuery *usernameQuery = [PFUser query];
+        [usernameQuery whereKeyExists:@"username"];  //this is based on whatever query you are trying to accomplish
+        [usernameQuery whereKey:@"username" containsString:searchTerm];
+        [usernameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]];
+        [usernameQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+        
+        PFQuery *nameQuery = [PFUser query];
+        [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
+        [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
+        [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
+        [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
+        
+        PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
+        query.limit = 20;
+        //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            [self.searchResults addObjectsFromArray:objects];
+            [self.tableView reloadData];
+            
+        }];
+        
+        
+        
+    }
     
 }
 
@@ -566,8 +570,9 @@
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
     NSString *searchString = searchController.searchBar.text;
-    [self filterResults:searchString];
-    [self.tableView reloadData];
+    if (![searchString isEqualToString:@""]){
+        [self filterResults:searchString];
+    }
 }
 
 

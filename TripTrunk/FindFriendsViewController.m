@@ -23,6 +23,8 @@
 
 @property NSString *searchString;
 
+@property int fbCount;
+
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
@@ -30,7 +32,11 @@
 
 @property (strong, nonatomic) NSMutableArray *promoted;
 
+@property int searchCount;
+
 @property BOOL removeResults;
+
+@property BOOL friendsMaxed;
 
 
 @end
@@ -124,6 +130,8 @@
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -134,6 +142,7 @@
         {
 
             _friends = [NSMutableArray arrayWithArray:objects];
+            self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -141,6 +150,35 @@
         }
     }];
 
+}
+
+-(void)searchFacebookFriends:(NSArray *)fbids {
+    // Get the TripTrunk user objects with the list of cached fbid's
+    PFQuery *friendsQuery = [PFUser query];
+    [friendsQuery whereKey:@"fbid" containedIn:fbids];
+    [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
+    
+    [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
+            
+            [_friends addObjectsFromArray:objects];
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.fbCount = self.fbCount + 10;
+                if (objects.count < 10) {
+                    self.friendsMaxed = YES;
+                }
+                [self.tableView reloadData];
+            });
+        }
+    }];
 }
 
 - (void)loadFollowing
@@ -216,11 +254,13 @@
         if (![self.searchController.searchBar.text isEqualToString:@""]){
             [self filterResults:self.searchString];
         }
+    } else if (y > h + reload_distance && self.friendsMaxed == NO){
+        [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
     }
 }
 
 - (void)filterResults:(NSString *)searchTerm {
-    
+    if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
@@ -247,9 +287,12 @@
     query.limit = 10;
     
     if (self.removeResults == NO){
+        self.searchCount = self.searchCount + 10;
         query.skip = self.searchResults.count;
     } else {
         query.skip = 0;
+        self.searchCount = 0;
+
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
@@ -268,6 +311,7 @@
 //    [self.tableView reloadData];
 
 }
+}
 
 
 //FIXME: TEMP UNTILL WE SEARCH AS USERS TYPE
@@ -276,6 +320,8 @@
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.fbCount = 0;
+        self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
             [self filterResults:searchBar.text];
         }
@@ -289,6 +335,7 @@
     NSString *searchString = searchController.searchBar.text;
     if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.searchCount = 0;
 //        [self filterResults:searchString];
     } else {
         self.removeResults = NO;
