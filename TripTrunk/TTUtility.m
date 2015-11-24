@@ -25,6 +25,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
     MBProgressHUD *HUD;
     MSFloatingProgressView *progressView;
 }
+
 @end
 
 @implementation TTUtility
@@ -211,10 +212,20 @@ CLCloudinary *cloudinary;
               // Set the ACL.
               photo.ACL = photoACL;
               
-              [photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+              [photo saveEventually:^(BOOL succeeded, NSError *error) {
                   
                   if(error) {
                       NSLog(@"error saving photo to parse: %@", error);
+                      
+                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error saving Photo"
+                                                                      message:@"Please try again"
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"Okay"
+                                                            otherButtonTitles:nil, nil];
+                      
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [alert show];
+                    });
                   }
                   else {
                       // Add photo to the cache

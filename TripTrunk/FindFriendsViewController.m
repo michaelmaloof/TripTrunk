@@ -23,13 +23,20 @@
 
 @property NSString *searchString;
 
+@property int fbCount;
+
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableArray *following; // users this user is already following
 
 @property (strong, nonatomic) NSMutableArray *promoted;
 
+@property int searchCount;
+
 @property BOOL removeResults;
+
+@property BOOL friendsMaxed;
 
 
 @end
@@ -44,10 +51,13 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
 
     _friends = [[NSMutableArray alloc] init];
+    _following = [[NSMutableArray alloc] init];
+
     _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
 
     [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
     [self loadPromotedUsers];
+    [self loadFollowing];
 
     self.searchResults = [[NSMutableArray alloc] init];
     
@@ -120,6 +130,8 @@
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -130,6 +142,7 @@
         {
 
             _friends = [NSMutableArray arrayWithArray:objects];
+            self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -137,6 +150,55 @@
         }
     }];
 
+}
+
+-(void)searchFacebookFriends:(NSArray *)fbids {
+    // Get the TripTrunk user objects with the list of cached fbid's
+    PFQuery *friendsQuery = [PFUser query];
+    [friendsQuery whereKey:@"fbid" containedIn:fbids];
+    [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
+    friendsQuery.limit = 10;
+    friendsQuery.skip = self.fbCount;
+    
+    [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+        }
+        else
+        {
+            
+            [_friends addObjectsFromArray:objects];
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.fbCount = self.fbCount + 10;
+                if (objects.count < 10) {
+                    self.friendsMaxed = YES;
+                }
+                [self.tableView reloadData];
+            });
+        }
+    }];
+}
+
+- (void)loadFollowing
+{
+    
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            for (PFUser *user in users) {
+                [_following addObject:user.objectId];
+            }
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+        else {
+            NSLog(@"Error loading following: %@",error);
+        }
+    }];
+    
 }
 
 - (void)refreshFacebookFriends {
@@ -192,11 +254,13 @@
         if (![self.searchController.searchBar.text isEqualToString:@""]){
             [self filterResults:self.searchString];
         }
+    } else if (y > h + reload_distance && self.friendsMaxed == NO){
+        [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
     }
 }
 
 - (void)filterResults:(NSString *)searchTerm {
-    
+    if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
@@ -223,9 +287,12 @@
     query.limit = 10;
     
     if (self.removeResults == NO){
+        self.searchCount = self.searchCount + 10;
         query.skip = self.searchResults.count;
     } else {
         query.skip = 0;
+        self.searchCount = 0;
+
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
@@ -244,6 +311,7 @@
 //    [self.tableView reloadData];
 
 }
+}
 
 
 //FIXME: TEMP UNTILL WE SEARCH AS USERS TYPE
@@ -252,6 +320,8 @@
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.fbCount = 0;
+        self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
             [self filterResults:searchBar.text];
         }
@@ -265,6 +335,7 @@
     NSString *searchString = searchController.searchBar.text;
     if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
+        self.searchCount = 0;
 //        [self filterResults:searchString];
     } else {
         self.removeResults = NO;
@@ -350,79 +421,79 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        PFUser *possibleFriend;
-        UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        
-        // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-        if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
-            possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
-        }
-        else {
-            if (indexPath.section == 0) {
-                possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
-            }
-            else if (indexPath.section == 1) {
-                possibleFriend = [_friends objectAtIndex:indexPath.row];
-            }
-        }
-        
-        [cell setDelegate:self];
-        [cell.followButton setSelected:NO];
-        
-        [cell setUser:possibleFriend];
-        
-        cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
-        
-        // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
-        NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-        if (followStatus.intValue > 0) {
-            [cell.followButton setHidden:NO];
-            [cell.followButton setSelected:YES];
-            if (followStatus.intValue == 2) {
-                [cell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
-            }
-        }
-        else {
-            // Determine the follow status of the user
-            PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
-            [isFollowingQuery whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-            [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
-            [isFollowingQuery whereKey:@"toUser" equalTo:possibleFriend];
-            [isFollowingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
-            [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                if (cell.tag == indexPath.row) {
-                    [cell.followButton setHidden:NO];
-                    [cell.followButton setSelected:(!error && number > 0)];
-                    // Cache the user's follow status
-                    [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:(!error && number > 0)] user:possibleFriend];
-                }
-            }];
-        }
-        
-        // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
-        NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
-        
-        NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-        __weak UserTableViewCell *weakCell = cell;
-        
-        [cell.profilePicImageView setImageWithURLRequest:request
-                                        placeholderImage:[UIImage imageNamed:@"defaultProfile"]
-                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                     
-                                                     [weakCell.profilePicImageView setImage:image];
-                                                     [weakCell setNeedsLayout];
-                                                     
-                                                 } failure:nil];
-        
-        [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
-        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-        [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
-        
-        return weakCell;
-        
-        return cell;
+    PFUser *possibleFriend;
+    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+    __weak UserTableViewCell *weakCell = cell;
 
+    // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
+        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    else {
+        if (indexPath.section == 0) {
+            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+        }
+        else if (indexPath.section == 1) {
+            possibleFriend = [_friends objectAtIndex:indexPath.row];
+        }
+    }
+    
+    [weakCell setDelegate:self];
+    
+    [weakCell setUser:possibleFriend];
+    
+    weakCell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
+    
+    
+    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
+    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+    if (followStatus.intValue > 0) {
+        weakCell.followButton.enabled = YES;
+        [weakCell.followButton setSelected:YES];
+        [weakCell.followButton setHidden:NO];
+        if (followStatus.intValue == 2) {
+            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+        }
+    }
+    else {
+        [weakCell.followButton setSelected:NO];
+        [weakCell.followButton setHidden:NO];
+        
+        if ([_following containsObject:possibleFriend.objectId]) {
+            NSLog(@"FOLLOWING");
+            [weakCell.followButton setHidden:NO];
+            weakCell.followButton.enabled = YES;
+            [weakCell.followButton setSelected:YES];
+            // Cache the user's follow status
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
+        }
+        else {
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
+        }
+        
+    }
+    
+    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
+    
+    [cell.profilePicImageView setImageWithURLRequest:request
+                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                 
+                                                 [weakCell.profilePicImageView setImage:image];
+                                                 [weakCell setNeedsLayout];
+                                                 
+                                             } failure:nil];
+    
+    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
+    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
+    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
+    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    
+    return weakCell;
+    
 }
 
 
@@ -469,22 +540,21 @@
         // Follow
         [cellView.followButton setSelected:YES];
         
+        // Add the user to the following array so we have a local copy of who they're following.
+        [_following addObject:user];
+        
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                NSLog(@"Error: %@", error);
-            }
-            if (!succeeded) {
+            if (error || !succeeded) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
                                                                 message:@"Please try again"
                                                                delegate:self
                                                       cancelButtonTitle:@"Okay"
                                                       otherButtonTitles:nil, nil];
-                
-                [cellView.followButton setSelected:NO];
                 [alert show];
-            }
-            else
-            {
+                if (error) {
+                    NSLog(@"Error following user: %@", error);
+                }
+                
             }
         }];
     }

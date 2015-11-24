@@ -35,7 +35,10 @@
         [followACL setPublicReadAccess:YES];
         followActivity.ACL = followACL;
         
-        [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error saving follow activity%@", error);
+            }
             
             // Cache the following status as FOLLOWED
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:succeeded] user:user];
@@ -64,7 +67,7 @@
     [followACL setWriteAccess:YES forUser:user];
     followActivity.ACL = followACL;
     
-    [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [followActivity saveEventually:^(BOOL succeeded, NSError *error) {
 
         // Cache the following status as PENDING
         [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:user];
@@ -163,7 +166,7 @@
     [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
     addToTripActivity.ACL = followACL;
     
-    [addToTripActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
         if (completionBlock) {
             completionBlock(succeeded, error);
         }
@@ -261,7 +264,7 @@
     // Also remove the User from the Trip's ACL.
     [trip.ACL setReadAccess:NO forUser:user];
     [trip.ACL setWriteAccess:NO forUser:user];
-    [trip saveInBackground];
+    [trip saveEventually];
 
     PFQuery *removeFromTripQuery = [PFQuery queryWithClassName:@"Activity"];
     [removeFromTripQuery whereKey:@"toUser" equalTo:user];
