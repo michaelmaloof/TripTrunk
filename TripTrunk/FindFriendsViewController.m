@@ -183,7 +183,7 @@
 
 - (void)loadFollowing
 {
-    
+    // TODO: Make this work for > 100 users since parse default limits 100. 
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
             for (PFUser *user in users) {
