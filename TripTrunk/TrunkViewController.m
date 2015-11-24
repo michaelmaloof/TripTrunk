@@ -463,7 +463,7 @@
         
         cell.logo.hidden = YES;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
-        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+//        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
         cell.photo.clipsToBounds = YES;
         cell.photo.translatesAutoresizingMaskIntoConstraints = NO;
         cell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -498,7 +498,7 @@
             UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
             __weak TrunkCollectionViewCell *weakCell = cell;
             [weakCell.photo setContentMode:UIViewContentModeScaleAspectFill];
-            weakCell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+//            weakCell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
             weakCell.photo.clipsToBounds = YES;
             weakCell.photo.translatesAutoresizingMaskIntoConstraints = NO;
             weakCell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
