@@ -426,7 +426,7 @@
     __weak UserTableViewCell *weakCell = cell;
 
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.searchResults.count > 0) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
