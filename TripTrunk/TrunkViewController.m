@@ -722,11 +722,15 @@
         self.totalLikeButton.hidden = NO;
         self.totalLikeHeart.hidden = NO;
     }
+    
+    
 }
 
 -(void)photoWasDisliked:(id)sender{
-    if (self.trip.publicTripDetail.totalLikes > 0 && self.likes > 0){
+    if (self.trip.publicTripDetail.totalLikes > 0 || self.likes > 0){
+        if (self.likes > 0){
         self.likes -= 1;
+        }
         int likes = self.trip.publicTripDetail.totalLikes + self.likes;
     if (likes < 1){
         self.totalLikeButton.hidden = YES;
@@ -738,6 +742,25 @@
         self.totalLikeButton.hidden = NO;
         self.totalLikeHeart.hidden = NO;
     }
+    }
+}
+
+-(void)photoWasDeleted:(NSNumber*)likes{
+    if (self.trip.publicTripDetail.totalLikes > 0 || self.likes > 0){
+        if (self.likes > 0){
+        self.likes -= likes.intValue;
+        }
+        int likes = self.trip.publicTripDetail.totalLikes + self.likes;
+        if (likes < 1){
+            self.totalLikeButton.hidden = YES;
+            self.totalLikeHeart.hidden = YES;
+        } else {
+            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+            self.totalLikeButton.textColor = [UIColor whiteColor];
+            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", likes];
+            self.totalLikeButton.hidden = NO;
+            self.totalLikeHeart.hidden = NO;
+        }
     }
 }
 

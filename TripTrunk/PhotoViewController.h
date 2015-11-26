@@ -14,6 +14,8 @@
 @protocol PhotoDelegate
 -(void)photoWasLiked:(id)sender;
 -(void)photoWasDisliked:(id)sender;
+-(void)photoWasDeleted:(NSNumber*)likes;
+
 
 
 @end
