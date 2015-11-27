@@ -15,7 +15,7 @@
 #import "SocialUtility.h"
 #import "TTUtility.h"
 #import "CitySearchViewController.h"
-
+#import "HomeMapViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -638,7 +638,11 @@
         {
             [SocialUtility deleteTrip:self.trip];
             
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            for (UIViewController *vc in self.navigationController.viewControllers){
+                if ([vc isKindOfClass:[HomeMapViewController class]]){
+                    [self.navigationController popToViewController:vc animated:YES];
+                }
+            }
 
         }
     }
