@@ -637,12 +637,14 @@
         if (buttonIndex == 1)
         {
             [SocialUtility deleteTrip:self.trip];
-            
+            NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
-                    [self.navigationController popToViewController:vc animated:YES];
+                    [locationArray addObject:vc];
                 }
             }
+            
+            [self.navigationController popToViewController:[locationArray lastObject] animated:YES];
 
         }
     }
