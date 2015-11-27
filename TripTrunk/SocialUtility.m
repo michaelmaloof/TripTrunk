@@ -188,6 +188,8 @@
     [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
     [addToTripActivity setObject:trip forKey:@"trip"];
     [addToTripActivity setObject:location forKey:@"content"];
+    [addToTripActivity setValue:[NSNumber numberWithDouble:trip.lat] forKey:@"latitude"];
+    [addToTripActivity setValue:[NSNumber numberWithDouble:trip.longitude] forKey:@"longitude"];
     
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [followACL setPublicReadAccess:YES];
@@ -303,9 +305,16 @@
             NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
             for (PFObject *object in objects) {
                 [object setValue:string forKey:@"content"];
+                [object setValue:[NSNumber numberWithDouble:trip.lat] forKey:@"latitude"];
+                [object setValue:[NSNumber numberWithDouble:trip.longitude] forKey:@"longitude"];
+
                 [objectsToUpdate addObject:object];
             }
-            [PFObject saveAllInBackground:objectsToUpdate];
+            [PFObject saveAllInBackground:objectsToUpdate block:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error){
+                    
+                }
+            }];
             
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
