@@ -108,30 +108,35 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
    */ 
   else if (activity.get("type") === "addToTrip") {
     console.log("Activity Type = AddToTrip");
-    blockQuery.find()
-    .then(function(blocked) {
-      if (blocked.length > 0) {
-        return Parse.Promise.error("User is blocked from performing this action");
-      }
 
-      // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
-      return;
+    if (!activity.isNew()) {
+      // Not a new activity, so we're doing an update.
+      return response.success();
+    }
+    // Otherwise, this is a new activity.
+    
+/* We commented out the blockQuery because this request times out. Eventually, users need to be able to block people */
 
-    }).then(function() {
+    // blockQuery.find()
+    // .then(function(blocked) {
+    //   if (blocked.length > 0) {
+    //     return Parse.Promise.error("User is blocked from performing this action");
+    //   }
 
-      /*
-       * Ensure we aren't adding duplicate users to a Trunk
-       * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
-       */
+    //   // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
 
-      var query = new Parse.Query("Activity");
-      query.equalTo("trip", activity.get("trip"));
-      query.equalTo("type", "addToTrip");
-      query.equalTo("toUser", toUser);
-      return query.first();
+    /*
+     * Ensure we aren't adding duplicate users to a Trunk
+     * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+     */
 
-
-    }).then(function(addToTripObject) {
+    var query = new Parse.Query("Activity");
+    query.equalTo("trip", activity.get("trip"));
+    query.equalTo("type", "addToTrip");
+    query.equalTo("toUser", toUser);
+    
+    query.first()
+    .then(function(addToTripObject) {
       console.log(addToTripObject);
       // If an addToTrip Object, it already exists. 
       if (addToTripObject) {
@@ -158,7 +163,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
         role.getUsers().add(toUser);
         return role.save();
       }
-        return Parse.Promise.error("No Role found for name: " + roleName);
+      return Parse.Promise.error("No Role found for name: " + roleName);
 
     }).then(function() {
       /* SUCCESS */
@@ -167,7 +172,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
 
     }, function(error) {
       /* ERROR */
-      console.log("Error Block: " + error);
+      console.log(error);
 
       return response.error(error);
     });

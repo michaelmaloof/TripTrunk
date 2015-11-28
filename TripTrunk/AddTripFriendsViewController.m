@@ -332,7 +332,12 @@
     NSMutableArray *tripUsers = [[NSMutableArray alloc] init];
     NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
     
-
+    if (self.isTripCreation) {
+        // It's the creation flow, so add the creator as a "member" to the trip
+        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
+        [tripUsers addObject:tripUser];
+        NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
+    }
 
     if (selectedRows.count > 0)
     {
@@ -402,6 +407,7 @@
         // It's the creation flow, so add the creator as a "member" to the trip
         PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
         [tripUsers addObject:tripUser];
+        NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
     }
 
     if (selectedRows.count == 0 && !self.isTripCreation) {
