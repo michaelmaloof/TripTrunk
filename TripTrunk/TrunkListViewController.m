@@ -163,7 +163,8 @@
             [query whereKey:@"toUser" equalTo:self.user];
         }
         [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"content" equalTo:self.city];
+        [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
+        [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
@@ -349,8 +350,10 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
-    [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query whereKey:@"content" equalTo:self.city];
+    [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
+    [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
+    [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
+//    [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
     [query includeKey:@"trip.publicTripDetail"];

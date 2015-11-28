@@ -44,7 +44,7 @@
 @property BOOL tutorialComplete;
 @property NSMutableArray *needsUpdates;
 @property NSMutableArray *haventSeens;
-
+@property CLLocation *location;
 
 @end
 
@@ -823,31 +823,39 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     // TODO: Get the state in a more elloquent way. This is hacky.
-    view.enabled = NO;
-    view.selected = YES;
+//    view.enabled = NO;
+//    view.selected = YES;
     
-    CLGeocoder *cod = [[CLGeocoder alloc] init];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
-    [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        
-        if (!error){
-            CLPlacemark *placemark = [placemarks firstObject];
-            self.pinCityName = view.annotation.title;
-            self.pinStateName = placemark.administrativeArea;
-            [self performSegueWithIdentifier:@"Trunk" sender:self];
-            self.pinCityName = nil;
-            self.pinStateName = nil;
-            self.photoPin = view;
-            view.enabled = YES;
-            view.selected = NO;
-
-
-        } else {
-            view.enabled = YES;
-            view.selected = NO;
-
-        }
-    }];
+//    CLGeocoder *cod = [[CLGeocoder alloc] init];
+    self.location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
+    
+    self.pinCityName = view.annotation.title;
+    [self performSegueWithIdentifier:@"Trunk" sender:self];
+    self.pinCityName = nil;
+    self.pinStateName = nil;
+    self.photoPin = view;
+    
+    
+//    [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+//        
+//        if (!error){
+//            CLPlacemark *placemark = [placemarks firstObject];
+//            self.pinCityName = view.annotation.title;
+//            self.pinStateName = placemark.administrativeArea;
+//            [self performSegueWithIdentifier:@"Trunk" sender:self];
+//            self.pinCityName = nil;
+//            self.pinStateName = nil;
+//            self.photoPin = view;
+//            view.enabled = YES;
+//            view.selected = NO;
+//
+//
+//        } else {
+//            view.enabled = YES;
+//            view.selected = NO;
+//
+//        }
+//    }];
 }
 
 
@@ -886,7 +894,8 @@
     {
         TrunkListViewController *trunkView = segue.destinationViewController;
         trunkView.city = self.pinCityName;
-        trunkView.state = self.pinStateName;
+//        trunkView.state = self.pinStateName;
+        trunkView.location = self.location;
         trunkView.user = self.user;
         self.pinCityName = nil;
     }
