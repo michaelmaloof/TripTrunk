@@ -20,7 +20,7 @@
 #import "ActivityListViewController.h"
 #import "TTCache.h"
 
-#if DEBUG == 0 
+#if DEBUG == 1 // CHANGE TO 0
 // DEBUG is not defined or defined to be 0
 // THIS IS PROD MODE
 #define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
