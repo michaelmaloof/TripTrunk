@@ -28,6 +28,7 @@
 @property (strong, nonatomic) PFUser *thisUser;
 // Array of PFUser objects that are already part of the trip
 @property (strong, nonatomic) NSMutableArray *existingMembers;
+@property BOOL isNext;
 
 @end
 
@@ -71,9 +72,9 @@
     }
     else
     {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                               target:self
-                                                                                               action:@selector(saveFriendsAndClose)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save",@"Save") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
+  
+    
     }
     
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
@@ -109,6 +110,8 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    
+    self.isNext = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -203,8 +206,10 @@
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active) {
         return [[_friends objectAtIndex:section] count];
-    } else {
+    } else if (self.isNext == NO){
         return self.searchResults.count;
+    } else {
+        return [[_friends objectAtIndex:section] count];
     }
 }
 
@@ -212,12 +217,20 @@
     return 66;
 }
 
+-(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+    if (self.isEditing){
+        [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
+    } else if (self.isNext == YES){
+        [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next",@"Next")];
+
+    }
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PFUser *possibleFriend;
     
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""]) {
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
@@ -327,27 +340,115 @@
 
 - (void)saveFriends
 {
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
-    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];
-    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-    
-    if (self.isTripCreation) {
-        // It's the creation flow, so add the creator as a "member" to the trip
-        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
-        [tripUsers addObject:tripUser];
-        NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
-    }
-
-    if (selectedRows.count > 0)
-    {
+    if (self.isNext == YES){
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+        NSMutableArray *tripUsers = [[NSMutableArray alloc] init];
+        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
         
-        for (NSIndexPath *indexPath in selectedRows) {
-            PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
-            if (![self userExists:user inArray:self.existingMembers]) {
+        if (self.isTripCreation) {
+            // It's the creation flow, so add the creator as a "member" to the trip
+            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
+            [tripUsers addObject:tripUser];
+            NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
+        }
+        
+        if (selectedRows.count > 0)
+        {
+            
+            for (NSIndexPath *indexPath in selectedRows) {
+                PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
+                if (![self userExists:user inArray:self.existingMembers]) {
+                    PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
+                    [tripUsers addObject:tripUser];
+                    [self.existingMembers addObject:user];
+                    
+                    // Update the Trip's ACL if it's a private trip.
+                    if (self.trip.isPrivate) {
+                        [self.trip.ACL setReadAccess:YES forUser:user];
+                        [self.trip.ACL setWriteAccess:YES forUser:user];
+                    }
+                }
+            }
+            if (self.trip.isPrivate) {
+                [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
+            }
+            [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
+                if (error || !succeeded) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed", @"Saving Frinds Failed")
+                                                                    message:NSLocalizedString(@"Please try again", @"Please try again")
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                          otherButtonTitles:nil, nil];
+                    [alert show];
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+                    
+                } else {
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+                    [self.delegate memberWasAdded:self];
+                    
+                    if (!self.isTripCreation) {
+                        // Adding friends to an existing trip, so pop back
+                        [self.navigationController popViewControllerAnimated:YES];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                    }
+                    else {
+                        // Nex trip creation flow, so push forward
+                        [self performSegueWithIdentifier:@"photos" sender:self];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                    }
+                    
+                }
+            }];
+        }
+        
+        
+    } else {
+        
+    }
+}
+
+
+/**
+ *  Save the selected friends to the trip, and close the view so that the map shows again
+ */
+- (void)saveFriendsAndClose
+{
+    if (self.isNext == YES){
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+        
+        NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
+        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+        
+        if (self.isTripCreation) {
+            // It's the creation flow, so add the creator as a "member" to the trip
+            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
+            [tripUsers addObject:tripUser];
+            NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
+        }
+        
+        if (selectedRows.count == 0 && !self.isTripCreation) {
+            // Adding friends to an existing trip, so pop back
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.delegate memberWasAdded:self];
+            
+            // TODO: Set title image
+            self.title = @"TripTrunk";
+            
+            return; // make sureit doesn't execute further.
+            
+        }
+        else if (selectedRows.count > 0)
+        {
+            
+            for (NSIndexPath *indexPath in selectedRows) {
+                PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
                 PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
                 [tripUsers addObject:tripUser];
-                [self.existingMembers addObject:user];
                 
                 // Update the Trip's ACL if it's a private trip.
                 if (self.trip.isPrivate) {
@@ -356,23 +457,35 @@
                 }
             }
         }
+        
         if (self.trip.isPrivate) {
             [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
         }
+        
         [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
-            if (error || !succeeded) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed", @"Saving Frinds Failed")
-                                                                message:NSLocalizedString(@"Please try again", @"Please try again")
+            
+            // We only show an error alert if the error code is not 142
+            // Code 142 means Cloud Code Validation Failed
+            // We run a beforeSave method in cloud code that checks if the user already exists in this trip, to prevent duplicates.
+            // If the user is already found, CC returns an error, with code 142. Since it's not a real error, we move on without an alert.
+            if (error && error.code != 142) {
+                NSLog(@"Error saving users: %@", error);
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed",@"Saving Frinds Failed")
+                                                                message:NSLocalizedString(@"Please try again",@"Please try again")
                                                                delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                       otherButtonTitles:nil, nil];
+                
                 [alert show];
                 self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+                self.title = @"TripTrunk"; //ToDo Set titleImage
+                
+                
                 
             } else {
                 self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+                self.title = @"TripTrunk"; //ToDo Set titleImage
                 [self.delegate memberWasAdded:self];
                 
                 if (!self.isTripCreation) {
@@ -385,118 +498,29 @@
                     [self performSegueWithIdentifier:@"photos" sender:self];
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                 }
-
+                
             }
+            
         }];
-    }
-}
-
-
-/**
- *  Save the selected friends to the trip, and close the view so that the map shows again
- */
-- (void)saveFriendsAndClose
-{
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
-
-    NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
-    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-    
-    if (self.isTripCreation) {
-        // It's the creation flow, so add the creator as a "member" to the trip
-        PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
-        [tripUsers addObject:tripUser];
-        NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
-    }
-
-    if (selectedRows.count == 0 && !self.isTripCreation) {
-        // Adding friends to an existing trip, so pop back
-        [self.navigationController popViewControllerAnimated:YES];
-        [self.delegate memberWasAdded:self];
-
-        // TODO: Set title image
-        self.title = @"TripTrunk";
         
-        return; // make sureit doesn't execute further.
-
-    }
-    else if (selectedRows.count > 0)
-    {
         
-        for (NSIndexPath *indexPath in selectedRows) {
-            PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
-            [tripUsers addObject:tripUser];
-            
-            // Update the Trip's ACL if it's a private trip.
-            if (self.trip.isPrivate) {
-                [self.trip.ACL setReadAccess:YES forUser:user];
-                [self.trip.ACL setWriteAccess:YES forUser:user];
-            }
-        }
-    }
-    
-    if (self.trip.isPrivate) {
-        [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
-    }
-    
-    [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
+        // Dismiss the view controller
+        // We dismiss it outside the save block so that there's no hangup for the user.
+        // The downside is, if it fails then they have to redo everything
+        //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
+        //    if (!self.isTripCreation) {
+        //        // Adding friends to an existing trip, so pop back
+        //        [self.navigationController popViewControllerAnimated:YES];
+        //        self.navigationItem.rightBarButtonItem.enabled = YES;
+        //    }
+        //    else {
+        //        // Nex trip creation flow, so push forward
+        //        [self performSegueWithIdentifier:@"photos" sender:self];
+        //        self.navigationItem.rightBarButtonItem.enabled = YES;
+        //    }
+    }else {
         
-        // We only show an error alert if the error code is not 142
-        // Code 142 means Cloud Code Validation Failed
-        // We run a beforeSave method in cloud code that checks if the user already exists in this trip, to prevent duplicates.
-        // If the user is already found, CC returns an error, with code 142. Since it's not a real error, we move on without an alert.
-        if (error && error.code != 142) {
-            NSLog(@"Error saving users: %@", error);
-
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed",@"Saving Frinds Failed")
-                                                            message:NSLocalizedString(@"Please try again",@"Please try again")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                  otherButtonTitles:nil, nil];
-            
-            [alert show];
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-            self.title = @"TripTrunk"; //ToDo Set titleImage
-
-
-
-        } else {
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-            self.title = @"TripTrunk"; //ToDo Set titleImage
-            [self.delegate memberWasAdded:self];
-            
-            if (!self.isTripCreation) {
-                // Adding friends to an existing trip, so pop back
-                [self.navigationController popViewControllerAnimated:YES];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-            }
-            else {
-                // Nex trip creation flow, so push forward
-                [self performSegueWithIdentifier:@"photos" sender:self];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-            }
-
-        }
-        
-    }];
-    
-    
-    // Dismiss the view controller
-    // We dismiss it outside the save block so that there's no hangup for the user.
-    // The downside is, if it fails then they have to redo everything
-    //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
-//    if (!self.isTripCreation) {
-//        // Adding friends to an existing trip, so pop back
-//        [self.navigationController popViewControllerAnimated:YES];
-//        self.navigationItem.rightBarButtonItem.enabled = YES;
-//    }
-//    else {
-//        // Nex trip creation flow, so push forward
-//        [self performSegueWithIdentifier:@"photos" sender:self];
-//        self.navigationItem.rightBarButtonItem.enabled = YES;
-//    }
+    }
     
 }
 
@@ -527,7 +551,7 @@
         [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
         
         PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-        query.limit = 20;
+        query.limit = 10;
         //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
         
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
@@ -547,8 +571,17 @@
  */
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"cancel button pressed: %lu", (unsigned long)[self.tableView indexPathsForSelectedRows].count);
-    [self saveFriends];
-    [self.tableView reloadData];
+
+    if (self.isNext == YES) {
+        [self saveFriends];
+//        [self.tableView reloadData];
+    } else {
+        self.isNext = YES;
+//        [self loadFollowing];
+//        [self loadFollowers];
+        [self.tableView reloadData];
+
+    }
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
@@ -575,10 +608,23 @@
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    NSString *searchString = searchController.searchBar.text;
-    if (![searchString isEqualToString:@""]){
-        [self filterResults:searchString];
+//    NSString *searchString = searchController.searchBar.text;
+//    if (![searchString isEqualToString:@""]){
+//        [self filterResults:searchString];
+//    }
+}
+
+
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    if (![searchBar.text isEqualToString:@""]){
+            [self filterResults:searchBar.text];
     }
+}
+
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    self.isNext = NO;
+    [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
 }
 
 
