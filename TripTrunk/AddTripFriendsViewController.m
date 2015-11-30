@@ -338,188 +338,90 @@
     return exists;
 }
 
-- (void)saveFriends
-{
-    if (self.isNext == YES){
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
-        NSMutableArray *tripUsers = [[NSMutableArray alloc] init];
-        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-        
-        if (self.isTripCreation) {
-            // It's the creation flow, so add the creator as a "member" to the trip
-            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
-            [tripUsers addObject:tripUser];
-            NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
-        }
-        
-        if (selectedRows.count > 0)
-        {
-            
-            for (NSIndexPath *indexPath in selectedRows) {
-                PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
-                if (![self userExists:user inArray:self.existingMembers]) {
-                    PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
-                    [tripUsers addObject:tripUser];
-                    [self.existingMembers addObject:user];
-                    
-                    // Update the Trip's ACL if it's a private trip.
-                    if (self.trip.isPrivate) {
-                        [self.trip.ACL setReadAccess:YES forUser:user];
-                        [self.trip.ACL setWriteAccess:YES forUser:user];
-                    }
-                }
-            }
-            if (self.trip.isPrivate) {
-                [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
-            }
-            [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
-                if (error || !succeeded) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed", @"Saving Frinds Failed")
-                                                                    message:NSLocalizedString(@"Please try again", @"Please try again")
-                                                                   delegate:self
-                                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                                          otherButtonTitles:nil, nil];
-                    [alert show];
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
-                    
-                } else {
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
-                    [self.delegate memberWasAdded:self];
-                    
-                    if (!self.isTripCreation) {
-                        // Adding friends to an existing trip, so pop back
-                        [self.navigationController popViewControllerAnimated:YES];
-                        self.navigationItem.rightBarButtonItem.enabled = YES;
-                    }
-                    else {
-                        // Nex trip creation flow, so push forward
-                        [self performSegueWithIdentifier:@"photos" sender:self];
-                        self.navigationItem.rightBarButtonItem.enabled = YES;
-                    }
-                    
-                }
-            }];
-        }
-        
-        
-    } else {
-        
-    }
+- (NSDictionary *)addToTripFunctionParamsForUser:(PFUser *)user onTrip:(Trip *)trip {
+    // Create the params dictionary of all the info we need in the Cloud Function
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            user.objectId, @"toUserId",
+                            [PFUser currentUser].objectId, @"fromUserId",
+                            trip.objectId, @"tripId",
+                            [NSString stringWithFormat:@"%@", trip.city], @"content",
+                            [NSNumber numberWithDouble:trip.lat], @"latitude",
+                            [NSNumber numberWithDouble:trip.longitude], @"longitude",
+                            nil];
+    return params;
 }
 
-
 /**
- *  Save the selected friends to the trip, and close the view so that the map shows again
+ *  Save the selected friends to the trip,
+ *  and perform the segue/push/pop based on what the user is doing here.
  */
 - (void)saveFriendsAndClose
 {
-    if (self.isNext == YES){
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.title = @"TripTrunk";
+    
+    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+    
+    if (self.isTripCreation) {
+        // It's the creation flow, so add the creator as a "member" to the trip
+        NSLog(@"Is Trip Creation, Adding an Activity for the Creator");
+        NSDictionary *params = [self addToTripFunctionParamsForUser:[PFUser currentUser] onTrip:self.trip];
+        [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+    }
+    
+    // TODO: If this test is true, and it's the Search Controller, then it'll go back instead of just hiding the search controller.
+    // This needs to just go back to the main list.
+    if (selectedRows.count == 0 && !self.isTripCreation) {
+        // Adding friends to an existing trip, so pop back
+        [self.navigationController popViewControllerAnimated:YES];
+        [self.delegate memberWasAdded:self];
+
         
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.title = NSLocalizedString(@"Saving Friends...",@"Saving Friends...");
+        return; // make sure it doesn't execute further.
+
+    }
+    else if (selectedRows.count > 0)
+    {
         
-        NSMutableArray *tripUsers = [[NSMutableArray alloc] init];;
-        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-        
-        if (self.isTripCreation) {
-            // It's the creation flow, so add the creator as a "member" to the trip
-            PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:[PFUser currentUser] onTrip:self.trip];
-            [tripUsers addObject:tripUser];
-            NSLog(@"Is Trip Creation, Adding Creator to tripUsers array");
-        }
-        
-        if (selectedRows.count == 0 && !self.isTripCreation) {
-            // Adding friends to an existing trip, so pop back
-            [self.navigationController popViewControllerAnimated:YES];
-            [self.delegate memberWasAdded:self];
+        for (NSIndexPath *indexPath in selectedRows) {
             
-            // TODO: Set title image
-            self.title = @"TripTrunk";
+            PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
             
-            return; // make sureit doesn't execute further.
+            // Create the params dictionary of all the info we need in the Cloud Function
+            NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
             
-        }
-        else if (selectedRows.count > 0)
-        {
+            // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
+            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
             
-            for (NSIndexPath *indexPath in selectedRows) {
-                PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-                PFObject *tripUser = [SocialUtility createAddToTripObjectForUser:user onTrip:self.trip];
-                [tripUsers addObject:tripUser];
-                
-                // Update the Trip's ACL if it's a private trip.
-                if (self.trip.isPrivate) {
-                    [self.trip.ACL setReadAccess:YES forUser:user];
-                    [self.trip.ACL setWriteAccess:YES forUser:user];
-                }
+            
+            // Update the Trip's ACL if it's a private trip.
+            if (self.trip.isPrivate) {
+                [self.trip.ACL setReadAccess:YES forUser:user];
+                [self.trip.ACL setWriteAccess:YES forUser:user];
             }
         }
-        
-        if (self.trip.isPrivate) {
-            [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
-        }
-        
-        [PFObject saveAllInBackground:tripUsers block:^(BOOL succeeded, NSError *error) {
-            
-            // We only show an error alert if the error code is not 142
-            // Code 142 means Cloud Code Validation Failed
-            // We run a beforeSave method in cloud code that checks if the user already exists in this trip, to prevent duplicates.
-            // If the user is already found, CC returns an error, with code 142. Since it's not a real error, we move on without an alert.
-            if (error && error.code != 142) {
-                NSLog(@"Error saving users: %@", error);
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving Frinds Failed",@"Saving Frinds Failed")
-                                                                message:NSLocalizedString(@"Please try again",@"Please try again")
-                                                               delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                      otherButtonTitles:nil, nil];
-                
-                [alert show];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.title = @"TripTrunk"; //ToDo Set titleImage
-                
-                
-                
-            } else {
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.title = @"TripTrunk"; //ToDo Set titleImage
-                [self.delegate memberWasAdded:self];
-                
-                if (!self.isTripCreation) {
-                    // Adding friends to an existing trip, so pop back
-                    [self.navigationController popViewControllerAnimated:YES];
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                }
-                else {
-                    // Nex trip creation flow, so push forward
-                    [self performSegueWithIdentifier:@"photos" sender:self];
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                }
-                
-            }
-            
-        }];
-        
-        
-        // Dismiss the view controller
-        // We dismiss it outside the save block so that there's no hangup for the user.
-        // The downside is, if it fails then they have to redo everything
-        //TODO: Should we put up a "loading" spinner and wait to dismiss until we save successfully?
-        //    if (!self.isTripCreation) {
-        //        // Adding friends to an existing trip, so pop back
-        //        [self.navigationController popViewControllerAnimated:YES];
-        //        self.navigationItem.rightBarButtonItem.enabled = YES;
-        //    }
-        //    else {
-        //        // Nex trip creation flow, so push forward
-        //        [self performSegueWithIdentifier:@"photos" sender:self];
-        //        self.navigationItem.rightBarButtonItem.enabled = YES;
-        //    }
-    }else {
-        
+    }
+    
+    if (self.trip.isPrivate) {
+        [self.trip saveInBackground]; // Save the trip because it's ACL has been updated for the new members.
+    }
+    
+    // Re-enable bar button and let the delegate know that things were updated.
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    if (self.delegate) {
+        [self.delegate memberWasAdded:self];
+    }
+    
+    // Perform the Navigation to the next/previous screen.
+    // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.
+    
+    if (!self.isTripCreation) {
+        // Adding friends to an existing trip, so pop back
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
+        // Nex trip creation flow, so push forward
+        [self performSegueWithIdentifier:@"photos" sender:self];
     }
     
 }
@@ -573,7 +475,7 @@
     NSLog(@"cancel button pressed: %lu", (unsigned long)[self.tableView indexPathsForSelectedRows].count);
 
     if (self.isNext == YES) {
-        [self saveFriends];
+        [self saveFriendsAndClose];
 //        [self.tableView reloadData];
     } else {
         self.isNext = YES;

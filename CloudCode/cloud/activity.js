@@ -58,6 +58,121 @@ var addToFriendRole = function(fromUserId, toUserId) {
 }
 
 /*
+ * Function to add a User to a Trip. Creates an addToTrip Activity. We're using a cloud function to avoid timeouts.
+ * Accepts a "fromUserId" parameter
+ */
+
+Parse.Cloud.define("addToTrip", function(request, response) {
+  // Create full objects out of the ID's sent as params.
+  var fromUser = new Parse.User();
+  fromUser.id = request.params.fromUserId;
+  
+  var toUser = new Parse.User();
+  toUser.id = request.params.toUserId;
+
+  var Trip = Parse.Object.extend("Trip");
+  var trip = new Trip();
+  trip.id = request.params.tripId;
+
+  var content = request.params.content;
+  var latitude = request.params.latitude;
+  var longitude = request.params.longitude;
+
+
+  // MAKE SURE THE USER ISN'T BLOCKED
+  var blockQuery = new Parse.Query("Block");
+  blockQuery.equalTo("blockedUser", fromUser);
+  blockQuery.equalTo("fromUser", toUser);
+
+  blockQuery.find()
+  .then(function(blocked) {
+    if (blocked.length > 0) {
+      return Parse.Promise.error("User is blocked from performing this action");
+    }
+
+    // USER IS ALLOWED TO DO THIS - NOT BLOCKED.
+    
+    /*
+     * Ensure we aren't adding duplicate users to a Trunk
+     * i.e. if the user clicks Next in trunk creation, then goes back to the user screen and clicks next again.
+     */
+    var query = new Parse.Query("Activity");
+    query.equalTo("trip", trip);
+    query.equalTo("type", "addToTrip");
+    query.equalTo("toUser", toUser);
+
+    return query.first();
+  })
+
+  .then(function(addToTripObject) {
+    console.log(addToTripObject);
+    // If an addToTrip Object, it already exists. 
+    if (addToTripObject) {
+      console.log("ADD TO TRIP OBJECT FOUND SO ALREADY ADDED");
+      return Parse.Promise.error("User already added to trunk");
+    }
+
+    // ADD TRUNK MEMBER TO ROLE
+    var roleName;
+    // If an ApprovingUser is passed in
+    if (trip.id) {
+      roleName = "trunkMembersOf_" + trip.id;
+    }
+    else  {
+      return Parse.Promise.error("No trip id passed so we have no Role Name");
+    }
+
+    var roleQuery = new Parse.Query(Parse.Role);
+    roleQuery.equalTo("name", roleName);
+    console.log("Looking for role name: " + roleName);
+
+    return roleQuery.first();
+
+  }).then(function(role) {
+    console.log("Role Found: " + role);
+    if (role) {
+      role.getUsers().add(toUser);
+      return role.save();
+    }
+    return Parse.Promise.error("No Role found for name: " + roleName);
+
+  }).then(function() {
+    /* SUCCESS */
+    console.log("Role Updated, so now save the Activity");
+
+        // Create an Activity for addedPhoto
+    var Activity = Parse.Object.extend("Activity");
+    var activity = new Activity();
+    activity.set("type", "addToTrip");
+    activity.set("trip", trip);
+    activity.set("fromUser", fromUser);
+    activity.set("toUser", toUser);
+    activity.set("content", content);
+    activity.set("latitude", latitude);
+    activity.set("longitude", longitude);
+
+    var acl = new Parse.ACL(fromUser);
+    acl.setPublicReadAccess(true); // Initially, we set up the Role to have public
+    acl.setWriteAccess(toUser, true); // We give public write access to the role also - Anyone can decide to be someone's friend (aka follow them)
+    activity.setACL(acl);
+    return activity.save();
+    
+  })
+  .then(function(activity) {
+    console.log('Successfully saved Activity');
+    return response.success();
+
+  }, function(error) {
+    /* ERROR */
+    console.error(error);
+
+    return response.error(error);
+  });
+
+  
+});
+
+/*
  * BEFORE SAVE - ACTIVITY
  */
 Parse.Cloud.beforeSave('Activity', function(request, response) {
@@ -113,6 +228,11 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
       // Not a new activity, so we're doing an update.
       return response.success();
     }
+
+    if (activity.get("latitude") && activity.get("longitude")) {
+      console.log("> Version 1.3, meaning Cloud Function is used for adding user to trip.");
+      return response.success();
+    }
     // Otherwise, this is a new activity.
     
 /* We commented out the blockQuery because this request times out. Eventually, users need to be able to block people */
@@ -134,7 +254,7 @@ Parse.Cloud.beforeSave('Activity', function(request, response) {
     query.equalTo("trip", activity.get("trip"));
     query.equalTo("type", "addToTrip");
     query.equalTo("toUser", toUser);
-    
+
     query.first()
     .then(function(addToTripObject) {
       console.log(addToTripObject);
