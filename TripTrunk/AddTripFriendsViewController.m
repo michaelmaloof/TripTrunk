@@ -29,6 +29,7 @@
 // Array of PFUser objects that are already part of the trip
 @property (strong, nonatomic) NSMutableArray *existingMembers;
 @property BOOL isNext;
+@property NSMutableArray *membersToAdd;
 
 @end
 
@@ -48,6 +49,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.membersToAdd = [[NSMutableArray alloc]init];
     if (!self.existingMembers) {
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
@@ -268,10 +270,33 @@
 
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isNext == YES){
+        [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        
+     
+    } else {
+        [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    if (self.isNext == YES){
+        [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+    } else {
+        [self.membersToAdd removeObject:[self.searchResults objectAtIndex:indexPath.row]];
+    }
+}
+
+
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selection of existing members
     [cell setSelected:[self userExists:cell.user inArray:self.existingMembers]];
+    
+    if (cell.selected == NO){
+        [cell setSelected:[self userExists:cell.user inArray:self.membersToAdd]];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -360,7 +385,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.title = @"TripTrunk";
     
-    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+//    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
     
     if (self.isTripCreation) {
         // It's the creation flow, so add the creator as a "member" to the trip
@@ -371,7 +396,7 @@
     
     // TODO: If this test is true, and it's the Search Controller, then it'll go back instead of just hiding the search controller.
     // This needs to just go back to the main list.
-    if (selectedRows.count == 0 && !self.isTripCreation) {
+    if (self.membersToAdd.count == 0 && !self.isTripCreation) {
         // Adding friends to an existing trip, so pop back
         [self.navigationController popViewControllerAnimated:YES];
         [self.delegate memberWasAdded:self];
@@ -380,12 +405,10 @@
         return; // make sure it doesn't execute further.
 
     }
-    else if (selectedRows.count > 0)
+    else if (self.membersToAdd.count > 0)
     {
         
-        for (NSIndexPath *indexPath in selectedRows) {
-            
-            PFUser *user = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        for (PFUser *user in self.membersToAdd) {
             
             // Create the params dictionary of all the info we need in the Cloud Function
             NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
