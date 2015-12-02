@@ -414,7 +414,14 @@
             NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
             
             // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
-            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+//            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+            
+            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params block:
+            ^(id  _Nullable object, NSError * _Nullable error) {
+                if (self.delegate) {
+                    [self.delegate memberWasAdded:self];
+                }
+            }];
             
             
             // Update the Trip's ACL if it's a private trip.
@@ -431,9 +438,9 @@
     
     // Re-enable bar button and let the delegate know that things were updated.
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    if (self.delegate) {
-        [self.delegate memberWasAdded:self];
-    }
+//    if (self.delegate) {
+//        [self.delegate memberWasAdded:self];
+//    }
     
     // Perform the Navigation to the next/previous screen.
     // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.

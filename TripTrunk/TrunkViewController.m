@@ -521,8 +521,9 @@
                                                [(Photo *)[self.photos objectAtIndex:index] setImage:image];
                                                
                                            }
-
+                                   
                                            weakCell.photo.image = image;
+                                           
 //                                           [weakCell setNeedsLayout];
                                            [weakCell layoutIfNeeded];
                                            
