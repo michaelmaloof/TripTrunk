@@ -60,7 +60,7 @@
     
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next",@"Next")
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk")
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(saveFriendsAndClose)];
@@ -223,7 +223,7 @@
     if (self.isEditing){
         [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
     } else if (self.isNext == YES){
-        [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Next",@"Next")];
+        [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk")];
 
     }
 }
