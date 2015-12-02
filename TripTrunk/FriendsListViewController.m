@@ -252,7 +252,7 @@
             text = [NSString stringWithFormat:@"%@ is not following anyone yet.", [_thisUser valueForKey:@"name"]];
         }
         else {
-            text = [NSString stringWithFormat:@"%@ They have you followers yet. :( You could be their first!", [_thisUser valueForKey:@"name"]];
+            text = [NSString stringWithFormat:@"%@, they have no followers yet. :( You could be their first!", [_thisUser valueForKey:@"name"]];
         }
     }
     
