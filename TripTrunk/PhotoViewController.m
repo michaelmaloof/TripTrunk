@@ -601,12 +601,12 @@
 }
 
 - (IBAction)likeCountButtonPressed:(id)sender {
-    
-    ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
-//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navController animated:YES completion:nil];
-    [self.navigationController pushViewController:vc animated:YES];
-
+    if (self.likeActivities.count > 0){
+        ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
+        //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        //    [self presentViewController:navController animated:YES completion:nil];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 - (IBAction)editCaptionTapped:(id)sender {
     
