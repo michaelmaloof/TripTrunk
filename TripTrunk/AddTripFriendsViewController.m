@@ -31,6 +31,9 @@
 @property BOOL isNext;
 @property NSMutableArray *membersToAdd;
 
+@property BOOL didTapCreated;
+
+
 @end
 
 @implementation AddTripFriendsViewController
@@ -74,7 +77,7 @@
     }
     else
     {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save",@"Save") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
   
     
     }
@@ -223,8 +226,13 @@
     if (self.isEditing){
         [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
     } else if (self.isNext == YES){
-        [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk")];
+        if (self.didTapCreated == YES){
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
 
+        }else {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
+
+        }
     }
 }
 
@@ -451,7 +459,11 @@
     }
     else {
         // Nex trip creation flow, so push forward
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
+
         [self performSegueWithIdentifier:@"photos" sender:self];
+        self.didTapCreated = YES;
+
     }
     
 }
