@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -127,7 +127,7 @@
                                         <action selector="followButtonPressed:" destination="-1" eventType="touchUpInside" id="TCx-l2-gE3"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Austin Barnard" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T27-K3-6wj">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TripTrunk" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T27-K3-6wj">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                     <animations/>
                                     <constraints>
@@ -148,7 +148,8 @@
                                             <exclude reference="yF8-cz-ITr"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
+                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                        <rect key="frame" x="132" y="200" width="113" height="36"/>
                                         <mask key="constraints">
                                             <exclude reference="Z5r-gk-8ee"/>
                                             <exclude reference="m3l-oi-RqO"/>
@@ -197,7 +198,7 @@
                                         <constraint firstAttribute="height" constant="35" id="qvE-MO-VNw"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                    <state key="normal" title="355 Following">
+                                    <state key="normal" title="Following">
                                         <color key="titleColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="titleShadowColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
@@ -222,7 +223,7 @@
                                         <action selector="followingButtonPressed:" destination="-1" eventType="touchUpInside" id="qL0-YY-vCt"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Los Angeles, CA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-Zi-cae">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Earth" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-Zi-cae">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                     <animations/>
                                     <constraints>
@@ -238,14 +239,15 @@
                                             <exclude reference="mGR-l4-F8f"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
+                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                        <rect key="frame" x="172" y="402" width="32" height="17"/>
                                         <mask key="constraints">
                                             <exclude reference="AgD-3A-9Ia"/>
                                             <exclude reference="mGR-l4-F8f"/>
                                         </mask>
                                     </variation>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@awbarnard" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gSV-73-NgV">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gSV-73-NgV">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                     <animations/>
                                     <constraints>
@@ -305,7 +307,7 @@
                                         </constraint>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                    <state key="normal" title="355 Followers">
+                                    <state key="normal" title="Followers">
                                         <color key="titleColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="titleShadowColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
@@ -317,8 +319,9 @@
                                             <exclude reference="Q62-hH-ZHq"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
+                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                        <rect key="frame" x="278" y="322" width="65" height="30"/>
                                         <mask key="constraints">
                                             <exclude reference="3zG-w1-GN9"/>
                                             <exclude reference="DjZ-UL-2Jo"/>

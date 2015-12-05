@@ -603,6 +603,43 @@
     }];
 }
 
++ (void)pendingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
+{
+    NSMutableArray *friends = [[NSMutableArray alloc] init];
+
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKey:@"fromUser" equalTo:user];
+    [followingQuery whereKey:@"type" equalTo:@"pending_follow"];
+    [followingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [followingQuery includeKey:@"toUser"];
+    [followingQuery setLimit:100];
+    [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error)
+        {
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }
+        else if (!error)
+        {
+            // Map the activity users into the friends array
+            for (PFObject *activity in objects)
+            {
+                if (![user[@"fbid"]isEqualToString:user[@"username"]]){
+                    PFUser *user = activity[@"toUser"];
+                    [friends addObject:user];
+                }
+            }
+            // Update the cache
+            if (friends.count > 0) {
+                [[TTCache sharedCache] setFollowing:friends];
+            }
+            
+            completionBlock(friends, error);
+        }
+        
+    }];
+}
+
 + (void)followers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
 {
     NSMutableArray *friends = [[NSMutableArray alloc] init];
