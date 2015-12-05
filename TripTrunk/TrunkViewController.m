@@ -49,6 +49,7 @@
 @property BOOL firstLoadDone;
 @property int likes;
 @property UITextView *descriptionTextView;
+@property NSMutableArray *loadingMembers;
 
 @end
 
@@ -106,6 +107,8 @@
                                              selector:@selector(queryParseMethod)
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
+    
+    self.loadingMembers = [[NSMutableArray alloc]init];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -556,12 +559,15 @@
         cell.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
         
         if (indexPath.item == 0){
+            cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"members"];
             
         } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == NO){
+            cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
             
         } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
             
         }else {
@@ -575,6 +581,12 @@
             } else {
                 possibleFriend = [self.members objectAtIndex:index - 1];
 
+            }
+            
+            if ([self.loadingMembers containsObject:possibleFriend]){
+                cell.profileImage.alpha = .5;
+            } else {
+                cell.profileImage.alpha = 1;
             }
 
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -671,6 +683,20 @@
 
 
 -(void)memberWasAdded:(id)sender{
+    self.firstLoadDone = YES;
+    [self.loadingMembers removeAllObjects];
+    [self.memberCollectionView reloadData];
+
+}
+
+-(void)memberWasAddedTemporary:(PFUser *)profile{
+    self.firstLoadDone = YES;
+    [self.members addObject:profile];
+    [self.loadingMembers addObject:profile];
+    [self.memberCollectionView reloadData];
+}
+
+-(void)memberFailedToLoad:(id)sender{
     self.firstLoadDone = YES;
     [self.members removeAllObjects];
     [self checkIfIsMember];

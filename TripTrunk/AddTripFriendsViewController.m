@@ -423,11 +423,16 @@
             
             // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
 //            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
-            
+            [self.delegate memberWasAddedTemporary:user];
             [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params block:
             ^(id  _Nullable object, NSError * _Nullable error) {
                 if (self.delegate) {
-                    [self.delegate memberWasAdded:self];
+                    
+                    if (!error){
+                        [self.delegate memberWasAdded:self];
+                    } else {
+                        [self.delegate memberFailedToLoad:self];
+                    }
                 }
             }];
             
