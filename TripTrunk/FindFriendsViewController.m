@@ -29,6 +29,7 @@
 
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (strong, nonatomic) NSMutableArray *following; // users this user is already following
+@property (strong, nonatomic) NSMutableArray *pending; // users this user has requested to follow
 
 @property (strong, nonatomic) NSMutableArray *promoted;
 
@@ -52,6 +53,7 @@
 
     _friends = [[NSMutableArray alloc] init];
     _following = [[NSMutableArray alloc] init];
+    _pending = [[NSMutableArray alloc] init];
 
     _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
 
@@ -193,6 +195,24 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
+            
+            
+            // Now that we have the array of following, lets also get their Pending..this should be a smaller array.
+            [SocialUtility pendingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+                if (!error && users.count > 0) {
+                    for (PFUser *user in users) {
+                        [_pending addObject:user.objectId];
+                    }
+                    // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView reloadData];
+                    });
+                }
+                else {
+                    NSLog(@"Error loading pending: %@",error);
+                }
+            }];
+            
         }
         else {
             NSLog(@"Error loading following: %@",error);
@@ -467,6 +487,15 @@
             // Cache the user's follow status
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
         }
+        else if([_pending containsObject:possibleFriend.objectId]) {
+            NSLog(@"PENDING");
+            [weakCell.followButton setHidden:NO];
+            weakCell.followButton.enabled = YES;
+            [weakCell.followButton setSelected:YES];
+            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+            // Cache the following status as PENDING
+            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:possibleFriend];
+        }
         else {
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
         }
@@ -539,6 +568,10 @@
     else {
         // Follow
         [cellView.followButton setSelected:YES];
+        
+        if (user[@"private"]) {
+            [cellView.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+        }
         
         // Add the user to the following array so we have a local copy of who they're following.
         [_following addObject:user];

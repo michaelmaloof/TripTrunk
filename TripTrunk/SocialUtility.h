@@ -191,6 +191,14 @@
 + (void)followingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
 
 /**
+ *  Gets the list of users that the given user has requested to follow
+ *
+ *  @param user            User of which we want their pending list
+ *  @param completionBlock completion block with users array or error
+ */
++ (void)pendingUsers:(PFUser *)user block:(void (^)(NSArray *users, NSError *error))completionBlock;
+
+/**
  *  Gets the list of users that follow a given user
  *
  *  @param user            User to find the followers of
