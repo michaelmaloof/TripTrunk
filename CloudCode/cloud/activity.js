@@ -557,7 +557,15 @@ Parse.Cloud.define("approveFriend", function(request, response) {
         query.equalTo("type", "pending_follow");
         query.first().then(function(activity) {
           if (activity) {
+            // Change the type to follow
             activity.set("type", "follow");
+
+            // Pending_follow activities are readable only by the two users involved. 
+            // It should be public now that it's a "follow" activity.
+            var acl = activity.getACL();
+            acl.setPublicReadAccess(true);
+            activity.setACL(acl);
+
             return activity.save();
           }
           else {
