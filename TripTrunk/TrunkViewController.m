@@ -524,7 +524,7 @@
                                                [(Photo *)[self.photos objectAtIndex:index] setImage:image];
                                                
                                            }
-                                           weakCell.photo.frame = CGRectMake(weakCell.frame.origin.x, weakCell.frame.origin.y, weakCell.frame.size.width, weakCell.frame.size.height);
+//                                           weakCell.photo.frame = CGRectMake(weakCell.frame.origin.x, weakCell.frame.origin.y, weakCell.frame.size.width, weakCell.frame.size.height);
                                            weakCell.photo.image = image;
                                            
 //                                           [weakCell setNeedsLayout];
