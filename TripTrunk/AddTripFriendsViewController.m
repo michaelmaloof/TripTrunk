@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSMutableArray *existingMembers;
 @property BOOL isNext;
 @property NSMutableArray *membersToAdd;
+@property BOOL isSearching;
 
 @property BOOL didTapCreated;
 
@@ -211,7 +212,7 @@
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active) {
         return [[_friends objectAtIndex:section] count];
-    } else if (self.isNext == NO){
+    } else if (self.isNext == NO && self.isSearching == YES){
         return self.searchResults.count;
     } else {
         return [[_friends objectAtIndex:section] count];
@@ -223,6 +224,7 @@
 }
 
 -(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+    
     if (self.isEditing){
         [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
     } else if (self.isNext == YES){
@@ -240,7 +242,7 @@
     PFUser *possibleFriend;
     
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO) {
+    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
@@ -279,20 +281,27 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isNext == YES){
+    
+    if (self.isNext == YES && self.isSearching == NO){
         [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         
      
-    } else {
+    } else if (self.isSearching == YES){
         [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
+    } else {
+        [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
+    
+    self.isSearching = NO;
 }
 
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    if (self.isNext == YES){
+    if (self.isNext == YES && self.isSearching == NO ){
         [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-    } else {
+    } else if (self.isSearching == YES){
         [self.membersToAdd removeObject:[self.searchResults objectAtIndex:indexPath.row]];
+    } else {
+        [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
 }
 
@@ -300,11 +309,15 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selection of existing members
-    [cell setSelected:[self userExists:cell.user inArray:self.existingMembers]];
-    
-    if (cell.selected == NO){
-        [cell setSelected:[self userExists:cell.user inArray:self.membersToAdd]];
+    if ([self userExists:cell.user inArray:self.existingMembers] == YES){
+        [cell setSelected:YES];
+    } else if ([self userExists:cell.user inArray:self.membersToAdd] == YES){
+        [cell setSelected:YES];
+    } else {
+        [cell setSelected:NO];
+
     }
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -520,6 +533,8 @@
  */
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"cancel button pressed: %lu", (unsigned long)[self.tableView indexPathsForSelectedRows].count);
+    
+    self.isSearching = NO;
 
     if (self.isNext == YES) {
         [self saveFriendsAndClose];
@@ -567,12 +582,14 @@
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
+        self.isSearching = YES;
             [self filterResults:searchBar.text];
     }
 }
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     self.isNext = NO;
+//    self.isSearching = YES;
     [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
 }
 
