@@ -70,7 +70,7 @@
 
 -(void)question{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't Find The City You Want?",@"Can't Find The City You Want?")
-                                                    message:NSLocalizedString(@"Email our CEO at austinbarnard@triptrunk.com and he will personally add it for you.",@"Email our CEO at austinbarnard@triptrunk.com and he will personally add it for you.")
+                                                    message:NSLocalizedString(@"Email our CEO at austinbarnard@triptrunkapp.com and he will personally add it for you.",@"Email our CEO at austinbarnard@triptrunkapp.com and he will personally add it for you.")
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                           otherButtonTitles:nil, nil];
