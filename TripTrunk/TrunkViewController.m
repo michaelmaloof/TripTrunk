@@ -720,13 +720,16 @@
         if (self.isMember == YES) {
             vc.photo = [self.photos objectAtIndex:self.path.item -1];
             vc.trip = self.trip;
+            vc.arrayInt = self.path.item - 1;
+
         } else {
             vc.photo = [self.photos objectAtIndex:self.path.item];
             vc.trip = self.trip;
+            vc.arrayInt = self.path.item;
+
 
         }
         vc.photos = self.photos;
-        vc.arrayInt = self.path.item - 1;
         self.path = nil;
     }
     
