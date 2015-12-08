@@ -82,16 +82,19 @@
     
     [self refreshTripDataViews];
     
-    if (self.trip.publicTripDetail.totalLikes < 1){
-        self.totalLikeButton.hidden = YES;
-        self.totalLikeHeart.hidden = YES;
-    } else {
-        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-        self.totalLikeButton.textColor = [UIColor whiteColor];
-        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-        self.totalLikeButton.hidden = NO;
-        self.totalLikeHeart.hidden = NO;
-    }
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (self.trip.publicTripDetail.totalLikes < 1){
+            self.totalLikeButton.hidden = YES;
+            self.totalLikeHeart.hidden = YES;
+        } else {
+            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+            self.totalLikeButton.textColor = [UIColor whiteColor];
+            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+            self.totalLikeButton.hidden = NO;
+            self.totalLikeHeart.hidden = NO;
+        }
+    }];
+
     
     self.photos = [[NSArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
