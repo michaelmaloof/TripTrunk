@@ -829,11 +829,15 @@
             
             //fixme, this should me done after the photo has been confirmed and deleted
             self.photo.trip.publicTripDetail.totalLikes = self.photo.trip.publicTripDetail.totalLikes - (int)[[TTCache sharedCache] likeCountForPhoto:self.photo];
-            NSLog(@"%d",(int)[[TTCache sharedCache] likeCountForPhoto:self.photo]);
+   
+            if ([self.photo isEqual:[self.photos objectAtIndex:0]]){
+                Photo *photoMost = [self.photos objectAtIndex:1];
+                self.trip.publicTripDetail.mostRecentPhoto = photoMost.createdAt;
+            }
+            
             [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo]];
             
             [[TTUtility sharedInstance] deletePhoto:self.photo];
-
             
             [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 // dismiss the view
