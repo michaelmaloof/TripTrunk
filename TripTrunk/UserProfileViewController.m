@@ -17,7 +17,7 @@
 #import "HomeMapViewController.h"
 #import "EditProfileViewController.h"
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
@@ -390,7 +390,22 @@
         // Unfollow
         NSLog(@"Attempt to unfollow %@",_user.username);
         [self.followButton setSelected:NO]; // change the button for immediate user feedback
-        [SocialUtility unfollowUser:_user];
+        
+        if (self.user[@"private"] == NO){
+            [SocialUtility unfollowUser:_user];
+        } else if (self.isFollowing == YES){
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.tag = 11;
+            NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
+            alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, self.user.username];
+            alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
+            [alertView show];
+
+        }
     }
     else {
         // Follow
@@ -529,6 +544,8 @@
     if (buttonIndex == 1 && alertView.tag == 1) {
         // BLOCK USER
         [SocialUtility blockUser:_user];
+    } else if (alertView.tag == 11 && buttonIndex == 1){
+        [SocialUtility unfollowUser:_user];
     }
 }
 

@@ -17,13 +17,15 @@
 #import "UIScrollView+EmptyDataSet.h"
 #import "UIColor+HexColors.h"
 
-@interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UISearchController *searchController;
 
 @property NSString *searchString;
 
 @property int fbCount;
+
+@property PFUser *user;
 
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
@@ -38,6 +40,7 @@
 @property BOOL removeResults;
 
 @property BOOL friendsMaxed;
+
 
 
 @end
@@ -467,7 +470,7 @@
     
     // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
     NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-    if (followStatus.intValue > 0) {
+    if (followStatus.intValue > 0 && self.user !=possibleFriend) {
         weakCell.followButton.enabled = YES;
         [weakCell.followButton setSelected:YES];
         [weakCell.followButton setHidden:NO];
@@ -479,7 +482,7 @@
         [weakCell.followButton setSelected:NO];
         [weakCell.followButton setHidden:NO];
         
-        if ([_following containsObject:possibleFriend.objectId]) {
+        if ([_following containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
             NSLog(@"FOLLOWING");
             [weakCell.followButton setHidden:NO];
             weakCell.followButton.enabled = YES;
@@ -487,7 +490,7 @@
             // Cache the user's follow status
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
         }
-        else if([_pending containsObject:possibleFriend.objectId]) {
+        else if([_pending containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
             NSLog(@"PENDING");
             [weakCell.followButton setHidden:NO];
             weakCell.followButton.enabled = YES;
@@ -562,8 +565,23 @@
     
     if ([cellView.followButton isSelected]) {
         // Unfollow
-        [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
-        [SocialUtility unfollowUser:user];
+        //FIXME FOR INTERNATIONAL, USING STRING COMPARISSON
+        if ((BOOL)user[@"private"] == YES && ![cellView.followButton.titleLabel.text isEqual:@"Pending"]){
+            self.user = user;
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            alertView.delegate = self;
+            alertView.tag = 11;
+            NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
+            alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, user.username];
+            alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
+            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel")];
+            [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
+            [alertView show];
+        } else {
+            [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
+            [SocialUtility unfollowUser:user];
+        }
     }
     else {
         // Follow
@@ -700,6 +718,16 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (alertView.tag == 11 && buttonIndex == 1){
+        [SocialUtility unfollowUser:self.user];
+        [self.tableView reloadData];
+    } else {
+        self.user = nil;
+    }
 }
 
 

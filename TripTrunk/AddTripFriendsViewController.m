@@ -240,7 +240,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PFUser *possibleFriend;
-    
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
@@ -254,7 +253,6 @@
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    
     [cell.followButton setSelected:_isFollowing];
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -284,8 +282,7 @@
     
     if (self.isNext == YES && self.isSearching == NO){
         [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-        
-     
+    
     } else if (self.isSearching == YES){
         [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
     } else {
@@ -315,7 +312,6 @@
         [cell setSelected:YES];
     } else {
         [cell setSelected:NO];
-
     }
     
 }
