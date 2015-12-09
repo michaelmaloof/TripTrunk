@@ -240,6 +240,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PFUser *possibleFriend;
+    
+    
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
@@ -308,8 +310,10 @@
     // Set selection of existing members
     if ([self userExists:cell.user inArray:self.existingMembers] == YES){
         [cell setSelected:YES];
+
     } else if ([self userExists:cell.user inArray:self.membersToAdd] == YES){
         [cell setSelected:YES];
+
     } else {
         [cell setSelected:NO];
     }

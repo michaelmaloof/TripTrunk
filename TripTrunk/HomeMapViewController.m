@@ -45,6 +45,7 @@
 @property NSMutableArray *needsUpdates;
 @property NSMutableArray *haventSeens;
 @property CLLocation *location;
+@property Trip *justMadeTrip;
 
 @end
 
@@ -492,6 +493,8 @@
 -(void)placeTrips
 {
 
+    self.justMadeTrunk = nil;
+    self.justMadeTrunk = [[NSMutableArray alloc]init];
 //If the original array of trunks we loaded when viewDidLoad was called then there are no current trunks on the map. We can just display the new trunks.
     if (self.originalArray.count == 0)
     {
@@ -564,8 +567,8 @@
             self.hotDots = [[NSMutableArray alloc]init];
             self.locations = nil;
             self.locations = [[NSMutableArray alloc]init];
-            self.justMadeTrunk = nil;
-            self.justMadeTrunk = [[NSMutableArray alloc]init];
+//            self.justMadeTrunk = nil;
+//            self.justMadeTrunk = [[NSMutableArray alloc]init];
             self.isNew= NO;
             
 
@@ -653,7 +656,7 @@
     NSDate *date = trip.createdAt;
     NSTimeInterval interval = [date timeIntervalSinceNow];
     
-    //if the trunk was made less than 30 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
+    //if the trunk was made less than 300 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
     if (isMostRecent == YES){
         CLLocationCoordinate2D center = annotation.coordinate;
         
@@ -671,11 +674,14 @@
     }
     
     
-    else if (interval > -30 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
+    else if (interval > -300 && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId] && self.justMadeTrunk && trip.objectId != self.tripToCheck.objectId) {
         self.isNew = YES;
         self.tripToCheck = trip;
         
-        [self.justMadeTrunk addObject:annotation];
+        if (![self.tripToCheck.city isEqualToString:self.justMadeTrip.city]){
+                [self.justMadeTrunk addObject:annotation];
+                self.tripToCheck = trip;
+        }
     }
     //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
     if (hot == YES)
