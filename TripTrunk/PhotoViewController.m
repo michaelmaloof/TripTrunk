@@ -838,10 +838,10 @@
             [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo]];
             
             [[TTUtility sharedInstance] deletePhoto:self.photo];
-            
+            [self.navigationController popViewControllerAnimated:YES];
+
             [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 // dismiss the view
-                [self.navigationController popViewControllerAnimated:YES];
             }];
             
         }
