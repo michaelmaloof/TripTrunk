@@ -308,9 +308,11 @@
 {
     // Set selection of existing members
     if ([self userExists:cell.user inArray:self.existingMembers] == YES){
+        [cell setSelected:NO];
         [cell setSelected:YES];
 
     } else if ([self userExists:cell.user inArray:self.membersToAdd] == YES){
+        [cell setSelected:NO];
         [cell setSelected:YES];
 
     } else {
