@@ -89,7 +89,9 @@
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
             [self queryParseMethodEveryone];
 //We're on the home tab so register the user's notifications
+            if (self.tutorialComplete == YES){
             [self registerNotifications];
+            }
             
         } else {
 //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
@@ -428,7 +430,7 @@
 //use parse to download the trunks of the current user and the users they are following
             [self queryForTrunks];
             
-            if (users.count == 0) {
+            if (users.count == 0 && self.tutorialComplete == YES) {
 //They're following no one, tell them to make some friends
                 [self displayFollowUserAlertIfNeeded];
                 
