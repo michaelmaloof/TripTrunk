@@ -687,6 +687,19 @@
 
 -(void)memberWasAdded:(id)sender{
     self.firstLoadDone = YES;
+    
+    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
+    NSInteger oneThirdView = self.view.frame.size.width / 1.5;
+    if (oneThirdView < memberWidthTotal){
+        self.memberCollectionWidth.constant = self.view.frame.size.width;
+        self.memberCollectionView.hidden = NO;
+        
+    } else {
+        self.memberCollectionWidth.constant = memberWidthTotal;
+        self.memberCollectionView.hidden = NO;
+        
+    }
+    
     [self.loadingMembers removeAllObjects];
     [self.memberCollectionView reloadData];
 
