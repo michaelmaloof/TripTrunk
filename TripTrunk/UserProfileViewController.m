@@ -153,8 +153,6 @@
     self.mapButton.userInteractionEnabled = NO;
     self.followersButton.enabled = NO;
 
-    
-    
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         self.followButton.enabled = YES;
@@ -168,6 +166,10 @@
     else {
         // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
+        if (followStatus.intValue == 2){
+            [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+        }
+        
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -193,7 +195,7 @@
 
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                 }
-                else {
+                else if (followStatus.intValue == 1) {
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
                     if ((BOOL)self.user[@"private"] == 1){
                         self.isFollowing = YES;
@@ -249,7 +251,7 @@
                             
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                         }
-                        else {
+                        else if (followStatus.intValue == 1){
                             self.isFollowing = YES;
                             self.followButton.enabled = YES;
                             self.followersButton.enabled = YES;
