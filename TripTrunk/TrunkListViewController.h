@@ -9,8 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "TTBaseViewController.h"
-
-
+#import "Trip.h"
 
 @interface TrunkListViewController : TTBaseViewController
 @property NSString *city;
@@ -20,5 +19,8 @@
 
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;
+
+-(void)reloadTrunkList:(Trip*)trip;
+
 
 @end

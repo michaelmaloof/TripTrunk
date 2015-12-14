@@ -17,6 +17,7 @@
 #import "HomeMapViewController.h"
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
 #import "PublicTripDetail.h"
+#import "TrunkListViewController.h"
 
 @interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate>
 @property NSMutableArray *photos;
@@ -112,7 +113,19 @@
                 }
                 }
             }
+        
+        for (TrunkListViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[TrunkListViewController class]]){
+                if (self.photos.count >0){
+                    [view reloadTrunkList:self.trip];
+                } else {
+                    [view reloadTrunkList:self.trip];
+                }
             }
+        }
+
+        }
 
     
     [self uploadAllPhotos];
