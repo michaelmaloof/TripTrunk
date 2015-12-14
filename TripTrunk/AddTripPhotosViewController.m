@@ -81,24 +81,39 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
+//    for (UINavigationController *controller in self.tabBarController.viewControllers)
+//    {
+//        if(controller == self.tabBarController.viewControllers[0])
+//        {
+//            for (HomeMapViewController *view in controller.viewControllers)
+//            {
+//                if (view == controller.viewControllers[0])
+//                {
+//                    if (self.photos.count >0){
+//                       [view updateTrunkColor:self.trip isHot:YES];
+//                    } else {
+//                        [view updateTrunkColor:self.trip isHot:NO];
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//    }
+    
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
-        if(controller == self.tabBarController.viewControllers[0])
-        {
-            for (HomeMapViewController *view in controller.viewControllers)
+        for (HomeMapViewController *view in controller.viewControllers)
             {
-                if (view == controller.viewControllers[0])
-                {
-                    if (self.photos.count >0){
-                       [view updateTrunkColor:self.trip isHot:YES];
-                    } else {
-                        [view updateTrunkColor:self.trip isHot:NO];
-                    }
-                    break;
+                if ([view isKindOfClass:[HomeMapViewController class]]){
+                if (self.photos.count >0){
+                    [view updateTrunkColor:self.trip isHot:YES];
+                } else {
+                    [view updateTrunkColor:self.trip isHot:NO];
+                }
                 }
             }
-        }
-    }
+            }
+
     
     [self uploadAllPhotos];
 }

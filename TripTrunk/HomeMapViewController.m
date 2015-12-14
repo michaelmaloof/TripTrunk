@@ -672,6 +672,7 @@
         self.zoomOut.hidden = NO;
         
         [self.mapView setRegion:region animated:YES];
+        [self.mapView selectAnnotation:annotation animated:NO];
         
     }
     
