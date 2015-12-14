@@ -297,7 +297,20 @@
     if (self.isNext == YES && self.isSearching == NO ){
         [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     } else if (self.isSearching == YES){
-        [self.membersToAdd removeObject:[self.searchResults objectAtIndex:indexPath.row]];
+        PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
+        BOOL delete = false;
+        for (PFUser *deleteUser in self.membersToAdd){
+            if ([user.objectId isEqualToString:deleteUser.objectId])
+            {
+                delete = YES;
+                user = deleteUser;
+                break;
+            }
+        }
+        
+        if (delete == YES){
+            [self.membersToAdd removeObject:user];
+        }
     } else {
         [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
@@ -306,21 +319,15 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    for (NSIndexPath *indexPath in tableView.indexPathsForSelectedRows) {
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    }
     
     // Set selection of existing members
     if ([self userExists:cell.user inArray:self.existingMembers] == YES){
-        [cell setSelected:NO];
-        [cell setSelected:YES];
-
+//        [cell setSelected:YES];
+        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([self userExists:cell.user inArray:self.membersToAdd] == YES){
-        [cell setSelected:NO];
-        [cell setSelected:YES];
-
+        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else {
-        [cell setSelected:NO];
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
     
 }
@@ -424,8 +431,9 @@
     // This needs to just go back to the main list.
     if (self.membersToAdd.count == 0 && !self.isTripCreation) {
         // Adding friends to an existing trip, so pop back
-        [self.navigationController popViewControllerAnimated:YES];
         [self.delegate memberWasAdded:self];
+        [self.navigationController popViewControllerAnimated:YES];
+
 
         
         return; // make sure it doesn't execute further.
