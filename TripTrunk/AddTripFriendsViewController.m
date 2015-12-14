@@ -306,6 +306,10 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    for (NSIndexPath *indexPath in tableView.indexPathsForSelectedRows) {
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
+    
     // Set selection of existing members
     if ([self userExists:cell.user inArray:self.existingMembers] == YES){
         [cell setSelected:NO];
