@@ -618,34 +618,38 @@
     } else {
         self.photo.caption = self.caption.text;
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (!error){
-                
-                if (self.commentActivities.count == 0){
+            if (!error)
+            {
+                if (self.commentActivities.count == 0)
+                {
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                         NSLog(@"caption saved as comment");
                         [self refreshPhotoActivities];
                         [self.caption endEditing:YES];
                     }];
-                } else {
+                } else
+                {
+                    //if there already is a caption we edit it and save it
                     __block BOOL save = NO;
                     for (PFObject *obj in self.commentActivities){
-                        if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
+                        if ((BOOL)[obj objectForKey:@"isCaption"] == YES && save == NO)
+                        {
+                            save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
-                            save = YES;
-                            
                         }
                     }
                     
                     if (save == NO) {
                         
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
-                            NSLog(@"caption saved as comment");
-                            [self refreshPhotoActivities];
-
-                        }];
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
+                         {
+                             NSLog(@"caption saved as comment");
+                             [self refreshPhotoActivities];
+                             
+                         }];
                         
                     }
                     
@@ -654,7 +658,7 @@
             
             [self.caption endEditing:YES];
         }];
-
+        
         
     }
     
