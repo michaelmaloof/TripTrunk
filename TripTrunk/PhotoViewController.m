@@ -19,6 +19,7 @@
 #import "TTCache.h"
 #import "TrunkViewController.h"
 #import "EditCaptionViewController.h"
+#import "UserProfileViewController.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -35,7 +36,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UILabel *photoTakenBy;
+@property (weak, nonatomic) IBOutlet UIButton *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
 @property CGFloat height;
 @property CGFloat originY;
@@ -81,10 +82,10 @@
     
     self.caption.delegate = self;
     
-    self.photoTakenBy.adjustsFontSizeToFitWidth = YES;
+    self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     //FIXME: if I self.photo.user.username it crashes thee app
-    self.photoTakenBy.text = self.photo.userName;
+    [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
     
     // Decide if we should show the trunkNameButton
     // - If we're on the Activity tab, then we want the user to be able to get to the Trunk from the Photo view
@@ -466,7 +467,7 @@
             self.photo = [self.photos objectAtIndex:self.arrayInt];
             [self loadImageForPhoto:self.photo];
             //        self.title = self.photo.userName;
-            self.photoTakenBy.text = self.photo.userName;
+              [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
             if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
                 self.addCaption.hidden = NO;
             } else {
@@ -510,7 +511,7 @@
             }
             [self loadImageForPhoto:self.photo];
             self.title = self.photo.userName;
-            self.photoTakenBy.text = self.photo.userName;
+               [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
             
             
             NSString *comments = NSLocalizedString(@"Comments",@"Comments");
@@ -809,6 +810,7 @@
         
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    [self.photo.trip fetchIfNeeded];
     trunkViewController.trip = (Trip *)self.photo.trip;
     
 //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
@@ -1018,6 +1020,27 @@
     self.caption.text = self.photo.caption;
     [self.photo saveInBackground];
 
+}
+
+- (IBAction)photoTakenByTapped:(id)sender {
+    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
+    
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UserProfileViewController *trunkViewController = (UserProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    [self.photo.user fetchIfNeeded];
+    UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
+    trunkViewController.user = self.photo.user;
+    
+    //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+    //        NSLog(@"Photo View DIsmissed");
+    
+    UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+    if (tabbarcontroller.selectedIndex == 3) {
+        [activityNavController pushViewController:trunkViewController animated:YES];
+    }
+    
+    //    }];
 }
 
 @end

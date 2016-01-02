@@ -36,5 +36,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *followingButton;
 @property (strong, nonatomic) IBOutlet UIButton *logoutButton;
 @property (strong, nonatomic) IBOutlet UIButton *followButton;
+@property (strong, nonatomic) PFUser *user;
+
 
 @end

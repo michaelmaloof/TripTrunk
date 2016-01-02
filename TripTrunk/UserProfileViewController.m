@@ -27,7 +27,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
-@property (strong, nonatomic) PFUser *user;
 @property BOOL isFollowing;
 @property UIImageView *privateAccountImageView;
 @property int privateCount;
