@@ -1565,7 +1565,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="176.5" y="32" width="30" height="29"/>
+                                            <rect key="frame" x="176" y="32" width="30" height="29"/>
                                         </variation>
                                         <connections>
                                             <action selector="trunkNameButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Gbv-Md-k4g"/>
@@ -1693,7 +1693,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="192" id="8Bx-Ly-jJH"/>
                                             <constraint firstAttribute="height" constant="175" id="DT5-oI-7DT">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="120"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="50"/>
                                             </constraint>
                                             <constraint firstAttribute="width" constant="359" id="Ir5-4b-TrL"/>
                                             <constraint firstAttribute="height" constant="175" id="Jjy-5T-izS"/>
@@ -1784,7 +1784,7 @@
                                         <variation key="heightClass=regular-widthClass=compact" constant="160"/>
                                     </constraint>
                                     <constraint firstAttribute="height" constant="64" id="UeT-Z1-nnK">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="200"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="100"/>
                                     </constraint>
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="leading" secondItem="pMh-vC-nPM" secondAttribute="leading" constant="12" id="WqT-5r-cZJ"/>
                                     <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Azv-Ms-g16" secondAttribute="trailing" constant="2" id="YPY-rk-3BU">
