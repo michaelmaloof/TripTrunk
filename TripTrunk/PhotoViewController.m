@@ -20,6 +20,8 @@
 #import "TrunkViewController.h"
 #import "EditCaptionViewController.h"
 #import "UserProfileViewController.h"
+#import "HomeMapViewController.h"
+#import "TrunkListViewController.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -839,15 +841,20 @@
             if ([self.photo isEqual:[self.photos objectAtIndex:0]]){
                 if (self.photos.count > 1){
                     Photo *photoMost = [self.photos objectAtIndex:1];
-                    self.trip.publicTripDetail.mostRecentPhoto = photoMost.createdAt;
+                    self.photo.trip.publicTripDetail.mostRecentPhoto = photoMost.createdAt;
                     //reload map color here
                 } else {
-                    self.trip.publicTripDetail.mostRecentPhoto = nil;
-                    //reload map color here
-
+                    NSString *dateString = @"1200-01-01 01:01:01";
+                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                    [dateFormat setTimeZone:[NSTimeZone systemTimeZone]];
+                    [dateFormat setLocale:[NSLocale currentLocale]];
+                    [dateFormat setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+                    [dateFormat setFormatterBehavior:NSDateFormatterBehaviorDefault];
+                    
+                    NSDate *date = [dateFormat dateFromString:dateString];
+                    self.photo.trip.publicTripDetail.mostRecentPhoto = date;
                 }
-                
-                
+        
             }
             
             if (self.trip.publicTripDetail.photoCount > 0){
@@ -858,6 +865,38 @@
             
             [[TTUtility sharedInstance] deletePhoto:self.photo];
             
+            NSDate *today = [NSDate date];
+            NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
+            
+            BOOL color = 0;
+            if (tripInterval < 86400)
+            {
+                color = 1;
+            } else{
+                color = 0;
+            }
+            
+            for (UINavigationController *controller in self.tabBarController.viewControllers)
+            {
+                for (HomeMapViewController *view in controller.viewControllers)
+                {
+                    if ([view isKindOfClass:[HomeMapViewController class]]){
+                        if (self.photos.count < 1){                                [view updateTrunkColor:self.photo.trip isHot:NO];
+                        } else if (1==1) //instead, find interval and update is HOT
+                        {
+                            [view updateTrunkColor:self.photo.trip isHot:color];
+                        }
+                    }
+                }
+                
+                for (TrunkListViewController *view in controller.viewControllers)
+                {
+                    if ([view isKindOfClass:[TrunkListViewController class]]){
+                        [view reloadTrunkList:self.photo.trip];
+                    }
+                }
+                
+            }
 
             [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 // dismiss the view
