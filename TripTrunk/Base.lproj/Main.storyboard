@@ -157,7 +157,7 @@
         <!--Trunk List View Controller-->
         <scene sceneID="x3T-wA-FQC">
             <objects>
-                <viewController id="iaX-sL-1aH" customClass="TrunkListViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TrunkList" id="iaX-sL-1aH" customClass="TrunkListViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="65g-8q-l87"/>
                         <viewControllerLayoutGuide type="bottom" id="lwA-SP-Ib2"/>
@@ -3848,7 +3848,7 @@
         <image name="Cancel" width="100" height="100"/>
         <image name="Plus Circle" width="100" height="100"/>
         <image name="addCaption" width="100" height="100"/>
-        <image name="addTrunk_tabIcon" width="35" height="30"/>
+        <image name="addTrunk_tabIcon" width="40" height="35"/>
         <image name="add_trunk" width="35" height="30"/>
         <image name="brownMountain_background" width="500" height="890"/>
         <image name="checkCircle" width="100" height="100"/>

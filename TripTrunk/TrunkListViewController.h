@@ -16,6 +16,7 @@
 @property NSString *state;
 @property PFUser *user;
 @property CLLocation *location;
+@property BOOL isList;
 
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;

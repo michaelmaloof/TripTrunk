@@ -44,7 +44,12 @@
     self.meParseLocations = [[NSMutableArray alloc]init];
     self.haventSeens = [[NSMutableArray alloc]init];
     
-    self.title = self.city;
+    if (self.isList == YES) {
+        self.title = self.user.username;
+    } else {
+        self.title = self.city;
+
+    }
     
     self.isMine = NO;
     
@@ -79,12 +84,18 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [self.filter setTitle:@""];
+    
 
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     
-    if (self.user == nil) {
+    if (self.isList == YES){
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [self loadTrunkListBasedOnProfile];
+    }
+    
+    else if (self.user == nil) {
         
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         
@@ -124,10 +135,12 @@
     
     float reload_distance = -250;
     if(y > h + reload_distance) {
-        if (self.isMine == YES){
+        if (self.isMine == YES && self.isList == NO){
             [self loadUserTrunks];
-        }else {
+        }else if (self.isList == NO){
             [self queryForTrunks];
+        } else {
+            [self loadTrunkListBasedOnProfile];
         }
     }
 }
@@ -208,6 +221,62 @@
     }
 }
 
+-(void)loadTrunkListBasedOnProfile{
+    
+    if (self.meParseLocations.count == 0) {
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        if (!self.user){
+            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+            
+        }else{
+            [query whereKey:@"toUser" equalTo:self.user];
+        }
+        [query whereKey:@"type" equalTo:@"addToTrip"];  
+        [query includeKey:@"trip"];
+        [query includeKey:@"trip.creator"];
+        [query includeKey:@"trip.publicTripDetail"];
+        query.limit = 50;
+        query.skip = self.objectsCountMe;
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            else
+            {
+                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
+                for (PFObject *activity in objects){
+                    
+                    Trip *trip = activity[@"trip"];
+                    
+                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
+                    {
+                        [self.meParseLocations addObject:trip];
+                        [self.meObjectIDs addObject:trip.objectId];
+                        
+                        NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                        if (lastTripInterval < 0 || lastPhotoInterval < 0)
+                        {
+                            [self.haventSeens addObject:trip];
+                        }
+                        
+                    }
+                }
+                //                self.filter.tag = 1;
+                [self.tableView reloadData];
+            }
+            
+        }];
+    } else
+    {
+        [self.tableView reloadData];
+    }
+}
+
+
 
 /**
  *  Toggle between loading all the trunks at this city and just the users trunks
@@ -237,12 +306,14 @@
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     
-    if (self.filter.tag == 1) {
+    if (self.filter.tag == 1 && self.isList == NO) {
         self.filter = 0;
         [self loadUserTrunks];
-    } else if (self.filter.tag == 0) {
+    } else if (self.filter.tag == 0 && self.isList == NO) {
         self.filter.tag = 1;
         [self queryParseMethodEveryone];
+    } else if (self.isList == YES){
+        [self loadTrunkListBasedOnProfile];
     }
     
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
@@ -419,14 +490,17 @@
     {
         TrunkViewController *trunkView = segue.destinationViewController;
         
-        if (self.filter.tag == 0 && self.parseLocations != nil && self.user == nil) {
+        if (self.filter.tag == 0 && self.parseLocations != nil && self.user == nil && self.isList == NO) {
             Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
-        } else if (self.filter.tag == 1 && self.meParseLocations != nil){
+        } else if (self.filter.tag == 1 && self.meParseLocations != nil && self.isList == NO){
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
-        } else if (self.user != nil) {
+        } else if (self.user != nil && self.isList == NO) {
             // This is a User Globe Map, so there is no self.filter.tag, and it uses the meParseLocations object.
+            Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
+            trunkView.trip = trip;
+        } else if (self.isList == YES){
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
         }
@@ -438,14 +512,16 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.filter.tag == 0 && self.parseLocations !=nil && self.user == nil) {
+    if (self.filter.tag == 0 && self.parseLocations !=nil && self.user == nil && self.isList == NO) {
         return self.parseLocations.count;
-    }else if (self.filter.tag == 1 && self.meParseLocations !=nil){
+    }else if (self.filter.tag == 1 && self.meParseLocations !=nil && self.isList == NO){
         return self.meParseLocations.count;
     }
-    else  if (self.user != nil){
+    else if (self.user != nil && self.isList == NO){
         return self.meParseLocations.count;
-    } else {
+    } else if (self.isList == YES){
+        return self.meParseLocations.count;
+    }else {
         return 0;
     }
 }
@@ -458,12 +534,11 @@
     cell.lockImage.hidden = YES;
     cell.seenLogo.hidden = YES;
     
-    if (self.filter.tag == 0 && self.user == nil) {
+    if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
         
     } else {
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
-        
     }
     
     if (trip.isPrivate == YES){

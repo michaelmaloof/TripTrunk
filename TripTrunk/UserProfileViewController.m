@@ -16,6 +16,7 @@
 #import "TTCache.h"
 #import "HomeMapViewController.h"
 #import "EditProfileViewController.h"
+#import "TrunkListViewController.h"
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -58,7 +59,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//
+//    
     self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -628,5 +629,40 @@
     [viewController.navigationItem setTitle:NSLocalizedString( @"Select Profile Image",@"Select Profile Image")];
 }
 
+- (IBAction)trunkListTapped:(id)sender {
+    if (![self.mapButton.titleLabel.text isEqualToString:@""]){
+        if ((BOOL)self.user[@"private"] == 0){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+            vc.user = self.user;
+            vc.isList = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+            vc.user = self.user;
+            vc.isList = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+            vc.user = self.user;
+            vc.isList = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            [self increaseLockSize];
+        }
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && [self.mapButton.titleLabel.text isEqualToString:@""]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
+                                                        message:NSLocalizedString(@"Go create some memories and we will store them here for you.",@"Go create some memories and we will store them here for you.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        
+        alert.tag = 11;
+        [alert show];
+    }
+
+}
 
 @end
