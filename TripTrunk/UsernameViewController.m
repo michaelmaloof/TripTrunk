@@ -166,7 +166,60 @@
             
             return NO;
         }
+        
+        if (username.length < 3 || username.length > 20 ){
             
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Username must be between 2-20 characters",@"Username must be between 2-20 characters")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            
+            return NO;
+        }
+        
+        if (![username containsString:@"."] && ![username containsString:@"_"] && ![username containsString:@"-"]){
+            
+            NSString* newStr = [username stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+            
+            if ([newStr length] < [username length])
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                message:NSLocalizedString(@"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n", @"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n")
+                                                    delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                      otherButtonTitles:nil, nil];
+                [alert show];
+                
+                return NO;
+
+            }
+            
+        } else {
+            NSString *newUser = username;
+            NSString *unders = [newUser stringByReplacingOccurrencesOfString:@"_" withString:@""];
+            NSString *dash = [unders stringByReplacingOccurrencesOfString:@"-" withString:@""];
+            NSString *newUsername = [dash stringByReplacingOccurrencesOfString:@"." withString:@""];
+            
+            
+            NSString* newStr = [newUsername stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+            
+            if ([newStr length] < [newUsername length])
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                message:NSLocalizedString(@"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n", @"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                      otherButtonTitles:nil, nil];
+                [alert show];
+                
+                return NO;
+            }
+
+            
+        }
+        
         // Show a progress hud
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         

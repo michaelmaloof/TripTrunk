@@ -1484,8 +1484,7 @@
                                                 <exclude reference="bri-he-aEq"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="156" y="5" width="71" height="27"/>
+                                        <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="VJB-vc-VEu"/>
                                                 <include reference="bri-he-aEq"/>
@@ -1564,9 +1563,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="176" y="32" width="30" height="29"/>
-                                        </variation>
                                         <connections>
                                             <action selector="trunkNameButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Gbv-Md-k4g"/>
                                         </connections>
@@ -1600,14 +1596,14 @@
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="5bJ-Sp-NUJ"/>
-                                        <exclude reference="3iP-vA-KCU"/>
-                                        <exclude reference="FX9-CE-9s1"/>
-                                        <exclude reference="PFr-0B-GX0"/>
-                                        <exclude reference="l4P-Cw-Dqt"/>
-                                        <exclude reference="S0I-TQ-96b"/>
-                                        <exclude reference="dMU-dw-NfI"/>
                                         <exclude reference="bwn-I7-BFb"/>
                                         <exclude reference="oZW-UR-wmg"/>
+                                        <exclude reference="3iP-vA-KCU"/>
+                                        <exclude reference="FX9-CE-9s1"/>
+                                        <exclude reference="S0I-TQ-96b"/>
+                                        <exclude reference="dMU-dw-NfI"/>
+                                        <exclude reference="PFr-0B-GX0"/>
+                                        <exclude reference="l4P-Cw-Dqt"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
@@ -1619,14 +1615,14 @@
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="5bJ-Sp-NUJ"/>
-                                        <include reference="3iP-vA-KCU"/>
-                                        <include reference="FX9-CE-9s1"/>
-                                        <include reference="PFr-0B-GX0"/>
-                                        <include reference="l4P-Cw-Dqt"/>
-                                        <include reference="S0I-TQ-96b"/>
-                                        <include reference="dMU-dw-NfI"/>
                                         <include reference="bwn-I7-BFb"/>
                                         <include reference="oZW-UR-wmg"/>
+                                        <include reference="3iP-vA-KCU"/>
+                                        <include reference="FX9-CE-9s1"/>
+                                        <include reference="S0I-TQ-96b"/>
+                                        <include reference="dMU-dw-NfI"/>
+                                        <include reference="PFr-0B-GX0"/>
+                                        <include reference="l4P-Cw-Dqt"/>
                                     </mask>
                                 </variation>
                             </view>
