@@ -524,10 +524,10 @@
                 
 //if this is a user profile we show the most recent trunk on the map
                 if (self.user && trip == [self.parseLocations objectAtIndex:0]) {
-                    [self addTripToMap:trip dot:color isMostRecent:YES];
+                    [self addTripToMap:trip dot:color isMostRecent:YES needToDelete:NO];
 
                 } else{
-                    [self addTripToMap:trip dot:color isMostRecent:NO];
+                    [self addTripToMap:trip dot:color isMostRecent:NO needToDelete:NO];
                 }
 //we want to know how many trunks we originally had
                 self.originalCount = self.parseLocations.count;
@@ -593,7 +593,7 @@
 
                 if(![self.tripsToCheck containsObject:address] || color == 1)
                 {
-                    [self addTripToMap:trip dot:color isMostRecent:NO];
+                    [self addTripToMap:trip dot:color isMostRecent:NO needToDelete:NO];
                     self.originalCount = self.parseLocations.count;
                     self.originalArray = self.parseLocations;
                 } else {
@@ -610,9 +610,8 @@
  *
  *
  */
--(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent;
+-(void)addTripToMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent needToDelete:(BOOL)replace;
 {
-    
     
     //we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
@@ -624,6 +623,7 @@
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
     annotation.title = trip.city;
     
+    
     if ([trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
         
     }
@@ -631,7 +631,7 @@
     
     if (trip.longitude != 0 && trip.longitude != 0){
         annotation.coordinate = CLLocationCoordinate2DMake(trip.lat, trip.longitude);
-        [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:NO];
+        [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:NO delete:replace];
 
         
     } else
@@ -647,16 +647,24 @@
                  annotation.title = trip.city;
                  trip.lat = placemark.location.coordinate.latitude;
                  trip.longitude = placemark.location.coordinate.longitude;
-                 [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:YES];
+                 [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:YES delete:replace];
              }
              
          }];
     }
 }
 
--(void)createTripForMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent annotation:(MKPointAnnotation*)annotation needToSave:(BOOL)isNeeded{
+-(void)createTripForMap:(Trip*)trip dot:(BOOL)hot isMostRecent:(BOOL)isMostRecent annotation:(MKPointAnnotation*)annotation needToSave:(BOOL)isNeeded delete:(BOOL)replace{
     NSDate *date = trip.createdAt;
     NSTimeInterval interval = [date timeIntervalSinceNow];
+    
+    if (replace == YES){
+        for (MKPointAnnotation *pnt in self.mapView.annotations){
+            if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
+                [self.mapView removeAnnotation:pnt];
+            }
+        }
+    }
     
     //if the trunk was made less than 300 seconds ago and by the current user then we zoom on to this trunk. This gives the effect of the user making a trunk and then immediatly being taken to the city where this trunk was made. However, if were on a user profile then we just show the most recent trunk.
     if (isMostRecent == YES){
@@ -975,9 +983,9 @@
     
     if ([self.tripsToCheck containsObject:address]){
         if ([self.hotDots containsObject:address]){
-            [self addTripToMap:trip dot:YES isMostRecent:YES];
+            [self addTripToMap:trip dot:YES isMostRecent:YES needToDelete:YES];
         } else {
-            [self addTripToMap:trip dot:isHot isMostRecent:YES];
+            [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
         }
     }
 }
