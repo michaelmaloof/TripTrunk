@@ -645,7 +645,7 @@
 -(void)reloadTrunkList:(Trip *)trip{
         for (Trip *tripP in self.parseLocations){
             if ([trip.objectId isEqualToString:tripP.objectId]){
-                tripP.publicTripDetail.mostRecentPhoto = [NSDate date];
+                tripP.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
                 tripP.publicTripDetail.photoCount += 1;
                 [self.tableView reloadData];
             }
@@ -653,7 +653,7 @@
     
         for (Trip *tripM in self.meParseLocations){
             if ([trip.objectId isEqualToString:tripM.objectId]){
-                tripM.publicTripDetail.mostRecentPhoto = [NSDate date];
+                tripM.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
                 tripM.publicTripDetail.photoCount += 1;
                 [self.tableView reloadData];
             }

@@ -100,7 +100,7 @@
 //            }
 //        }
 //    }
-    
+    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)
