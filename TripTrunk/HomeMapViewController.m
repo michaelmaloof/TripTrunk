@@ -35,7 +35,6 @@
 @property int dropped;
 @property int notDropped;
 @property NSDate *today;
-@property BOOL loadedOnce;
 @property MKAnnotationView *photoPin;
 @property NSMutableArray *friends;
 @property BOOL isNew;
@@ -54,7 +53,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self designNavBar];
-    [self setUpArrays];
     
 //This is an old feature that has been removed. It used to let you filter between your trunks and your newsfeeed trunks. We left the code but hide the button in case we ever want this feature
     self.mapFilter.hidden = YES;
@@ -68,18 +66,26 @@
     self.needsUpdates = nil;
     self.needsUpdates = [[NSMutableArray alloc]init];
     self.today = [NSDate date];
-
     
+    [self beginLoadingTrunks];
+
+}
+
+-(void)beginLoadingTrunks{
+    self.navigationItem.rightBarButtonItem = nil;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    
+    [self setUpArrays];
+
     if (self.user == nil) {
         //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
-            [self queryParseMethodEveryone];
+        [self queryParseMethodEveryone];
         //We're on the home tab so register the user's notifications
         
     } else {
         //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
-            [self queryParseMethodForUser:self.user];
+        [self queryParseMethodForUser:self.user];
     }
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -136,6 +142,9 @@
     self.tabBarController.tabBar.translucent = false;
 //TODO We should have TripTrunk blue be in a font class
     [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+    
+
+
 }
 
 /**
@@ -254,9 +263,6 @@
 -(void)queryParseMethodForUser:(PFUser*)user
 {
 //We want to know if we have already loaded trunks from parse
-    if (self.loadedOnce == NO){
-        self.loadedOnce = YES;
-    }
 
 //Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -273,15 +279,11 @@
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-//If we haven't loaded the user's trunks before then we tell the current user that we are loading in the title of the navBar
-        if (self.loadedOnce == NO)
-        {
-            self.title = @"Loading Trunks...";
-            self.loadedOnce = YES;
-        }
-        
-        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+    
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
+        self.navigationItem.rightBarButtonItem = button;
+
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
 
 
 //If there is an error put the navBar title back to normal so that it isn't still tellign the user we are loading the trunks.
@@ -340,7 +342,6 @@
 /**
  *  Load the trunks of the user's who the current user is following. We use the self.friends array to store their following.
  *
- *
  */
 -(void)queryForTrunks{ //City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
     
@@ -367,11 +368,9 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
-        if (self.loadedOnce == NO)
-        {
-            self.title = NSLocalizedString(@"Loading Trunks...",@"Loading Trunks...");
-            self.loadedOnce = YES;
-        }
+        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
+        self.navigationItem.rightBarButtonItem = button;
+
         if(error)
         {
             NSLog(@"Error: %@",error);
@@ -426,9 +425,7 @@
  */
 -(void)queryParseMethodEveryone
 {
-    if (self.loadedOnce == NO){
-        self.loadedOnce = YES;
-    }
+
     
 //self.friends will contrain the users that the current user is following.
         self.friends = [[NSMutableArray alloc]init];
@@ -436,10 +433,7 @@
         [self.friends addObject:[PFUser currentUser]];
 
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-        if (self.loadedOnce == NO){
-            self.title = NSLocalizedString(@"Loading Trunks...",@"Loading Trunks...");
-            self.loadedOnce = YES;
-        }
+ 
 
         if (!error) {
 //add the users to self.friends. Now its containing the current user and all the people they are following
