@@ -964,6 +964,8 @@
     for (MKPointAnnotation *pin in self.mapView.annotations){
         if (pin.coordinate.latitude == location.coordinate.latitude && pin.coordinate.longitude == location.coordinate.longitude){
             [self.mapView removeAnnotation:pin];
+            self.mapView.camera.altitude *= 3.5;
+            self.mapView.camera.altitude *= 3.5;
         }
     }
 }
