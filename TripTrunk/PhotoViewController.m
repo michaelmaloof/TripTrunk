@@ -1091,6 +1091,9 @@
     UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
     if (tabbarcontroller.selectedIndex == 3) {
         [activityNavController pushViewController:trunkViewController animated:YES];
+    } else {
+        [self.navigationController pushViewController:trunkViewController animated:YES];
+
     }
     
     //    }];
