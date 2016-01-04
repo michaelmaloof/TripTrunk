@@ -45,6 +45,7 @@
 @property NSMutableArray *haventSeens;
 @property CLLocation *location;
 @property Trip *justMadeTrip;
+@property NSArray<id<MKAnnotation>> *annotationsToDelete;
 
 @end
 
@@ -53,6 +54,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self designNavBar];
+    
+    self.annotationsToDelete = [[NSMutableArray alloc]init];
     
 //This is an old feature that has been removed. It used to let you filter between your trunks and your newsfeeed trunks. We left the code but hide the button in case we ever want this feature
     self.mapFilter.hidden = YES;
@@ -73,8 +76,7 @@
 
 -(void)beginLoadingTrunks{
     self.navigationItem.rightBarButtonItem = nil;
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    
+    self.annotationsToDelete = self.mapView.annotations;
     [self setUpArrays];
 
     if (self.user == nil) {
@@ -280,7 +282,7 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     
-        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
         self.navigationItem.rightBarButtonItem = button;
 
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -388,7 +390,6 @@
         }
         else
         {
-            
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
@@ -614,6 +615,9 @@
             }
         }
     }
+    
+    [self.mapView removeAnnotations:self.annotationsToDelete];
+    self.annotationsToDelete = [[NSMutableArray alloc]init];
 }
 
 
@@ -930,52 +934,6 @@
     }
 }
 
-
-// no longer supported as a feature but leave in case we add the feature again
-- (IBAction)mapToggleTapped:(id)sender {
-    
-    if (self.mapFilter.tag == 0)
-    {
-        [self.mapFilter setImage:[UIImage imageNamed:@"Them"] forState:UIControlStateNormal];
-        self.originalCount = 0;
-        self.hotDots = nil;
-        self.hotDots = [[NSMutableArray alloc]init];
-        self.locations = nil;
-        self.locations = [[NSMutableArray alloc]init];
-        self.parseLocations = nil;
-        self.parseLocations = [[NSMutableArray alloc]init];
-        self.tripsToCheck = nil;
-        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
-        //        NSString *user = [PFUser currentUser].username;
-        //        NSMutableArray *users = [[NSMutableArray alloc]init];
-        //        //ADD USERS HERE
-        //        [self queryParseMethod:users];
-        
-    }
-    
-    else if (self.mapFilter.tag == 1)
-    {
-        [self.mapFilter setImage:[UIImage imageNamed:@"Me"] forState:UIControlStateNormal];
-        self.originalCount = 0;
-        self.hotDots = nil;
-        self.hotDots = [[NSMutableArray alloc]init];
-        self.locations = nil;
-        self.locations = [[NSMutableArray alloc]init];
-        self.parseLocations = nil;
-        self.parseLocations = [[NSMutableArray alloc]init];
-        self.tripsToCheck = nil;
-        [self.mapView removeAnnotations:self.mapView.annotations]; //TEMP REMOVE LATER
-        NSString *user = [PFUser currentUser].username;
-        NSMutableArray *users = [[NSMutableArray alloc]init];
-        [users addObject:user];
-        [self queryParseMethodEveryone];
- 
-
-    }
-    self.mapFilter.tag = !self.mapFilter.tag;
-    
-    
-}
 
 #pragma mark - Tutorial Management
 -(void)showTutorial
