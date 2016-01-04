@@ -101,6 +101,10 @@
     }
     [self.trunkNameButton setHidden:YES];
     
+    if (self.fromNotification == YES){
+        self.shouldShowTrunkNameButton = YES;
+    }
+    
     self.commentActivities = [[NSMutableArray alloc] init];
 //    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
     
