@@ -29,7 +29,7 @@
 @property NSArray *trunkAlbum;
 @property NSInteger arrayInt;
 @property id<PhotoDelegate> delegate;
-
+@property BOOL fromNotification;
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
 
 
