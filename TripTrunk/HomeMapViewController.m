@@ -47,6 +47,7 @@
 @property Trip *justMadeTrip;
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
 @property BOOL isLoading;
+@property int limit;
 
 @end
 
@@ -57,6 +58,7 @@
     [self designNavBar];
     
     self.isLoading = NO;
+    self.limit = 250;
     
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     
@@ -289,7 +291,7 @@
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 1000];
+    [query setLimit: self.limit];
     
     
     
@@ -373,7 +375,7 @@
     [query includeKey:@"createdAt"];
     [query includeKey:@"trip.publicTripDetail"];
     [query orderByDescending:@"createdAt"];
-    [query setLimit: 1000]; // DEFAULT IS 100 so trunks get left off.
+    [query setLimit: self.limit]; // DEFAULT IS 100 so trunks get left off.
 
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -383,6 +385,7 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.isLoading = NO;
+        NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
         UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
         self.navigationItem.rightBarButtonItem = button;
 
@@ -983,6 +986,14 @@
     }
 }
 
+- (IBAction)addMoreTrunks:(id)sender {
+    if (self.limit < 100){
+        self.limit = self.limit + 250;
+    } else if (self.limit < 300){
+        self.limit = self.limit + 400;
+    }
+    [self beginLoadingTrunks];
+}
 
 
 @end
