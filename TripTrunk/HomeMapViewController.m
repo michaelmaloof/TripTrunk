@@ -133,11 +133,9 @@
             
         } else {
 //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
-//            [self queryParseMethodForUser:self.user]; sprint 7 removal
+            [self beginLoadingTrunks];
         }
     }
-    
-    [self beginLoadingTrunks];
 }
 
 /**
