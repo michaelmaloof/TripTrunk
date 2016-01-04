@@ -46,6 +46,7 @@
 @property CLLocation *location;
 @property Trip *justMadeTrip;
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
+@property BOOL isLoading;
 
 @end
 
@@ -54,6 +55,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self designNavBar];
+    
+    self.isLoading = NO;
     
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     
@@ -75,18 +78,25 @@
 }
 
 -(void)beginLoadingTrunks{
+    
+    if (self.isLoading == NO){
+    
     self.navigationItem.rightBarButtonItem = nil;
     self.annotationsToDelete = self.mapView.annotations;
     [self setUpArrays];
 
     if (self.user == nil) {
         //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
+        self.isLoading = YES;
         [self queryParseMethodEveryone];
         //We're on the home tab so register the user's notifications
         
     } else {
         //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
+        self.isLoading = YES;
         [self queryParseMethodForUser:self.user];
+    }
+        
     }
 }
 
@@ -124,6 +134,8 @@
 //            [self queryParseMethodForUser:self.user]; sprint 7 removal
         }
     }
+    
+    [self beginLoadingTrunks];
 }
 
 /**
@@ -264,6 +276,7 @@
  */
 -(void)queryParseMethodForUser:(PFUser*)user
 {
+    
 //We want to know if we have already loaded trunks from parse
 
 //Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
@@ -281,7 +294,7 @@
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    
+        self.isLoading = NO;
     UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
         self.navigationItem.rightBarButtonItem = button;
 
@@ -369,7 +382,7 @@
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
+        self.isLoading = NO;
         UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
         self.navigationItem.rightBarButtonItem = button;
 
