@@ -16,6 +16,7 @@
 @property PFUser *user;
 
 -(void)updateTrunkColor:(Trip*)trip isHot:(BOOL)isHot;
+-(void)deleteTrunk:(CLLocation*)location;
 
 @end
 

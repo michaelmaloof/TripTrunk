@@ -65,13 +65,31 @@
 //Require users to agree to the terms and conditions
     [self ensureEULA];
     
+    self.needsUpdates = nil;
+    self.needsUpdates = [[NSMutableArray alloc]init];
+    self.today = [NSDate date];
+
+    
+    if (self.user == nil) {
+        //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
+            [self queryParseMethodEveryone];
+        //We're on the home tab so register the user's notifications
+        
+    } else {
+        //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
+            [self queryParseMethodForUser:self.user];
+    }
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
 //    if(![PFUser currentUser] || ![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
-   self.needsUpdates = nil;
-    self.needsUpdates = [[NSMutableArray alloc]init];
-    self.today = [NSDate date];
+    
+    //sprint 7 removal
+//   self.needsUpdates = nil;
+//    self.needsUpdates = [[NSMutableArray alloc]init];
+//    self.today = [NSDate date];
+    
 //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
@@ -87,15 +105,15 @@
         if (self.user == nil) {
             
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
-            [self queryParseMethodEveryone];
-//We're on the home tab so register the user's notifications
+//            [self queryParseMethodEveryone]; sprint 7 removal
+//We're on the home taeb so register the user's notifications
             if (self.tutorialComplete == YES){
             [self registerNotifications];
             }
             
         } else {
 //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
-            [self queryParseMethodForUser:self.user];
+//            [self queryParseMethodForUser:self.user]; sprint 7 removal
         }
     }
 }
@@ -986,6 +1004,14 @@
             [self addTripToMap:trip dot:YES isMostRecent:YES needToDelete:YES];
         } else {
             [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
+        }
+    }
+}
+
+-(void)deleteTrunk:(CLLocation *)location{
+    for (MKPointAnnotation *pin in self.mapView.annotations){
+        if (pin.coordinate.latitude == location.coordinate.latitude && pin.coordinate.longitude == location.coordinate.longitude){
+            [self.mapView removeAnnotation:pin];
         }
     }
 }

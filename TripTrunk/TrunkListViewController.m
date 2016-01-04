@@ -14,6 +14,7 @@
 #import "SocialUtility.h"
 #import "TTUtility.h"
 #import "UIImageView+AFNetworking.h"
+#import "HomeMapViewController.h"
 
 #import "UIScrollView+EmptyDataSet.h"
 
@@ -31,6 +32,7 @@
 @property int objectsCountTotal;
 @property int objectsCountMe;
 @property BOOL isMine;
+@property BOOL didLoad;
 
 
 @end
@@ -191,6 +193,7 @@
             }
             else
             {
+                self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
                 for (PFObject *activity in objects){
                     
@@ -449,6 +452,7 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            self.didLoad = YES;
             self.objectsCountTotal = self.objectsCountTotal + (int)objects.count;
             for (PFObject *activity in objects)
             {
@@ -624,7 +628,7 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = NSLocalizedString(@"No Trunks Here",@"No Trunks Here");
+    NSString *text = NSLocalizedString(@"Opps! These trunks have gone missing!",@"Opps! These trunks have gone missing!");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -682,11 +686,22 @@
         self.tableView.tableFooterView = [UIView new];
         return YES;
     }
-//    else  if (self.user == nil){
-//        // A little trick for removing the cell separators
-//        self.tableView.tableFooterView = [UIView new];
-//        return YES;
-//    }
+    else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
+        {
+            for (HomeMapViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[HomeMapViewController class]]){
+                    [view deleteTrunk:self.location];
+                }
+            }
+        }
+        
+        return YES;
+    }
 
     return NO;
 }
