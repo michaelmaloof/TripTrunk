@@ -48,6 +48,9 @@
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
 @property BOOL isLoading;
 @property int limit;
+@property (weak, nonatomic) IBOutlet UIImageView *compassRose;
+@property (weak, nonatomic) IBOutlet UIButton *compasButton;
+
 
 @end
 
@@ -55,6 +58,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.compassRose.hidden = YES;
     [self designNavBar];
     
     self.isLoading = NO;
@@ -117,10 +121,13 @@
         //COMMENETED OUT UNTIL AJ MAKES DEISNGS
         //If user has not completed tutorial, show tutorial
         self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
-        if (self.tutorialComplete == NO) //change to no
+        if (self.tutorialComplete == NO) 
         {
             [self showTutorial];
-       }
+        } else {
+            self.compassRose.hidden = YES;
+
+        }
         
         if (self.user == nil) {
             
@@ -294,6 +301,7 @@
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //if statement
         self.isLoading = NO;
     UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
         self.navigationItem.rightBarButtonItem = button;
@@ -382,6 +390,7 @@
     
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //if statement
         self.isLoading = NO;
         NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
         UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
@@ -955,6 +964,8 @@
     //Show Tutorial View Controller to User
     TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
     [self.navigationController presentViewController:tutorialVC	 animated:YES completion:nil];
+    self.compassRose.hidden = NO;
+
 }
 
 // This is needed for the login to work properly
@@ -991,6 +1002,10 @@
         self.limit = self.limit + 400;
     }
     [self beginLoadingTrunks];
+}
+
+- (IBAction)compassTaped:(id)sender {
+    self.compassRose.hidden = !self.compassRose.hidden;
 }
 
 
