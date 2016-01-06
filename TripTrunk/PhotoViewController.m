@@ -885,10 +885,13 @@
                 for (HomeMapViewController *view in controller.viewControllers)
                 {
                     if ([view isKindOfClass:[HomeMapViewController class]]){
-                        if (self.photos.count < 1){                                [view updateTrunkColor:self.photo.trip isHot:NO];
+                        if (self.photos.count < 1){
+                            [view dontRefreshMap];
+                            [view updateTrunkColor:self.photo.trip isHot:NO member:nil];
                         } else if (1==1) //instead, find interval and update is HOT
                         {
-                            [view updateTrunkColor:self.photo.trip isHot:color];
+                            [view dontRefreshMap];
+                            [view updateTrunkColor:self.photo.trip isHot:color member:nil];
                         }
                     }
                 }

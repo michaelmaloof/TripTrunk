@@ -16,6 +16,7 @@
 #import "TTUtility.h"
 #import "CitySearchViewController.h"
 #import "HomeMapViewController.h"
+#import "TrunkListViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -631,7 +632,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-
+    
     if (alertView.tag == 0)
     {
         if (buttonIndex == 1)
@@ -642,16 +643,33 @@
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
                     [locationArray addObject:vc];
                     CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
-                    [(HomeMapViewController*)vc deleteTrunk:location trip:self.trip];
+                    [(HomeMapViewController*)vc dontRefreshMap];
+                    [(HomeMapViewController*)vc checkToDeleteCity:location trip:self.trip];
                 }
             }
             
-            [self.navigationController popToViewController:[locationArray lastObject] animated:YES];
-
+            if (locationArray.count > 0){
+                
+                [self.navigationController popToViewController:[locationArray lastObject] animated:YES];
+                
+            } else {
+                NSMutableArray *listArray = [[NSMutableArray alloc]init];
+                for (UIViewController *vc in self.navigationController.viewControllers){
+                    if ([vc isKindOfClass:[TrunkListViewController class]])
+                    {
+                        [(TrunkListViewController*)vc reloadTrunkList:self.trip];
+                        [listArray addObject:vc];
+                        //TODO Delete not working on list
+                    }
+                }
+                
+                [self.navigationController popToViewController:[listArray lastObject] animated:YES];
+            }
+            
         }
     }
     
-
+    
 }
 
 #pragma mark - Parse

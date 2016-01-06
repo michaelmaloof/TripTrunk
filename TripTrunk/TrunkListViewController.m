@@ -156,20 +156,6 @@
 {
     if (self.meParseLocations.count == 0) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-
-//        PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-//        [trunkQuery whereKey:@"city" equalTo:self.city];
-//        [trunkQuery whereKey:@"state" equalTo: self.state];
-//        [trunkQuery includeKey:@"creator"];
-//        [trunkQuery includeKey:@"creator.username"];
-//        
-//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//        [query whereKey:@"toUser" equalTo:self.user];
-//        [query whereKey:@"type" equalTo:@"addToTrip"];
-//        [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
-//        [query includeKey:@"trip"];
-//        [query setLimit:7];
-        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         if (!self.user){
             [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
@@ -183,6 +169,7 @@
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
+        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
         query.limit = 50;
         query.skip = self.objectsCountMe;
 
@@ -239,6 +226,7 @@
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
+        [query orderByDescending:@"createdAt"];
         query.limit = 50;
         query.skip = self.objectsCountMe;
         
@@ -421,7 +409,6 @@
 
 - (void)queryForTrunks{
     
-    
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
     [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
@@ -431,22 +418,9 @@
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
     [query includeKey:@"trip.publicTripDetail"];
+    [query orderByDescending:@"createdAt"];
     query.limit = 50;
     query.skip = self.objectsCountTotal;
-    
-    //    PFQuery *trunkQuery = [PFQuery queryWithClassName:@"Trip"];
-    //    [trunkQuery whereKey:@"city" equalTo:self.city];
-    //    [trunkQuery whereKey:@"state" equalTo: self.state];
-    //    [trunkQuery includeKey:@"creator"];
-    //    [trunkQuery includeKey:@"creator.username"];
-    //
-    //    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    //    [query whereKey:@"toUser" containedIn:self.friends];
-    //    [query whereKey:@"type" equalTo:@"addToTrip"];
-    //    [query whereKey:@"trip" matchesKey:@"objectId" inQuery:trunkQuery];
-    //    [query includeKey:@"trip"];
-    //    [query includeKey:@"toUser"];
-    //    [query includeKey:@"createdAt"];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
@@ -695,6 +669,7 @@
             for (HomeMapViewController *view in controller.viewControllers)
             {
                 if ([view isKindOfClass:[HomeMapViewController class]]){
+                    [view dontRefreshMap];
                     [view deleteTrunk:self.location trip:nil];
                 }
             }

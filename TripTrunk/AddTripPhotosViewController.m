@@ -82,51 +82,46 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
-//    for (UINavigationController *controller in self.tabBarController.viewControllers)
-//    {
-//        if(controller == self.tabBarController.viewControllers[0])
-//        {
-//            for (HomeMapViewController *view in controller.viewControllers)
-//            {
-//                if (view == controller.viewControllers[0])
-//                {
-//                    if (self.photos.count >0){
-//                       [view updateTrunkColor:self.trip isHot:YES];
-//                    } else {
-//                        [view updateTrunkColor:self.trip isHot:NO];
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
+    
     self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)
-            {
-                if ([view isKindOfClass:[HomeMapViewController class]]){
-                if (self.photos.count >0){
-                    [view updateTrunkColor:self.trip isHot:YES];
-                } else {
-                    [view updateTrunkColor:self.trip isHot:NO];
-                }
-                }
-            }
-        
-        for (TrunkListViewController *view in controller.viewControllers)
         {
-            if ([view isKindOfClass:[TrunkListViewController class]]){
-                if (self.photos.count >0){
-                    [view reloadTrunkList:self.trip];
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                BOOL hotness;
+                if (self.photos.count > 0){
+                    hotness = YES;
                 } else {
+                    hotness = NO;
+                }
+                BOOL mem;
+
+                if (view.user == nil || [view.user.objectId isEqualToString:[PFUser currentUser].objectId] ){
+                    if (self.isTripCreation == YES){
+                        mem = YES;
+                    } else {
+                        mem = NO;
+                    }
+                } else {
+                    mem = NO;
+                }
+                [view dontRefreshMap];
+                [view updateTrunkColor:self.trip isHot:hotness member:mem];
+            }
+            
+            for (TrunkListViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[TrunkListViewController class]])
+                {
                     [view reloadTrunkList:self.trip];
                 }
             }
         }
-
-        }
-
+        
+    }
+    
     
     [self uploadAllPhotos];
 }
