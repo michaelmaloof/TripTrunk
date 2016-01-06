@@ -83,7 +83,9 @@
     self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
-    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+    if (self.photos.count > 0){
+        self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+    }
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)

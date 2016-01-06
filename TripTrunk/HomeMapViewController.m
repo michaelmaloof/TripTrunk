@@ -556,6 +556,10 @@
         {
             //place the trunk on the map
             
+            if ([trip.name isEqualToString:@"Mike Test"]){
+                NSLog(@"stip");
+            }
+            
             //if this is a user profile we zoom to show the most recent trunk on the map
             if (self.user && trip == [self.parseLocations objectAtIndex:0] && self.isFirstUserLoad == YES) {
                 self.isFirstUserLoad = NO;
