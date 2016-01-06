@@ -638,6 +638,7 @@
         if (buttonIndex == 1)
         {
             [SocialUtility deleteTrip:self.trip];
+            //TODO needs to be the whole tab bar not just the nav controller
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
@@ -653,6 +654,8 @@
                 [self.navigationController popToViewController:[locationArray lastObject] animated:YES];
                 
             } else {
+                //needs to be the whole tab bar not just the nav controller
+
                 NSMutableArray *listArray = [[NSMutableArray alloc]init];
                 for (UIViewController *vc in self.navigationController.viewControllers){
                     if ([vc isKindOfClass:[TrunkListViewController class]])

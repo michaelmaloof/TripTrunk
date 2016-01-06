@@ -22,7 +22,6 @@
 
 @interface HomeMapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property NSMutableArray *locations;
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *tripsToCheck;
 @property NSMutableArray *hotDots;
@@ -194,9 +193,6 @@
 //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
 //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
     self.hotDots = [[NSMutableArray alloc]init];
-    
-//the locations we place on the map
-    self.locations = [[NSMutableArray alloc]init];
     
 //the trunks we pull down from parse
     self.parseLocations = [[NSMutableArray alloc]init];
@@ -741,7 +737,6 @@
     startAnnotation.rightCalloutAccessoryView.hidden = YES;
     startAnnotation.leftCalloutAccessoryView.hidden = YES;
     
-    [self.locations addObject:startAnnotation];
 
     return startAnnotation;
 }
@@ -872,6 +867,7 @@
     //this trip isn't in self.parseLocations, so we're adding a new trip to the map and nopt updating one.
     //TODO Currently this only applies to current users map and newsfeed. We should do it to any users also a member of this trunk
     } else if (isMember == YES){
+        [self.parseLocations addObject:trip];
         [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
     }
 }
@@ -885,7 +881,8 @@
     
     //I want to remove the string annonation titles from hot dots and and needs updates. Then I want to replace the trunks at this particular city WHILE remove the trip from self.parseLocations. This will have the map replace all the trunks from that city WITHOUT placing the one we just erased. This ensures that we update to the correct color and logo status when deleted. In order to do this, I need to store the geoLocations and not string titles.
     
-    for (MKPointAnnotation *pin in self.mapView.annotations){
+    for (MKPointAnnotation *pin in self.mapView.annotations)
+    {
         if (pin.coordinate.latitude == location.coordinate.latitude && pin.coordinate.longitude == location.coordinate.longitude){
             
             
@@ -914,8 +911,70 @@
     self.dontRefresh = YES;
 }
 
--(void)checkToDeleteCity:(CLLocation *)location trip:(Trip *)trip{
+-(void)checkToDeleteCity:(CLLocation *)location trip:(Trip *)trip
+{
+    //check if this map has this trip
     
+    for (Trip *trunk in self.parseLocations){
+        if ([trunk.objectId isEqualToString:trip.objectId]){
+            NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+            
+            [self.tripsToCheck removeObject:address];
+            [self.hotDots removeObject:trip.city];
+            
+            CLLocation *deleteLoc = [[CLLocation alloc]init];
+            for (CLLocation *loc in self.haventSeens)
+            {
+                if (trip.lat == loc.coordinate.latitude && trip.longitude == location.coordinate.longitude)
+                {
+                    deleteLoc = loc;
+                }
+            }
+            [self.haventSeens removeObject:deleteLoc];
+            
+            for (Trip *tripSaved in self.parseLocations)
+            {
+                if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat && ![tripSaved.objectId isEqualToString:trip.objectId])
+                {
+                    
+                    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:tripSaved.publicTripDetail.mostRecentPhoto];
+                    
+                    BOOL color = 0;
+                    if (tripInterval < 86400)
+                    {
+                        color = 1;
+                    } else{
+                        color = 0;
+                    }
+                    
+                    //find how much time has passed since the trunk was made and when the current user last opened the app
+                    NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:tripSaved.createdAt];
+                    
+                    //find how much time has passed since the trunk had a photo added and when the current user last opened the app
+                    NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:tripSaved.publicTripDetail.mostRecentPhoto];
+                    
+                    //put the trip data into a CLLocation
+                    CLLocation *location = [[CLLocation alloc]initWithLatitude:tripSaved.lat longitude:tripSaved.longitude];
+                    
+                    //if the lastTripInterval is less than 0 is means the user hasn't seen the trunk because they haven't been in the app since it was made
+                    if (lastTripInterval < 0)
+                    {
+                        [self.haventSeens addObject:location];
+                    }
+                    //if the lastPhotoInterval is less than 0 is means the user hasn't seen the new photo because they haven't been in the app since it was added
+                    else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil)
+                    {
+                        [self.haventSeens addObject:location];
+                    }
+                    
+                    [self addTripToMap:tripSaved dot:color isMostRecent:NO needToDelete:YES];
+                }
+            }
+        }
+    }
+    
+    [self.parseLocations removeObject:trip];
+
 }
 @end
 
