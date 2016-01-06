@@ -664,16 +664,16 @@
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         
-        for (UINavigationController *controller in self.tabBarController.viewControllers)
-        {
-            for (HomeMapViewController *view in controller.viewControllers)
-            {
-                if ([view isKindOfClass:[HomeMapViewController class]]){
-                    [view dontRefreshMap];
-                    [view deleteTrunk:self.location trip:nil];
-                }
+        NSMutableArray *locationArray = [[NSMutableArray alloc]init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            if ([vc isKindOfClass:[HomeMapViewController class]]){
+                [locationArray addObject:vc];
             }
         }
+        
+        if (locationArray.count > 0){
+            [(HomeMapViewController*)[locationArray lastObject] dontRefreshMap];
+            [(HomeMapViewController*)[locationArray lastObject] deleteTrunk:self.location trip:nil];        }
         
         return YES;
     }

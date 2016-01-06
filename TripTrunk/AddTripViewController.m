@@ -638,24 +638,38 @@
         if (buttonIndex == 1)
         {
             [SocialUtility deleteTrip:self.trip];
-            //TODO needs to be the whole tab bar not just the nav controller
+            
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
-            for (UIViewController *vc in self.navigationController.viewControllers){
-                if ([vc isKindOfClass:[HomeMapViewController class]]){
-                    [locationArray addObject:vc];
-                    CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
-                    [(HomeMapViewController*)vc dontRefreshMap];
-                    [(HomeMapViewController*)vc checkToDeleteCity:location trip:self.trip];
+            for (UINavigationController *controller in self.tabBarController.viewControllers)
+            {
+                for (HomeMapViewController *view in controller.viewControllers)
+                {
+                    if ([view isKindOfClass:[HomeMapViewController class]])
+                    {
+                        [locationArray addObject:view];
+                        CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
+                        [(HomeMapViewController*)view dontRefreshMap];
+                        [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
+                    }
                 }
             }
             
-            if (locationArray.count > 0){
+            NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
+            for (UIViewController *vc in self.navigationController.viewControllers){
+                if ([vc isKindOfClass:[HomeMapViewController class]]){
+                    [locationArray2 addObject:vc];
+                }
+            }
+
+            
+            if (locationArray2.count > 0)
+            {
                 
-                [self.navigationController popToViewController:[locationArray lastObject] animated:YES];
+                [self.navigationController popToViewController:[locationArray2 lastObject] animated:YES];
                 
             } else {
-                //needs to be the whole tab bar not just the nav controller
-
+                //TODO: needs to be the whole tab bar not just the nav controller
+                
                 NSMutableArray *listArray = [[NSMutableArray alloc]init];
                 for (UIViewController *vc in self.navigationController.viewControllers){
                     if ([vc isKindOfClass:[TrunkListViewController class]])
