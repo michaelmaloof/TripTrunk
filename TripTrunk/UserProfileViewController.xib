@@ -14,6 +14,7 @@
                 <outlet property="followersButton" destination="k8T-73-v3H" id="Led-Ma-XaL"/>
                 <outlet property="followingButton" destination="G68-Y4-O01" id="xvm-h6-93O"/>
                 <outlet property="hometownLabel" destination="8kk-Zi-cae" id="IBC-gV-Sh9"/>
+                <outlet property="listButton" destination="0EA-De-iju" id="1ba-KG-8R0"/>
                 <outlet property="logoutButton" destination="ZFG-sH-wqm" id="cyu-sB-SqY"/>
                 <outlet property="mapButton" destination="aRl-Kc-Hyq" id="99N-rH-R35"/>
                 <outlet property="nameLabel" destination="T27-K3-6wj" id="T1K-RA-cYz"/>

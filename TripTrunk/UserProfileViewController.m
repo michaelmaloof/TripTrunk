@@ -21,6 +21,7 @@
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UIButton *listButton;
 
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
@@ -59,7 +60,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    
+    self.listButton.hidden = YES;
+
     self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -335,8 +337,11 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (count == 0){
                 [self.mapButton setTitle:@"" forState:UIControlStateNormal];
+                self.listButton.hidden = YES;
             }else {
                      [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+                self.listButton.hidden = NO;
+
 
                  }
         });
