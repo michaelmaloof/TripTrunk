@@ -554,7 +554,6 @@
         //we make sure that we havent already placed a pin on a city. If the trunk is red (hot) then we place it anyways since we always want red pins showing
         if(![self.tripsToCheck containsObject:address] || color == 1)
         {
-            //place the trunk on the map
             
             if ([trip.name isEqualToString:@"Mike Test"]){
                 NSLog(@"stip");
