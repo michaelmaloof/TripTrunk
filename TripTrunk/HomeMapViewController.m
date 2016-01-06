@@ -132,6 +132,8 @@
 //We're on the home taeb so register the user's notifications
             if (self.tutorialComplete == YES){
             [self registerNotifications];
+            [self beginLoadingTrunks];
+
             }
             
         } else {
