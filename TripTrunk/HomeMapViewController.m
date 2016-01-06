@@ -528,8 +528,6 @@
  */
 -(void)placeTrips
 {
-
-    
     //self.parselocations contains the trips we just pulled down from parse
     for (Trip *trip in self.parseLocations)
     {
@@ -630,6 +628,10 @@
     
         if (isMostRecent == YES){
             self.annotationPinToZoomOn = annotation;
+            
+            if (self.user){
+                [self zoomInOnNewPin];
+            }
     }
     
     //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
