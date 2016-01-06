@@ -641,6 +641,8 @@
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
                     [locationArray addObject:vc];
+                    CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
+                    [(HomeMapViewController*)vc deleteTrunk:location trip:self.trip];
                 }
             }
             

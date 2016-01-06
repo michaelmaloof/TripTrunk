@@ -695,7 +695,7 @@
             for (HomeMapViewController *view in controller.viewControllers)
             {
                 if ([view isKindOfClass:[HomeMapViewController class]]){
-                    [view deleteTrunk:self.location];
+                    [view deleteTrunk:self.location trip:nil];
                 }
             }
         }
