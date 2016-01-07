@@ -179,6 +179,20 @@
             return NO;
         }
         
+        if ([username containsString:@" "]){
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Username can't have any spaces.",@"Username can't have any spaces.")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+            
+            return NO;
+
+        }
+
+        
         if (![username containsString:@"."] && ![username containsString:@"_"] && ![username containsString:@"-"]){
             
             NSString* newStr = [username stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
