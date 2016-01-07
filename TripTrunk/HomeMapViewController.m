@@ -47,8 +47,8 @@
 @property BOOL dontRefresh;
 @property BOOL isFirstUserLoad;
 @property MKPointAnnotation* annotationPinToZoomOn;
-
-
+@property BOOL isMainMap;
+@property NSMutableArray *visitedTrunks;
 @end
 
 @implementation HomeMapViewController
@@ -58,8 +58,9 @@
     
     //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
     self.compassRose.hidden = YES;
-    
     self.isFirstUserLoad = YES;
+    
+    self.viewedTrunks = [[NSMutableArray alloc]init];
     
     [self designNavBar];
     
@@ -85,9 +86,38 @@
     //we need the date the user last oppened the app to put the logo on certain trunks
     //TODO we should do this once on viewDidLoad
     self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (self == (HomeMapViewController*)controller.viewControllers[0]){
+                        self.isMainMap = YES;
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    self.visitedTrunks = [[NSMutableArray alloc]init];
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    self.visitedTrunks = view.viewedTrunks;
+                }
+            }
+        }
+    }
     
     //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
@@ -380,42 +410,47 @@
         //there is no error loading the trunks so begin the process of placing them on the map
         else
         {
-            //this array will store all the trunks we just pulled from parse
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                
-                //We make sure the trip has a name. Old trips in the database could be nil for the names. We want to filter these out
                 if (trip.name != nil)
                 {
                     [self.parseLocations addObject:trip];
-                
-                //find how much time has passed since the trunk was made and when the current user last opened the app
-                    NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                    
-                //find how much time has passed since the trunk had a photo added and when the current user last opened the app
-                    NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                    
-                //put the trip data into a CLLocation
-                    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                
-                //if the lastTripInterval is less than 0 is means the user hasn't seen the trunk because they haven't been in the app since it was made
-                    if (lastTripInterval < 0)
-                    {
-                        [self.haventSeens addObject:location];
-                    }
-                    //if the lastPhotoInterval is less than 0 is means the user hasn't seen the new photo because they haven't been in the app since it was added
-                    else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil){
-                        [self.haventSeens addObject:location];
-                    }
                 }
             }
-            //we've made an array of all the trunks that haven't been seen and filtered out "bad" trunks. Now lets place them on the map
+            
+            
+            for (Trip *trip in self.parseLocations)
+            {
+                NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+                
+                BOOL contains = NO;
+                
+                for (Trip* trunk in self.visitedTrunks){
+                    if ([trunk.objectId isEqualToString:trip.objectId]){
+                        contains = YES;
+                    }
+                }
+                
+                if (self.visitedTrunks.count == 0){
+                    contains = NO;
+                }
+                
+                if (lastTripInterval < 0 && contains == NO)
+                {
+                    [self.haventSeens addObject:location];
+                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+                    [self.haventSeens addObject:location];
+                }
+            }
             [self placeTrips];
         }
     }];
 }
+
 
 /**
  *  Load the trunks of the user's who the current user is following. We use the self.friends array to store their following.
@@ -472,15 +507,29 @@
                 }
             }
             
+            
             for (Trip *trip in self.parseLocations)
             {
                 NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                 NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
                 CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                if (lastTripInterval < 0)
+                
+                BOOL contains = NO;
+                
+                for (Trip* trunk in self.visitedTrunks){
+                    if ([trunk.objectId isEqualToString:trip.objectId]){
+                        contains = YES;
+                    }
+                }
+                
+                if (self.visitedTrunks.count == 0){
+                    contains = NO;
+                }
+                
+                if (lastTripInterval < 0 && contains == NO)
                 {
                     [self.haventSeens addObject:location];
-                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil){
+                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
                     [self.haventSeens addObject:location];
                 }
             }
@@ -1039,6 +1088,10 @@
 
 -(void)dontRefreshMap{
     self.dontRefresh = YES;
+}
+
+-(void)addTripToViewArray:(Trip *)trip{
+    [self.viewedTrunks addObject:trip];
 }
 
 @end

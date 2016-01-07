@@ -21,6 +21,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
+#import "HomeMapViewController.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
 
@@ -101,21 +102,6 @@
         
     }];
 
-    
-//    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-//        if (self.trip.publicTripDetail.totalLikes < 1){
-//            self.totalLikeButton.hidden = YES;
-//            self.totalLikeHeart.hidden = YES;
-//        } else {
-//            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-//            self.totalLikeButton.textColor = [UIColor whiteColor];
-//            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-//            self.totalLikeButton.hidden = NO;
-//            self.totalLikeHeart.hidden = NO;
-//        }
-//    }];
-
-    
     self.photos = [[NSArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
     
@@ -132,6 +118,24 @@
                                                object:nil];
     
     self.loadingMembers = [[NSMutableArray alloc]init];
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        if (![view.viewedTrunks containsObject:self.trip])
+                        {
+                            [view addTripToViewArray:self.trip];
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{

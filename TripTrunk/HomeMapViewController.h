@@ -14,6 +14,8 @@
 
 @interface HomeMapViewController : TTBaseViewController
 @property PFUser *user;
+@property NSMutableArray *viewedTrunks;
+
 
 /**
  *  Updates the trunk color on the map
@@ -37,6 +39,9 @@
 -(void)checkToDeleteCity:(CLLocation*)location trip:(Trip*)trip;
 
 -(void)dontRefreshMap;
+
+-(void)addTripToViewArray:(Trip*)trip;
+
 
 
 @end
