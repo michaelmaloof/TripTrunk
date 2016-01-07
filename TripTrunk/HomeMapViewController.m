@@ -866,7 +866,7 @@
                 [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
             }
         }
-    //this trip isn't in self.parseLocations, so we're adding a new trip to the map and nopt updating one.
+    //this trip isn't in self.parseLocations, so we're adding a new trip to the map and not updating one.
     //TODO Currently this only applies to current users map and newsfeed. We should do it to any users also a member of this trunk
     } else if (isMember == YES){
         [self.parseLocations addObject:trip];
@@ -919,6 +919,17 @@
     
     for (Trip *trunk in self.parseLocations){
         if ([trunk.objectId isEqualToString:trip.objectId]){
+            
+            for (MKPointAnnotation *pin in self.mapView.annotations)
+            {
+                if (pin.coordinate.latitude == trip.lat && trip.longitude == location.coordinate.longitude){
+                
+                    [self.mapView removeAnnotation:pin];
+                    
+                    
+                }
+            }
+            
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
             
             [self.tripsToCheck removeObject:address];
