@@ -168,7 +168,9 @@
                             <constraint firstItem="4gq-K4-4ao" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="PXp-3B-1qp"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="SQU-bT-ERF"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="28" id="SVE-ZS-caH"/>
-                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="kPw-9F-2H0" secondAttribute="bottom" constant="8" id="Sil-0v-2Bc"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="kPw-9F-2H0" secondAttribute="bottom" constant="8" id="Sil-0v-2Bc">
+                                <variation key="heightClass=regular-widthClass=compact" constant="12"/>
+                            </constraint>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="paW-Ly-ly2" secondAttribute="bottom" id="SxR-ba-ohE"/>
                             <constraint firstItem="xSu-3N-Dsa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Uga-IG-Wqe">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-11"/>
@@ -188,7 +190,9 @@
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="hMG-y3-LMl"/>
                             <constraint firstItem="kPw-9F-2H0" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="iWB-ea-ur5"/>
-                            <constraint firstItem="kPw-9F-2H0" firstAttribute="top" secondItem="4gq-K4-4ao" secondAttribute="bottom" constant="8" id="keJ-2c-Fp7"/>
+                            <constraint firstItem="kPw-9F-2H0" firstAttribute="top" secondItem="4gq-K4-4ao" secondAttribute="bottom" constant="8" id="keJ-2c-Fp7">
+                                <variation key="heightClass=regular-widthClass=compact" constant="12"/>
+                            </constraint>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="lyP-HK-IOG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="5" id="oWF-EG-AeR"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="ow4-Qa-GyF"/>
