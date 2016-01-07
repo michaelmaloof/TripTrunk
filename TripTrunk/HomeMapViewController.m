@@ -856,7 +856,7 @@
 {
     BOOL isOnThisMap = NO;
     NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
-    
+    int count = 0;
     //make sure self.parseLocation contains this trip to avoid adding it to incorrect maps
     for (Trip *trunk in self.parseLocations)
     {
@@ -885,7 +885,7 @@
                 {
                     if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat && ![tripSaved.objectId isEqualToString:trip.objectId])
                     {
-                        
+                        count += 1;
                         NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:tripSaved.publicTripDetail.mostRecentPhoto];
                         
                         BOOL color = 0;
@@ -927,6 +927,8 @@
         //TODO Currently this only applies to current users map and newsfeed. We should do it to any users also a member of this trunk
         if (isOnThisMap == NO && isMember == YES){
             [self.parseLocations addObject:trip];
+            [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
+        } else if (isOnThisMap == YES && count == 0){
             [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
         }
     }
