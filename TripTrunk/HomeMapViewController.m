@@ -667,18 +667,18 @@
     
     
     //if were placing a new trip over an old one we need to remove the old one from the map to prevent it from ever showing. If you dont do this it will toggle between the old and new trunk when the user touches it
-    if (replace == YES){
-        for (MKPointAnnotation *pnt in self.mapView.annotations){
-            if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
-                [self.mapView removeAnnotation:pnt];
-            }
-        }
-    }
     
         if (isMostRecent == YES){
             self.annotationPinToZoomOn = annotation;
             
             if (self.user){
+                if (replace == YES){
+                    for (MKPointAnnotation *pnt in self.mapView.annotations){
+                        if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
+                            [self.mapView removeAnnotation:pnt];
+                        }
+                    }
+                }
                 [self zoomInOnNewPin];
             }
     }
@@ -686,13 +686,26 @@
     //if hot (meaning the trunk has had a photo added in less than 24 hours) then we place it on the map no matter what
     if (hot == YES)
     {
+        if (replace == YES){
+            for (MKPointAnnotation *pnt in self.mapView.annotations){
+                if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
+                    [self.mapView removeAnnotation:pnt];
+                }
+            }
+        }
         [self.hotDots addObject:annotation.title];
         [self.mapView addAnnotation:annotation];
         
     }
     // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
     else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
-        
+        if (replace == YES){
+            for (MKPointAnnotation *pnt in self.mapView.annotations){
+                if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
+                    [self.mapView removeAnnotation:pnt];
+                }
+            }
+        }
         [self.mapView addAnnotation:annotation];
     }else {
     }
@@ -748,6 +761,8 @@
             hasSeen = YES;
         }
     }
+    
+    
     
     
     //if the trunk is in the hotDots (meaning its hot) then make it red
@@ -1092,6 +1107,51 @@
 
 -(void)addTripToViewArray:(Trip *)trip{
     [self.viewedTrunks addObject:trip];
+    
+    BOOL isOnThisMap = NO;
+    NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
+    int count = 0;
+    //make sure self.parseLocation contains this trip to avoid adding it to incorrect maps
+    for (Trip *trunk in self.parseLocations)
+    {
+        if ([trunk.objectId isEqualToString:trip.objectId])
+        {
+            isOnThisMap = YES;
+            
+            [self.hotDots removeObject:trip.city];
+            [self.tripsToCheck removeObject:address];
+            
+            CLLocation *deleteLoc = [[CLLocation alloc]init];
+            for (CLLocation *loc in self.haventSeens)
+            {
+                if (trunk.lat == loc.coordinate.latitude && trunk.longitude == loc.coordinate.longitude)
+                {
+                    deleteLoc = loc;
+                }
+            }
+            [self.haventSeens removeObject:deleteLoc];
+            
+            for (Trip *tripSaved in self.parseLocations)
+            {
+                if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat)
+                {
+                    count += 1;
+                    NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:tripSaved.publicTripDetail.mostRecentPhoto];
+                    
+                    BOOL color = 0;
+                    if (tripInterval < 86400)
+                    {
+                        color = 1;
+                    } else{
+                        color = 0;
+                    }
+                    
+                    [self addTripToMap:tripSaved dot:color isMostRecent:NO needToDelete:YES];
+                }
+            }
+        }
+    }
+    
 }
 
 @end
