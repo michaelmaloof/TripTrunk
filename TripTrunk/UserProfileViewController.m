@@ -253,7 +253,7 @@
                             
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                         }
-                        else if (followStatus.intValue == 1){
+                else if (followingStatus.intValue == 1){
                             self.isFollowing = YES;
                             self.followButton.enabled = YES;
                             self.followersButton.enabled = YES;
