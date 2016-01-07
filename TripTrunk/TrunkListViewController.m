@@ -655,29 +655,59 @@
     // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
     // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
     // Either they can't get to this page, or something is in the All Trunks list, so the user's list is the only possible empty list.
-    if (self.filter.tag == 1 && self.meParseLocations.count == 0){
+    if (self.user == nil && self.filter.tag == 1 && self.meParseLocations.count == 0){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
+    } else if (self.user && self.meParseLocations.count == 0){
+        self.tableView.tableFooterView = [UIView new];
+        
+        NSMutableArray *locationArray = [[NSMutableArray alloc]init];
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
+        {
+            for (HomeMapViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[HomeMapViewController class]])
+                {
+                    
+                    [locationArray addObject:view];
+                    if ([view.user.objectId isEqualToString:self.user.objectId] )
+                    {
+                        [view dontRefreshMap];
+                        [view deleteTrunk:self.location trip:nil];
+                    }
+                }
+            }
+        }
+        
+        return YES;
     }
+    
     else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         
         NSMutableArray *locationArray = [[NSMutableArray alloc]init];
-        for (UIViewController *vc in self.navigationController.viewControllers){
-            if ([vc isKindOfClass:[HomeMapViewController class]]){
-                [locationArray addObject:vc];
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
+        {
+            for (HomeMapViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[HomeMapViewController class]])
+                {
+                    
+                    [locationArray addObject:view];
+                    if (view.user == nil || [view.user.objectId isEqualToString:[PFUser currentUser].objectId] )
+                    {
+                        [view dontRefreshMap];
+                        [view deleteTrunk:self.location trip:nil];
+                    }
+                }
             }
         }
         
-        if (locationArray.count > 0){
-            [(HomeMapViewController*)[locationArray lastObject] dontRefreshMap];
-            [(HomeMapViewController*)[locationArray lastObject] deleteTrunk:self.location trip:nil];        }
-        
         return YES;
     }
-
+    
     return NO;
 }
 

@@ -1011,13 +1011,6 @@
 
 -(void)deleteTrunk:(CLLocation *)location trip:(Trip *)trip{
     
-    //    for (MKPointAnnotation *trip in self.hotDots){
-    //        [self.hotDots addObject:annotation.title];
-    //        self.needsUpdates
-    //            }
-    
-    //I want to remove the string annonation titles from hot dots and and needs updates. Then I want to replace the trunks at this particular city WHILE remove the trip from self.parseLocations. This will have the map replace all the trunks from that city WITHOUT placing the one we just erased. This ensures that we update to the correct color and logo status when deleted. In order to do this, I need to store the geoLocations and not string titles.
-    
     for (MKPointAnnotation *pin in self.mapView.annotations)
     {
         if (pin.coordinate.latitude == location.coordinate.latitude && pin.coordinate.longitude == location.coordinate.longitude){
