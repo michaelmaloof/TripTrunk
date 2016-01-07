@@ -15,7 +15,6 @@
 #import "TTUtility.h"
 #import "UIImageView+AFNetworking.h"
 #import "HomeMapViewController.h"
-
 #import "UIScrollView+EmptyDataSet.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
@@ -237,6 +236,7 @@
             }
             else
             {
+                self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
                 for (PFObject *activity in objects){
                     
@@ -655,11 +655,11 @@
     // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
     // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
     // Either they can't get to this page, or something is in the All Trunks list, so the user's list is the only possible empty list.
-    if (self.user == nil && self.filter.tag == 1 && self.meParseLocations.count == 0){
+    if (self.user == nil && self.filter.tag == 1 && self.meParseLocations.count == 0 &&self.didLoad == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
-    } else if (self.user && self.meParseLocations.count == 0){
+    } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES){
         self.tableView.tableFooterView = [UIView new];
         
         NSMutableArray *locationArray = [[NSMutableArray alloc]init];
