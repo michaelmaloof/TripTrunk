@@ -306,6 +306,7 @@
                             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                             PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
                             photoViewController.photo = (Photo *)photo;
+                            photoViewController.fromNotification = YES;
 
                             [homeNavController pushViewController:photoViewController animated:YES];
                         }
@@ -375,6 +376,7 @@
                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
                     photoViewController.photo = (Photo *)photo;
+                    photoViewController.fromNotification = YES;
                     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
                     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
                     [tabbarcontroller setSelectedIndex:0];
