@@ -103,6 +103,7 @@
     
     if (self.fromNotification == YES){
         self.shouldShowTrunkNameButton = YES;
+
     }
     
     self.commentActivities = [[NSMutableArray alloc] init];
@@ -374,6 +375,7 @@
 
 - (void)tripLoaded:(Trip *)trip {
     if (self.shouldShowTrunkNameButton) {
+        [self.photo.trip fetchIfNeeded];
         [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
         [self.trunkNameButton setHidden:NO];
     }
@@ -813,22 +815,20 @@
 - (IBAction)trunkNameButtonPressed:(id)sender {
     
     //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
+    [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+        trunkViewController.trip = self.photo.trip;
         
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-    [self.photo.trip fetchIfNeeded];
-    trunkViewController.trip = (Trip *)self.photo.trip;
-    
-//    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-//        NSLog(@"Photo View DIsmissed");
-    
+        //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+        //        NSLog(@"Photo View DIsmissed");
+        
         UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
         UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
         if (tabbarcontroller.selectedIndex == 3) {
             [activityNavController pushViewController:trunkViewController animated:YES];
         }
-    
-//    }];
+    }];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
