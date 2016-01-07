@@ -183,7 +183,7 @@
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
-        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+//        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
         query.limit = 50;
         query.skip = self.objectsCountMe;
         
@@ -260,7 +260,7 @@
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
-        [query orderByDescending:@"createdAt"];
+//        [query orderByDescending:@"createdAt"];
         query.limit = 50;
         query.skip = self.objectsCountMe;
         
@@ -417,7 +417,7 @@
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
     [query includeKey:@"trip.publicTripDetail"];
-    [query orderByDescending:@"createdAt"];
+//    [query orderByDescending:@"createdAt"];
     query.limit = 50;
     query.skip = self.objectsCountTotal;
     
