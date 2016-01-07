@@ -666,15 +666,14 @@
             {
                 
                 [self.navigationController popToViewController:[locationArray2 lastObject] animated:YES];
-                
-            } else {
+            }
                 //TODO: needs to be the whole tab bar not just the nav controller
                 
                 NSMutableArray *listArray = [[NSMutableArray alloc]init];
                 for (UIViewController *vc in self.navigationController.viewControllers){
                     if ([vc isKindOfClass:[TrunkListViewController class]])
                     {
-                        [(TrunkListViewController*)vc reloadTrunkList:self.trip];
+                        [(TrunkListViewController*)vc deleteItemOnTrunkList:self.trip];
                         [listArray addObject:vc];
                         //TODO Delete not working on list
                     }
@@ -682,8 +681,6 @@
                 
                 [self.navigationController popToViewController:[listArray lastObject] animated:YES];
             }
-            
-        }
     }
     
     

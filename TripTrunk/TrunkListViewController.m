@@ -716,18 +716,44 @@
             if ([trip.objectId isEqualToString:tripP.objectId]){
                 tripP.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
                 tripP.publicTripDetail.photoCount += 1;
-                [self.tableView reloadData];
             }
         }
-    
+    //TODO dont need to call this twice just reload once
+
         for (Trip *tripM in self.meParseLocations){
             if ([trip.objectId isEqualToString:tripM.objectId]){
                 tripM.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
                 tripM.publicTripDetail.photoCount += 1;
-                [self.tableView reloadData];
             }
         }
+    
+    [self.tableView reloadData];
+
 }
+
+-(void)deleteItemOnTrunkList:(Trip*)trip{
+    Trip *tripA = [[Trip alloc]init];
+    Trip *tripB = [[Trip alloc]init];
+    
+    for (Trip *tripP in self.parseLocations){
+        if ([trip.objectId isEqualToString:tripP.objectId]){
+            tripA = tripP;
+        }
+    }
+    //TODO dont need to call this twice just reload once
+    for (Trip *tripM in self.meParseLocations){
+        if ([trip.objectId isEqualToString:tripM.objectId]){
+            tripB = tripM;
+        }
+    }
+    
+    [self.parseLocations removeObject:tripA];
+    [self.meParseLocations removeObject:tripB];
+    
+    [self.tableView reloadData];
+
+}
+
 
 
 @end
