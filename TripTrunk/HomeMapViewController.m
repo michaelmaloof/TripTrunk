@@ -49,6 +49,7 @@
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
 @property NSMutableArray *visitedTrunks;
+
 @end
 
 @implementation HomeMapViewController
@@ -61,6 +62,7 @@
     self.isFirstUserLoad = YES;
     
     self.viewedTrunks = [[NSMutableArray alloc]init];
+    self.viewedPhotos = [[NSMutableArray alloc]init];
     
     [self designNavBar];
     

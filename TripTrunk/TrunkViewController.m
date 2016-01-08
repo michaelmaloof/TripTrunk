@@ -52,6 +52,7 @@
 @property int likes;
 @property UITextView *descriptionTextView;
 @property NSMutableArray *loadingMembers;
+@property NSMutableArray *photosSeen;
 
 @end
 
@@ -131,7 +132,11 @@
                         if (![view.viewedTrunks containsObject:self.trip])
                         {
                             [view.viewedTrunks addObject:self.trip];
+
                         }
+                        
+                        self.photosSeen = [[NSMutableArray alloc]init];
+                        self.photosSeen = view.viewedPhotos;
                     }
                 }
             }
@@ -163,6 +168,24 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+
+                            self.photosSeen = [[NSMutableArray alloc]init];
+                            self.photosSeen = view.viewedPhotos;
+                    }
+                }
+            }
+        }
+    }
+
     
     [self refreshTripDataViews];
     
@@ -542,7 +565,11 @@
             NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
             if (lastPhotoInterval < 0)
             {
-                cell.logo.hidden = NO;
+                if (![self.photosSeen containsObject:cell.tripPhoto.objectId]){
+                    cell.logo.hidden = NO;
+                } else {
+                    cell.logo.hidden = YES;
+                }
 
             }
             
@@ -885,7 +912,10 @@
 //        }
 }
 
-
+-(void)photoWasViewed:(Photo *)photo{
+    [self.photosSeen addObject:photo.objectId];
+    [self.collectionView reloadData];
+}
 
 @end
 

@@ -281,6 +281,25 @@
 
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+
+                            [view.viewedPhotos addObject:self.photo.objectId];
+                            [self.delegate photoWasViewed:self.photo];
+
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -500,11 +519,31 @@
             
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
+            for (UINavigationController *controller in self.tabBarController.viewControllers)
+            {
+                for (HomeMapViewController *view in controller.viewControllers)
+                {
+                    if ([view isKindOfClass:[HomeMapViewController class]])
+                    {
+                        if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                            if (view == (HomeMapViewController*)controller.viewControllers[0]){
+  
+                                    [view.viewedPhotos addObject:self.photo.objectId];
+                                    [self.delegate photoWasViewed:self.photo];
+
+                            }
+                        }
+                    }
+                }
+            }
+            
             [self refreshPhotoActivities];
             
             self.imageZoomed = NO;
             
             [self.caption setContentOffset:CGPointZero animated:NO];
+            
+
         }
     }
 }
@@ -540,6 +579,26 @@
 
             
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+            
+            for (UINavigationController *controller in self.tabBarController.viewControllers)
+            {
+                for (HomeMapViewController *view in controller.viewControllers)
+                {
+                    if ([view isKindOfClass:[HomeMapViewController class]])
+                    {
+                        if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                            if (view == (HomeMapViewController*)controller.viewControllers[0]){
+
+                                    [view.viewedPhotos addObject:self.photo.objectId];
+                                    [self.delegate photoWasViewed:self.photo];
+
+                            }
+                        }
+                    }
+                }
+            }
+            
+
             
             [self refreshPhotoActivities];
             

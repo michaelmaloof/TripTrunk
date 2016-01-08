@@ -15,6 +15,7 @@
 @interface HomeMapViewController : TTBaseViewController
 @property PFUser *user;
 @property NSMutableArray *viewedTrunks;
+@property NSMutableArray *viewedPhotos;
 
 
 /**

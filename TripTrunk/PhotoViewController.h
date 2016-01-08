@@ -15,6 +15,7 @@
 -(void)photoWasLiked:(id)sender;
 -(void)photoWasDisliked:(id)sender;
 -(void)photoWasDeleted:(NSNumber*)likes;
+-(void)photoWasViewed:(Photo*)photo;
 
 
 
