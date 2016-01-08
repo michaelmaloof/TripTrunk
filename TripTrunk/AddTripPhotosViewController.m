@@ -117,7 +117,7 @@
             {
                 if ([view isKindOfClass:[TrunkListViewController class]])
                 {
-                    [view reloadTrunkList:self.trip];
+                    [view reloadTrunkList:self.trip seen:NO];
                 }
             }
         }

@@ -22,6 +22,7 @@
 #import "AddTripFriendsViewController.h"
 #import "UserProfileViewController.h"
 #import "HomeMapViewController.h"
+#import "TrunkListViewController.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
 
@@ -144,6 +145,17 @@
             if ([view isKindOfClass:[HomeMapViewController class]])
             {
                 [view addTripToViewArray:self.trip];
+            }
+        }
+    }
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (TrunkListViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[TrunkListViewController class]])
+            {
+                [view reloadTrunkList:self.trip seen:YES];
             }
         }
     }

@@ -762,7 +762,7 @@
     self.tableView.emptyDataSetDelegate = nil;
 }
 
--(void)reloadTrunkList:(Trip *)trip{
+-(void)reloadTrunkList:(Trip *)trip seen:(BOOL)hasSeen{
         for (Trip *tripP in self.parseLocations){
             if ([trip.objectId isEqualToString:tripP.objectId]){
                 tripP.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
@@ -777,6 +777,19 @@
                 tripM.publicTripDetail.photoCount += 1;
             }
         }
+    Trip *trunk = [[Trip alloc]init];
+
+    if (hasSeen == YES){
+        for (Trip *trunkSeen in self.haventSeens){
+            if ([trunkSeen.objectId isEqualToString:trip.objectId])
+            {
+                trunk = trunkSeen;
+            }
+        }
+    }
+    if (hasSeen == YES){
+        [self.haventSeens removeObject:trunk];
+    }
     
     [self.tableView reloadData];
 
