@@ -63,7 +63,7 @@
     
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
-    
+    self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
     
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
@@ -524,7 +524,7 @@
                     }
                 }
                 
-                if (self.visitedTrunks.count == 0){
+                if (self.visitedTrunks.count == 0 || self.visitedTrunks){
                     contains = NO;
                 }
                 
