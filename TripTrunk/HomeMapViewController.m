@@ -1106,7 +1106,6 @@
 }
 
 -(void)addTripToViewArray:(Trip *)trip{
-    [self.viewedTrunks addObject:trip];
     
     BOOL isOnThisMap = NO;
     NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];

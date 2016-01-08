@@ -129,13 +129,25 @@
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
                         if (![view.viewedTrunks containsObject:self.trip])
                         {
-                            [view addTripToViewArray:self.trip];
+                            [view.viewedTrunks addObject:self.trip];
                         }
                     }
                 }
             }
         }
     }
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                [view addTripToViewArray:self.trip];
+            }
+        }
+    }
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
