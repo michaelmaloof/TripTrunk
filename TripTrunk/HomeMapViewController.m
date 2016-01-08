@@ -86,7 +86,6 @@
     self.today = [NSDate date];
     
     //we need the date the user last oppened the app to put the logo on certain trunks
-    //TODO we should do this once on viewDidLoad
     self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
     for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -140,6 +139,7 @@
             //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
             //We're on the home taeb so register the user's notifications
             if (self.tutorialComplete == YES){
+                
                 [self registerNotifications];
                 if (self.dontRefresh == NO){
                     [self beginLoadingTrunks];
@@ -186,7 +186,8 @@
  *
  */
 -(void)beginLoadingTrunks{
-    
+    //we need the date the user last oppened the app to put the logo on certain trunks
+    self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     //the user doesnt have a query in progress to load the trunks already, so go ahead and load the trunks
     if (self.isLoading == NO){
         
