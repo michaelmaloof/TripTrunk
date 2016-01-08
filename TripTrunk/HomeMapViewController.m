@@ -192,7 +192,7 @@
     if (self.isLoading == NO){
         
         //disable the refresh button until we finish loading the trunks
-        self.navigationItem.rightBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItems = nil;
         
         //save the current pins on the map so we can delete them once we place the new ones
         self.annotationsToDelete = self.mapView.annotations;
@@ -392,8 +392,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //we finished loading so switch the bool and renable the refresh icon
         self.isLoading = NO;
-        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
-        self.navigationItem.rightBarButtonItem = button;
+        [self createButtons];
         
         
         //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
@@ -480,8 +479,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.isLoading = NO;
         NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
-        UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
-        self.navigationItem.rightBarButtonItem = button;
+        [self createButtons];
         
         if(error)
         {
@@ -1091,7 +1089,7 @@
     }
 }
 
-- (IBAction)addMoreTrunks:(id)sender {
+- (void)addMoreTrunks{
     if (self.limit < 100){
         self.limit = self.limit + 250;
     } else if (self.limit < 300){
@@ -1153,6 +1151,25 @@
             }
         }
     }
+    
+}
+
+-(void)createButtons{
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
+    
+    UIImage *image = [UIImage imageNamed:@"moree"];
+    CGRect buttonFrame = CGRectMake(0, 0, image.size.width/1.6, image.size.height/1.6);
+    
+    UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+    [bttn addTarget:self action:@selector(addMoreTrunks) forControlEvents:UIControlEventTouchUpInside];
+    [bttn setImage:image forState:UIControlStateNormal];
+
+    UIBarButtonItem *buttonTwo= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+    
+    NSArray *buttons = @[buttonTwo, button];
+    
+    self.navigationItem.rightBarButtonItems = buttons;
+    
     
 }
 
