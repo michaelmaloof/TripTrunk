@@ -1158,7 +1158,7 @@
     UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
     
     UIImage *image = [UIImage imageNamed:@"moree"];
-    CGRect buttonFrame = CGRectMake(0, 0, image.size.width/1.6, image.size.height/1.6);
+    CGRect buttonFrame = CGRectMake(0, 0, image.size.width/1.8, image.size.height/1.8);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(addMoreTrunks) forControlEvents:UIControlEventTouchUpInside];

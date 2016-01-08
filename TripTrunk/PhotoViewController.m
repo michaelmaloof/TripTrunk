@@ -274,9 +274,9 @@
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-    
     self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+
+
 
 
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
@@ -471,7 +471,6 @@
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 self.caption.text = self.photo.caption;
-                [self.caption setContentOffset:CGPointZero animated:NO];
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -514,7 +513,6 @@
             NSString *likes = NSLocalizedString(@"Likes",@"Likes");
             [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
             self.caption.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
 
             
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -540,10 +538,6 @@
             [self refreshPhotoActivities];
             
             self.imageZoomed = NO;
-            
-            [self.caption setContentOffset:CGPointZero animated:NO];
-            
-
         }
     }
 }
@@ -575,7 +569,7 @@
             NSString *likes = NSLocalizedString(@"Likes",@"Likes");
             [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
             self.caption.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
+  
 
             
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -603,9 +597,6 @@
             [self refreshPhotoActivities];
             
             self.imageZoomed = NO;
-            
-            [self.caption setContentOffset:CGPointZero animated:NO];
-
         }
     }
 }
@@ -697,8 +688,8 @@
         [self.caption becomeFirstResponder];
         
     } else {
-        self.photo.caption = self.caption.text;
-        [self.caption setContentOffset:CGPointZero animated:NO];
+        self.caption.text = self.photo.caption;
+
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (!error)
             {
@@ -739,7 +730,6 @@
             }
             
             [self.caption endEditing:YES];
-            [self.caption setContentOffset:CGPointZero animated:NO];
 
         }];
         
@@ -882,8 +872,6 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
-
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
