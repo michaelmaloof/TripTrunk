@@ -124,6 +124,26 @@
         
     }
     
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        if (![view.viewedTrunks containsObject:self.trip])
+                        {
+                            [view.viewedTrunks addObject:self.trip];
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
     
     [self uploadAllPhotos];
 }
@@ -226,6 +246,23 @@
         photo.usersWhoHaveLiked = [[NSMutableArray alloc] init];
         photo.tripName = self.trip.name;
         photo.city = self.trip.city;
+        
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
+        {
+            for (HomeMapViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[HomeMapViewController class]])
+                {
+                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                        if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                            
+                            [view.viewedPhotos addObject:photo.objectId];                            
+                        }
+                    }
+                }
+            }
+        }
+
         
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         [options setVersion:PHImageRequestOptionsVersionCurrent];
