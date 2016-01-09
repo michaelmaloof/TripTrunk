@@ -92,5 +92,32 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Search</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>searchGlass_tabIcon</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Activity</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Activity</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>comment_tabIcon</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Trunk</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>New Trunk</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>addTrunk_tabIcon</string>
+		</dict>
+	</array>
 </dict>
 </plist>

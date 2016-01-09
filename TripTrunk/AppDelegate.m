@@ -41,10 +41,11 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
+    
     
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
     
@@ -52,8 +53,39 @@
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
                                                            [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
+    // Check API availiability
+    // UIApplicationShortcutItem is available in iOS 9 or later.
+    if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
+        
+        
+        // If a shortcut was launched, display its information and take the appropriate action
+        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKeyedSubscript:UIApplicationLaunchOptionsShortcutItemKey];
+        
+        if(shortcutItem)
+        {
+            // When the app launch at first time, this block can not called.
+            [self handleShortCutItem:shortcutItem launch:launchOptions];
+            
+        }else{
+            // normal app launch process without quick action
+            
+            [self launchWithoutQuickAction:launchOptions];
+            
+        }
+        
+    }else{
+        
+        // Less than iOS9 or later
+        
+        [self launchWithoutQuickAction:launchOptions];
+        
+    }
     
+    
+    return YES;
+}
 
+-(void)launchWithoutQuickAction:(NSDictionary*)launchOptions{
     [ParseCrashReporting enable];
     
     [Parse setApplicationId:kPARSE_APP_ID
@@ -73,8 +105,9 @@
     [self setupActivityTabBar];
     [self setupProfileTabBar];
     
-    return YES;
 }
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
@@ -93,6 +126,7 @@
     [user setValue:[NSDate date] forKeyPath:@"lastUsed"];
 
     [user saveInBackground];
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -386,6 +420,68 @@
         }
 
     }
+}
+
+
+
+/**
+ *  @brief handle shortcut item depend on its type
+ *
+ *  @param shortcutItem shortcutItem  selected shortcut item with quick action.
+ *
+ *  @return return BOOL description
+ */
+- (BOOL)handleShortCutItem : (UIApplicationShortcutItem *)shortcutItem launch:(NSDictionary*)launchOptions{
+    
+    BOOL handled = NO;
+    
+    NSString *shortcutSearch = @"Search";
+    NSString *shortcutActivity = @"Activity";
+    NSString *shortcutTrunk = @"Trunk";
+    
+    [ParseCrashReporting enable];
+    
+    [Parse setApplicationId:kPARSE_APP_ID
+                  clientKey:kPARSE_CLIENT_KEY];
+    [PFUser enableRevocableSessionInBackground];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    [PFImageView class];
+    
+    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
+    
+    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
+    
+    [self setupSearchTabBar];
+    [self setupActivityTabBar];
+    [self setupProfileTabBar];
+
+
+    if ([shortcutItem.type isEqualToString:shortcutSearch]) {
+        handled = YES;
+        
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:1];
+
+    }
+    
+    else if ([shortcutItem.type isEqualToString:shortcutActivity]) {
+        handled = YES;
+        
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:3];
+
+    }
+    
+    else if ([shortcutItem.type isEqualToString:shortcutTrunk]) {
+        handled = YES;
+        
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:2];
+
+    }
+    
+    return handled;
 }
 
 @end
