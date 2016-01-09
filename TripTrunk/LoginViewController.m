@@ -93,7 +93,25 @@
         {
             NSLog(@"User logged in through Facebook!");
             
-                // Make sure the user has a TripTrunk username
+            if ([user objectForKey:@"fbid"] == nil)
+            {
+                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+                [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                    if (!error)
+                    {
+                        // result is a dictionary with the user's Facebook data
+                        NSDictionary *userData = (NSDictionary *)result;
+                        PFUser *user = [PFUser currentUser];
+                        NSString *fbid = [userData objectForKey:@"id"];
+                        if (fbid){
+                            [user setObject:fbid forKey:@"fbid"];
+                            [user saveInBackground];
+                        }
+                    }
+                    }];
+                    
+                 }
+                 // Make sure the user has a TripTrunk username
                  if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
                      [self showSetUsernameView];
                  }
