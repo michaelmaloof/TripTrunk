@@ -66,6 +66,9 @@
     
     [super viewDidLoad];
     
+    self.tabBarController.tabBar.translucent = false;
+    [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+    
     self.descriptionTextView = [[UITextView alloc]init];
     self.descriptionTextView.hidden = YES;
     [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
