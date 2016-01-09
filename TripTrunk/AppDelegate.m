@@ -484,4 +484,24 @@
     return handled;
 }
 
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+    
+    NSString *shortcutSearch = @"Search";
+    NSString *shortcutActivity = @"Activity";
+    NSString *shortcutTrunk = @"Trunk";
+    
+    if ([shortcutItem.type isEqualToString:shortcutSearch]) {
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:1];
+    }
+    
+    else if ([shortcutItem.type isEqualToString:shortcutActivity]) {
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:3];
+    }
+    
+    else if ([shortcutItem.type isEqualToString:shortcutTrunk]) {
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:2];
+    }
+}
+
+
 @end
