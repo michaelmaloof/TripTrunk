@@ -17,6 +17,7 @@
 @property PFUser *user;
 @property CLLocation *location;
 @property BOOL isList;
+@property BOOL isPreview;
 
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;

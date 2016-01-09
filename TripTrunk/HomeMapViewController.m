@@ -20,7 +20,7 @@
 
 #define METERS_PER_MILE 1609.344
 
-@interface HomeMapViewController () <MKMapViewDelegate>
+@interface HomeMapViewController () <MKMapViewDelegate,UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *tripsToCheck;
@@ -49,6 +49,7 @@
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
 @property NSMutableArray *visitedTrunks;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPress;
 
 @end
 
@@ -748,8 +749,11 @@
     self.zoomOut.hidden = NO;
     
     view.layer.zPosition = 1;
+    self.pinCityName = view.annotation.title;
+    self.location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
     
     [self.mapView setRegion:region animated:YES];
+    
 }
 
 
@@ -824,11 +828,6 @@
 //FIXME: Lets use the array of parselocations here
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    // TODO: Get the state in a more elloquent way. This is hacky.
-    //    view.enabled = NO;
-    //    view.selected = YES;
-    
-    //    CLGeocoder *cod = [[CLGeocoder alloc] init];
     self.location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
     
     self.pinCityName = view.annotation.title;
@@ -838,26 +837,6 @@
     self.photoPin = view;
     
     
-    //    [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-    //
-    //        if (!error){
-    //            CLPlacemark *placemark = [placemarks firstObject];
-    //            self.pinCityName = view.annotation.title;
-    //            self.pinStateName = placemark.administrativeArea;
-    //            [self performSegueWithIdentifier:@"Trunk" sender:self];
-    //            self.pinCityName = nil;
-    //            self.pinStateName = nil;
-    //            self.photoPin = view;
-    //            view.enabled = YES;
-    //            view.selected = NO;
-    //
-    //
-    //        } else {
-    //            view.enabled = YES;
-    //            view.selected = NO;
-    //
-    //        }
-    //    }];
 }
 
 
@@ -867,6 +846,17 @@
     [self.view endEditing:YES];
     
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self check3DTouch];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    
+    [self check3DTouch];
+}
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     
@@ -1173,6 +1163,67 @@
     self.navigationItem.rightBarButtonItems = buttons;
     
     
+}
+
+
+- (void)check3DTouch {
+    
+    // register for 3D Touch (if available)
+    if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+        
+        [self registerForPreviewingWithDelegate:(id)self sourceView:self.view];
+        NSLog(@"3D Touch is available! Hurra!");
+        
+        // no need for our alternative anymore
+        self.longPress.enabled = NO;
+        
+    } else {
+        
+        NSLog(@"3D Touch is not available on this device. Sniff!");
+        
+        // handle a 3D Touch alternative (long gesture recognizer)
+        self.longPress.enabled = YES;
+        
+    }
+}
+
+- (UILongPressGestureRecognizer *)longPress {
+    
+    if (!_longPress) {
+        _longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(showPeek)];
+        [self.view addGestureRecognizer:_longPress];
+    }
+    return _longPress;
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+    
+    // check if we're not already displaying a preview controller
+    if ([self.presentedViewController isKindOfClass:[TrunkListViewController class]]) {
+        return nil;
+    }
+    if (self.pinCityName){
+    // shallow press: return the preview controller here (peek)
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkListViewController *trunkView = [storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+    trunkView.city = self.pinCityName;
+    trunkView.location = self.location;
+    trunkView.isPreview = YES;
+    self.pinCityName = nil;
+    
+    return trunkView;
+    } else {
+        return nil;
+    }
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+    
+    // deep press: bring up the commit view controller (pop)
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *commitController = [storyboard instantiateViewControllerWithIdentifier:@"CommitView"];
+    
+    [self showViewController:commitController sender:self];
 }
 
 @end

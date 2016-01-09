@@ -170,13 +170,13 @@
                                 <exclude reference="4gq-K4-4ao"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="PXp-3B-1qp"/>
+                                <exclude reference="SaA-Xn-MSo"/>
+                                <exclude reference="Uga-IG-Wqe"/>
                                 <exclude reference="8xa-m3-jvs"/>
                                 <exclude reference="MTC-j5-esn"/>
                                 <exclude reference="hMG-y3-LMl"/>
                                 <exclude reference="lyP-HK-IOG"/>
-                                <exclude reference="Uga-IG-Wqe"/>
-                                <exclude reference="PXp-3B-1qp"/>
-                                <exclude reference="SaA-Xn-MSo"/>
                                 <exclude reference="5P0-at-t5u"/>
                                 <exclude reference="J9S-fj-2gt"/>
                                 <exclude reference="SVE-ZS-caH"/>
@@ -203,6 +203,9 @@
                                 <include reference="4gq-K4-4ao"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="PXp-3B-1qp"/>
+                                <include reference="SaA-Xn-MSo"/>
+                                <include reference="Uga-IG-Wqe"/>
                                 <exclude reference="1P8-u6-Hev"/>
                                 <exclude reference="5Rc-rz-BTx"/>
                                 <include reference="8xa-m3-jvs"/>
@@ -210,9 +213,6 @@
                                 <exclude reference="SQU-bT-ERF"/>
                                 <include reference="hMG-y3-LMl"/>
                                 <include reference="lyP-HK-IOG"/>
-                                <include reference="Uga-IG-Wqe"/>
-                                <exclude reference="PXp-3B-1qp"/>
-                                <include reference="SaA-Xn-MSo"/>
                                 <include reference="5P0-at-t5u"/>
                                 <exclude reference="SxR-ba-ohE"/>
                                 <include reference="HnI-7G-yCt"/>
@@ -230,7 +230,7 @@
                         <outlet property="compassRose" destination="xSu-3N-Dsa" id="6GI-OY-102"/>
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
                         <outlet property="zoomOut" destination="itu-Co-AEg" id="rW6-oE-g8A"/>
-                        <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
+                        <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="zKf-7n-h1K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -505,7 +505,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jf4-sa-9aP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1173" y="-969"/>
+            <point key="canvasLocation" x="1482" y="-918"/>
         </scene>
         <!--Trunk View Controller-->
         <scene sceneID="o6Y-UQ-mKr">
@@ -3955,8 +3955,8 @@
         <image name="zoomGlass" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="bhX-wL-LGH"/>
         <segue reference="hXf-dS-IMJ"/>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
