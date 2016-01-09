@@ -103,30 +103,36 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-    
-    self.tabBarController.tabBar.translucent = false;
-    [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
-    
-    
-    // Setup tableview delegate/datasource
-    [self.tableView setDelegate:self];
-    [self.tableView setDataSource:self];
-    // Setup Empty Datasets
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.emptyDataSetSource = self;
-    
-    if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
-        // Query for activities for user
-        [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
-            _activities = [NSMutableArray arrayWithArray:activities];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.activitySearchComplete = YES;
-                [self.tableView reloadData];
-            });
-        }];
+    if (![PFUser currentUser]) {
+        [self.tabBarController setSelectedIndex:0];
+    } else {
+        
+        
+        [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+        [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
+        
+        self.tabBarController.tabBar.translucent = false;
+        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+        
+        
+        // Setup tableview delegate/datasource
+        [self.tableView setDelegate:self];
+        [self.tableView setDataSource:self];
+        // Setup Empty Datasets
+        self.tableView.emptyDataSetDelegate = self;
+        self.tableView.emptyDataSetSource = self;
+        
+        if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+            // Query for activities for user
+            [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
+                _activities = [NSMutableArray arrayWithArray:activities];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.activitySearchComplete = YES;
+                    [self.tableView reloadData];
+                });
+            }];
+        }
+        
     }
     
 }

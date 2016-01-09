@@ -50,61 +50,66 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"Find Friends";
     
-
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
-    
-    self.tabBarController.tabBar.translucent = false;
-    [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
-
-    _friends = [[NSMutableArray alloc] init];
-    _following = [[NSMutableArray alloc] init];
-    _pending = [[NSMutableArray alloc] init];
-
-    _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
-
-    [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
-    [self loadPromotedUsers];
-    [self loadFollowing];
-
-    self.searchResults = [[NSMutableArray alloc] init];
-    
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar sizeToFit];
-    [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-    // Make the search Cancel button TTBlue
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                                                  ttBlueColor,
-                                                                                                  NSForegroundColorAttributeName,
-                                                                                                  nil] 
-                                                                                        forState:UIControlStateNormal];
-    
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    self.definesPresentationContext = YES;
-    
-
-    // Setup Empty Datasets
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.emptyDataSetSource = self;
-    
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-
-    // Add keyboard notifications so that the keyboard won't cover the table when searching
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-
+    if (![PFUser currentUser]) {
+        [self.tabBarController setSelectedIndex:0];
+    } else {
+        
+        self.title = @"Find Friends";
+        
+        
+        [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
+        
+        self.tabBarController.tabBar.translucent = false;
+        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+        
+        _friends = [[NSMutableArray alloc] init];
+        _following = [[NSMutableArray alloc] init];
+        _pending = [[NSMutableArray alloc] init];
+        
+        _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
+        
+        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+        [self loadPromotedUsers];
+        [self loadFollowing];
+        
+        self.searchResults = [[NSMutableArray alloc] init];
+        
+        self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+        self.searchController.searchResultsUpdater = self;
+        self.searchController.dimsBackgroundDuringPresentation = NO;
+        self.searchController.searchBar.delegate = self;
+        [self.searchController.searchBar sizeToFit];
+        [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+        // Make the search Cancel button TTBlue
+        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+        [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                                                      ttBlueColor,
+                                                                                                      NSForegroundColorAttributeName,
+                                                                                                      nil]
+                                                                                            forState:UIControlStateNormal];
+        
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+        self.definesPresentationContext = YES;
+        
+        
+        // Setup Empty Datasets
+        self.tableView.emptyDataSetDelegate = self;
+        self.tableView.emptyDataSetSource = self;
+        
+        [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+        
+        // Add keyboard notifications so that the keyboard won't cover the table when searching
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
+    }
 }
 
 - (void)loadPromotedUsers {

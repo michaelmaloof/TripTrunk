@@ -65,6 +65,7 @@
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
+    [self setUpArrays];
     
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
     self.isLoading = NO;
@@ -74,6 +75,7 @@
     
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
+    self.visitedTrunks = [[NSMutableArray alloc]init];
     
     //Require users to agree to the terms and conditions
     [self ensureEULA];
