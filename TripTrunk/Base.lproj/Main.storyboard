@@ -170,13 +170,13 @@
                                 <exclude reference="4gq-K4-4ao"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="PXp-3B-1qp"/>
+                                <exclude reference="SaA-Xn-MSo"/>
+                                <exclude reference="Uga-IG-Wqe"/>
                                 <exclude reference="8xa-m3-jvs"/>
                                 <exclude reference="MTC-j5-esn"/>
                                 <exclude reference="hMG-y3-LMl"/>
                                 <exclude reference="lyP-HK-IOG"/>
-                                <exclude reference="Uga-IG-Wqe"/>
-                                <exclude reference="PXp-3B-1qp"/>
-                                <exclude reference="SaA-Xn-MSo"/>
                                 <exclude reference="5P0-at-t5u"/>
                                 <exclude reference="J9S-fj-2gt"/>
                                 <exclude reference="SVE-ZS-caH"/>
@@ -203,6 +203,9 @@
                                 <include reference="4gq-K4-4ao"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="PXp-3B-1qp"/>
+                                <include reference="SaA-Xn-MSo"/>
+                                <include reference="Uga-IG-Wqe"/>
                                 <exclude reference="1P8-u6-Hev"/>
                                 <exclude reference="5Rc-rz-BTx"/>
                                 <include reference="8xa-m3-jvs"/>
@@ -210,9 +213,6 @@
                                 <exclude reference="SQU-bT-ERF"/>
                                 <include reference="hMG-y3-LMl"/>
                                 <include reference="lyP-HK-IOG"/>
-                                <include reference="Uga-IG-Wqe"/>
-                                <exclude reference="PXp-3B-1qp"/>
-                                <include reference="SaA-Xn-MSo"/>
                                 <include reference="5P0-at-t5u"/>
                                 <exclude reference="SxR-ba-ohE"/>
                                 <include reference="HnI-7G-yCt"/>
@@ -2752,7 +2752,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rs-Y7-aUD">

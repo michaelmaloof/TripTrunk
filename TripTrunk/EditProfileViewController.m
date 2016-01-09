@@ -9,6 +9,10 @@
 #import "EditProfileViewController.h"
 #import "CitySearchViewController.h"
 #import "EULAViewController.h"
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+
 
 @interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 
@@ -210,5 +214,19 @@
     
     [self.hometownTextField setText:[location stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
 }
+
+- (IBAction)addFacebook:(id)sender
+{
+    
+    NSArray *permissionsArray = @[@"public_profile", @"user_friends"];
+    
+    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]] == NO)
+    {
+        [PFFacebookUtils linkUserInBackground:[PFUser currentUser] withReadPermissions:permissionsArray block:^(BOOL succeeded, NSError * _Nullable error) {
+            
+        }];
+    }
+}
+
 
 @end

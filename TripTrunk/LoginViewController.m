@@ -11,6 +11,8 @@
 #import <Parse/Parse.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "MSTextField.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 
 @interface LoginViewController ()
 
@@ -63,48 +65,52 @@
     [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
 }
 
-- (void)_loginWithFacebook {
+- (void)_loginWithFacebook
+{
     // Set permissions required from the facebook user account
     NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
     // Login PFUser using Facebook
-    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error)
+    {
         
-        if (error) {
+        if (error)
+        {
             NSString *errorString = [error userInfo][@"error"];
             NSLog(@"%@",errorString);
             return;
-
         }
         
-        if (!user) {
+        if (!user)
+        {
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
-        } else if (user.isNew) {
+        } else if (user.isNew)
+        {
             NSLog(@"User signed up and logged in through Facebook!");
-
             [self showSetUsernameView];
-
-        } else {
+            
+        } else
+        {
             NSLog(@"User logged in through Facebook!");
             
-            // Make sure the user has a TripTrunk username
-            if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
-                [self showSetUsernameView];
+                // Make sure the user has a TripTrunk username
+                 if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
+                     [self showSetUsernameView];
+                 }
+                 else
+                 {
+                     [self dismissViewControllerAnimated:YES completion:^{
+                         
+                     }];
+                 }
+                 }
+                 }];
             }
-            else
-            {
-                [self dismissViewControllerAnimated:YES completion:^{
-                    
-                }];
+            
+            - (void)showSetUsernameView {
+                [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
+                
             }
-        }
-    }];
-}
-
-- (void)showSetUsernameView {
-    [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
-    
-}
 
 #pragma mark - Keyboard delegate methods
 
