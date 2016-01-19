@@ -1168,7 +1168,7 @@
 
     UIBarButtonItem *buttonTwo= [[UIBarButtonItem alloc] initWithCustomView:bttn];
     
-    NSArray *buttons = @[buttonTwo, button];
+    NSArray *buttons = @[button, buttonTwo];
     
     self.navigationItem.rightBarButtonItems = buttons;
     
