@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentCity;
 @property (weak, nonatomic) IBOutlet UILabel *editBio;
 @property (weak, nonatomic) IBOutlet UISwitch *privateAccountSwitch;
+@property (weak, nonatomic) IBOutlet UIButton *facebookButton;
 
 @end
 
@@ -49,6 +50,14 @@
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]] == YES)
+    {
+        self.facebookButton.hidden = YES;
+    } else {
+        self.facebookButton.hidden = NO;
+
+    }
     
     
     _hometownTextField.delegate = self;
