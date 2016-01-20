@@ -884,13 +884,13 @@
         TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
         trunkViewController.trip = self.photo.trip;
         
-        //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        //        NSLog(@"Photo View DIsmissed");
-        
         UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
         UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
         if (tabbarcontroller.selectedIndex == 3) {
             [activityNavController pushViewController:trunkViewController animated:YES];
+        }else {
+            [self.navigationController pushViewController:trunkViewController animated:YES];
+            
         }
     }];
 }

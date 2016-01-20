@@ -256,7 +256,8 @@
                     if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                         if (view == (HomeMapViewController*)controller.viewControllers[0]){
                             
-                            [view.viewedPhotos addObject:photo.objectId];
+//                            [view.viewedPhotos addObject:photo.objectId];
+                            
                         }
                     }
                 }
