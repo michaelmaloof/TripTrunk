@@ -1548,6 +1548,9 @@
                                                 <include reference="ccu-Hj-uVK"/>
                                             </mask>
                                         </variation>
+                                        <connections>
+                                            <action selector="photoTakenByTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Nq4-5J-bRU"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HFK-1a-bML" userLabel="Trunk Name Button">
                                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
