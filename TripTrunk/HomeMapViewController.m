@@ -46,6 +46,8 @@
 @property NSDate *lastOpenedApp;
 @property BOOL dontRefresh;
 @property BOOL isFirstUserLoad;
+@property BOOL buttonsMaded;
+
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
 @property NSMutableArray *visitedTrunks;
@@ -60,7 +62,7 @@
     //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
     self.compassRose.hidden = YES;
     self.isFirstUserLoad = YES;
-    
+    self.buttonsMaded = NO;
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
@@ -194,7 +196,15 @@
     if (self.isLoading == NO){
         
         //disable the refresh button until we finish loading the trunks
-        self.navigationItem.rightBarButtonItems = nil;
+        if (self.buttonsMaded == NO){
+            self.navigationItem.rightBarButtonItems = nil;
+        } else
+        {
+            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+                leftButton.enabled = NO;
+            }
+
+        }
         
         //save the current pins on the map so we can delete them once we place the new ones
         self.annotationsToDelete = self.mapView.annotations;
@@ -394,7 +404,14 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //we finished loading so switch the bool and renable the refresh icon
         self.isLoading = NO;
-        [self createButtons];
+        
+        if (self.buttonsMaded == NO){
+            [self createButtons];
+        } else {
+            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+                leftButton.enabled = YES;
+            }
+        }
         
         
         //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
@@ -481,7 +498,13 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.isLoading = NO;
         NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
-        [self createButtons];
+        if (self.buttonsMaded == NO){
+            [self createButtons];
+        } else {
+            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+                leftButton.enabled = YES;
+            }
+        }
         
         if(error)
         {
@@ -1171,6 +1194,8 @@
     NSArray *buttons = @[button, buttonTwo];
     
     self.navigationItem.rightBarButtonItems = buttons;
+    
+    self.buttonsMaded = YES;
     
     
 }
