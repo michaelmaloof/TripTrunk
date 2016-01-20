@@ -28,10 +28,9 @@
 #else
 // THIS IS DEBUG MODE
 
-//#define kPARSE_APP_ID @"xBZ7gyGIuTMLluZeVO0SxAsBdEFSzBe6wJwKt19z"
-//#define kPARSE_CLIENT_KEY @"1BW54t5ZC2lRJHgFlZrcdkSLhoFz2XCSFcJ8agXl"
-#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
+#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+
 #endif
 
 @interface AppDelegate ()
