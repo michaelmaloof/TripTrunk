@@ -67,11 +67,31 @@
                                     <action selector="zoomOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9ga-7t-Vo3"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cRD-4f-3M6">
+                                <rect key="frame" x="539" y="456" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="Ivt-7D-rVg"/>
+                                    <constraint firstAttribute="width" constant="25" id="T3a-Ch-oap"/>
+                                </constraints>
+                                <state key="normal" image="rose"/>
+                                <connections>
+                                    <action selector="compassTaped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cmT-ug-1Je"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Group" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
+                                <rect key="frame" x="11" y="319" width="180" height="168"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI"/>
+                                    <constraint firstAttribute="height" constant="168" id="cHb-Dp-cfa"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="paW-Ly-ly2" secondAttribute="trailing" constant="-16" id="1P8-u6-Hev"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="P4J-Qq-oHp" secondAttribute="bottom" constant="8" id="2gN-yF-4zN"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="5Rc-rz-BTx"/>
+                            <constraint firstItem="P4J-Qq-oHp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="6PV-IP-soi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="-5" id="6qP-MR-7xQ">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
@@ -96,10 +116,12 @@
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="481" id="fKL-EK-TQ8"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="hMG-y3-LMl"/>
+                            <constraint firstItem="cRD-4f-3M6" firstAttribute="centerX" secondItem="itu-Co-AEg" secondAttribute="centerX" id="iIu-52-7MH"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="lyP-HK-IOG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="5" id="oWF-EG-AeR"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="ow4-Qa-GyF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="qO6-K8-mEr"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="cRD-4f-3M6" secondAttribute="bottom" constant="15" id="uB9-pb-hve"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -145,6 +167,8 @@
                     </tabBarItem>
                     <navigationItem key="navigationItem" id="Eje-fq-v1r"/>
                     <connections>
+                        <outlet property="compasButton" destination="cRD-4f-3M6" id="a7L-hi-obL"/>
+                        <outlet property="compassRose" destination="P4J-Qq-oHp" id="7Q5-hy-IgD"/>
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
                         <outlet property="zoomOut" destination="itu-Co-AEg" id="rW6-oE-g8A"/>
                         <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
@@ -3853,6 +3877,7 @@
     </scenes>
     <resources>
         <image name="Cancel" width="100" height="100"/>
+        <image name="Group" width="108" height="114"/>
         <image name="Plus Circle" width="100" height="100"/>
         <image name="addCaption" width="100" height="100"/>
         <image name="addTrunk_tabIcon" width="40" height="35"/>
@@ -3871,6 +3896,7 @@
         <image name="moreIcon" width="20" height="5"/>
         <image name="nightSkyline_background" width="500" height="889"/>
         <image name="removeCaption" width="100" height="100"/>
+        <image name="rose" width="50" height="50"/>
         <image name="save" width="100" height="100"/>
         <image name="unlocked" width="88" height="88"/>
         <image name="yellowSkyMountain_background" width="400" height="713"/>

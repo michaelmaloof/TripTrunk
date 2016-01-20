@@ -42,11 +42,12 @@
 @property BOOL isLoading;
 @property int limit;
 @property (weak, nonatomic) IBOutlet UIImageView *compassRose;
-@property (weak, nonatomic) IBOutlet UIButton *compasButton;
+
 @property NSDate *lastOpenedApp;
 @property BOOL dontRefresh;
 @property BOOL isFirstUserLoad;
 @property BOOL buttonsMaded;
+@property (weak, nonatomic) IBOutlet UIButton *compasButton;
 
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
@@ -1122,10 +1123,11 @@
     }
     [self beginLoadingTrunks];
 }
-
 - (IBAction)compassTaped:(id)sender {
-    self.compassRose.hidden = !self.compassRose.hidden;
+        self.compassRose.hidden = !self.compassRose.hidden;
 }
+
+
 
 -(void)dontRefreshMap{
     self.dontRefresh = YES;
