@@ -443,11 +443,7 @@
 
 }
 
-//- (IBAction)membersButtonPressed:(id)sender {
-//    TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
-//    vc.isMember = self.isMember;
-//    [self.navigationController pushViewController:vc animated:YES];
-//}
+
 
 -(void)editTapped{
     [self performSegueWithIdentifier:NSLocalizedString(@"Edit",@"Edit") sender:self];
