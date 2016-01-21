@@ -17,6 +17,7 @@
 @interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
+@property (weak, nonatomic) IBOutlet UISwitch *roseToggle;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UITextField *nameTextView;
 
@@ -66,6 +67,13 @@
     self.nameTextView.text = _user[@"name"];
     if (_user[@"private"] && [_user[@"private"] boolValue] == YES) {
         self.privateAccountSwitch.on = YES;
+    }
+    
+    if ([_user[@"hideCompassRose"] boolValue] == NO) {
+        self.roseToggle.on = YES;
+    } else {
+        self.roseToggle.on = NO;
+
     }
     
     // Set Edit button
@@ -359,5 +367,20 @@
     
 }
 
+- (IBAction)toggleRose:(id)sender {
+    
+    if (self.roseToggle.isOn) {
+        //disable compass rose
+        [[PFUser currentUser] setValue:@NO forKeyPath:@"hideCompassRose"];
+        [[PFUser currentUser] saveInBackground];
+    }
+    
+    else {
+        //enable compass rose
+        [[PFUser currentUser] setValue:@YES forKeyPath:@"hideCompassRose"];
+        [[PFUser currentUser] saveInBackground];
+    }
+    
+}
 
 @end
