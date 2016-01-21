@@ -70,6 +70,13 @@
     [self designNavBar];
     [self setUpArrays];
     
+    if (self.user){
+        self.compasButton.hidden = YES;
+    } else {
+        self.compasButton.hidden = NO;
+
+    }
+    
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
     self.isLoading = NO;
     
