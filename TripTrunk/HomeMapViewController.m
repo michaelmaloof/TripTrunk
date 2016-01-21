@@ -72,9 +72,6 @@
     
     if (self.user){
         self.compasButton.hidden = YES;
-    } else {
-        self.compasButton.hidden = NO;
-
     }
     
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
@@ -143,6 +140,15 @@
         } else {
             //if they have already seen the tutorial we dont show them the compass rose unless they ask to see it.
             self.compassRose.hidden = YES;
+            BOOL hideCompass = [[[PFUser currentUser] valueForKey:@"hideCompassRose"] boolValue];
+            if (hideCompass == YES){
+                self.compasButton.hidden = YES;
+                self.compassRose.hidden = YES;
+            } else  if (!self.user){
+                self.compasButton.hidden = NO;
+            } else if (self.user){
+                self.compasButton.hidden = YES;
+            }
             
         }
         
