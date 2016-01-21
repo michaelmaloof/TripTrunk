@@ -782,22 +782,27 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
-    BOOL hasSeen = NO;
+    BOOL hasSeen = YES;
     for (CLLocation *loc in self.haventSeens){ //Save trip instead
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
+            hasSeen = NO;
+        }
+    }
+    
+    for (Trip *trip in self.visitedTrunks){
+        if ((float)trip.longitude == (float)annotation.coordinate.longitude && (float)trip.lat == (float)annotation.coordinate.latitude){
             hasSeen = YES;
         }
     }
     
     
     
-    
     //if the trunk is in the hotDots (meaning its hot) then make it red
     if ([self.hotDots containsObject:annotation.title]) {
         if (hasSeen == NO){
-            startAnnotation.image = [UIImage imageNamed:@"redMapCircle"];
+            startAnnotation.image = [UIImage imageNamed:@"unseenRedCircle"];
         }else {
-            startAnnotation.image = [UIImage imageNamed:@"redTrunk"];
+            startAnnotation.image = [UIImage imageNamed:@"seenRedCircle"];
             
         }
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
@@ -808,9 +813,9 @@
         
     } else {
         if (hasSeen == NO){
-            startAnnotation.image = [UIImage imageNamed:@"blueMapCircle"];
+            startAnnotation.image = [UIImage imageNamed:@"unseenBlueCircle"];
         }else {
-            startAnnotation.image = [UIImage imageNamed:@"blueTrunk"];
+            startAnnotation.image = [UIImage imageNamed:@"seenBlueCircle"];
             
         }
         startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, 25, 25);
