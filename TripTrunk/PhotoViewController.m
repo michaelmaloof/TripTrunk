@@ -688,7 +688,7 @@
         [self.caption becomeFirstResponder];
         
     } else {
-        self.caption.text = self.photo.caption;
+        self.photo.caption = self.caption.text;
 
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (!error)
