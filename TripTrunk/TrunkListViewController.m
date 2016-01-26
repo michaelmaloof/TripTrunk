@@ -487,19 +487,27 @@
 {
     if ([segue.identifier isEqualToString:@"TrunkView"])
     {
-        TrunkViewController *trunkView = segue.destinationViewController;
-        
         if (self.filter.tag == 0 && self.parseLocations != nil && self.user == nil && self.isList == NO) {
-            Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
-            trunkView.trip = trip;
+            if (self.path.row < self.parseLocations.count)
+            {
+                TrunkViewController *trunkView = segue.destinationViewController;
+                Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
+                trunkView.trip = trip;
+            }
         } else if (self.filter.tag == 1 && self.meParseLocations != nil && self.isList == NO){
-            Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
-            trunkView.trip = trip;
+            if (self.path.row < self.meParseLocations.count)
+            {
+                TrunkViewController *trunkView = segue.destinationViewController;
+                Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
+                trunkView.trip = trip;
+            }
         } else if (self.user != nil && self.isList == NO) {
             // This is a User Globe Map, so there is no self.filter.tag, and it uses the meParseLocations object.
+            TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
         } else if (self.isList == YES){
+            TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
         }
@@ -614,8 +622,28 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.path = indexPath;
-    [self performSegueWithIdentifier:@"TrunkView" sender:self];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (self.filter.tag == 0 && self.parseLocations != nil && self.user == nil && self.isList == NO) {
+        if (self.path.row < self.parseLocations.count)
+        {
+            [self performSegueWithIdentifier:@"TrunkView" sender:self];
+
+        }
+    } else if (self.filter.tag == 1 && self.meParseLocations != nil && self.isList == NO){
+        if (self.path.row < self.meParseLocations.count)
+        {
+            [self performSegueWithIdentifier:@"TrunkView" sender:self];
+
+        }
+    } else if (self.user != nil && self.isList == NO) {
+            [self performSegueWithIdentifier:@"TrunkView" sender:self];
+
+    } else if (self.isList == YES){
+            [self performSegueWithIdentifier:@"TrunkView" sender:self];
+
+    }
+
 }
 
 
