@@ -185,7 +185,6 @@
             }
         }
     }
-
     
     [self refreshTripDataViews];
     
@@ -222,9 +221,6 @@
         
     }
     
-    self.descriptionTextView.hidden = YES;
-    self.descriptionTextView.tag = 0;
-    
     self.descriptionTextView.text = self.trip.descriptionStory;
     
        [self.view addSubview:self.descriptionTextView];
@@ -257,12 +253,17 @@
 
 -(void)titleTapped{
     
-    if (self.descriptionTextView.tag == 0){
-        self.descriptionTextView.hidden = NO;
-        self.descriptionTextView.tag = 1;
+    if ([self.trip.descriptionStory length] > 0){
+        if (self.descriptionTextView.tag == 0){
+            self.descriptionTextView.hidden = NO;
+            self.descriptionTextView.tag = 1;
+        }else {
+            self.descriptionTextView.hidden = YES;
+            self.descriptionTextView.tag = 0;
+        }
+        
     } else {
         self.descriptionTextView.hidden = YES;
-        self.descriptionTextView.tag = 0;
 
     }
 }
@@ -448,7 +449,6 @@
 -(void)editTapped{
     [self performSegueWithIdentifier:NSLocalizedString(@"Edit",@"Edit") sender:self];
     self.descriptionTextView.hidden = YES;
-    self.descriptionTextView.tag = 0;
 }
 
 -(void)leaveTrunk{
