@@ -33,6 +33,7 @@
 @property BOOL isFollowing;
 @property UIImageView *privateAccountImageView;
 @property int privateCount;
+@property int trunkCount;
 @end
 
 @implementation UserProfileViewController
@@ -336,6 +337,8 @@
     
     [SocialUtility trunkCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.trunkCount= count;
+            
             if (count == 0){
                 [self.mapButton setTitle:@"" forState:UIControlStateNormal];
                 self.listButton.hidden = YES;
@@ -453,18 +456,21 @@
 }
 
 - (IBAction)mapButtonPressed:(id)sender {
-    if (![self.mapButton.titleLabel.text isEqualToString:@""]){
-        if ((BOOL)self.user[@"private"] == 0){
+    if (self.trunkCount >0){
+        if ((BOOL)self.user[@"private"] == 0)
+        {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
             vc.user = self.user;
             [self.navigationController pushViewController:vc animated:YES];
-        } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES){
+        } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES)
+        {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
             vc.user = self.user;
             [self.navigationController pushViewController:vc animated:YES];
-        } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+        } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId])
+        {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
             vc.user = self.user;
@@ -472,7 +478,7 @@
         } else {
             [self increaseLockSize];
         }
-    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && [self.mapButton.titleLabel.text isEqualToString:@""]){
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && self.trunkCount == 0){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
                                                         message:NSLocalizedString(@"Go create some memories and we will store them here for you.",@"Go create some memories and we will store them here for you.")
                                                        delegate:self
@@ -636,7 +642,7 @@
 }
 
 - (IBAction)trunkListTapped:(id)sender {
-    if (![self.mapButton.titleLabel.text isEqualToString:@""]){
+    if (self.trunkCount >0){
         if ((BOOL)self.user[@"private"] == 0){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
@@ -658,7 +664,7 @@
         } else {
             [self increaseLockSize];
         }
-    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && [self.mapButton.titleLabel.text isEqualToString:@""]){
+    } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && self.trunkCount == 0){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
                                                         message:NSLocalizedString(@"Go create some memories and we will store them here for you.",@"Go create some memories and we will store them here for you.")
                                                        delegate:self
