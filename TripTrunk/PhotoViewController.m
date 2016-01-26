@@ -688,6 +688,7 @@
         [self.caption becomeFirstResponder];
         
     } else {
+        self.addCaption.enabled = NO;
         self.photo.caption = self.caption.text;
 
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
@@ -730,6 +731,7 @@
             }
             
             [self.caption endEditing:YES];
+            self.addCaption.enabled = YES;
 
         }];
         
