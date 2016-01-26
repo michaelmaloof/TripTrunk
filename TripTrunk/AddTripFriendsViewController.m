@@ -231,9 +231,11 @@
         if (self.didTapCreated == YES){
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
 
-        }else {
+        }else if (self.isTripCreation){
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
 
+        } else {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
         }
     }
 }
