@@ -148,6 +148,10 @@
         self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
     }
     else if (buttonIndex == 1) {
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.title = NSLocalizedString(@"Updating, Please Wait", @"Updating, Please Wait");
+        
         NSLog(@"Continue Button Pressedd");
         if (self.privateAccountSwitch.isOn) {
             // Become Private
@@ -155,6 +159,8 @@
             [PFCloud callFunctionInBackground:@"becomePrivate" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
                 if (error) {
                     NSLog(@"Error becoming private: %@", error);
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                 }
                 else {
                     NSLog(@"Successfully privatized");
@@ -162,6 +168,8 @@
                         [[PFUser currentUser] fetch];
                         NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
                         [self.delegate privacyChanged:[PFUser currentUser]];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                     });
 
                 }
@@ -173,6 +181,8 @@
             [PFCloud callFunctionInBackground:@"becomePublic" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
                 if (error) {
                     NSLog(@"Error becoming public: %@", error);
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                 }
                 else {
                     NSLog(@"Successfully publicized");
@@ -180,6 +190,8 @@
                         [[PFUser currentUser] fetch];
                         NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
                         [self.delegate privacyChanged:[PFUser currentUser]];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                     });
                 }
             }];
