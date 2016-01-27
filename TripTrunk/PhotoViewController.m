@@ -79,7 +79,6 @@
         self.addCaption.hidden = YES;
 
     }
-    [self.caption setContentOffset:CGPointZero animated:NO];
 
     
     self.caption.selectable = NO;
@@ -120,14 +119,12 @@
     // Load initial data (photo and comments)
     [self loadImageForPhoto:self.photo];
     
-    [self refreshPhotoActivities];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshPhotoActivities)
                                                  name:@"commentUpdatedOnPhoto"
                                                object:nil];
     
-    
+    self.caption.hidden = YES;
 
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
@@ -141,6 +138,9 @@
     self.originX = self.scrollView.frame.origin.x;
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
+    
+    [self refreshPhotoActivities];
+
     
     
 
@@ -277,10 +277,7 @@
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-    self.caption.hidden = YES;
-    self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+
 
 
 
@@ -437,6 +434,8 @@
     
     self.likeActivities = [[NSMutableArray alloc] init];
     self.commentActivities = [[NSMutableArray alloc] init];
+    self.caption.hidden = YES;
+
     
     self.isLikedByCurrentUser = NO;
     
@@ -459,7 +458,12 @@
                     }
                 }
             }
-                        
+            
+            [self.caption setContentOffset:CGPointZero animated:NO];
+            self.caption.text = self.photo.caption;
+            [self.caption setContentOffset:CGPointZero animated:NO];
+            self.caption.hidden = NO;
+            
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
             //TODO: update cached photo attributes, i.e. likers, commenters, etc.
@@ -477,10 +481,7 @@
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-                self.caption.hidden = YES;
-                self.caption.text = self.photo.caption;
-                [self.caption setContentOffset:CGPointZero animated:NO];
-                self.caption.hidden = NO;
+                
 
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
@@ -497,7 +498,6 @@
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (self.isZoomed == NO && self.isEditingCaption == NO){
-        [self.caption setContentOffset:CGPointZero animated:NO];
 
         // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
         if (!self.photos || self.photos.count == 0) {
@@ -524,11 +524,7 @@
             [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
             NSString *likes = NSLocalizedString(@"Likes",@"Likes");
             [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-            self.caption.hidden = YES;
-            self.caption.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
-            self.caption.hidden = NO;
-            
+    
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -559,7 +555,6 @@
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (self.isZoomed == NO && self.isEditingCaption == NO){
-        [self.caption setContentOffset:CGPointZero animated:NO];
 
         if (!self.photos || self.photos.count == 0) {
             return;
@@ -584,10 +579,7 @@
             [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
             NSString *likes = NSLocalizedString(@"Likes",@"Likes");
             [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
-            self.caption.hidden = YES;
-            self.caption.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
-            self.caption.hidden = NO;
+
 
 
             
@@ -796,6 +788,7 @@
     self.caption.backgroundColor = [UIColor clearColor];
     self.caption.textColor = [UIColor whiteColor];
     self.caption.hidden = YES;
+    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.hidden = NO;
@@ -896,6 +889,7 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.hidden = YES;
+    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.hidden = NO;
@@ -1165,6 +1159,7 @@
         self.photo.caption = @"";
     }
     self.caption.hidden = YES;
+    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.hidden = NO;
