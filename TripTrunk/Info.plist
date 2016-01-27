@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.03</string>
+	<string>2.03.01</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -28,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.03</string>
+	<string>2.03.01</string>
 	<key>FacebookAppID</key>
 	<string>339286769601593</string>
 	<key>FacebookDisplayName</key>
@@ -71,6 +71,33 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>addTrunk_tabIcon</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>New Trunk</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Trunk</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>comment_tabIcon</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Activity</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Activity</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>searchGlass_tabIcon</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Search</string>
+		</dict>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -92,32 +119,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>Trunk</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>New Trunk</string>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>addTrunk_tabIcon</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>Activity</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Activity</string>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>comment_tabIcon</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>Search</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Search</string>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>searchGlass_tabIcon</string>
-		</dict>
-	</array>
 </dict>
 </plist>
