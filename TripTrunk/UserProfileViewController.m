@@ -181,7 +181,7 @@
                 [self.followButton setSelected:YES];
                 
                 if (followStatus.intValue == 2) {
-                    if ((BOOL)self.user[@"private"] == 1){
+                    if ([[self.user valueForKey:@"private"] boolValue] == 1){
                         self.isFollowing = NO;
                         self.followButton.enabled = YES;
                         self.followersButton.enabled = YES;
@@ -201,7 +201,7 @@
                 }
                 else if (followStatus.intValue == 1) {
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
-                    if ((BOOL)self.user[@"private"] == 1){
+                    if ([[self.user valueForKey:@"private"] boolValue] == 1){
                         self.isFollowing = YES;
                         self.followButton.enabled = YES;
                         self.followersButton.enabled = YES;
@@ -237,7 +237,7 @@
                         [self.followButton setEnabled:YES];
                         [self.followButton setSelected:YES];
                         if (followingStatus.intValue == 2) {
-                            if ((BOOL)self.user[@"private"] == 1){
+                            if ([[self.user valueForKey:@"private"] boolValue] == 1){
                                 self.isFollowing = NO;
                                 self.followButton.enabled = YES;
                                 self.followersButton.enabled = YES;
@@ -271,7 +271,7 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.followButton setEnabled:YES];
                         [self.followButton setSelected:NO];
-                        if ((BOOL)self.user[@"private"] == 1){
+                        if ([[self.user valueForKey:@"private"] boolValue] == 1){
                             self.isFollowing = NO;
                             self.followButton.enabled = YES;
                             self.followersButton.enabled = YES;
@@ -358,10 +358,10 @@
 }
 - (IBAction)followersButtonPressed:(id)sender {
     NSLog(@"Followers Button Pressed");
-    if ((BOOL)self.user[@"private"]  == 0){
+    if ([[self.user valueForKey:@"private"] boolValue]  == 0){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
         [self.navigationController pushViewController:vc animated:YES];
-    } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES){
+    } else if ([[self.user valueForKey:@"private"] boolValue] == 1 && self.isFollowing == YES){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
         [self.navigationController pushViewController:vc animated:YES];
     } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
@@ -374,10 +374,10 @@
 
 - (IBAction)followingButtonPressed:(id)sender {
     NSLog(@"Following Button Pressed");
-    if ((BOOL)self.user[@"private"] == 0){
+    if ([[self.user valueForKey:@"private"] boolValue] == 0){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
         [self.navigationController pushViewController:vc animated:YES];
-    } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES){
+    } else if ([[self.user valueForKey:@"private"] boolValue] == 1 && self.isFollowing == YES){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
         [self.navigationController pushViewController:vc animated:YES];
     } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
@@ -397,12 +397,14 @@
 
 - (IBAction)followButtonPressed:(id)sender {
     
+    BOOL isPrivate = [[self.user valueForKey:@"private"] boolValue];
+    
     if ([self.followButton isSelected]) {
         // Unfollow
         NSLog(@"Attempt to unfollow %@",_user.username);
         [self.followButton setSelected:NO]; // change the button for immediate user feedback
         
-        if (self.user[@"private"] == NO){
+        if (isPrivate == NO){
             [SocialUtility unfollowUser:_user];
         } else if (self.isFollowing == YES){
             UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -439,7 +441,7 @@
                 [self.followButton setSelected:NO];
                 [alert show];
             }
-            else if ((BOOL)_user[@"private"] == 0)
+            else if (isPrivate == 0)
             {
                 [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
             }
@@ -457,13 +459,13 @@
 
 - (IBAction)mapButtonPressed:(id)sender {
     if (self.trunkCount >0){
-        if ((BOOL)self.user[@"private"] == 0)
+        if ([[self.user valueForKey:@"private"] boolValue] == 0)
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
             vc.user = self.user;
             [self.navigationController pushViewController:vc animated:YES];
-        } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES)
+        } else if ([[self.user valueForKey:@"private"] boolValue] == 1 && self.isFollowing == YES)
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
@@ -643,13 +645,13 @@
 
 - (IBAction)trunkListTapped:(id)sender {
     if (self.trunkCount >0){
-        if ((BOOL)self.user[@"private"] == 0){
+        if ([[self.user valueForKey:@"private"] boolValue] == 0){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
             vc.user = self.user;
             vc.isList = YES;
             [self.navigationController pushViewController:vc animated:YES];
-        } else if ((BOOL)self.user[@"private"] == 1 && self.isFollowing == YES){
+        } else if ([[self.user valueForKey:@"private"] boolValue] == 1 && self.isFollowing == YES){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
             vc.user = self.user;
