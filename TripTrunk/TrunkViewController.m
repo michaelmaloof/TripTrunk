@@ -409,7 +409,6 @@
             
             if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
                 [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                }];
             
                 if (self.trip.publicTripDetail == nil){
                     self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
@@ -420,8 +419,10 @@
                 self.trip.publicTripDetail.photoCount = (int)self.photos.count;
 //                [self.trip saveInBackground];
             }
-                
+                }];
+
             }
+
             
         }else
         {
