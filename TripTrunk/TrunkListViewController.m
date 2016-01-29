@@ -420,8 +420,8 @@
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
     [query includeKey:@"trip.publicTripDetail"];
-//    [query orderByDescending:@"createdAt"];
-    query.limit = 50;
+    [query orderByDescending:@"createdAt"];
+    query.limit = 100;
     query.skip = self.objectsCountTotal;
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];

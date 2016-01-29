@@ -507,6 +507,8 @@
     [query orderByDescending:@"createdAt"]; //TODO does this actually work?
     [query setLimit: self.limit];
     
+    
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.isLoading = NO;
         NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
