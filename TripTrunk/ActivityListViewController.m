@@ -140,6 +140,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
+    self.tabBarController.tabBar.hidden = NO;
     [self.tableView reloadData];
 }
 

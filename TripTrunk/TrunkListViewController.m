@@ -86,7 +86,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [self.filter setTitle:@""];
-    
+    self.tabBarController.tabBar.hidden = NO;
+    NSLog(@"HEY IM HERE = %d", self.tabBarController.tabBar.hidden);
 
 }
 
@@ -405,6 +406,8 @@
     }
 
 }
+
+
 
 - (void)queryForTrunks{
     

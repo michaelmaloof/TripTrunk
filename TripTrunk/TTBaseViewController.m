@@ -33,6 +33,7 @@
 //This is to remove the titles under the tab bar icons
 -(void)viewWillAppear:(BOOL)animated{
     [self tabBarTitle];
+    self.tabBarController.tabBar.hidden = NO;
 
 }
 

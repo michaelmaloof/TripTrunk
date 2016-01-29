@@ -167,6 +167,10 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = NO;
+}
+
 -(void)viewDidAppear:(BOOL)animated{
     
     for (UINavigationController *controller in self.tabBarController.viewControllers)

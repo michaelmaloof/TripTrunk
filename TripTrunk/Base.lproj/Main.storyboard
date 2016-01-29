@@ -1457,7 +1457,7 @@
         <!--Photo View Controller-->
         <scene sceneID="7it-gC-gg0">
             <objects>
-                <viewController storyboardIdentifier="PhotoView" wantsFullScreenLayout="YES" hidesBottomBarWhenPushed="YES" id="aHH-Uj-SSR" customClass="PhotoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoView" wantsFullScreenLayout="YES" extendedLayoutIncludesOpaqueBars="YES" id="aHH-Uj-SSR" customClass="PhotoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HLk-IP-VEv"/>
                         <viewControllerLayoutGuide type="bottom" id="FCi-FU-N5k"/>
