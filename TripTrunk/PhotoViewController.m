@@ -925,6 +925,9 @@
             //TODO: What if they're deleting the only photo in the trunk?
             
             //fixme, this should me done after the photo has been confirmed and deleted
+            
+            [self.photo.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                
             self.photo.trip.publicTripDetail.totalLikes = self.photo.trip.publicTripDetail.totalLikes - (int)[[TTCache sharedCache] likeCountForPhoto:self.photo];
    
             if ([self.photo isEqual:[self.photos objectAtIndex:0]]){
@@ -972,11 +975,11 @@
                     if ([view isKindOfClass:[HomeMapViewController class]]){
                         if (self.photos.count < 1){
                             [view dontRefreshMap];
-                            [view updateTrunkColor:self.trip isHot:NO member:YES];
+                            [view updateTrunkColor:self.photo.trip isHot:NO member:YES];
                         } else if (1==1) //instead, find interval and update is HOT
                         {
                             [view dontRefreshMap];
-                            [view updateTrunkColor:self.trip isHot:color member:YES];
+                            [view updateTrunkColor:self.photo.trip isHot:color member:YES];
                         }
                     }
                 }
@@ -996,9 +999,10 @@
             
             [self.navigationController popViewControllerAnimated:YES];
 
-            
+            }];
+
         }
-        // Download Photo
+             // Download Photo
         else if (alertView.tag == 1) {
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
         }
