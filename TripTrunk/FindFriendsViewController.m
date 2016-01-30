@@ -601,7 +601,7 @@
     if ([cellView.followButton isSelected]) {
         // Unfollow
         //FIXME FOR INTERNATIONAL, USING STRING COMPARISSON
-        if ((BOOL)user[@"private"] == YES && ![cellView.followButton.titleLabel.text isEqual:@"Pending"]){
+        if ([user[@"private"] boolValue] == YES && ![cellView.followButton.titleLabel.text isEqual:@"Pending"]){
             self.user = user;
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
@@ -622,7 +622,7 @@
         // Follow
         [cellView.followButton setSelected:YES];
         
-        if (user[@"private"]) {
+        if ([user[@"private"] boolValue] == YES) {
             [cellView.followButton setTitle:@"Pending" forState:UIControlStateSelected];
         }
         
