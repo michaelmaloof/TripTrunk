@@ -146,6 +146,9 @@
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 10;
     friendsQuery.skip = self.fbCount;
+    friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
+
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -173,6 +176,8 @@
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 10;
     friendsQuery.skip = self.fbCount;
+    friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
@@ -284,14 +289,14 @@
     if(y > h + reload_distance && self.searchString) {
         self.removeResults = NO;
         if (![self.searchController.searchBar.text isEqualToString:@""]){
-            [self filterResults:self.searchString];
+            [self filterResults:self.searchString isScroll:YES];
         }
     } else if (y > h + reload_distance && self.friendsMaxed == NO){
         [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
     }
 }
 
-- (void)filterResults:(NSString *)searchTerm {
+- (void)filterResults:(NSString *)searchTerm isScroll:(BOOL)isScroll {
     if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
@@ -312,10 +317,24 @@
     [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
     [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
     nameQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
 
     [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
+    NSMutableArray *objcts = [[NSMutableArray alloc]init];
+    if (isScroll == YES)
+    {
+        for (PFObject *obj in self.searchResults)
+        {
+            [objcts addObject:[obj objectId]];
+        }
+        
+        [usernameQuery whereKey:@"objectId" notContainedIn:objcts];
+        [nameQuery whereKey:@"objectId" notContainedIn:objcts];
+
+    }
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
+        
     query.limit = 10;
     
     if (self.removeResults == NO){
@@ -355,7 +374,7 @@
         self.fbCount = 0;
         self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
-            [self filterResults:searchBar.text];
+            [self filterResults:searchBar.text isScroll:NO];
         }
     }
     return YES;
