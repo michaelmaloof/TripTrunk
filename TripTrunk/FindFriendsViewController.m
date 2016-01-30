@@ -332,6 +332,13 @@
         [nameQuery whereKey:@"objectId" notContainedIn:objcts];
 
     }
+        
+//FIXME
+//better way to paginate and get new content
+        
+//    [query orderByDescending:@"createdAt"]; [query whereKey:@"createdAt" lessThanOrEqualTo:lastObjectDate]; [query whereKey:@"objectId" notContainedIn:lastSectionObjectsIDs];
+        
+//        https://www.parse.com/questions/duplicates-objects-in-pfqueryviewcontroller-with-paging-enable-using-a-query-with-ordering-constraint-based-on-date
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
         
