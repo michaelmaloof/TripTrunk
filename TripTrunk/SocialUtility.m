@@ -496,27 +496,30 @@
     [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"fromUser"];
-    [query includeKey:@"fromUser"];
-    [query includeKey:@"photo"];
-    [query includeKey:@"trip"];
-    [query includeKey:@"trip.publicTripDetail"];
-    [query orderByDescending:@"createdAt"];
-    query.limit = 20;
-    query.skip = count;
+//    [query includeKey:@"fromUser"];
+//    [query includeKey:@"photo"];
+//    [query includeKey:@"trip"];
+//    [query includeKey:@"trip.publicTripDetail"];
+
     
     PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
     [photos whereKey:@"trip" containedIn:trips];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [photos includeKey:@"fromUser"];
-    [photos includeKey:@"photo"];
-    [photos includeKey:@"trip"];
-    [photos includeKey:@"trip.publicTripDetail"];
-    [photos orderByDescending:@"createdAt"];
-   
+//    [photos includeKey:@"fromUser"];
+//    [photos includeKey:@"photo"];
+//    [photos includeKey:@"trip"];
+//    [photos includeKey:@"trip.publicTripDetail"];
+//   
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[query, photos]];
     subqueries.limit = 20;
     subqueries.skip = count;
+    [subqueries orderByDescending:@"createdAt"];
+    [subqueries includeKey:@"fromUser"];
+    [subqueries includeKey:@"photo"];
+    [subqueries includeKey:@"trip"];
+    [subqueries includeKey:@"trip.publicTripDetail"];
+
 
     [subqueries setCachePolicy:kPFCachePolicyNetworkOnly];
     
