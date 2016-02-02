@@ -489,7 +489,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(NSInteger)count query:(void (^)(NSArray *, NSError *))completionBlock
++ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -504,25 +504,27 @@
     query.limit = 20;
     query.skip = count;
     
-    [query setCachePolicy:kPFCachePolicyNetworkOnly];
+    PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+    [photos whereKey:@"trip" containedIn:trips];
+    [photos whereKey:@"type" equalTo:@"addedPhoto"];
+    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [photos includeKey:@"fromUser"];
+    [photos includeKey:@"photo"];
+    [photos includeKey:@"trip"];
+    [photos includeKey:@"trip.publicTripDetail"];
+    [photos orderByDescending:@"createdAt"];
+   
+    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[query, photos]];
+    subqueries.limit = 20;
+    subqueries.skip = count;
+
+    [subqueries setCachePolicy:kPFCachePolicyNetworkOnly];
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [subqueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
     }];
 }
 
-//+ (void)addToTripActivities:(PFUser *)user forCity:(NSString*)city  {
-//    
-//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//    [query whereKey:@"toUser" equalTo:user];
-//    [query whereKey:@"type" equalTo:@"addToTrip"];
-//    [query includeKey:@"trip"];
-//    
-//    if (city && ![city isEqualToString: @""]) {
-//        [query whereKey:@"content" equalTo:city];
-//    }
-//    
-//}
 
 + (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock; {
     // Determine the follow status of the user

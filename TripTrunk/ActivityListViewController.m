@@ -35,6 +35,7 @@ enum TTActivityViewType : NSUInteger {
 @property (strong, nonatomic) Photo *photo;
 @property BOOL activitySearchComplete;
 @property BOOL isLikes;
+@property NSMutableArray *trips;
 
 @end
 
@@ -102,6 +103,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.trips = [[NSMutableArray alloc]init];
     
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
@@ -122,16 +124,40 @@ enum TTActivityViewType : NSUInteger {
         self.tableView.emptyDataSetDelegate = self;
         self.tableView.emptyDataSetSource = self;
         
-        if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
-            // Query for activities for user
-            [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
-                _activities = [NSMutableArray arrayWithArray:activities];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.activitySearchComplete = YES;
-                    [self.tableView reloadData];
-                });
+
+        PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
+        [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [trips whereKey:@"type" equalTo:@"addToTrip"];
+        [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
+        [trips includeKey:@"trip"];
+        [trips setLimit:1000];
+        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            if (!error)
+            {
+                for (PFObject *activity in objects)
+                {
+                    Trip *trip = activity[@"trip"];
+                    if (trip.name != nil)
+                    {
+                        [self.trips addObject:trip];
+                    }
+                }
+                if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+                    // Query for activities for user
+                    [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
+                        _activities = [NSMutableArray arrayWithArray:activities];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.activitySearchComplete = YES;
+                            [self.tableView reloadData];
+                        });
+                    }];
+                }
+
+            } else {
+                //error
+            }
+                
             }];
-        }
         
     }
     
@@ -208,7 +234,7 @@ enum TTActivityViewType : NSUInteger {
 - (void)refresh:(UIRefreshControl *)refreshControl {
     if (self.isLikes == NO){
     // Query for activities for user
-    [SocialUtility queryForAllActivities:0 query:^(NSArray *activities, NSError *error) {
+    [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
         _activities = [NSMutableArray arrayWithArray:activities];
         dispatch_async(dispatch_get_main_queue(), ^{
             // End the refreshing & update the timestamp
@@ -244,7 +270,7 @@ enum TTActivityViewType : NSUInteger {
     
     float reload_distance = -250;
     if(y > h + reload_distance && self.isLikes == NO) {
-        [SocialUtility queryForAllActivities:self.activities.count query:^(NSArray *activities, NSError *error) {
+        [SocialUtility queryForAllActivities:self.activities.count trips:self.trips query:^(NSArray *activities, NSError *error) {
             //        _activities = [NSMutableArray arrayWithArray:activities];
             [self.activities addObjectsFromArray:activities];
             dispatch_async(dispatch_get_main_queue(), ^{
