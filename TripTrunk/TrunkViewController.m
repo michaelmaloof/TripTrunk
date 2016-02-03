@@ -802,10 +802,18 @@
     [self.memberCollectionView reloadData];
 }
 
--(void)memberFailedToLoad:(id)sender{
+-(void)memberFailedToLoad:(PFUser*)sender{
     self.firstLoadDone = YES;
-    [self.members removeAllObjects];
-    [self checkIfIsMember];
+    [self.members removeObject:sender];
+    [self.memberCollectionView reloadData];
+    NSString *title = NSLocalizedString(@"was unable to be added to",@"was unable to be added to");
+    NSString *finalTitle = [NSString stringWithFormat:@"%@ %@ %@",sender.username, title, self.trip.name];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:finalTitle
+                                                    message:NSLocalizedString(@"Please try again",@"Please try again")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                          otherButtonTitles:nil, nil];    
+    [alert show];
 }
 
 #pragma mark - Segue

@@ -459,7 +459,7 @@
                     if (!error){
                         [self.delegate memberWasAdded:self];
                     } else {
-                        [self.delegate memberFailedToLoad:self];
+                        [self.delegate memberFailedToLoad:user];
                     }
                 }
             }];

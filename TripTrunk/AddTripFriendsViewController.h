@@ -15,7 +15,7 @@
 @protocol MemberDelegate
 -(void)memberWasAdded:(id)sender;
 -(void)memberWasAddedTemporary:(PFUser*)profile;
--(void)memberFailedToLoad:(id)sender;
+-(void)memberFailedToLoad:(PFUser*)sender;
 
 
 
