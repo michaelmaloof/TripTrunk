@@ -182,6 +182,7 @@
         [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
         [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
         [query includeKey:@"trip"];
+        [query whereKeyExists:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
 //        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
@@ -260,6 +261,7 @@
         [query whereKey:@"type" equalTo:@"addToTrip"];  
         [query includeKey:@"trip"];
         [query includeKey:@"trip.creator"];
+        [query whereKeyExists:@"trip"];
         [query includeKey:@"trip.publicTripDetail"];
 //        [query orderByDescending:@"createdAt"];
         query.limit = 50;
@@ -419,6 +421,7 @@
     //    [query whereKey:@"content" equalTo:self.city];
     [query includeKey:@"trip"];
     [query includeKey:@"trip.creator"];
+    [query whereKeyExists:@"trip"];
     [query includeKey:@"trip.publicTripDetail"];
     [query orderByDescending:@"createdAt"];
     query.limit = 100;

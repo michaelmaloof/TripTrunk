@@ -19,6 +19,7 @@
 #import "UIColor+HexColors.h"
 #import "MBProgressHUD.h"
 
+
 #define USER_CELL @"user_table_view_cell"
 #define ACTIVITY_CELL @"activity_table_view_cell"
 
@@ -130,6 +131,7 @@ enum TTActivityViewType : NSUInteger {
         [trips whereKey:@"type" equalTo:@"addToTrip"];
         [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
         [trips includeKey:@"trip"];
+        [trips whereKeyExists:@"trip"];
         [trips setLimit:1000];
         [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if (!error)
@@ -145,7 +147,15 @@ enum TTActivityViewType : NSUInteger {
                 if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
                     // Query for activities for user
                     [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
-                        _activities = [NSMutableArray arrayWithArray:activities];
+                        for (PFObject *obj in activities){
+                            if (obj[@"trip"]){
+                                [self.activities addObject:obj];
+                            } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+                                [self.activities addObject:obj];
+
+                            }
+                        }
+//                        _activities = [NSMutableArray arrayWithArray:activities];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             self.activitySearchComplete = YES;
                             [self.tableView reloadData];
@@ -235,7 +245,12 @@ enum TTActivityViewType : NSUInteger {
     if (self.isLikes == NO){
     // Query for activities for user
     [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
-        _activities = [NSMutableArray arrayWithArray:activities];
+        for (PFObject *obj in activities){
+            if (obj[@"trip"]){
+                [self.activities addObject:obj];
+            }
+        }
+//        _activities = [NSMutableArray arrayWithArray:activities];
         dispatch_async(dispatch_get_main_queue(), ^{
             // End the refreshing & update the timestamp
             if (refreshControl) {
@@ -354,6 +369,7 @@ enum TTActivityViewType : NSUInteger {
         ActivityTableViewCell *activityCell = [self.tableView dequeueReusableCellWithIdentifier:ACTIVITY_CELL forIndexPath:indexPath];
         [activityCell setDelegate:self];
         NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
+        
         [activityCell setActivity:activity];
         
         // We assume fromUser contains the full PFUser object

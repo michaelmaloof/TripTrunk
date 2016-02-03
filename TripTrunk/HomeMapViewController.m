@@ -411,6 +411,7 @@
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
     [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+    [query whereKeyExists:@"trip"];
     [query setLimit: self.limit];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -503,6 +504,7 @@
     [query includeKey:@"toUser"];
     [query includeKey:@"creator"];
     [query includeKey:@"createdAt"];
+    [query whereKeyExists:@"trip"];
     [query includeKey:@"trip.publicTripDetail"];
     [query orderByDescending:@"createdAt"]; //TODO does this actually work?
     [query setLimit: self.limit];

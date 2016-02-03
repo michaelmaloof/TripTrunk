@@ -296,6 +296,7 @@
     PFQuery *updateQuery = [PFQuery queryWithClassName:@"Activity"];
     [updateQuery whereKey:@"type" equalTo:@"addToTrip"];
     [updateQuery whereKey:@"trip" equalTo:trip];
+    [updateQuery whereKeyExists:@"trip"];
     [updateQuery setLimit:1000];
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
@@ -485,6 +486,7 @@
     //Order by the time and then order by isCaption so that the caption is always first
     [query orderByAscending:@"createdAt"];
     [query orderByDescending:@"isCaption"];
+    
 
     return query;
 }
@@ -492,10 +494,25 @@
 + (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
+    PFQuery *Pfollow = [PFQuery queryWithClassName:@"Activity"];
+    [Pfollow whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [Pfollow whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [Pfollow whereKeyExists:@"fromUser"];
+    [Pfollow whereKey:@"type" equalTo:@"pending_follow"];
+    
+    PFQuery *follow = [PFQuery queryWithClassName:@"Activity"];
+    [follow whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [follow whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [follow whereKeyExists:@"fromUser"];
+    [follow whereKey:@"type" equalTo:@"follow"];
+    
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"fromUser"];
+    [query whereKeyExists:@"trip"];
+    
+    
 //    [query includeKey:@"fromUser"];
 //    [query includeKey:@"photo"];
 //    [query includeKey:@"trip"];
@@ -506,12 +523,14 @@
     [photos whereKey:@"trip" containedIn:trips];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:@"trip"];
+
 //    [photos includeKey:@"fromUser"];
 //    [photos includeKey:@"photo"];
 //    [photos includeKey:@"trip"];
 //    [photos includeKey:@"trip.publicTripDetail"];
 //   
-    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[query, photos]];
+    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
     subqueries.skip = count;
     [subqueries orderByDescending:@"createdAt"];
@@ -520,6 +539,7 @@
     [subqueries includeKey:@"trip"];
     [subqueries includeKey:@"trip.publicTripDetail"];
     [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    
 
 
 
@@ -720,6 +740,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query whereKeyExists:@"trip"];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query setLimit:1000];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
