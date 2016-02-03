@@ -519,6 +519,8 @@
     [subqueries includeKey:@"photo"];
     [subqueries includeKey:@"trip"];
     [subqueries includeKey:@"trip.publicTripDetail"];
+    [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+
 
 
     [subqueries setCachePolicy:kPFCachePolicyNetworkOnly];
