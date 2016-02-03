@@ -740,11 +740,21 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query includeKey:@"trip"];
     [query whereKeyExists:@"trip"];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query setLimit:1000];
-    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        completionBlock(number, error);
+//    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+//        completionBlock(number, error);
+//    }];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        int count = 0;
+        for (PFObject *obj in objects){
+            if (obj[@"trip"]) {
+                count += 1;
+            }
+        completionBlock(count, error);
+        }
     }];
 }
 
