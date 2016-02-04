@@ -37,6 +37,7 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL activitySearchComplete;
 @property BOOL isLikes;
 @property NSMutableArray *trips;
+@property BOOL needToRefresh;
 
 @end
 
@@ -612,6 +613,40 @@ enum TTActivityViewType : NSUInteger {
 {
     self.tableView.emptyDataSetSource = nil;
     self.tableView.emptyDataSetDelegate = nil;
+}
+
+-(void)trunkWasDeleted:(Trip*)trip{
+    NSMutableArray *objs = [[NSMutableArray alloc]init];
+    for (PFObject *obj in self.activities){
+        Trip *tripObj = obj[@"trip"];
+        if ([tripObj.objectId isEqualToString:trip.objectId])
+        {
+            [objs addObject:obj];
+        }
+    }
+    
+    for (PFObject *obj in objs){
+        [self.activities removeObject:obj];
+    }
+    
+    [self.tableView reloadData];
+}
+
+-(void)photoWasDeleted:(Photo*)photo{
+    NSMutableArray *objs = [[NSMutableArray alloc]init];
+    for (PFObject *obj in self.activities){
+        Photo *tripObj = obj[@"photo"];
+        if ([tripObj.objectId isEqualToString:photo.objectId])
+        {
+            [objs addObject:obj];
+        }
+    }
+    
+    for (PFObject *obj in objs){
+        [self.activities removeObject:obj];
+    }
+    
+    [self.tableView reloadData];
 }
 
 

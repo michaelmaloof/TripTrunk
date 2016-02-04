@@ -17,6 +17,7 @@
 #import "CitySearchViewController.h"
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
+#import "ActivityListViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -644,12 +645,13 @@
     {
         if (buttonIndex == 1)
         {
+            //FIXME this needs to return if it was a success or not
             [SocialUtility deleteTrip:self.trip];
             
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UINavigationController *controller in self.tabBarController.viewControllers)
             {
-                for (HomeMapViewController *view in controller.viewControllers)
+                for (UIViewController *view in controller.viewControllers)
                 {
                     if ([view isKindOfClass:[HomeMapViewController class]])
                     {
@@ -657,7 +659,11 @@
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
                         [(HomeMapViewController*)view dontRefreshMap];
                         [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
-                    }
+                    } else if ([view isKindOfClass:[ActivityListViewController class]])
+                        {
+                            [(ActivityListViewController*)view trunkWasDeleted:self.trip];
+        
+                        }
                 }
             }
             

@@ -17,6 +17,11 @@
 
 - (id)initWithActivities:(NSArray *)activities;
 
+-(void)trunkWasDeleted:(Trip*)trip;
+-(void)photoWasDeleted:(Photo*)photo;
+
+
+
 
 
 @end

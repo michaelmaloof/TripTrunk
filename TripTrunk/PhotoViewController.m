@@ -970,17 +970,21 @@
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
             {
-                for (HomeMapViewController *view in controller.viewControllers)
+                for (UIViewController *view in controller.viewControllers)
                 {
                     if ([view isKindOfClass:[HomeMapViewController class]]){
                         if (self.photos.count < 1){
-                            [view dontRefreshMap];
-                            [view updateTrunkColor:self.photo.trip isHot:NO member:YES];
+                            [(HomeMapViewController*)view dontRefreshMap];
+                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
                         } else if (1==1) //instead, find interval and update is HOT
                         {
-                            [view dontRefreshMap];
-                            [view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                            [(HomeMapViewController*)view dontRefreshMap];
+                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
                         }
+                    } else if ([view isKindOfClass:[ActivityListViewController class]])
+                    {
+                        [(ActivityListViewController*)view photoWasDeleted:self.photo];
+                        
                     }
                 }
                 
