@@ -246,6 +246,7 @@ enum TTActivityViewType : NSUInteger {
     if (self.isLikes == NO){
     // Query for activities for user
     [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
+        self.activities = [[NSMutableArray alloc]init];
         for (PFObject *obj in activities){
             if (obj[@"trip"]){
                 [self.activities addObject:obj];
