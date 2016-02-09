@@ -191,48 +191,52 @@
 
 - (void)uploadAllPhotos { //FIXME: Handle error handling better on lost trunks here
     
-    int originalCount = self.trip.publicTripDetail.photoCount;
-
-    
-    if (self.photos.count > 0){
-        if (!self.trip.publicTripDetail){
-            self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
-        }
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
+        
+        int originalCount = self.trip.publicTripDetail.photoCount;
+        
+        
+        if (self.photos.count > 0){
+            if (!self.trip.publicTripDetail){
+                self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+            }
             self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
             self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photos.count;
-    }
-    
-    if (![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
-        [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error){
-                NSLog(@"Error yo");
-            } else {
-                NSLog(@"Error no");
-
-            }
+        }
+        
+        if (![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error){
+                    NSLog(@"Error yo");
+                } else {
+                    NSLog(@"Error no");
+                    
+                }
+                
+            }];
+            [self savePhotosToParse];
             
-        }];
-        [self savePhotosToParse];
-
-    } else {
-    
-        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error){
-                self.trip.publicTripDetail.photoCount = originalCount;
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                UIAlertView *alertView = [[UIAlertView alloc] init];
-                alertView.delegate = self;
-                alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
-                alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-                [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
-                [alertView show];
-            } else {
-                [self savePhotosToParse];
-    
-            }
-        }];
-    
-    }
+        } else {
+            
+            [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error){
+                    self.trip.publicTripDetail.photoCount = originalCount;
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    UIAlertView *alertView = [[UIAlertView alloc] init];
+                    alertView.delegate = self;
+                    alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
+                    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                    [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+                    [alertView show];
+                } else {
+                    [self savePhotosToParse];
+                    
+                }
+            }];
+            
+        }
+    }];
 }
 
 -(void)savePhotosToParse{
