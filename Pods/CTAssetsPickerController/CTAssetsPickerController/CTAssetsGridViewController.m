@@ -614,7 +614,7 @@ NSString * const CTAssetsGridViewFooterIdentifier = @"CTAssetsGridViewFooterIden
                                               forIndexPath:indexPath];
     
     PHAsset *asset = [self assetAtIndexPath:indexPath];
-    
+        
     if ([self.picker.delegate respondsToSelector:@selector(assetsPickerController:shouldEnableAsset:)])
         cell.enabled = [self.picker.delegate assetsPickerController:self.picker shouldEnableAsset:asset];
     else
@@ -695,10 +695,18 @@ NSString * const CTAssetsGridViewFooterIdentifier = @"CTAssetsGridViewFooterIden
 {
     PHAsset *asset = [self assetAtIndexPath:indexPath];
     
-    [self.picker selectAsset:asset];
+    if (asset.mediaType == PHAssetMediaTypeVideo){
     
-    if ([self.picker.delegate respondsToSelector:@selector(assetsPickerController:didSelectAsset:)])
-        [self.picker.delegate assetsPickerController:self.picker didSelectAsset:asset];
+     
+    }
+    else {
+        
+        [self.picker selectAsset:asset];
+        
+        if ([self.picker.delegate respondsToSelector:@selector(assetsPickerController:didSelectAsset:)])
+            [self.picker.delegate assetsPickerController:self.picker didSelectAsset:asset];
+    }
+    
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -725,10 +733,22 @@ NSString * const CTAssetsGridViewFooterIdentifier = @"CTAssetsGridViewFooterIden
 {
     PHAsset *asset = [self assetAtIndexPath:indexPath];
     
+    if (asset.mediaType == PHAssetMediaTypeVideo){
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = NSLocalizedString(@"Photos Only Please :/ ",@"Photos Only Please :/");
+        alertView.message = NSLocalizedString(@"Triptrunk currently only allows photos to be added",@"Triptrunk currently only allows photos to be added");
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+        [alertView show];
+        return NO;
+    } else {
+
     if ([self.picker.delegate respondsToSelector:@selector(assetsPickerController:shouldHighlightAsset:)])
         return [self.picker.delegate assetsPickerController:self.picker shouldHighlightAsset:asset];
     else
         return YES;
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
