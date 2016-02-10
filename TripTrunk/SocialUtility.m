@@ -164,6 +164,7 @@
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [followACL setPublicReadAccess:YES];
     [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
+    [followACL setWriteAccess:YES forUser:trip.creator];
     addToTripActivity.ACL = followACL;
     
     [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
@@ -194,6 +195,7 @@
     PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [followACL setPublicReadAccess:YES];
     [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
+    [followACL setWriteAccess:YES forUser:trip.creator];
     addToTripActivity.ACL = followACL;
     
     
@@ -371,19 +373,24 @@
     // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [commentACL setWriteAccess:YES forUser:photo.user];
-    [commentACL setPublicReadAccess:YES];
-    commentActivity.ACL = commentACL;
     
-    [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            if (completionBlock) {
-                completionBlock(succeeded, error);
+    [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
+        [commentACL setWriteAccess:YES forUser:photo.trip.creator];
+        [commentACL setPublicReadAccess:YES];
+        commentActivity.ACL = commentACL;
+        
+        [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                if (completionBlock) {
+                    completionBlock(succeeded, error);
+                }
             }
-        }
-        else {
-            // Error, so decrement the cache count again.
-            [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
-        }
+            else {
+                // Error, so decrement the cache count again.
+                [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
+            }
+        }];
     }];
 }
 
@@ -434,7 +441,13 @@
         
         PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
         [likeACL setPublicReadAccess:YES];
+        
+        [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+
+        
         [likeACL setWriteAccess:YES forUser:photo.user];
+        [likeACL setWriteAccess:YES forUser:photo.trip.creator];
+
         likeActivity.ACL = likeACL;
         
         [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -442,6 +455,7 @@
                 completionBlock(succeeded,error);
             }
         }];
+    }];
     }];
 
 }
