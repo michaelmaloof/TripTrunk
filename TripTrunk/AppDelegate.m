@@ -297,14 +297,7 @@
  intValue] + 1;
                 searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
                 [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
-     
 
-               
-                
-                
-
-        
-            
             }
         }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.

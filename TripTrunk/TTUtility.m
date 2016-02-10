@@ -471,9 +471,12 @@ CLCloudinary *cloudinary;
     NSLog(@"Upload error: %@, %ld", result, (long)code);
     
     // Get rid of the progress view
-    //FIXME this should only remove if the rest of the photos are already added
+ if ([progressView taskCompleted])
+ {
     [progressView removeFromWindow];
-    progressView = nil;
+     progressView = nil;
+ }
+    
 }
 
 - (void)uploaderProgress:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite context:(id)context {
