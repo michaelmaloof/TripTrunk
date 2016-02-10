@@ -282,7 +282,7 @@
                                                   otherButtonTitles:nil, nil];
 
             //Clear user property
-            self.user = nil;
+//            self.user = nil;
 
             //Show alert view
             [alert show];
@@ -300,7 +300,7 @@
                                                   cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
             //Clear user property
-            self.user = nil;
+//            self.user = nil;
 
             //Show alert view
             [alert show];
