@@ -257,6 +257,12 @@ enum TTActivityViewType : NSUInteger {
 }
 
 - (void)refresh:(UIRefreshControl *)refreshControl {
+    
+    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    [self.navigationController setTabBarItem:searchItem];
+    
     if (self.isLikes == NO){
     // Query for activities for user
     [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
