@@ -645,7 +645,7 @@
             cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
             
-        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == YES){
             cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
             
@@ -729,7 +729,7 @@
             vc.delegate = self;
             [self.navigationController pushViewController:vc animated:YES];
             
-        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES){
             NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
             [members addObject:self.trip.creator];
             AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
