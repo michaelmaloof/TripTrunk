@@ -105,7 +105,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.trips = [[NSMutableArray alloc]init];
+    
     
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
@@ -178,7 +178,21 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
+    self.trips = [[NSMutableArray alloc]init];
+    
+    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    [self.navigationController setTabBarItem:searchItem];
+    
     [self.tableView reloadData];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    [self.navigationController setTabBarItem:searchItem];
 }
 
 - (void)didReceiveMemoryWarning {
