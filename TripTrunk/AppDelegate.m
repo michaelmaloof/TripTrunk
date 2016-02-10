@@ -277,10 +277,34 @@
         if (userInfo[@"aps"]) {
             NSString *alertText = [userInfo[@"aps"] valueForKey:@"alert"];
             if (alertText && ![alertText isEqualToString:@""]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"TripTrunk" message:alertText delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [alert show];
-                });
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"TripTrunk" message:alertText delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [alert show];
+//                });
+                
+//            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"unseenBlueCircle"]];
+//            imageView.frame = (CGRectMake(self.window.frame.size.width*.8, self.window.frame.origin.y + self.window.frame.size.height - 15, 10, 10));
+//            [self.window addSubview:imageView];
+                
+                
+                UITabBarController *tabNumber = (UITabBarController*)self.window.rootViewController;
+                
+                UIImage *image = [UIImage imageNamed:@"redComment"];
+                UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+                UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
+                [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+                int value = [[tabNumber.tabBar.items objectAtIndex:3].badgeValue
+ intValue] + 1;
+                searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
+                [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
+     
+
+               
+                
+                
+
+        
+            
             }
         }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.
