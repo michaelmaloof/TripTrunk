@@ -18,7 +18,7 @@
         return;
     }
     // If the user is private then we should be REQUESTING to follow, not following.
-    if (user[@"private"]) {
+    if ([user[@"private"]boolValue] == YES) {
         [self requestToFollowUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (completionBlock) {
                 return completionBlock(succeeded, error);
@@ -453,6 +453,7 @@
         [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (completionBlock) {
                 completionBlock(succeeded,error);
+                
             }
         }];
     }];

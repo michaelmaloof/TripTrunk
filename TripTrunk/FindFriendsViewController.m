@@ -642,6 +642,11 @@
                 }
                 
             }
+            
+            if (!error && [user[@"private"] boolValue] == NO){
+                [cellView.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+
+            }
         }];
     }
 }
