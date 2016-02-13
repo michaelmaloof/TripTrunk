@@ -139,7 +139,7 @@
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
     
-    [self refreshPhotoActivities];
+    [self refreshPhotoActivitiesWithUpdateNow:NO];
 
     
     
@@ -423,7 +423,7 @@
                                success:nil failure:nil];
 }
 
--(void)refreshPhotoActivities {
+-(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
     if (self.shouldShowTrunkNameButton) {
         // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
@@ -478,10 +478,12 @@
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 
-                //direct update
-                [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-                [self.photo saveInBackground];
-
+                if (updateNow == YES) {
+                    //direct update
+                    [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
+                    [self.photo saveInBackground];
+                }
+                
                 //
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
@@ -545,7 +547,7 @@
                 }
             }
             
-            [self refreshPhotoActivities];
+            [self refreshPhotoActivitiesWithUpdateNow:YES];
             
             self.imageZoomed = NO;
         }
@@ -605,7 +607,7 @@
             
 
             
-            [self refreshPhotoActivities];
+            [self refreshPhotoActivitiesWithUpdateNow:YES];
             
             self.imageZoomed = NO;
         }
@@ -710,7 +712,7 @@
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                         NSLog(@"caption saved as comment");
-                        [self refreshPhotoActivities];
+                        [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
                     }];
                 } else
@@ -732,7 +734,7 @@
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
                          {
                              NSLog(@"caption saved as comment");
-                             [self refreshPhotoActivities];
+                             [self refreshPhotoActivitiesWithUpdateNow:YES];
                              
                          }];
                         
@@ -833,8 +835,6 @@
 
 - (IBAction)likeButtonPressed:(id)sender {
     
-//    self.likeButton.enabled = NO;
-    
     // Like Photo
     if (!self.likeButton.selected)
     {
@@ -844,13 +844,11 @@
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
             if (succeeded) {
-                [self refreshPhotoActivities];
+                [self refreshPhotoActivitiesWithUpdateNow:YES];
 
                 if (self.photo.trip.publicTripDetail){
                     
                     [self.delegate photoWasLiked:sender];
-
-                    
                     
                 }
             }
@@ -869,14 +867,12 @@
             self.likeButton.enabled = YES;
             
             if (succeeded) {
-                [self refreshPhotoActivities];
+                [self refreshPhotoActivitiesWithUpdateNow:YES];
  
                 if (self.photo.trip.publicTripDetail){
-//                    if (self.photo.trip.publicTripDetail.totalLikes > 0){
-//                    self.photo.trip.publicTripDetail.totalLikes -= 1;
+
                     [self.delegate photoWasDisliked:sender];
-//                    [self.photo.trip.publicTripDetail saveInBackground];
-//                    }
+
                 }
             }
             else {
@@ -1202,43 +1198,4 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
