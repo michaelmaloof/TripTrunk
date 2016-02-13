@@ -857,29 +857,17 @@
 }
 
 -(void)photoWasLiked:(id)sender{
-//    self.likes += 1;
-//    int likes = self.trip.publicTripDetail.totalLikes + self.likes;
-//    if (likes < 1){
-//        self.totalLikeButton.hidden = YES;
-//        self.totalLikeHeart.hidden = YES;
-//    } else {
-//        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-//        self.totalLikeButton.textColor = [UIColor whiteColor];
-//        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", likes];
-//        self.totalLikeButton.hidden = NO;
-//        self.totalLikeHeart.hidden = NO;
-//    }
-//    self.trip.publicTripDetail.totalLikes += 1;
+
     int likes = [self.totalLikeButton.text intValue] + 1;
     [self.totalLikeButton setText:[NSString stringWithFormat:@"%d",likes]];
     [self.totalLikeButton setTintColor:[UIColor whiteColor]];
     self.totalLikeButton.textColor = [UIColor whiteColor];
-//    self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
     self.totalLikeButton.hidden = NO;
     self.totalLikeHeart.hidden = NO;
-//    [self.trip.publicTripDetail saveInBackground];
 
-    
+    //direct update after calculation
+    [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
+    [self.trip.publicTripDetail saveInBackground];
     
 }
 

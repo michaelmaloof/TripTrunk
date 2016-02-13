@@ -472,17 +472,17 @@
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-//                [self.likeButton setSelected:self.isLikedByCurrentUser];
-//                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
-//                
-//                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
-//            
+        
                 NSString *comments = NSLocalizedString(@"Comments",@"Comments");
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 
+                //direct update
+                [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
+                [self.photo saveInBackground];
 
+                //
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -847,9 +847,11 @@
                 [self refreshPhotoActivities];
 
                 if (self.photo.trip.publicTripDetail){
-//                    self.photo.trip.publicTripDetail.totalLikes += 1;
+                    
                     [self.delegate photoWasLiked:sender];
-//                    [self.photo.trip.publicTripDetail saveInBackground];
+
+                    
+                    
                 }
             }
             else {

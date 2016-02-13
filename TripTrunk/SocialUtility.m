@@ -443,20 +443,19 @@
         [likeACL setPublicReadAccess:YES];
         
         [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-
-        
-        [likeACL setWriteAccess:YES forUser:photo.user];
-        [likeACL setWriteAccess:YES forUser:photo.trip.creator];
-
-        likeActivity.ACL = likeACL;
-        
-        [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (completionBlock) {
-                completionBlock(succeeded,error);
+            [likeACL setWriteAccess:YES forUser:photo.user];
+            [likeACL setWriteAccess:YES forUser:photo.trip.creator];
+            
+            likeActivity.ACL = likeACL;
+            
+            [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 
-            }
+                if (completionBlock) {
+                    completionBlock(succeeded,error);
+                }
+                
+            }];
         }];
-    }];
     }];
 
 }
