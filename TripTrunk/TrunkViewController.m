@@ -889,6 +889,11 @@
         self.totalLikeButton.hidden = NO;
         self.totalLikeHeart.hidden = NO;
     }
+    
+    //direct update after calculation
+    [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
+    [self.trip.publicTripDetail saveInBackground];
+    
 }
 
 
