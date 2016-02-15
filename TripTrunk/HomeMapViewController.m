@@ -17,6 +17,7 @@
 #import "ParseErrorHandlingController.h"
 #import "EULAViewController.h"
 #import "TutorialViewController.h"
+#import "TTNewsFeedViewController.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -42,7 +43,7 @@
 @property BOOL isLoading;
 @property int limit;
 @property (weak, nonatomic) IBOutlet UIImageView *compassRose;
-
+@property BOOL hasLoadedOnce;
 @property NSDate *lastOpenedApp;
 @property BOOL dontRefresh;
 @property BOOL isFirstUserLoad;
@@ -69,6 +70,8 @@
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
     [self setUpArrays];
+    
+
     
     self.compasButton.hidden = YES;
     
@@ -109,6 +112,8 @@
             }
         }
     }
+    
+//    if (self.hasLoadedOnce == NO && self.) i was doing stuff here fixme
 
 }
 
@@ -912,8 +917,15 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    if (self.user == nil){
+        [self createLeftButtons];
+    }
+}
+
 -(void)viewWillDisappear:(BOOL)animated{
     
+    self.navigationItem.leftBarButtonItem = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         for (Trip *trip in self.needsUpdates) {
             NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
@@ -1218,6 +1230,35 @@
     self.navigationItem.rightBarButtonItems = buttons;
     
     self.buttonsMaded = YES;
+    
+    
+}
+
+-(void)createLeftButtons{
+ 
+    self.navigationItem.leftBarButtonItem = nil;
+    UIImage *image = [UIImage imageNamed:@"newsFeedMapToggle"];
+    CGRect buttonFrame = CGRectMake(0, 0, 90, 20);
+    
+    UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+    [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
+    [bttn setImage:image forState:UIControlStateNormal];
+    [bttn setImage:image forState:UIControlStateHighlighted];
+    [bttn setImage:image forState:UIControlStateSelected];
+    
+    UIBarButtonItem *buttonOne= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+
+    self.navigationItem.leftBarButtonItem = buttonOne;
+    
+
+}
+
+-(void)switchToTimeline{
+    
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
+    [self.navigationController pushViewController:news animated:NO]; //maybe make this NO?
     
     
 }
