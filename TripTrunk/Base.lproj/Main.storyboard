@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -29,6 +29,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HPB-EU-AQf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1234" y="-316"/>
+        </scene>
+        <!--News Feed View Controller-->
+        <scene sceneID="8jb-4y-jPb">
+            <objects>
+                <viewController storyboardIdentifier="TTNews" id="dUS-I7-5Tv" customClass="TTNewsFeedViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="X0H-cV-9Tk"/>
+                        <viewControllerLayoutGuide type="bottom" id="Svh-fi-DON"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Mqo-oX-k9m">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="0.50901184990000004" blue="0.154383668" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5qi-dZ-bd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-436.5" y="-843.75"/>
         </scene>
         <!--Home Map View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -172,11 +189,12 @@
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
                         <outlet property="zoomOut" destination="itu-Co-AEg" id="rW6-oE-g8A"/>
                         <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
+                        <segue destination="dUS-I7-5Tv" kind="show" id="2Ph-Hd-Ljh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="376.5" y="-1167"/>
+            <point key="canvasLocation" x="360" y="-1060.5"/>
         </scene>
         <!--Trunk List View Controller-->
         <scene sceneID="x3T-wA-FQC">
