@@ -14,6 +14,7 @@
 		220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F01AF1C1EA009DB060 /* PhotoViewController.m */; };
 		220408F41AF311D6009DB060 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 220408F31AF311D6009DB060 /* Comment.m */; };
 		2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2232F9C51C6E241D00D9A2D3 /* TTNewsFeedViewController.m */; };
+		2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2232F9C81C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m */; };
 		22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */; };
 		22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */; };
 		223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
@@ -142,6 +143,8 @@
 		220408F31AF311D6009DB060 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		2232F9C41C6E241D00D9A2D3 /* TTNewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNewsFeedViewController.h; sourceTree = "<group>"; };
 		2232F9C51C6E241D00D9A2D3 /* TTNewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNewsFeedViewController.m; sourceTree = "<group>"; };
+		2232F9C71C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimeLineCollectionViewCell.h; sourceTree = "<group>"; };
+		2232F9C81C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimeLineCollectionViewCell.m; sourceTree = "<group>"; };
 		22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseViewController.h; sourceTree = "<group>"; };
 		22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseViewController.m; sourceTree = "<group>"; };
 		22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewController.h; sourceTree = "<group>"; };
@@ -436,6 +439,8 @@
 		220408DF1AED55E7009DB060 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				2232F9C71C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.h */,
+				2232F9C81C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m */,
 				22474D7B1AE5E29400C76E87 /* PhotoCollectionViewCell.h */,
 				22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */,
 				220408DA1AED52C3009DB060 /* TrunkTableViewCell.h */,
@@ -879,6 +884,7 @@
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
+				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,

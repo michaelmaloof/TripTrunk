@@ -1237,12 +1237,14 @@
 -(void)createLeftButtons{
  
     self.navigationItem.leftBarButtonItem = nil;
-    UIImage *image = [UIImage imageNamed:@"moree"];
-    CGRect buttonFrame = CGRectMake(0, 0, image.size.width/1.8, image.size.height/1.8);
+    UIImage *image = [UIImage imageNamed:@"newsFeedMapToggle"];
+    CGRect buttonFrame = CGRectMake(0, 0, 90, 20);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
     [bttn setImage:image forState:UIControlStateNormal];
+    [bttn setImage:image forState:UIControlStateHighlighted];
+    [bttn setImage:image forState:UIControlStateSelected];
     
     UIBarButtonItem *buttonOne= [[UIBarButtonItem alloc] initWithCustomView:bttn];
 
@@ -1252,9 +1254,12 @@
 }
 
 -(void)switchToTimeline{
+    
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
     [self.navigationController pushViewController:news animated:NO]; //maybe make this NO?
+    
     
 }
 
