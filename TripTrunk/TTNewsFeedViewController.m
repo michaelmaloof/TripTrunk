@@ -76,6 +76,7 @@
                 }
                 self.skip += 5;
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.photos removeObjectAtIndex:0]; //REMOVE
                     [self.collectionView reloadData];
                     
                 });
@@ -120,6 +121,7 @@
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
     Photo *photo = self.photos[indexPath.row];
+    
     NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
     cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
@@ -165,8 +167,8 @@
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                           
-                                          [weakCell.userprofile setImage:image];
-                                          [weakCell setNeedsLayout];
+                                          [cell.userprofile setImage:image];
+                                          [cell setNeedsLayout];
                                           
                                       } failure:nil];
     
@@ -181,7 +183,7 @@
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew
                           placeholderImage:placeholderImage
                                    success:nil failure:nil];
-
+    
     return weakCell;
     return  cell;
 }
