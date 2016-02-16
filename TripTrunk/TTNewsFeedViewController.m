@@ -16,6 +16,7 @@
 #import <Parse/Parse.h>
 #import "UserProfileViewController.h"
 #import "TrunkViewController.h"
+#import "PhotoViewController.h"
 
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
@@ -118,6 +119,15 @@
     
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
+    
+    tap.cancelsTouchesInView = YES;
+    tap.numberOfTapsRequired = 1;
+    [cell.newsfeedPhoto addGestureRecognizer:tap];
+    cell.newsfeedPhoto.userInteractionEnabled = YES;
+    tap.view.tag =  indexPath.row;
 
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
@@ -176,6 +186,16 @@
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
--(void)photoWasTapped
+
+// handle method
+- (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController showViewController:photoViewController sender:self];}
+
+
 
 @end
