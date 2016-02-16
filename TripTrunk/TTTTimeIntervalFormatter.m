@@ -306,19 +306,19 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
     
     switch (unit) {
         case TTTCalendarUnitYear:
-            return singular ? NSLocalizedStringFromTable(@"year", @"FormatterKit", @"Year Unit (Singular)") : NSLocalizedStringFromTable(@"Y", @"FormatterKit", @"Year Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"Y", @"FormatterKit", @"Year Unit (Singular)") : NSLocalizedStringFromTable(@"Y", @"FormatterKit", @"Year Unit (Plural)");
         case TTTCalendarUnitMonth:
-            return singular ? NSLocalizedStringFromTable(@"month", @"FormatterKit", @"Month Unit (Singular)") : NSLocalizedStringFromTable(@"M", @"FormatterKit", @"Month Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"M", @"FormatterKit", @"Month Unit (Singular)") : NSLocalizedStringFromTable(@"M", @"FormatterKit", @"Month Unit (Plural)");
         case TTTCalendarUnitWeek:
-            return singular ? NSLocalizedStringFromTable(@"week", @"FormatterKit", @"Week Unit (Singular)") : NSLocalizedStringFromTable(@"w", @"FormatterKit", @"Week Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"w", @"FormatterKit", @"Week Unit (Singular)") : NSLocalizedStringFromTable(@"w", @"FormatterKit", @"Week Unit (Plural)");
         case TTTCalendarUnitDay:
-            return singular ? NSLocalizedStringFromTable(@"day", @"FormatterKit", @"Day Unit (Singular)") : NSLocalizedStringFromTable(@"d", @"FormatterKit", @"Day Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"d", @"FormatterKit", @"Day Unit (Singular)") : NSLocalizedStringFromTable(@"d", @"FormatterKit", @"Day Unit (Plural)");
         case TTTCalendarUnitHour:
-            return singular ? NSLocalizedStringFromTable(@"hour", @"FormatterKit", @"Hour Unit (Singular)") : NSLocalizedStringFromTable(@"h", @"FormatterKit", @"Hour Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"h", @"FormatterKit", @"Hour Unit (Singular)") : NSLocalizedStringFromTable(@"h", @"FormatterKit", @"Hour Unit (Plural)");
         case TTTCalendarUnitMinute:
-            return singular ? NSLocalizedStringFromTable(@"minute", @"FormatterKit", @"Minute Unit (Singular)") : NSLocalizedStringFromTable(@"m", @"FormatterKit", @"Minute Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"m", @"FormatterKit", @"Minute Unit (Singular)") : NSLocalizedStringFromTable(@"m", @"FormatterKit", @"Minute Unit (Plural)");
         case TTTCalendarUnitSecond:
-            return singular ? NSLocalizedStringFromTable(@"second", @"FormatterKit", @"Second Unit (Singular)") : NSLocalizedStringFromTable(@"s", @"FormatterKit", @"Second Unit (Plural)");
+            return singular ? NSLocalizedStringFromTable(@"s", @"FormatterKit", @"Second Unit (Singular)") : NSLocalizedStringFromTable(@"s", @"FormatterKit", @"Second Unit (Plural)");
         default:
             return nil;
     }
