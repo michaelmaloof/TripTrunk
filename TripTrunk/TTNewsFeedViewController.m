@@ -76,7 +76,6 @@
                 }
                 self.skip += 5;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.photos removeObjectAtIndex:0]; //REMOVE
                     [self.collectionView reloadData];
                     
                 });
@@ -119,8 +118,19 @@
 }
 
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+
     TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
+    
+    cell.username.titleLabel.text= nil;
+    cell.tripName.titleLabel.text = nil;
+    cell.location.text = nil;
+    cell.userprofile.image = nil;
+    cell.newsfeedPhoto.image = nil;
+    cell.timeStamp.text = nil;
+    
     Photo *photo = self.photos[indexPath.row];
+    
     
     NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
     cell.timeStamp.text = timeStamp;
@@ -161,7 +171,6 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     
-    __weak TTTimeLineCollectionViewCell *weakCell = cell;
     
     [cell.userprofile setImageWithURLRequest:request
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
@@ -177,14 +186,12 @@
     NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     UIImage *placeholderImage = photo.image;
     [cell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFill];
-    [weakCell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFill];
 
     
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew
                           placeholderImage:placeholderImage
                                    success:nil failure:nil];
     
-    return weakCell;
     return  cell;
 }
 
