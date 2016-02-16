@@ -128,6 +128,15 @@
     [cell.newsfeedPhoto addGestureRecognizer:tap];
     cell.newsfeedPhoto.userInteractionEnabled = YES;
     tap.view.tag =  indexPath.row;
+    
+    UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapProfile:)];
+    
+    profileTap.cancelsTouchesInView = YES;
+    profileTap.numberOfTapsRequired = 1;
+    [cell.userprofile addGestureRecognizer:profileTap];
+    cell.userprofile.userInteractionEnabled = YES;
+    profileTap.view.tag =  indexPath.row;
+    
 
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
@@ -194,7 +203,17 @@
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     
-    [self.navigationController showViewController:photoViewController sender:self];}
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+- (void) handleImageTapProfile:(UIGestureRecognizer *)gestureRecognizer {
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    PFUser *user = (PFUser*)photo.user;
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
 
 
 
