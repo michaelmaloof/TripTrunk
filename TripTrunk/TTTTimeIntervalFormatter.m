@@ -102,6 +102,7 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
 @synthesize futureDeicticExpression = _futureDeicticExpression;
 @synthesize deicticExpressionFormat = _deicticExpressionFormat;
 @synthesize suffixExpressionFormat = _suffixExpressionFormat;
+@synthesize suffixExpressionFormatNoSpace = _suffixExpressionFormatNoSpace;
 @synthesize approximateQualifierFormat = _approximateQualifierFormat;
 @synthesize presentTimeIntervalMargin = _presentTimeIntervalMargin;
 @synthesize usesAbbreviatedCalendarUnits = _usesAbbreviatedCalendarUnits;
@@ -127,6 +128,8 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
     self.deicticExpressionFormat = NSLocalizedStringWithDefaultValue(@"Deictic Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@ %@", @"Deictic Expression Format (#{Time} #{Ago/From Now}");
     self.approximateQualifierFormat = NSLocalizedStringFromTable(@"about %@", @"FormatterKit", @"Approximate Qualifier Format");
     self.suffixExpressionFormat = NSLocalizedStringWithDefaultValue(@"Suffix Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@ %@", @"Suffix Expression Format (#{Time} #{Unit})");
+    
+    self.suffixExpressionFormatNoSpace = NSLocalizedStringWithDefaultValue(@"Suffix Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@%@", @"Suffix Expression Format (#{Time} #{Unit})");
 
     self.presentTimeIntervalMargin = 1;
 
@@ -172,7 +175,7 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
         if ((self.significantUnits & unit) && NSCalendarUnitCompareSignificance(self.leastSignificantUnit, unit) != NSOrderedDescending) {
             NSNumber *number = @(abs((int)[[components valueForKey:unitName] integerValue]));
             if ([number integerValue]) {
-                NSString *suffix = [NSString stringWithFormat:self.suffixExpressionFormat, number, [self localizedStringForTimeStampNumber:[number unsignedIntegerValue] ofCalendarUnit:unit]];
+                NSString *suffix = [NSString stringWithFormat:self.suffixExpressionFormatNoSpace, number, [self localizedStringForTimeStampNumber:[number unsignedIntegerValue] ofCalendarUnit:unit]];
                 if (!string) {
                     string = suffix;
                 } else if (self.numberOfSignificantUnits == 0 || numberOfUnits < self.numberOfSignificantUnits) {
