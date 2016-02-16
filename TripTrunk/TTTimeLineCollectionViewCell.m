@@ -15,5 +15,13 @@
     [self.userprofile.layer setMasksToBounds:YES];
     [self.userprofile.layer setBorderWidth:2.0f];
     self.userprofile.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);}
+- (IBAction)usernameTapped:(id)sender {
+    
+}
+
+
+- (IBAction)tripNameTapped:(id)sender {
+    
+}
 
 @end

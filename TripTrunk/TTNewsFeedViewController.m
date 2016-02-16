@@ -14,7 +14,8 @@
 #import "TTUtility.h"
 #import "UIImageView+AFNetworking.h"
 #import <Parse/Parse.h>
-
+#import "UserProfileViewController.h"
+#import "TrunkViewController.h"
 
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
@@ -113,6 +114,11 @@
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
     [cell.tripName setTitle:photo.trip.name forState:UIControlStateNormal];
     cell.location.text = [NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country];
+    cell.tag = indexPath.row;
+    
+    [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
+
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
@@ -151,5 +157,25 @@
     return self.photos.count;
 }
 
+-(void)usernameTapped:(UIButton*)sender{
+    Photo *photo = self.photos[sender.tag];
+    PFUser *user = (PFUser*)photo.user;
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+
+-(void)trunkTapped:(UIButton*)sender{
+    Photo *photo = self.photos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)photoWasTapped
 
 @end
