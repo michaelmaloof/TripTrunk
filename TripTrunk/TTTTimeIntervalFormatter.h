@@ -68,6 +68,8 @@
  */
 @property (nonatomic, strong) NSString *suffixExpressionFormat;
 
+@property (nonatomic, strong) NSString *suffixExpressionFormatNoSpace;
+
 /**
  Specifies the time interval before and after the present moment that is described as still being in the present, rather than the past or future. Defaults to 1 second.
  */
@@ -141,5 +143,10 @@
  */
 - (NSString *)stringForTimeIntervalFromDate:(NSDate *)startingDate
                                      toDate:(NSDate *)endingDate;
+
+- (NSString *)stringTimeStampFromDate:(NSDate *)startingDate
+                               toDate:(NSDate *)endingDate;
+
+- (NSString *)localizedStringForTimeStampNumber:(NSUInteger)number ofCalendarUnit:(NSCalendarUnit)unit;
 
 @end

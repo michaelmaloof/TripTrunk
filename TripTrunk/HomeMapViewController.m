@@ -21,7 +21,7 @@
 
 #define METERS_PER_MILE 1609.344
 
-@interface HomeMapViewController () <MKMapViewDelegate>
+@interface HomeMapViewController () <MKMapViewDelegate,NewsDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *tripsToCheck;
@@ -53,6 +53,8 @@
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
 @property NSMutableArray *visitedTrunks;
+@property TTNewsFeedViewController *newsVC;
+@property BOOL exists;
 
 @end
 
@@ -60,7 +62,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.exists = NO;
     //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
     self.compassRose.hidden = YES;
     self.isFirstUserLoad = YES;
@@ -68,6 +70,7 @@
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
+    self.newsVC = [[TTNewsFeedViewController alloc]init];
     [self designNavBar];
     [self setUpArrays];
     
@@ -1238,7 +1241,7 @@
  
     self.navigationItem.leftBarButtonItem = nil;
     UIImage *image = [UIImage imageNamed:@"newsFeedMapToggle"];
-    CGRect buttonFrame = CGRectMake(0, 0, 90, 20);
+    CGRect buttonFrame = CGRectMake(0, 0, 80, 25);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
@@ -1255,12 +1258,22 @@
 
 -(void)switchToTimeline{
     
+    if (self.exists == NO){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
+        news.delegate = self;
+        self.exists = YES;
+        [self.navigationController pushViewController:news animated:NO];
+    } else {
+        [self.navigationController pushViewController:self.newsVC animated:NO];
+
+    }
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
-    [self.navigationController pushViewController:news animated:NO]; //maybe make this NO?
     
-    
+}
+
+-(void)backWasTapped:(id)sender{
+    self.newsVC = (TTNewsFeedViewController*)sender;
 }
 
 @end
