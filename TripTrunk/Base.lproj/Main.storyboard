@@ -88,7 +88,7 @@
                                                             <variation key="heightClass=regular-widthClass=compact" constant="15"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="default">
@@ -115,8 +115,10 @@
                                                             <variation key="heightClass=regular-widthClass=compact" constant="15"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <state key="normal" title="Username"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="13"/>
+                                                    <state key="normal" title="Username">
+                                                        <color key="titleColor" red="0.17504041198272502" green="0.37969204828074166" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="S26-NW-fgh"/>
@@ -141,8 +143,10 @@
                                                             <variation key="heightClass=regular-widthClass=compact" constant="15"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <state key="normal" title="Trip Name"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                                    <state key="normal" title="Trip Name">
+                                                        <color key="titleColor" red="0.17504041200000001" green="0.37969204829999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="SK6-qV-JVg"/>
@@ -158,7 +162,7 @@
                                                         </mask>
                                                     </variation>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2D-C4-KB0">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11m" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2D-C4-KB0">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="30" id="5F5-Ev-6ak"/>
@@ -166,8 +170,8 @@
                                                         <constraint firstAttribute="height" constant="21" id="giH-GH-4o3"/>
                                                         <constraint firstAttribute="height" constant="21" id="p2m-Vz-iW6"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -189,6 +193,9 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dXI-oM-KDj">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <gestureRecognizers/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="54" width="398" height="344"/>
+                                                    </variation>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -222,7 +229,7 @@
                                             <constraint firstItem="agu-Rc-1D1" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" id="bwH-sE-cXG"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="6" id="egq-P1-t1m"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="22" id="hcB-0I-B1Q">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                                             </constraint>
                                             <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" constant="51" id="mTT-Nf-nbe"/>
                                             <constraint firstItem="W95-rK-hFQ" firstAttribute="top" secondItem="agu-Rc-1D1" secondAttribute="bottom" constant="1" id="mgP-f2-mnM">

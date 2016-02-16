@@ -27,6 +27,7 @@
 @property NSMutableArray *following;
 @property NSMutableArray *photos;
 @property TTTTimeIntervalFormatter *timeFormatter;
+@property int skip;
 @end
 
 @implementation TTNewsFeedViewController
@@ -54,6 +55,7 @@
             [photos whereKey:@"fromUser" containedIn:self.following];
             [photos whereKeyExists:@"trip"];
             photos.limit = 5;
+            photos.skip = self.skip;
             [photos orderByDescending:@"createdAt"];
             [photos includeKey:@"fromUser"];
             [photos includeKey:@"photo"];
@@ -72,8 +74,11 @@
                         [self.photos addObject:photo];
                     }
                 }
-                
-                [self.collectionView reloadData];
+                self.skip += 5;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.collectionView reloadData];
+                    
+                });
             }];
 
         }
@@ -146,6 +151,8 @@
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
+    cell.username.tag= indexPath.row;
+    cell.tripName.tag= indexPath.row;
     [cell.location adjustsFontSizeToFitWidth];
     
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:photo.user[@"profilePicUrl"]]];
@@ -227,6 +234,22 @@
     time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
 
     return time;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -250;
+    if(y > h + reload_distance) {
+        [self loadNewsFeed];
+        }
 }
 
 
