@@ -174,7 +174,9 @@
     NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
     NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     UIImage *placeholderImage = photo.image;
-    [cell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFit];
+    [cell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFill];
+    [weakCell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFill];
+
     
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew
                           placeholderImage:placeholderImage
