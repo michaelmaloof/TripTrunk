@@ -142,4 +142,9 @@
 - (NSString *)stringForTimeIntervalFromDate:(NSDate *)startingDate
                                      toDate:(NSDate *)endingDate;
 
+- (NSString *)stringTimeStampFromDate:(NSDate *)startingDate
+                               toDate:(NSDate *)endingDate;
+
+- (NSString *)localizedStringForTimeStampNumber:(NSUInteger)number ofCalendarUnit:(NSCalendarUnit)unit;
+
 @end

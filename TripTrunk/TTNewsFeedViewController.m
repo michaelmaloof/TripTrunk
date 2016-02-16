@@ -17,6 +17,8 @@
 #import "UserProfileViewController.h"
 #import "TrunkViewController.h"
 #import "PhotoViewController.h"
+#import "TTTTimeIntervalFormatter.h"
+#import <CoreText/CoreText.h>
 
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
@@ -24,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property NSMutableArray *following;
 @property NSMutableArray *photos;
+@property TTTTimeIntervalFormatter *timeFormatter;
 @end
 
 @implementation TTNewsFeedViewController
@@ -112,6 +115,8 @@
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
     Photo *photo = self.photos[indexPath.row];
+    NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
+    cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
     [cell.tripName setTitle:photo.trip.name forState:UIControlStateNormal];
     cell.location.text = [NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country];
@@ -213,6 +218,15 @@
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];
     }
+}
+- (NSString *)stringForTimeStamp:(NSDate*)created {
+    
+    self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
+
+    NSString *time = @"";
+    time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
+
+    return time;
 }
 
 
