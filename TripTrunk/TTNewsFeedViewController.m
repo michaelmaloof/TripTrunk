@@ -114,6 +114,7 @@
 }
 
 -(void)switchToMap{
+    [self.delegate backWasTapped:self];
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
@@ -264,6 +265,8 @@
         [self loadNewsFeed];
         }
 }
+
+
 
 
 
