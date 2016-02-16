@@ -12,6 +12,17 @@
 
 @implementation SocialUtility
 
++ (PFUser*)loadUserFromUsername:(NSString*)username{
+
+    //Connect to Parse and grab the PFUser from the username
+    //FIXME: Some sort of user caching would be a good idea so we don't have to do this everytime
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"username" equalTo:username];
+    PFUser *user = (PFUser *)[query getFirstObject];
+    
+    return user;
+}
+
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock
 {
     if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {

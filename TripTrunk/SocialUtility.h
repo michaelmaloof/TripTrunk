@@ -15,6 +15,13 @@
 @interface SocialUtility : NSObject
 
 /**
+ *  Load PFUser from username string
+ *
+ *  @param username String to search for user
+ */
++ (PFUser*)loadUserFromUsername:(NSString*)username;
+
+/**
  *  CurrentUser will follow the given user, asychronous operation
  *
  *  @param user            User to follow
