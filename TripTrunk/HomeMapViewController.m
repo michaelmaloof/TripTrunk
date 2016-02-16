@@ -1238,7 +1238,7 @@
  
     self.navigationItem.leftBarButtonItem = nil;
     UIImage *image = [UIImage imageNamed:@"newsFeedMapToggle"];
-    CGRect buttonFrame = CGRectMake(0, 0, 90, 20);
+    CGRect buttonFrame = CGRectMake(0, 0, 80, 25);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
