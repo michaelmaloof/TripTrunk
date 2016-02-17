@@ -21,6 +21,7 @@
 #import <CoreText/CoreText.h>
 #import "UIColor+HexColors.h"
 #import "TrunkListViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
 , UICollectionViewDelegate>
@@ -182,6 +183,17 @@
     cell.userprofile.image = nil;
     cell.newsfeedPhoto.image = nil;
     cell.timeStamp.text = nil;
+    cell.image1.image = nil;
+    cell.image2.image = nil;
+    cell.image3.image = nil;
+    cell.image4.image = nil;
+    cell.image5.image = nil;
+    
+    cell.image1.hidden = YES;
+    cell.image2.hidden = YES;
+    cell.image3.hidden = YES;
+    cell.image4.hidden = YES;
+    cell.image5.hidden = YES;
     
     Photo *photo = self.photos[indexPath.row];
     
@@ -248,6 +260,17 @@
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                        [cell.newsfeedPhoto setImage:image];
+                                       [cell.image1 setImage:image];
+                                       [cell.image2 setImage:image];
+                                       [cell.image3 setImage:image];
+                                       [cell.image4 setImage:image];
+                                       [cell.image5 setImage:image];
+                                       cell.image1.hidden = NO;
+                                       cell.image2.hidden = NO;
+                                       cell.image3.hidden = NO;
+                                       cell.image4.hidden = NO;
+                                       cell.image5.hidden = NO;
+
                                        [cell setNeedsLayout];
                                    } failure:nil];
     

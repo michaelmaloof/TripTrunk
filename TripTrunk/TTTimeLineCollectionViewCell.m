@@ -7,13 +7,45 @@
 //
 
 #import "TTTimeLineCollectionViewCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation TTTimeLineCollectionViewCell
 - (void)awakeFromNib {
-    [self.userprofile.layer setCornerRadius:20.0f];
+    [self.userprofile.layer setCornerRadius:25.0f];
     [self.userprofile.layer setMasksToBounds:YES];
     [self.userprofile.layer setBorderWidth:2.0f];
-    self.userprofile.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);}
+    self.userprofile.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+
+    [self.image1.layer setCornerRadius:25.0f];
+    [self.image1.layer setMasksToBounds:YES];
+    [self.image1.layer setBorderWidth:3.0f];
+    [self.image1.layer setBorderColor: [[UIColor colorWithRed:118.0/255.0 green:164.0/255.0 blue:184.0/255.0 alpha:1.0] CGColor]];
+    
+    [self.image2.layer setCornerRadius:25.0f];
+    [self.image2.layer setMasksToBounds:YES];
+    [self.image2.layer setBorderWidth:3.0f];
+    [self.image2.layer setBorderColor: [[UIColor colorWithRed:217.0/255.0 green:135.0/255.0 blue:135.0/255.0 alpha:1.0] CGColor]];
+    
+    [self.image3.layer setCornerRadius:25.0f];
+    [self.image3.layer setMasksToBounds:YES];
+    [self.image3.layer setBorderWidth:3.0f];
+    [self.image3.layer setBorderColor: [[UIColor whiteColor] CGColor]];
+    
+    [self.image4.layer setCornerRadius:25.0f];
+    [self.image4.layer setMasksToBounds:YES];
+    [self.image4.layer setBorderWidth:3.0f];
+    [self.image4.layer setBorderColor: [[UIColor colorWithRed:174.0/255.0 green:221.0/255.0 blue:177.0/255.0 alpha:1.0] CGColor]];
+    
+    [self.image5.layer setCornerRadius:25.0f];
+    [self.image5.layer setMasksToBounds:YES];
+    [self.image5.layer setBorderWidth:3.0f];
+    [self.image5.layer setBorderColor: [[UIColor blackColor] CGColor]];
+    
+
+
+}
+
+
 
 
 @end
