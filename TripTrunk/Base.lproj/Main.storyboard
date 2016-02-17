@@ -150,7 +150,9 @@
                                                         <constraint firstAttribute="width" constant="295" id="q2Z-QW-eSc"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
-                                                    <state key="normal" title="Location"/>
+                                                    <state key="normal" title="Location">
+                                                        <color key="titleColor" red="0.17504041200000001" green="0.37969204829999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="Ysq-IQ-Gh2"/>
