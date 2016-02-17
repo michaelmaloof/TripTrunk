@@ -316,12 +316,8 @@
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="FDn-n1-fSZ">
-                                                            <variation key="heightClass=regular-widthClass=compact" constant="46"/>
-                                                        </constraint>
-                                                        <constraint firstAttribute="height" constant="50" id="M8k-sc-rgF">
-                                                            <variation key="heightClass=regular-widthClass=compact" constant="46"/>
-                                                        </constraint>
+                                                        <constraint firstAttribute="width" constant="50" id="FDn-n1-fSZ"/>
+                                                        <constraint firstAttribute="height" constant="50" id="M8k-sc-rgF"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
@@ -385,7 +381,8 @@
                                                             <exclude reference="BGU-l6-y49"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="311" y="353" width="16" height="22"/>
                                                         <mask key="constraints">
                                                             <include reference="0aa-ok-COR"/>
                                                             <include reference="BGU-l6-y49"/>
@@ -455,9 +452,7 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="22" id="hcB-0I-B1Q">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                                             </constraint>
-                                            <constraint firstAttribute="bottomMargin" secondItem="HAm-vg-quU" secondAttribute="bottom" constant="10" id="ir6-W6-Cge">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="12"/>
-                                            </constraint>
+                                            <constraint firstAttribute="bottomMargin" secondItem="HAm-vg-quU" secondAttribute="bottom" constant="10" id="ir6-W6-Cge"/>
                                             <constraint firstItem="Bwq-hZ-H3p" firstAttribute="centerY" secondItem="N3J-xl-9a4" secondAttribute="centerY" id="itG-Z0-7qJ"/>
                                             <constraint firstItem="y77-ZS-KZk" firstAttribute="bottom" secondItem="N3J-xl-9a4" secondAttribute="bottomMargin" id="ja8-W8-oSY">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="-10"/>
@@ -477,9 +472,7 @@
                                             <constraint firstItem="Bwq-hZ-H3p" firstAttribute="leading" secondItem="o7D-jt-n9q" secondAttribute="trailing" constant="10" id="tRc-mS-4pH"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="Hra-10-glI" secondAttribute="bottom" id="uHI-O5-UPs"/>
                                             <constraint firstItem="Bwq-hZ-H3p" firstAttribute="centerX" secondItem="N3J-xl-9a4" secondAttribute="centerX" id="uKv-ag-Wgj"/>
-                                            <constraint firstItem="HAm-vg-quU" firstAttribute="leading" secondItem="Hra-10-glI" secondAttribute="trailing" constant="10" id="uOK-wM-x7l">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="12"/>
-                                            </constraint>
+                                            <constraint firstItem="HAm-vg-quU" firstAttribute="leading" secondItem="Hra-10-glI" secondAttribute="trailing" constant="10" id="uOK-wM-x7l"/>
                                             <constraint firstItem="o7D-jt-n9q" firstAttribute="leading" secondItem="by5-Fj-cvc" secondAttribute="trailing" constant="10" id="vEY-d3-W7Y"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="Bwq-hZ-H3p" secondAttribute="bottom" id="vxT-D3-m6F"/>
                                             <constraint firstItem="Hra-10-glI" firstAttribute="width" secondItem="by5-Fj-cvc" secondAttribute="width" id="wAE-eV-hUz"/>
