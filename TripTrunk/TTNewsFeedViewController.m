@@ -30,7 +30,6 @@
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property NSMutableArray *objid;
 @property BOOL isLoading;
-@property NSMutableArray *trips;
 @end
 
 @implementation TTNewsFeedViewController
@@ -62,28 +61,9 @@
             }
         }
         
-        PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
-        [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [trips whereKey:@"type" equalTo:@"addToTrip"];
-        [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
-        [trips includeKey:@"trip"];
-        [trips whereKeyExists:@"trip"];
-        [trips setLimit:1000];
-        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            if (!error)
-            {
-                self.trips = [[NSMutableArray alloc]init];
-                for (PFObject *activity in objects)
-                {
-                    Trip *trip = activity[@"trip"];
-                    if (trip.name != nil)
-                    {
-                        [self.trips addObject:trip];
-                    }
-                }
-            }
+
                 [self loadNewsFeed:NO refresh:nil];
-        }];
+ 
         
     }];
 }
