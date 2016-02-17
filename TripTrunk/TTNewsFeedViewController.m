@@ -27,7 +27,6 @@
 @property NSMutableArray *following;
 @property NSMutableArray *photos;
 @property TTTTimeIntervalFormatter *timeFormatter;
-@property int skip;
 @property NSMutableArray *objid;
 @property BOOL isLoading;
 @end
@@ -50,10 +49,11 @@
     refreshControl.tintColor = ttBlueColor;
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
-    [self loadNewsFeed:NO];
+    [self loadNewsFeed:NO refresh:nil];
 }
 
--(void)loadNewsFeed:(BOOL)isRefresh{
+-(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
+    
     if (self.isLoading == NO){
         self.isLoading = YES;
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
@@ -69,11 +69,14 @@
             [photos whereKeyExists:@"trip"];
             photos.limit = 5;
             [photos orderByDescending:@"createdAt"];
-            if (self.photos.count > 0){
+            if (self.photos.count > 0 && isRefresh == NO){
                 Photo *photo = self.photos.lastObject;
                 [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
                 [photos whereKey:@"objectId" notContainedIn:self.objid];
-
+            } else if (self.photos.count > 0 && isRefresh == YES){
+                Photo *photo = self.photos.firstObject;
+                [photos whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
+                [photos whereKey:@"objectId" notContainedIn:self.objid];
             }
             [photos includeKey:@"fromUser"];
             [photos includeKey:@"photo"];
@@ -89,14 +92,34 @@
                     photo.trip = activity[@"trip"];
                     if (photo.trip != nil)
                     {
-                        [self.photos addObject:photo];
+                        if (isRefresh == NO){
+                            [self.photos addObject:photo];
+                        } else {
+                            [self.photos insertObject:photo atIndex:0];
+                        }
                         [self.objid addObject:activity.objectId];
                     }
                 }
-                self.skip += 5;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.collectionView reloadData];
-                    self.isLoading = NO;
+                    if (refreshControl) {
+                        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                        [formatter setDateFormat:@"MMM d, h:mm a"];
+                        NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                        NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                        NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                                    forKey:NSForegroundColorAttributeName];
+                        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                        refreshControl.attributedTitle = attributedTitle;
+                        
+                        [refreshControl endRefreshing];
+                        [self.collectionView reloadData];
+                        self.isLoading = NO;
+
+
+                    } else {
+                        [self.collectionView reloadData];
+                        self.isLoading = NO;
+                    }
                     
                 });
             }];
@@ -284,49 +307,17 @@
     
     float reload_distance = -200;
     if(y > h + reload_distance) {
-        [self loadNewsFeed:YES];
+        [self loadNewsFeed:NO refresh:nil];
         }
 }
 
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
-//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-//    [self.navigationController setTabBarItem:searchItem];
-//    
-//    if (self.isLikes == NO){
-//        // Query for activities for user
-//        [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
-//            self.activities = [[NSMutableArray alloc]init];
-//            for (PFObject *obj in activities){
-//                if (obj[@"trip"]){
-//                    [self.activities addObject:obj];
-//                }
-//            }
-//            //        _activities = [NSMutableArray arrayWithArray:activities];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                // End the refreshing & update the timestamp
-//                if (refreshControl) {
-//                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//                    [formatter setDateFormat:@"MMM d, h:mm a"];
-//                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-//                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-//                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-//                                                                                forKey:NSForegroundColorAttributeName];
-//                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-//                    refreshControl.attributedTitle = attributedTitle;
-//                    
-                    [refreshControl endRefreshing];
-//                }
-//                
-//                [self.tableView reloadData];
-//                
-//            });
-//        }];
-//    }
+    [self loadNewsFeed:YES refresh:refreshControl];
     
 }
+
+
 
 
 
