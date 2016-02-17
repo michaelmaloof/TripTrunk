@@ -30,6 +30,7 @@
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property NSMutableArray *objid;
 @property BOOL isLoading;
+@property NSMutableArray *trips;
 @end
 
 @implementation TTNewsFeedViewController
@@ -38,7 +39,6 @@
     [super viewDidLoad];
     [self setTitleImage];
     [self createLeftButtons];
-    self.following = [[NSMutableArray alloc]init];
     self.photos = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
@@ -46,23 +46,53 @@
              forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:refreshControl];
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    
     refreshControl.tintColor = ttBlueColor;
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
-    [self loadNewsFeed:NO refresh:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error)
+        {
+            self.following = [[NSMutableArray alloc]init];
+            for (PFUser *user in users)
+            {
+                [self.following addObject:user];
+            }
+        }
+        
+        PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
+        [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [trips whereKey:@"type" equalTo:@"addToTrip"];
+        [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
+        [trips includeKey:@"trip"];
+        [trips whereKeyExists:@"trip"];
+        [trips setLimit:1000];
+        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            if (!error)
+            {
+                self.trips = [[NSMutableArray alloc]init];
+                for (PFObject *activity in objects)
+                {
+                    Trip *trip = activity[@"trip"];
+                    if (trip.name != nil)
+                    {
+                        [self.trips addObject:trip];
+                    }
+                }
+            }
+                [self loadNewsFeed:NO refresh:nil];
+        }];
+        
+    }];
 }
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
     
     if (self.isLoading == NO){
         self.isLoading = YES;
-    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-        if (!error)
-        {
-            for (PFUser *user in users) {
-                [self.following addObject:user];
-            }
+
             
             PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
             [photos whereKey:@"type" equalTo:@"addedPhoto"];
@@ -126,11 +156,8 @@
             }];
 
         }
-    }];
-    
     }
 
-    }
 
 - (void)setTitleImage {
     UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
