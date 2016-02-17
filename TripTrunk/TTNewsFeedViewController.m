@@ -28,6 +28,8 @@
 @property NSMutableArray *photos;
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property int skip;
+@property NSMutableArray *objid;
+@property BOOL isLoading;
 @end
 
 @implementation TTNewsFeedViewController
@@ -47,11 +49,13 @@
     
     refreshControl.tintColor = ttBlueColor;
     [refreshControl endRefreshing];
-    [self loadNewsFeed];
+    self.objid = [[NSMutableArray alloc]init];
+    [self loadNewsFeed:NO];
 }
 
--(void)loadNewsFeed{
-    
+-(void)loadNewsFeed:(BOOL)isRefresh{
+    if (self.isLoading == NO){
+        self.isLoading = YES;
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
@@ -64,8 +68,13 @@
             [photos whereKey:@"fromUser" containedIn:self.following];
             [photos whereKeyExists:@"trip"];
             photos.limit = 5;
-            photos.skip = self.skip;
             [photos orderByDescending:@"createdAt"];
+            if (self.photos.count > 0){
+                Photo *photo = self.photos.lastObject;
+                [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
+                [photos whereKey:@"objectId" notContainedIn:self.objid];
+
+            }
             [photos includeKey:@"fromUser"];
             [photos includeKey:@"photo"];
             [photos includeKey:@"trip"];
@@ -81,11 +90,13 @@
                     if (photo.trip != nil)
                     {
                         [self.photos addObject:photo];
+                        [self.objid addObject:activity.objectId];
                     }
                 }
                 self.skip += 5;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.collectionView reloadData];
+                    self.isLoading = NO;
                     
                 });
             }];
@@ -93,6 +104,8 @@
         }
     }];
     
+    }
+
     }
 
 - (void)setTitleImage {
@@ -271,7 +284,7 @@
     
     float reload_distance = -200;
     if(y > h + reload_distance) {
-        [self loadNewsFeed];
+        [self loadNewsFeed:YES];
         }
 }
 
