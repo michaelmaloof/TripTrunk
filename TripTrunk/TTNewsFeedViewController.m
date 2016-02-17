@@ -17,13 +17,19 @@
 #import "UserProfileViewController.h"
 #import "TrunkViewController.h"
 #import "PhotoViewController.h"
-
+#import "TTTTimeIntervalFormatter.h"
+#import <CoreText/CoreText.h>
+#import "UIColor+HexColors.h"
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
 , UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property NSMutableArray *following;
 @property NSMutableArray *photos;
+@property TTTTimeIntervalFormatter *timeFormatter;
+@property int skip;
+@property NSMutableArray *objid;
+@property BOOL isLoading;
 @end
 
 @implementation TTNewsFeedViewController
@@ -34,11 +40,22 @@
     [self createLeftButtons];
     self.following = [[NSMutableArray alloc]init];
     self.photos = [[NSMutableArray alloc]init];
-    [self loadNewsFeed];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(refresh:)
+             forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:refreshControl];
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    
+    refreshControl.tintColor = ttBlueColor;
+    [refreshControl endRefreshing];
+    self.objid = [[NSMutableArray alloc]init];
+    [self loadNewsFeed:NO];
 }
 
--(void)loadNewsFeed{
-    
+-(void)loadNewsFeed:(BOOL)isRefresh{
+    if (self.isLoading == NO){
+        self.isLoading = YES;
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
@@ -52,6 +69,12 @@
             [photos whereKeyExists:@"trip"];
             photos.limit = 5;
             [photos orderByDescending:@"createdAt"];
+            if (self.photos.count > 0){
+                Photo *photo = self.photos.lastObject;
+                [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
+                [photos whereKey:@"objectId" notContainedIn:self.objid];
+
+            }
             [photos includeKey:@"fromUser"];
             [photos includeKey:@"photo"];
             [photos includeKey:@"trip"];
@@ -67,15 +90,22 @@
                     if (photo.trip != nil)
                     {
                         [self.photos addObject:photo];
+                        [self.objid addObject:activity.objectId];
                     }
                 }
-                
-                [self.collectionView reloadData];
+                self.skip += 5;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.collectionView reloadData];
+                    self.isLoading = NO;
+                    
+                });
             }];
 
         }
     }];
     
+    }
+
     }
 
 - (void)setTitleImage {
@@ -106,12 +136,27 @@
 }
 
 -(void)switchToMap{
+    [self.delegate backWasTapped:self];
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+
     TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
+    
+    cell.username.titleLabel.text= nil;
+    cell.tripName.titleLabel.text = nil;
+    cell.location.text = nil;
+    cell.userprofile.image = nil;
+    cell.newsfeedPhoto.image = nil;
+    cell.timeStamp.text = nil;
+    
     Photo *photo = self.photos[indexPath.row];
+    
+    
+    NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
+    cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
     [cell.tripName setTitle:photo.trip.name forState:UIControlStateNormal];
     cell.location.text = [NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country];
@@ -141,20 +186,21 @@
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
+    cell.username.tag= indexPath.row;
+    cell.tripName.tag= indexPath.row;
     [cell.location adjustsFontSizeToFitWidth];
     
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:photo.user[@"profilePicUrl"]]];
     
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     
-    __weak TTTimeLineCollectionViewCell *weakCell = cell;
     
     [cell.userprofile setImageWithURLRequest:request
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                           
-                                          [weakCell.userprofile setImage:image];
-                                          [weakCell setNeedsLayout];
+                                          [cell.userprofile setImage:image];
+                                          [cell setNeedsLayout];
                                           
                                       } failure:nil];
     
@@ -162,13 +208,15 @@
     NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
     NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     UIImage *placeholderImage = photo.image;
-    [cell.newsfeedPhoto setContentMode:UIViewContentModeScaleAspectFit];
+
     
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew
                           placeholderImage:placeholderImage
-                                   success:nil failure:nil];
-
-    return weakCell;
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                       [cell.newsfeedPhoto setImage:image];
+                                       [cell setNeedsLayout];
+                                   } failure:nil];
+    
     return  cell;
 }
 
@@ -214,6 +262,74 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
+- (NSString *)stringForTimeStamp:(NSDate*)created {
+    
+    self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
+
+    NSString *time = @"";
+    time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
+
+    return time;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = -200;
+    if(y > h + reload_distance) {
+        [self loadNewsFeed:YES];
+        }
+}
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    
+//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    [self.navigationController setTabBarItem:searchItem];
+//    
+//    if (self.isLikes == NO){
+//        // Query for activities for user
+//        [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
+//            self.activities = [[NSMutableArray alloc]init];
+//            for (PFObject *obj in activities){
+//                if (obj[@"trip"]){
+//                    [self.activities addObject:obj];
+//                }
+//            }
+//            //        _activities = [NSMutableArray arrayWithArray:activities];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                // End the refreshing & update the timestamp
+//                if (refreshControl) {
+//                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//                    [formatter setDateFormat:@"MMM d, h:mm a"];
+//                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+//                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+//                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+//                                                                                forKey:NSForegroundColorAttributeName];
+//                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+//                    refreshControl.attributedTitle = attributedTitle;
+//                    
+                    [refreshControl endRefreshing];
+//                }
+//                
+//                [self.tableView reloadData];
+//                
+//            });
+//        }];
+//    }
+    
+}
+
+
+
 
 
 

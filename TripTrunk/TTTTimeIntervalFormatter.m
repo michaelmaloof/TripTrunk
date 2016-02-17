@@ -102,6 +102,7 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
 @synthesize futureDeicticExpression = _futureDeicticExpression;
 @synthesize deicticExpressionFormat = _deicticExpressionFormat;
 @synthesize suffixExpressionFormat = _suffixExpressionFormat;
+@synthesize suffixExpressionFormatNoSpace = _suffixExpressionFormatNoSpace;
 @synthesize approximateQualifierFormat = _approximateQualifierFormat;
 @synthesize presentTimeIntervalMargin = _presentTimeIntervalMargin;
 @synthesize usesAbbreviatedCalendarUnits = _usesAbbreviatedCalendarUnits;
@@ -127,6 +128,8 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
     self.deicticExpressionFormat = NSLocalizedStringWithDefaultValue(@"Deictic Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@ %@", @"Deictic Expression Format (#{Time} #{Ago/From Now}");
     self.approximateQualifierFormat = NSLocalizedStringFromTable(@"about %@", @"FormatterKit", @"Approximate Qualifier Format");
     self.suffixExpressionFormat = NSLocalizedStringWithDefaultValue(@"Suffix Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@ %@", @"Suffix Expression Format (#{Time} #{Unit})");
+    
+    self.suffixExpressionFormatNoSpace = NSLocalizedStringWithDefaultValue(@"Suffix Expression Format String", @"FormatterKit", [NSBundle mainBundle], @"%@%@", @"Suffix Expression Format (#{Time} #{Unit})");
 
     self.presentTimeIntervalMargin = 1;
 
@@ -140,6 +143,53 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
 - (NSString *)stringForTimeInterval:(NSTimeInterval)seconds {
     NSDate *date = [NSDate date];
     return [self stringForTimeIntervalFromDate:date toDate:[NSDate dateWithTimeInterval:seconds sinceDate:date]];
+}
+
+- (NSString *)stringTimeStampFromDate:(NSDate *)startingDate
+                                     toDate:(NSDate *)endingDate
+{
+    NSTimeInterval seconds = [startingDate timeIntervalSinceDate:endingDate];
+    if (fabs(seconds) < self.presentTimeIntervalMargin) {
+        return self.presentDeicticExpression;
+    }
+    
+    NSDateComponents *components = [self.calendar components:self.significantUnits fromDate:startingDate toDate:endingDate options:0];
+    
+    if (seconds > 86400 && components.month == 0){
+        int day = seconds/86400;
+        [components setDay:day];
+    }
+    
+    if (self.usesIdiomaticDeicticExpressions) {
+        NSString *idiomaticDeicticExpression = [self localizedIdiomaticDeicticExpressionForComponents:components];
+        if (idiomaticDeicticExpression) {
+            return idiomaticDeicticExpression;
+        }
+    }
+    
+    NSString *string = nil;
+    BOOL isApproximate = NO;
+    NSUInteger numberOfUnits = 0;
+    for (NSString *unitName in @[@"year", @"month", @"weekOfYear", @"day", @"hour", @"minute", @"second"]) {
+        NSCalendarUnit unit = NSCalendarUnitFromString(unitName);
+        if ((self.significantUnits & unit) && NSCalendarUnitCompareSignificance(self.leastSignificantUnit, unit) != NSOrderedDescending) {
+            NSNumber *number = @(abs((int)[[components valueForKey:unitName] integerValue]));
+            if ([number integerValue]) {
+                NSString *suffix = [NSString stringWithFormat:self.suffixExpressionFormatNoSpace, number, [self localizedStringForTimeStampNumber:[number unsignedIntegerValue] ofCalendarUnit:unit]];
+                if (!string) {
+                    string = suffix;
+                } else if (self.numberOfSignificantUnits == 0 || numberOfUnits < self.numberOfSignificantUnits) {
+                    string = [string stringByAppendingFormat:@"%@", suffix];
+                } else {
+                    isApproximate = YES;
+                }
+                
+                numberOfUnits++;
+            }
+        }
+    }
+    
+    return string;
 }
 
 - (NSString *)stringForTimeIntervalFromDate:(NSDate *)startingDate
@@ -248,6 +298,29 @@ static inline NSComparisonResult NSCalendarUnitCompareSignificance(NSCalendarUni
             default:
                 return nil;
         }
+    }
+}
+
+- (NSString *)localizedStringForTimeStampNumber:(NSUInteger)number ofCalendarUnit:(NSCalendarUnit)unit {
+    BOOL singular = (number == 1);
+    
+    switch (unit) {
+        case TTTCalendarUnitYear:
+            return singular ? NSLocalizedStringFromTable(@"Y", @"FormatterKit", @"Year Unit (Singular)") : NSLocalizedStringFromTable(@"Y", @"FormatterKit", @"Year Unit (Plural)");
+        case TTTCalendarUnitMonth:
+            return singular ? NSLocalizedStringFromTable(@"M", @"FormatterKit", @"Month Unit (Singular)") : NSLocalizedStringFromTable(@"M", @"FormatterKit", @"Month Unit (Plural)");
+        case TTTCalendarUnitWeek:
+            return singular ? NSLocalizedStringFromTable(@"w", @"FormatterKit", @"Week Unit (Singular)") : NSLocalizedStringFromTable(@"w", @"FormatterKit", @"Week Unit (Plural)");
+        case TTTCalendarUnitDay:
+            return singular ? NSLocalizedStringFromTable(@"d", @"FormatterKit", @"Day Unit (Singular)") : NSLocalizedStringFromTable(@"d", @"FormatterKit", @"Day Unit (Plural)");
+        case TTTCalendarUnitHour:
+            return singular ? NSLocalizedStringFromTable(@"h", @"FormatterKit", @"Hour Unit (Singular)") : NSLocalizedStringFromTable(@"h", @"FormatterKit", @"Hour Unit (Plural)");
+        case TTTCalendarUnitMinute:
+            return singular ? NSLocalizedStringFromTable(@"m", @"FormatterKit", @"Minute Unit (Singular)") : NSLocalizedStringFromTable(@"m", @"FormatterKit", @"Minute Unit (Plural)");
+        case TTTCalendarUnitSecond:
+            return singular ? NSLocalizedStringFromTable(@"s", @"FormatterKit", @"Second Unit (Singular)") : NSLocalizedStringFromTable(@"s", @"FormatterKit", @"Second Unit (Plural)");
+        default:
+            return nil;
     }
 }
 

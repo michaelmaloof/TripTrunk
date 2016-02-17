@@ -139,7 +139,7 @@
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
     
-    [self refreshPhotoActivities];
+    [self refreshPhotoActivitiesWithUpdateNow:NO];
 
     
     
@@ -271,19 +271,16 @@
 -(void)viewWillAppear:(BOOL)animated {
     self.navigationController.navigationBarHidden = YES;
     self.tabBarController.tabBar.hidden = YES;
-    
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    
+    //set button titles with numbers
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", @(self.photo.likes), likes] forState:UIControlStateNormal];
 
-
-
-
-
-
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    //set button selelction
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
     for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -306,7 +303,12 @@
 
 }
 
+-(void)viewDidAppear:(BOOL)animated{
 
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    
+}
 
 -(void)viewDidLayoutSubviews {
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
@@ -423,7 +425,7 @@
                                success:nil failure:nil];
 }
 
--(void)refreshPhotoActivities {
+-(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
     if (self.shouldShowTrunkNameButton) {
         // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
@@ -472,17 +474,19 @@
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-//                [self.likeButton setSelected:self.isLikedByCurrentUser];
-//                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
-//                
-//                [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
-//            
+        
                 NSString *comments = NSLocalizedString(@"Comments",@"Comments");
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
                 NSString *likes = NSLocalizedString(@"Likes",@"Likes");
                 [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 
-
+                if (updateNow == YES) {
+                    //direct update
+                    [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
+                    [self.photo saveInBackground];
+                }
+                
+                //
                 [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             });
             
@@ -545,7 +549,7 @@
                 }
             }
             
-            [self refreshPhotoActivities];
+            [self refreshPhotoActivitiesWithUpdateNow:YES];
             
             self.imageZoomed = NO;
         }
@@ -605,7 +609,7 @@
             
 
             
-            [self refreshPhotoActivities];
+            [self refreshPhotoActivitiesWithUpdateNow:YES];
             
             self.imageZoomed = NO;
         }
@@ -710,7 +714,7 @@
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                         NSLog(@"caption saved as comment");
-                        [self refreshPhotoActivities];
+                        [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
                     }];
                 } else
@@ -732,7 +736,7 @@
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
                          {
                              NSLog(@"caption saved as comment");
-                             [self refreshPhotoActivities];
+                             [self refreshPhotoActivitiesWithUpdateNow:YES];
                              
                          }];
                         
@@ -750,13 +754,6 @@
     }
     
 }
-
-
-
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    [self.view endEditing:YES];
-//    [super touchesBegan:touches withEvent:event];
-//}
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -833,8 +830,6 @@
 
 - (IBAction)likeButtonPressed:(id)sender {
     
-//    self.likeButton.enabled = NO;
-    
     // Like Photo
     if (!self.likeButton.selected)
     {
@@ -844,12 +839,12 @@
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
             if (succeeded) {
-                [self refreshPhotoActivities];
+                [self refreshPhotoActivitiesWithUpdateNow:YES];
 
                 if (self.photo.trip.publicTripDetail){
-//                    self.photo.trip.publicTripDetail.totalLikes += 1;
+                    
                     [self.delegate photoWasLiked:sender];
-//                    [self.photo.trip.publicTripDetail saveInBackground];
+                    
                 }
             }
             else {
@@ -867,14 +862,12 @@
             self.likeButton.enabled = YES;
             
             if (succeeded) {
-                [self refreshPhotoActivities];
+                [self refreshPhotoActivitiesWithUpdateNow:YES];
  
                 if (self.photo.trip.publicTripDetail){
-//                    if (self.photo.trip.publicTripDetail.totalLikes > 0){
-//                    self.photo.trip.publicTripDetail.totalLikes -= 1;
+
                     [self.delegate photoWasDisliked:sender];
-//                    [self.photo.trip.publicTripDetail saveInBackground];
-//                    }
+
                 }
             }
             else {
@@ -1200,43 +1193,4 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

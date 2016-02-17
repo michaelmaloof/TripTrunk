@@ -9,7 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "TTBaseViewController.h"
 
+@protocol NewsDelegate
+-(void)backWasTapped:(id)sender;
+
+
+
+@end
+
 @interface TTNewsFeedViewController : TTBaseViewController
+@property id<NewsDelegate> delegate;
 
 
 @end
