@@ -271,19 +271,16 @@
 -(void)viewWillAppear:(BOOL)animated {
     self.navigationController.navigationBarHidden = YES;
     self.tabBarController.tabBar.hidden = YES;
-    
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    
+    //set button titles with numbers
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", @(self.photo.likes), likes] forState:UIControlStateNormal];
 
-
-
-
-
-
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    //set button selelction
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
     for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -306,7 +303,12 @@
 
 }
 
+-(void)viewDidAppear:(BOOL)animated{
 
+    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    
+}
 
 -(void)viewDidLayoutSubviews {
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
@@ -752,13 +754,6 @@
     }
     
 }
-
-
-
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    [self.view endEditing:YES];
-//    [super touchesBegan:touches withEvent:event];
-//}
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {

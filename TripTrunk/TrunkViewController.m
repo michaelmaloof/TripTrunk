@@ -86,23 +86,17 @@
     [self refreshTripDataViews];
     
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"type" equalTo:@"like"];
-    [query whereKey:@"trip" equalTo:self.trip];
-    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
-        if (number < 1){
-            self.totalLikeButton.hidden = YES;
-            self.totalLikeHeart.hidden = YES;
-        } else {
-            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-            self.totalLikeButton.textColor = [UIColor whiteColor];
-            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", number];
-            self.totalLikeButton.hidden = NO;
-            self.totalLikeHeart.hidden = NO;
-        }
-
-        
-    }];
+    if (self.trip.publicTripDetail.totalLikes > 0) {
+        self.totalLikeButton.tintColor = [UIColor whiteColor];
+        self.totalLikeButton.textColor = [UIColor whiteColor];
+        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+        self.totalLikeButton.hidden = NO;
+        self.totalLikeHeart.hidden = NO;
+    }
+    else{
+        self.totalLikeButton.hidden = YES;
+        self.totalLikeHeart.hidden = YES;
+    }
 
     self.photos = [[NSArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
@@ -172,6 +166,22 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"type" equalTo:@"like"];
+    [query whereKey:@"trip" equalTo:self.trip];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (number < 1){
+            self.totalLikeButton.hidden = YES;
+            self.totalLikeHeart.hidden = YES;
+        } else {
+            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
+            self.totalLikeButton.textColor = [UIColor whiteColor];
+            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", number];
+            self.totalLikeButton.hidden = NO;
+            self.totalLikeHeart.hidden = NO;
+        }
+    }];
     
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
