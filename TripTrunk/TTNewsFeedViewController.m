@@ -20,6 +20,7 @@
 #import "TTTTimeIntervalFormatter.h"
 #import <CoreText/CoreText.h>
 #import "UIColor+HexColors.h"
+#import "TrunkListViewController.h"
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
 , UICollectionViewDelegate>
@@ -170,7 +171,7 @@
     
     cell.username.titleLabel.text= nil;
     cell.tripName.titleLabel.text = nil;
-    cell.location.text = nil;
+    cell.location.titleLabel.text = nil;
     cell.userprofile.image = nil;
     cell.newsfeedPhoto.image = nil;
     cell.timeStamp.text = nil;
@@ -182,11 +183,13 @@
     cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
     [cell.tripName setTitle:photo.trip.name forState:UIControlStateNormal];
-    cell.location.text = [NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country];
+    [cell.location setTitle:[NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country] forState:UIControlStateNormal];
     cell.tag = indexPath.row;
     
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+
     
     //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
@@ -204,6 +207,7 @@
     [cell.userprofile addGestureRecognizer:profileTap];
     cell.userprofile.userInteractionEnabled = YES;
     profileTap.view.tag =  indexPath.row;
+    cell.location.tag = indexPath.row;
     
 
     
@@ -211,7 +215,7 @@
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
     cell.username.tag= indexPath.row;
     cell.tripName.tag= indexPath.row;
-    [cell.location adjustsFontSizeToFitWidth];
+    [cell.location.titleLabel adjustsFontSizeToFitWidth];
     
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:photo.user[@"profilePicUrl"]]];
     
@@ -266,6 +270,17 @@
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
+-(void)locationWasTapped:(UIButton*)sender{
+    Photo *photo = self.photos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkListViewController *trunkViewController = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+    trunkViewController.city = trip.city;
+    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+    trunkViewController.location = location;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
 
 // handle method
 - (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
@@ -316,6 +331,8 @@
     [self loadNewsFeed:YES refresh:refreshControl];
     
 }
+
+
 
 
 
