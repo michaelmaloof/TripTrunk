@@ -41,6 +41,16 @@
     [self.image5.layer setBorderWidth:3.0f];
     [self.image5.layer setBorderColor: [[UIColor blackColor] CGColor]];
     
+    [self.imageBUtton.layer setCornerRadius:25.0f];
+    [self.imageBUtton.layer setMasksToBounds:YES];
+    
+    [self.labelButton.layer setCornerRadius:25.0f];
+    [self.labelButton.layer setMasksToBounds:YES];
+    self.labelButton.alpha = .5;
+
+
+
+    
 
 
 }
