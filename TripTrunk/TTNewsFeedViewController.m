@@ -19,7 +19,7 @@
 #import "PhotoViewController.h"
 #import "TTTTimeIntervalFormatter.h"
 #import <CoreText/CoreText.h>
-
+#import "UIColor+HexColors.h"
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
 , UICollectionViewDelegate>
@@ -38,6 +38,15 @@
     [self createLeftButtons];
     self.following = [[NSMutableArray alloc]init];
     self.photos = [[NSMutableArray alloc]init];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(refresh:)
+             forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:refreshControl];
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    
+    refreshControl.tintColor = ttBlueColor;
+    [refreshControl endRefreshing];
     [self loadNewsFeed];
 }
 
@@ -260,11 +269,52 @@
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = -250;
+    float reload_distance = -200;
     if(y > h + reload_distance) {
         [self loadNewsFeed];
         }
 }
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    
+//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    [self.navigationController setTabBarItem:searchItem];
+//    
+//    if (self.isLikes == NO){
+//        // Query for activities for user
+//        [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
+//            self.activities = [[NSMutableArray alloc]init];
+//            for (PFObject *obj in activities){
+//                if (obj[@"trip"]){
+//                    [self.activities addObject:obj];
+//                }
+//            }
+//            //        _activities = [NSMutableArray arrayWithArray:activities];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                // End the refreshing & update the timestamp
+//                if (refreshControl) {
+//                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//                    [formatter setDateFormat:@"MMM d, h:mm a"];
+//                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+//                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+//                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+//                                                                                forKey:NSForegroundColorAttributeName];
+//                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+//                    refreshControl.attributedTitle = attributedTitle;
+//                    
+                    [refreshControl endRefreshing];
+//                }
+//                
+//                [self.tableView reloadData];
+//                
+//            });
+//        }];
+//    }
+    
+}
+
 
 
 

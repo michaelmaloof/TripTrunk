@@ -210,7 +210,9 @@
                                             </constraint>
                                             <constraint firstItem="fs7-uv-2Pu" firstAttribute="centerX" secondItem="W95-rK-hFQ" secondAttribute="centerX" id="FBK-nX-G7j"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="dXI-oM-KDj" secondAttribute="bottom" id="FKF-Tr-605"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="fs7-uv-2Pu" secondAttribute="bottom" id="GBe-5I-Y3I"/>
+                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="fs7-uv-2Pu" secondAttribute="bottom" id="GBe-5I-Y3I">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                                            </constraint>
                                             <constraint firstItem="fs7-uv-2Pu" firstAttribute="top" secondItem="W95-rK-hFQ" secondAttribute="bottom" constant="1" id="NTn-pu-QQ1">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                             </constraint>
