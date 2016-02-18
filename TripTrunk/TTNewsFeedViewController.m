@@ -387,7 +387,6 @@
                 [cell.image4 addGestureRecognizer:imageFourTap];
                 cell.image4.userInteractionEnabled = YES;
                 imageFourTap.view.tag = indexCount - 1;
-                
                 cell.image4.hidden = NO;
                 [cell.image4 setImageWithURLRequest:requestNew
                                    placeholderImage:placeholderImage
@@ -403,15 +402,13 @@
             {
                 
                 cell.image5.hidden = NO;
+                cell.labelButton.hidden = NO;
+                cell.imageBUtton.hidden = NO;
 
                 [cell.image5 setImageWithURLRequest:requestNew
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image5 setImage:image];
-                                                cell.image5.hidden = NO;
-                                                cell.labelButton.hidden = NO;
-                                                cell.imageBUtton.hidden = NO;
-                                                
                                                 [cell setNeedsLayout];
                                             } failure:nil];
             }
@@ -474,6 +471,7 @@
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 1;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -483,6 +481,7 @@
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 2;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -492,6 +491,7 @@
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 3;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -500,6 +500,7 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
+    photoViewController.arrayInt = 4;
     photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
@@ -509,7 +510,7 @@
     NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
     for (Photo *smallPhoto in self.photos)
     {
-        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId])
+        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
         {
             [mutablePhotos addObject:smallPhoto];
         }
@@ -527,6 +528,7 @@
     Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 0;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
