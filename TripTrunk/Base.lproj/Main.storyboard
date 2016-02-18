@@ -174,7 +174,7 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="y77-ZS-KZk">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultProfile" translatesAutoresizingMaskIntoConstraints="NO" id="y77-ZS-KZk">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="EOv-mp-9qg"/>
@@ -198,36 +198,6 @@
                                                             <exclude reference="cNe-eH-TcP"/>
                                                             <include reference="jtY-aW-7tZ"/>
                                                             <exclude reference="phE-3I-ya5"/>
-                                                        </mask>
-                                                    </variation>
-                                                </imageView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bwq-hZ-H3p">
-                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="ELC-9T-Wib"/>
-                                                        <constraint firstAttribute="height" constant="50" id="ImQ-FF-cRA"/>
-                                                        <constraint firstAttribute="height" constant="93" id="LdA-7A-s1j">
-                                                            <variation key="heightClass=regular-widthClass=compact" constant="60"/>
-                                                        </constraint>
-                                                        <constraint firstAttribute="width" constant="50" id="V5r-Ta-C4j"/>
-                                                        <constraint firstAttribute="height" constant="50" id="f2e-iY-l1Z"/>
-                                                    </constraints>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="ELC-9T-Wib"/>
-                                                            <exclude reference="ImQ-FF-cRA"/>
-                                                            <exclude reference="LdA-7A-s1j"/>
-                                                            <exclude reference="V5r-Ta-C4j"/>
-                                                            <exclude reference="f2e-iY-l1Z"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="ELC-9T-Wib"/>
-                                                            <exclude reference="ImQ-FF-cRA"/>
-                                                            <exclude reference="LdA-7A-s1j"/>
-                                                            <exclude reference="V5r-Ta-C4j"/>
-                                                            <include reference="f2e-iY-l1Z"/>
                                                         </mask>
                                                     </variation>
                                                 </imageView>
@@ -388,6 +358,36 @@
                                                         </mask>
                                                     </variation>
                                                 </button>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bwq-hZ-H3p">
+                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="ELC-9T-Wib"/>
+                                                        <constraint firstAttribute="height" constant="50" id="ImQ-FF-cRA"/>
+                                                        <constraint firstAttribute="height" constant="93" id="LdA-7A-s1j">
+                                                            <variation key="heightClass=regular-widthClass=compact" constant="60"/>
+                                                        </constraint>
+                                                        <constraint firstAttribute="width" constant="50" id="V5r-Ta-C4j"/>
+                                                        <constraint firstAttribute="height" constant="50" id="f2e-iY-l1Z"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="ELC-9T-Wib"/>
+                                                            <exclude reference="ImQ-FF-cRA"/>
+                                                            <exclude reference="LdA-7A-s1j"/>
+                                                            <exclude reference="V5r-Ta-C4j"/>
+                                                            <exclude reference="f2e-iY-l1Z"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="ELC-9T-Wib"/>
+                                                            <exclude reference="ImQ-FF-cRA"/>
+                                                            <exclude reference="LdA-7A-s1j"/>
+                                                            <exclude reference="V5r-Ta-C4j"/>
+                                                            <include reference="f2e-iY-l1Z"/>
+                                                        </mask>
+                                                    </variation>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -485,13 +485,13 @@
                                                 <exclude reference="dXI-oM-KDj"/>
                                                 <exclude reference="Hra-10-glI"/>
                                                 <exclude reference="y77-ZS-KZk"/>
-                                                <exclude reference="Bwq-hZ-H3p"/>
                                                 <exclude reference="HYb-FJ-b87"/>
                                                 <exclude reference="W95-rK-hFQ"/>
                                                 <exclude reference="by5-Fj-cvc"/>
                                                 <exclude reference="HAm-vg-quU"/>
                                                 <exclude reference="o7D-jt-n9q"/>
                                                 <exclude reference="GsE-hG-GbG"/>
+                                                <exclude reference="Bwq-hZ-H3p"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="RP9-hN-PJJ"/>
@@ -566,13 +566,13 @@
                                                 <include reference="dXI-oM-KDj"/>
                                                 <include reference="Hra-10-glI"/>
                                                 <include reference="y77-ZS-KZk"/>
-                                                <include reference="Bwq-hZ-H3p"/>
                                                 <include reference="HYb-FJ-b87"/>
                                                 <include reference="W95-rK-hFQ"/>
                                                 <include reference="by5-Fj-cvc"/>
                                                 <include reference="HAm-vg-quU"/>
                                                 <include reference="o7D-jt-n9q"/>
                                                 <include reference="GsE-hG-GbG"/>
+                                                <include reference="Bwq-hZ-H3p"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <include reference="RP9-hN-PJJ"/>
@@ -4585,6 +4585,7 @@
         <image name="add_trunk" width="35" height="30"/>
         <image name="brownMountain_background" width="500" height="890"/>
         <image name="checkCircle" width="100" height="100"/>
+        <image name="defaultProfile" width="150" height="150"/>
         <image name="deletePhoto" width="100" height="100"/>
         <image name="editPencil" width="100" height="100"/>
         <image name="ellipsis" width="32" height="32"/>

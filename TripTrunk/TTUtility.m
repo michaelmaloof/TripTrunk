@@ -431,6 +431,21 @@ CLCloudinary *cloudinary;
     return transformedUrl;
 }
 
+- (NSString *)lowQualityImageUrl:(NSString *)urlString;
+{
+    CLTransformation *transformation = [CLTransformation transformation];
+    
+    [transformation setQualityWithFloat:30];
+    [transformation setFetchFormat:@"jpg"];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    
+    NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
+    return transformedUrl;
+}
+
+
 - (NSString *)mediumQualityScaledDownImageUrl:(NSString *)urlString;
 {
     CGRect screenRect = [[UIScreen mainScreen] bounds];
