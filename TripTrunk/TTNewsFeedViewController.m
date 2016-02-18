@@ -306,8 +306,8 @@
     __block int indexCount = 0;
     for (Photo *smallPhoto in self.photos){
         indexCount += 1;
-
         if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId]){
+            
             NSString *urlString = [[TTUtility sharedInstance] lowQualityImageUrl:smallPhoto.imageUrl];
             NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
             UIImage *placeholderImage = smallPhoto.image;
@@ -473,7 +473,7 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -482,7 +482,7 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -491,7 +491,7 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -500,8 +500,23 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(NSArray*)returnPhotosForView:(Photo*)photo
+{
+    NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
+    for (Photo *smallPhoto in self.photos)
+    {
+        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId])
+        {
+            [mutablePhotos addObject:smallPhoto];
+        }
+    }
+    
+    NSArray *array = [mutablePhotos mutableCopy];
+    return array;
 }
 
 
@@ -511,7 +526,7 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
