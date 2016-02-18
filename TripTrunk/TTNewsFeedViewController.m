@@ -83,7 +83,7 @@
         [photos whereKey:@"type" equalTo:@"addedPhoto"];
         [photos whereKey:@"fromUser" containedIn:self.following];
         [photos whereKeyExists:@"trip"];
-        photos.limit = 20;
+        photos.limit = 100;
         [photos orderByDescending:@"createdAt"];
         if (self.photos.count > 0 && isRefresh == NO){
             Photo *photo = self.photos.lastObject;
@@ -246,6 +246,7 @@
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.imageBUtton addTarget:self action:@selector(moreWasTapped:) forControlEvents:UIControlEventTouchUpInside];
 
     
     //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
@@ -265,8 +266,7 @@
     cell.userprofile.userInteractionEnabled = YES;
     profileTap.view.tag =  indexPath.row;
     cell.location.tag = indexPath.row;
-    
-
+    cell.imageBUtton.tag = indexPath.row;
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
@@ -303,7 +303,10 @@
     
     
     __block int count = 0;
+    __block int indexCount = 0;
     for (Photo *smallPhoto in self.photos){
+        indexCount += 1;
+
         if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId]){
             NSString *urlString = [[TTUtility sharedInstance] lowQualityImageUrl:smallPhoto.imageUrl];
             NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -312,21 +315,34 @@
             
             if (count == 1)
             {
-            cell.image1.hidden = NO;
-
+                
+                UITapGestureRecognizer *imageOneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapOne:)];
+                
+                imageOneTap.cancelsTouchesInView = YES;
+                imageOneTap.numberOfTapsRequired = 1;
+                [cell.image1 addGestureRecognizer:imageOneTap];
+                cell.image1.userInteractionEnabled = YES;
+                imageOneTap.view.tag = indexCount - 1;
+                cell.image1.hidden = NO;
                 
             [cell.image1 setImageWithURLRequest:requestNew
                                       placeholderImage:placeholderImage
                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                    [cell.image1 setImage:image];
                                                    cell.image1.hidden = NO;
-             
                                                    [cell setNeedsLayout];
                                                } failure:nil];
             }
             
             else if (count == 2)
             {
+                UITapGestureRecognizer *imageTwoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapTwo:)];
+                
+                imageTwoTap.cancelsTouchesInView = YES;
+                imageTwoTap.numberOfTapsRequired = 1;
+                [cell.image2 addGestureRecognizer:imageTwoTap];
+                cell.image2.userInteractionEnabled = YES;
+                imageTwoTap.view.tag = indexCount - 1;
                 cell.image2.hidden = NO;
 
                 [cell.image2 setImageWithURLRequest:requestNew
@@ -341,13 +357,22 @@
             
             else if (count == 3)
             {
+                 UITapGestureRecognizer *imageThreeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapThree:)];
+                imageThreeTap.cancelsTouchesInView = YES;
+                imageThreeTap.numberOfTapsRequired = 1;
+                [cell.image3 addGestureRecognizer:imageThreeTap];
+                cell.image3.userInteractionEnabled = YES;
+                imageThreeTap.view.tag = indexCount - 1;
                 cell.image3.hidden = NO;
+
 
                 [cell.image3 setImageWithURLRequest:requestNew
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image3 setImage:image];
-                                                cell.image3.hidden = NO;
+                                            
+                                                
+                                       
                                                 
                                                 [cell setNeedsLayout];
                                             } failure:nil];
@@ -355,13 +380,20 @@
             
             else if (count == 4)
             {
+                UITapGestureRecognizer *imageFourTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapFour:)];
+                
+                imageFourTap.cancelsTouchesInView = YES;
+                imageFourTap.numberOfTapsRequired = 1;
+                [cell.image4 addGestureRecognizer:imageFourTap];
+                cell.image4.userInteractionEnabled = YES;
+                imageFourTap.view.tag = indexCount - 1;
+                
                 cell.image4.hidden = NO;
-
                 [cell.image4 setImageWithURLRequest:requestNew
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image4 setImage:image];
-                                                cell.image4.hidden = NO;
+                                            
                                                 
                                                 [cell setNeedsLayout];
                                             } failure:nil];
@@ -427,6 +459,51 @@
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
+-(void)moreWasTapped:(UIButton*)sender{
+    Photo *photo = self.mainPhotos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)handleImageTapOne:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapTwo:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapThree:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapFour:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
 
 // handle method
 - (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
@@ -472,11 +549,15 @@
         }
 }
 
+
+
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
     [self loadNewsFeed:YES refresh:refreshControl];
     
 }
+
+
 
 
 
