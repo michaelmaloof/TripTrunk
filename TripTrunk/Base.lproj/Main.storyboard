@@ -60,7 +60,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="398" height="407"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
@@ -239,7 +239,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <state key="normal" title="Location">
-                                                        <color key="titleColor" red="0.17504041200000001" green="0.37969204829999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.007886144352435176" green="0.69949904576666344" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -265,7 +265,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <state key="normal" title="Trip Name">
-                                                        <color key="titleColor" red="0.17504041200000001" green="0.37969204829999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.1161094447536527" green="0.56636016434561642" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -381,8 +381,7 @@
                                                             <exclude reference="BGU-l6-y49"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="311" y="353" width="16" height="22"/>
+                                                    <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
                                                             <include reference="0aa-ok-COR"/>
                                                             <include reference="BGU-l6-y49"/>
@@ -495,40 +494,24 @@
                                                 <exclude reference="GsE-hG-GbG"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <exclude reference="BBv-L6-ZXd"/>
-                                                <exclude reference="n0J-Ue-4gS"/>
-                                                <exclude reference="wLx-qx-7M8"/>
-                                                <exclude reference="FKF-Tr-605"/>
-                                                <exclude reference="S5V-BF-dvZ"/>
-                                                <exclude reference="kLJ-qt-SlZ"/>
-                                                <exclude reference="mTT-Nf-nbe"/>
-                                                <exclude reference="pVx-C2-2VV"/>
-                                                <exclude reference="DR2-SF-Pmy"/>
-                                                <exclude reference="bwH-sE-cXG"/>
-                                                <exclude reference="aur-gb-u1N"/>
-                                                <exclude reference="mgP-f2-mnM"/>
+                                                <exclude reference="RP9-hN-PJJ"/>
+                                                <exclude reference="XbN-iC-Wpx"/>
                                                 <exclude reference="6sk-Aj-zWW"/>
                                                 <exclude reference="N9a-lh-LEg"/>
+                                                <exclude reference="aur-gb-u1N"/>
+                                                <exclude reference="mgP-f2-mnM"/>
+                                                <exclude reference="DR2-SF-Pmy"/>
+                                                <exclude reference="bwH-sE-cXG"/>
+                                                <exclude reference="ir6-W6-Cge"/>
+                                                <exclude reference="uOK-wM-x7l"/>
                                                 <exclude reference="0MI-Df-NhF"/>
                                                 <exclude reference="9ox-n9-eDt"/>
                                                 <exclude reference="BbR-7b-PO2"/>
                                                 <exclude reference="egq-P1-t1m"/>
                                                 <exclude reference="hcB-0I-B1Q"/>
-                                                <exclude reference="7sj-Fa-Gfy"/>
-                                                <exclude reference="Gbf-cl-2QD"/>
-                                                <exclude reference="NhU-Mb-gSK"/>
-                                                <exclude reference="Ozv-Dt-Rg9"/>
-                                                <exclude reference="PTs-Jy-Bwq"/>
-                                                <exclude reference="Xka-In-myK"/>
-                                                <exclude reference="qVT-sT-O4c"/>
-                                                <exclude reference="ECM-L3-FKy"/>
-                                                <exclude reference="KE4-zC-cVr"/>
-                                                <exclude reference="Pah-0h-MOQ"/>
-                                                <exclude reference="RQW-q8-xgY"/>
-                                                <exclude reference="WM8-KF-4Zm"/>
-                                                <exclude reference="eEU-Jn-yKV"/>
-                                                <exclude reference="f60-42-Txh"/>
-                                                <exclude reference="vEY-d3-W7Y"/>
+                                                <exclude reference="BBv-L6-ZXd"/>
+                                                <exclude reference="n0J-Ue-4gS"/>
+                                                <exclude reference="wLx-qx-7M8"/>
                                                 <exclude reference="7fA-eo-ODs"/>
                                                 <exclude reference="EUo-sq-eG9"/>
                                                 <exclude reference="JbY-Bh-tgg"/>
@@ -549,14 +532,30 @@
                                                 <exclude reference="sdh-yu-tEA"/>
                                                 <exclude reference="uHI-O5-UPs"/>
                                                 <exclude reference="wAE-eV-hUz"/>
-                                                <exclude reference="RP9-hN-PJJ"/>
-                                                <exclude reference="XbN-iC-Wpx"/>
+                                                <exclude reference="7sj-Fa-Gfy"/>
+                                                <exclude reference="Gbf-cl-2QD"/>
+                                                <exclude reference="NhU-Mb-gSK"/>
+                                                <exclude reference="Ozv-Dt-Rg9"/>
+                                                <exclude reference="PTs-Jy-Bwq"/>
+                                                <exclude reference="Xka-In-myK"/>
+                                                <exclude reference="qVT-sT-O4c"/>
+                                                <exclude reference="FKF-Tr-605"/>
+                                                <exclude reference="S5V-BF-dvZ"/>
+                                                <exclude reference="kLJ-qt-SlZ"/>
+                                                <exclude reference="mTT-Nf-nbe"/>
+                                                <exclude reference="pVx-C2-2VV"/>
+                                                <exclude reference="ECM-L3-FKy"/>
+                                                <exclude reference="KE4-zC-cVr"/>
+                                                <exclude reference="Pah-0h-MOQ"/>
+                                                <exclude reference="RQW-q8-xgY"/>
+                                                <exclude reference="WM8-KF-4Zm"/>
+                                                <exclude reference="eEU-Jn-yKV"/>
+                                                <exclude reference="f60-42-Txh"/>
+                                                <exclude reference="vEY-d3-W7Y"/>
                                                 <exclude reference="GhY-QU-ga0"/>
                                                 <exclude reference="Inm-mf-ZHW"/>
                                                 <exclude reference="SaC-fX-SCc"/>
                                                 <exclude reference="ja8-W8-oSY"/>
-                                                <exclude reference="ir6-W6-Cge"/>
-                                                <exclude reference="uOK-wM-x7l"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
@@ -576,40 +575,24 @@
                                                 <include reference="GsE-hG-GbG"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <include reference="BBv-L6-ZXd"/>
-                                                <exclude reference="n0J-Ue-4gS"/>
-                                                <include reference="wLx-qx-7M8"/>
-                                                <include reference="FKF-Tr-605"/>
-                                                <include reference="S5V-BF-dvZ"/>
-                                                <include reference="kLJ-qt-SlZ"/>
-                                                <exclude reference="mTT-Nf-nbe"/>
-                                                <include reference="pVx-C2-2VV"/>
-                                                <include reference="DR2-SF-Pmy"/>
-                                                <include reference="bwH-sE-cXG"/>
-                                                <include reference="aur-gb-u1N"/>
-                                                <include reference="mgP-f2-mnM"/>
+                                                <include reference="RP9-hN-PJJ"/>
+                                                <include reference="XbN-iC-Wpx"/>
                                                 <include reference="6sk-Aj-zWW"/>
                                                 <include reference="N9a-lh-LEg"/>
+                                                <include reference="aur-gb-u1N"/>
+                                                <include reference="mgP-f2-mnM"/>
+                                                <include reference="DR2-SF-Pmy"/>
+                                                <include reference="bwH-sE-cXG"/>
+                                                <include reference="ir6-W6-Cge"/>
+                                                <include reference="uOK-wM-x7l"/>
                                                 <exclude reference="0MI-Df-NhF"/>
                                                 <include reference="9ox-n9-eDt"/>
                                                 <include reference="BbR-7b-PO2"/>
                                                 <exclude reference="egq-P1-t1m"/>
                                                 <include reference="hcB-0I-B1Q"/>
-                                                <exclude reference="7sj-Fa-Gfy"/>
-                                                <exclude reference="Gbf-cl-2QD"/>
-                                                <exclude reference="NhU-Mb-gSK"/>
-                                                <include reference="Ozv-Dt-Rg9"/>
-                                                <exclude reference="PTs-Jy-Bwq"/>
-                                                <exclude reference="Xka-In-myK"/>
-                                                <exclude reference="qVT-sT-O4c"/>
-                                                <include reference="ECM-L3-FKy"/>
-                                                <exclude reference="KE4-zC-cVr"/>
-                                                <exclude reference="Pah-0h-MOQ"/>
-                                                <exclude reference="RQW-q8-xgY"/>
-                                                <exclude reference="WM8-KF-4Zm"/>
-                                                <exclude reference="eEU-Jn-yKV"/>
-                                                <exclude reference="f60-42-Txh"/>
-                                                <include reference="vEY-d3-W7Y"/>
+                                                <include reference="BBv-L6-ZXd"/>
+                                                <exclude reference="n0J-Ue-4gS"/>
+                                                <include reference="wLx-qx-7M8"/>
                                                 <include reference="7fA-eo-ODs"/>
                                                 <include reference="EUo-sq-eG9"/>
                                                 <exclude reference="JbY-Bh-tgg"/>
@@ -630,14 +613,30 @@
                                                 <exclude reference="sdh-yu-tEA"/>
                                                 <exclude reference="uHI-O5-UPs"/>
                                                 <exclude reference="wAE-eV-hUz"/>
-                                                <include reference="RP9-hN-PJJ"/>
-                                                <include reference="XbN-iC-Wpx"/>
+                                                <exclude reference="7sj-Fa-Gfy"/>
+                                                <exclude reference="Gbf-cl-2QD"/>
+                                                <exclude reference="NhU-Mb-gSK"/>
+                                                <include reference="Ozv-Dt-Rg9"/>
+                                                <exclude reference="PTs-Jy-Bwq"/>
+                                                <exclude reference="Xka-In-myK"/>
+                                                <exclude reference="qVT-sT-O4c"/>
+                                                <include reference="FKF-Tr-605"/>
+                                                <include reference="S5V-BF-dvZ"/>
+                                                <include reference="kLJ-qt-SlZ"/>
+                                                <exclude reference="mTT-Nf-nbe"/>
+                                                <include reference="pVx-C2-2VV"/>
+                                                <include reference="ECM-L3-FKy"/>
+                                                <exclude reference="KE4-zC-cVr"/>
+                                                <exclude reference="Pah-0h-MOQ"/>
+                                                <exclude reference="RQW-q8-xgY"/>
+                                                <exclude reference="WM8-KF-4Zm"/>
+                                                <exclude reference="eEU-Jn-yKV"/>
+                                                <exclude reference="f60-42-Txh"/>
+                                                <include reference="vEY-d3-W7Y"/>
                                                 <exclude reference="GhY-QU-ga0"/>
                                                 <exclude reference="Inm-mf-ZHW"/>
                                                 <include reference="SaC-fX-SCc"/>
                                                 <include reference="ja8-W8-oSY"/>
-                                                <include reference="ir6-W6-Cge"/>
-                                                <include reference="uOK-wM-x7l"/>
                                             </mask>
                                         </variation>
                                         <connections>

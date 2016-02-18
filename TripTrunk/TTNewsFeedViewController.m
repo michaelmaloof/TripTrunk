@@ -194,6 +194,8 @@
     cell.image3.hidden = YES;
     cell.image4.hidden = YES;
     cell.image5.hidden = YES;
+    cell.imageBUtton.hidden = YES;
+    cell.labelButton.hidden = YES;
     
     Photo *photo = self.photos[indexPath.row];
     
@@ -270,6 +272,8 @@
                                        cell.image3.hidden = NO;
                                        cell.image4.hidden = NO;
                                        cell.image5.hidden = NO;
+                                       cell.imageBUtton.hidden = NO;
+                                       cell.labelButton.hidden = NO;
 
                                        [cell setNeedsLayout];
                                    } failure:nil];

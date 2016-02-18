@@ -11,7 +11,7 @@
 
 @implementation TTTimeLineCollectionViewCell
 - (void)awakeFromNib {
-    [self.userprofile.layer setCornerRadius:25.0f];
+    [self.userprofile.layer setCornerRadius:20.0f];
     [self.userprofile.layer setMasksToBounds:YES];
     [self.userprofile.layer setBorderWidth:2.0f];
     self.userprofile.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
