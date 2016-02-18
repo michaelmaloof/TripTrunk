@@ -32,8 +32,9 @@
     [self.image3.layer setCornerRadius:25.0f];
     [self.image3.layer setMasksToBounds:YES];
     [self.image3.layer setBorderWidth:3.0f];
-    [self.image3.layer setBorderColor: [[UIColor whiteColor] CGColor]];
-    [self.image3 setBackgroundColor:[UIColor whiteColor]];
+    [self.image3.layer setBorderColor: [[UIColor colorWithRed:221.0/255.0 green:203.0/255.0 blue:178.0/255.0 alpha:1.0] CGColor]];
+    [self.image3 setBackgroundColor:[UIColor colorWithRed:221.0/255.0 green:203.0/255.0 blue:178.0/255.0 alpha:1.0]];
+
     
     [self.image4.layer setCornerRadius:25.0f];
     [self.image4.layer setMasksToBounds:YES];
