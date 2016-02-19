@@ -204,8 +204,12 @@
     
 }
 
--(void)switchToMap{
+-(void)viewWillDisappear:(BOOL)animated{
     [self.delegate backWasTapped:self];
+
+}
+
+-(void)switchToMap{
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 

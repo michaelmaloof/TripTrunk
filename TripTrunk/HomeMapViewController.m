@@ -70,7 +70,6 @@
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
-    self.newsVC = [[TTNewsFeedViewController alloc]init];
     [self designNavBar];
     [self setUpArrays];
     
@@ -1257,14 +1256,18 @@
 }
 
 -(void)switchToTimeline{
+    NSLog(@"%@",self.navigationController.viewControllers);
     
-    if (self.exists == NO){
+    
+    if (self.newsVC == nil){
+        self.newsVC = [[TTNewsFeedViewController alloc]init];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
         news.delegate = self;
         self.exists = YES;
         [self.navigationController pushViewController:news animated:NO];
-    } else {
+    }
+     else {
         [self.navigationController pushViewController:self.newsVC animated:NO];
 
     }
