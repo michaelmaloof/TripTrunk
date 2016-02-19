@@ -85,6 +85,8 @@
     
     [self refreshTripDataViews];
     
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    
     
     if (self.trip.publicTripDetail.totalLikes > 0) {
         self.totalLikeButton.tintColor = [UIColor whiteColor];
@@ -158,7 +160,8 @@
             }
         }
     }
-    
+    }];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -530,7 +533,7 @@
         if (self.isMember == YES){
             if (self.trip.isPrivate == NO){
                 return self.members.count +2;
-            } else if (self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            } else if (self.trip.isPrivate == YES){
                 return self.members.count +2;
             } else {
                 return self.members.count +1;
@@ -665,7 +668,7 @@
                 possibleFriend = [self.members objectAtIndex:index - 1];
             } else if (self.isMember == YES && self.trip.isPrivate == NO) {
                 possibleFriend = [self.members objectAtIndex:index - 2];
-            } else if (self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            } else if (self.isMember == YES && self.trip.isPrivate == YES){
                 possibleFriend = [self.members objectAtIndex:index - 2];
             } else {
                 possibleFriend = [self.members objectAtIndex:index - 1];
@@ -753,7 +756,7 @@
                 user = [self.members objectAtIndex:indexPath.row -1];
             } else if (self.isMember == YES && self.trip.isPrivate == NO) {
                 user = [self.members objectAtIndex:indexPath.row -2];
-            } else if (self.isMember == YES && self.trip.isPrivate == YES && [[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
+            } else if (self.isMember == YES && self.trip.isPrivate == YES){
                 user = [self.members objectAtIndex:indexPath.row -2];
             } else {
                 user = [self.members objectAtIndex:indexPath.row -1];

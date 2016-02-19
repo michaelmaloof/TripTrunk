@@ -11,10 +11,17 @@
 @interface TTTimeLineCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *userprofile;
 @property (weak, nonatomic) IBOutlet UIImageView *newsfeedPhoto;
-@property (weak, nonatomic) IBOutlet UILabel *location;
 @property (weak, nonatomic) IBOutlet UIButton *username;
 @property (weak, nonatomic) IBOutlet UIButton *tripName;
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
+@property (weak, nonatomic) IBOutlet UIButton *location;
+@property (weak, nonatomic) IBOutlet UIImageView *image1;
+@property (weak, nonatomic) IBOutlet UIImageView *image2;
+@property (weak, nonatomic) IBOutlet UIImageView *image3;
+@property (weak, nonatomic) IBOutlet UIImageView *image4;
+@property (weak, nonatomic) IBOutlet UIImageView *image5;
+@property (weak, nonatomic) IBOutlet UIButton *imageBUtton;
+@property (weak, nonatomic) IBOutlet UILabel *labelButton;
 
 
 

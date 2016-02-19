@@ -20,6 +20,8 @@
 #import "TTTTimeIntervalFormatter.h"
 #import <CoreText/CoreText.h>
 #import "UIColor+HexColors.h"
+#import "TrunkListViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
 , UICollectionViewDelegate>
@@ -27,9 +29,12 @@
 @property NSMutableArray *following;
 @property NSMutableArray *photos;
 @property TTTTimeIntervalFormatter *timeFormatter;
-@property int skip;
 @property NSMutableArray *objid;
 @property BOOL isLoading;
+@property NSMutableArray *mainPhotos;
+@property NSMutableArray *duplicatePhotoStrings;
+@property BOOL reachedBottom;
+
 @end
 
 @implementation TTNewsFeedViewController
@@ -38,75 +43,139 @@
     [super viewDidLoad];
     [self setTitleImage];
     [self createLeftButtons];
-    self.following = [[NSMutableArray alloc]init];
     self.photos = [[NSMutableArray alloc]init];
+    self.mainPhotos = [[NSMutableArray alloc]init];
+    self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:refreshControl];
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    
     refreshControl.tintColor = ttBlueColor;
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
-    [self loadNewsFeed:NO];
 }
 
--(void)loadNewsFeed:(BOOL)isRefresh{
-    if (self.isLoading == NO){
-        self.isLoading = YES;
+-(void)viewDidAppear:(BOOL)animated{
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
-            for (PFUser *user in users) {
+            self.following = [[NSMutableArray alloc]init];
+            for (PFUser *user in users)
+            {
                 [self.following addObject:user];
             }
-            
-            PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
-            [photos whereKey:@"type" equalTo:@"addedPhoto"];
-            [photos whereKey:@"fromUser" containedIn:self.following];
-            [photos whereKeyExists:@"trip"];
-            photos.limit = 5;
-            [photos orderByDescending:@"createdAt"];
-            if (self.photos.count > 0){
-                Photo *photo = self.photos.lastObject;
-                [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
-                [photos whereKey:@"objectId" notContainedIn:self.objid];
+        }
+        [self loadNewsFeed:NO refresh:nil];
+    }];
+}
 
-            }
-            [photos includeKey:@"fromUser"];
-            [photos includeKey:@"photo"];
-            [photos includeKey:@"trip"];
-            [photos includeKey:@"trip.publicTripDetail"];
-            [photos setCachePolicy:kPFCachePolicyNetworkOnly];
-            
-            [photos findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                for (PFObject *activity in objects)
-                {
-                    Photo *photo = activity[@"photo"];
-                    photo.user = activity[@"fromUser"];
-                    photo.trip = activity[@"trip"];
-                    if (photo.trip != nil)
-                    {
-                        [self.photos addObject:photo];
-                        [self.objid addObject:activity.objectId];
-                    }
+-(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
+    
+    if (self.isLoading == NO){
+        self.isLoading = YES;
+        
+        int mainCount = (int)self.mainPhotos.count;
+        
+        
+        PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+        [photos whereKey:@"type" equalTo:@"addedPhoto"];
+        [photos whereKey:@"fromUser" containedIn:self.following];
+        [photos whereKeyExists:@"trip"];
+        photos.limit = 100;
+        [photos orderByDescending:@"createdAt"];
+        if (self.photos.count > 0 && isRefresh == NO){
+            Photo *photo = self.photos.lastObject;
+            [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
+            [photos whereKey:@"objectId" notContainedIn:self.objid];
+        } else if (self.photos.count > 0 && isRefresh == YES){
+            Photo *photo = self.photos.firstObject;
+            [photos whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
+            [photos whereKey:@"objectId" notContainedIn:self.objid];
+        }
+        [photos includeKey:@"fromUser"];
+        [photos includeKey:@"photo"];
+        [photos includeKey:@"trip"];
+        [photos includeKey:@"trip.publicTripDetail"];
+        [photos setCachePolicy:kPFCachePolicyNetworkOnly];
+        
+        [photos findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            if (!error){
+                if (isRefresh == NO && objects.count == 0){
+                    self.reachedBottom = YES;
                 }
-                self.skip += 5;
-                dispatch_async(dispatch_get_main_queue(), ^{
+            
+            for (PFObject *activity in objects)
+            {
+                Photo *photo = activity[@"photo"];
+                photo.user = activity[@"fromUser"];
+                photo.trip = activity[@"trip"];
+                if (photo.trip != nil)
+                {
+                    
+                    if (isRefresh == NO){
+                        [self.photos addObject:photo];
+                        
+                        if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
+                            [self.mainPhotos addObject:photo];
+                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                        }
+                        
+                    } else {
+                        [self.photos insertObject:photo atIndex:0];
+                        
+                        if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
+                            [self.mainPhotos insertObject:photo atIndex:0];
+                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                        }
+                        
+                    }
+                    [self.objid addObject:activity.objectId];
+                }
+            }
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (self.mainPhotos.count < 2 && self.reachedBottom == NO){
+                    self.isLoading = NO;
+                    [self loadNewsFeed:NO refresh:nil];
+                } else if (mainCount == (int)self.mainPhotos && self.reachedBottom == NO){
+                    self.isLoading = NO;
+                    [self loadNewsFeed:NO refresh:nil];
+                }
+                
+                if (refreshControl) {
+                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                    [formatter setDateFormat:@"MMM d, h:mm a"];
+                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                                forKey:NSForegroundColorAttributeName];
+                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                    refreshControl.attributedTitle = attributedTitle;
+                    
+                    [refreshControl endRefreshing];
                     [self.collectionView reloadData];
                     self.isLoading = NO;
                     
-                });
-            }];
-
-        }
-    }];
-    
+                    
+                } else {
+                    [self.collectionView reloadData];
+                    
+            
+                    self.isLoading = NO;
+                    
+                }
+                
+            });
+            }
+        }];
+        
     }
+}
 
-    }
 
 - (void)setTitleImage {
     UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
@@ -135,8 +204,12 @@
     
 }
 
--(void)switchToMap{
+-(void)viewWillDisappear:(BOOL)animated{
     [self.delegate backWasTapped:self];
+
+}
+
+-(void)switchToMap{
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
@@ -147,23 +220,38 @@
     
     cell.username.titleLabel.text= nil;
     cell.tripName.titleLabel.text = nil;
-    cell.location.text = nil;
+    cell.location.titleLabel.text = nil;
     cell.userprofile.image = nil;
     cell.newsfeedPhoto.image = nil;
     cell.timeStamp.text = nil;
+    cell.image1.image = nil;
+    cell.image2.image = nil;
+    cell.image3.image = nil;
+    cell.image4.image = nil;
+    cell.image5.image = nil;
     
-    Photo *photo = self.photos[indexPath.row];
+    cell.image1.hidden = YES;
+    cell.image2.hidden = YES;
+    cell.image3.hidden = YES;
+    cell.image4.hidden = YES;
+    cell.image5.hidden = YES;
+    cell.imageBUtton.hidden = YES;
+    cell.labelButton.hidden = YES;
     
+    Photo *photo = self.mainPhotos[indexPath.row];
     
     NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
     cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
     [cell.tripName setTitle:photo.trip.name forState:UIControlStateNormal];
-    cell.location.text = [NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country];
+    [cell.location setTitle:[NSString stringWithFormat:@"%@, %@",photo.trip.city, photo.trip.country] forState:UIControlStateNormal];
     cell.tag = indexPath.row;
     
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.imageBUtton addTarget:self action:@selector(moreWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+
     
     //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
@@ -181,14 +269,14 @@
     [cell.userprofile addGestureRecognizer:profileTap];
     cell.userprofile.userInteractionEnabled = YES;
     profileTap.view.tag =  indexPath.row;
-    
-
+    cell.location.tag = indexPath.row;
+    cell.imageBUtton.tag = indexPath.row;
     
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
     cell.username.tag= indexPath.row;
     cell.tripName.tag= indexPath.row;
-    [cell.location adjustsFontSizeToFitWidth];
+    [cell.location.titleLabel adjustsFontSizeToFitWidth];
     
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:photo.user[@"profilePicUrl"]]];
     
@@ -217,15 +305,133 @@
                                        [cell setNeedsLayout];
                                    } failure:nil];
     
+    
+    __block int count = 0;
+    __block int indexCount = 0;
+    for (Photo *smallPhoto in self.photos){
+        indexCount += 1;
+        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId]){
+            
+            NSString *urlString = [[TTUtility sharedInstance] lowQualityImageUrl:smallPhoto.imageUrl];
+            NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+            UIImage *placeholderImage = smallPhoto.image;
+            count +=1;
+            
+            if (count == 1)
+            {
+                
+                UITapGestureRecognizer *imageOneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapOne:)];
+                
+                imageOneTap.cancelsTouchesInView = YES;
+                imageOneTap.numberOfTapsRequired = 1;
+                [cell.image1 addGestureRecognizer:imageOneTap];
+                cell.image1.userInteractionEnabled = YES;
+                imageOneTap.view.tag = indexCount - 1;
+                cell.image1.hidden = NO;
+                
+            [cell.image1 setImageWithURLRequest:requestNew
+                                      placeholderImage:placeholderImage
+                                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                   [cell.image1 setImage:image];
+                                                   cell.image1.hidden = NO;
+                                                   [cell setNeedsLayout];
+                                               } failure:nil];
+            }
+            
+            else if (count == 2)
+            {
+                UITapGestureRecognizer *imageTwoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapTwo:)];
+                
+                imageTwoTap.cancelsTouchesInView = YES;
+                imageTwoTap.numberOfTapsRequired = 1;
+                [cell.image2 addGestureRecognizer:imageTwoTap];
+                cell.image2.userInteractionEnabled = YES;
+                imageTwoTap.view.tag = indexCount - 1;
+                cell.image2.hidden = NO;
+
+                [cell.image2 setImageWithURLRequest:requestNew
+                                   placeholderImage:placeholderImage
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                [cell.image2 setImage:image];
+                                                cell.image2.hidden = NO;
+                                                
+                                                [cell setNeedsLayout];
+                                            } failure:nil];
+            }
+            
+            else if (count == 3)
+            {
+                 UITapGestureRecognizer *imageThreeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapThree:)];
+                imageThreeTap.cancelsTouchesInView = YES;
+                imageThreeTap.numberOfTapsRequired = 1;
+                [cell.image3 addGestureRecognizer:imageThreeTap];
+                cell.image3.userInteractionEnabled = YES;
+                imageThreeTap.view.tag = indexCount - 1;
+                cell.image3.hidden = NO;
+
+
+                [cell.image3 setImageWithURLRequest:requestNew
+                                   placeholderImage:placeholderImage
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                [cell.image3 setImage:image];
+                                            
+                                                
+                                       
+                                                
+                                                [cell setNeedsLayout];
+                                            } failure:nil];
+            }
+            
+            else if (count == 4)
+            {
+                UITapGestureRecognizer *imageFourTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapFour:)];
+                
+                imageFourTap.cancelsTouchesInView = YES;
+                imageFourTap.numberOfTapsRequired = 1;
+                [cell.image4 addGestureRecognizer:imageFourTap];
+                cell.image4.userInteractionEnabled = YES;
+                imageFourTap.view.tag = indexCount - 1;
+                cell.image4.hidden = NO;
+                [cell.image4 setImageWithURLRequest:requestNew
+                                   placeholderImage:placeholderImage
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                [cell.image4 setImage:image];
+                                            
+                                                
+                                                [cell setNeedsLayout];
+                                            } failure:nil];
+            }
+            
+            else if (count == 5)
+            {
+                
+                cell.image5.hidden = NO;
+                cell.labelButton.hidden = NO;
+                cell.imageBUtton.hidden = NO;
+
+                [cell.image5 setImageWithURLRequest:requestNew
+                                   placeholderImage:placeholderImage
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                [cell.image5 setImage:image];
+                                                [cell setNeedsLayout];
+                                            } failure:nil];
+            }
+
+
+
+        }
+    }
+    
     return  cell;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return self.photos.count;
+  
+    return self.mainPhotos.count;
 }
 
 -(void)usernameTapped:(UIButton*)sender{
-    Photo *photo = self.photos[sender.tag];
+    Photo *photo = self.mainPhotos[sender.tag];
     PFUser *user = (PFUser*)photo.user;
     UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
     if (vc) {
@@ -235,7 +441,7 @@
 
 
 -(void)trunkTapped:(UIButton*)sender{
-    Photo *photo = self.photos[sender.tag];
+    Photo *photo = self.mainPhotos[sender.tag];
     Trip *trip = photo.trip;
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
@@ -243,19 +449,100 @@
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
+-(void)locationWasTapped:(UIButton*)sender{
+    Photo *photo = self.mainPhotos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkListViewController *trunkViewController = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+    trunkViewController.city = trip.city;
+    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+    trunkViewController.location = location;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)moreWasTapped:(UIButton*)sender{
+    Photo *photo = self.mainPhotos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)handleImageTapOne:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 1;
+    photoViewController.fromTimeline = YES;
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapTwo:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 2;
+     photoViewController.fromTimeline = YES;
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapThree:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 3;
+     photoViewController.fromTimeline = YES;
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(void)handleImageTapFour:(UIGestureRecognizer *)gestureRecognizer {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)photo;
+    photoViewController.arrayInt = 4;
+     photoViewController.fromTimeline = YES;
+    photoViewController.photos = [self returnPhotosForView:photo];
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+-(NSArray*)returnPhotosForView:(Photo*)photo
+{
+    NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
+    for (Photo *smallPhoto in self.photos)
+    {
+        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
+        {
+            [mutablePhotos addObject:smallPhoto];
+        }
+    }
+    
+    NSArray *array = [mutablePhotos mutableCopy];
+    return array;
+}
+
 
 // handle method
 - (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
+    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.arrayInt = 0;
+     photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
 - (void) handleImageTapProfile:(UIGestureRecognizer *)gestureRecognizer {
-    Photo *photo = self.photos[gestureRecognizer.view.tag];
+    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     PFUser *user = (PFUser*)photo.user;
     UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
     if (vc) {
@@ -284,49 +571,23 @@
     
     float reload_distance = -200;
     if(y > h + reload_distance) {
-        [self loadNewsFeed:YES];
+        [self loadNewsFeed:NO refresh:nil];
         }
 }
 
+
+
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
-//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-//    [self.navigationController setTabBarItem:searchItem];
-//    
-//    if (self.isLikes == NO){
-//        // Query for activities for user
-//        [SocialUtility queryForAllActivities:0 trips:self.trips query:^(NSArray *activities, NSError *error) {
-//            self.activities = [[NSMutableArray alloc]init];
-//            for (PFObject *obj in activities){
-//                if (obj[@"trip"]){
-//                    [self.activities addObject:obj];
-//                }
-//            }
-//            //        _activities = [NSMutableArray arrayWithArray:activities];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                // End the refreshing & update the timestamp
-//                if (refreshControl) {
-//                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//                    [formatter setDateFormat:@"MMM d, h:mm a"];
-//                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-//                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-//                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-//                                                                                forKey:NSForegroundColorAttributeName];
-//                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-//                    refreshControl.attributedTitle = attributedTitle;
-//                    
-                    [refreshControl endRefreshing];
-//                }
-//                
-//                [self.tableView reloadData];
-//                
-//            });
-//        }];
-//    }
+    [self loadNewsFeed:YES refresh:refreshControl];
     
 }
+
+
+
+
+
+
 
 
 

@@ -120,6 +120,9 @@
  */
 - (NSAttributedString *)attributedStringForActivity:(NSDictionary *)activity;
 
+- (NSString *)lowQualityImageUrl:(NSString *)urlString;
+
+
 /**
  *  Takes an Activity Object for a comment and converts it to an AttributedString for a photo's comment view
  *  (i.e. a comment on a picture would return just the comment and time, not the username or extra "commented: " text)

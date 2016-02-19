@@ -205,7 +205,7 @@
                                                          toItem:view
                                                       attribute:NSLayoutAttributeBottom
                                                      multiplier:1.0
-                                                       constant:0.0];
+                                                       constant:0];
     // Center Vertically
     [view addConstraint:_bottomConstraint];
     

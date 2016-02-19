@@ -123,12 +123,7 @@
                                                       action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
-        UIBarButtonItem *newBackButton =
-        [[UIBarButtonItem alloc] initWithTitle:@""
-                                         style:UIBarButtonItemStylePlain
-                                        target:nil
-                                        action:nil];
-        [[self navigationItem] setBackBarButtonItem:newBackButton];
+
         
         self.filter.tag = 0;
         [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
@@ -138,6 +133,13 @@
     } else {
         [self loadUserTrunks];
     }
+    
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView

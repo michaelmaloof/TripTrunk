@@ -58,6 +58,8 @@
     [_commentInputView setupConstraintsWithView:self.view];
     _commentInputView.delegate = self;
     
+    self.view.backgroundColor = [UIColor colorWithRed:205.0/255.0 green:205.0/255.0 blue:205.0/255.0 alpha:1.0];
+    
     [self setupTableViewConstraints];
     
     // Set Done button

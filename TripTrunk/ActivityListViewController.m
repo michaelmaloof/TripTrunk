@@ -270,6 +270,9 @@ enum TTActivityViewType : NSUInteger {
         for (PFObject *obj in activities){
             if (obj[@"trip"]){
                 [self.activities addObject:obj];
+            } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+                [self.activities addObject:obj];
+                
             }
         }
 //        _activities = [NSMutableArray arrayWithArray:activities];
@@ -309,7 +312,14 @@ enum TTActivityViewType : NSUInteger {
     if(y > h + reload_distance && self.isLikes == NO) {
         [SocialUtility queryForAllActivities:self.activities.count trips:self.trips query:^(NSArray *activities, NSError *error) {
             //        _activities = [NSMutableArray arrayWithArray:activities];
-            [self.activities addObjectsFromArray:activities];
+            for (PFObject *obj in activities){
+                if (obj[@"trip"]){
+                    [self.activities addObject:obj];
+                } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+                    [self.activities addObject:obj];
+                    
+                }
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 
