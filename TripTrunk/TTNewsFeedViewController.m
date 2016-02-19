@@ -302,8 +302,8 @@
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                        [cell.newsfeedPhoto setImage:image];
-                                       [(Photo *)[self.mainPhotos objectAtIndex:indexPath.row] setImage:image];
-                                       
+//                     [(Photo *)[self.mainPhotos objectAtIndex:indexPath.row] setImage:image];
+//                                       need to set above line to self.photos
                                        [cell setNeedsLayout];
                                    } failure:nil];
     
@@ -314,9 +314,9 @@
         indexCount += 1;
         if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId]){
             
-            NSString *urlString = [[TTUtility sharedInstance] lowQualityImageUrl:smallPhoto.imageUrl];
+            NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:smallPhoto.imageUrl];
             NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-            UIImage *placeholderImage = smallPhoto.image;
+            UIImage *placeholderImage = nil;
             count +=1;
             
             if (count == 1)
@@ -337,7 +337,6 @@
                                                    [cell.image1 setImage:image];
                                                    cell.image1.hidden = NO;
                                                    [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
-
                                                    [cell setNeedsLayout];
                                                } failure:nil];
             }
@@ -424,22 +423,24 @@
                                                 [cell setNeedsLayout];
                                             } failure:nil];
             }
-            
-            else {
-                cell.image5.hidden = NO;
-                cell.labelButton.hidden = NO;
-                cell.imageBUtton.hidden = NO;
-                
-                [cell.image5 setImageWithURLRequest:requestNew
-                                   placeholderImage:placeholderImage
-                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
-                                                
-                                        
-                                            } failure:nil];
-
-            }
-
+      //FIXME SHOULD ONLY SWIPE BETWEEN THE FOUR THEN TAKEN TO THE TRUNK
+//            else {
+////                cell.image5.hidden = NO;
+//                cell.labelButton.hidden = NO;
+//                cell.imageBUtton.hidden = NO;
+//                
+//                [cell.image5 setImageWithURLRequest:requestNew
+//                                   placeholderImage:placeholderImage
+//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+//                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+//                                                //QUESTION? WHy is image not nill but later if I access it it is
+//            
+//                                  
+//
+//                                            } failure:nil];
+//                
+//            }
+//
 
 
         }
@@ -558,6 +559,11 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
+    
+    for (Photo* photo in self.photos){
+        NSLog(@"%@", photo.image);
+    }
+    
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 0;
      photoViewController.fromTimeline = YES;
