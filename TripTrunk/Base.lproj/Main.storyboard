@@ -775,9 +775,16 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Group" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
                                 <rect key="frame" x="11" y="319" width="180" height="168"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI"/>
-                                    <constraint firstAttribute="height" constant="168" id="cHb-Dp-cfa"/>
+                                    <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="110"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="168" id="cHb-Dp-cfa">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="100"/>
+                                    </constraint>
                                 </constraints>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="660" width="101" height="83"/>
+                                </variation>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -2697,7 +2704,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1O6-QX-DAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2822.25" y="-1497.375"/>
+            <point key="canvasLocation" x="2243.25" y="-1681.875"/>
         </scene>
         <!--Add Trip Photos View Controller-->
         <scene sceneID="JY7-OJ-pGe">
@@ -4606,8 +4613,8 @@
         <image name="zoomGlass" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hXf-dS-IMJ"/>
-        <segue reference="JSU-Dg-jAI"/>
         <segue reference="bhX-wL-LGH"/>
+        <segue reference="hXf-dS-IMJ"/>
+        <segue reference="yXb-jN-ymd"/>
     </inferredMetricsTieBreakers>
 </document>
