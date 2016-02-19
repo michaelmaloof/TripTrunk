@@ -71,6 +71,17 @@
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
+    
+    //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
+    //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
+    self.hotDots = [[NSMutableArray alloc]init];
+    
+    //the trunks we pull down from parse
+    self.parseLocations = [[NSMutableArray alloc]init];
+    
+    //list of trunks the user hasn't seen since last being in the app
+    self.haventSeens = [[NSMutableArray alloc]init];
+    
     [self setUpArrays];
     
 
@@ -254,15 +265,11 @@
 //we locate each trunk thats placed o nthe map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
     self.tripsToCheck = [[NSMutableArray alloc]init];
     
-//containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
-//TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
-    self.hotDots = [[NSMutableArray alloc]init];
     
 //the trunks we pull down from parse
     self.parseLocations = [[NSMutableArray alloc]init];
   
-//list of trunks the user hasn't seen since last being in the app
-    self.haventSeens = [[NSMutableArray alloc]init];
+
 }
 
 /**
@@ -804,6 +811,11 @@
 {
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
+    
+    if ([annotation.title isEqualToString:@"San Clemente"]){
+        NSLog(@"stip here");
+    }
+    
     BOOL hasSeen = YES;
     for (CLLocation *loc in self.haventSeens){ //Save trip instead
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
