@@ -291,7 +291,7 @@
     if (self.user == nil) {
         [self setTitleImage];
     } else {
-        self.title = [NSString stringWithFormat:@"@%@'s Trunks", self.user.username];
+        self.title = [NSString stringWithFormat:@"%@'s Trunks", self.user.username];
     }
     
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
