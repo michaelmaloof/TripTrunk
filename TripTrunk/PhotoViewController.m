@@ -22,6 +22,8 @@
 #import "UserProfileViewController.h"
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
+#import "KILabel.h"
+#import "Autocomplete.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -49,6 +51,9 @@
 @property BOOL isZoomed;
 
 @property (weak, nonatomic) IBOutlet UITextView *caption;
+@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+@property (strong, nonatomic) Autocomplete *autocomplete;
+
 
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
@@ -83,8 +88,12 @@
     
     self.caption.selectable = NO;
     self.caption.editable = NO;
-    
     self.caption.delegate = self;
+    //disable the iPhone's default autocomplete feature
+    self.caption.autocorrectionType = UITextAutocorrectionTypeNo;
+    
+    //create the Autocomplete class and initialize it with some data
+    self.autocomplete = [[Autocomplete alloc] initWithArray:[[NSArray alloc] initWithObjects:@"apples", @"oranges", @"bananas", @"peaches", @"grapes", @"blackberries", @"strawberies", @"watermelons", @"mangos", @"pears", @"lemons", nil]];
     
     self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
     
@@ -142,12 +151,30 @@
     [self refreshPhotoActivitiesWithUpdateNow:NO];
 
     
+    // Attach block for handling taps on usernames
+    _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:string]];
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        if(vc)
+            [self.navigationController pushViewController:vc animated:YES];
+        
+    };
     
+    _captionLabel.hashtagLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        //Not implemented yet
+    };
+    
+    _captionLabel.urlLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        // Open URLs
+        //        [self attemptOpenURL:[NSURL URLWithString:string]];
+    };
 
 }
 
 
-
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
 
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
@@ -380,7 +407,7 @@
     [self.view addGestureRecognizer:swipeUp];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [self.view addGestureRecognizer:tapGesture];
+    [self.imageView addGestureRecognizer:tapGesture];
     
 //    
 //    UITapGestureRecognizer *dblRecognizer;
@@ -399,6 +426,7 @@
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
         self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
         self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+        self.captionLabel.hidden = self.bottomButtonWrapper.hidden;
     } completion:nil];
 
 }
@@ -463,8 +491,9 @@
             
             [self.caption setContentOffset:CGPointZero animated:NO];
             self.caption.text = self.photo.caption;
+            self.captionLabel.text = self.photo.caption;
             [self.caption setContentOffset:CGPointZero animated:NO];
-            self.caption.hidden = NO;
+//            self.caption.hidden = NO;
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
@@ -698,13 +727,16 @@
 - (IBAction)editCaptionTapped:(id)sender {
     
     if (self.addCaption.tag == 0){
-        
+        self.caption.hidden = NO;
+        self.captionLabel.hidden = YES;
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
         
     } else {
         self.addCaption.enabled = NO;
         self.photo.caption = self.caption.text;
+        self.caption.hidden = YES;
+        self.captionLabel.hidden = NO;
 
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (!error)
@@ -767,7 +799,7 @@
     self.deleteCaption.hidden = NO;
     self.caption.backgroundColor = [UIColor whiteColor];
     self.caption.alpha = .7;
-    self.caption.textColor = [UIColor blackColor];
+//    self.caption.textColor = [UIColor blackColor];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
 
@@ -783,12 +815,13 @@
     self.deleteCaption.hidden = YES;
     self.caption.alpha = 1.0;
     self.caption.backgroundColor = [UIColor clearColor];
-    self.caption.textColor = [UIColor whiteColor];
+//    self.caption.textColor = [UIColor whiteColor];
     self.caption.hidden = YES;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
+    self.captionLabel.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+//    self.caption.hidden = NO;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
@@ -809,6 +842,7 @@
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
                             self.caption.text = @"";
+                            self.captionLabel.text = @"";
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
@@ -884,8 +918,9 @@
     self.caption.hidden = YES;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
+    self.captionLabel.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+//    self.caption.hidden = NO;
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
@@ -1142,6 +1177,40 @@
     return zoomRect;
 }
 
+#pragma mark - UITextViewDelegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    NSLog(@"key pressed");
+    [self colorHashtagAndMentions];
+    return YES;
+}
+
+- (void)colorHashtagAndMentions{
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
+//    NSString *str = self.caption.text;
+    NSError *error = [[NSError alloc] init];
+//    NSTextCheckingResult *match = [[NSTextCheckingResult alloc] init];
+    UIColor *fontColor = [UIColor colorWithRed:62/255 green:117/225 blue:169/255 alpha:1.0];
+    
+    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
+    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
+    
+    for(NSTextCheckingResult * match in matches){
+        NSRange wordRange = [match rangeAtIndex:0];
+        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
+    }
+    
+    NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
+    NSArray *matchesAt = [regExAt matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
+    
+    for(NSTextCheckingResult * matchAt in matchesAt){
+        NSRange wordRangeAt = [matchAt rangeAtIndex:0];
+        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
+    }
+    
+    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.caption.text.length)];
+    self.caption.attributedText = string;
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -1162,8 +1231,9 @@
     self.caption.hidden = YES;
     [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
+    self.captionLabel.text = self.photo.caption;
     [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+//    self.caption.hidden = NO;
     [self.photo saveInBackground];
 
 }
@@ -1191,6 +1261,8 @@
     
     //    }];
 }
+
+
 
 @end
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -59,7 +59,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="407"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
@@ -553,7 +553,7 @@
                                         <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AKn-8L-1Iv" id="f0d-3e-NRL">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rsa-WS-Nbe">
@@ -2069,7 +2069,7 @@
                                             <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Px1-AS-Jn7">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Px1-AS-Jn7">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="192" id="8Bx-Ly-jJH"/>
@@ -2080,9 +2080,16 @@
                                             <constraint firstAttribute="height" constant="175" id="Jjy-5T-izS"/>
                                             <constraint firstAttribute="height" constant="175" id="eOp-K6-On3"/>
                                         </constraints>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <attributedString key="attributedText">
+                                            <fragment>
+                                                <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                <attributes>
+                                                    <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -2094,6 +2101,7 @@
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <mask key="constraints">
                                                 <exclude reference="8Bx-Ly-jJH"/>
                                                 <exclude reference="DT5-oI-7DT"/>
@@ -2245,11 +2253,31 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rxd-3L-nVv" customClass="KILabel">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="KIF-vv-WtV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="KIF-vv-WtV"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="KIF-vv-WtV"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="g0k-n4-hcD" secondAttribute="centerY" id="1qM-to-aaD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pMh-vC-nPM" secondAttribute="trailing" constant="-20" id="Fy6-A6-66G"/>
+                            <constraint firstItem="Rxd-3L-nVv" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leading" constant="8" id="H90-3n-8be"/>
                             <constraint firstItem="hR0-63-pl9" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" constant="-20" id="I7C-52-YpH">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
                             </constraint>
@@ -2281,16 +2309,17 @@
                             <constraint firstItem="hR0-63-pl9" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" constant="-20" id="ukt-d8-MZB">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="FCi-FU-N5k" firstAttribute="top" secondItem="Rxd-3L-nVv" secondAttribute="bottom" constant="53" id="wWW-xD-p7z"/>
+                            <constraint firstAttribute="trailing" secondItem="Rxd-3L-nVv" secondAttribute="trailing" constant="8" id="yZK-qX-Xj3"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="g0k-n4-hcD"/>
                                 <exclude reference="hR0-63-pl9"/>
                                 <exclude reference="pMh-vC-nPM"/>
+                                <exclude reference="Rxd-3L-nVv"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gWZ-RY-n6u"/>
-                                <exclude reference="gcu-A7-CvH"/>
                                 <exclude reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <exclude reference="OlX-6N-agJ"/>
@@ -2304,6 +2333,11 @@
                                 <exclude reference="ukt-d8-MZB"/>
                                 <exclude reference="Fy6-A6-66G"/>
                                 <exclude reference="cHa-qk-R1i"/>
+                                <exclude reference="H90-3n-8be"/>
+                                <exclude reference="yZK-qX-Xj3"/>
+                                <exclude reference="gWZ-RY-n6u"/>
+                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="wWW-xD-p7z"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -2311,10 +2345,9 @@
                                 <include reference="g0k-n4-hcD"/>
                                 <include reference="hR0-63-pl9"/>
                                 <include reference="pMh-vC-nPM"/>
+                                <include reference="Rxd-3L-nVv"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="gWZ-RY-n6u"/>
-                                <exclude reference="gcu-A7-CvH"/>
                                 <include reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <include reference="OlX-6N-agJ"/>
@@ -2328,6 +2361,11 @@
                                 <include reference="ukt-d8-MZB"/>
                                 <include reference="Fy6-A6-66G"/>
                                 <include reference="cHa-qk-R1i"/>
+                                <include reference="H90-3n-8be"/>
+                                <include reference="yZK-qX-Xj3"/>
+                                <include reference="gWZ-RY-n6u"/>
+                                <exclude reference="gcu-A7-CvH"/>
+                                <include reference="wWW-xD-p7z"/>
                             </mask>
                         </variation>
                     </view>
@@ -2341,6 +2379,7 @@
                         <outlet property="bottomButtonWrapper" destination="pMh-vC-nPM" id="FEg-Qz-DeW"/>
                         <outlet property="bottomWrapperHeightCnt" destination="UeT-Z1-nnK" id="oUa-jg-YEP"/>
                         <outlet property="caption" destination="Px1-AS-Jn7" id="XXh-yv-482"/>
+                        <outlet property="captionLabel" destination="Rxd-3L-nVv" id="f4d-d1-ElL"/>
                         <outlet property="closeButton" destination="CmI-e7-SWG" id="n0Q-OZ-KCt"/>
                         <outlet property="comments" destination="Qe2-XC-VCF" id="Vf0-dx-X8o"/>
                         <outlet property="deleteCaption" destination="Vwc-5O-1LE" id="U0i-oT-bon"/>
@@ -3315,7 +3354,7 @@
                                 <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hgo-b2-68r" id="3WF-8I-k7n">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
