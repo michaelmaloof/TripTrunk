@@ -472,6 +472,7 @@
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 1;
+    photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -482,6 +483,7 @@
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 2;
+     photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -492,6 +494,7 @@
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 3;
+     photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -501,6 +504,7 @@
     Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.arrayInt = 4;
+     photoViewController.fromTimeline = YES;
     photoViewController.photos = [self returnPhotosForView:photo];
     [self.navigationController showViewController:photoViewController sender:self];
 }
@@ -529,6 +533,7 @@
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 0;
+     photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 

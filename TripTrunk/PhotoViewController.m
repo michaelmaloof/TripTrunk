@@ -103,7 +103,7 @@
     }
     [self.trunkNameButton setHidden:YES];
     
-    if (self.fromNotification == YES){
+    if (self.fromNotification == YES || self.fromTimeline){
         self.shouldShowTrunkNameButton = YES;
 
     }
@@ -119,6 +119,7 @@
     // Load initial data (photo and comments)
     [self loadImageForPhoto:self.photo];
     
+    //FIXME was there a mehtod for this before (refreshPhotoActivities)? 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshPhotoActivities)
                                                  name:@"commentUpdatedOnPhoto"
