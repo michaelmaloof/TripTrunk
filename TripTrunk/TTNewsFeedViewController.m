@@ -302,6 +302,8 @@
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                        [cell.newsfeedPhoto setImage:image];
+                                       [(Photo *)[self.mainPhotos objectAtIndex:indexPath.row] setImage:image];
+                                       
                                        [cell setNeedsLayout];
                                    } failure:nil];
     
@@ -334,6 +336,8 @@
                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                    [cell.image1 setImage:image];
                                                    cell.image1.hidden = NO;
+                                                   [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+
                                                    [cell setNeedsLayout];
                                                } failure:nil];
             }
@@ -354,7 +358,7 @@
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image2 setImage:image];
                                                 cell.image2.hidden = NO;
-                                                
+                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
                                                 [cell setNeedsLayout];
                                             } failure:nil];
             }
@@ -376,7 +380,8 @@
                                                 [cell.image3 setImage:image];
                                             
                                                 
-                                       
+                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+
                                                 
                                                 [cell setNeedsLayout];
                                             } failure:nil];
@@ -396,7 +401,8 @@
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image4 setImage:image];
-                                            
+                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+
                                                 
                                                 [cell setNeedsLayout];
                                             } failure:nil];
@@ -413,8 +419,25 @@
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image5 setImage:image];
+                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+
                                                 [cell setNeedsLayout];
                                             } failure:nil];
+            }
+            
+            else {
+                cell.image5.hidden = NO;
+                cell.labelButton.hidden = NO;
+                cell.imageBUtton.hidden = NO;
+                
+                [cell.image5 setImageWithURLRequest:requestNew
+                                   placeholderImage:placeholderImage
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                
+                                        
+                                            } failure:nil];
+
             }
 
 
