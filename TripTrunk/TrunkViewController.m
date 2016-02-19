@@ -85,6 +85,8 @@
     
     [self refreshTripDataViews];
     
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    
     
     if (self.trip.publicTripDetail.totalLikes > 0) {
         self.totalLikeButton.tintColor = [UIColor whiteColor];
@@ -158,7 +160,8 @@
             }
         }
     }
-    
+    }];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
