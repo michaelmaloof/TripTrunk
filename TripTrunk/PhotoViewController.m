@@ -550,7 +550,7 @@
                 }
             }
             
-            [self refreshPhotoActivitiesWithUpdateNow:YES];
+            [self refreshPhotoActivitiesWithUpdateNow:NO];
             
             self.imageZoomed = NO;
         }
@@ -610,7 +610,7 @@
             
 
             
-            [self refreshPhotoActivitiesWithUpdateNow:YES];
+            [self refreshPhotoActivitiesWithUpdateNow:NO];
             
             self.imageZoomed = NO;
         }
