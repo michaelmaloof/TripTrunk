@@ -85,9 +85,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self.filter setTitle:@""];
     self.tabBarController.tabBar.hidden = NO;
-    NSLog(@"HEY IM HERE = %d", self.tabBarController.tabBar.hidden);
 
 }
 
@@ -115,18 +113,17 @@
     else if (self.user == nil) {
         
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
         
         
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All Trunks",@"All Trunks")
-                                                       style:UIBarButtonItemStylePlain
-                                                      target:self
-                                                      action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
 
         
+
+        
         self.filter.tag = 0;
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
         [self queryParseMethodEveryone];
         
         
@@ -334,12 +331,12 @@
  */
 -(void)rightBarItemWasTapped {
     if (self.filter.tag == 0) {
-        [self.filter setTitle:NSLocalizedString(@"My Trunks",@"My Trunks")];
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.filter.tag = 1;
         self.isMine = YES;
         [self loadUserTrunks];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
         self.filter.tag = 0;
         self.isMine = NO;
         [self queryParseMethodEveryone];

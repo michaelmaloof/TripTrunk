@@ -539,6 +539,7 @@
 
 -(NSArray*)returnPhotosForView:(Photo*)photo
 {
+    
     NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
     for (Photo *smallPhoto in self.photos)
     {
