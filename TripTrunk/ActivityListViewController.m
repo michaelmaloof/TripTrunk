@@ -180,10 +180,10 @@ enum TTActivityViewType : NSUInteger {
     self.tabBarController.tabBar.hidden = NO;
     self.trips = [[NSMutableArray alloc]init];
     
-    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    [self.navigationController setTabBarItem:searchItem];
+//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    [self.navigationController setTabBarItem:searchItem];
     
     [self.tableView reloadData];
 }

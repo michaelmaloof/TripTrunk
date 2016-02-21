@@ -308,7 +308,10 @@
     }
     else {
         // this pushes to the notification's screen, but if the app is open then we don't want to do that. We just want to tell the user they got a notification
+            
         [self handlePush:userInfo];
+
+        
     }
 
 }

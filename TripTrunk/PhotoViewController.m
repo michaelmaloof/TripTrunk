@@ -337,7 +337,7 @@
     if (self.isEditingCaption){
         [self.caption endEditing:YES];
     }
-
+    
 }
 
 - (void)centerScrollViewContents {
