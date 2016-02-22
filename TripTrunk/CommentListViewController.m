@@ -210,8 +210,8 @@
     };
     
     commentCell.contentLabel.userHandleLinkTapHandler = tapHandler;
-    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
-    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
+//    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
+//    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
 
     
     return weakCell;

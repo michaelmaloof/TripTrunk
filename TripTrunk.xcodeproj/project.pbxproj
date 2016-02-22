@@ -54,6 +54,7 @@
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		272A4AE21C73770D00700DCA /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE11C73770D00700DCA /* KILabel.m */; };
 		272A4AE51C761E4400700DCA /* Autocomplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE41C761E4400700DCA /* Autocomplete.m */; };
+		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
 		66ABD90AD9444AC11462D4FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 900CAF97ED54CF7422AA80B6 /* libPods.a */; };
@@ -207,6 +208,8 @@
 		272A4AE11C73770D00700DCA /* KILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KILabel.m; sourceTree = "<group>"; };
 		272A4AE31C761E4400700DCA /* Autocomplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Autocomplete.h; sourceTree = "<group>"; };
 		272A4AE41C761E4400700DCA /* Autocomplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Autocomplete.m; sourceTree = "<group>"; };
+		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
+		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
@@ -413,6 +416,8 @@
 				C910B1931B66B97700788BE0 /* ActivityListViewController.m */,
 				C903F7121B98885500F56FE1 /* CommentListViewController.h */,
 				C903F7131B98885500F56FE1 /* CommentListViewController.m */,
+				272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */,
+				272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */,
 				C9FB808D1B83C7E9008B8A67 /* TTCommentInputView.h */,
 				C9FB808E1B83C7E9008B8A67 /* TTCommentInputView.m */,
 				C90C3D1A1B053F4B00CABBC9 /* UserProfileViewController.h */,
@@ -902,6 +907,7 @@
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
+				272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */,
 				272A4AE21C73770D00700DCA /* KILabel.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,

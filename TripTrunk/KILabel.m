@@ -109,7 +109,8 @@ NSString * const KILabelLinkKey = @"link";
     _automaticLinkDetectionEnabled = YES;
     
     // All links are detectable by default
-    _linkDetectionTypes = KILinkTypeOptionAll;
+//    _linkDetectionTypes = KILinkTypeOptionAll;
+    _linkDetectionTypes = KILinkTypeOptionUserHandle;
     
     // Link Type Attributes. Default is empty (no attributes).
     _linkTypeAttributes = [NSMutableDictionary dictionary];

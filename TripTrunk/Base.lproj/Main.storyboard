@@ -2417,8 +2417,9 @@
                                             <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Px1-AS-Jn7">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.69999999999999996" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Px1-AS-Jn7">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="192" id="8Bx-Ly-jJH"/>
                                             <constraint firstAttribute="height" constant="175" id="DT5-oI-7DT">
@@ -2428,16 +2429,7 @@
                                             <constraint firstAttribute="height" constant="175" id="Jjy-5T-izS"/>
                                             <constraint firstAttribute="height" constant="175" id="eOp-K6-On3"/>
                                         </constraints>
-                                        <attributedString key="attributedText">
-                                            <fragment>
-                                                <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                                <attributes>
-                                                    <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <font key="NSFont" size="15" name="HelveticaNeue"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                </attributes>
-                                            </fragment>
-                                        </attributedString>
+                                        <attributedString key="attributedText"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -2668,6 +2660,11 @@
                                 <exclude reference="Rxd-3L-nVv"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="gWZ-RY-n6u"/>
+                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="wWW-xD-p7z"/>
+                                <exclude reference="H90-3n-8be"/>
+                                <exclude reference="yZK-qX-Xj3"/>
                                 <exclude reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <exclude reference="OlX-6N-agJ"/>
@@ -2681,11 +2678,6 @@
                                 <exclude reference="ukt-d8-MZB"/>
                                 <exclude reference="Fy6-A6-66G"/>
                                 <exclude reference="cHa-qk-R1i"/>
-                                <exclude reference="H90-3n-8be"/>
-                                <exclude reference="yZK-qX-Xj3"/>
-                                <exclude reference="gWZ-RY-n6u"/>
-                                <exclude reference="gcu-A7-CvH"/>
-                                <exclude reference="wWW-xD-p7z"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -2696,6 +2688,11 @@
                                 <include reference="Rxd-3L-nVv"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="gWZ-RY-n6u"/>
+                                <exclude reference="gcu-A7-CvH"/>
+                                <include reference="wWW-xD-p7z"/>
+                                <include reference="H90-3n-8be"/>
+                                <include reference="yZK-qX-Xj3"/>
                                 <include reference="1qM-to-aaD"/>
                                 <exclude reference="ImZ-p9-QDq"/>
                                 <include reference="OlX-6N-agJ"/>
@@ -2709,11 +2706,6 @@
                                 <include reference="ukt-d8-MZB"/>
                                 <include reference="Fy6-A6-66G"/>
                                 <include reference="cHa-qk-R1i"/>
-                                <include reference="H90-3n-8be"/>
-                                <include reference="yZK-qX-Xj3"/>
-                                <include reference="gWZ-RY-n6u"/>
-                                <exclude reference="gcu-A7-CvH"/>
-                                <include reference="wWW-xD-p7z"/>
                             </mask>
                         </variation>
                     </view>
@@ -2744,6 +2736,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1O6-QX-DAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2243.25" y="-1681.875"/>
+        </scene>
+        <!--Suggestion Table View Controller-->
+        <scene sceneID="Q3V-vg-pMT">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5g4-V0-90S" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController storyboardIdentifier="TTSuggestionTableViewController" id="0kA-Ya-icl" customClass="TTSuggestionTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="BBp-rk-vYm">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="Tri-Yb-OfN">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tri-Yb-OfN" id="02l-cE-yPL">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="0kA-Ya-icl" id="JbE-jG-Zzx"/>
+                            <outlet property="delegate" destination="0kA-Ya-icl" id="Jk1-nv-jGv"/>
+                        </connections>
+                    </tableView>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="300" height="132"/>
+                    <connections>
+                        <outlet property="suggestionsTable" destination="BBp-rk-vYm" id="BSq-Iq-nOj"/>
+                    </connections>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="2257.5" y="-2099.25"/>
         </scene>
         <!--Add Trip Photos View Controller-->
         <scene sceneID="JY7-OJ-pGe">

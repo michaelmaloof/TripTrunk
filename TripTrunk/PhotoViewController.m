@@ -24,12 +24,13 @@
 #import "TrunkListViewController.h"
 #import "KILabel.h"
 #import "Autocomplete.h"
+#import "TTSuggestionTableViewController.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -53,6 +54,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet KILabel *captionLabel;
 @property (strong, nonatomic) Autocomplete *autocomplete;
+@property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 
 
 @property BOOL imageZoomed;
@@ -336,6 +338,7 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     
+    [self colorHashtagAndMentions];
 }
 
 -(void)viewDidLayoutSubviews {
@@ -490,10 +493,10 @@
                 }
             }
             
-            [self.caption setContentOffset:CGPointZero animated:NO];
+//            [self.caption setContentOffset:CGPointZero animated:NO];
             self.caption.text = self.photo.caption;
             self.captionLabel.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
+//            [self.caption setContentOffset:CGPointZero animated:NO];
 //            self.caption.hidden = NO;
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
@@ -790,7 +793,7 @@
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
-    self.caption.editable = YES;
+//    self.caption.editable = YES;
     self.isEditingCaption = YES;
     self.scrollView.scrollEnabled = NO;
     self.likeButton.hidden = YES;
@@ -798,8 +801,8 @@
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
     self.deleteCaption.hidden = NO;
-    self.caption.backgroundColor = [UIColor whiteColor];
-    self.caption.alpha = .7;
+//    self.caption.backgroundColor = [UIColor whiteColor];
+//    self.caption.alpha = .7;
 //    self.caption.textColor = [UIColor blackColor];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
@@ -814,14 +817,14 @@
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
     self.deleteCaption.hidden = YES;
-    self.caption.alpha = 1.0;
-    self.caption.backgroundColor = [UIColor clearColor];
+//    self.caption.alpha = 1.0;
+//    self.caption.backgroundColor = [UIColor clearColor];
 //    self.caption.textColor = [UIColor whiteColor];
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
 //    self.caption.hidden = NO;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
@@ -917,10 +920,10 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
 //    self.caption.hidden = NO;
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -1180,25 +1183,69 @@
 
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    NSLog(@"key pressed");
     [self colorHashtagAndMentions];
+//    UITextRange* selectedRange = [textView selectedTextRange];
+//    NSInteger cursorOffset = [textView offsetFromPosition:0 toPosition:selectedRange.start];
+    //Get the current word as it is typed and check to see if the user is trying to mention
+    NSRange cursorPosition = [textView selectedRange];
+    NSString* substring = [textView.text substringToIndex:cursorPosition.location];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    
+    //If the current word contains an @ then the user is trying to mention another user.
+    //Display the popover
+    if([lastWord containsString:@"@"]){
+//        [self performSegueWithIdentifier:@"showUsernamesPopoverSegue" sender:self];
+        TTSuggestionTableViewController *vc=[[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+        vc.modalPresentationStyle = UIModalPresentationPopover;
+        vc.preferredContentSize = CGSizeMake(320, 132);
+        UIPopoverPresentationController *popover  = vc.popoverPresentationController;
+        popover.delegate = self;
+        popover.sourceView = self.caption;
+        popover.sourceRect = [self.caption bounds];
+        //    popover.sourceRect = CGRectMake(0,0,200,200);
+        popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        self.autocompletePopover = vc;
+        [self presentViewController:vc animated:YES completion:nil];
+    }else{
+//        [self.autocompletePopover dismissViewControllerAnimated:YES completion:nil];
+//        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        [self.autocompletePopover dismissThisStupidEffingViewController];
+        
+//        for (UINavigationController *controller in self.tabBarController.viewControllers)
+//        {
+//            for (TTSuggestionTableViewController *view in controller.viewControllers)
+//            {
+//                if ([view isKindOfClass:[TTSuggestionTableViewController class]])
+//                {
+//                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+//                        if (view == (TTSuggestionTableViewController*)controller.viewControllers[0]){
+//                            
+//                            [view dismissViewControllerAnimated:YES completion:nil];
+//                            
+//                        }
+//                    }
+//                }
+//            }
+//        }
+    }
+    
     return YES;
 }
 
+//FIXME: This needs to be refactored into a single method
 - (void)colorHashtagAndMentions{
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
-//    NSString *str = self.caption.text;
     NSError *error = [[NSError alloc] init];
-//    NSTextCheckingResult *match = [[NSTextCheckingResult alloc] init];
-    UIColor *fontColor = [UIColor colorWithRed:62/255 green:117/225 blue:169/255 alpha:1.0];
+    UIColor *fontColor = [UIColor blueColor];
+    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.caption.text.length)];
     
-    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
-    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
-    
-    for(NSTextCheckingResult * match in matches){
-        NSRange wordRange = [match rangeAtIndex:0];
-        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
-    }
+//    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
+//    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
+//    
+//    for(NSTextCheckingResult * match in matches){
+//        NSRange wordRange = [match rangeAtIndex:0];
+//        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
+//    }
     
     NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
     NSArray *matchesAt = [regExAt matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
@@ -1208,17 +1255,25 @@
         [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
     }
     
-    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.caption.text.length)];
     self.caption.attributedText = string;
 }
+
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
     if ([segue.identifier isEqualToString:@"editCaption"]){
     
+    }
+    
+    if ([segue.identifier isEqualToString:@"showUsernamesPopoverSegue"]) {
+        TTSuggestionTableViewController *controller = segue.destinationViewController;
+        controller.popoverPresentationController.delegate = self;
+        controller.preferredContentSize = CGSizeMake(320, 132);
+
     }
 }
 
@@ -1230,10 +1285,10 @@
         self.photo.caption = @"";
     }
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
+//    [self.caption setContentOffset:CGPointZero animated:NO];
 //    self.caption.hidden = NO;
     [self.photo saveInBackground];
 
@@ -1264,6 +1319,14 @@
 }
 
 
+
+
+// MARK: UIPopoverPresentationControllerDelegate
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Return no adaptive presentation style, use default presentation behaviour
+    return UIModalPresentationNone;
+}
 
 @end
 
