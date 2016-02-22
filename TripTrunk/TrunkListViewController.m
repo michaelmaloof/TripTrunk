@@ -656,7 +656,7 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = NSLocalizedString(@"Opps! These trunks have gone missing!",@"Opps! These trunks have gone missing!");
+    NSString *text = NSLocalizedString(@"No One Has Been here :/",@"No One Has Been Here :/");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -713,6 +713,8 @@
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
+        
+        //if were on the user's profile and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
     } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES){
         self.tableView.tableFooterView = [UIView new];
         
@@ -737,6 +739,7 @@
         return YES;
     }
     
+    //if were on the home map  and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
     else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
