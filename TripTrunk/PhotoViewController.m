@@ -367,7 +367,7 @@
     if (self.isEditingCaption){
         [self.caption endEditing:YES];
     }
-
+    
 }
 
 - (void)centerScrollViewContents {
@@ -582,7 +582,7 @@
                 }
             }
             
-            [self refreshPhotoActivitiesWithUpdateNow:YES];
+            [self refreshPhotoActivitiesWithUpdateNow:NO];
             
             self.imageZoomed = NO;
         }
@@ -596,6 +596,18 @@
         if (!self.photos || self.photos.count == 0) {
             return;
         }
+        
+        if (self.fromTimeline == YES && self.arrayInt == 5){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+            [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                trunkViewController.trip = self.photo.trip;
+                [self.navigationController pushViewController:trunkViewController animated:YES];
+                return;
+            }];
+     
+        } else {
+
         
         if (self.arrayInt != self.photos.count - 1)
         {
@@ -642,10 +654,11 @@
             
 
             
-            [self refreshPhotoActivitiesWithUpdateNow:YES];
+            [self refreshPhotoActivitiesWithUpdateNow:NO];
             
             self.imageZoomed = NO;
         }
+    }
     }
 }
 

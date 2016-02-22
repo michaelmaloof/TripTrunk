@@ -85,9 +85,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self.filter setTitle:@""];
     self.tabBarController.tabBar.hidden = NO;
-    NSLog(@"HEY IM HERE = %d", self.tabBarController.tabBar.hidden);
 
 }
 
@@ -109,28 +107,30 @@
     
     if (self.isList == YES){
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadTrunkListBasedOnProfile];
     }
     
     else if (self.user == nil) {
         
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
         
         
-        self.filter = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All Trunks",@"All Trunks")
-                                                       style:UIBarButtonItemStylePlain
-                                                      target:self
-                                                      action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         
 
         
+
+        
         self.filter.tag = 0;
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         [self queryParseMethodEveryone];
         
         
     } else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadUserTrunks];
     }
     
@@ -171,8 +171,9 @@
  */
 -(void)loadUserTrunks
 {
-    if (self.meParseLocations.count == 0) {
+    if (self.meParseLocations.count == 0 || self.meParseLocations.class == nil) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+        
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         if (!self.user){
             [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
@@ -187,8 +188,12 @@
         [query whereKeyExists:@"trip"];
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
-//        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-        query.limit = 50;
+        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+
+        
+        
+        
+        query.limit = 100;
         query.skip = self.objectsCountMe;
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -241,12 +246,15 @@
                 
             }
             //                self.filter.tag = 1;
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
         }];
     } else
     {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.tableView reloadData];
     }
+
 }
 
 -(void)loadTrunkListBasedOnProfile{
@@ -318,10 +326,12 @@
                 
             }
             //                self.filter.tag = 1;
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
         }];
     } else
     {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.tableView reloadData];
     }
 }
@@ -333,13 +343,15 @@
  *
  */
 -(void)rightBarItemWasTapped {
+    
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     if (self.filter.tag == 0) {
-        [self.filter setTitle:NSLocalizedString(@"My Trunks",@"My Trunks")];
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.filter.tag = 1;
         self.isMine = YES;
         [self loadUserTrunks];
     } else if (self.filter.tag == 1) {
-        [self.filter setTitle:NSLocalizedString(@"All Trunks",@"All Trunks")];
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
         self.filter.tag = 0;
         self.isMine = NO;
         [self queryParseMethodEveryone];
@@ -405,7 +417,7 @@
         }];
         
     } else
-    {
+    {    self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.tableView reloadData];
     }
 
@@ -435,6 +447,7 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
         }
         {
@@ -481,6 +494,7 @@
             
         }
         self.filter.tag = 0;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.tableView reloadData];
         
     }];
@@ -659,7 +673,7 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = NSLocalizedString(@"Opps! These trunks have gone missing!",@"Opps! These trunks have gone missing!");
+    NSString *text = NSLocalizedString(@"No One Has Been Here :/",@"No One Has Been Here :/");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -716,6 +730,8 @@
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
+        
+        //if were on the user's profile and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
     } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES){
         self.tableView.tableFooterView = [UIView new];
         
@@ -740,6 +756,7 @@
         return YES;
     }
     
+    //if were on the home map  and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
     else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
@@ -826,7 +843,7 @@
     if (hasSeen == YES){
         [self.haventSeens removeObject:trunk];
     }
-    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     [self.tableView reloadData];
 
 }
@@ -849,7 +866,8 @@
     
     [self.parseLocations removeObject:tripA];
     [self.meParseLocations removeObject:tripB];
-    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
     [self.tableView reloadData];
 
 }

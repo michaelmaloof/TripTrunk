@@ -490,6 +490,7 @@
     else {
         if (indexPath.section == 0) {
             possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+           
         }
         else if (indexPath.section == 1) {
             possibleFriend = [_friends objectAtIndex:indexPath.row];
@@ -538,6 +539,10 @@
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
         }
         
+        if ([[PFUser currentUser].objectId isEqualToString:possibleFriend.objectId]){
+            cell.followButton.hidden = YES;
+        }
+        
     }
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -558,6 +563,8 @@
     [weakCell.profilePicImageView.layer setMasksToBounds:YES];
     [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
     weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    
+    
     
     return weakCell;
     
