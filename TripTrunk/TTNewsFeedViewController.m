@@ -34,7 +34,7 @@
 @property NSMutableArray *mainPhotos;
 @property NSMutableArray *duplicatePhotoStrings;
 @property BOOL reachedBottom;
-
+@property NSMutableArray *arrayToSend;
 @end
 
 @implementation TTNewsFeedViewController
@@ -44,6 +44,7 @@
     [self setTitleImage];
     [self createLeftButtons];
     self.photos = [[NSMutableArray alloc]init];
+    self.arrayToSend = [[NSMutableArray alloc]init];
     self.mainPhotos = [[NSMutableArray alloc]init];
     self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -116,6 +117,7 @@
                     
                     if (isRefresh == NO){
                         [self.photos addObject:photo];
+                        [self.arrayToSend addObject:photo];
                         
                         if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
                             [self.mainPhotos addObject:photo];
@@ -124,6 +126,7 @@
                         
                     } else {
                         [self.photos insertObject:photo atIndex:0];
+                        [self.arrayToSend insertObject:photo atIndex:0];
                         
                         if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
                             [self.mainPhotos insertObject:photo atIndex:0];
@@ -293,19 +296,6 @@
                                       } failure:nil];
     
     
-    NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
-    NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    UIImage *placeholderImage = photo.image;
-
-    
-    [cell.newsfeedPhoto setImageWithURLRequest:requestNew
-                          placeholderImage:placeholderImage
-                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                       [cell.newsfeedPhoto setImage:image];
-//                     [(Photo *)[self.mainPhotos objectAtIndex:indexPath.row] setImage:image];
-//                                       need to set above line to self.photos
-                                       [cell setNeedsLayout];
-                                   } failure:nil];
     
     
     __block int count = 0;
@@ -336,7 +326,9 @@
                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                    [cell.image1 setImage:image];
                                                    cell.image1.hidden = NO;
-                                                   [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                   [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                   [smallPhoto setImage:image];
+                                                   [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
                                                    [cell setNeedsLayout];
                                                } failure:nil];
             }
@@ -357,7 +349,9 @@
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image2 setImage:image];
                                                 cell.image2.hidden = NO;
-                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                [smallPhoto setImage:image];
+                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
                                                 [cell setNeedsLayout];
                                             } failure:nil];
             }
@@ -379,7 +373,9 @@
                                                 [cell.image3 setImage:image];
                                             
                                                 
-                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                [smallPhoto setImage:image];
+                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
 
                                                 
                                                 [cell setNeedsLayout];
@@ -400,7 +396,9 @@
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image4 setImage:image];
-                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                [smallPhoto setImage:image];
+                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
 
                                                 
                                                 [cell setNeedsLayout];
@@ -418,32 +416,31 @@
                                    placeholderImage:placeholderImage
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                 [cell.image5 setImage:image];
-                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
+                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                [smallPhoto setImage:image];
+                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
 
                                                 [cell setNeedsLayout];
                                             } failure:nil];
             }
-      //FIXME SHOULD ONLY SWIPE BETWEEN THE FOUR THEN TAKEN TO THE TRUNK
-//            else {
-////                cell.image5.hidden = NO;
-//                cell.labelButton.hidden = NO;
-//                cell.imageBUtton.hidden = NO;
-//                
-//                [cell.image5 setImageWithURLRequest:requestNew
-//                                   placeholderImage:placeholderImage
-//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                [(Photo *)[self.photos objectAtIndex:indexCount-1] setImage:image];
-//                                                //QUESTION? WHy is image not nill but later if I access it it is
-//            
-//                                  
-//
-//                                            } failure:nil];
-//                
-//            }
-//
-
-
+            
+        }  else if ([photo.objectId isEqualToString:smallPhoto.objectId]){
+            
+            NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
+            NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+            UIImage *placeholderImage = photo.image;
+            
+            [cell.newsfeedPhoto setImageWithURLRequest:requestNew
+                                      placeholderImage:placeholderImage
+                                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                                   [cell.newsfeedPhoto setImage:image];
+                                                   [self.arrayToSend removeObjectAtIndex:indexCount-1];
+                                                   [smallPhoto setImage:image];
+                                                   [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
+                                                   [cell setNeedsLayout];
+                                               } failure:nil];
         }
+
     }
     
     return  cell;
@@ -541,7 +538,7 @@
 {
     
     NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
-    for (Photo *smallPhoto in self.photos)
+    for (Photo *smallPhoto in self.arrayToSend)
     {
         if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
         {
