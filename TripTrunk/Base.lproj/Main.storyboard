@@ -63,25 +63,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="40" id="53h-PL-fD0"/>
-                                                        <constraint firstAttribute="width" constant="40" id="WGm-kS-SOv"/>
-                                                    </constraints>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="53h-PL-fD0"/>
-                                                            <exclude reference="WGm-kS-SOv"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="53h-PL-fD0"/>
-                                                            <include reference="WGm-kS-SOv"/>
-                                                        </mask>
-                                                    </variation>
-                                                </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
                                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                                     <constraints>
@@ -388,6 +369,25 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="53h-PL-fD0"/>
+                                                        <constraint firstAttribute="width" constant="40" id="WGm-kS-SOv"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="53h-PL-fD0"/>
+                                                            <exclude reference="WGm-kS-SOv"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="53h-PL-fD0"/>
+                                                            <include reference="WGm-kS-SOv"/>
+                                                        </mask>
+                                                    </variation>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -400,7 +400,7 @@
                                             <constraint firstItem="by5-Fj-cvc" firstAttribute="width" secondItem="dXI-oM-KDj" secondAttribute="height" multiplier="1:4" id="7sj-Fa-Gfy"/>
                                             <constraint firstItem="L2D-C4-KB0" firstAttribute="leading" secondItem="agu-Rc-1D1" secondAttribute="trailing" constant="8" id="9ox-n9-eDt"/>
                                             <constraint firstItem="6hP-2Q-apq" firstAttribute="leading" secondItem="N3J-xl-9a4" secondAttribute="leadingMargin" id="BBv-L6-ZXd">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="4"/>
                                             </constraint>
                                             <constraint firstItem="L2D-C4-KB0" firstAttribute="centerY" secondItem="agu-Rc-1D1" secondAttribute="centerY" id="BbR-7b-PO2"/>
                                             <constraint firstItem="agu-Rc-1D1" firstAttribute="leading" secondItem="6hP-2Q-apq" secondAttribute="trailing" constant="13" id="DR2-SF-Pmy">
@@ -479,7 +479,6 @@
                                         </constraints>
                                         <variation key="default">
                                             <mask key="subviews">
-                                                <exclude reference="6hP-2Q-apq"/>
                                                 <exclude reference="agu-Rc-1D1"/>
                                                 <exclude reference="L2D-C4-KB0"/>
                                                 <exclude reference="dXI-oM-KDj"/>
@@ -492,6 +491,7 @@
                                                 <exclude reference="o7D-jt-n9q"/>
                                                 <exclude reference="GsE-hG-GbG"/>
                                                 <exclude reference="Bwq-hZ-H3p"/>
+                                                <exclude reference="6hP-2Q-apq"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="RP9-hN-PJJ"/>
@@ -560,7 +560,6 @@
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="subviews">
-                                                <include reference="6hP-2Q-apq"/>
                                                 <include reference="agu-Rc-1D1"/>
                                                 <include reference="L2D-C4-KB0"/>
                                                 <include reference="dXI-oM-KDj"/>
@@ -573,6 +572,7 @@
                                                 <include reference="o7D-jt-n9q"/>
                                                 <include reference="GsE-hG-GbG"/>
                                                 <include reference="Bwq-hZ-H3p"/>
+                                                <include reference="6hP-2Q-apq"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <include reference="RP9-hN-PJJ"/>
