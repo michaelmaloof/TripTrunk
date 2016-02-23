@@ -8,7 +8,6 @@
 
 #import "TTCommentInputView.h"
 #import "UIColor+HexColors.h"
-#import "Autocomplete.h"
 #import "TTSuggestionTableViewController.h"
 
 UIView *topView;

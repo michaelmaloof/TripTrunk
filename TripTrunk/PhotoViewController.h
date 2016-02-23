@@ -34,5 +34,4 @@
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
 @property BOOL fromTimeline;
 
-
 @end

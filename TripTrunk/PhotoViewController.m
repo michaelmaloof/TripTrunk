@@ -23,14 +23,13 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "KILabel.h"
-#import "Autocomplete.h"
 #import "TTSuggestionTableViewController.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -53,9 +52,8 @@
 
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet KILabel *captionLabel;
-@property (strong, nonatomic) Autocomplete *autocomplete;
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
-
 
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
@@ -91,12 +89,7 @@
     self.caption.selectable = NO;
     self.caption.editable = NO;
     self.caption.delegate = self;
-    //disable the iPhone's default autocomplete feature
-    self.caption.autocorrectionType = UITextAutocorrectionTypeNo;
-    
-    //create the Autocomplete class and initialize it with some data
-    self.autocomplete = [[Autocomplete alloc] initWithArray:[[NSArray alloc] initWithObjects:@"apples", @"oranges", @"bananas", @"peaches", @"grapes", @"blackberries", @"strawberies", @"watermelons", @"mangos", @"pears", @"lemons", nil]];
-    
+
     self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     //FIXME: if I self.photo.user.username it crashes thee app
@@ -1206,45 +1199,84 @@
     
     //If the current word contains an @ then the user is trying to mention another user.
     //Display the popover
-    if([lastWord containsString:@"@"]){
-//        [self performSegueWithIdentifier:@"showUsernamesPopoverSegue" sender:self];
-        TTSuggestionTableViewController *vc=[[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-        vc.modalPresentationStyle = UIModalPresentationPopover;
-        vc.preferredContentSize = CGSizeMake(320, 132);
-        UIPopoverPresentationController *popover  = vc.popoverPresentationController;
-        popover.delegate = self;
-        popover.sourceView = self.caption;
-        popover.sourceRect = [self.caption bounds];
-        //    popover.sourceRect = CGRectMake(0,0,200,200);
-        popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
-        self.autocompletePopover = vc;
-        [self presentViewController:vc animated:YES completion:nil];
-    }else{
-//        [self.autocompletePopover dismissViewControllerAnimated:YES completion:nil];
-//        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-        [self.autocompletePopover dismissThisStupidEffingViewController];
-        
-//        for (UINavigationController *controller in self.tabBarController.viewControllers)
-//        {
-//            for (TTSuggestionTableViewController *view in controller.viewControllers)
-//            {
-//                if ([view isKindOfClass:[TTSuggestionTableViewController class]])
-//                {
-//                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-//                        if (view == (TTSuggestionTableViewController*)controller.viewControllers[0]){
-//                            
-//                            [view dismissViewControllerAnimated:YES completion:nil];
-//                            
-//                        }
-//                    }
-//                }
+//    if([lastWord containsString:@"@"] && !self.popover.delegate){
+//        self.autocompletePopover.delegate = self;
+//        self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+//        self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+//        self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
+//        self.popover  = self.autocompletePopover.popoverPresentationController;
+//        self.popover.delegate = self;
+//        self.popover.sourceView = self.caption;
+//        self.popover.sourceRect = [self.caption bounds];
+//        self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+//        
+//        [self.autocompletePopover buildFriendsList:^(BOOL succeeded, NSError *error){
+//            if(succeeded){
+////                self.autocompletePopover.mentionText = lastWord;
+////                [self.autocompletePopover updateAutocompleteTableView];
+////                if(self.autocompletePopover.displayFriendsArray.count > 0)
+//                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+//            }else{
+//                NSLog(@"Error: %@",error);
 //            }
-//        }
-    }
-    
+//        }];
+//    }
+
     return YES;
 }
 
+- (void)textViewDidChange:(UITextView *)textView{
+    NSRange cursorPosition = [textView selectedRange];
+    NSString* substring = [textView.text substringToIndex:cursorPosition.location];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    self.autocompletePopover.delegate = self;
+    
+    if([lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate){
+        if(!self.autocompletePopover){
+            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+            self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+            self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
+            self.popover  = self.autocompletePopover.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.caption;
+            self.popover.sourceRect = [self.caption bounds];
+            self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        
+            [self.autocompletePopover buildFriendsList:^(BOOL succeeded, NSError *error){
+                if(succeeded){
+                    self.autocompletePopover.mentionText = lastWord;
+                    [self.autocompletePopover updateAutocompleteTableView];
+                    if(self.autocompletePopover.displayFriendsArray.count > 0)
+                        [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                }else{
+                    NSLog(@"Error: %@",error);
+                }
+            }];
+            
+        }
+    }
+    
+    if(self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""]){
+        self.autocompletePopover.mentionText = lastWord;
+        [self.autocompletePopover updateAutocompleteTableView];
+    }
+    
+    //Remove the popover if a space is typed
+    if(self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""])){
+        [self dismissViewControllerAnimated:YES completion:nil];
+        self.popover.delegate = nil;
+        self.autocompletePopover = nil;
+    }
+}
+
+#pragma mark - TTSuggestionTableViewControllerDelegate
+- (void)popoverViewControllerShouldDissmissWithNoResults{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    self.popover.delegate = nil;
+    self.autocompletePopover = nil;
+}
+
+#pragma mark -
 //FIXME: This needs to be refactored into a single method
 - (void)colorHashtagAndMentions{
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
@@ -1280,13 +1312,6 @@
     
     if ([segue.identifier isEqualToString:@"editCaption"]){
     
-    }
-    
-    if ([segue.identifier isEqualToString:@"showUsernamesPopoverSegue"]) {
-        TTSuggestionTableViewController *controller = segue.destinationViewController;
-        controller.popoverPresentationController.delegate = self;
-        controller.preferredContentSize = CGSizeMake(320, 132);
-
     }
 }
 
@@ -1334,7 +1359,7 @@
 
 
 
-// MARK: UIPopoverPresentationControllerDelegate
+#pragma mark - UIPopoverPresentationControllerDelegate
 -(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
     // Return no adaptive presentation style, use default presentation behaviour

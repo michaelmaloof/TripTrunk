@@ -8,8 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TTSuggestionTableViewControllerDelegate <NSObject>
+- (void)popoverViewControllerShouldDissmissWithNoResults;
+@end
+
 @interface TTSuggestionTableViewController : UITableViewController <UITableViewDataSource,UITableViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *suggestionsTable;
+@property (strong, nonatomic) NSString *mentionText;
+@property (strong, nonatomic) NSMutableArray *friendsArray;
+@property (strong, nonatomic) NSArray *displayFriendsArray;
+@property (assign) id <TTSuggestionTableViewControllerDelegate> delegate;
 
--(void)dismissThisStupidEffingViewController;
+-(void)buildFriendsList:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+-(void)updateAutocompleteTableView;
+
 @end
+
+
