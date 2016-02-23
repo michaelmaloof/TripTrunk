@@ -505,7 +505,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips query:(void (^)(NSArray *, NSError *))completionBlock
++ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *Pfollow = [PFQuery queryWithClassName:@"Activity"];
@@ -546,7 +546,6 @@
 //   
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
-    subqueries.skip = count;
     [subqueries orderByDescending:@"createdAt"];
     [subqueries includeKey:@"fromUser"];
     [subqueries includeKey:@"photo"];
@@ -554,7 +553,18 @@
     [subqueries includeKey:@"trip.publicTripDetail"];
     [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     
-
+    if (activities > 0){
+        
+        PFObject *object = activities.lastObject;
+        NSMutableArray *objIds = [[NSMutableArray alloc]init];
+        for (PFObject *obj in activities){
+            [objIds addObject:obj.objectId];
+        }
+        
+        [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
+        [subqueries whereKey:@"objectId" notContainedIn:objIds];
+        
+    }
 
 
     [subqueries setCachePolicy:kPFCachePolicyNetworkOnly];
