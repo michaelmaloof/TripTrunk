@@ -171,7 +171,7 @@
  *
  *  @param completionBlock Array of Activity objects or error
  */
-+ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities  query:(void (^)(NSArray *, NSError *))completionBlock;
++ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock;
 /**
  *  Gets the following status of one user to another
  *

@@ -505,7 +505,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities query:(void (^)(NSArray *, NSError *))completionBlock
++ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *Pfollow = [PFQuery queryWithClassName:@"Activity"];
