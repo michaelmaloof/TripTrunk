@@ -62,7 +62,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
 
-
+@property UIPopoverPresentationController *popVc;
 
 // Data Properties
 @property NSMutableArray *commentActivities;
@@ -1208,21 +1208,24 @@
     //Display the popover
     if([lastWord containsString:@"@"]){
 //        [self performSegueWithIdentifier:@"showUsernamesPopoverSegue" sender:self];
-        TTSuggestionTableViewController *vc=[[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-        vc.modalPresentationStyle = UIModalPresentationPopover;
-        vc.preferredContentSize = CGSizeMake(320, 132);
-        UIPopoverPresentationController *popover  = vc.popoverPresentationController;
-        popover.delegate = self;
-        popover.sourceView = self.caption;
-        popover.sourceRect = [self.caption bounds];
+        self.autocompletePopover =[[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+        self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+        self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
+        self.popVc  = self.autocompletePopover.popoverPresentationController;
+        self.popVc.delegate = self;
+        self.popVc.sourceView = self.caption;
+        self.popVc.sourceRect = [self.caption bounds];
         //    popover.sourceRect = CGRectMake(0,0,200,200);
-        popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
-        self.autocompletePopover = vc;
-        [self presentViewController:vc animated:YES completion:nil];
+        self.popVc.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        [self.navigationController presentViewController:self.autocompletePopover animated:YES completion:nil];
     }else{
 //        [self.autocompletePopover dismissViewControllerAnimated:YES completion:nil];
 //        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-        [self.autocompletePopover dismissThisStupidEffingViewController];
+        [self.autocompletePopover dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
+
+        
         
 //        for (UINavigationController *controller in self.tabBarController.viewControllers)
 //        {
