@@ -505,7 +505,7 @@
     return query;
 }
 
-+ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities query:(void (^)(NSArray *, NSError *))completionBlock
++ (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities isRefesh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock
 {
     // Query all user's that
     PFQuery *Pfollow = [PFQuery queryWithClassName:@"Activity"];
@@ -553,7 +553,7 @@
     [subqueries includeKey:@"trip.publicTripDetail"];
     [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     
-    if (activities > 0){
+    if (activities > 0 && isRefresh == NO){
         
         PFObject *object = activities.lastObject;
         NSMutableArray *objIds = [[NSMutableArray alloc]init];
@@ -564,6 +564,16 @@
         [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
         [subqueries whereKey:@"objectId" notContainedIn:objIds];
         
+    } else if (isRefresh ==YES && activities.count >0){
+        
+        PFObject *object = activities.lastObject;
+        NSMutableArray *objIds = [[NSMutableArray alloc]init];
+        for (PFObject *obj in activities){
+            [objIds addObject:obj.objectId];
+        }
+        
+        [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
+        [subqueries whereKey:@"objectId" notContainedIn:objIds];
     }
 
 

@@ -148,7 +148,7 @@ enum TTActivityViewType : NSUInteger {
                 }
                 if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
                     // Query for activities for user
-                    [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil query:^(NSArray *activities, NSError *error) {
+                    [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                         for (PFObject *obj in activities){
                             if (obj[@"trip"]){
                                 [self.activities addObject:obj];
@@ -266,7 +266,7 @@ enum TTActivityViewType : NSUInteger {
     
     if (self.isLikes == NO){
     // Query for activities for user
-        [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities query:^(NSArray *activities, NSError *error) {
+        [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error) {
         self.activities = [[NSMutableArray alloc]init];
         for (PFObject *obj in activities){
             if (obj[@"trip"]){
@@ -311,7 +311,7 @@ enum TTActivityViewType : NSUInteger {
     
     float reload_distance = -250;
     if(y > h + reload_distance && self.isLikes == NO) {
-        [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities query:^(NSArray *activities, NSError *error) {
+        [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
             //        _activities = [NSMutableArray arrayWithArray:activities];
             for (PFObject *obj in activities){
                 if (obj[@"trip"]){
