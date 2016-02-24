@@ -10,6 +10,7 @@
 
 @protocol TTSuggestionTableViewControllerDelegate <NSObject>
 - (void)popoverViewControllerShouldDissmissWithNoResults;
+- (void)insertUsernameAsMention:(NSString*)username;
 @end
 
 @interface TTSuggestionTableViewController : UITableViewController <UITableViewDataSource,UITableViewDelegate>

@@ -43,15 +43,15 @@
             [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error){
                 if(!error){
                     for(PFUser *user in users){
-                        if(![self.friendsArray containsObject:user]){
+                        if(![self array:self.friendsArray containsPFObjectById:user]){
                             [self.friendsArray addObject:user];
                         }
                     }
                     
-                    if(self.friendsArray.count > 0)
+                    if(self.friendsArray.count > 0){
                         [self.suggestionsTable reloadData];
+                    }
                     
-                    NSLog(@"COUNT: %lu",(unsigned long)self.friendsArray.count);
                     completionBlock(YES, error);
                     
                 }else{
@@ -66,23 +66,59 @@
     }];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if([self.delegate respondsToSelector:@selector(insertUsernameAsMention:)]){
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        [self.delegate insertUsernameAsMention:cell.textLabel.text];
+    }
+}
+
 -(void)updateAutocompleteTableView{
     self.displayFriendsArray = [[NSArray alloc] init];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
-    self.displayFriendsArray = [self.friendsArray filteredArrayUsingPredicate:predicate];
 
-    NSLog(@"PRED: %@",predicate);
-    NSLog(@"DISPLAY COUNT: %lu",(unsigned long)self.displayFriendsArray.count);
+//    NSMutableArray *partPredicates = [NSMutableArray arrayWithCapacity:3];
+//    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
+//    NSPredicate *firstnamePredicate = [NSPredicate predicateWithFormat:@"firstName beginswith %@", [self.mentionText substringFromIndex:1]];
+//    NSPredicate *lastnamePredicate = [NSPredicate predicateWithFormat:@"lastName beginswith %@", [self.mentionText substringFromIndex:1]];
+//    [partPredicates addObject:usernamePredicate]; [partPredicates addObject:firstnamePredicate]; [partPredicates addObject:lastnamePredicate];
     
-    if(self.displayFriendsArray.count == 0 || self.displayFriendsArray == nil || isnan(self.displayFriendsArray.count)){
+    NSMutableArray *partPredicates = [NSMutableArray arrayWithCapacity:2];
+    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
+    NSPredicate *firstnamePredicate = [NSPredicate predicateWithFormat:@"lowercaseName contains %@", [self.mentionText substringFromIndex:1]];
+    [partPredicates addObject:usernamePredicate]; [partPredicates addObject:firstnamePredicate];
+
+
+    NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:partPredicates];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
+    self.displayFriendsArray = [self.friendsArray filteredArrayUsingPredicate:predicate];
+    
+    //sort the Array alphabetically
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES];
+    NSArray *sortedArray=[self.displayFriendsArray sortedArrayUsingDescriptors:@[sort]];
+    self.displayFriendsArray = [NSArray arrayWithArray:sortedArray];
+    
+    //If no users are in the array, tell the delegate to dismiss the Popover
+    if([self noUsersFound]){
         if([self.delegate respondsToSelector:@selector(popoverViewControllerShouldDissmissWithNoResults)])
             [self.delegate popoverViewControllerShouldDissmissWithNoResults];
     }else{
+        //users are found so reload the table
         [self.suggestionsTable reloadData];
     }
 }
 
+- (BOOL) array:(NSArray *)array containsPFObjectById:(PFObject *)object{
+    //Check if the object's objectId matches the objectId of any member of the array.
+    for (PFObject *arrayObject in array){
+        if ([[arrayObject objectId] isEqual:[object objectId]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
+-(BOOL)noUsersFound{
+    return self.displayFriendsArray.count == 0 || self.displayFriendsArray == nil || isnan(self.displayFriendsArray.count);
+}
 
 @end

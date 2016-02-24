@@ -348,7 +348,8 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     
-    [self colorHashtagAndMentions];
+    NSRange cursorPosition = [self.caption selectedRange];
+    [self colorHashtagAndMentions:cursorPosition.location];
 }
 
 -(void)viewDidLayoutSubviews {
@@ -1209,31 +1210,41 @@
 
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    [self colorHashtagAndMentions];
+    NSRange cursorPosition = [textView selectedRange];
+    [self colorHashtagAndMentions:cursorPosition.location];
     return YES;
 }
 
+//As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
+    //get the word that the user is currently typing
     NSRange cursorPosition = [textView selectedRange];
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
     self.autocompletePopover.delegate = self;
     
-    if([lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate){
+    //Display the Popover if there is a @ plus a letter typed and only if it is not already showing
+    if([self displayAutocompletePopover:lastWord]){
         if(!self.autocompletePopover){
+            //Instantiate the view controller and set its size
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
             self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
             self.popover  = self.autocompletePopover.popoverPresentationController;
             self.popover.delegate = self;
             self.popover.sourceView = self.caption;
             self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
         
+            //Build the friends list for the table view in the popover and wait
             [self.autocompletePopover buildFriendsList:^(BOOL succeeded, NSError *error){
                 if(succeeded){
+                    //send the current word to the Popover to use for comparison
                     self.autocompletePopover.mentionText = lastWord;
                     [self.autocompletePopover updateAutocompleteTableView];
+                    //If there are friends to display, now show the popup on the screen
                     if(self.autocompletePopover.displayFriendsArray.count > 0)
                         [self presentViewController:self.autocompletePopover animated:YES completion:nil];
                 }else{
@@ -1244,33 +1255,76 @@
         }
     }
     
-    if(self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""]){
+    //Update the table view in the popover but only if it is currently displayed
+    if([self updateAutocompletePopover:lastWord]){
         self.autocompletePopover.mentionText = lastWord;
         [self.autocompletePopover updateAutocompleteTableView];
     }
     
     //Remove the popover if a space is typed
-    if(self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""])){
+    if([self dismissAutocompletePopover:lastWord]){
         [self dismissViewControllerAnimated:YES completion:nil];
         self.popover.delegate = nil;
         self.autocompletePopover = nil;
     }
 }
 
-#pragma mark - TTSuggestionTableViewControllerDelegate
-- (void)popoverViewControllerShouldDissmissWithNoResults{
+//Only true if user has typed an @ and a letter and if the popover is not showing
+-(BOOL)displayAutocompletePopover:(NSString*)lastWord{
+    return [lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate;
+}
+
+//Only true if the popover is showing and the user typed a space
+-(BOOL)dismissAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""]);
+}
+
+//Only true if the popover is showing and there are friends to show in the table view and the @mention isn't broken
+-(BOOL)updateAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""];
+}
+
+//Dismiss the popover and reset the delegates
+-(void)removeAutocompletePopoverFromSuperview{
     [self dismissViewControllerAnimated:YES completion:nil];
     self.popover.delegate = nil;
     self.autocompletePopover = nil;
 }
 
+#pragma mark - TTSuggestionTableViewControllerDelegate
+//The popover is telling this view controller to dismiss it
+- (void)popoverViewControllerShouldDissmissWithNoResults{
+    [self removeAutocompletePopoverFromSuperview];
+}
+
+//replace the currently typed word with the the username
+-(void)insertUsernameAsMention:(NSString*)username{
+    //Get the currently typed word
+    NSRange cursorPosition = [self.caption selectedRange];
+    NSString* substring = [self.caption.text substringToIndex:cursorPosition.location];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    //get a mutable copy of the current caption
+    NSMutableString *caption = [NSMutableString stringWithString:self.caption.text];
+    //create the replacement range of the typed mention
+    NSRange mentionRange = NSMakeRange(cursorPosition.location-[lastWord length], [lastWord length]);
+    //replace that typed @mention with the user name of the user they want to mention
+    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
+    
+    //display the new caption
+    self.caption.text = mentionString;
+    //dismiss the popover
+    [self removeAutocompletePopoverFromSuperview];
+    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
+    [self colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1];
+}
+
 #pragma mark -
 //FIXME: This needs to be refactored into a single method
-- (void)colorHashtagAndMentions{
+- (void)colorHashtagAndMentions:(NSUInteger)cursorPosition{
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
     NSError *error = [[NSError alloc] init];
     UIColor *fontColor = [UIColor blueColor];
-    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.caption.text.length)];
+    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica Neue" size:14] range:NSMakeRange(0, self.caption.text.length)];
     
 //    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
 //    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
@@ -1289,6 +1343,7 @@
     }
     
     self.caption.attributedText = string;
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
 }
 
 
