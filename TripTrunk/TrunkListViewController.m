@@ -28,6 +28,8 @@
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
+@property NSMutableArray *mutualObjectIDs;
+
 @property NSMutableArray *haventSeens;
 @property int objectsCountTotal;
 @property int objectsCountMe;
@@ -35,6 +37,7 @@
 @property BOOL didLoad;
 @property NSMutableArray *visitedTrunks;
 @property NSMutableArray *mutualTrunks;
+
 
 
 @end
@@ -65,6 +68,7 @@
     
     self.objectIDs = [[NSMutableArray alloc]init];
     self.meObjectIDs = [[NSMutableArray alloc]init];
+    self.mutualTrunks = [[NSMutableArray alloc]init];
 
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -110,7 +114,7 @@
         }
     }
     
-    if (self.isList == YES){
+    if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
        //fixme: change image
         self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
@@ -118,8 +122,12 @@
         self.trunkListToggle.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadTrunkListBasedOnProfile];
+        
+    } else if (self.isList == YES){
+        self.trunkListToggle.tag = 0;
+        [self loadTrunkListBasedOnProfile];
     }
-    
+
     else if (self.user == nil) {
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
@@ -159,7 +167,7 @@
         } else if (self.isList == YES && self.trunkListToggle.tag == 0){
             [self loadTrunkListBasedOnProfile];
         } else if (self.isList == YES && self.trunkListToggle.tag == 1){
-            //fixme: load mutual trunks
+            //fixme: load mutual trunks but for now idk if we need to since there wont be more than 1000 trips combined. once this is a service method we can do this
         }
     }
 }
@@ -331,6 +339,92 @@
     }
 }
 
+-(void)loadMutualTrunkList{
+    //fixme this should be a service call
+    if (self.mutualTrunks.count == 0) {
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        if (!self.user){
+            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+            
+        }else{
+            [query whereKey:@"toUser" equalTo:self.user];
+        }
+        [query whereKey:@"type" equalTo:@"addToTrip"];
+        
+        
+        PFQuery *queryMine = [PFQuery queryWithClassName:@"Activity"];
+        [queryMine whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [queryMine whereKey:@"type" equalTo:@"addToTrip"];
+
+        PFQuery *subQuery = [PFQuery orQueryWithSubqueries:@[queryMine, query]];
+
+        
+        subQuery.limit = 1000;
+        
+        [subQuery includeKey:@"trip"];
+        [subQuery includeKey:@"trip.creator"];
+        [subQuery whereKeyExists:@"trip"];
+        [subQuery includeKey:@"trip.publicTripDetail"];
+
+        
+        [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            {
+                self.didLoad = YES;
+                for (PFObject *activity in objects)
+                {
+                    
+                    Trip *trip = activity[@"trip"];
+                    
+                    if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId])
+                    {
+                        [self.mutualTrunks addObject:trip];
+                        [self.mutualObjectIDs addObject:trip.objectId];
+                    }
+                }
+                
+                for (Trip *trip in self.mutualTrunks)
+                {
+                    
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                    
+                    BOOL contains = NO;
+                    
+                    for (Trip* trunk in self.visitedTrunks){
+                        if ([trunk.objectId isEqualToString:trip.objectId]){
+                            contains = YES;
+                        }
+                    }
+                    
+                    if (self.visitedTrunks.count == 0){
+                        contains = NO;
+                    }
+                    
+                    if (lastTripInterval < 0 && contains == NO)
+                    {
+                        [self.haventSeens addObject:trip];
+                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+                        [self.haventSeens addObject:trip];
+                    }
+                }
+                
+            }
+            //            self.trunkListToggle.tag = 0;
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            [self.tableView reloadData];
+        }];
+    } else
+    {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        [self.tableView reloadData];
+    }
+}
+
 
 /**
  *  Toggle between loading all the trunks at this city and just the users trunks
@@ -354,6 +448,7 @@
         [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.trunkListToggle.tag = 1;
         self.isMine = YES;
+        [self loadMutualTrunkList];
 // fixme: method to load mutual
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){ //switch to all list
         [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_1"]];
@@ -381,7 +476,7 @@
     } else if (self.isList == YES  && self.trunkListToggle.tag == 0){
         [self loadTrunkListBasedOnProfile];
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){
-        //fixme: load mutual trunks
+        [self loadMutualTrunkList];
     }
 
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
@@ -739,7 +834,7 @@
 
 #pragma mark - DZNEmptyDataSetDelegate
 
-- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView //fixme: change the message to "you share no trunks"
 {
     // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
     // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
