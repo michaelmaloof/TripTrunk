@@ -51,6 +51,7 @@
     self.meParseLocations = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
     self.haventSeens = [[NSMutableArray alloc]init];
+    self.mutualObjectIDs = [[NSMutableArray alloc]init];
     
     if (self.isList == YES) {
         self.title = self.user.username;
@@ -377,14 +378,23 @@
                 self.didLoad = YES;
                 for (PFObject *activity in objects)
                 {
-                    
                     Trip *trip = activity[@"trip"];
+
+                    for (PFObject *check in objects){
                     
-                    if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId])
-                    {
-                        [self.mutualTrunks addObject:trip];
-                        [self.mutualObjectIDs addObject:trip.objectId];
+                        Trip *tripCheck = check[@"trip"];
+                        
+                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId]){
+                            
+                            if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
+                                [self.mutualTrunks addObject:tripCheck];
+                                [self.mutualObjectIDs addObject:tripCheck.objectId];
+                            }
+                        }
+                    
+                    
                     }
+
                 }
                 
                 for (Trip *trip in self.mutualTrunks)
