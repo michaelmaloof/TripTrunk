@@ -47,6 +47,7 @@
 @property CGFloat width;
 @property CGFloat originX;
 @property BOOL isEditingCaption;
+@property TTTTimeIntervalFormatter *timeFormatter;
 
 @property BOOL isZoomed;
 
@@ -59,6 +60,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
+@property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 
 
 
@@ -85,15 +87,19 @@
 
     }
 
+    self.timeStamp.text = @"";
     
     self.caption.selectable = NO;
     self.caption.editable = NO;
     self.caption.delegate = self;
 
     self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.timeStamp.adjustsFontSizeToFitWidth = YES;
     
     //FIXME: if I self.photo.user.username it crashes thee app
     [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
+    
+    self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
     
     // Decide if we should show the trunkNameButton
     // - If we're on the Activity tab, then we want the user to be able to get to the Trunk from the Photo view
@@ -542,6 +548,8 @@
             [self loadImageForPhoto:self.photo];
             //        self.title = self.photo.userName;
               [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
+            self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
+
             if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
                 self.addCaption.hidden = NO;
             } else {
@@ -615,7 +623,8 @@
             [self loadImageForPhoto:self.photo];
             self.title = self.photo.userName;
                [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
-            
+            self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
+
             
             NSString *comments = NSLocalizedString(@"Comments",@"Comments");
             [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
