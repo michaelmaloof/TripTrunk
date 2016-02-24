@@ -22,6 +22,7 @@
 #import "UserProfileViewController.h"
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
+#import "TTTTimeIntervalFormatter.h"
 #import "KILabel.h"
 #import "TTSuggestionTableViewController.h"
 
@@ -171,6 +172,16 @@
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
 
+}
+
+- (NSString *)stringForTimeStamp:(NSDate*)created {
+    
+    self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
+    
+    NSString *time = @"";
+    time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
+    
+    return time;
 }
 
 
@@ -1199,38 +1210,6 @@
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     [self colorHashtagAndMentions];
-//    UITextRange* selectedRange = [textView selectedTextRange];
-//    NSInteger cursorOffset = [textView offsetFromPosition:0 toPosition:selectedRange.start];
-    //Get the current word as it is typed and check to see if the user is trying to mention
-    NSRange cursorPosition = [textView selectedRange];
-    NSString* substring = [textView.text substringToIndex:cursorPosition.location];
-    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-    
-    //If the current word contains an @ then the user is trying to mention another user.
-    //Display the popover
-//    if([lastWord containsString:@"@"] && !self.popover.delegate){
-//        self.autocompletePopover.delegate = self;
-//        self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-//        self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
-//        self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
-//        self.popover  = self.autocompletePopover.popoverPresentationController;
-//        self.popover.delegate = self;
-//        self.popover.sourceView = self.caption;
-//        self.popover.sourceRect = [self.caption bounds];
-//        self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
-//        
-//        [self.autocompletePopover buildFriendsList:^(BOOL succeeded, NSError *error){
-//            if(succeeded){
-////                self.autocompletePopover.mentionText = lastWord;
-////                [self.autocompletePopover updateAutocompleteTableView];
-////                if(self.autocompletePopover.displayFriendsArray.count > 0)
-//                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
-//            }else{
-//                NSLog(@"Error: %@",error);
-//            }
-//        }];
-//    }
-
     return YES;
 }
 
