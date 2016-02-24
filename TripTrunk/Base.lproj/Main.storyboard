@@ -2284,16 +2284,26 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HFK-1a-bML" userLabel="Trunk Name Button">
                                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <state key="normal">
+                                        <state key="normal" title="Trunk">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="176.5" y="31" width="30" height="29"/>
+                                        </variation>
                                         <connections>
                                             <action selector="trunkNameButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Gbv-Md-k4g"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWA-ve-gIJ">
+                                        <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="dWA-ve-gIJ" secondAttribute="bottom" constant="8" id="1VA-WR-WZI"/>
                                     <constraint firstItem="CmI-e7-SWG" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" id="3iP-vA-KCU">
                                         <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                     </constraint>
@@ -2307,14 +2317,17 @@
                                     </constraint>
                                     <constraint firstItem="HFK-1a-bML" firstAttribute="centerX" secondItem="hR0-63-pl9" secondAttribute="centerX" id="dMU-dw-NfI"/>
                                     <constraint firstItem="Lec-yX-hFH" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="8" id="e39-vj-NXz"/>
+                                    <constraint firstItem="dWA-ve-gIJ" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="35" id="fKi-bx-tr2"/>
                                     <constraint firstItem="HFK-1a-bML" firstAttribute="top" secondItem="Lec-yX-hFH" secondAttribute="bottom" constant="8" id="fZR-Jd-98U">
                                         <variation key="heightClass=regular-widthClass=compact" constant="2"/>
                                     </constraint>
                                     <constraint firstItem="HFK-1a-bML" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="8" id="g98-Gw-ndT"/>
                                     <constraint firstItem="Lec-yX-hFH" firstAttribute="centerX" secondItem="hR0-63-pl9" secondAttribute="centerX" id="hxg-e0-ry0"/>
+                                    <constraint firstAttribute="trailing" secondItem="dWA-ve-gIJ" secondAttribute="trailing" constant="17" id="kdB-pH-oV4"/>
                                     <constraint firstItem="BL7-tA-HXj" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="11" id="oZW-UR-wmg">
                                         <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                     </constraint>
+                                    <constraint firstItem="dWA-ve-gIJ" firstAttribute="centerY" secondItem="HFK-1a-bML" secondAttribute="centerY" id="xA7-qN-1hW"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
@@ -2322,19 +2335,24 @@
                                         <exclude reference="BL7-tA-HXj"/>
                                         <exclude reference="Lec-yX-hFH"/>
                                         <exclude reference="HFK-1a-bML"/>
+                                        <exclude reference="dWA-ve-gIJ"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="5bJ-Sp-NUJ"/>
-                                        <exclude reference="bwn-I7-BFb"/>
-                                        <exclude reference="oZW-UR-wmg"/>
                                         <exclude reference="3iP-vA-KCU"/>
                                         <exclude reference="FX9-CE-9s1"/>
-                                        <exclude reference="dMU-dw-NfI"/>
-                                        <exclude reference="fZR-Jd-98U"/>
-                                        <exclude reference="g98-Gw-ndT"/>
                                         <exclude reference="4XE-7w-zcm"/>
                                         <exclude reference="e39-vj-NXz"/>
                                         <exclude reference="hxg-e0-ry0"/>
+                                        <exclude reference="dMU-dw-NfI"/>
+                                        <exclude reference="fZR-Jd-98U"/>
+                                        <exclude reference="g98-Gw-ndT"/>
+                                        <exclude reference="bwn-I7-BFb"/>
+                                        <exclude reference="oZW-UR-wmg"/>
+                                        <exclude reference="1VA-WR-WZI"/>
+                                        <exclude reference="fKi-bx-tr2"/>
+                                        <exclude reference="kdB-pH-oV4"/>
+                                        <exclude reference="xA7-qN-1hW"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
@@ -2343,19 +2361,24 @@
                                         <include reference="BL7-tA-HXj"/>
                                         <include reference="Lec-yX-hFH"/>
                                         <include reference="HFK-1a-bML"/>
+                                        <include reference="dWA-ve-gIJ"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="5bJ-Sp-NUJ"/>
-                                        <include reference="bwn-I7-BFb"/>
-                                        <include reference="oZW-UR-wmg"/>
                                         <include reference="3iP-vA-KCU"/>
                                         <include reference="FX9-CE-9s1"/>
-                                        <include reference="dMU-dw-NfI"/>
-                                        <include reference="fZR-Jd-98U"/>
-                                        <exclude reference="g98-Gw-ndT"/>
                                         <exclude reference="4XE-7w-zcm"/>
                                         <include reference="e39-vj-NXz"/>
                                         <include reference="hxg-e0-ry0"/>
+                                        <include reference="dMU-dw-NfI"/>
+                                        <include reference="fZR-Jd-98U"/>
+                                        <exclude reference="g98-Gw-ndT"/>
+                                        <include reference="bwn-I7-BFb"/>
+                                        <include reference="oZW-UR-wmg"/>
+                                        <include reference="1VA-WR-WZI"/>
+                                        <include reference="fKi-bx-tr2"/>
+                                        <include reference="kdB-pH-oV4"/>
+                                        <include reference="xA7-qN-1hW"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -2698,6 +2721,7 @@
                         <outlet property="photoTakenBy" destination="Lec-yX-hFH" id="Rvn-Zb-2Ap"/>
                         <outlet property="saveButton" destination="BL7-tA-HXj" id="YzY-gH-fEI"/>
                         <outlet property="scrollView" destination="g0k-n4-hcD" id="9vF-FK-Tbf"/>
+                        <outlet property="timeStamp" destination="dWA-ve-gIJ" id="aFb-8b-dJ6"/>
                         <outlet property="topButtonWrapper" destination="hR0-63-pl9" id="UWT-my-qEN"/>
                         <outlet property="trunkNameButton" destination="HFK-1a-bML" id="oRk-p1-U7d"/>
                     </connections>
@@ -4613,8 +4637,8 @@
         <image name="zoomGlass" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JSU-Dg-jAI"/>
-        <segue reference="hXf-dS-IMJ"/>
-        <segue reference="bhX-wL-LGH"/>
+        <segue reference="5P2-gM-OYf"/>
+        <segue reference="yXb-jN-ymd"/>
+        <segue reference="UVS-2K-sz0"/>
     </inferredMetricsTieBreakers>
 </document>
