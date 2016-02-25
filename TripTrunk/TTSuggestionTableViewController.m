@@ -9,6 +9,8 @@
 #import "TTSuggestionTableViewController.h"
 #import "SocialUtility.h"
 #import "PhotoViewController.h"
+#import "TTSuggestionViewCell.h"
+#import "TTUtility.h"
 
 @interface TTSuggestionTableViewController()
 
@@ -28,10 +30,12 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *cellIdentifier = @"Cell";
-    UITableViewCell *cell = [self.suggestionsTable dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    TTSuggestionViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];    
     PFUser *userToAdd = self.displayFriendsArray[indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"@%@",userToAdd.username];
+//    cell.userFullName.text = [NSString stringWithFormat:@"%@ %@",userToAdd[@"name"],userToAdd[@"lastName"]];
+    cell.userFullName.text = userToAdd[@"name"];
+    cell.username.text = [NSString stringWithFormat:@"@%@ ",userToAdd.username];
+    [self setProfilePic:userToAdd[@"profilePicUrl"] indexPath:indexPath];
     
     //stop the tableview from scrolling if the list has 3 or less
     self.suggestionsTable.scrollEnabled = [self preventTableViewFromScrolling];
@@ -42,8 +46,10 @@
 //When the user selects a row, send the username to the delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if([self.delegate respondsToSelector:@selector(insertUsernameAsMention:)]){
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        [self.delegate insertUsernameAsMention:cell.textLabel.text];
+        PFUser *user = self.displayFriendsArray[indexPath.row];
+        [self.delegate insertUsernameAsMention:[NSString stringWithFormat:@"@%@",user.username]];
+    }else{
+        NSLog(@"Delegate error: insertUsernameAsMention:");
     }
 }
 
@@ -157,6 +163,28 @@
 //Determine if the table view should scroll. Only scroll if there are more than 3 users inthe table
 -(BOOL)preventTableViewFromScrolling{
     return self.displayFriendsArray.count < 3 ? NO : YES;
+}
+
+#pragma mark - REFACTOR THIS INTO IT"S OWN CLASS
+- (void)setProfilePic:(NSString *)urlString indexPath:(NSIndexPath*)indexPath{
+    NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
+    
+    // Run network request asynchronously
+    [NSURLConnection sendAsynchronousRequest:urlRequest
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:
+     ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+         if (connectionError == nil && data != nil) {
+             
+             // Set image on the UI thread
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 TTSuggestionViewCell *cell = [self.suggestionsTable cellForRowAtIndexPath:indexPath];
+                 cell.userPhoto.image = [[UIImage alloc] initWithData:data];
+             });
+             
+         }
+     }];
 }
 
 @end
