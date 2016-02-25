@@ -249,7 +249,7 @@
     }
     else {
         
-        NSString *name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"name"],_thisUser[@"lastName"]];
+        NSString *name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"firstName"],_thisUser[@"lastName"]];
 
         
         if (_isFollowing) {

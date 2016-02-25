@@ -66,7 +66,7 @@
     self.hometownTextField.text = [_user valueForKey:@"hometown"];
     self.bioTextView.text = [_user valueForKey:@"bio"];
     self.nameTextView.text = _user[@"lastName"];
-    self.firstName.text = _user[@"name"];
+    self.firstName.text = _user[@"firstName"];
 
     if (_user[@"private"] && [_user[@"private"] boolValue] == YES) {
         self.privateAccountSwitch.on = YES;
@@ -130,7 +130,7 @@
 
     [_user setValue:hometown forKey:@"hometown"];
     [_user setValue:bio forKey:@"bio"];
-    [_user setValue:firstName forKey:@"name"];
+    [_user setValue:firstName forKey:@"firstName"];
     [_user setValue:lastName forKey:@"lastName"];
 
     

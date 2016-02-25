@@ -33,7 +33,7 @@
 
 - (void)setUser:(PFUser *)user {
     _user = user;
-    NSString *name = [NSString stringWithFormat:@"%@ %@",user[@"name"],user[@"lastName"]];
+    NSString *name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
     [self.nameLabel setText:name];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@", user.username]];
     

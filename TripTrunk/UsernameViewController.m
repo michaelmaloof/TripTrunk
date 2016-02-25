@@ -249,7 +249,7 @@
         }
         
         _user.username = username;
-        [_user setValue:firstName forKey:@"name"];
+        [_user setValue:firstName forKey:@"firstName"];
         [_user setValue:lastName forKey:@"lastName"];
         _user.email = email;
         [_user setPassword:password];
