@@ -2288,9 +2288,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="176.5" y="31" width="30" height="29"/>
-                                        </variation>
                                         <connections>
                                             <action selector="trunkNameButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Gbv-Md-k4g"/>
                                         </connections>
@@ -2339,16 +2336,16 @@
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="5bJ-Sp-NUJ"/>
+                                        <exclude reference="bwn-I7-BFb"/>
+                                        <exclude reference="oZW-UR-wmg"/>
                                         <exclude reference="3iP-vA-KCU"/>
                                         <exclude reference="FX9-CE-9s1"/>
-                                        <exclude reference="4XE-7w-zcm"/>
-                                        <exclude reference="e39-vj-NXz"/>
-                                        <exclude reference="hxg-e0-ry0"/>
                                         <exclude reference="dMU-dw-NfI"/>
                                         <exclude reference="fZR-Jd-98U"/>
                                         <exclude reference="g98-Gw-ndT"/>
-                                        <exclude reference="bwn-I7-BFb"/>
-                                        <exclude reference="oZW-UR-wmg"/>
+                                        <exclude reference="4XE-7w-zcm"/>
+                                        <exclude reference="e39-vj-NXz"/>
+                                        <exclude reference="hxg-e0-ry0"/>
                                         <exclude reference="1VA-WR-WZI"/>
                                         <exclude reference="fKi-bx-tr2"/>
                                         <exclude reference="kdB-pH-oV4"/>
@@ -2365,16 +2362,16 @@
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="5bJ-Sp-NUJ"/>
+                                        <include reference="bwn-I7-BFb"/>
+                                        <include reference="oZW-UR-wmg"/>
                                         <include reference="3iP-vA-KCU"/>
                                         <include reference="FX9-CE-9s1"/>
-                                        <exclude reference="4XE-7w-zcm"/>
-                                        <include reference="e39-vj-NXz"/>
-                                        <include reference="hxg-e0-ry0"/>
                                         <include reference="dMU-dw-NfI"/>
                                         <include reference="fZR-Jd-98U"/>
                                         <exclude reference="g98-Gw-ndT"/>
-                                        <include reference="bwn-I7-BFb"/>
-                                        <include reference="oZW-UR-wmg"/>
+                                        <exclude reference="4XE-7w-zcm"/>
+                                        <include reference="e39-vj-NXz"/>
+                                        <include reference="hxg-e0-ry0"/>
                                         <include reference="1VA-WR-WZI"/>
                                         <include reference="fKi-bx-tr2"/>
                                         <include reference="kdB-pH-oV4"/>
