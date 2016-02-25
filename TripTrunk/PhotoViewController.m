@@ -1229,7 +1229,6 @@
             //Instantiate the view controller and set its size
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
-            self.autocompletePopover.preferredContentSize = CGSizeMake(320, 132);
             
             //force the popover to display like an iPad popover otherwise it will be full screen
             self.popover  = self.autocompletePopover.popoverPresentationController;
@@ -1246,6 +1245,7 @@
                     [self.autocompletePopover updateAutocompleteTableView];
                     //If there are friends to display, now show the popup on the screen
                     if(self.autocompletePopover.displayFriendsArray.count > 0)
+                        self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
                         [self presentViewController:self.autocompletePopover animated:YES completion:nil];
                 }else{
                     NSLog(@"Error: %@",error);
@@ -1318,14 +1318,24 @@
     [self colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1];
 }
 
+//Adjust the height of the popover to fit the number of usernames in the tableview
+-(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
+    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], height);
+}
+
 #pragma mark -
 //FIXME: This needs to be refactored into a single method
 - (void)colorHashtagAndMentions:(NSUInteger)cursorPosition{
+    //Convert caption to Mutable and Attributed
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
-    NSError *error = [[NSError alloc] init];
+    NSError *error = nil;
+    //Set the mention and hashtog font color <-- need to use TripTrunk app blue
     UIColor *fontColor = [UIColor blueColor];
+    //create the attribute to change mentions and hastags blue
     [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica Neue" size:14] range:NSMakeRange(0, self.caption.text.length)];
     
+    //Use regular expressions to search through the string and search for the #(letter) pattern
+    //This is currently turned off so hastags will remain black
 //    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
 //    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
 //    
@@ -1334,15 +1344,19 @@
 //        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
 //    }
     
+    //Use regular expressions to search through the string and search for the @(letter) pattern
     NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
     NSArray *matchesAt = [regExAt matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
     
+    //Loop through all the regular expression matches and wrap them in the attributed properties
     for(NSTextCheckingResult * matchAt in matchesAt){
         NSRange wordRangeAt = [matchAt rangeAtIndex:0];
         [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
     }
     
+    //Update caption uitextview field
     self.caption.attributedText = string;
+    //make sure the cursor is in the proper place while typing
     [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
 }
 
