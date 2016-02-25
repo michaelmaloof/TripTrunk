@@ -38,6 +38,7 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL isLikes;
 @property NSMutableArray *trips;
 @property BOOL needToRefresh;
+@property BOOL isLoading;
 
 
 @end
@@ -148,6 +149,8 @@ enum TTActivityViewType : NSUInteger {
                 }
                 if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
                     // Query for activities for user
+                    if (self.isLoading == NO){
+                        self.isLoading = YES;
                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                         for (PFObject *obj in activities){
                             if (obj[@"trip"]){
@@ -160,13 +163,15 @@ enum TTActivityViewType : NSUInteger {
 //                        _activities = [NSMutableArray arrayWithArray:activities];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             self.activitySearchComplete = YES;
+                            self.isLoading = NO;
                             [self.tableView reloadData];
                         });
                     }];
+                    }
                 }
 
             } else {
-                //error
+                self.isLoading = NO;
             }
                 
             }];
@@ -266,13 +271,16 @@ enum TTActivityViewType : NSUInteger {
     
     if (self.isLikes == NO){
     // Query for activities for user
+        if (self.isLoading == NO){
+            
+        self.isLoading = YES;
         [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error) {
-        self.activities = [[NSMutableArray alloc]init];
+//        self.activities = [[NSMutableArray alloc]init];
         for (PFObject *obj in activities){
             if (obj[@"trip"]){
-                [self.activities addObject:obj];
+                [self.activities insertObject:obj atIndex:0];
             } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                [self.activities addObject:obj];
+                [self.activities insertObject:obj atIndex:0];
                 
             }
         }
@@ -291,12 +299,19 @@ enum TTActivityViewType : NSUInteger {
                 
                 [refreshControl endRefreshing];
             }
-            
+            self.isLoading = NO;
+
             [self.tableView reloadData];
 
         });
+            
+            if (error){
+                self.isLoading = NO;
+            }
     }];
     }
+    }
+    
     
 }
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
@@ -311,8 +326,10 @@ enum TTActivityViewType : NSUInteger {
     
     float reload_distance = -250;
     if(y > h + reload_distance && self.isLikes == NO) {
+        
+        if (self.isLoading == NO){
+            self.isLoading = YES;
         [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
-            //        _activities = [NSMutableArray arrayWithArray:activities];
             for (PFObject *obj in activities){
                 if (obj[@"trip"]){
                     [self.activities addObject:obj];
@@ -322,10 +339,16 @@ enum TTActivityViewType : NSUInteger {
                 }
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.isLoading = NO;
                 [self.tableView reloadData];
                 
             });
+            
+            if (error){
+                self.isLoading = NO;
+            }
         }];
+    }
     }
 }
 

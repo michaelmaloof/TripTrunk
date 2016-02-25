@@ -537,24 +537,12 @@
     [query whereKeyExists:@"fromUser"];
     [query whereKeyExists:@"trip"];
     
-    
-//    [query includeKey:@"fromUser"];
-//    [query includeKey:@"photo"];
-//    [query includeKey:@"trip"];
-//    [query includeKey:@"trip.publicTripDetail"];
-
-    
     PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
     [photos whereKey:@"trip" containedIn:trips];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"trip"];
-
-//    [photos includeKey:@"fromUser"];
-//    [photos includeKey:@"photo"];
-//    [photos includeKey:@"trip"];
-//    [photos includeKey:@"trip.publicTripDetail"];
-//   
+  
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
     [subqueries orderByDescending:@"createdAt"];
@@ -563,6 +551,18 @@
     [subqueries includeKey:@"trip"];
     [subqueries includeKey:@"trip.publicTripDetail"];
     [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+
+    for (PFObject *ojber in activities){
+        int count = 0;
+        for (PFObject *objer2 in activities){
+            if ([objer2.objectId isEqualToString:ojber.objectId]){
+                count +=1;
+                if (count ==2){
+                    NSLog(@"clone %@", ojber.objectId);
+                }
+            }
+        }
+    }
     
     if (activities > 0 && isRefresh == NO){
         
@@ -583,12 +583,12 @@
             [objIds addObject:obj.objectId];
         }
         
-        [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
+        [subqueries whereKey:@"createdAt" greaterThan:object.createdAt];
         [subqueries whereKey:@"objectId" notContainedIn:objIds];
     }
     
     
-    [subqueries setCachePolicy:kPFCachePolicyNetworkOnly];
+    [subqueries setCachePolicy:kPFCachePolicyNetworkOnly]; //is this the right one?
 
     
     [subqueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

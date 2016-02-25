@@ -24,15 +24,20 @@
 @property NSIndexPath *path;
 @property NSDate *today;
 @property UIBarButtonItem *filter;
+@property UIBarButtonItem *trunkListToggle;
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
+@property NSMutableArray *mutualObjectIDs;
+
 @property NSMutableArray *haventSeens;
 @property int objectsCountTotal;
 @property int objectsCountMe;
 @property BOOL isMine;
 @property BOOL didLoad;
 @property NSMutableArray *visitedTrunks;
+@property NSMutableArray *mutualTrunks;
+
 
 
 @end
@@ -44,7 +49,9 @@
     
     self.parseLocations = [[NSMutableArray alloc]init];
     self.meParseLocations = [[NSMutableArray alloc]init];
+    self.mutualTrunks = [[NSMutableArray alloc]init];
     self.haventSeens = [[NSMutableArray alloc]init];
+    self.mutualObjectIDs = [[NSMutableArray alloc]init];
     
     if (self.isList == YES) {
         self.title = self.user.username;
@@ -62,6 +69,7 @@
     
     self.objectIDs = [[NSMutableArray alloc]init];
     self.meObjectIDs = [[NSMutableArray alloc]init];
+    self.mutualTrunks = [[NSMutableArray alloc]init];
 
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -91,6 +99,8 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
+    //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
+    
     self.visitedTrunks = [[NSMutableArray alloc]init];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
@@ -105,30 +115,27 @@
         }
     }
     
-    if (self.isList == YES){
+    if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+       //fixme: change image
+        self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
+        self.trunkListToggle.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadTrunkListBasedOnProfile];
+        
+    } else if (self.isList == YES){
+        self.trunkListToggle.tag = 0;
+        [self loadTrunkListBasedOnProfile];
     }
-    
+
     else if (self.user == nil) {
-        
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
         self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
-        
-        
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-        
-
-        
-
-        
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self queryParseMethodEveryone];
-        
-        
     } else {
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadUserTrunks];
@@ -158,8 +165,10 @@
             [self loadUserTrunks];
         }else if (self.isList == NO){
             [self queryForTrunks];
-        } else {
+        } else if (self.isList == YES && self.trunkListToggle.tag == 0){
             [self loadTrunkListBasedOnProfile];
+        } else if (self.isList == YES && self.trunkListToggle.tag == 1){
+            //fixme: load mutual trunks but for now idk if we need to since there wont be more than 1000 trips combined. once this is a service method we can do this
         }
     }
 }
@@ -189,10 +198,6 @@
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
         [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-
-        
-        
-        
         query.limit = 100;
         query.skip = self.objectsCountMe;
         
@@ -254,7 +259,6 @@
         self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.tableView reloadData];
     }
-
 }
 
 -(void)loadTrunkListBasedOnProfile{
@@ -325,7 +329,102 @@
                 }
                 
             }
-            //                self.filter.tag = 1;
+//            self.trunkListToggle.tag = 0;
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            [self.tableView reloadData];
+        }];
+    } else
+    {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        [self.tableView reloadData];
+    }
+}
+
+-(void)loadMutualTrunkList{
+    //fixme this should be a service call
+    if (self.mutualTrunks.count == 0) {
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        if (!self.user){
+            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+            
+        }else{
+            [query whereKey:@"toUser" equalTo:self.user];
+        }
+        [query whereKey:@"type" equalTo:@"addToTrip"];
+        
+        
+        PFQuery *queryMine = [PFQuery queryWithClassName:@"Activity"];
+        [queryMine whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [queryMine whereKey:@"type" equalTo:@"addToTrip"];
+
+        PFQuery *subQuery = [PFQuery orQueryWithSubqueries:@[queryMine, query]];
+
+        
+        subQuery.limit = 1000;
+        
+        [subQuery includeKey:@"trip"];
+        [subQuery includeKey:@"trip.creator"];
+        [subQuery whereKeyExists:@"trip"];
+        [subQuery includeKey:@"trip.publicTripDetail"];
+
+        
+        [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(error)
+            {
+                NSLog(@"Error: %@",error);
+            }
+            {
+                self.didLoad = YES;
+                for (PFObject *activity in objects)
+                {
+                    Trip *trip = activity[@"trip"];
+
+                    for (PFObject *check in objects){
+                    
+                        Trip *tripCheck = check[@"trip"];
+                        
+                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId]){
+                            
+                            if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
+                                [self.mutualTrunks addObject:tripCheck];
+                                [self.mutualObjectIDs addObject:tripCheck.objectId];
+                            }
+                        }
+                    
+                    
+                    }
+
+                }
+                
+                for (Trip *trip in self.mutualTrunks)
+                {
+                    
+                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+                    
+                    BOOL contains = NO;
+                    
+                    for (Trip* trunk in self.visitedTrunks){
+                        if ([trunk.objectId isEqualToString:trip.objectId]){
+                            contains = YES;
+                        }
+                    }
+                    
+                    if (self.visitedTrunks.count == 0){
+                        contains = NO;
+                    }
+                    
+                    if (lastTripInterval < 0 && contains == NO)
+                    {
+                        [self.haventSeens addObject:trip];
+                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+                        [self.haventSeens addObject:trip];
+                    }
+                }
+                
+            }
+            //            self.trunkListToggle.tag = 0;
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
         }];
@@ -345,16 +444,27 @@
 -(void)rightBarItemWasTapped {
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    if (self.filter.tag == 0) {
+    if (self.filter.tag == 0 && self.isList == NO) {
         [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.filter.tag = 1;
         self.isMine = YES;
         [self loadUserTrunks];
-    } else if (self.filter.tag == 1) {
+    } else if (self.filter.tag == 1 && self.isList == NO) {
         [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
         self.filter.tag = 0;
         self.isMine = NO;
         [self queryParseMethodEveryone];
+    } else if (self.isList == YES && self.trunkListToggle.tag == 0){ //switch to mutual
+        [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_2"]];
+        self.trunkListToggle.tag = 1;
+        self.isMine = YES;
+        [self loadMutualTrunkList];
+// fixme: method to load mutual
+    } else if (self.isList == YES && self.trunkListToggle.tag == 1){ //switch to all list
+        [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_1"]];
+        self.trunkListToggle.tag = 0;
+        self.isMine = NO;
+        [self loadTrunkListBasedOnProfile];
 
     }
 }
@@ -373,10 +483,12 @@
     } else if (self.filter.tag == 0 && self.isList == NO) {
         self.filter.tag = 1;
         [self queryParseMethodEveryone];
-    } else if (self.isList == YES){
+    } else if (self.isList == YES  && self.trunkListToggle.tag == 0){
         [self loadTrunkListBasedOnProfile];
+    } else if (self.isList == YES && self.trunkListToggle.tag == 1){
+        [self loadMutualTrunkList];
     }
-    
+
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
     // End the refreshing & update the timestamp
     if (refreshControl) {
@@ -528,9 +640,13 @@
             TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
-        } else if (self.isList == YES){
+        } else if (self.isList == YES && self.trunkListToggle.tag == 0){
             TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
+            trunkView.trip = trip;
+        } else if (self.isList == YES && self.trunkListToggle.tag == 1){
+            TrunkViewController *trunkView = segue.destinationViewController;
+            Trip *trip = [self.mutualTrunks objectAtIndex:self.path.row];
             trunkView.trip = trip;
         }
         self.path = nil;
@@ -548,10 +664,12 @@
     }
     else if (self.user != nil && self.isList == NO){
         return self.meParseLocations.count;
-    } else if (self.isList == YES){
+    } else if (self.isList == YES && self.trunkListToggle.tag == 0){
         return self.meParseLocations.count;
-    }else {
-        return 0;
+    }else if (self.isList == YES && self.trunkListToggle.tag == 1){
+        return self.mutualTrunks.count;
+    } else {
+         return 0;
     }
 }
 
@@ -566,6 +684,8 @@
     if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
         
+    } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
+        trip = [self.mutualTrunks objectAtIndex:indexPath.row];
     } else {
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
     }
@@ -661,9 +781,12 @@
     } else if (self.user != nil && self.isList == NO) {
             [self performSegueWithIdentifier:@"TrunkView" sender:self];
 
-    } else if (self.isList == YES){
+    } else if (self.isList == YES && self.trunkListToggle.tag == 0){
             [self performSegueWithIdentifier:@"TrunkView" sender:self];
 
+    } else if (self.isList == YES && self.trunkListToggle.tag == 1){
+        [self performSegueWithIdentifier:@"TrunkView" sender:self];
+        
     }
 
 }
@@ -721,7 +844,7 @@
 
 #pragma mark - DZNEmptyDataSetDelegate
 
-- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView //fixme: change the message to "you share no trunks"
 {
     // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
     // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
