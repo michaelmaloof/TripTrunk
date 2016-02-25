@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *roseToggle;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UITextField *nameTextView;
+@property (weak, nonatomic) IBOutlet UITextField *firstName;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
@@ -64,7 +65,9 @@
     _hometownTextField.delegate = self;
     self.hometownTextField.text = [_user valueForKey:@"hometown"];
     self.bioTextView.text = [_user valueForKey:@"bio"];
-    self.nameTextView.text = _user[@"name"];
+    self.nameTextView.text = _user[@"lastName"];
+    self.firstName.text = _user[@"name"];
+
     if (_user[@"private"] && [_user[@"private"] boolValue] == YES) {
         self.privateAccountSwitch.on = YES;
     }
@@ -121,11 +124,15 @@
     
     NSString *hometown = self.hometownTextField.text;
     NSString *bio = self.bioTextView.text;
-    NSString *name = self.nameTextView.text;
+    NSString *firstName = self.firstName.text;
+    NSString *lastName = self.nameTextView.text;
+
 
     [_user setValue:hometown forKey:@"hometown"];
     [_user setValue:bio forKey:@"bio"];
-    [_user setValue:name forKey:@"name"];
+    [_user setValue:firstName forKey:@"name"];
+    [_user setValue:lastName forKey:@"lastName"];
+
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
         [self.delegate shouldSaveUserAndClose:_user];

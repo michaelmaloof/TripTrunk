@@ -248,11 +248,15 @@
         }
     }
     else {
+        
+        NSString *name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"name"],_thisUser[@"lastName"]];
+
+        
         if (_isFollowing) {
-            text = [NSString stringWithFormat:@"%@ is not following anyone yet.", [_thisUser valueForKey:@"name"]];
+            text = [NSString stringWithFormat:@"%@ is not following anyone yet.",name];
         }
         else {
-            text = [NSString stringWithFormat:@"%@, they have no followers yet. :( You could be their first!", [_thisUser valueForKey:@"name"]];
+            text = [NSString stringWithFormat:@"%@, they have no followers yet. :( You could be their first!", name];
         }
     }
     

@@ -83,8 +83,8 @@
     [_user fetchIfNeeded];
     self.title  = _user.username;
     [self tabBarTitle];
-    
-    [self.nameLabel setText:_user[@"name"]];
+    NSString *name = [NSString stringWithFormat:@"%@ %@",_user[@"name"],_user[@"lastName"]];
+    [self.nameLabel setText:name];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
     [self.hometownLabel setText:_user[@"hometown"]];
     
@@ -522,7 +522,8 @@
         NSLog(@"Bio Updated");
         self.bioTextView.text = user[@"bio"];
         self.hometownLabel.text = user[@"hometown"];
-        self.nameLabel.text = user[@"name"];
+        NSString *name = [NSString stringWithFormat:@"%@ %@",user[@"name"],user[@"lastName"]];
+        self.nameLabel.text = name;
         
     }
     
