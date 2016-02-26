@@ -36,7 +36,7 @@
     _user = user;
     
     NSString *name;
-    if (_user[@"firstName"] == nil){
+    if (_user[@"lastName"] == nil){
         name = [NSString stringWithFormat:@"%@",_user[@"firstName"]];
     } else {
         name = [NSString stringWithFormat:@"%@ %@",_user[@"firstName"],_user[@"lastName"]];

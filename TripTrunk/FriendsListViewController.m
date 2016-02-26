@@ -249,7 +249,7 @@
     }
     else {
         NSString *name;
-        if (_thisUser[@"firstName"] == nil){
+        if (_thisUser[@"lastName"] == nil){
             name = [NSString stringWithFormat:@"%@",_thisUser[@"firstName"]];
         } else {
             name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"firstName"],_thisUser[@"lastName"]];
