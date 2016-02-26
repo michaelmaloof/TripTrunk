@@ -248,9 +248,12 @@
         }
     }
     else {
-        
-        NSString *name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"firstName"],_thisUser[@"lastName"]];
-
+        NSString *name;
+        if (_thisUser[@"firstName"] == nil){
+            name = [NSString stringWithFormat:@"%@",_thisUser[@"firstName"]];
+        } else {
+            name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"firstName"],_thisUser[@"lastName"]];
+        }
         
         if (_isFollowing) {
             text = [NSString stringWithFormat:@"%@ is not following anyone yet.",name];
