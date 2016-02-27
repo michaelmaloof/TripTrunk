@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -98,6 +98,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="2rU-cP-gsI"/>
                                         <constraint firstAttribute="width" constant="45" id="Cvk-sl-9kI"/>
+                                        <constraint firstAttribute="width" constant="90" id="XKH-Ww-pkM"/>
                                     </constraints>
                                     <color key="tintColor" red="0.89411764709999997" green="0.67450980390000004" blue="0.35294117650000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <state key="normal" title="Follow">
@@ -111,12 +112,15 @@
                                         <mask key="constraints">
                                             <exclude reference="2rU-cP-gsI"/>
                                             <exclude reference="Cvk-sl-9kI"/>
+                                            <exclude reference="XKH-Ww-pkM"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
+                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                        <rect key="frame" x="166.5" y="241.5" width="44" height="30"/>
                                         <mask key="constraints">
                                             <exclude reference="2rU-cP-gsI"/>
                                             <exclude reference="Cvk-sl-9kI"/>
+                                            <include reference="XKH-Ww-pkM"/>
                                         </mask>
                                     </variation>
                                     <connections>
