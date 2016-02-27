@@ -89,11 +89,14 @@
     [self tabBarTitle];
     
     NSString *name;
-    if (_user[@"firstName"] == nil){
+    if (_user[@"lastName"] == nil && _user[@"firstName"] != nil){
         name = [NSString stringWithFormat:@"%@",_user[@"firstName"]];
-    } else {
+    } else if (_user[@"firstName"] != nil &&  _user[@"firstName"] == nil){
         name = [NSString stringWithFormat:@"%@ %@",_user[@"firstName"],_user[@"lastName"]];
+    } else {
+        name = self.user[@"name"];
     }
+    
     
     [self.nameLabel setText:name];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",_user[@"username"]]];
