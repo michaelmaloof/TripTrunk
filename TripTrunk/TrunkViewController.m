@@ -375,13 +375,15 @@
     
     self.collectionView.hidden = NO;
     
-    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
     int count;
     if (self.isMember == YES){
         count =1;
     } else {
         count = 0;
     }
+    
+    NSInteger memberWidthTotal = (self.members.count + count + 1) * 60;
+
     
     if ( self.members.count + count + 1 > 4){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
@@ -784,13 +786,15 @@
     
     self.collectionView.hidden = NO;
     
-    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
     int count;
     if (self.isMember == YES){
         count =1;
     } else {
         count = 0;
     }
+    
+    NSInteger memberWidthTotal = (self.members.count + count + 1) * 60;
+    
     
     if ( self.members.count + count + 1 > 4){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
