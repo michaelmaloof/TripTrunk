@@ -142,7 +142,7 @@ enum TTActivityViewType : NSUInteger {
                 for (PFObject *activity in objects)
                 {
                     Trip *trip = activity[@"trip"];
-                    if (trip.name != nil)
+                    if (trip.name != nil && trip.publicTripDetail != nil)
                     {
                         [self.trips addObject:trip];
                     }
