@@ -13,6 +13,7 @@
 
 @property (nonatomic, weak) PFUser *user;
 
+
 @end
 
 @implementation UserTableViewCell
@@ -33,11 +34,18 @@
 
 - (void)setUser:(PFUser *)user {
     _user = user;
-    
-    [self.nameLabel setText:user[@"name"]];
+    NSString *name;
+    if (user[@"firstName"] == nil){
+        name = [NSString stringWithFormat:@"%@",user[@"firstName"]];
+    } else {
+        name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
+    }
+    [self.nameLabel setText:name];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@", user.username]];
     
 }
+
+
 
 - (IBAction)followButtonPressed:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didPressFollowButton:)]) {

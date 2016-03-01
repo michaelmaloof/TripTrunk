@@ -214,8 +214,8 @@
                 {
                     
                     Trip *trip = activity[@"trip"];
-                    
-                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
+
+                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
@@ -293,8 +293,8 @@
                 {
                     
                     Trip *trip = activity[@"trip"];
-                    
-                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId])
+
+                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
@@ -384,7 +384,7 @@
                     
                         Trip *tripCheck = check[@"trip"];
                         
-                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId]){
+                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId] && trip.publicTripDetail != nil){
                             
                             if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
                                 [self.mutualTrunks addObject:tripCheck];
@@ -570,7 +570,7 @@
                 
                 Trip *trip = activity[@"trip"];
                 
-                if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId])
+                if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                 {
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];

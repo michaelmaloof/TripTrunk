@@ -462,7 +462,7 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                if (trip.name != nil)
+                if (trip.name != nil && trip.publicTripDetail != nil)
                 {
                     [self.parseLocations addObject:trip];
                 }
@@ -557,7 +557,7 @@
             for (PFObject *activity in objects)
             {
                 Trip *trip = activity[@"trip"];
-                if (trip.name != nil)
+                if (trip.name != nil && trip.publicTripDetail != nil)
                 {
                     [self.parseLocations addObject:trip];
                 }

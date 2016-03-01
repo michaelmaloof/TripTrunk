@@ -21,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
+@property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 
 @property (strong, nonatomic) PFUser *user;
 @property (nonatomic)BOOL isFBUser;
@@ -31,6 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _firstNameTextField.delegate = self;
     _fullnameTextField.delegate = self;
     _emailTextField.delegate = self;
     _usernameTextField.delegate = self;
@@ -56,7 +58,7 @@
                 });
 
                 NSString *facebookID = userData[@"id"];
-                NSString *name = userData[@"name"];
+//                NSString *name = userData[@"name"];
                 NSString *email = userData[@"email"];
                 
                 if (email == nil){
@@ -67,13 +69,13 @@
                     facebookID = @"";
                 }
                 
-                if (name == nil){
-                    name = @"";
-                }
+//                if (name == nil){
+//                    name = @"";
+//                }
 
                 
                 [_user setObject:facebookID forKey:@"fbid"];
-                [_user setObject:name forKey:@"name"];
+//                [_user setObject:name forKey:@"name"];
                 [_user setObject:email forKey:@"email"];
                 
                 
@@ -96,7 +98,7 @@
 
 - (void)updateFieldsWithFBInfo:(NSDictionary *)userData {
     [self.emailTextField setText:userData[@"email"]];
-    [self.fullnameTextField setText:userData[@"name"]];
+//    [self.fullnameTextField setText:userData[@"name"]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -149,12 +151,13 @@
     {
     
         NSString *username = _usernameTextField.text;
-        NSString *fullName = _fullnameTextField.text;
+        NSString *firstName = _firstNameTextField.text;
+        NSString *lastName = _fullnameTextField.text;
         NSString *email = _emailTextField.text;
         NSString *password = _passwordTextField.text;
         NSString *hometown = _hometownTextField.text;
         
-        if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || fullName.length == 0) {
+        if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || firstName.length == 0 || lastName.length == 0) {
             NSLog(@"Empty Field");
 
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
@@ -246,6 +249,9 @@
         }
         
         _user.username = username;
+        [_user setValue:firstName forKey:@"firstName"];
+        [_user setValue:lastName forKey:@"lastName"];
+        NSString *fullName = [NSString stringWithFormat:@"%@, %@", firstName, lastName];
         [_user setValue:fullName forKey:@"name"];
         _user.email = email;
         [_user setPassword:password];

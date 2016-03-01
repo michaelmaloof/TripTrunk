@@ -534,8 +534,18 @@ CLCloudinary *cloudinary;
     
     NSString *content = @"";
     
+    BOOL isAllActivity = NO;
+    
+    PFUser *toUser = activity[@"toUser"];
+    
     if ([type isEqualToString:@"like"]) {
-        content = NSLocalizedString(@"liked your photo.",@"liked your photo.");
+        
+        if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
+            content = NSLocalizedString(@"liked your photo.",@"liked your photo.");
+        } else {
+            isAllActivity = YES;
+            content = NSLocalizedString(@"liked a photo by",@"liked a photo by");
+        }
     }
     else if ([type isEqualToString:@"comment"]) {
         NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
@@ -551,7 +561,12 @@ CLCloudinary *cloudinary;
         }
     }
     else if ([type isEqualToString:@"follow"]) {
-        content = NSLocalizedString(@"followed you.",@"followed you.");
+        if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
+            content = NSLocalizedString(@"followed you.",@"followed you.");
+        } else {
+            isAllActivity = YES;
+            content = NSLocalizedString(@"followed",@"followed");
+        }
     }
     else if ([type isEqualToString:@"addedPhoto"]) {
         NSString *addedPhoto = NSLocalizedString(@"added a photo to",@"added a photo to");
@@ -569,7 +584,13 @@ CLCloudinary *cloudinary;
         time = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:created];
     }
     
-    NSString *contentString = [NSString stringWithFormat:@"%@ %@ ", user.username, content];
+    NSString *contentString = @"";
+    
+    if (isAllActivity == NO){
+        contentString = [NSString stringWithFormat:@"%@ %@", user.username, content];
+    } else {
+        contentString = [NSString stringWithFormat:@"%@ %@ %@ ", user.username, content, toUser.username];
+    }
 
     NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;

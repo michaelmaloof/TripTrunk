@@ -583,6 +583,8 @@
     subqueries.limit = 20;
     [subqueries orderByDescending:@"createdAt"];
     [subqueries includeKey:@"fromUser"];
+    [subqueries includeKey:@"toUser"];
+
     [subqueries includeKey:@"photo"];
     [subqueries includeKey:@"trip"];
     [subqueries includeKey:@"trip.publicTripDetail"];
@@ -631,6 +633,74 @@
         completionBlock(objects, error);
     }];
 }
+
++ (void)queryForFollowingActivities:(NSInteger)count friends:(NSMutableArray*)friends activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock
+{
+    PFQuery *likes = [PFQuery queryWithClassName:@"Activity"];
+    [likes whereKey:@"fromUser" containedIn:friends];
+    [likes whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
+    [likes whereKey:@"type" equalTo:@"like"];
+    [likes whereKeyExists:@"trip"];
+
+    PFQuery *following = [PFQuery queryWithClassName:@"Activity"];
+    [following whereKey:@"fromUser" containedIn:friends];
+    [following whereKey:@"type" equalTo:@"follow"];
+    [following whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
+    
+    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[likes, following]];
+    subqueries.limit = 20;
+    [subqueries orderByDescending:@"createdAt"];
+    [subqueries includeKey:@"fromUser"];
+    [subqueries includeKey:@"toUser"];
+    [subqueries includeKey:@"photo"];
+    [subqueries includeKey:@"trip"];
+    [subqueries includeKey:@"trip.publicTripDetail"];
+    [subqueries whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    
+    for (PFObject *ojber in activities){
+        int count = 0;
+        for (PFObject *objer2 in activities){
+            if ([objer2.objectId isEqualToString:ojber.objectId]){
+                count +=1;
+                if (count ==2){
+                    NSLog(@"clone %@", ojber.objectId);
+                }
+            }
+        }
+    }
+    
+    if (activities > 0 && isRefresh == NO){
+        
+        PFObject *object = activities.lastObject;
+        NSMutableArray *objIds = [[NSMutableArray alloc]init];
+        for (PFObject *obj in activities){
+            [objIds addObject:obj.objectId];
+        }
+        
+        [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
+        [subqueries whereKey:@"objectId" notContainedIn:objIds];
+        
+    } else if (isRefresh ==YES && activities.count >0){
+        
+        PFObject *object = activities.lastObject;
+        NSMutableArray *objIds = [[NSMutableArray alloc]init];
+        for (PFObject *obj in activities){
+            [objIds addObject:obj.objectId];
+        }
+        
+        [subqueries whereKey:@"createdAt" greaterThan:object.createdAt];
+        [subqueries whereKey:@"objectId" notContainedIn:objIds];
+    }
+    
+    
+    [subqueries setCachePolicy:kPFCachePolicyNetworkOnly]; //is this the right one?
+    
+    
+    [subqueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        completionBlock(objects, error);
+    }];
+}
+
 
 
 + (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock; {

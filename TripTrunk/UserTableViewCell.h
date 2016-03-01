@@ -20,7 +20,9 @@
 @property (nonatomic, weak, readonly) PFUser *user;
 
 
+
 - (void)setUser:(PFUser *)user;
+
 
 @end
 
