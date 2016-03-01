@@ -383,7 +383,7 @@
             [self.tableView reloadData];
             
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
-                                block:^(BOOL succeeded, NSError *error) {
+                                block:^(BOOL succeeded, PFObject *object, NSError *error) {
                                     
                 if (!error) {
                     NSLog(@"Comment Saved Success");

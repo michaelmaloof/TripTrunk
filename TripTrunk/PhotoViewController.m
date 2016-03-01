@@ -56,6 +56,7 @@
 @property (weak, nonatomic) IBOutlet KILabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
+@property (strong, nonatomic) NSString *previousComment;
 
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
@@ -758,6 +759,9 @@
 - (IBAction)editCaptionTapped:(id)sender {
     
     if (self.addCaption.tag == 0){
+        //store the mentioned users from the current comment
+        if (self.caption.text.length > 0)
+            self.previousComment = self.caption.text;
         self.caption.hidden = NO;
         self.captionLabel.hidden = YES;
         self.caption.editable = YES;
@@ -769,53 +773,70 @@
         self.caption.hidden = YES;
         self.captionLabel.hidden = NO;
 
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow? I added one for sendPushNotificationsForMentionedUsers
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (!error)
             {
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
-                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
+                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error) {
                         NSLog(@"caption saved as comment");
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
+                        [self saveMentionToDatabase:object];
                     }];
                 } else
                 {
                     //if there already is a caption we edit it and save it
                     __block BOOL save = NO;
                     for (PFObject *obj in self.commentActivities){
-                        if ((BOOL)[obj objectForKey:@"isCaption"] == YES && save == NO)
+                        if ((BOOL)[obj objectForKey:@"isCaption"] && !save)
                         {
                             save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
+                            [self saveMentionToDatabase:obj];
                         }
                     }
                     
-                    if (save == NO) {
+                    if (!save) {
                         
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error)
                          {
                              NSLog(@"caption saved as comment");
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             
+                             [self saveMentionToDatabase:object];
                          }];
                         
+                    }else{
+                        //shouldn't we handle this conditon?
                     }
-                    
                 }
             }
             
             [self.caption endEditing:YES];
             self.addCaption.enabled = YES;
-
         }];
-        
-        
     }
-    
+}
+
+-(void)saveMentionToDatabase:(PFObject*)object{
+    //save mention to database
+    NSArray *mentionList = [[NSArray alloc] initWithArray:[self commentMentionsWithUsernames:self.photo.caption]];
+    if (mentionList) {
+        for(PFUser *user in mentionList){
+            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:self.photo block:^(BOOL succeeded, NSError *error){
+                if(succeeded)
+                    NSLog(@"Mention added to db for %@",user.username);
+                else NSLog(@"Error: %@", error);
+            }];
+        }
+    }
+
 }
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
@@ -1325,6 +1346,7 @@
 
 #pragma mark -
 //FIXME: This needs to be refactored into a single method
+//FIXME: Send caption in to method so uitextview is not hard coded
 - (void)colorHashtagAndMentions:(NSUInteger)cursorPosition{
     //Convert caption to Mutable and Attributed
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
@@ -1358,6 +1380,44 @@
     self.caption.attributedText = string;
     //make sure the cursor is in the proper place while typing
     [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
+}
+
+-(NSArray*)commentMentionsWithUsernames:(NSString*)comment{
+    
+    //quick check to see if the string contains an @ before we do regex
+    if([comment containsString:@"@"]){
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        
+        //create an array of every word in the comment
+        NSArray *allWords = [comment componentsSeparatedByString:@" "];
+    
+        //Loop through all of the words
+        for(NSString *word in allWords){
+            //check if the word starts with a @
+            if(![word isEqualToString:@""]){
+                if([[word substringToIndex:1] isEqualToString:@"@"]){
+                    //check to see if the user was already in the caption to prevent adding them to the db multiple times
+                    if(![self.previousComment containsString:word]){
+                        //load user from username
+                        PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
+                        //If the user is found, add it the array to return
+                        if(mentionedUser)
+                            [array addObject:mentionedUser];
+                    }
+                }
+            }
+        }
+        
+        //return an array with all of the mention usernames in the comment
+        if(array.count > 0){
+            NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
+            return weededArray;
+        }
+        
+    }
+    
+    //there are no mentions, just return nil
+    return nil;
 }
 
 

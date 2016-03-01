@@ -30,7 +30,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    TTSuggestionViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];    
+    TTSuggestionViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     PFUser *userToAdd = self.displayFriendsArray[indexPath.row];
 //    cell.userFullName.text = [NSString stringWithFormat:@"%@ %@",userToAdd[@"name"],userToAdd[@"lastName"]];
     cell.userFullName.text = userToAdd[@"name"];
@@ -98,16 +98,12 @@
 -(void)updateAutocompleteTableView{
     self.displayFriendsArray = [[NSArray alloc] init];
     //Create an array of predicates so a user can search by username and first & last name
-//    NSMutableArray *partPredicates = [NSMutableArray arrayWithCapacity:3];
-//    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
-//    NSPredicate *firstnamePredicate = [NSPredicate predicateWithFormat:@"firstName beginswith %@", [self.mentionText substringFromIndex:1]];
-//    NSPredicate *lastnamePredicate = [NSPredicate predicateWithFormat:@"lastName beginswith %@", [self.mentionText substringFromIndex:1]];
-//    [partPredicates addObject:usernamePredicate]; [partPredicates addObject:firstnamePredicate]; [partPredicates addObject:lastnamePredicate];
-    
-    NSMutableArray *partPredicates = [NSMutableArray arrayWithCapacity:2];
-    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username beginswith %@", [self.mentionText substringFromIndex:1]];
-    NSPredicate *firstnamePredicate = [NSPredicate predicateWithFormat:@"lowercaseName contains %@", [self.mentionText substringFromIndex:1]];
-    [partPredicates addObject:usernamePredicate]; [partPredicates addObject:firstnamePredicate];
+    //[cd] in the predicate tells it to ignore case and diacritic
+    NSMutableArray *partPredicates = [NSMutableArray arrayWithCapacity:3];
+    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username beginswith[cd] %@", [self.mentionText substringFromIndex:1]];
+    NSPredicate *firstnamePredicate = [NSPredicate predicateWithFormat:@"firstName beginswith[cd] %@", [self.mentionText substringFromIndex:1]];
+    NSPredicate *lastnamePredicate = [NSPredicate predicateWithFormat:@"lastName beginswith[cd] %@", [self.mentionText substringFromIndex:1]];
+    [partPredicates addObject:usernamePredicate]; [partPredicates addObject:firstnamePredicate]; [partPredicates addObject:lastnamePredicate];
 
     //Set the predicate to the array of predicates
     NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:partPredicates];
