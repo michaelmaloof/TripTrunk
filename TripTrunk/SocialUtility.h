@@ -172,6 +172,14 @@
  *  @param completionBlock Array of Activity objects or error
  */
 + (void)queryForAllActivities:(NSInteger)count trips:(NSMutableArray*)trips activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock;
+
+/**
+ *  Gets all Activities for the users who the  current user follows
+ *
+ *  @param completionBlock Array of Activity objects or error
+ */
++ (void)queryForFollowingActivities:(NSInteger)count friends:(NSMutableArray*)friends activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock;
+
 /**
  *  Gets the following status of one user to another
  *
@@ -228,6 +236,8 @@
  *  @param completionBlock block with count or error
  */
 + (void)trunkCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
+
+
 
 
 @end

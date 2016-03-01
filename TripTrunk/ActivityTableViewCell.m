@@ -11,6 +11,7 @@
 #import "TTUtility.h"
 
 #define USER_ACTIVITY_URL @"activity://user"
+#define TOUSER_ACTIVITY_URL @"activity://toUser"
 #define TRIP_ACTIVITY_URL @"activity://trip"
 #define kPENDING_FOLLOW_ACCEPT_URL @"activity://pendingFollow_accept"
 #define kPENDING_FOLLOW_REJECT_URL @"activity://pendingFollow_reject"
@@ -19,6 +20,7 @@
 @interface ActivityTableViewCell () <TTTAttributedLabelDelegate>
 
 @property (nonatomic, strong, readwrite) PFUser *user;
+@property (nonatomic, strong, readwrite) PFUser *toUser;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *contentLabel;
 @property (nonatomic, strong, readwrite) NSDictionary *activity;
 @end
@@ -74,6 +76,7 @@
 
     _activity = activity;
     _user = activity[@"fromUser"];
+    self.toUser = activity[@"toUser"];
     
     if (!activity[@"photo"]) {
         [self.photoImageView setHidden:YES];
@@ -107,9 +110,16 @@
     
     [self.contentLabel setAttributedText:mut];
     
-    // Set up a link for the username
+    // Set up a link for the usernames
     NSRange range = [self.contentLabel.text rangeOfString:_user.username];
     [self.contentLabel addLinkToURL:[NSURL URLWithString:USER_ACTIVITY_URL] withRange:range]; // Embedding a custom link in a substring
+
+    if (self.toUser){
+    
+    NSRange toRange = [self.contentLabel.text rangeOfString:self.toUser.username];
+    [self.contentLabel addLinkToURL:[NSURL URLWithString:TOUSER_ACTIVITY_URL] withRange:toRange]; // Embedding a custom link in a substring
+        
+    }
     
     // If it'as an addToTrip or addedPhoto activity, set the Trip Name as a URL
     if ( ( [_activity[@"type"] isEqualToString:@"addToTrip"] || [_activity[@"type"] isEqualToString:@"addedPhoto"])
@@ -161,6 +171,16 @@
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
                 [self.delegate activityCell:self didPressUsernameForUser:_user];
+            }
+        } else if ([[url scheme] hasPrefix:@"activity"]) {
+            if ([[url host] hasPrefix:@"toUser"]) {
+                /* load user profile screen */
+                NSLog(@"ToUsername tapped");
+                
+                // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+                if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
+                    [self.delegate activityCell:self didPressUsernameForUser:self.toUser];
+                }
             }
         }
         else if([[url host] hasPrefix:@"trip"]) {

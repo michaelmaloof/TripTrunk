@@ -31,6 +31,8 @@ enum TTActivityViewType : NSUInteger {
 @interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, ActivityTableViewCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
+@property (strong, nonatomic) NSMutableArray *followingActivities;
+
 @property NSUInteger viewType;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
@@ -39,6 +41,9 @@ enum TTActivityViewType : NSUInteger {
 @property NSMutableArray *trips;
 @property BOOL needToRefresh;
 @property BOOL isLoading;
+@property UIBarButtonItem *filter;
+@property NSMutableArray *friends;
+
 
 
 @end
@@ -54,6 +59,8 @@ enum TTActivityViewType : NSUInteger {
         _activitySearchComplete = NO;
         self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
+
+
     }
     return self;
 }
@@ -92,6 +99,13 @@ enum TTActivityViewType : NSUInteger {
     }
     // Else, it's the All Activities list
     else {
+        self.friends= [[NSMutableArray alloc]init];
+        self.followingActivities = [[NSMutableArray alloc]init];
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+        self.filter.tag = 0;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         // Initialize the refresh control.
         UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
         [refreshControl addTarget:self
@@ -108,11 +122,9 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
     } else {
-        
         
         [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
         [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
@@ -142,7 +154,7 @@ enum TTActivityViewType : NSUInteger {
                 for (PFObject *activity in objects)
                 {
                     Trip *trip = activity[@"trip"];
-                    if (trip.name != nil) //FIXME should also be && trip.publicTrip != nil but parse doesnt work. Why?
+                    if (trip.name != nil && trip.publicTripDetail != nil) 
                     {
                         [self.trips addObject:trip];
                     }
@@ -164,6 +176,7 @@ enum TTActivityViewType : NSUInteger {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             self.activitySearchComplete = YES;
                             self.isLoading = NO;
+                            self.navigationItem.rightBarButtonItem.enabled = YES;
                             [self.tableView reloadData];
                         });
                     }];
@@ -171,6 +184,7 @@ enum TTActivityViewType : NSUInteger {
                 }
 
             } else {
+                self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.isLoading = NO;
             }
                 
@@ -262,58 +276,121 @@ enum TTActivityViewType : NSUInteger {
     
 }
 
-- (void)refresh:(UIRefreshControl *)refreshControl {
+- (void)refresh:(UIRefreshControl *)refreshControl
+{
     
     UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
     UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
     [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     [self.navigationController setTabBarItem:searchItem];
     
-    if (self.isLikes == NO){
-    // Query for activities for user
-        if (self.isLoading == NO){
-            
-        self.isLoading = YES;
-        [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error) {
-//        self.activities = [[NSMutableArray alloc]init];
-        for (PFObject *obj in activities){
-            if (obj[@"trip"]){
-                [self.activities insertObject:obj atIndex:0];
-            } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                [self.activities insertObject:obj atIndex:0];
+    if (self.isLikes == NO)
+    {
+        // Query for activities for user
+        if (self.isLoading == NO)
+        {
+            self.navigationItem.rightBarButtonItem.enabled = NO;
+            self.isLoading = YES;
+            if (self.filter.tag == 0)
+            {
                 
+                [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error)
+                {
+                    //        self.activities = [[NSMutableArray alloc]init];
+                    for (PFObject *obj in activities)
+                    {
+                        if (obj[@"trip"])
+                        {
+                            [self.activities insertObject:obj atIndex:0];
+                        } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
+                        {
+                            [self.activities insertObject:obj atIndex:0];
+                            
+                        }
+                    }
+                    //        _activities = [NSMutableArray arrayWithArray:activities];
+                    dispatch_async(dispatch_get_main_queue(), ^
+                    {
+                        // End the refreshing & update the timestamp
+                        if (refreshControl)
+                        {
+                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                            [formatter setDateFormat:@"MMM d, h:mm a"];
+                            NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                            NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                                        forKey:NSForegroundColorAttributeName];
+                            NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                            refreshControl.attributedTitle = attributedTitle;
+                            
+                            [refreshControl endRefreshing];
+                        }
+                        self.isLoading = NO;
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self.tableView reloadData];
+                        
+                    });
+                    
+                    if (error)
+                    {
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        self.isLoading = NO;
+                    }
+                }];
+            } else if (self.filter.tag ==1) {
+                [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:self.followingActivities isRefresh:YES query:^(NSArray *activities, NSError *error) {
+                 
+                     for (PFObject *obj in activities)
+                     {
+                         
+                         if (obj[@"trip"])
+                         {
+                             Trip *trip = obj[@"trip"];
+                             if (trip.name != nil)
+                             {
+                                 [self.followingActivities insertObject:obj atIndex:0];
+                             }
+                         }
+                         else if ([obj[@"type"] isEqualToString:@"follow"]){
+                             [self.followingActivities insertObject:obj atIndex:0];
+                             
+                         }
+                     }
+                     //        _activities = [NSMutableArray arrayWithArray:activities];
+                     dispatch_async(dispatch_get_main_queue(), ^
+                                    {
+                                        // End the refreshing & update the timestamp
+                                        if (refreshControl)
+                                        {
+                                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                                            [formatter setDateFormat:@"MMM d, h:mm a"];
+                                            NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                                            NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                                                        forKey:NSForegroundColorAttributeName];
+                                            NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                                            refreshControl.attributedTitle = attributedTitle;
+                                            
+                                            [refreshControl endRefreshing];
+                                        }
+                                        self.isLoading = NO;
+                                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                                        [self.tableView reloadData];
+                                        
+                                    });
+                     
+                     if (error)
+                     {
+                         self.navigationItem.rightBarButtonItem.enabled = YES;
+                         self.isLoading = NO;
+                     }
+                 }];
+
             }
         }
-//        _activities = [NSMutableArray arrayWithArray:activities];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // End the refreshing & update the timestamp
-            if (refreshControl) {
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"MMM d, h:mm a"];
-                NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-                NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-                                                                            forKey:NSForegroundColorAttributeName];
-                NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-                refreshControl.attributedTitle = attributedTitle;
-                
-                [refreshControl endRefreshing];
-            }
-            self.isLoading = NO;
-
-            [self.tableView reloadData];
-
-        });
-            
-            if (error){
-                self.isLoading = NO;
-            }
-    }];
     }
-    }
-    
-    
 }
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
 {
@@ -328,27 +405,62 @@ enum TTActivityViewType : NSUInteger {
     if(y > h + reload_distance && self.isLikes == NO) {
         
         if (self.isLoading == NO){
+            self.navigationItem.rightBarButtonItem.enabled = NO;
             self.isLoading = YES;
-        [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
-            for (PFObject *obj in activities){
-                if (obj[@"trip"]){
-                    [self.activities addObject:obj];
-                } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                    [self.activities addObject:obj];
-                    
-                }
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.isLoading = NO;
-                [self.tableView reloadData];
-                
-            });
             
-            if (error){
-                self.isLoading = NO;
+            if (self.filter.tag == 0){
+                
+                [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                    for (PFObject *obj in activities){
+                        if (obj[@"trip"]){
+                            [self.activities addObject:obj];
+                        } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+                            [self.activities addObject:obj];
+                            
+                        }
+                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.isLoading = NO;
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self.tableView reloadData];
+                        
+                    });
+                    
+                    if (error){
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        self.isLoading = NO;
+                    }
+                }];
+            } else if (self.filter.tag == 1){
+                [SocialUtility queryForFollowingActivities:self.followingActivities.count friends:self.friends activities:self.followingActivities isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                    for (PFObject *obj in activities){
+                        if (obj[@"trip"]){
+                            Trip *trip = obj[@"trip"];
+                            if (trip.name != nil){
+                                [self.followingActivities addObject:obj];
+                                
+                            }
+                        }
+                        else if ([obj[@"type"] isEqualToString:@"follow"]){
+                            [self.followingActivities addObject:obj];
+                            
+                        }
+                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.isLoading = NO;
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self.tableView reloadData];
+                        
+                    });
+                    
+                    if (error){
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        self.isLoading = NO;
+                    }
+                }];
+
             }
-        }];
-    }
+        }
     }
 }
 
@@ -361,16 +473,26 @@ enum TTActivityViewType : NSUInteger {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _activities.count;
+    if (self.filter.tag == 0){
+        return _activities.count;
+    } else {
+        return self.followingActivities.count;
+    }
 }
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (_viewType == TTActivityViewAllActivities) {
+        NSAttributedString *cellText = [[NSAttributedString alloc]init];
+        if (self.filter.tag == 0){
+            // Get a variable cell height to make sure we can fit long comments
+            cellText= [[TTUtility sharedInstance] attributedStringForActivity:[_activities objectAtIndex:indexPath.row]];
+        } else {
+            // Get a variable cell height to make sure we can fit long comments
+            cellText = [[TTUtility sharedInstance] attributedStringForActivity:[self.followingActivities objectAtIndex:indexPath.row]];
+        }
         
-        // Get a variable cell height to make sure we can fit long comments
-        NSAttributedString *cellText = [[TTUtility sharedInstance] attributedStringForActivity:[_activities objectAtIndex:indexPath.row]];
         CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
         
         CGSize labelSize = [cellText boundingRectWithSize:constraintSize
@@ -390,8 +512,17 @@ enum TTActivityViewType : NSUInteger {
         UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     //    [cell setDelegate:self];
         
+        
         // We assume fromUser contains the full PFUser object
-        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        PFUser *user;
+        if (self.filter.tag == 0){
+        
+            user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+            
+        } else {
+            user = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+
+        }
         NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
         [cell setUser:user];
         
@@ -424,12 +555,40 @@ enum TTActivityViewType : NSUInteger {
     else if (_viewType == TTActivityViewAllActivities) {
         ActivityTableViewCell *activityCell = [self.tableView dequeueReusableCellWithIdentifier:ACTIVITY_CELL forIndexPath:indexPath];
         [activityCell setDelegate:self];
-        NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
+        NSDictionary *activity;
+        
+        if (self.filter.tag == 0) {
+           activity = [_activities objectAtIndex:indexPath.row];
+        } else {
+            activity = [self.followingActivities objectAtIndex:indexPath.row];
+        }
         
         [activityCell setActivity:activity];
         
         // We assume fromUser contains the full PFUser object
-        PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        PFUser *user;
+        
+        if ([activity[@"type"] isEqualToString:@"follow"] || [activity[@"type"] isEqualToString:@"like"]){
+            
+            PFUser *check = activity[@"toUser"];
+            if (![[PFUser currentUser].objectId isEqualToString:check.objectId]){
+                
+                if (self.filter.tag == 1){
+                    PFUser *toUser;
+                    toUser = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"toUser"];
+                }
+
+            }
+        }
+        
+        
+        if (self.filter.tag == 0) {
+            user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        } else {
+            user = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+
+        }
+        
         NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -500,7 +659,15 @@ enum TTActivityViewType : NSUInteger {
         return;
     }
     
-    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
+    UserProfileViewController *vc;
+    
+    if (self.filter.tag == 0) {
+        
+        vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
+        
+    } else {
+        vc = [[UserProfileViewController alloc] initWithUser:[[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
+    }
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -637,12 +804,19 @@ enum TTActivityViewType : NSUInteger {
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    
+    if (self.filter.tag == 0){
     // Search Controller and the regular table view have different data sources
     if (self.activities.count == 0 && self.activitySearchComplete) {
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
+    }
+    } else {
+        if (self.followingActivities.count == 0 && self.activitySearchComplete) {
+            // A little trick for removing the cell separators
+            self.tableView.tableFooterView = [UIView new];
+            return YES;
+        }
     }
     
     return NO;
@@ -705,6 +879,74 @@ enum TTActivityViewType : NSUInteger {
 }
 
 
+-(void)toggleWasTapped{
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    if (self.filter.tag == 0) {
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
+        self.filter.tag = 1;
+        if (self.friends.count > 0){
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            [self.tableView reloadData];
+        } else {
+            [self loadFriends];
+        }
+    } else  {
+        [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
+        self.filter.tag = 0;
+        //load the user's activities
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        [self.tableView reloadData];
+    }
 
+}
+
+-(void)loadFriends{
+    // TODO: Make this work for > 100 users since parse default limits 100.
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error) {
+            for (PFUser *user in users) {
+                [self.friends addObject:user];
+            }
+            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self loadUserActivities];
+            });
+            
+        }else {
+            NSLog(@"Error loading following: %@",error);
+        }
+    }];
+}
+
+-(void)loadUserActivities{
+    
+    if (self.followingActivities.count == 0 && _viewType == TTActivityViewAllActivities) {
+        // Query for activities for user
+        if (self.isLoading == NO){
+            self.isLoading = YES;
+
+            [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                for (PFObject *obj in activities){
+                    if (obj[@"trip"]){
+                        Trip *trip = obj[@"trip"];
+                        if (trip.name != nil){
+                            [self.followingActivities addObject:obj];
+                        }
+                    }
+                    else if ([obj[@"type"] isEqualToString:@"follow"]){
+                        [self.followingActivities addObject:obj];
+                        
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.activitySearchComplete = YES;
+                    self.isLoading = NO;
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    [self.tableView reloadData];
+                });
+            }];
+        }
+    }
+}
 
 @end
