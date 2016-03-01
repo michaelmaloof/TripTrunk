@@ -142,7 +142,7 @@ enum TTActivityViewType : NSUInteger {
                 for (PFObject *activity in objects)
                 {
                     Trip *trip = activity[@"trip"];
-                    if (trip.name != nil && trip.publicTripDetail != nil)
+                    if (trip.name != nil) //FIXME should also be && trip.publicTrip != nil but parse doesnt work. Why?
                     {
                         [self.trips addObject:trip];
                     }
