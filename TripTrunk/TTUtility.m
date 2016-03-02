@@ -576,6 +576,16 @@ CLCloudinary *cloudinary;
         content =  NSLocalizedString(@"requested to follow you.",@"requested to follow you.");
     }
     
+    else if ([type isEqualToString:@"mention"]) {
+        if ((BOOL)activity[@"isCaption"] == YES) {
+            content =  NSLocalizedString(@"mentioned you in a photo caption.",@"mentioned you in a photo caption.");
+
+        }else {
+            content =  NSLocalizedString(@"mentioned you in a comment.",@"mentioned you in a comment.");
+        }
+    }
+    
+    
     PFUser *user = activity[@"fromUser"];
     NSString *time = @"";
 
