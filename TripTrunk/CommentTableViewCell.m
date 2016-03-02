@@ -11,13 +11,12 @@
 #import "TTUtility.h"
 #import "TTTAttributedLabel.h"
 
-
 #define USER_ACTIVITY_URL @"activity://user"
 
 @interface CommentTableViewCell () <TTTAttributedLabelDelegate>
 
 @property (nonatomic, strong, readwrite) PFUser *user;
-@property (weak, nonatomic) IBOutlet TTTAttributedLabel *contentLabel;
+
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *usernameLabel;
 @property (nonatomic, strong, readwrite) NSDictionary *activity;
 
@@ -30,7 +29,7 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     [self.profilePicImageView setClipsToBounds:YES];
-    [self.contentLabel setLineSpacing:5.0];
+//    [self.contentLabel setLineSpacing:5.0];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
         

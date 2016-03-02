@@ -15,6 +15,13 @@
 @interface SocialUtility : NSObject
 
 /**
+ *  Load PFUser from username string
+ *
+ *  @param username String to search for user
+ */
++ (PFUser*)loadUserFromUsername:(NSString*)username;
+
+/**
  *  CurrentUser will follow the given user, asychronous operation
  *
  *  @param user            User to follow
@@ -120,7 +127,27 @@
  *  @param photo           Photo object on which the comment is being written
  *  @param completionBlock completion handler callback
  */
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL succeeded, PFObject *object, NSError *error))completionBlock;
+
+/**
+ *  Adds a user mention on the given comment
+ *
+ *  @param isCaption       Sets the mention as a comment or caption
+ *  @param commentObject   Pointer to the objectId of the comment
+ *  @param user            The user mention in the comment
+ *  @param photo           Photo object on which the comment is being written
+ *  @param completionBlock completion handler callback
+ */
++ (void)addMention:(PFObject *)commentObject isCaption:(BOOL)isCaption withUser:(PFUser*)user forPhoto:(Photo *)photo block:(void (^)(BOOL, NSError *))completionBlock;
+
+/**
+ *  Removes a user mention on the given comment
+ *
+ *  @param commentObject   Pointer to the objectId of the comment
+ *  @param user            The user mention in the comment
+ *  @param completionBlock completion handler callback
+ */
++ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user block:(void (^)(BOOL, NSError *))completionBlock;
 
 /**
  *  Retrieves the all of the Comment Activity objects for the given Photo

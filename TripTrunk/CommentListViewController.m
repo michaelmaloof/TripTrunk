@@ -15,6 +15,7 @@
 #import "TTUtility.h"
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "KILabel.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
@@ -202,6 +203,15 @@
                                                          [weakCell setNeedsLayout];
                                                          
                                                      } failure:nil];
+    
+    // Block to handle all our taps, we attach this to all the label's handlers
+    KILinkTapHandler tapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        [self tappedLink:string cellForRowAtIndexPath:indexPath];
+    };
+    
+    commentCell.contentLabel.userHandleLinkTapHandler = tapHandler;
+//    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
+//    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
 
     
     return weakCell;
@@ -373,7 +383,7 @@
             [self.tableView reloadData];
             
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
-                                block:^(BOOL succeeded, NSError *error) {
+                                block:^(BOOL succeeded, PFObject *object, NSError *error) {
                                     
                 if (!error) {
                     NSLog(@"Comment Saved Success");
@@ -391,6 +401,31 @@
             
         }
     }
+}
+
+#pragma mark - LILabelDelegateMethods
+- (void)tappedLink:(NSString *)link cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if([self isLinkAMention:link]){
+        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:link]];
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        if(vc)
+            [self.navigationController pushViewController:vc animated:YES];
+    }else if ([self isLinkAHashtag:link]){
+        //FIXME: Implement this for hashtags
+    }
+}
+
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
+
+-(BOOL)isLinkAMention:(NSString*)link{
+    return [[link substringToIndex:1] isEqualToString:@"@"] ? YES : NO;
+}
+
+-(BOOL)isLinkAHashtag:(NSString*)link{
+    return [[link substringToIndex:1] isEqualToString:@"#"] ? YES : NO;
 }
 
 #pragma mark -
