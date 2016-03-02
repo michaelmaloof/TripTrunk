@@ -839,6 +839,21 @@
 
 }
 
+-(void)removeMentionFromDatabase:(PFObject*)object{
+    //remove mention from database
+    NSArray *mentionList = [[NSArray alloc] initWithArray:[self removeMentionsWithUsernames:self.photo.caption]];
+    if (mentionList) {
+        for(PFUser *user in mentionList){
+            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:self.photo block:^(BOOL succeeded, NSError *error){
+                if(succeeded)
+                    NSLog(@"Mention removed to db for %@",user.username);
+                else NSLog(@"Error: %@", error);
+            }];
+        }
+    }
+    
+}
+
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
 //    self.caption.editable = YES;
@@ -1391,6 +1406,44 @@
         //create an array of every word in the comment
         NSArray *allWords = [comment componentsSeparatedByString:@" "];
     
+        //Loop through all of the words
+        for(NSString *word in allWords){
+            //check if the word starts with a @
+            if(![word isEqualToString:@""]){
+                if([[word substringToIndex:1] isEqualToString:@"@"]){
+                    //check to see if the user was already in the caption to prevent adding them to the db multiple times
+                    if(![self.previousComment containsString:word]){
+                        //load user from username
+                        PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
+                        //If the user is found, add it the array to return
+                        if(mentionedUser)
+                            [array addObject:mentionedUser];
+                    }
+                }
+            }
+        }
+        
+        //return an array with all of the mention usernames in the comment
+        if(array.count > 0){
+            NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
+            return weededArray;
+        }
+        
+    }
+    
+    //there are no mentions, just return nil
+    return nil;
+}
+
+-(NSArray*)removeMentionsWithUsernames:(NSString*)comment{
+    
+    //quick check to see if the string contains an @ before we do regex
+    if([comment containsString:@"@"]){
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        
+        //create an array of every word in the comment
+        NSArray *allWords = [comment componentsSeparatedByString:@" "];
+        
         //Loop through all of the words
         for(NSString *word in allWords){
             //check if the word starts with a @

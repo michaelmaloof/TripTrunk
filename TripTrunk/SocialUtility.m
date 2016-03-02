@@ -441,6 +441,27 @@
     }];
 }
 
++ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user forPhoto:(Photo *)photo block:(void (^)(BOOL, NSError *))completionBlock
+{
+    if (commentObject == nil) {
+        if (completionBlock)
+            return completionBlock(false, nil);
+    }
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"comment" equalTo:commentObject];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
+         if (!error && object.count != 0){
+             [object[0] deleteEventually];
+         }
+         else{
+             NSLog(@"Error: %@", error);
+         }
+     }];
+}
+
 + (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
 {
     // Query all user's that
