@@ -441,8 +441,7 @@
     }];
 }
 
-+ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user forPhoto:(Photo *)photo block:(void (^)(BOOL, NSError *))completionBlock
-{
++ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user block:(void (^)(BOOL, NSError *))completionBlock{
     if (commentObject == nil) {
         if (completionBlock)
             return completionBlock(false, nil);
@@ -453,12 +452,9 @@
     [query whereKey:@"comment" equalTo:commentObject];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
-         if (!error && object.count != 0){
+         if (!error && object.count != 0)
              [object[0] deleteEventually];
-         }
-         else{
-             NSLog(@"Error: %@", error);
-         }
+         else NSLog(@"Error: %@", error);
      }];
 }
 

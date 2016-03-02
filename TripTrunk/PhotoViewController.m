@@ -787,6 +787,7 @@
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
                         [self saveMentionToDatabase:object];
+                        [self removeMentionFromDatabase:object];
                     }];
                 } else
                 {
@@ -800,6 +801,7 @@
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
                             [self saveMentionToDatabase:obj];
+                            [self removeMentionFromDatabase:obj];
                         }
                     }
                     
@@ -810,6 +812,7 @@
                              NSLog(@"caption saved as comment");
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
                              [self saveMentionToDatabase:object];
+                             [self removeMentionFromDatabase:object];
                          }];
                         
                     }else{
@@ -844,7 +847,7 @@
     NSArray *mentionList = [[NSArray alloc] initWithArray:[self removeMentionsWithUsernames:self.photo.caption]];
     if (mentionList) {
         for(PFUser *user in mentionList){
-            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:self.photo block:^(BOOL succeeded, NSError *error){
+            [SocialUtility deleteMention:object withUser:user block:^(BOOL succeeded, NSError *error){
                 if(succeeded)
                     NSLog(@"Mention removed to db for %@",user.username);
                 else NSLog(@"Error: %@", error);

@@ -141,6 +141,15 @@
 + (void)addMention:(PFObject *)commentObject isCaption:(BOOL)isCaption withUser:(PFUser*)user forPhoto:(Photo *)photo block:(void (^)(BOOL, NSError *))completionBlock;
 
 /**
+ *  Removes a user mention on the given comment
+ *
+ *  @param commentObject   Pointer to the objectId of the comment
+ *  @param user            The user mention in the comment
+ *  @param completionBlock completion handler callback
+ */
++ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user block:(void (^)(BOOL, NSError *))completionBlock;
+
+/**
  *  Retrieves the all of the Comment Activity objects for the given Photo
  *
  *  @param photo           Photo that we want the comments for
