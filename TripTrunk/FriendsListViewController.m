@@ -248,9 +248,10 @@
         }
     }
     else {
+        
         NSString *name;
-        if (_thisUser[@"lastName"] == nil){
-            name = [NSString stringWithFormat:@"%@",_thisUser[@"firstName"]];
+        if (_thisUser[@"firstName"] == nil || _thisUser[@"lastName"] == nil){
+            name = [NSString stringWithFormat:@"%@",_thisUser[@"name"]];
         } else {
             name = [NSString stringWithFormat:@"%@ %@",_thisUser[@"firstName"],_thisUser[@"lastName"]];
         }
