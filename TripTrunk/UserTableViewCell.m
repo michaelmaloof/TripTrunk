@@ -22,7 +22,6 @@
     // Initialization code
     [self.profilePicImageView setClipsToBounds:YES];
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    
     [self.followButton setTintColor:ttBlueColor];
 }
 
