@@ -165,7 +165,9 @@ enum TTActivityViewType : NSUInteger {
                         self.isLoading = YES;
                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                         for (PFObject *obj in activities){
-                            if (obj[@"trip"]){
+                            PFUser *toUser = obj[@"toUser"];
+                            PFUser *fromUser = obj[@"fromUser"];
+                            if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId]){
                                 [self.activities addObject:obj];
                             } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                                 [self.activities addObject:obj];
@@ -412,7 +414,9 @@ enum TTActivityViewType : NSUInteger {
                 
                 [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
                     for (PFObject *obj in activities){
-                        if (obj[@"trip"]){
+                        PFUser *toUser = obj[@"toUser"];
+                        PFUser *fromUser = obj[@"fromUser"];
+                        if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId]){
                             [self.activities addObject:obj];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                             [self.activities addObject:obj];
@@ -435,8 +439,10 @@ enum TTActivityViewType : NSUInteger {
                 [SocialUtility queryForFollowingActivities:self.followingActivities.count friends:self.friends activities:self.followingActivities isRefresh:NO query:^(NSArray *activities, NSError *error) {
                     for (PFObject *obj in activities){
                         if (obj[@"trip"]){
+                            PFUser *toUser = obj[@"toUser"];
+                            PFUser *fromUser = obj[@"fromUser"];
                             Trip *trip = obj[@"trip"];
-                            if (trip.name != nil){
+                            if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId]){
                                 [self.followingActivities addObject:obj];
                                 
                             }
@@ -927,9 +933,11 @@ enum TTActivityViewType : NSUInteger {
 
             [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                 for (PFObject *obj in activities){
+                    PFUser *toUser = obj[@"toUser"];
+                    PFUser *fromUser = obj[@"fromUser"];
                     if (obj[@"trip"]){
                         Trip *trip = obj[@"trip"];
-                        if (trip.name != nil){
+                        if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId]){
                             [self.followingActivities addObject:obj];
                         }
                     }

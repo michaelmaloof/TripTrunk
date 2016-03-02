@@ -1071,7 +1071,7 @@
                         if (self.photos.count < 1){
                             [(HomeMapViewController*)view dontRefreshMap];
                             [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
-                        } else if (1==1) //instead, find interval and update is HOT
+                        } else  //instead, find interval and update is HOT
                         {
                             [(HomeMapViewController*)view dontRefreshMap];
                             [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
