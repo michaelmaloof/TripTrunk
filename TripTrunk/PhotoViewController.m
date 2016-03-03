@@ -444,10 +444,12 @@
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
+    
+    
     if (self.shouldShowTrunkNameButton) {
         // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
         // If we aren't going to show the button, dont' worry about populating self.photo.trip
-        [self.photo.trip fetchInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
+        [self.photo.trip fetchIfNeededInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
     }
 
     
