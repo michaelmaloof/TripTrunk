@@ -75,6 +75,8 @@
         _pending = [[NSMutableArray alloc] init];
         
         self.loadedOnce = NO;
+        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+        [self loadPromotedUsers];
         
         _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
         
@@ -243,8 +245,8 @@
                         self.isLoadingPending = NO;
                         if (self.loadedOnce == NO){
                             self.loadedOnce = YES;
-                            [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
-                            [self loadPromotedUsers];
+//                            [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+//                            [self loadPromotedUsers];
                         } else {
                             [self.tableView reloadData];
                         }
@@ -569,7 +571,8 @@
         
     } else {
     
-    
+        cell.followButton.hidden = YES;
+
 //    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
 //    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
 //    if (followStatus.intValue > 0 && ![self.user.objectId isEqualToString:possibleFriend.objectId]) {
