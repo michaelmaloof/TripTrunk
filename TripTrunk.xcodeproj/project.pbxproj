@@ -55,6 +55,7 @@
 		272A4AE21C73770D00700DCA /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE11C73770D00700DCA /* KILabel.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
+		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
@@ -212,6 +213,8 @@
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		27A581421C888D910095ED94 /* TTPushNotificationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPushNotificationHandler.h; sourceTree = "<group>"; };
 		27A581431C888D910095ED94 /* TTPushNotificationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPushNotificationHandler.m; sourceTree = "<group>"; };
+		27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHashtagMentionColorization.h; sourceTree = "<group>"; };
+		27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHashtagMentionColorization.m; sourceTree = "<group>"; };
 		27C531E01C7F832C00F8B974 /* TTSuggestionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionViewCell.h; sourceTree = "<group>"; };
 		27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionViewCell.m; sourceTree = "<group>"; };
 		27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileImage.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */,
 				27A581421C888D910095ED94 /* TTPushNotificationHandler.h */,
 				27A581431C888D910095ED94 /* TTPushNotificationHandler.m */,
+				27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */,
+				27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
@@ -881,6 +886,7 @@
 				C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
+				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,

@@ -121,6 +121,7 @@
     
     //If no users are in the array, tell the delegate to dismiss the Popover
     if([self noUsersFound]){
+        self.displayFriendsArray = nil;
         if([self.delegate respondsToSelector:@selector(popoverViewControllerShouldDissmissWithNoResults)])
             [self.delegate popoverViewControllerShouldDissmissWithNoResults];
     }else{

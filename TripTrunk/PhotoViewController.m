@@ -25,6 +25,7 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "KILabel.h"
 #import "TTSuggestionTableViewController.h"
+#import "TTHashtagMentionColorization.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -350,7 +351,9 @@
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     
     NSRange cursorPosition = [self.caption selectedRange];
-    [self colorHashtagAndMentions:cursorPosition.location];
+//    [self colorHashtagAndMentions:cursorPosition.location];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
 -(void)viewDidLayoutSubviews {
@@ -785,8 +788,7 @@
                         NSLog(@"caption saved as comment");
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
-                        [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
-                        [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
+                        [self updateMentionsInDatabase:object];
                     }];
                 } else
                 {
@@ -799,8 +801,7 @@
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
-                            [self.autocompletePopover saveMentionToDatabase:obj comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
-                            [self.autocompletePopover removeMentionFromDatabase:obj comment:self.photo.caption previousComment:self.previousComment];
+                            [self updateMentionsInDatabase:obj];
                         }
                     }
                     
@@ -810,8 +811,7 @@
                          {
                              NSLog(@"caption saved as comment");
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
-                             [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
+                             [self updateMentionsInDatabase:object];
                          }];
                         
                     }else{
@@ -1206,10 +1206,16 @@
 
 
 //############################################# MENTIONS ##################################################
+-(void)updateMentionsInDatabase:(PFObject*)object{
+    [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
+}
+
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     NSRange cursorPosition = [textView selectedRange];
-    [self colorHashtagAndMentions:cursorPosition.location];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
     return YES;
 }
 
@@ -1219,11 +1225,9 @@
     NSRange cursorPosition = [textView selectedRange];
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-//    self.autocompletePopover.delegate = self;
     
     //Display the Popover if there is a @ plus a letter typed and only if it is not already showing
     if([self displayAutocompletePopover:lastWord]){
-//        if(!self.autocompletePopover){
         if(!self.autocompletePopover.delegate){
             //Instantiate the view controller and set its size
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
@@ -1243,15 +1247,16 @@
                     self.autocompletePopover.mentionText = lastWord;
                     [self.autocompletePopover updateAutocompleteTableView];
                     //If there are friends to display, now show the popup on the screen
-                    if(self.autocompletePopover.displayFriendsArray.count > 0)
+                    if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
                         self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
-                    self.autocompletePopover.delegate = self;
+                        self.autocompletePopover.delegate = self;
                         [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                    }
                 }else{
                     NSLog(@"Error: %@",error);
                 }
             }];
-            
+
         }
     }
     
@@ -1315,7 +1320,8 @@
     //dismiss the popover
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-    [self colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1 text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
     self.autocompletePopover.delegate = nil;
 }
 
@@ -1337,43 +1343,6 @@
     return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
 }
 
-#pragma mark -
-//FIXME: This needs to be refactored into a single method
-//FIXME: Send caption in to method so uitextview is not hard coded
-- (void)colorHashtagAndMentions:(NSUInteger)cursorPosition{
-    //Convert caption to Mutable and Attributed
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.caption.text];
-    NSError *error = nil;
-    //Set the mention and hashtog font color <-- need to use TripTrunk app blue
-    UIColor *fontColor = [UIColor blueColor];
-    //create the attribute to change mentions and hastags blue
-    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica Neue" size:14] range:NSMakeRange(0, self.caption.text.length)];
-    
-    //Use regular expressions to search through the string and search for the #(letter) pattern
-    //This is currently turned off so hastags will remain black
-//    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
-//    NSArray *matches = [regExHash matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
-//    
-//    for(NSTextCheckingResult * match in matches){
-//        NSRange wordRange = [match rangeAtIndex:0];
-//        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
-//    }
-    
-    //Use regular expressions to search through the string and search for the @(letter) pattern
-    NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
-    NSArray *matchesAt = [regExAt matchesInString:self.caption.text options:0 range:NSMakeRange(0, self.caption.text.length)];
-    
-    //Loop through all the regular expression matches and wrap them in the attributed properties
-    for(NSTextCheckingResult * matchAt in matchesAt){
-        NSRange wordRangeAt = [matchAt rangeAtIndex:0];
-        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
-    }
-    
-    //Update caption uitextview field
-    self.caption.attributedText = string;
-    //make sure the cursor is in the proper place while typing
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
-}
 //############################################# MENTIONS ##################################################
 
 

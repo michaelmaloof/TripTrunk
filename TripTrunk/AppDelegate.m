@@ -49,11 +49,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-#if DEBUG
-    NSLog(@"PARSE MODE: DEVELOPMENT");
-#else
-    NSLog(@"PARSE MODE: PRODUCTION");
-#endif
     NSLog(@"PARSE APP ID: %@",kPARSE_APP_ID);
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
