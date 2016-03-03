@@ -288,7 +288,7 @@
     float reload_distance = -250;
     if(y > h + reload_distance && self.searchString) {
         self.removeResults = NO;
-        if (![self.searchController.searchBar.text isEqualToString:@""]){
+        if (![self.searchString isEqualToString:@""]){
             [self filterResults:self.searchString isScroll:YES];
         }
     } else if (y > h + reload_distance && self.friendsMaxed == NO){
@@ -463,7 +463,7 @@
 {
     // Search Controller and the regular table view have different data sources
     if (self.searchController.active) {
-        if (![self.searchController.searchBar.text isEqualToString:@""]){
+        if (![self.searchString isEqualToString:@""]){
             return self.searchResults.count;
         } else {
             return 0;
@@ -484,7 +484,7 @@
     __weak UserTableViewCell *weakCell = cell;
 
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.searchResults.count > 0) {
+    if (self.searchController.active && ![self.searchString isEqualToString:@""] && self.searchResults.count > 0) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
