@@ -278,12 +278,16 @@
  *
  */
 - (void)setTitleImage {
-    UIImage *logo = [UIImage imageNamed:@"tripTrunkTitle"];
-    UIImageView *logoView = [[UIImageView alloc] initWithImage:logo];
+    
+    UIImageView* logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tripTrunkTitle"]];
     logoView.frame = CGRectMake(logoView.frame.origin.x, logoView.frame.origin.y,logoView.frame.size.width,self.navigationController.navigationBar.frame.size.height*.6);
-    [logoView setContentMode:UIViewContentModeScaleAspectFit];
-    self.navigationItem.titleView = logoView;
-    [self.navigationItem.titleView setContentMode:UIViewContentModeScaleAspectFit];
+    logoView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    UIView* titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, logoView.frame.size.width, logoView.frame.size.height)];
+    logoView.frame = titleView.bounds;
+    [titleView addSubview:logoView];
+    
+    self.navigationItem.titleView = titleView;
 }
 
 /**
@@ -1242,7 +1246,7 @@
     NSArray *buttons = @[button, buttonTwo];
     
     self.navigationItem.rightBarButtonItems = buttons;
-    
+
     self.buttonsMaded = YES;
     
     
