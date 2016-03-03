@@ -164,7 +164,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
+    [self.followButton setHidden:YES];
     self.followButton.enabled = NO;
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
@@ -184,20 +184,11 @@
     else {
         // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
-        if (followStatus.intValue == 2){
-            [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
-            
-            
-        }
+//        }
         
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.followButton setEnabled:YES];
-                [self.followButton setSelected:YES];
-                
-                [[self.followButton layer] setBorderWidth:0.0f];
-                [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
                 
                 if (followStatus.intValue == 2) {
                     if ([[self.user valueForKey:@"private"] boolValue] == 1){
@@ -217,13 +208,22 @@
                     }
 
                     [[self.followButton layer] setBorderWidth:0.0f];
+                    [self.followButton setEnabled:YES];
+                    [self.followButton setSelected:YES];
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
+                    [self.followButton setHidden:NO];
+
                 }
                 else if (followStatus.intValue == 1) {
                     [[self.followButton layer] setBorderWidth:0.0f];
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
+                    [self.followButton setEnabled:YES];
+                    [self.followButton setSelected:YES];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+                    [self.followButton setHidden:NO];
                     if ([[self.user valueForKey:@"private"] boolValue] == 1){
                         self.isFollowing = YES;
                         self.followButton.enabled = YES;
@@ -246,8 +246,8 @@
         {
             // Not following this user in CACHE, enable the button and set the selected status
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[self.followButton layer] setBorderWidth:2.0f];
-                [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
+//                [[self.followButton layer] setBorderWidth:2.0f];
+//                [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
                 [self.followButton setSelected:NO];
             });
         }
@@ -259,10 +259,8 @@
                 {
                     // We have the following status, so update the Selected status and enable the button
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.followButton setEnabled:YES];
                         [[self.followButton layer] setBorderWidth:0.0f];
                         [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
-                        [self.followButton setSelected:YES];
                         if (followingStatus.intValue == 2) {
                             if ([[self.user valueForKey:@"private"] boolValue] == 1){
                                 self.isFollowing = NO;
@@ -281,7 +279,12 @@
                             }
                             [[self.followButton layer] setBorderWidth:0.0f];
                             [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
+                            [self.followButton setEnabled:YES];
+                            [self.followButton setSelected:YES];
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
+                            [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                            [self.followButton setHidden:NO];
+
                         }
                 else if (followingStatus.intValue == 1){
                             self.isFollowing = YES;
@@ -291,8 +294,12 @@
                             self.mapButton.userInteractionEnabled = YES;
                             self.followersButton.enabled = YES;
                     [[self.followButton layer] setBorderWidth:0.0f];
+                    [self.followButton setEnabled:YES];
+                    [self.followButton setSelected:YES];
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                    [self.followButton setHidden:NO];
                         }
                     });
                 }
@@ -303,6 +310,8 @@
                         [[self.followButton layer] setBorderWidth:2.0f];
                         [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
                         [self.followButton setSelected:NO];
+                        [self.followButton setTitleColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+
                         if ([[self.user valueForKey:@"private"] boolValue] == 1){
                             self.isFollowing = NO;
                             self.followButton.enabled = YES;
@@ -318,6 +327,9 @@
                             self.mapButton.userInteractionEnabled = YES;
                             self.followersButton.enabled = YES;
                         }
+                        
+                        [self.followButton setHidden:NO];
+
 
                     });
                 }
@@ -327,9 +339,6 @@
             }
         }];
         
-        
-        // Show the button
-        [self.followButton setHidden:NO];
         
     }
     
