@@ -44,6 +44,7 @@
 
 @property BOOL isLoadingFollowing;
 @property BOOL isLoadingPending;
+@property BOOL isLoadingFacebook;
 
 
 
@@ -142,8 +143,11 @@
 }
 
 - (void)getFriendsFromFbids:(NSArray *)fbids {
-    
+    if (self.isLoadingFacebook == NO){
+        self.isLoadingFacebook = YES;
+
     if (fbids.count == 0) {
+        self.isLoadingFacebook = NO;
         [self refreshFacebookFriends];
         return;
     }
@@ -161,6 +165,7 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
+            self.isLoadingFacebook = NO;
         }
         else
         {
@@ -169,10 +174,12 @@
             self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.isLoadingFacebook = NO;
                 [self.tableView reloadData];
             });
         }
     }];
+    }
 
 }
 
@@ -260,6 +267,9 @@
 }
 
 - (void)refreshFacebookFriends {
+    
+    if (self.isLoadingFacebook == NO){
+        self.isLoadingFacebook = YES;
     if ([FBSDKAccessToken currentAccessToken]) {
         
         // Get the user's Facebook Friends who are already on TripTrunk
@@ -267,7 +277,8 @@
         [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/friends" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             if (!error) {
                 // result will contain an array with user's friends in the "data" key
-                
+                self.isLoadingFacebook = NO;
+
                 // Loop through the friends list and create a new array of just their fbid's
                 NSMutableArray *friendList = [[NSMutableArray alloc] init];
                 for (NSDictionary *friend in [result objectForKey:@"data"]) {
@@ -285,6 +296,9 @@
     }
     else {
         NSLog(@"No Facebook Access Token");
+        self.isLoadingFacebook = NO;
+
+    }
     }
 
 }
