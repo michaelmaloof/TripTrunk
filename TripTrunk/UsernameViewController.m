@@ -251,7 +251,7 @@
         _user.username = username;
         [_user setValue:firstName forKey:@"firstName"];
         [_user setValue:lastName forKey:@"lastName"];
-        NSString *fullName = [NSString stringWithFormat:@"%@, %@", firstName, lastName];
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         [_user setValue:fullName forKey:@"name"];
         _user.email = email;
         [_user setPassword:password];
