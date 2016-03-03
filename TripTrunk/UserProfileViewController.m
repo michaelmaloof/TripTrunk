@@ -572,8 +572,8 @@
         self.bioTextView.text = user[@"bio"];
         self.hometownLabel.text = user[@"hometown"];
         NSString *name;
-        if (user[@"firstName"] == nil){
-            name = [NSString stringWithFormat:@"%@",user[@"firstName"]];
+        if (user[@"firstName"] == nil || user[@"lastName"] == nil){
+            name = [NSString stringWithFormat:@"%@",user[@"name"]];
         } else {
             name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
         }

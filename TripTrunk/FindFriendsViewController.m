@@ -506,37 +506,45 @@
     
     // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
     NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-    if (followStatus.intValue > 0 && self.user !=possibleFriend) {
+    if (followStatus.intValue > 0 && ![self.user.objectId isEqualToString:possibleFriend.objectId]) {
         weakCell.followButton.enabled = YES;
         [weakCell.followButton setSelected:YES];
-        [weakCell.followButton setHidden:NO];
         if (followStatus.intValue == 2) {
+            weakCell.followButton.enabled = YES;
+            [weakCell.followButton setSelected:YES];
             [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+            [weakCell.followButton setHidden:NO];
+        } else if ( followStatus.intValue == 1){
+            [weakCell.followButton setSelected:YES];
+            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
+            [weakCell.followButton setHidden:NO];
         }
     }
     else {
         [weakCell.followButton setSelected:NO];
-        [weakCell.followButton setHidden:NO];
+//        [weakCell.followButton setHidden:NO];
         
         if ([_following containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
-            NSLog(@"FOLLOWING");
-            [weakCell.followButton setHidden:NO];
             weakCell.followButton.enabled = YES;
             [weakCell.followButton setSelected:YES];
+            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
+            [weakCell.followButton setHidden:NO];
+
             // Cache the user's follow status
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
         }
         else if([_pending containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
-            NSLog(@"PENDING");
-            [weakCell.followButton setHidden:NO];
             weakCell.followButton.enabled = YES;
             [weakCell.followButton setSelected:YES];
             [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+            [weakCell.followButton setHidden:NO];
+
             // Cache the following status as PENDING
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:possibleFriend];
         }
         else {
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
+
         }
         
         if ([[PFUser currentUser].objectId isEqualToString:possibleFriend.objectId]){
