@@ -19,6 +19,8 @@
 #import "FindFriendsViewController.h"
 #import "ActivityListViewController.h"
 #import "TTCache.h"
+#import "CommentListViewController.h"
+#import "SocialUtility.h"
 
 #if DEBUG == 0 // CHANGE TO 0
 // DEBUG is not defined or defined to be 0
@@ -335,13 +337,45 @@
         
         // Activity notification
         if ([[payload objectForKey:@"p"] isEqualToString:@"a"]) {
-            [self handleActivityPush:payload];
+            if([[payload objectForKey:@"t"] isEqualToString:@"m"])
+                [self handleMentionPush:payload];
+            else [self handleActivityPush:payload];
         }
         // Photo notification
         else if ([[payload objectForKey:@"p"] isEqualToString:@"p"]) {
             [self handlePhotoPush:payload];
         }
     }
+}
+
+-(void)handleMentionPush:(NSDictionary*)payload{
+    NSString *photoId = [payload objectForKey:@"pid"];
+    //load photo bu photoId into Photo* photo object
+    PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
+    [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
+        if (!error) {
+            PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:(Photo*)photo cachePolicy:kPFCachePolicyNetworkOnly];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    NSMutableArray *comments = [[NSMutableArray alloc] init];
+                    for (PFObject *activity in objects) {
+                        if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
+                            [comments addObject:activity];
+                        }
+                    }
+                    
+                    CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:comments forPhoto:(Photo*)photo];
+                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
+                    [tabbarcontroller setSelectedIndex:0];
+                    [homeNavController pushViewController:vc animated:YES];
+                    
+                }else {
+                    NSLog(@"Error loading photo Activities: %@", error);
+                }
+            }];
+        }
+    }];
 }
 
 - (void)handlePhotoPush:(NSDictionary *)payload {
