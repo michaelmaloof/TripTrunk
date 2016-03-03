@@ -63,6 +63,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
 
     self.privateCount = 0;
@@ -118,12 +119,15 @@
     // If it's the current user, set up their profile a bit differently.
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
-        [self.logoutButton setHidden:NO];
+//        [self.logoutButton setHidden:NO];
 
         // Set Edit button
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                                                                               target:self
-                                                                                               action:@selector(editButtonPressed:)];
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings",@"Settings")
+                                                                                  style:UIBarButtonItemStylePlain
+                                                                                 target:self
+                                                                                 action:@selector(editButtonPressed:)];
+        
         
         UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
         picTap.numberOfTapsRequired = 1;

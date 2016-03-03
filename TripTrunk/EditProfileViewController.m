@@ -11,6 +11,8 @@
 #import "EULAViewController.h"
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "AppDelegate.h"
+
 
 
 
@@ -394,6 +396,10 @@
         [[PFUser currentUser] saveInBackground];
     }
     
+}
+- (IBAction)logoutWasTapped:(id)sender {
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
+
 }
 
 @end

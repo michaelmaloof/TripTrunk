@@ -55,7 +55,8 @@
 - (IBAction)deleteButtonTapped:(id)sender {
     [self.delegate captionButtonTapped:1 caption:self.captionBox.text];
     [self dismissViewControllerAnimated:YES completion:nil];
-
-
 }
+
+//[(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
+
 @end

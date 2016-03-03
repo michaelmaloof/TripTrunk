@@ -185,8 +185,10 @@
     // This pushes the user back to the map view, on the map tab, which should then show the loginview
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
+    [homeNavController dismissViewControllerAnimated:YES completion:nil];
     [homeNavController popToRootViewControllerAnimated:YES];
     [tabbarcontroller setSelectedIndex:0];
+    
 }
 
 

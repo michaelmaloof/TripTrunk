@@ -115,8 +115,7 @@
                                             <exclude reference="XKH-Ww-pkM"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                        <rect key="frame" x="166.5" y="241.5" width="44" height="30"/>
+                                    <variation key="heightClass=regular-widthClass=compact">
                                         <mask key="constraints">
                                             <exclude reference="2rU-cP-gsI"/>
                                             <exclude reference="Cvk-sl-9kI"/>
