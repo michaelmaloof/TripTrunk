@@ -172,20 +172,13 @@
         // Open URLs
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
-    
-//    self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-    
 //############################################# MENTIONS ##################################################
 
 }
 
 
 
-//############################################# MENTIONS ##################################################
-- (NSString*)getUsernameFromLink:(NSString*)link{
-    return [link substringFromIndex:1];
-}
-//############################################# MENTIONS ##################################################
+
 
 - (NSString *)stringForTimeStamp:(NSDate*)created {
     
@@ -833,17 +826,6 @@
     }
 }
 
-//############################################# MENTIONS ##################################################
--(NSString*)separateMentions:(NSString*)comment{
-    if(![comment containsString:@"@"])
-        return comment;
-    
-    NSArray *array = [comment componentsSeparatedByString:@"@"];
-    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
-    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
-}
-//############################################# MENTIONS ##################################################
-
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
 //    self.caption.editable = YES;
@@ -1341,7 +1323,19 @@
 -(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
     self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], height);
 }
-//############################################# MENTIONS ##################################################
+
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
+
+-(NSString*)separateMentions:(NSString*)comment{
+    if(![comment containsString:@"@"])
+        return comment;
+    
+    NSArray *array = [comment componentsSeparatedByString:@"@"];
+    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+}
 
 #pragma mark -
 //FIXME: This needs to be refactored into a single method
