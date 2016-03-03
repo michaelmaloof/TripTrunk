@@ -544,6 +544,8 @@
         }
         else {
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
+            cell.followButton.hidden = NO;
+
 
         }
         
@@ -630,6 +632,7 @@
             [alertView show];
         } else {
             [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
+            [self.following removeObject:user];
             [SocialUtility unfollowUser:user];
         }
     }
@@ -637,13 +640,18 @@
         // Follow
         [cellView.followButton setSelected:YES];
         
+        // Add the user to the following array so we have a local copy of who they're following.
+
         if ([user[@"private"] boolValue] == YES) {
             [cellView.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+            [_pending addObject:user];
+        } else {
+            [_following addObject:user];
+            [cellView.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
+
         }
         
-        // Add the user to the following array so we have a local copy of who they're following.
-        [_following addObject:user];
-        
+ 
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (error || !succeeded) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
@@ -654,13 +662,17 @@
                 [alert show];
                 if (error) {
                     NSLog(@"Error following user: %@", error);
+                      [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+                    [self.following removeObject:user]; //we lose these
+                    [self.pending removeObject:user];
                 }
                 
             }
             
             if (!error && [user[@"private"] boolValue] == NO){
                 [cellView.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
-
+            } else {
+                [cellView.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
             }
         }];
     }
@@ -779,6 +791,7 @@
     
     if (alertView.tag == 11 && buttonIndex == 1){
         [SocialUtility unfollowUser:self.user];
+        [self.pending removeObject:self.user];
         [self.tableView reloadData];
     } else {
         self.user = nil;
