@@ -45,6 +45,7 @@
 @property BOOL isLoadingFollowing;
 @property BOOL isLoadingPending;
 @property BOOL isLoadingFacebook;
+@property BOOL isLoadingSearch;
 
 
 
@@ -332,6 +333,9 @@
 }
 
 - (void)filterResults:(NSString *)searchTerm isScroll:(BOOL)isScroll {
+    
+    if (self.isLoadingSearch == NO){
+        self.isLoadingSearch = YES;
     if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
@@ -389,11 +393,13 @@
     }
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        
         if (self.removeResults == YES) {
             [self.searchResults removeAllObjects];
         }
         [self.searchResults addObjectsFromArray:objects];
         self.searchString = searchTerm;
+        self.isLoadingSearch = NO;
         [self.tableView reloadData];
     }];
 //    if (self.removeResults == YES) {
@@ -404,6 +410,7 @@
 //    [self.tableView reloadData];
 
 }
+    }
 }
 
 
