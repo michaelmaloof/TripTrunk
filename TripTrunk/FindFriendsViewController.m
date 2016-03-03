@@ -26,6 +26,7 @@
 @property int fbCount;
 
 @property PFUser *user;
+@property BOOL loadedOnce;
 
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
@@ -67,11 +68,9 @@
         _following = [[NSMutableArray alloc] init];
         _pending = [[NSMutableArray alloc] init];
         
-        _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
+        self.loadedOnce = NO;
         
-        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
-        [self loadPromotedUsers];
-        [self loadFollowing];
+        _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
         
         self.searchResults = [[NSMutableArray alloc] init];
         
@@ -110,6 +109,10 @@
                                                      name:UIKeyboardWillHideNotification
                                                    object:nil];
     }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self loadFollowing];
 }
 
 - (void)loadPromotedUsers {
@@ -222,7 +225,14 @@
                     }
                     // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.tableView reloadData];
+                        
+                        if (self.loadedOnce == NO){
+                            self.loadedOnce = YES;
+                            [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+                            [self loadPromotedUsers];
+                        } else {
+                            [self.tableView reloadData];
+                        }
                     });
                 }
                 else {
@@ -482,6 +492,8 @@
     PFUser *possibleFriend;
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     __weak UserTableViewCell *weakCell = cell;
+    [weakCell.followButton setHidden:YES];
+
 
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchString isEqualToString:@""] && self.searchResults.count > 0) {
@@ -494,7 +506,7 @@
         }
         else if (indexPath.section == 1) {
             possibleFriend = [_friends objectAtIndex:indexPath.row];
-        }
+        } 
     }
     
     [weakCell setDelegate:self];
@@ -503,55 +515,78 @@
     
     weakCell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
     
-    
-    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
-    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
-    if (followStatus.intValue > 0 && ![self.user.objectId isEqualToString:possibleFriend.objectId]) {
+    if (self.following.count >0 ) {
         weakCell.followButton.enabled = YES;
         [weakCell.followButton setSelected:YES];
-        if (followStatus.intValue == 2) {
-            weakCell.followButton.enabled = YES;
-            [weakCell.followButton setSelected:YES];
-            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
-            [weakCell.followButton setHidden:NO];
-        } else if ( followStatus.intValue == 1){
-            [weakCell.followButton setSelected:YES];
-            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
-            [weakCell.followButton setHidden:NO];
-        }
-    }
-    else {
-        [weakCell.followButton setSelected:NO];
-//        [weakCell.followButton setHidden:NO];
-        
-        if ([_following containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
-            weakCell.followButton.enabled = YES;
-            [weakCell.followButton setSelected:YES];
-            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
-            [weakCell.followButton setHidden:NO];
-
-            // Cache the user's follow status
-            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
-        }
-        else if([_pending containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
+        if ([self.pending containsObject:possibleFriend.objectId]){
             weakCell.followButton.enabled = YES;
             [weakCell.followButton setSelected:YES];
             [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
             [weakCell.followButton setHidden:NO];
 
-            // Cache the following status as PENDING
-            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:possibleFriend];
-        }
-        else {
-            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
-            cell.followButton.hidden = NO;
-
-
-        }
-        
-        if ([[PFUser currentUser].objectId isEqualToString:possibleFriend.objectId]){
+        } else if ([self.following containsObject:possibleFriend.objectId]){
+            [weakCell.followButton setSelected:YES];
+            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
+            [weakCell.followButton setHidden:NO];
+        } else if ([[PFUser currentUser].objectId isEqualToString:possibleFriend.objectId]){
             cell.followButton.hidden = YES;
+        } else {
+            [weakCell.followButton setSelected:NO];
+            cell.followButton.hidden = NO;
         }
+        
+    } else {
+    
+    
+//    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
+//    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
+//    if (followStatus.intValue > 0 && ![self.user.objectId isEqualToString:possibleFriend.objectId]) {
+//        weakCell.followButton.enabled = YES;
+//        [weakCell.followButton setSelected:YES];
+//        if (followStatus.intValue == 2) {
+//            weakCell.followButton.enabled = YES;
+//            [weakCell.followButton setSelected:YES];
+//            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+//            [weakCell.followButton setHidden:NO];
+//        } else if ( followStatus.intValue == 1){
+//            [weakCell.followButton setSelected:YES];
+//            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
+//            [weakCell.followButton setHidden:NO];
+//        }
+//    }
+//    else {
+//        [weakCell.followButton setSelected:NO];
+////        [weakCell.followButton setHidden:NO];
+//        
+//        if ([_following containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
+//            weakCell.followButton.enabled = YES;
+//            [weakCell.followButton setSelected:YES];
+//            [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
+//            [weakCell.followButton setHidden:NO];
+//
+//            // Cache the user's follow status
+//            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:YES] user:possibleFriend];
+//        }
+//        else if([_pending containsObject:possibleFriend.objectId] && self.user !=possibleFriend) {
+//            weakCell.followButton.enabled = YES;
+//            [weakCell.followButton setSelected:YES];
+//            [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
+//            [weakCell.followButton setHidden:NO];
+//
+//            // Cache the following status as PENDING
+//            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:possibleFriend];
+//        }
+//        else {
+//            [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:possibleFriend];
+//            cell.followButton.hidden = NO;
+//
+//
+//        }
+//        
+//        if ([[PFUser currentUser].objectId isEqualToString:possibleFriend.objectId]){
+//            cell.followButton.hidden = YES;
+//        }
+//    }
         
     }
     
@@ -631,7 +666,9 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
             [alertView show];
         } else {
-            [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
+            // change the button for immediate user feedback
+            [cellView.followButton setSelected:NO];
+               [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
             [self.following removeObject:user];
             [SocialUtility unfollowUser:user];
         }
@@ -644,9 +681,9 @@
 
         if ([user[@"private"] boolValue] == YES) {
             [cellView.followButton setTitle:@"Pending" forState:UIControlStateSelected];
-            [_pending addObject:user];
+            [_pending addObject:user.objectId];
         } else {
-            [_following addObject:user];
+            [_following addObject:user.objectId];
             [cellView.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
 
         }

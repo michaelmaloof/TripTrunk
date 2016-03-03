@@ -38,6 +38,7 @@
         [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Error saving follow activity%@", error);
+                //FIXME Need to remove the user from follow list
             }
             
             // Cache the following status as FOLLOWED
