@@ -51,13 +51,13 @@
 @property TTTTimeIntervalFormatter *timeFormatter;
 
 @property BOOL isZoomed;
-
+//############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet KILabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
-
+//############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
@@ -154,7 +154,7 @@
     
     [self refreshPhotoActivitiesWithUpdateNow:NO];
 
-    
+//############################################# MENTIONS ##################################################
     // Attach block for handling taps on usernames
     _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
         PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:string]];
@@ -172,8 +172,20 @@
         // Open URLs
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
+    
+//    self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    
+//############################################# MENTIONS ##################################################
 
 }
+
+
+
+//############################################# MENTIONS ##################################################
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
+//############################################# MENTIONS ##################################################
 
 - (NSString *)stringForTimeStamp:(NSDate*)created {
     
@@ -183,11 +195,6 @@
     time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
     
     return time;
-}
-
-
-- (NSString*)getUsernameFromLink:(NSString*)link{
-    return [link substringFromIndex:1];
 }
 
 
@@ -505,11 +512,8 @@
                 }
             }
             
-//            [self.caption setContentOffset:CGPointZero animated:NO];
             self.caption.text = self.photo.caption;
             self.captionLabel.text = self.photo.caption;
-//            [self.caption setContentOffset:CGPointZero animated:NO];
-//            self.caption.hidden = NO;
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
@@ -756,6 +760,7 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
+
 - (IBAction)editCaptionTapped:(id)sender {
     
     if (self.addCaption.tag == 0){
@@ -769,14 +774,15 @@
         
     } else {
         self.addCaption.enabled = NO;
-        self.photo.caption = self.caption.text;
+        self.photo.caption = [self separateMentions:self.caption.text];
         self.caption.hidden = YES;
         self.captionLabel.hidden = NO;
 
         //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
         //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow? I added one for sendPushNotificationsForMentionedUsers
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
                 if (self.commentActivities.count == 0)
@@ -786,8 +792,8 @@
                         NSLog(@"caption saved as comment");
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
-                        [self saveMentionToDatabase:object];
-                        [self removeMentionFromDatabase:object];
+                        [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+                        [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
                     }];
                 } else
                 {
@@ -800,8 +806,8 @@
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
-                            [self saveMentionToDatabase:obj];
-                            [self removeMentionFromDatabase:obj];
+                            [self.autocompletePopover saveMentionToDatabase:obj comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+                            [self.autocompletePopover removeMentionFromDatabase:obj comment:self.photo.caption previousComment:self.previousComment];
                         }
                     }
                     
@@ -811,8 +817,8 @@
                          {
                              NSLog(@"caption saved as comment");
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             [self saveMentionToDatabase:object];
-                             [self removeMentionFromDatabase:object];
+                             [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+                             [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
                          }];
                         
                     }else{
@@ -827,35 +833,16 @@
     }
 }
 
--(void)saveMentionToDatabase:(PFObject*)object{
-    //save mention to database
-    NSArray *mentionList = [[NSArray alloc] initWithArray:[self commentMentionsWithUsernames:self.photo.caption]];
-    if (mentionList) {
-        for(PFUser *user in mentionList){
-            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:self.photo block:^(BOOL succeeded, NSError *error){
-                if(succeeded)
-                    NSLog(@"Mention added to db for %@",user.username);
-                else NSLog(@"Error: %@", error);
-            }];
-        }
-    }
-
-}
-
--(void)removeMentionFromDatabase:(PFObject*)object{
-    //remove mention from database
-    NSArray *mentionList = [[NSArray alloc] initWithArray:[self removeMentionsWithUsernames:self.photo.caption]];
-    if (mentionList) {
-        for(PFUser *user in mentionList){
-            [SocialUtility deleteMention:object withUser:user block:^(BOOL succeeded, NSError *error){
-                if(succeeded)
-                    NSLog(@"Mention removed to db for %@",user.username);
-                else NSLog(@"Error: %@", error);
-            }];
-        }
-    }
+//############################################# MENTIONS ##################################################
+-(NSString*)separateMentions:(NSString*)comment{
+    if(![comment containsString:@"@"])
+        return comment;
     
+    NSArray *array = [comment componentsSeparatedByString:@"@"];
+    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
 }
+//############################################# MENTIONS ##################################################
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -867,9 +854,6 @@
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
     self.deleteCaption.hidden = NO;
-//    self.caption.backgroundColor = [UIColor whiteColor];
-//    self.caption.alpha = .7;
-//    self.caption.textColor = [UIColor blackColor];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
 
@@ -883,15 +867,9 @@
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
     self.deleteCaption.hidden = YES;
-//    self.caption.alpha = 1.0;
-//    self.caption.backgroundColor = [UIColor clearColor];
-//    self.caption.textColor = [UIColor whiteColor];
     self.caption.hidden = YES;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
-//    self.caption.hidden = NO;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
@@ -986,11 +964,8 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.hidden = YES;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
-//    self.caption.hidden = NO;
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
@@ -1247,6 +1222,8 @@
     return zoomRect;
 }
 
+
+//############################################# MENTIONS ##################################################
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     NSRange cursorPosition = [textView selectedRange];
@@ -1260,11 +1237,12 @@
     NSRange cursorPosition = [textView selectedRange];
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-    self.autocompletePopover.delegate = self;
+//    self.autocompletePopover.delegate = self;
     
     //Display the Popover if there is a @ plus a letter typed and only if it is not already showing
     if([self displayAutocompletePopover:lastWord]){
-        if(!self.autocompletePopover){
+//        if(!self.autocompletePopover){
+        if(!self.autocompletePopover.delegate){
             //Instantiate the view controller and set its size
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
@@ -1285,6 +1263,7 @@
                     //If there are friends to display, now show the popup on the screen
                     if(self.autocompletePopover.displayFriendsArray.count > 0)
                         self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                    self.autocompletePopover.delegate = self;
                         [self presentViewController:self.autocompletePopover animated:YES completion:nil];
                 }else{
                     NSLog(@"Error: %@",error);
@@ -1355,12 +1334,14 @@
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
     [self colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1];
+    self.autocompletePopover.delegate = nil;
 }
 
 //Adjust the height of the popover to fit the number of usernames in the tableview
 -(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
     self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], height);
 }
+//############################################# MENTIONS ##################################################
 
 #pragma mark -
 //FIXME: This needs to be refactored into a single method
@@ -1399,82 +1380,7 @@
     //make sure the cursor is in the proper place while typing
     [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
 }
-
--(NSArray*)commentMentionsWithUsernames:(NSString*)comment{
-    
-    //quick check to see if the string contains an @ before we do regex
-    if([comment containsString:@"@"]){
-        NSMutableArray *array = [[NSMutableArray alloc] init];
-        
-        //create an array of every word in the comment
-        NSArray *allWords = [comment componentsSeparatedByString:@" "];
-    
-        //Loop through all of the words
-        for(NSString *word in allWords){
-            //check if the word starts with a @
-            if(![word isEqualToString:@""]){
-                if([[word substringToIndex:1] isEqualToString:@"@"]){
-                    //check to see if the user was already in the caption to prevent adding them to the db multiple times
-                    if(![self.previousComment containsString:word]){
-                        //load user from username
-                        PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
-                        //If the user is found, add it the array to return
-                        if(mentionedUser)
-                            [array addObject:mentionedUser];
-                    }
-                }
-            }
-        }
-        
-        //return an array with all of the mention usernames in the comment
-        if(array.count > 0){
-            NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
-            return weededArray;
-        }
-        
-    }
-    
-    //there are no mentions, just return nil
-    return nil;
-}
-
--(NSArray*)removeMentionsWithUsernames:(NSString*)comment{
-    
-    //quick check to see if the string contains an @ before we do regex
-    if([comment containsString:@"@"]){
-        NSMutableArray *array = [[NSMutableArray alloc] init];
-        
-        //create an array of every word in the comment
-        NSArray *allWords = [comment componentsSeparatedByString:@" "];
-        
-        //Loop through all of the words
-        for(NSString *word in allWords){
-            //check if the word starts with a @
-            if(![word isEqualToString:@""]){
-                if([[word substringToIndex:1] isEqualToString:@"@"]){
-                    //check to see if the user was already in the caption to prevent adding them to the db multiple times
-                    if(![self.previousComment containsString:word]){
-                        //load user from username
-                        PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
-                        //If the user is found, add it the array to return
-                        if(mentionedUser)
-                            [array addObject:mentionedUser];
-                    }
-                }
-            }
-        }
-        
-        //return an array with all of the mention usernames in the comment
-        if(array.count > 0){
-            NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
-            return weededArray;
-        }
-        
-    }
-    
-    //there are no mentions, just return nil
-    return nil;
-}
+//############################################# MENTIONS ##################################################
 
 
 - (void)dealloc {
@@ -1496,11 +1402,8 @@
         self.photo.caption = @"";
     }
     self.caption.hidden = YES;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
     self.captionLabel.text = self.photo.caption;
-//    [self.caption setContentOffset:CGPointZero animated:NO];
-//    self.caption.hidden = NO;
     [self.photo saveInBackground];
 
 }

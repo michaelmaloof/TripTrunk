@@ -452,9 +452,12 @@
     [query whereKey:@"comment" equalTo:commentObject];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
-         if (!error && object.count != 0)
+        if (!error && object.count != 0){
              [object[0] deleteEventually];
-         else NSLog(@"Error: %@", error);
+            return completionBlock(true, nil);
+        }else{
+            NSLog(@"Error: %@", error);
+        }
      }];
 }
 

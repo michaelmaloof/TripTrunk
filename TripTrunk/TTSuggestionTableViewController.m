@@ -161,6 +161,118 @@
     return self.displayFriendsArray.count < 3 ? NO : YES;
 }
 
+-(NSString*)separateMentions:(NSString*)comment{
+    if(![comment containsString:@"@"])
+        return comment;
+    
+    NSArray *array = [comment componentsSeparatedByString:@"@"];
+    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+}
+
+-(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo *)photo{
+    //save mention to database
+    NSArray *mentionList = [[NSArray alloc] initWithArray:[self commentMentionsWithUsernames:[self separateMentions:comment] previousComment:previousComment]];
+    
+    if (mentionList) {
+        for(PFUser *user in mentionList){
+            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:photo block:^(BOOL succeeded, NSError *error){
+                if(succeeded)
+                    NSLog(@"Mention added to db for %@",user.username);
+                else NSLog(@"Error: %@", error);
+            }];
+        }
+    }
+    
+}
+
+-(NSArray*)commentMentionsWithUsernames:(NSString*)comment previousComment:(NSString*)previousComment{
+    
+    //quick check to see if the string contains an @ before we do regex
+    if([comment containsString:@"@"]){
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        
+        //create an array of every word in the comment
+        NSArray *allWords = [comment componentsSeparatedByString:@" "];
+        
+        //Loop through all of the words
+        for(NSString *word in allWords){
+            //check if the word starts with a @
+            if(![word isEqualToString:@""]){
+                if([[word substringToIndex:1] isEqualToString:@"@"]){
+                    //check to see if the user was already in the caption to prevent adding them to the db multiple times
+                    if(![previousComment containsString:word]){
+                        //load user from username
+                        PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
+                        //If the user is found, add it the array to return
+                        if(mentionedUser)
+                            [array addObject:mentionedUser];
+                    }
+                }
+            }
+        }
+        
+        //return an array with all of the mention usernames in the comment
+        if(array.count > 0){
+            NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
+            return weededArray;
+        }
+        
+    }
+    
+    //there are no mentions, just return nil
+    return nil;
+}
+
+-(void)removeMentionFromDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment{
+    //remove mention from database
+    NSArray *mentionList = [[NSArray alloc] initWithArray:[self removeMentionsWithUsernames:[self separateMentions:comment] previousComment:previousComment]];
+    if (mentionList) {
+        for(PFUser *user in mentionList){
+            [SocialUtility deleteMention:object withUser:user block:^(BOOL succeeded, NSError *error){
+                if(succeeded)
+                    NSLog(@"Mention removed to db for %@",user.username);
+                else NSLog(@"Error: %@", error);
+            }];
+        }
+    }
+    
+}
+
+-(NSArray*)removeMentionsWithUsernames:(NSString*)comment previousComment:(NSString*)previousComment{
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    //create an array of every word in the previous comment
+    NSArray *allWords = [previousComment componentsSeparatedByString:@" "];
+    
+    //Loop through all of the words
+    for(NSString *word in allWords){
+        //check if the word starts with a @
+        if(![word isEqualToString:@""]){
+            if([[word substringToIndex:1] isEqualToString:@"@"]){
+                //check to see if the user was in the previous comment and not in the current comment
+                if(![comment containsString:word]){
+                    //load user from username
+                    PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
+                    //If the user is found, add it the array to return
+                    if(mentionedUser)
+                        [array addObject:mentionedUser];
+                }
+            }
+        }
+    }
+    
+    //return an array with all of the mention usernames in the comment
+    if(array.count > 0){
+        NSArray *weededArray = [[NSSet setWithArray:array] allObjects];
+        return weededArray;
+    }
+    
+    //there are no mentions, just return nil
+    return nil;
+}
+
 #pragma mark - REFACTOR THIS INTO IT"S OWN CLASS
 - (void)setProfilePic:(NSString *)urlString indexPath:(NSIndexPath*)indexPath{
     NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];

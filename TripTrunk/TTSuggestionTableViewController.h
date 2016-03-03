@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PFObject+NSCoding.h"
+#import "Photo.h"
 
 #pragma mark - TTSuggestionTableViewControllerDelegate
 @protocol TTSuggestionTableViewControllerDelegate <NSObject>
@@ -31,6 +33,9 @@
  *  @param height The integer that the popover height should be set to 
  */
 - (void)adjustPreferredHeightOfPopover:(NSUInteger)height;
+
+- (NSString*)getUsernameFromLink:(NSString*)link;
+-(NSString*)separateMentions:(NSString*)comment;
 @end
 
 
@@ -90,6 +95,10 @@
  *
  */
 -(NSUInteger)preferredHeightForPopover;
+
+//-(NSString*)separateMentions:(NSString*)comment;
+-(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo*)photo;
+-(void)removeMentionFromDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment;
 
 @end
 
