@@ -13,7 +13,7 @@
 #import "TTUtility.h"
 
 @interface TTSuggestionTableViewController()
-
+@property unsigned long popoverHeight;
 @end
 
 @implementation TTSuggestionTableViewController
@@ -154,7 +154,11 @@
 //Set the height of the popover
 -(NSUInteger)preferredHeightForPopover{
     int cellSize = 44;
-    return self.displayFriendsArray.count < 3 ? self.displayFriendsArray.count*cellSize : 3;
+    if(self.displayFriendsArray.count == 0)
+        return self.popoverHeight;
+    
+    self.popoverHeight = self.displayFriendsArray.count < 3 ? self.displayFriendsArray.count*cellSize : 3;
+    return self.popoverHeight;
 }
 
 //Determine if the table view should scroll. Only scroll if there are more than 3 users inthe table
