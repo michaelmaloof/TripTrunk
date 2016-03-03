@@ -90,7 +90,6 @@
 }
 
 - (void)cancelButtonPressed {
-    NSLog(@"Cancel Button Pressed");
 }
 
 - (void)incrementTaskCount {

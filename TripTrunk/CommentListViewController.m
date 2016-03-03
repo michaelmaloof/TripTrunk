@@ -235,7 +235,6 @@
                 });
             }
             else {
-                NSLog(@"Comment Deleted");
                 // Post a notification so that the data is reloaded in the Photo View
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 
@@ -376,7 +375,6 @@
                                 block:^(BOOL succeeded, NSError *error) {
                                     
                 if (!error) {
-                    NSLog(@"Comment Saved Success");
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {

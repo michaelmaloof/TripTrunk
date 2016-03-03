@@ -113,8 +113,6 @@
     
     [PFCloud callFunctionInBackground:@"approveFriend" withParameters:params
                                 block:^(id  _Nullable success, NSError * _Nullable error) {
-                                    NSLog(@"successs: %@", success);
-                                    
                                     if (!error) {
                                         completionBlock(YES, error);
                                     }
@@ -280,7 +278,6 @@
      {
          if (!error) {
              // The find succeeded.
-             NSLog(@"Successfully retrieved %lu added-to-trip activities.", (unsigned long)objects.count);
              // Delete the found objects
              for (PFObject *object in objects) {
                  [object deleteInBackground];
@@ -304,7 +301,6 @@
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
         if (!error) {
-            NSLog(@"Successfully found Trip activities");
             // Delete the found objects
             NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
             for (PFObject *object in objects) {
@@ -334,7 +330,6 @@
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
-             NSLog(@"Successfully found Trip activities");
              // Delete the found objects
              NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
              for (PFObject *object in objects) {
@@ -550,7 +545,6 @@
             if ([objer2.objectId isEqualToString:ojber.objectId]){
                 count +=1;
                 if (count ==2){
-                    NSLog(@"clone %@", ojber.objectId);
                 }
             }
         }
@@ -796,7 +790,6 @@
             for (PFObject *activity in objects)
             {
                 PFUser *user = activity[@"fromUser"];
-                NSLog(@"name: %@", user.username);
                 [friends addObject:user];
             }
             // Update the cache

@@ -562,11 +562,6 @@
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
-    
-    for (Photo* photo in self.photos){
-        NSLog(@"%@", photo.image);
-    }
-    
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 0;
      photoViewController.fromTimeline = YES;

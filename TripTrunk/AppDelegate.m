@@ -356,7 +356,6 @@
                 [homeNavController pushViewController:trunkViewController animated:NO];
                 
                 if (photoId && photoId.length != 0) {
-                    NSLog(@"GOT PHOTO ADDED PUSH NOTIFICATION: %@", payload);
                     
                     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
                     [photoQuery getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
@@ -381,7 +380,6 @@
     
     // it's an addToTrip notification, so display the trip
     if ([[payload objectForKey:@"t"] isEqualToString:@"a"]) {
-        NSLog(@"GOT ADD TO TRIP PUSH NOTIFICATION: %@", payload);
 
         // Push to the referenced trip
         NSString *tripId = [payload objectForKey:@"tid"];
@@ -404,7 +402,6 @@
     }
     // it's a follow users notification, so display the user profile
     else if ([[payload objectForKey:@"t"] isEqualToString:@"f"]) {
-        NSLog(@"GOT FOLLOW USER PUSH NOTIFICATION: %@", payload);
         NSString *userId = [payload objectForKey:@"fu"];
         if (userId && userId.length != 0) {
             PFQuery *query = [PFUser query];
@@ -423,7 +420,6 @@
     }
     // it's a Comment on Photo notification, so display the Photo View
     else if ([[payload objectForKey:@"t"] isEqualToString:@"c"] || [[payload objectForKey:@"t"] isEqualToString:@"l"]) {
-        NSLog(@"GOT PHOTO COMMENT OR LIKE PUSH NOTIFICATION: %@", payload);
 
         // Push to the referenced Photo
         NSString *photoId = [payload objectForKey:@"pid"];

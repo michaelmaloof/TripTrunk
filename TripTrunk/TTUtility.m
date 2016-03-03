@@ -91,7 +91,6 @@ CLCloudinary *cloudinary;
                       NSLog(@"error saving user to parse: %@", error);
                   }
                   else {
-                      NSLog(@"Saved Successfully to parse");
                   }
               }];
               
@@ -200,10 +199,8 @@ CLCloudinary *cloudinary;
               
               
               // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
-              NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
               if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
                   [photoACL setPublicReadAccess:NO];
-                  NSLog(@"Set private photo read permissions - role name: %@", roleName);
               }
               else {
                   [photoACL setPublicReadAccess:YES];
@@ -235,12 +232,10 @@ CLCloudinary *cloudinary;
                       if (photo.caption && ![photo.caption isEqualToString:@""]) {
                           [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
                         
-                            NSLog(@"caption saved as comment");
                           }];
                       }
                       
                       
-                      NSLog(@"Saved Successfully to parse");
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
                       
@@ -332,7 +327,6 @@ CLCloudinary *cloudinary;
             if (responseObject) {
                 // Save image to phone
                 UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
-                NSLog(@"saved a photo");
 
                 // Increment counter so we know when to hide the HUD
                 completedDownloads++;
@@ -451,7 +445,6 @@ CLCloudinary *cloudinary;
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-//    NSLog(@"screen size: %f x %f", screenWidth, screenHeight);
     
     //TODO: change width/height scaling for iPhone 6+ since it's a 3x phone.
     

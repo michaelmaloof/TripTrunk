@@ -54,11 +54,9 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        NSLog(@"Agreed to EULA");
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"agreedToEULA"];
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
-    NSLog(@"DID NOT AGREE to EULA");
 
 }
 

@@ -208,9 +208,8 @@
         if (![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
             [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error){
-                    NSLog(@"Error yo");
+                    NSLog(@"Error yo %@", error);
                 } else {
-                    NSLog(@"Error no");
                     
                 }
                 
@@ -301,14 +300,11 @@
     
     if (!self.isTripCreation) {
         // This came from the Trunk view, so pop back to it.
-        NSLog(@"Trip Photos Added, not trip creation so pop back one view");
-        
         [self.navigationController popViewControllerAnimated:YES];
         [[self navigationController] setNavigationBarHidden:NO animated:YES];
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
     else {
-        NSLog(@"Trip Photos Added, is trip creation so pop to Root View");
         dispatch_async(dispatch_get_main_queue(), ^{
             
             // Now pop to the root view of the other map view controller and set that as the selected tab.

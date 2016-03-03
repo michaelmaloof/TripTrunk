@@ -129,8 +129,6 @@
         }
         else
         {
-            NSLog(@"Trunk Creator: %@", object);
-            
             _tripCreator = (PFUser *)object;
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
@@ -302,7 +300,6 @@
                     });
                 }
                 else {
-                    NSLog(@"User Deleted");
                     [self.delegate memberWasRemoved:user];
                 }
             }];
@@ -348,7 +345,6 @@
             }
             else
             {
-                NSLog(@"Follow Succeeded");
             }
         }];
     }

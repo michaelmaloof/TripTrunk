@@ -119,7 +119,6 @@
     NSString *searchString = searchController.searchBar.text;
 
     [[TTUtility sharedInstance] locationsForSearch:searchString block:^(NSArray *objects, NSError *error) {
-//        NSLog(@"Reponse Object Count: %lu", (unsigned long)objects.count);
         [_locations removeAllObjects];
 
         if (objects && objects.count > 0) {
@@ -181,7 +180,6 @@
     NSString *location = [_locations objectAtIndex:indexPath.row];
     
     if (location) {
-        NSLog(@"location chosen: %@", location);
         if (self.delegate && [self.delegate respondsToSelector:@selector(citySearchDidSelectLocation:)]) {
             [self.delegate citySearchDidSelectLocation:location];
         }

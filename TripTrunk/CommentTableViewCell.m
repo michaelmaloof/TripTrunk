@@ -101,7 +101,6 @@
     if ([[url scheme] hasPrefix:@"activity"]) {
         if ([[url host] hasPrefix:@"user"]) {
             /* load user profile screen */
-            NSLog(@"Username tapped");
             
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:didPressUsernameForUser:)]) {

@@ -86,13 +86,10 @@
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
         } else if (user.isNew)
         {
-            NSLog(@"User signed up and logged in through Facebook!");
             [self showSetUsernameView];
             
         } else
         {
-            NSLog(@"User logged in through Facebook!");
-            
             if ([user objectForKey:@"fbid"] == nil)
             {
                 FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];

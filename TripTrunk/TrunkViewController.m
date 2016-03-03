@@ -408,8 +408,6 @@
 
 -(void)queryParseMethod{
     
-    NSLog(@"TrunkViewController - queryParseMethod");
-    
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
     [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
@@ -613,8 +611,7 @@
                                            // Set the image to the Photo object in the array
                                            
                                            if (self.isMember == YES) {
-                                               NSLog(@"self.photos count is: %lu", (unsigned long)self.photos.count);
-                                               NSLog(@"index is: %ld and index-1 is: %ld", (long)index, (long)index-1);
+                                              
                                                if (index - 1 > 0) {
                                                    [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
                                                }
@@ -729,9 +726,7 @@
         
         else
         {
-            self.path = indexPath;
-            NSLog(@"didSelectItemAtIndexPath: %ld", (long)indexPath.item);
-            
+            self.path = indexPath;            
             [self performSegueWithIdentifier:@"photo" sender:self];
 
         }

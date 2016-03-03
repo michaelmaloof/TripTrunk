@@ -217,7 +217,6 @@
             }
             else
             {
-                NSLog(@"Follow Succeeded");
             }
         }];
     }

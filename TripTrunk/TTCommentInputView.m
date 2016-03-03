@@ -247,9 +247,7 @@
     
 }
 
-- (void)submitButtonPressed {
-    NSLog(@"Submit Button Pressed");
-    
+- (void)submitButtonPressed {    
     // Let the delegate handle the submit button press
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentSubmitButtonPressedWithComment:)]) {
         [self.delegate commentSubmitButtonPressedWithComment:self.commentField.text];

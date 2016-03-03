@@ -527,7 +527,6 @@
             return;
         }
         
-        NSLog(@"check 1 = %ld", (long)self.arrayInt);
         if (self.arrayInt > 0)
         {
             self.arrayInt = self.arrayInt - 1;
@@ -748,7 +747,6 @@
                 {
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
-                        NSLog(@"caption saved as comment");
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
                     }];
@@ -770,7 +768,6 @@
                         
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
                          {
-                             NSLog(@"caption saved as comment");
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
                              
                          }];
@@ -1059,7 +1056,6 @@
     // if the user is the photo owner, they have the Delete option
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId] || [[PFUser currentUser].objectId isEqualToString:self.photo.trip.creator.objectId]) {
         if (buttonIndex == 0) {
-            NSLog(@"Delete Photo");
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
             alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo?",@"Are you sure you want to delete this photo?");
@@ -1071,7 +1067,6 @@
             
         }
         else if (buttonIndex == 1) {
-            NSLog(@"Report Photo");
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];
@@ -1081,7 +1076,6 @@
             [alert show];
         }
         else if (buttonIndex == 2 ){
-//            NSLog(@"Download Photo");
 //            UIAlertView *alertView = [[UIAlertView alloc] init];
 //            alertView.delegate = self;
 //            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
@@ -1098,8 +1092,6 @@
     // Not photo owner, they can't delete.
     else {
         if (buttonIndex == 0) {
-            NSLog(@"Report Photo");
-            NSLog(@"Report Photo");
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Report Photo",@"Report Photo") message:NSLocalizedString(@"What is inappropriate about this photo?",@"What is inappropriate about this photo?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel") otherButtonTitles:NSLocalizedString(@"Submit",@"Submit"), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
             UITextField * alertTextField = [alert textFieldAtIndex:0];

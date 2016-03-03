@@ -398,7 +398,6 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)followersButtonPressed:(id)sender {
-    NSLog(@"Followers Button Pressed");
     if ([[self.user valueForKey:@"private"] boolValue]  == 0){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
         [self.navigationController pushViewController:vc animated:YES];
@@ -414,7 +413,6 @@
 }
 
 - (IBAction)followingButtonPressed:(id)sender {
-    NSLog(@"Following Button Pressed");
     if ([[self.user valueForKey:@"private"] boolValue] == 0){
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
         [self.navigationController pushViewController:vc animated:YES];
@@ -442,7 +440,6 @@
     
     if ([self.followButton isSelected]) {
         // Unfollow
-        NSLog(@"Attempt to unfollow %@",_user.username);
         [self.followButton setSelected:NO]; // change the button for immediate user feedback
         
         [[self.followButton layer] setBorderWidth:2.0f];
@@ -466,7 +463,6 @@
     }
     else {
         // Follow
-        NSLog(@"Attempt to follow %@",_user.username);
         [self.followButton setSelected:YES];
         
         [[self.followButton layer] setBorderWidth:0.0f];
@@ -561,8 +557,6 @@
 
 - (void)moreButtonPressed:(id)sender {
     
-    NSLog(@"More Button Pressed");
-    
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
@@ -577,7 +571,6 @@
     // Ensure it's the current user so we don't accidentally let people change other people's info. 
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
         [_user saveInBackground];
-        NSLog(@"Bio Updated");
         self.bioTextView.text = user[@"bio"];
         self.hometownLabel.text = user[@"hometown"];
         NSString *name;
@@ -607,7 +600,6 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 0) {
-        NSLog(@"Block User");
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Are You Sure?",@"Are You Sure?")
                                                             message:NSLocalizedString(@"This user will no longer see your profile or be able to follow you",@"This user will no longer see your profile or be able to follow you")
                                                            delegate:self

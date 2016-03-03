@@ -166,7 +166,6 @@
     if ([[url scheme] hasPrefix:@"activity"]) {
         if ([[url host] hasPrefix:@"user"]) {
             /* load user profile screen */
-            NSLog(@"Username tapped");
             
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
@@ -175,7 +174,6 @@
         } else if ([[url scheme] hasPrefix:@"activity"]) {
             if ([[url host] hasPrefix:@"toUser"]) {
                 /* load user profile screen */
-                NSLog(@"ToUsername tapped");
                 
                 // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
                 if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
@@ -185,7 +183,6 @@
         }
         else if([[url host] hasPrefix:@"trip"]) {
             /* load user profile screen */
-            NSLog(@"Trip tapped");
             Trip *trip = (Trip *)_activity[@"trip"];
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressTrip:)]) {
@@ -194,7 +191,6 @@
         }
         else if([[url host] hasPrefix:@"pendingFollow_accept"]) {
             /* Approve a Follow Request */
-            NSLog(@"Pending Follow Accept tapped");
 
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didAcceptFollowRequest:fromUser:)]) {
                 [self.delegate activityCell:self didAcceptFollowRequest:YES fromUser:_user];
@@ -202,7 +198,6 @@
         }
         else if([[url host] hasPrefix:@"pendingFollow_reject"]) {
             /* Approve a Follow Request */
-            NSLog(@"Pending Follow Reject tapped");
             
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didAcceptFollowRequest:fromUser:)]) {
                 [self.delegate activityCell:self didAcceptFollowRequest:NO fromUser:_user];

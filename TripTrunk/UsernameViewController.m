@@ -158,7 +158,6 @@
         NSString *hometown = _hometownTextField.text;
         
         if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || firstName.length == 0 || lastName.length == 0) {
-            NSLog(@"Empty Field");
 
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                             message:NSLocalizedString(@"Please fill out all fields",@"Please fill out all fields")
@@ -313,7 +312,6 @@
             return NO;
         }
 
-        NSLog(@"Username Saved");
         return YES;
 
     }

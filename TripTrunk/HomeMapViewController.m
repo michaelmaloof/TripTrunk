@@ -531,7 +531,6 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.isLoading = NO;
-        NSLog(@"%lu",(unsigned long)self.mapView.annotations.count);
         if (self.buttonsMaded == NO){
             [self createButtons];
         } else {
@@ -657,11 +656,6 @@
         //we make sure that we havent already placed a pin on a city. If the trunk is red (hot) then we place it anyways since we always want red pins showing
         if(![self.tripsToCheck containsObject:address] || color == 1)
         {
-            
-            if ([trip.name isEqualToString:@"Mike Test"]){
-                NSLog(@"stip");
-            }
-            
             //if this is a user profile we zoom to show the most recent trunk on the map
             if (self.user && trip == [self.parseLocations objectAtIndex:0] && self.isFirstUserLoad == YES) {
                 self.isFirstUserLoad = NO;
@@ -816,10 +810,6 @@
     MKAnnotationView *startAnnotation = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"startpin"];
     startAnnotation.canShowCallout = YES;
     
-    if ([annotation.title isEqualToString:@"San Clemente"]){
-        NSLog(@"stip here");
-    }
-    
     BOOL hasSeen = YES;
     for (CLLocation *loc in self.haventSeens){ //Save trip instead
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
@@ -952,7 +942,7 @@
                                withParameters:@{@"latitude": lat, @"longitude": lon, @"tripId": trip.objectId}
                                         block:^(NSString *response, NSError *error) {
                                             if (!error) {
-                                                NSLog(@"%@ upadated with lat %@ and long %@", trip.name, lat, lon);
+                                            
                                             }
                                             else {
                                                 NSLog(@"Error for %@ : %@", trip.name, error);
@@ -1272,9 +1262,7 @@
 }
 
 -(void)switchToTimeline{
-    NSLog(@"%@",self.navigationController.viewControllers);
-    
-    
+
     if (self.newsVC == nil){
         self.newsVC = [[TTNewsFeedViewController alloc]init];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];

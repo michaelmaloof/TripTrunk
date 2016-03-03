@@ -424,7 +424,6 @@
     
     if (self.isTripCreation) {
         // It's the creation flow, so add the creator as a "member" to the trip
-        NSLog(@"Is Trip Creation, Adding an Activity for the Creator");
         NSDictionary *params = [self addToTripFunctionParamsForUser:[PFUser currentUser] onTrip:self.trip];
         [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
     }
@@ -546,9 +545,7 @@
 /**
  *  Delegate method executed when the "Done" button is pressed
  */
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    NSLog(@"cancel button pressed: %lu", (unsigned long)[self.tableView indexPathsForSelectedRows].count);
-    
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {    
     self.isSearching = NO;
 
     if (self.isNext == YES) {
