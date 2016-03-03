@@ -42,6 +42,10 @@
 
 @property BOOL friendsMaxed;
 
+@property BOOL isLoadingFollowing;
+@property BOOL isLoadingPending;
+
+
 
 
 @end
@@ -205,6 +209,8 @@
 
 - (void)loadFollowing
 {
+    self.isLoadingFollowing = YES;
+    self.isLoadingPending = YES;
     // TODO: Make this work for > 100 users since parse default limits 100. 
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
@@ -213,6 +219,7 @@
             }
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.isLoadingFollowing = NO;
                 [self.tableView reloadData];
             });
             
@@ -225,7 +232,7 @@
                     }
                     // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        
+                        self.isLoadingPending = NO;
                         if (self.loadedOnce == NO){
                             self.loadedOnce = YES;
                             [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
@@ -237,12 +244,16 @@
                 }
                 else {
                     NSLog(@"Error loading pending: %@",error);
+                    self.isLoadingPending = NO;
+
                 }
             }];
             
         }
         else {
             NSLog(@"Error loading following: %@",error);
+            self.isLoadingPending = NO;
+            self.isLoadingFollowing= NO;
         }
     }];
     
@@ -649,7 +660,7 @@
 
 - (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
 {
-    
+    if (self.isLoadingFollowing == NO && self.isLoadingPending == NO){
     if ([cellView.followButton isSelected]) {
         // Unfollow
         //FIXME FOR INTERNATIONAL, USING STRING COMPARISSON
@@ -712,6 +723,7 @@
                 [cellView.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
             }
         }];
+    }
     }
 }
 
