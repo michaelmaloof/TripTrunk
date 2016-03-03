@@ -167,10 +167,13 @@ enum TTActivityViewType : NSUInteger {
                         for (PFObject *obj in activities){
                             PFUser *toUser = obj[@"toUser"];
                             PFUser *fromUser = obj[@"fromUser"];
-                            if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId]){
+                            if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
                                 [self.activities addObject:obj];
                             } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                                [self.activities addObject:obj];
+                                
+                                if (toUser != nil && fromUser != nil){
+                                    [self.activities addObject:obj];
+                                }
 
                             }
                         }
@@ -301,12 +304,16 @@ enum TTActivityViewType : NSUInteger {
                     //        self.activities = [[NSMutableArray alloc]init];
                     for (PFObject *obj in activities)
                     {
-                        if (obj[@"trip"])
+                        PFUser *toUser = obj[@"toUser"];
+                        PFUser *fromUser = obj[@"fromUser"];
+                        if (obj[@"trip"] && toUser != nil && fromUser != nil)
                         {
                             [self.activities insertObject:obj atIndex:0];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
                         {
-                            [self.activities insertObject:obj atIndex:0];
+                            if (toUser != nil && fromUser != nil){
+                                [self.activities insertObject:obj atIndex:0];
+                            }
                             
                         }
                     }
@@ -416,10 +423,12 @@ enum TTActivityViewType : NSUInteger {
                     for (PFObject *obj in activities){
                         PFUser *toUser = obj[@"toUser"];
                         PFUser *fromUser = obj[@"fromUser"];
-                        if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId]){
+                        if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
                             [self.activities addObject:obj];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                            [self.activities addObject:obj];
+                            if (toUser != nil && fromUser != nil){
+                                [self.activities addObject:obj];
+                            }
                             
                         }
                     }
@@ -438,16 +447,16 @@ enum TTActivityViewType : NSUInteger {
             } else if (self.filter.tag == 1){
                 [SocialUtility queryForFollowingActivities:self.followingActivities.count friends:self.friends activities:self.followingActivities isRefresh:NO query:^(NSArray *activities, NSError *error) {
                     for (PFObject *obj in activities){
+                        PFUser *toUser = obj[@"toUser"];
+                        PFUser *fromUser = obj[@"fromUser"];
                         if (obj[@"trip"]){
-                            PFUser *toUser = obj[@"toUser"];
-                            PFUser *fromUser = obj[@"fromUser"];
                             Trip *trip = obj[@"trip"];
-                            if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId]){
+                            if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
                                 [self.followingActivities addObject:obj];
                                 
                             }
                         }
-                        else if ([obj[@"type"] isEqualToString:@"follow"]){
+                        else if ([obj[@"type"] isEqualToString:@"follow"] && toUser != nil && fromUser != nil){
                             [self.followingActivities addObject:obj];
                             
                         }
@@ -937,12 +946,14 @@ enum TTActivityViewType : NSUInteger {
                     PFUser *fromUser = obj[@"fromUser"];
                     if (obj[@"trip"]){
                         Trip *trip = obj[@"trip"];
-                        if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId]){
+                        if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
                             [self.followingActivities addObject:obj];
                         }
                     }
                     else if ([obj[@"type"] isEqualToString:@"follow"]){
-                        [self.followingActivities addObject:obj];
+                        if (toUser != nil && fromUser != nil){
+                            [self.followingActivities addObject:obj];
+                        }
                         
                     }
                 }
