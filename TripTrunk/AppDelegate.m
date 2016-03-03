@@ -13,14 +13,16 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "TTPushNotificationHandler.h"
+
 #import "UserProfileViewController.h"
-#import "PhotoViewController.h"
-#import "TrunkViewController.h"
+//#import "PhotoViewController.h"
+//#import "TrunkViewController.h"
 #import "FindFriendsViewController.h"
 #import "ActivityListViewController.h"
 #import "TTCache.h"
-#import "CommentListViewController.h"
-#import "SocialUtility.h"
+//#import "CommentListViewController.h"
+//#import "SocialUtility.h"
 
 #if DEBUG == 0 // CHANGE TO 0
 // DEBUG is not defined or defined to be 0
@@ -271,7 +273,6 @@
 }
 
 #pragma mark - Remote Notifications
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -311,26 +312,24 @@
  intValue] + 1;
                 searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
                 [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
-
             }
         }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.
-    }
-    else {
-        // this pushes to the notification's screen, but if the app is open then we don't want to do that. We just want to tell the user they got a notification
-            
+    }else{
+        //This pushes to the notification's screen, but if the app is open then we don't want to do that.
+        //We just want to tell the user they got a notification
         [self handlePush:userInfo];
-
-        
     }
 
 }
 
 #pragma mark - Push Notification Handler
-
 - (void)handlePush:(NSDictionary *)launchOptions {
     // Extract the notification payload dictionary
     NSDictionary *payload = launchOptions;
+    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+    [tabbarcontroller setSelectedIndex:0];
+    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
     
     // Check if the app was open from a notification and a user is logged in
     if (payload && [PFUser currentUser]) {
@@ -338,158 +337,15 @@
         // Activity notification
         if ([[payload objectForKey:@"p"] isEqualToString:@"a"]) {
             if([[payload objectForKey:@"t"] isEqualToString:@"m"])
-                [self handleMentionPush:payload];
-            else [self handleActivityPush:payload];
+                [TTPushNotificationHandler handleMentionPush:payload controller:homeNavController];
+            else [TTPushNotificationHandler handleActivityPush:payload controller:homeNavController];
         }
         // Photo notification
         else if ([[payload objectForKey:@"p"] isEqualToString:@"p"]) {
-            [self handlePhotoPush:payload];
+            [TTPushNotificationHandler handlePhotoPush:payload controller:homeNavController];
         }
     }
 }
-
--(void)handleMentionPush:(NSDictionary*)payload{
-    NSString *photoId = [payload objectForKey:@"pid"];
-    //load photo bu photoId into Photo* photo object
-    PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
-    [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
-        if (!error) {
-            PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:(Photo*)photo cachePolicy:kPFCachePolicyNetworkOnly];
-            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    NSMutableArray *comments = [[NSMutableArray alloc] init];
-                    for (PFObject *activity in objects) {
-                        if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
-                            [comments addObject:activity];
-                        }
-                    }
-                    
-                    CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:comments forPhoto:(Photo*)photo];
-                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-                    [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController pushViewController:vc animated:YES];
-                    
-                }else {
-                    NSLog(@"Error loading photo Activities: %@", error);
-                }
-            }];
-        }
-    }];
-}
-
-- (void)handlePhotoPush:(NSDictionary *)payload {
-    // Push the referenced photo/trip into view
-    NSString *photoId = [payload objectForKey:@"pid"];
-    
-    NSString *tripId = [payload objectForKey:@"tid"];
-    
-    if (tripId && tripId.length != 0) {
-        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
-        [query getObjectInBackgroundWithId:tripId block:^(PFObject *trip, NSError *error) {
-            if (!error) {
-                
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-                trunkViewController.trip = (Trip *)trip;
-                UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-                UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-                [tabbarcontroller setSelectedIndex:0];
-                [homeNavController pushViewController:trunkViewController animated:NO];
-                
-                if (photoId && photoId.length != 0) {
-                    NSLog(@"GOT PHOTO ADDED PUSH NOTIFICATION: %@", payload);
-                    
-                    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-                    [photoQuery getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
-                        if (!error) {
-                            
-                            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                            PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-                            photoViewController.photo = (Photo *)photo;
-                            photoViewController.fromNotification = YES;
-
-                            [homeNavController pushViewController:photoViewController animated:YES];
-                        }
-                    }];
-                }
-            }
-        }];
-
-    }
-}
-
-- (void)handleActivityPush:(NSDictionary *)payload {
-    
-    // it's an addToTrip notification, so display the trip
-    if ([[payload objectForKey:@"t"] isEqualToString:@"a"]) {
-        NSLog(@"GOT ADD TO TRIP PUSH NOTIFICATION: %@", payload);
-
-        // Push to the referenced trip
-        NSString *tripId = [payload objectForKey:@"tid"];
-        if (tripId && tripId.length != 0) {
-            PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
-            [query getObjectInBackgroundWithId:tripId block:^(PFObject *trip, NSError *error) {
-                if (!error) {
-                    
-                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-                    trunkViewController.trip = (Trip *)trip;
-                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-                    [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController pushViewController:trunkViewController animated:YES];
-                }
-            }];
-        }
-
-    }
-    // it's a follow users notification, so display the user profile
-    else if ([[payload objectForKey:@"t"] isEqualToString:@"f"]) {
-        NSLog(@"GOT FOLLOW USER PUSH NOTIFICATION: %@", payload);
-        NSString *userId = [payload objectForKey:@"fu"];
-        if (userId && userId.length != 0) {
-            PFQuery *query = [PFUser query];
-            [query getObjectInBackgroundWithId:userId block:^(PFObject *user, NSError *error) {
-                if (!error) {
-                    
-                    // Push to the user's profile from the home map view tab
-                    UserProfileViewController *profileViewController = [[UserProfileViewController alloc] initWithUser:(PFUser *)user];
-                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-                    [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController pushViewController:profileViewController animated:YES];
-                }
-            }];
-        }
-    }
-    // it's a Comment on Photo notification, so display the Photo View
-    else if ([[payload objectForKey:@"t"] isEqualToString:@"c"] || [[payload objectForKey:@"t"] isEqualToString:@"l"]) {
-        NSLog(@"GOT PHOTO COMMENT OR LIKE PUSH NOTIFICATION: %@", payload);
-
-        // Push to the referenced Photo
-        NSString *photoId = [payload objectForKey:@"pid"];
-        if (photoId && photoId.length != 0) {
-            PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
-            [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
-                if (!error) {
-                    
-                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-                    photoViewController.photo = (Photo *)photo;
-                    photoViewController.fromNotification = YES;
-                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-                    [tabbarcontroller setSelectedIndex:0];
-                    [homeNavController pushViewController:photoViewController animated:YES];
-                }
-            }];
-        }
-
-    }
-}
-
-
 
 /**
  *  @brief handle shortcut item depend on its type
