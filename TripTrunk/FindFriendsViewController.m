@@ -704,7 +704,7 @@
             // change the button for immediate user feedback
             [cellView.followButton setSelected:NO];
                [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
-            [self.following removeObject:user];
+            [self.following removeObject:user.objectId];
             [SocialUtility unfollowUser:user];
         }
     }
@@ -735,7 +735,7 @@
                 if (error) {
                     NSLog(@"Error following user: %@", error);
                       [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
-                    [self.following removeObject:user]; //we lose these
+                    [self.following removeObject:user.objectId]; //we lose these
                     [self.pending removeObject:user];
                 }
                 
