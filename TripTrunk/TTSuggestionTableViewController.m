@@ -54,7 +54,7 @@
 }
 
 #pragma mark - Private Methods
--(void)buildFriendsList:(void (^)(BOOL, NSError *))completionBlock{
+-(void)buildFriendsList:(Trip*)trip block:(void (^)(BOOL, NSError *))completionBlock{
     self.friendsArray = [[NSMutableArray alloc] init];
     //Ask SocialUtility to return this user's followers
     [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
@@ -74,13 +74,25 @@
                         }
                     }
                     
-                    //If the list isn't empty, reload the tableview
-                    if(self.friendsArray.count > 0){
-                        [self.suggestionsTable reloadData];
-                    }
-                    
-                    //tell the block to finish with success
-                    completionBlock(YES, error);
+                    [SocialUtility trunkMembers:trip block:^(NSArray *users, NSError *error){
+                        if(!error){
+                            //Loop through all of the followingUsers
+                            for(PFUser *user in users){
+                                //Check to see if the user is in the array already
+                                if(![self array:self.friendsArray containsPFObjectById:user]){
+                                    //if not, add the user to the array
+                                    [self.friendsArray addObject:user];
+                                }
+                            }
+                            
+                            //If the list isn't empty, reload the tableview
+                            if(self.friendsArray.count > 0)
+                                [self.suggestionsTable reloadData];
+                            
+                            //tell the block to finish with success
+                            completionBlock(YES, error);
+                        }
+                    }];
                     
                 }else{
                     //tell the block to finish with failure

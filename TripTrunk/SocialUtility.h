@@ -264,7 +264,12 @@
  */
 + (void)trunkCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
 
-
-
+/**
+ *  Gets the members of a trunk/trip
+ *
+ *  @param trip            The trip to search for members in
+ *  @param completionBlock block with array or error
+ */
++ (void)trunkMembers:(Trip*)trip block:(void (^)(NSArray *users, NSError *error))completionBlock;
 
 @end

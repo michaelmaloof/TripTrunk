@@ -454,9 +454,10 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
         if (!error && object.count != 0){
              [object[0] deleteEventually];
-            return completionBlock(true, nil);
+            return completionBlock(true, error);
         }else{
             NSLog(@"Error: %@", error);
+            return completionBlock(false, error);
         }
      }];
 }
@@ -927,6 +928,38 @@
             }
         completionBlock(count, error);
         }
+    }];
+}
+
++ (void)trunkMembers:(Trip*)trip block:(void (^)(NSArray *users, NSError *error))completionBlock{
+    NSMutableArray *members = [[NSMutableArray alloc] init];
+    
+    PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKey:@"trip" equalTo:trip];
+    [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [memberQuery whereKey:@"toUser" notEqualTo:trip.creator];
+    [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    [memberQuery includeKey:@"toUser"];
+    
+    
+    
+    [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error){
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }else{
+            
+            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
+            for (PFObject *activity in objects) {
+                PFUser *user = activity[@"toUser"];
+                if (![user[@"fbid"]isEqualToString:user[@"username"]]){
+                    [members addObject: user];
+                }
+            }
+            
+            completionBlock(members, error);
+        }
+        
     }];
 }
 

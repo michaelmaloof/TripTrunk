@@ -73,7 +73,7 @@
  *  @param completionBlock returns boolean of succeed or fail
  *  @param completionBlock returns error message if fail
  */
--(void)buildFriendsList:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+-(void)buildFriendsList:(Trip*)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
  *  Updates the tableview that is displayed in the popover
