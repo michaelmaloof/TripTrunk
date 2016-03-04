@@ -481,23 +481,26 @@
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
-    
-    
-    if (self.shouldShowTrunkNameButton) {
-        // Populate the photo's trip reference so we can allow linking to the Trunk from the photo view.
-        // If we aren't going to show the button, dont' worry about populating self.photo.trip
-        [self.photo.trip fetchIfNeededInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
-    }
-
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             
             [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 if (!error){
+                    
+                    if (self.shouldShowTrunkNameButton) {
+                        [self.photo.trip fetchIfNeeded];
+                        [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
+                        [self.trunkNameButton setHidden:NO];
+                    }
+                    
                     if ([self.photo.user[@"private"] boolValue] == YES && self.photo.trip.isPrivate == NO) {
                         self.privateButton.hidden = NO;
                     } else {
                         self.privateButton.hidden = YES;
+                    }
+                    
+                    if (error){
+                        NSLog(@"error %@", error);
                     }
                 }
                 

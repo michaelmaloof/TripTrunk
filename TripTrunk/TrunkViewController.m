@@ -413,6 +413,10 @@
     [findPhotosUser orderByDescending:@"createdAt"];
     [findPhotosUser includeKey:@"trip.creator"];
     [findPhotosUser includeKey:@"trip.publicTripDetail"];
+    [findPhotosUser includeKey:@"trip"];
+    [findPhotosUser includeKey:@"user"];
+
+
 
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
