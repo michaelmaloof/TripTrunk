@@ -125,6 +125,7 @@ enum TTActivityViewType : NSUInteger {
     self.trips = [[NSMutableArray alloc]init];
 
     
+    
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
     } else {
@@ -143,6 +144,7 @@ enum TTActivityViewType : NSUInteger {
         self.tableView.emptyDataSetDelegate = self;
         self.tableView.emptyDataSetSource = self;
         
+        [self loadTrips];
 
         PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
         [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
