@@ -122,6 +122,9 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.trips = [[NSMutableArray alloc]init];
+
+    
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
     } else {
@@ -148,7 +151,8 @@ enum TTActivityViewType : NSUInteger {
         [trips includeKey:@"trip"];
         [trips whereKeyExists:@"trip"];
         [trips setLimit:1000];
-        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
+        {
             if (!error)
             {
                 for (PFObject *activity in objects)
@@ -164,6 +168,11 @@ enum TTActivityViewType : NSUInteger {
                     if (self.isLoading == NO){
                         self.isLoading = YES;
                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                        
+                        if (error){
+                            NSLog(@"error %@",error);
+                        } else {
+                        
                         for (PFObject *obj in activities){
                             PFUser *toUser = obj[@"toUser"];
                             PFUser *fromUser = obj[@"fromUser"];
@@ -184,13 +193,16 @@ enum TTActivityViewType : NSUInteger {
                             self.navigationItem.rightBarButtonItem.enabled = YES;
                             [self.tableView reloadData];
                         });
+                        }
                     }];
                     }
+                     
                 }
 
             } else {
                 self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.isLoading = NO;
+                NSLog(@"error %@", error);
             }
                 
             }];
@@ -203,7 +215,6 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-    self.trips = [[NSMutableArray alloc]init];
     
 //    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
 //    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
