@@ -933,7 +933,11 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
 {
-    [self loadTrips];
+    if (self.filter.tag == 0){
+        [self loadTrips];
+    }else {
+        [self loadFriends];
+    }
     
 }
 
