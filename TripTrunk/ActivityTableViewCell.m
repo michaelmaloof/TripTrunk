@@ -170,9 +170,7 @@
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
                 [self.delegate activityCell:self didPressUsernameForUser:_user];
-            }
-        } else if ([[url scheme] hasPrefix:@"activity"]) {
-            if ([[url host] hasPrefix:@"toUser"]) {
+            } else if ([[url host] hasPrefix:@"toUser"]) {
                 /* load user profile screen */
                 
                 // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.

@@ -744,6 +744,8 @@ enum TTActivityViewType : NSUInteger {
             [self refresh:nil];
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Hide HUD spinner
+                [self.activities removeObject:cellView.activity];
+                [self.tableView reloadData];
                 HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
                 [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
             });
