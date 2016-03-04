@@ -808,12 +808,8 @@
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
-<<<<<<< HEAD
-                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
-=======
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error) {
                         NSLog(@"caption saved as comment");
->>>>>>> feature/TRIPTRUNK-126
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
                         [self updateMentionsInDatabase:object];
