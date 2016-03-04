@@ -2307,6 +2307,30 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QI0-yB-QB7">
+                                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="eG0-iw-a8B"/>
+                                            <constraint firstAttribute="width" constant="20" id="tmD-89-m3K"/>
+                                        </constraints>
+                                        <state key="normal" image="lock"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="eG0-iw-a8B"/>
+                                                <exclude reference="tmD-89-m3K"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="61" y="8" width="20" height="20"/>
+                                            <mask key="constraints">
+                                                <include reference="eG0-iw-a8B"/>
+                                                <include reference="tmD-89-m3K"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="privatebuttonTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="k5M-Jp-h5O"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="dWA-ve-gIJ" secondAttribute="bottom" constant="8" id="1VA-WR-WZI"/>
@@ -2317,7 +2341,10 @@
                                     <constraint firstAttribute="height" constant="70" id="5bJ-Sp-NUJ">
                                         <variation key="heightClass=regular-widthClass=compact" constant="64"/>
                                     </constraint>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="leading" secondItem="CmI-e7-SWG" secondAttribute="trailing" constant="6" id="8Ic-hL-SHt"/>
                                     <constraint firstItem="CmI-e7-SWG" firstAttribute="leading" secondItem="hR0-63-pl9" secondAttribute="leading" constant="5" id="FX9-CE-9s1"/>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="top" secondItem="CmI-e7-SWG" secondAttribute="bottom" constant="8" id="GQe-eB-xAe"/>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="leading" secondItem="Lec-yX-hFH" secondAttribute="trailing" constant="2" id="O9g-C8-KQN"/>
                                     <constraint firstAttribute="trailing" secondItem="BL7-tA-HXj" secondAttribute="trailing" constant="13" id="bwn-I7-BFb">
                                         <variation key="heightClass=regular-widthClass=compact" constant="6"/>
                                     </constraint>
@@ -2330,9 +2357,12 @@
                                     <constraint firstItem="HFK-1a-bML" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="8" id="g98-Gw-ndT"/>
                                     <constraint firstItem="Lec-yX-hFH" firstAttribute="centerX" secondItem="hR0-63-pl9" secondAttribute="centerX" id="hxg-e0-ry0"/>
                                     <constraint firstAttribute="trailing" secondItem="dWA-ve-gIJ" secondAttribute="trailing" constant="17" id="kdB-pH-oV4"/>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="centerX" secondItem="CmI-e7-SWG" secondAttribute="centerX" id="mND-Ul-zJ9"/>
                                     <constraint firstItem="BL7-tA-HXj" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="11" id="oZW-UR-wmg">
                                         <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                     </constraint>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="top" secondItem="hR0-63-pl9" secondAttribute="top" constant="8" id="p9s-Gn-Czi"/>
+                                    <constraint firstItem="QI0-yB-QB7" firstAttribute="centerY" secondItem="Lec-yX-hFH" secondAttribute="centerY" id="rrH-gv-s5E"/>
                                     <constraint firstItem="dWA-ve-gIJ" firstAttribute="centerY" secondItem="HFK-1a-bML" secondAttribute="centerY" id="xA7-qN-1hW"/>
                                 </constraints>
                                 <variation key="default">
@@ -2342,19 +2372,26 @@
                                         <exclude reference="Lec-yX-hFH"/>
                                         <exclude reference="HFK-1a-bML"/>
                                         <exclude reference="dWA-ve-gIJ"/>
+                                        <exclude reference="QI0-yB-QB7"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="5bJ-Sp-NUJ"/>
-                                        <exclude reference="bwn-I7-BFb"/>
-                                        <exclude reference="oZW-UR-wmg"/>
                                         <exclude reference="3iP-vA-KCU"/>
                                         <exclude reference="FX9-CE-9s1"/>
-                                        <exclude reference="dMU-dw-NfI"/>
-                                        <exclude reference="fZR-Jd-98U"/>
-                                        <exclude reference="g98-Gw-ndT"/>
+                                        <exclude reference="8Ic-hL-SHt"/>
+                                        <exclude reference="GQe-eB-xAe"/>
+                                        <exclude reference="O9g-C8-KQN"/>
+                                        <exclude reference="mND-Ul-zJ9"/>
+                                        <exclude reference="p9s-Gn-Czi"/>
+                                        <exclude reference="rrH-gv-s5E"/>
                                         <exclude reference="4XE-7w-zcm"/>
                                         <exclude reference="e39-vj-NXz"/>
                                         <exclude reference="hxg-e0-ry0"/>
+                                        <exclude reference="dMU-dw-NfI"/>
+                                        <exclude reference="fZR-Jd-98U"/>
+                                        <exclude reference="g98-Gw-ndT"/>
+                                        <exclude reference="bwn-I7-BFb"/>
+                                        <exclude reference="oZW-UR-wmg"/>
                                         <exclude reference="1VA-WR-WZI"/>
                                         <exclude reference="fKi-bx-tr2"/>
                                         <exclude reference="kdB-pH-oV4"/>
@@ -2368,19 +2405,26 @@
                                         <include reference="Lec-yX-hFH"/>
                                         <include reference="HFK-1a-bML"/>
                                         <include reference="dWA-ve-gIJ"/>
+                                        <include reference="QI0-yB-QB7"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="5bJ-Sp-NUJ"/>
-                                        <include reference="bwn-I7-BFb"/>
-                                        <include reference="oZW-UR-wmg"/>
                                         <include reference="3iP-vA-KCU"/>
                                         <include reference="FX9-CE-9s1"/>
-                                        <include reference="dMU-dw-NfI"/>
-                                        <include reference="fZR-Jd-98U"/>
-                                        <exclude reference="g98-Gw-ndT"/>
+                                        <include reference="8Ic-hL-SHt"/>
+                                        <exclude reference="GQe-eB-xAe"/>
+                                        <exclude reference="O9g-C8-KQN"/>
+                                        <exclude reference="mND-Ul-zJ9"/>
+                                        <include reference="p9s-Gn-Czi"/>
+                                        <exclude reference="rrH-gv-s5E"/>
                                         <exclude reference="4XE-7w-zcm"/>
                                         <include reference="e39-vj-NXz"/>
                                         <include reference="hxg-e0-ry0"/>
+                                        <include reference="dMU-dw-NfI"/>
+                                        <include reference="fZR-Jd-98U"/>
+                                        <exclude reference="g98-Gw-ndT"/>
+                                        <include reference="bwn-I7-BFb"/>
+                                        <include reference="oZW-UR-wmg"/>
                                         <include reference="1VA-WR-WZI"/>
                                         <include reference="fKi-bx-tr2"/>
                                         <include reference="kdB-pH-oV4"/>
@@ -2725,6 +2769,7 @@
                         <outlet property="likeButton" destination="Azv-Ms-g16" id="MQw-ce-Y2u"/>
                         <outlet property="likeCountButton" destination="VAb-3S-Guy" id="MNv-X7-3F8"/>
                         <outlet property="photoTakenBy" destination="Lec-yX-hFH" id="Rvn-Zb-2Ap"/>
+                        <outlet property="privateButton" destination="QI0-yB-QB7" id="2W3-5b-6ph"/>
                         <outlet property="saveButton" destination="BL7-tA-HXj" id="YzY-gH-fEI"/>
                         <outlet property="scrollView" destination="g0k-n4-hcD" id="9vF-FK-Tbf"/>
                         <outlet property="timeStamp" destination="dWA-ve-gIJ" id="aFb-8b-dJ6"/>

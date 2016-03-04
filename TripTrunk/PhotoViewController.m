@@ -58,6 +58,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
+@property (weak, nonatomic) IBOutlet UIButton *privateButton;
 
 
 
@@ -74,6 +75,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.privateButton.hidden = YES;
     self.deleteCaption.hidden = YES;
     // Set initial UI
     
@@ -95,6 +97,9 @@
     self.timeStamp.adjustsFontSizeToFitWidth = YES;
     
     //FIXME: if I self.photo.user.username it crashes thee app
+
+
+    
     [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
     
     self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
@@ -115,6 +120,8 @@
         self.shouldShowTrunkNameButton = YES;
 
     }
+    
+
     
     self.commentActivities = [[NSMutableArray alloc] init];
 //    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
@@ -451,6 +458,22 @@
         // If we aren't going to show the button, dont' worry about populating self.photo.trip
         [self.photo.trip fetchIfNeededInBackgroundWithTarget:self selector:@selector(tripLoaded:)];
     }
+
+    [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (!error){
+            
+            [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                if (!error){
+                    if ([self.photo.user[@"private"] boolValue] == YES && self.photo.trip.isPrivate == NO) {
+                        self.privateButton.hidden = NO;
+                    } else {
+                        self.privateButton.hidden = YES;
+                    }
+                }
+                
+            }];
+        }
+    }];
 
     
     self.likeActivities = [[NSMutableArray alloc] init];
@@ -1217,6 +1240,15 @@
     }
     
     //    }];
+}
+- (IBAction)privatebuttonTapped:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = NSLocalizedString(@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and by members of the trunk where the photo is located.",@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and members of the trunk where the photo is located.");
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+   [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
+    alertView.tag = 3;
+    [alertView show];
 }
 
 @end
