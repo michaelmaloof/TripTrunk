@@ -255,16 +255,6 @@
     [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.imageBUtton addTarget:self action:@selector(moreWasTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-    
-    //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
-    
-    tap.cancelsTouchesInView = YES;
-    tap.numberOfTapsRequired = 1;
-    [cell.newsfeedPhoto addGestureRecognizer:tap];
-    cell.newsfeedPhoto.userInteractionEnabled = YES;
-    tap.view.tag =  indexPath.row;
-    
     UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapProfile:)];
     
     profileTap.cancelsTouchesInView = YES;
@@ -430,6 +420,16 @@
             NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
             UIImage *placeholderImage = photo.image;
             
+            //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
+            
+            tap.cancelsTouchesInView = YES;
+            tap.numberOfTapsRequired = 1;
+            [cell.newsfeedPhoto addGestureRecognizer:tap];
+            cell.newsfeedPhoto.userInteractionEnabled = YES;
+            tap.view.tag =  indexCount - 1;
+
+            
             [cell.newsfeedPhoto setImageWithURLRequest:requestNew
                                       placeholderImage:placeholderImage
                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -560,7 +560,7 @@
 - (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
+    Photo *photo = self.photos[gestureRecognizer.view.tag];
     photoViewController.photo = (Photo *)photo;
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 0;
