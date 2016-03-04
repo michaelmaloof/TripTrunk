@@ -12,6 +12,17 @@
 
 @implementation SocialUtility
 
++ (PFUser*)loadUserFromUsername:(NSString*)username{
+
+    //Connect to Parse and grab the PFUser from the username
+    //FIXME: Some sort of user caching would be a good idea so we don't have to do this everytime
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"username" equalTo:username];
+    PFUser *user = (PFUser *)[query getFirstObject];
+    
+    return user;
+}
+
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock
 {
     if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
@@ -345,11 +356,11 @@
      }];
 }
 
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL, NSError *))completionBlock
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL, PFObject *, NSError *))completionBlock
 {
     if ([comment isEqualToString:@""]) {
         if (completionBlock) {
-            return completionBlock(false, nil);
+            return completionBlock(false, nil, nil);
         }
     }
     
@@ -379,7 +390,7 @@
         [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 if (completionBlock) {
-                    completionBlock(succeeded, error);
+                    completionBlock(succeeded, object, error);
                 }
             }
             else {
@@ -388,6 +399,63 @@
             }
         }];
     }];
+}
+
++ (void)addMention:(PFObject *)commentObject isCaption:(BOOL)isCaption withUser:(PFUser*)user forPhoto:(Photo *)photo block:(void (^)(BOOL, NSError *))completionBlock
+{
+    if (commentObject == nil) {
+        if (completionBlock)
+            return completionBlock(false, nil);
+    }
+    
+    PFObject *mentionActivity = [PFObject objectWithClassName:@"Activity"];
+    [mentionActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
+    [mentionActivity setObject:user forKey:@"toUser"];
+    [mentionActivity setObject:photo forKey:@"photo"];
+    [mentionActivity setObject:photo.trip forKey:@"trip"];
+    [mentionActivity setObject:@"mention" forKey:@"type"];
+    [mentionActivity setObject:commentObject forKey:@"comment"];
+    [mentionActivity setObject:[NSNumber numberWithBool:isCaption] forKey:@"isCaption"];
+    
+    // Permissions: commenter and photo owner can edit/delete comments.
+    PFACL *mentionACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [mentionACL setWriteAccess:YES forUser:photo.user];
+    
+    [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
+        [mentionACL setWriteAccess:YES forUser:photo.trip.creator];
+        [mentionACL setPublicReadAccess:YES];
+        mentionActivity.ACL = mentionACL;
+        
+        [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                if (completionBlock) {
+                    completionBlock(succeeded, error);
+                }
+            }
+        }];
+    }];
+}
+
++ (void)deleteMention:(PFObject *)commentObject withUser:(PFUser*)user block:(void (^)(BOOL, NSError *))completionBlock{
+    if (commentObject == nil) {
+        if (completionBlock)
+            return completionBlock(false, nil);
+    }
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:user];
+    [query whereKey:@"comment" equalTo:commentObject];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
+        if (!error && object.count != 0){
+             [object[0] deleteEventually];
+            return completionBlock(true, error);
+        }else{
+            NSLog(@"Error: %@", error);
+            return completionBlock(false, error);
+        }
+     }];
 }
 
 + (void)getCommentsForPhoto:(Photo *)photo block:(void (^)(NSArray *objects, NSError *error))completionBlock;
@@ -854,6 +922,38 @@
             }
         completionBlock(count, error);
         }
+    }];
+}
+
++ (void)trunkMembers:(Trip*)trip block:(void (^)(NSArray *users, NSError *error))completionBlock{
+    NSMutableArray *members = [[NSMutableArray alloc] init];
+    
+    PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKey:@"trip" equalTo:trip];
+    [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [memberQuery whereKey:@"toUser" notEqualTo:trip.creator];
+    [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    [memberQuery includeKey:@"toUser"];
+    
+    
+    
+    [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error){
+            NSLog(@"Error: %@",error);
+            completionBlock(nil, error);
+        }else{
+            
+            // These are Activity objects, so loop through and just pull out the "toUser" User objects.
+            for (PFObject *activity in objects) {
+                PFUser *user = activity[@"toUser"];
+                if (![user[@"fbid"]isEqualToString:user[@"username"]]){
+                    [members addObject: user];
+                }
+            }
+            
+            completionBlock(members, error);
+        }
+        
     }];
 }
 

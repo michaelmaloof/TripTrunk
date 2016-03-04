@@ -8,6 +8,9 @@
 
 #import "TTCommentInputView.h"
 #import "UIColor+HexColors.h"
+#import "TTSuggestionTableViewController.h"
+
+UIView *topView;
 
 @interface TTCommentInputView () <UITextFieldDelegate>
 
@@ -45,7 +48,7 @@
         _commentField.autocorrectionType = UITextAutocorrectionTypeYes;
         _commentField.keyboardType = UIKeyboardTypeDefault;
         _commentField.clearButtonMode = UITextFieldViewModeWhileEditing;
-//        _commentField.delegate = self;
+        _commentField.delegate = self;
         
 
         _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -67,6 +70,9 @@
         // Listen for keyboard notifications
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+        
+        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+        topView = window.rootViewController.tabBarController.view;
 
     }
     return self;
@@ -258,7 +264,38 @@
 
 }
 
-#pragma mark - UITextView Delegate Methods
+#pragma mark - UITextFieldDelegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [self colorHashtagAndMentions];
+    return YES;
+}
+
+//FIXME: This needs to be refactored into a single method
+- (void)colorHashtagAndMentions{
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.commentField.text];
+    NSError *error = [[NSError alloc] init];
+    UIColor *fontColor = [UIColor blueColor];
+    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.commentField.text.length)];
+    
+//    //This is used to highlight and link #hashtags
+//    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
+//    NSArray *matches = [regExHash matchesInString:self.commentField.text options:0 range:NSMakeRange(0, self.commentField.text.length)];
+//    
+//    for(NSTextCheckingResult * match in matches){
+//        NSRange wordRange = [match rangeAtIndex:0];
+//        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
+//    }
+    
+    NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
+    NSArray *matchesAt = [regExAt matchesInString:self.commentField.text options:0 range:NSMakeRange(0, self.commentField.text.length)];
+    
+    for(NSTextCheckingResult * matchAt in matchesAt){
+        NSRange wordRangeAt = [matchAt rangeAtIndex:0];
+        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
+    }
+    
+    self.commentField.attributedText = string;
+}
 
 
 #pragma mark - dealloc

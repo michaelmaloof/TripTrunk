@@ -23,13 +23,15 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "TTTTimeIntervalFormatter.h"
-
+#import "KILabel.h"
+#import "TTSuggestionTableViewController.h"
+#import "TTHashtagMentionColorization.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -50,9 +52,13 @@
 @property TTTTimeIntervalFormatter *timeFormatter;
 
 @property BOOL isZoomed;
-
+//############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
-
+@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
+@property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
+@property (strong, nonatomic) NSString *previousComment;
+//############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
 @property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
@@ -90,9 +96,8 @@
     
     self.caption.selectable = NO;
     self.caption.editable = NO;
-    
     self.caption.delegate = self;
-    
+
     self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.timeStamp.adjustsFontSizeToFitWidth = YES;
     
@@ -157,10 +162,31 @@
     
     [self refreshPhotoActivitiesWithUpdateNow:NO];
 
+//############################################# MENTIONS ##################################################
+    // Attach block for handling taps on usernames
+    _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:string]];
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+        if(vc)
+            [self.navigationController pushViewController:vc animated:YES];
+        
+    };
     
+    _captionLabel.hashtagLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        //Not implemented yet
+    };
     
+    _captionLabel.urlLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+        // Open URLs
+        //        [self attemptOpenURL:[NSURL URLWithString:string]];
+    };
+//############################################# MENTIONS ##################################################
 
 }
+
+
+
+
 
 - (NSString *)stringForTimeStamp:(NSDate*)created {
     
@@ -171,7 +197,6 @@
     
     return time;
 }
-
 
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
@@ -332,6 +357,10 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     
+    NSRange cursorPosition = [self.caption selectedRange];
+//    [self colorHashtagAndMentions:cursorPosition.location];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
 -(void)viewDidLayoutSubviews {
@@ -404,7 +433,7 @@
     [self.view addGestureRecognizer:swipeUp];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [self.view addGestureRecognizer:tapGesture];
+    [self.imageView addGestureRecognizer:tapGesture];
     
 //    
 //    UITapGestureRecognizer *dblRecognizer;
@@ -423,6 +452,7 @@
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
         self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
         self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+        self.captionLabel.hidden = self.bottomButtonWrapper.hidden;
     } completion:nil];
 
 }
@@ -503,10 +533,8 @@
                 }
             }
             
-            [self.caption setContentOffset:CGPointZero animated:NO];
             self.caption.text = self.photo.caption;
-            [self.caption setContentOffset:CGPointZero animated:NO];
-            self.caption.hidden = NO;
+            self.captionLabel.text = self.photo.caption;
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
@@ -752,67 +780,82 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
+
 - (IBAction)editCaptionTapped:(id)sender {
     
     if (self.addCaption.tag == 0){
-        
+        //store the mentioned users from the current comment
+        if (self.caption.text.length > 0)
+            self.previousComment = self.caption.text;
+        self.caption.hidden = NO;
+        self.captionLabel.hidden = YES;
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
         
     } else {
         self.addCaption.enabled = NO;
-        self.photo.caption = self.caption.text;
+        self.photo.caption = [self separateMentions:self.caption.text];
+        self.caption.hidden = YES;
+        self.captionLabel.hidden = NO;
 
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
+<<<<<<< HEAD
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error) {
+=======
+                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error) {
+                        NSLog(@"caption saved as comment");
+>>>>>>> feature/TRIPTRUNK-126
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
+                        [self updateMentionsInDatabase:object];
                     }];
                 } else
                 {
                     //if there already is a caption we edit it and save it
                     __block BOOL save = NO;
                     for (PFObject *obj in self.commentActivities){
-                        if ((BOOL)[obj objectForKey:@"isCaption"] == YES && save == NO)
+                        if ((BOOL)[obj objectForKey:@"isCaption"] && !save)
                         {
                             save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
                             [obj saveInBackground];
+                            [self updateMentionsInDatabase:obj];
                         }
                     }
                     
-                    if (save == NO) {
+                    if (!save) {
                         
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, NSError *error)
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error)
                          {
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             
+                             [self updateMentionsInDatabase:object];
                          }];
                         
+                    }else{
+                        //shouldn't we handle this conditon?
                     }
-                    
                 }
             }
             
             [self.caption endEditing:YES];
             self.addCaption.enabled = YES;
-
         }];
-        
-        
     }
-    
 }
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
-    self.caption.editable = YES;
+//    self.caption.editable = YES;
     self.isEditingCaption = YES;
     self.scrollView.scrollEnabled = NO;
     self.likeButton.hidden = YES;
@@ -820,9 +863,6 @@
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
     self.deleteCaption.hidden = NO;
-    self.caption.backgroundColor = [UIColor whiteColor];
-    self.caption.alpha = .7;
-    self.caption.textColor = [UIColor blackColor];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
 
@@ -836,14 +876,9 @@
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
     self.deleteCaption.hidden = YES;
-    self.caption.alpha = 1.0;
-    self.caption.backgroundColor = [UIColor clearColor];
-    self.caption.textColor = [UIColor whiteColor];
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+    self.captionLabel.text = self.photo.caption;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
@@ -864,6 +899,7 @@
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
                             self.caption.text = @"";
+                            self.captionLabel.text = @"";
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
@@ -937,10 +973,8 @@
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+    self.captionLabel.text = self.photo.caption;
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
@@ -1192,11 +1226,154 @@
     return zoomRect;
 }
 
+
+//############################################# MENTIONS ##################################################
+-(void)updateMentionsInDatabase:(PFObject*)object{
+    [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
+}
+
+#pragma mark - UITextViewDelegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    NSRange cursorPosition = [textView selectedRange];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    return YES;
+}
+
+//As the user types, check for a @mention and display a popup with a list of users to autocomplete
+- (void)textViewDidChange:(UITextView *)textView{
+    //get the word that the user is currently typing
+    NSRange cursorPosition = [textView selectedRange];
+    NSString* substring = [textView.text substringToIndex:cursorPosition.location];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    
+    //Display the Popover if there is a @ plus a letter typed and only if it is not already showing
+    if([self displayAutocompletePopover:lastWord]){
+        if(!self.autocompletePopover.delegate){
+            //Instantiate the view controller and set its size
+            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+            self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.autocompletePopover.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.caption;
+            self.popover.sourceRect = [self.caption bounds];
+            self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        
+            //Build the friends list for the table view in the popover and wait
+            [self.autocompletePopover buildFriendsList:self.trip block:^(BOOL succeeded, NSError *error){
+                if(succeeded){
+                    //send the current word to the Popover to use for comparison
+                    self.autocompletePopover.mentionText = lastWord;
+                    [self.autocompletePopover updateAutocompleteTableView];
+                    //If there are friends to display, now show the popup on the screen
+                    if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                        self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                        self.autocompletePopover.delegate = self;
+                        [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                    }
+                }else{
+                    NSLog(@"Error: %@",error);
+                }
+            }];
+
+        }
+    }
+    
+    //Update the table view in the popover but only if it is currently displayed
+    if([self updateAutocompletePopover:lastWord]){
+        self.autocompletePopover.mentionText = lastWord;
+        [self.autocompletePopover updateAutocompleteTableView];
+    }
+    
+    //Remove the popover if a space is typed
+    if([self dismissAutocompletePopover:lastWord]){
+        [self dismissViewControllerAnimated:YES completion:nil];
+        self.popover.delegate = nil;
+        self.autocompletePopover = nil;
+    }
+}
+
+//Only true if user has typed an @ and a letter and if the popover is not showing
+-(BOOL)displayAutocompletePopover:(NSString*)lastWord{
+    return [lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate;
+}
+
+//Only true if the popover is showing and the user typed a space
+-(BOOL)dismissAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""]);
+}
+
+//Only true if the popover is showing and there are friends to show in the table view and the @mention isn't broken
+-(BOOL)updateAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""];
+}
+
+//Dismiss the popover and reset the delegates
+-(void)removeAutocompletePopoverFromSuperview{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    self.popover.delegate = nil;
+    self.autocompletePopover = nil;
+}
+
+#pragma mark - TTSuggestionTableViewControllerDelegate
+//The popover is telling this view controller to dismiss it
+- (void)popoverViewControllerShouldDissmissWithNoResults{
+    [self removeAutocompletePopoverFromSuperview];
+}
+
+//replace the currently typed word with the the username
+-(void)insertUsernameAsMention:(NSString*)username{
+    //Get the currently typed word
+    NSRange cursorPosition = [self.caption selectedRange];
+    NSString* substring = [self.caption.text substringToIndex:cursorPosition.location];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    //get a mutable copy of the current caption
+    NSMutableString *caption = [NSMutableString stringWithString:self.caption.text];
+    //create the replacement range of the typed mention
+    NSRange mentionRange = NSMakeRange(cursorPosition.location-[lastWord length], [lastWord length]);
+    //replace that typed @mention with the user name of the user they want to mention
+    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
+    
+    //display the new caption
+    self.caption.text = mentionString;
+    //dismiss the popover
+    [self removeAutocompletePopoverFromSuperview];
+    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1 text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
+    self.autocompletePopover.delegate = nil;
+}
+
+//Adjust the height of the popover to fit the number of usernames in the tableview
+-(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
+    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], height);
+}
+
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
+
+-(NSString*)separateMentions:(NSString*)comment{
+    if(![comment containsString:@"@"])
+        return comment;
+    
+    NSArray *array = [comment componentsSeparatedByString:@"@"];
+    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+}
+
+//############################################# MENTIONS ##################################################
+
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
     if ([segue.identifier isEqualToString:@"editCaption"]){
     
     }
@@ -1210,10 +1387,8 @@
         self.photo.caption = @"";
     }
     self.caption.hidden = YES;
-    [self.caption setContentOffset:CGPointZero animated:NO];
     self.caption.text = self.photo.caption;
-    [self.caption setContentOffset:CGPointZero animated:NO];
-    self.caption.hidden = NO;
+    self.captionLabel.text = self.photo.caption;
     [self.photo saveInBackground];
 
 }
@@ -1249,6 +1424,16 @@
    [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
     alertView.tag = 3;
     [alertView show];
+}
+
+
+
+
+#pragma mark - UIPopoverPresentationControllerDelegate
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Return no adaptive presentation style, use default presentation behaviour
+    return UIModalPresentationNone;
 }
 
 @end

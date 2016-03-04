@@ -16,23 +16,19 @@
 -(void)photoWasDisliked:(id)sender;
 -(void)photoWasDeleted:(NSNumber*)likes;
 -(void)photoWasViewed:(Photo*)photo;
-
-
-
 @end
 
 @interface PhotoViewController : TTBaseViewController
 @property Photo *photo; //mattschoch 6/10 - added so that we can pass in the image directly instead of downloading it again
 
 @property Trip *trip;
-
 @property NSArray *photos;
 @property NSArray *trunkAlbum;
 @property NSInteger arrayInt;
 @property id<PhotoDelegate> delegate;
 @property BOOL fromNotification;
--(void)captionButtonTapped:(int)button caption:(NSString*)text;
 @property BOOL fromTimeline;
 
+-(void)captionButtonTapped:(int)button caption:(NSString*)text;
 
 @end
