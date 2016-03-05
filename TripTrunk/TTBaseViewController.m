@@ -7,6 +7,9 @@
 //
 
 #import "TTBaseViewController.h"
+#import "AFNetworkReachabilityManager.h"
+#import "TTUtility.h"
+
 
 
 @interface TTBaseViewController ()
@@ -20,6 +23,8 @@
     
 //This is to remove the titles under the tab bar icons
     [self tabBarTitle];
+    
+    [self checkUserInternetConnection];
     
     
 //This is to remove the word "Back" on the nav bar. We want there just to be an arrow @"<".
@@ -38,6 +43,25 @@
 
 }
 
+-(void)checkUserInternetConnection{
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                [[TTUtility sharedInstance] internetConnectionFound];
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                [[TTUtility sharedInstance] internetConnectionFound];
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+            default:
+                [[TTUtility sharedInstance] noInternetConnection];
+                break;
+        }
+    }];
+
+}
+
 
 -(void)tabBarTitle{
     [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
@@ -46,4 +70,5 @@
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
 }
+
 @end
