@@ -93,9 +93,11 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
         }
         else
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             [_tripMembers removeAllObjects]; // clear the array in case it already has stuff in it
             
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.

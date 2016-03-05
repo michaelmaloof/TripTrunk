@@ -209,8 +209,9 @@
             [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error){
                     NSLog(@"Error yo %@", error);
+                    [ParseErrorHandlingController handleError:error];
                 } else {
-                    
+                    [[TTUtility sharedInstance] internetConnectionFound];
                 }
                 
             }];
@@ -220,6 +221,7 @@
             
             [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error){
+                    [ParseErrorHandlingController handleError:error];
                     self.trip.publicTripDetail.photoCount = originalCount;
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -229,6 +231,7 @@
                     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 } else {
+                    [[TTUtility sharedInstance] internetConnectionFound];
                     [self savePhotosToParse];
                     
                 }

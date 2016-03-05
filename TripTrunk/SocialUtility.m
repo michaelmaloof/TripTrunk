@@ -9,6 +9,8 @@
 #import "SocialUtility.h"
 #import "TTCache.h"
 #import "MBProgressHUD.h"
+#import "ParseErrorHandlingController.h"
+#import "TTUtility.h"
 
 @implementation SocialUtility
 
@@ -104,12 +106,16 @@
         
         if (!error) {
             
+            [[TTUtility sharedInstance] internetConnectionFound];
+            
             // Cache the following status as NOT FOLLOWING
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:user];
             
             for (PFObject *followActivity in followActivities) {
                 [followActivity deleteEventually];
             }
+        }else if (error){
+            [ParseErrorHandlingController handleError:error];
         }
     }];
 }
@@ -227,6 +233,7 @@
     [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
+             [[TTUtility sharedInstance] internetConnectionFound];
              // The find succeeded.
              // Delete the found objects
              for (PFObject *object in objects) {
@@ -237,6 +244,7 @@
              
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
+             [ParseErrorHandlingController handleError:error];
          }
      }];
     
@@ -247,7 +255,7 @@
      {
          if (!error) {
              // The find succeeded.
-             
+             [[TTUtility sharedInstance] internetConnectionFound];
              // Delete the found Photos
              for (PFObject *object in objects) {
                  [object deleteEventually];
@@ -257,6 +265,7 @@
 
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
+             [ParseErrorHandlingController handleError:error];
          }
      }];
 
@@ -290,6 +299,9 @@
          if (!error) {
              // The find succeeded.
              // Delete the found objects
+             
+             [[TTUtility sharedInstance] internetConnectionFound];
+             
              for (PFObject *object in objects) {
                  [object deleteInBackground];
              }
@@ -298,6 +310,7 @@
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
              completionBlock(NO, error);
+             [ParseErrorHandlingController handleError:error];
          }
      }];
 }
@@ -312,6 +325,8 @@
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
         if (!error) {
+            
+            [[TTUtility sharedInstance] internetConnectionFound];
             // Delete the found objects
             NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
             for (PFObject *object in objects) {
@@ -323,12 +338,13 @@
             }
             [PFObject saveAllInBackground:objectsToUpdate block:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error){
-                    
+                    [ParseErrorHandlingController handleError:error];
                 }
             }];
             
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            [ParseErrorHandlingController handleError:error];
         }
     }];
 }
@@ -341,6 +357,7 @@
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
+             [[TTUtility sharedInstance] internetConnectionFound];
              // Delete the found objects
              NSMutableArray *objectsToUpdate = [[NSMutableArray alloc] init];
              for (PFObject *object in objects) {
@@ -352,6 +369,7 @@
              
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
+             [ParseErrorHandlingController handleError:error];
          }
      }];
 }
@@ -392,9 +410,11 @@
                 if (completionBlock) {
                     completionBlock(succeeded, object, error);
                 }
+                                [[TTUtility sharedInstance] internetConnectionFound];
             }
             else {
                 // Error, so decrement the cache count again.
+                [ParseErrorHandlingController handleError:error];
                 [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
             }
         }];
@@ -429,9 +449,12 @@
         
         [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
+                [[TTUtility sharedInstance] internetConnectionFound];
                 if (completionBlock) {
                     completionBlock(succeeded, error);
                 }
+            } else if (!error){
+                [ParseErrorHandlingController handleError:error];
             }
         }];
     }];
@@ -450,9 +473,11 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
         if (!error && object.count != 0){
              [object[0] deleteEventually];
+            [[TTUtility sharedInstance] internetConnectionFound];
             return completionBlock(true, error);
         }else{
             NSLog(@"Error: %@", error);
+            [ParseErrorHandlingController handleError:error];
             return completionBlock(false, error);
         }
      }];
@@ -471,6 +496,13 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
+        
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        } else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+        }
+        
     }];
 }
 
@@ -490,9 +522,12 @@
     [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
     [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
         if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
             for (PFObject *activity in activities) {
                 [activity delete];
             }
+        } else if (error){
+            [ParseErrorHandlingController handleError:error];
         }
         
         // proceed to creating new like
@@ -507,12 +542,25 @@
         [likeACL setPublicReadAccess:YES];
         
         [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            
+            if (error){
+                [ParseErrorHandlingController handleError:error];
+            } else {
+                [[TTUtility sharedInstance] internetConnectionFound];
+            }
+         
             [likeACL setWriteAccess:YES forUser:photo.user];
             [likeACL setWriteAccess:YES forUser:photo.trip.creator];
             
             likeActivity.ACL = likeACL;
             
             [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                
+                if (error){
+                    [ParseErrorHandlingController handleError:error];
+                } else {
+                    [[TTUtility sharedInstance] internetConnectionFound];
+                }
                 
                 if (completionBlock) {
                     completionBlock(succeeded,error);
@@ -533,6 +581,7 @@
     [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
     [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
         if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
             for (PFObject *activity in activities) {
                 [activity delete];
             }
@@ -543,6 +592,8 @@
         }
         else if (completionBlock) {
             completionBlock(NO,error);
+        } else if (error){
+            [ParseErrorHandlingController handleError:error];
         }
     }];
 }
@@ -647,6 +698,11 @@
     
     [subqueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        } else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+        }
     }];
 }
 
@@ -714,6 +770,11 @@
     
     [subqueries findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         completionBlock(objects, error);
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        } else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+        }
     }];
 }
 
@@ -774,11 +835,13 @@
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
+            [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
         }
         else if (!error)
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             // Map the activity users into the friends array
             for (PFObject *activity in objects)
             {
@@ -811,11 +874,13 @@
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
+            [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
         }
         else if (!error)
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             // Map the activity users into the friends array
             for (PFObject *activity in objects)
             {
@@ -849,11 +914,13 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
+            [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
         }
         else if (!error)
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             // Map the activity users into the friends array
             for (PFObject *activity in objects)
             {
@@ -915,6 +982,13 @@
 //        completionBlock(number, error);
 //    }];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        
+        
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        }else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+        }
         int count = 0;
         for (PFObject *obj in objects){
             if (obj[@"trip"]) {
@@ -941,8 +1015,9 @@
         if(error){
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
+            [ParseErrorHandlingController handleError:error];
         }else{
-            
+            [[TTUtility sharedInstance] internetConnectionFound];
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
             for (PFObject *activity in objects) {
                 PFUser *user = activity[@"toUser"];

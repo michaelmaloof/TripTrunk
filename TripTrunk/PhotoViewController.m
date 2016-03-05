@@ -520,6 +520,7 @@
     PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
             for (PFObject *activity in objects) {
                 // Separate the Activities into Likes and Comments
                 if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
@@ -566,6 +567,7 @@
         }
         else {
             NSLog(@"Error loading photo Activities: %@", error);
+            [ParseErrorHandlingController handleError:error];
         }
     }];
 }
@@ -808,6 +810,7 @@
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
+                [[TTUtility sharedInstance] internetConnectionFound];
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
@@ -819,6 +822,7 @@
                     }];
                 } else
                 {
+                    [ParseErrorHandlingController handleError:error];
                     //if there already is a caption we edit it and save it
                     __block BOOL save = NO;
                     for (PFObject *obj in self.commentActivities){
@@ -890,7 +894,7 @@
     [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         self.photo.caption = @"";
         if (!error){
-            
+            [[TTUtility sharedInstance] internetConnectionFound];
             NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
             for (PFObject *obj in self.commentActivities){
                 if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
@@ -913,6 +917,10 @@
             }
             
         }
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        }
+        
     }];
     
     

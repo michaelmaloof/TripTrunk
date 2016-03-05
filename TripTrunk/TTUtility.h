@@ -145,7 +145,9 @@
  */
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason;
 
+-(void)noInternetConnection;
 
+-(void)internetConnectionFound;
 
 @end
 

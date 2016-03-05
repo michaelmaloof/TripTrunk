@@ -531,8 +531,15 @@
         //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
         
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [self.searchResults addObjectsFromArray:objects];
-            [self.tableView reloadData];
+            
+            if (error){
+                [ParseErrorHandlingController handleError:error];
+            } else {
+                [self.searchResults addObjectsFromArray:objects];
+                [self.tableView reloadData];
+                [[TTUtility sharedInstance] internetConnectionFound];
+
+            }
             
         }];
         

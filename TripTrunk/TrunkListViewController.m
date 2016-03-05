@@ -204,10 +204,12 @@
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
+                [ParseErrorHandlingController handleError:error];
                 NSLog(@"Error: %@",error);
             }
             else
             {
+                [[TTUtility sharedInstance] internetConnectionFound];
                 self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
                 for (PFObject *activity in objects)
@@ -282,10 +284,17 @@
         query.skip = self.objectsCountMe;
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
             if(error)
             {
                 NSLog(@"Error: %@",error);
+                [ParseErrorHandlingController handleError:error];
             }
+            else if (!error)
+            {
+                [[TTUtility sharedInstance] internetConnectionFound];
+            }
+            
             {
                 self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
@@ -372,9 +381,13 @@
         [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
+                [ParseErrorHandlingController handleError:error];
                 NSLog(@"Error: %@",error);
             }
             {
+                if (!error){
+                    [[TTUtility sharedInstance] internetConnectionFound];
+                }
                 self.didLoad = YES;
                 for (PFObject *activity in objects)
                 {
@@ -558,11 +571,16 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
+            [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
         }
         {
+            
+            if (!error){
+                [[TTUtility sharedInstance] internetConnectionFound];
+            }
             self.didLoad = YES;
             self.objectsCountTotal = (int)objects.count + self.objectsCountTotal;
             for (PFObject *activity in objects)

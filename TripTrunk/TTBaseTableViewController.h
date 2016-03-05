@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ParseErrorHandlingController.h"
+
 
 @interface TTBaseTableViewController : UITableViewController
 

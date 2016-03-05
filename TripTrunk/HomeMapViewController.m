@@ -62,6 +62,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    
     self.exists = NO;
     //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
     self.compassRose.hidden = YES;
@@ -386,6 +388,7 @@
     
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
             //add the users to self.friends. Now its containing the current user and all the people they are following
             [self.friends addObjectsFromArray:users];
             
@@ -462,6 +465,7 @@
         //there is no error loading the trunks so begin the process of placing them on the map
         else
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {
@@ -556,6 +560,8 @@
         }
         else
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
+
             self.parseLocations = [[NSMutableArray alloc]init];
             for (PFObject *activity in objects)
             {

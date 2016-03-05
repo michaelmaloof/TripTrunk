@@ -157,6 +157,8 @@ enum TTActivityViewType : NSUInteger {
         {
             if (!error)
             {
+                [[TTUtility sharedInstance] internetConnectionFound];
+
                 for (PFObject *activity in objects)
                 {
                     Trip *trip = activity[@"trip"];
@@ -204,6 +206,7 @@ enum TTActivityViewType : NSUInteger {
             } else {
                 self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.isLoading = NO;
+                [ParseErrorHandlingController handleError:error];
                 NSLog(@"error %@", error);
             }
                 
@@ -227,6 +230,9 @@ enum TTActivityViewType : NSUInteger {
      {
          if (!error)
          {
+            [[TTUtility sharedInstance] internetConnectionFound];
+
+             
              for (PFObject *activity in objects)
              {
                  Trip *trip = activity[@"trip"];
@@ -274,6 +280,7 @@ enum TTActivityViewType : NSUInteger {
          } else {
              self.navigationItem.rightBarButtonItem.enabled = YES;
              self.isLoading = NO;
+             [ParseErrorHandlingController handleError:error];
              NSLog(@"error %@", error);
          }
          

@@ -8,11 +8,16 @@
 
 #import "ParseErrorHandlingController.h"
 #import <Parse/Parse.h>
+#import "TTUtility.h"
 @implementation ParseErrorHandlingController
 
 + (void)handleError:(NSError *)error {
     if (![error.domain isEqualToString:PFParseErrorDomain]) {
         return;
+    }
+    
+    if (error.code == 100){
+        [[TTUtility sharedInstance] noInternetConnection];
     }
     
     switch (error.code) {

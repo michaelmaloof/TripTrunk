@@ -102,10 +102,16 @@
         [photos setCachePolicy:kPFCachePolicyNetworkOnly];
         
         [photos findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            
+            if (error){
+                [ParseErrorHandlingController handleError:error];
+            }
+            
             if (!error){
                 if (isRefresh == NO && objects.count == 0){
                     self.reachedBottom = YES;
                 }
+                [[TTUtility sharedInstance] internetConnectionFound];
             
             for (PFObject *activity in objects)
             {

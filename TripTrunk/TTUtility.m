@@ -12,6 +12,7 @@
 #import "AFNetworking/AFNetworking.h"
 #import "TTTTimeIntervalFormatter.h"
 #import "MSFloatingProgressView.h"
+#import "TTNoInternetView.h"
 #import "TTCache.h"
 #import "SocialUtility.h"
 #import <CoreText/CoreText.h>
@@ -24,6 +25,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
 @interface TTUtility () <MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
     MSFloatingProgressView *progressView;
+    TTNoInternetView *internetView;
 }
 
 @end
@@ -89,13 +91,16 @@ CLCloudinary *cloudinary;
                   
                   if(error) {
                       NSLog(@"error saving user to parse: %@", error);
+                      [ParseErrorHandlingController handleError:error];
                   }
                   else {
+                      [[TTUtility sharedInstance] internetConnectionFound];
                   }
               }];
               
           } else {
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+              
               
           }
           
@@ -145,6 +150,21 @@ CLCloudinary *cloudinary;
     
     NSString *transformedUrl = [cloudinary url:[[[url path] lastPathComponent] stringByReplacingOccurrencesOfString:@".png" withString:@".jpg"] options:@{@"transformation": transformation}];
     return transformedUrl;
+}
+
+-(void)noInternetConnection{
+    // Initialize the progressView if it isn't initialized already
+    if (!internetView) {
+        internetView = [[TTNoInternetView alloc] init];
+        [internetView addToWindow];
+    }
+}
+
+-(void)internetConnectionFound{
+    if (internetView){
+        [internetView removeFromWindow];
+        internetView = nil;
+    }
 }
 
 - (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
@@ -376,6 +396,8 @@ CLCloudinary *cloudinary;
          if (!error) {
              // The find succeeded.
              // Delete the found objects
+            [[TTUtility sharedInstance] internetConnectionFound];
+             
              for (PFObject *object in objects) {
                  [object deleteEventually];
              }
@@ -384,6 +406,7 @@ CLCloudinary *cloudinary;
              
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
+             [ParseErrorHandlingController handleError:error];
          }
      }];
     

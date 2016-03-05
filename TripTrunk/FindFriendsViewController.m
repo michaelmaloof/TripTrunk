@@ -131,6 +131,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             _promoted = [NSMutableArray arrayWithArray:objects];
             [[TTCache sharedCache] setPromotedUsers:_promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
@@ -141,6 +142,8 @@
         else
         {
             NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
+
         }
     }];
 }
@@ -168,11 +171,12 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
             self.isLoadingFacebook = NO;
         }
         else
         {
-
+            [[TTUtility sharedInstance] internetConnectionFound];
             _friends = [NSMutableArray arrayWithArray:objects];
             self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
@@ -200,10 +204,11 @@
         if(error)
         {
             NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
         }
         else
         {
-            
+            [[TTUtility sharedInstance] internetConnectionFound];
             [_friends addObjectsFromArray:objects];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -396,6 +401,10 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         
+        if (error){
+            [ParseErrorHandlingController handleError:error];
+        } else {
+        
         if (self.removeResults == YES) {
             [self.searchResults removeAllObjects];
         }
@@ -403,6 +412,8 @@
         self.searchString = searchTerm;
         self.isLoadingSearch = NO;
         [self.tableView reloadData];
+        [[TTUtility sharedInstance] internetConnectionFound];
+        }
     }];
 //    if (self.removeResults == YES) {
 //        [self.searchResults removeAllObjects];

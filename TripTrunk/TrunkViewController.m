@@ -315,10 +315,12 @@
         [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error)
             {
+                [[TTUtility sharedInstance] internetConnectionFound];
                 [self memberCollectionViewMethod:objects];
                 
             }else
             {
+                [ParseErrorHandlingController handleError:error];
                 NSLog(@"Error: %@",error);
             }
             
@@ -422,6 +424,7 @@
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
+            [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
             self.photos = [NSArray arrayWithArray:objects];
             if (self.photos.count > 0){
@@ -450,6 +453,7 @@
         }else
         {
             NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
         }
 
 

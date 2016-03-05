@@ -166,6 +166,7 @@
         //Update User "Tutorial Viewed" Bool to Yes
         [[PFUser currentUser] setValue:@YES forKeyPath:@"tutorialViewed"];
         [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            
             [self.delegate userCompletedTutorial];
 
             //Dismiss View Controller

@@ -792,6 +792,7 @@
      {
          
          if(error) {
+             [ParseErrorHandlingController handleError:error];
              UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                                  message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
                                                                 delegate:self
@@ -804,7 +805,7 @@
          }
          else
          {
-             
+             [[TTUtility sharedInstance] internetConnectionFound];
              if (self.navigationItem.leftBarButtonItem.tag == 0)
              {
                  [self performSegueWithIdentifier:@"addFriends" sender:self];

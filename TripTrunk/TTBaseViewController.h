@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ParseErrorHandlingController.h"
+
 
 @interface TTBaseViewController : UIViewController
 
@@ -16,5 +18,6 @@
  *
  */
 -(void)tabBarTitle;
+
 
 @end

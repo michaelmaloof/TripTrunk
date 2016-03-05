@@ -50,6 +50,7 @@
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		272A4AE21C73770D00700DCA /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE11C73770D00700DCA /* KILabel.m */; };
@@ -203,6 +204,8 @@
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNoInternetView.h; sourceTree = "<group>"; };
+		22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNoInternetView.m; sourceTree = "<group>"; };
 		22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCaptionViewController.h; sourceTree = "<group>"; };
 		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
@@ -391,6 +394,8 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */,
+				22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */,
 				22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */,
 				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
 				22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */,
@@ -890,6 +895,7 @@
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
+				22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
