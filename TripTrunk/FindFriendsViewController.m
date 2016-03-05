@@ -176,7 +176,6 @@
         }
         else
         {
-            [[TTUtility sharedInstance] internetConnectionFound];
             _friends = [NSMutableArray arrayWithArray:objects];
             self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.

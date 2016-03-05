@@ -157,7 +157,7 @@ enum TTActivityViewType : NSUInteger {
         {
             if (!error)
             {
-                [[TTUtility sharedInstance] internetConnectionFound];
+//                [[TTUtility sharedInstance] internetConnectionFound];
 
                 for (PFObject *activity in objects)
                 {
@@ -230,7 +230,7 @@ enum TTActivityViewType : NSUInteger {
      {
          if (!error)
          {
-            [[TTUtility sharedInstance] internetConnectionFound];
+//            [[TTUtility sharedInstance] internetConnectionFound];
 
              
              for (PFObject *activity in objects)

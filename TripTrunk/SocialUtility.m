@@ -987,7 +987,7 @@
         if (error){
             [ParseErrorHandlingController handleError:error];
         }else {
-            [[TTUtility sharedInstance] internetConnectionFound];
+//            [[TTUtility sharedInstance] internetConnectionFound];
         }
         int count = 0;
         for (PFObject *obj in objects){
