@@ -60,6 +60,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (![PFUser currentUser]) {
+        [self.tabBarController setSelectedIndex:0];
+    } else {
+    
     self.constraintLabel.hidden = YES;
     self.totalLikeButton.hidden = YES;
     self.totalLikeHeart.hidden = YES;
@@ -161,7 +166,7 @@
         }
     }
     }];
-
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
