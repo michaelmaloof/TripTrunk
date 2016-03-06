@@ -17,7 +17,8 @@
 
 #import "UserProfileViewController.h"
 //#import "PhotoViewController.h"
-//#import "TrunkViewController.h"
+#import "TrunkViewController.h"
+#import "Trip.h"
 #import "FindFriendsViewController.h"
 #import "ActivityListViewController.h"
 #import "TTCache.h"
@@ -357,6 +358,8 @@
     NSString *shortcutSearch = @"Search";
     NSString *shortcutActivity = @"Activity";
     NSString *shortcutTrunk = @"Trunk";
+    NSString *shortcutRecent = @"Recent";
+
     
     [ParseCrashReporting enable];
     
@@ -400,6 +403,17 @@
 
     }
     
+    else if ([shortcutItem.type isEqualToString:shortcutRecent]) {
+        
+        handled = YES;
+        
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
+
+
+
+    }
+
+    
     return handled;
 }
 
@@ -408,6 +422,8 @@
     NSString *shortcutSearch = @"Search";
     NSString *shortcutActivity = @"Activity";
     NSString *shortcutTrunk = @"Trunk";
+    NSString *shortcutRecent = @"Recent";
+
     
     if ([shortcutItem.type isEqualToString:shortcutSearch]) {
         [(UITabBarController*)self.window.rootViewController setSelectedIndex:1];
@@ -419,6 +435,49 @@
     
     else if ([shortcutItem.type isEqualToString:shortcutTrunk]) {
         [(UITabBarController*)self.window.rootViewController setSelectedIndex:2];
+    }
+    
+    else if ([shortcutItem.type isEqualToString:shortcutRecent]) {
+
+        UITabBarController *tabControl = (UITabBarController*)self.window.rootViewController;
+        UINavigationController *nav = tabControl.viewControllers[0];
+        //        UIViewController *vc = nav.viewControllers[0];
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+        
+        [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
+
+        
+        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
+        [query includeKey:@"trip"];
+        [query includeKey:@"toUser"];
+        [query includeKey:@"fromUser"];
+        [query whereKeyExists:@"trip"];
+        [query includeKey:@"trip.publicTripDetail"];
+        [query orderByDescending:@"createdAt"];
+        query.limit = 5;
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            
+            if(!error)
+            {
+                __block BOOL pushed;
+                pushed = NO;
+                for (PFObject *act in objects){
+                    Trip *trip = act[@"trip"];
+                    trunkViewController.trip = trip;
+                    
+                    if (trunkViewController.trip != nil && pushed == NO){
+                        pushed = YES;
+                        [nav pushViewController:trunkViewController animated:YES];
+                        break;
+                        
+                    }
+                }
+            }
+        }];
     }
 }
 

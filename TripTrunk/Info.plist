@@ -97,6 +97,14 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>Search</string>
 		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>mostRecent</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Recent Trunk</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Recent</string>
+		</dict>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
