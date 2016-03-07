@@ -272,4 +272,13 @@
  */
 + (void)trunkMembers:(Trip*)trip block:(void (^)(NSArray *users, NSError *error))completionBlock;
 
+/**
+ *  Check if a user is a member of a trunk
+ *
+ *  @param trip            The trip to search for members in
+ * @param user             User to check
+ *  @param completionBlock block with array or error
+ */
++ (void)memberStatusOfTrunk:(Trip*)trip user:(PFUser*)user block:(void (^)(BOOL followingStatus, NSError *error))completionBlock;
+
 @end

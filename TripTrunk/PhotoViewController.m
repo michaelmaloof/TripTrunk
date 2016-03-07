@@ -1270,7 +1270,7 @@
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
         
             //Build the friends list for the table view in the popover and wait
-            [self.autocompletePopover buildFriendsList:self.trip block:^(BOOL succeeded, NSError *error){
+            [self.autocompletePopover buildPopoverList:self.trip photo:self.photo block:^(BOOL succeeded, NSError *error){
                 if(succeeded){
                     //send the current word to the Popover to use for comparison
                     self.autocompletePopover.mentionText = lastWord;
