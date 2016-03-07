@@ -14,7 +14,7 @@
 #import "MBProgressHUD.h"
 #import "CitySearchViewController.h"
 
-@interface UsernameViewController () <CitySearchViewControllerDelegate>
+@interface UsernameViewController () <CitySearchViewControllerDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
@@ -44,56 +44,85 @@
 
     // If the user has been created - aka logged in through fb.
     if (_user) {
+        UIAlertView *alert = [[UIAlertView alloc] init];
+        alert.title = NSLocalizedString(@"You're About to Make a New TripTrunk Account Using This Facebook Account",@"You're About to Make a New TripTrunk Account Using This Facebook Account");
+        alert.message = NSLocalizedString(@"If you'd like to instead link your Facebook to an already existing TripTrunk account, please go to settings within your TripTrunk account", @"If you'd like to link your Facebook to an already existing TripTrunk account, please go to settings within your TripTrunk account");
+        alert.delegate = self;
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel!")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Great, Create Account!",@"Great, Create Account!")];
+        [alert show];
 
-        _isFBUser = YES;
-        
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-            if (!error) {
-                // result is a dictionary with the user's Facebook data
-                NSDictionary *userData = (NSDictionary *)result;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self updateFieldsWithFBInfo:userData];
-                });
-
-                NSString *facebookID = userData[@"id"];
-//                NSString *name = userData[@"name"];
-                NSString *email = userData[@"email"];
-                
-                if (email == nil){
-                    email = @"";
-                }
-                
-                if (facebookID == nil){
-                    facebookID = @"";
-                }
-                
-//                if (name == nil){
-//                    name = @"";
-//                }
-
-                
-                [_user setObject:facebookID forKey:@"fbid"];
-//                [_user setObject:name forKey:@"name"];
-                [_user setObject:email forKey:@"email"];
-                
-                
-                NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
-                [_user setObject:pictureURL forKey:@"profilePicUrl"];
-                
-                [_user saveInBackground];
-
-            }
-            else {
-                NSLog(@"%@",error);
-            }
-        }];
-    }
-
-
+          }
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1){
+        [self handleFacebookUser];
+    } else {
+            if (_user) {
+                [self.user deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (error){
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }
+                    [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                }];
+                 }];
+            } else {
+                [self dismissViewControllerAnimated:YES completion:nil];
+
+            }
+    }
+}
+
+
+-(void)handleFacebookUser{
+    _isFBUser = YES;
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+            // result is a dictionary with the user's Facebook data
+            NSDictionary *userData = (NSDictionary *)result;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateFieldsWithFBInfo:userData];
+            });
+            
+            NSString *facebookID = userData[@"id"];
+            //                NSString *name = userData[@"name"];
+            NSString *email = userData[@"email"];
+            
+            if (email == nil){
+                email = @"";
+            }
+            
+            if (facebookID == nil){
+                facebookID = @"";
+            }
+            
+            //                if (name == nil){
+            //                    name = @"";
+            //                }
+            
+            
+            [_user setObject:facebookID forKey:@"fbid"];
+            //                [_user setObject:name forKey:@"name"];
+            [_user setObject:email forKey:@"email"];
+            
+            
+            NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
+            [_user setObject:pictureURL forKey:@"profilePicUrl"];
+            
+            [_user saveInBackground];
+            
+        }
+        else {
+            NSLog(@"%@",error);
+        }
+    }];
+
+}
 
 
 - (void)updateFieldsWithFBInfo:(NSDictionary *)userData {
@@ -107,10 +136,6 @@
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-    
-}
-
-- (IBAction)cancelButtonPressed:(id)sender {
     if (_user) {
         // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Create A Username",@"Create A Username")
@@ -122,6 +147,22 @@
     }
     else {
         // No user, so they're here to create a username/password account. Let them go back.
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+- (IBAction)cancelButtonPressed:(id)sender {
+    if (_user) {
+        [self.user deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error){
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+            [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }];
+        }];
+    } else {
+        
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

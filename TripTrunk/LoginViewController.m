@@ -122,7 +122,7 @@
                  }];
             }
             
-            - (void)showSetUsernameView {
+ - (void)showSetUsernameView {
                 [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
                 
             }
