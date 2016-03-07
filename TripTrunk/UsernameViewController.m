@@ -136,19 +136,8 @@
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-    if (_user) {
-        // We have a logged-in user, so that means they either just logged in with FB, or they logged in with FB before but never made a username
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Create A Username",@"Create A Username")
-                                                        message:NSLocalizedString(@"You must set a Username and Current City",@"You must set a Username and Current City")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else {
-        // No user, so they're here to create a username/password account. Let them go back.
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
