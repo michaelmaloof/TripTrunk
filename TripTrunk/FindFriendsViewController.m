@@ -75,8 +75,8 @@
         _pending = [[NSMutableArray alloc] init];
         
         self.loadedOnce = NO;
-        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
         [self loadPromotedUsers];
+        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
         
         _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
         
