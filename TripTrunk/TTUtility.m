@@ -232,16 +232,19 @@ CLCloudinary *cloudinary;
               [photo saveEventually:^(BOOL succeeded, NSError *error) {
                   
                   if(error) {
+                      
+                      //FIXME: add photo to core data and then let the user reattempt the parse save.
+
                       NSLog(@"error saving photo to parse: %@", error);
                       
-                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error saving Photo"
-                                                                      message:@"Please try again"
-                                                                     delegate:self
-                                                            cancelButtonTitle:@"Okay"
-                                                            otherButtonTitles:nil, nil];
+//                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error saving Photo"
+//                                                                      message:@"Please try again"
+//                                                                     delegate:self
+//                                                            cancelButtonTitle:@"Okay"
+//                                                            otherButtonTitles:nil, nil];
                       
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [alert show];
+//                        [alert show];
                     });
                   }
                   else {
@@ -267,8 +270,18 @@ CLCloudinary *cloudinary;
               
           } else {
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+//              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Saving Photos"
+//                                                              message:@"Please try again"
+//                                                             delegate:self
+//                                                    cancelButtonTitle:@"Okay"
+//                                                    otherButtonTitles:nil, nil];
               [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+              //FIXME: add photo to core data and then let the user reattempt the cloudinary upload
+
               bgTask = UIBackgroundTaskInvalid;
+              dispatch_async(dispatch_get_main_queue(), ^{
+//                  [alert show];
+              });
           }
           
       } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
