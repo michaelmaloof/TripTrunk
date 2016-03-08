@@ -222,6 +222,10 @@
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
                         
+                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
+                    {
+                        [self.meParseLocations addObject:trip];
+                        [self.meObjectIDs addObject:trip.objectId];
                     }
                 }
                 
@@ -308,6 +312,10 @@
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
                         
+                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
+                    {
+                        [self.meParseLocations addObject:trip];
+                        [self.meObjectIDs addObject:trip.objectId];
                     }
                 }
                 
@@ -593,6 +601,9 @@
                     [self.parseLocations addObject:trip];
                     [self.objectIDs addObject:trip.objectId];
                     
+                } else if ( trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+                    [self.parseLocations addObject:trip];
+                    [self.objectIDs addObject:trip.objectId];
                 }
             }
             

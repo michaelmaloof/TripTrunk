@@ -474,6 +474,10 @@
                 {
                     [self.parseLocations addObject:trip];
                 }
+                else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+                    [self.parseLocations addObject:trip];
+
+                }
             }
             
             
