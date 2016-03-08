@@ -63,6 +63,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
     self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
 
@@ -251,8 +254,6 @@
         {
             // Not following this user in CACHE, enable the button and set the selected status
             dispatch_async(dispatch_get_main_queue(), ^{
-//                [[self.followButton layer] setBorderWidth:2.0f];
-//                [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
                 [self.followButton setSelected:NO];
             });
         }
@@ -315,8 +316,9 @@
                         [self.followButton setEnabled:YES];
                         [[self.followButton layer] setBorderWidth:2.0f];
                         [[self.followButton layer] setBorderColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0].CGColor];
-                        [self.followButton setSelected:NO];
                         [self.followButton setTitleColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+                        [self.followButton setSelected:NO];
+
 
                         if ([[self.user valueForKey:@"private"] boolValue] == 1){
                             self.isFollowing = NO;
@@ -416,15 +418,6 @@
     } else {
         [self increaseLockSize];
     }
-    NSLog(@"button text = %@", self.followButton.titleLabel.text);
-    NSLog(@"button tint color = %@", self.followButton.tintColor);
-    NSLog(@"button text color = %@", self.followButton.titleLabel.tintColor);
-    NSLog(@"button background color = %@", self.followButton.backgroundColor);
-    NSLog(@"button text background color = %@", self.followButton.titleLabel.backgroundColor);
-
-
-
-    
 }
 
 - (IBAction)followingButtonPressed:(id)sender {
