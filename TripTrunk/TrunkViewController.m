@@ -91,7 +91,19 @@
     [self refreshTripDataViews];
     
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-    
+        
+        
+        if (self.trip.publicTripDetail == nil){
+            PublicTripDetail *publicTrip = [[PublicTripDetail alloc]init];
+            self.trip.publicTripDetail = publicTrip;
+            self.trip.publicTripDetail.trip = self.trip;
+            [self.trip saveInBackground];
+            [self.trip.publicTripDetail saveInBackground];
+
+        } else if (self.trip.publicTripDetail.trip == nil){
+            self.trip.publicTripDetail.trip = self.trip;
+            [self.trip.publicTripDetail saveInBackground];
+        }
     
     if (self.trip.publicTripDetail.totalLikes > 0) {
         self.totalLikeButton.tintColor = [UIColor whiteColor];
@@ -165,11 +177,7 @@
             }
         }
     }
-        
-        if (self.trip.publicTripDetail.trip == nil){
-            self.trip.publicTripDetail.trip = self.trip;
-            [self.trip.publicTripDetail saveInBackground];
-        }
+
     
     }];
     }
