@@ -416,6 +416,15 @@
     } else {
         [self increaseLockSize];
     }
+    NSLog(@"button text = %@", self.followButton.titleLabel.text);
+    NSLog(@"button tint color = %@", self.followButton.tintColor);
+    NSLog(@"button text color = %@", self.followButton.titleLabel.tintColor);
+    NSLog(@"button background color = %@", self.followButton.backgroundColor);
+    NSLog(@"button text background color = %@", self.followButton.titleLabel.backgroundColor);
+
+
+
+    
 }
 
 - (IBAction)followingButtonPressed:(id)sender {
