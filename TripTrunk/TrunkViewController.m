@@ -165,6 +165,12 @@
             }
         }
     }
+        
+        if (self.trip.publicTripDetail.trip == nil){
+            self.trip.publicTripDetail.trip = self.trip;
+            [self.trip.publicTripDetail saveInBackground];
+        }
+    
     }];
     }
 }
