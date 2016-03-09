@@ -65,9 +65,9 @@
     [super viewDidLoad];
     [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
     self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
+    
 
     self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -79,6 +79,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [[self.followButton layer] setBorderWidth:2.0f];
+    self.followButton.backgroundColor = [UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0];
     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
     
     
@@ -218,6 +219,7 @@
                     [[self.followButton layer] setBorderWidth:0.0f];
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
                     [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                     [self.followButton setHidden:NO];
                     [self.followButton setEnabled:YES];
@@ -227,6 +229,7 @@
                     [[self.followButton layer] setBorderWidth:0.0f];
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
                     [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
                     [self.followButton setHidden:NO];
                     [self.followButton setEnabled:YES];
@@ -287,6 +290,7 @@
                             [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateSelected];
                             [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                            [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                             [self.followButton setHidden:NO];
                             [self.followButton setEnabled:YES];
                             [self.followButton setSelected:YES];
@@ -304,6 +308,7 @@
                     [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateSelected];
                     [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+                    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                     [self.followButton setHidden:NO];
                     [self.followButton setEnabled:YES];
                     [self.followButton setSelected:YES];
@@ -316,7 +321,8 @@
                         [self.followButton setEnabled:YES];
                         [[self.followButton layer] setBorderWidth:2.0f];
                         [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
-                        [self.followButton setTitleColor:[UIColor colorWithRed:228.0/255.0 green:172.0/255.0 blue:90.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+                        [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                        [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
                         [self.followButton setSelected:NO];
 
 
