@@ -1006,7 +1006,6 @@
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
     [memberQuery whereKey:@"trip" equalTo:trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [memberQuery whereKey:@"toUser" notEqualTo:trip.creator];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
     
@@ -1044,7 +1043,7 @@
     [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error){
             NSLog(@"Error: %@",error);
-            completionBlock(nil, error);
+            completionBlock(false, error);
             [ParseErrorHandlingController handleError:error];
         }else{
             [[TTUtility sharedInstance] internetConnectionFound];
