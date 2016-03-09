@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
 #import "PublicTripDetail.h"
+@class PublicTripDetail;
 @interface Trip : PFObject <PFSubclassing>
 
 @property NSString *name;

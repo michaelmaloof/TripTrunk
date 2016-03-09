@@ -88,11 +88,12 @@
     self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
 
     
+    
     [self refreshTripDataViews];
-    
+        
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-    
-    
+        
+
     if (self.trip.publicTripDetail.totalLikes > 0) {
         self.totalLikeButton.tintColor = [UIColor whiteColor];
         self.totalLikeButton.textColor = [UIColor whiteColor];
@@ -104,6 +105,8 @@
         self.totalLikeButton.hidden = YES;
         self.totalLikeHeart.hidden = YES;
     }
+        
+    }];
 
     self.photos = [[NSArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
@@ -165,7 +168,9 @@
             }
         }
     }
-    }];
+
+    
+//    }];
     }
 }
 
@@ -210,6 +215,24 @@
     
     [self refreshTripDataViews];
     
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    if (self.trip.publicTripDetail == nil){
+        self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+        self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+        self.trip.publicTripDetail.photoCount = (int)self.photos.count;
+        self.trip.publicTripDetail.totalLikes = 0;
+        self.trip.publicTripDetail.trip = self.trip;
+        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            NSLog(@"saved");
+        }];
+    } else if (self.trip.publicTripDetail.trip == nil){
+        self.trip.publicTripDetail.trip = self.trip;
+        [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            NSLog(@"saved");
+        }];
+    }
 }
 
 - (IBAction)lockTapped:(id)sender {
@@ -419,7 +442,6 @@
     [findPhotosUser whereKey:@"trip" equalTo:self.trip];
     [findPhotosUser orderByDescending:@"createdAt"];
     [findPhotosUser includeKey:@"trip.creator"];
-    [findPhotosUser includeKey:@"trip.publicTripDetail"];
     [findPhotosUser includeKey:@"trip"];
     [findPhotosUser includeKey:@"user"];
 
@@ -438,30 +460,33 @@
             
             [self.collectionView reloadData];
             
-            if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-                [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            //FIXME JUNIL IS THIS NEEDED
+
+//            if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
             
-                if (self.trip.publicTripDetail == nil){
-                    self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
-                    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
-                }
-                
-            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
-                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
+                //FIXME JUNIL IS THIS NEEDED
+//                [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//            
+//                if (self.trip.publicTripDetail.mostRecentPhoto == nil){
+//                    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+//                }
+//                
+//            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
+//                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
 //                [self.trip saveInBackground];
-            }
-                }];
-
-            }
-
-            
-        }else
-        {
-            NSLog(@"Error: %@",error);
-            [ParseErrorHandlingController handleError:error];
+//            }
+//                }];
+//
+//            }
+//
+//            
+//        }else
+//        {
+//            NSLog(@"Error: %@",error);
+//            [ParseErrorHandlingController handleError:error];
         }
-
-
+//
+//
     }];
 
 }
@@ -907,12 +932,17 @@
     self.totalLikeHeart.hidden = NO;
 
     //direct update after calculation
-    [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
-    [self.trip.publicTripDetail saveInBackground];
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
+        [self.trip.publicTripDetail saveInBackground];
+    }];
     
 }
 
 -(void)photoWasDisliked:(id)sender{
+    
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
     
     int likes = [self.totalLikeButton.text intValue];
     if (likes > 0){
@@ -934,6 +964,8 @@
     //direct update after calculation
     [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
     [self.trip.publicTripDetail saveInBackground];
+    }];
+
     
 }
 

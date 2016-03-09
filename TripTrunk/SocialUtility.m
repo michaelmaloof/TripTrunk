@@ -926,7 +926,9 @@
             for (PFObject *activity in objects)
             {
                 PFUser *user = activity[@"fromUser"];
-                [friends addObject:user];
+                if (user){
+                    [friends addObject:user];
+                }
             }
             // Update the cache
             if (friends.count > 0) {

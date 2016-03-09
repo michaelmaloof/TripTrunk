@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
-
+#import "Trip.h"
+@class Trip;
 @interface PublicTripDetail : PFObject <PFSubclassing>
 @property NSDate *mostRecentPhoto;
 @property int photoCount;
 @property int totalLikes;
-
+@property Trip *trip;
 
 @end

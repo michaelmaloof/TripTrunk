@@ -145,78 +145,80 @@ enum TTActivityViewType : NSUInteger {
         self.tableView.emptyDataSetSource = self;
         
         [self loadTrips];
-
-        PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
-        [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [trips whereKey:@"type" equalTo:@"addToTrip"];
-        [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
-        [trips includeKey:@"trip"];
-        [trips whereKeyExists:@"trip"];
-        [trips setLimit:1000];
-        [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
-        {
-            if (!error)
-            {
-//                [[TTUtility sharedInstance] internetConnectionFound];
-
-                for (PFObject *activity in objects)
-                {
-                    Trip *trip = activity[@"trip"];
-                    if (trip.name != nil && trip.publicTripDetail != nil) 
-                    {
-                        [self.trips addObject:trip];
-                    }
-                }
-                if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
-                    // Query for activities for user
-                    if (self.isLoading == NO){
-                        self.isLoading = YES;
-                    [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
-                        
-                        if (error){
-                            NSLog(@"error %@",error);
-                        } else {
-                        
-                        for (PFObject *obj in activities){
-                            PFUser *toUser = obj[@"toUser"];
-                            PFUser *fromUser = obj[@"fromUser"];
-                            if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
-                                [self.activities addObject:obj];
-                            } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                                
-                                if (toUser != nil && fromUser != nil){
-                                    [self.activities addObject:obj];
-                                }
-
-                            }
-                        }
-//                        _activities = [NSMutableArray arrayWithArray:activities];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            self.activitySearchComplete = YES;
-                            self.isLoading = NO;
-                            self.navigationItem.rightBarButtonItem.enabled = YES;
-                            [self.tableView reloadData];
-                        });
-                        }
-                    }];
-                    }
-                     
-                }
-
-            } else {
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                self.isLoading = NO;
-                [ParseErrorHandlingController handleError:error];
-                NSLog(@"error %@", error);
-            }
-                
-            }];
-        
     }
-    
+
+//    PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
+//    [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//    [trips whereKey:@"type" equalTo:@"addToTrip"];
+//    [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
+//    [trips includeKey:@"trip"];
+//    [trips whereKeyExists:@"trip"];
+//    [trips setLimit:1000];
+//    [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
+//     {
+//         if (!error)
+//         {
+//             //                [[TTUtility sharedInstance] internetConnectionFound];
+//             
+//             for (PFObject *activity in objects)
+//             {
+//                 Trip *trip = activity[@"trip"];
+//                 if (trip.name != nil && trip.publicTripDetail != nil)
+//                 {
+//                     [self.trips addObject:trip];
+//                 }
+//             }
+//             if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+//                 // Query for activities for user
+//                 if (self.isLoading == NO){
+//                     self.isLoading = YES;
+//                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+//                         
+//                         if (error){
+//                             NSLog(@"error %@",error);
+//                         } else {
+//                             
+//                             for (PFObject *obj in activities){
+//                                 PFUser *toUser = obj[@"toUser"];
+//                                 PFUser *fromUser = obj[@"fromUser"];
+//                                 if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+//                                     [self.activities addObject:obj];
+//                                 } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+//                                     
+//                                     if (toUser != nil && fromUser != nil){
+//                                         [self.activities addObject:obj];
+//                                     }
+//                                     
+//                                 }
+//                             }
+//                             //                        _activities = [NSMutableArray arrayWithArray:activities];
+//                             dispatch_async(dispatch_get_main_queue(), ^{
+//                                 self.activitySearchComplete = YES;
+//                                 self.isLoading = NO;
+//                                 self.navigationItem.rightBarButtonItem.enabled = YES;
+//                                 [self.tableView reloadData];
+//                             });
+//                         }
+//                     }];
+//                 }
+//                 
+//             }
+//             
+//         } else {
+//             self.navigationItem.rightBarButtonItem.enabled = YES;
+//             self.isLoading = NO;
+//             [ParseErrorHandlingController handleError:error];
+//             NSLog(@"error %@", error);
+//         }
+//         
+//     }];
+//    
+//}
+
 }
 
 -(void)loadTrips{
+    
      self.trips = [[NSMutableArray alloc]init];
     
     PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
