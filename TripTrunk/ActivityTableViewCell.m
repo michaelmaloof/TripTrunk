@@ -178,7 +178,15 @@
                     [self.delegate activityCell:self didPressUsernameForUser:self.toUser];
                 }
             }
+        }else if ([[url host] hasPrefix:@"toUser"]) {
+            /* load user profile screen */
+            
+            // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+            if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
+                [self.delegate activityCell:self didPressUsernameForUser:self.toUser];
+            }
         }
+
         else if([[url host] hasPrefix:@"trip"]) {
             /* load user profile screen */
             Trip *trip = (Trip *)_activity[@"trip"];
