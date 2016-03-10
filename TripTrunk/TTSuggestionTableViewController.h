@@ -68,12 +68,13 @@
 @property (assign) id <TTSuggestionTableViewControllerDelegate> delegate;
 
 /**
- *  Builds the friends list from Parse following & followers using SocialUtility
+ *  Builds the popover list from Parse trunk members, following & followers using SocialUtility
  *
+ *  @param data  a dictionary with trip, photo, and trunk members in it
  *  @param completionBlock returns boolean of succeed or fail
  *  @param completionBlock returns error message if fail
  */
--(void)buildFriendsList:(Trip*)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+-(void)buildPopoverList:(NSDictionary*)data block:(void (^)(BOOL, NSError *))completionBlock;
 
 /**
  *  Updates the tableview that is displayed in the popover
@@ -97,7 +98,7 @@
 -(NSUInteger)preferredHeightForPopover;
 
 //-(NSString*)separateMentions:(NSString*)comment;
--(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo*)photo;
+-(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo*)photo members:(NSArray*)members;
 -(void)removeMentionFromDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment;
 
 @end

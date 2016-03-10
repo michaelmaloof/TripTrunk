@@ -11,6 +11,7 @@
 #import "PhotoViewController.h"
 #import "TTSuggestionViewCell.h"
 #import "TTUtility.h"
+#import "Trip.h"
 
 @interface TTSuggestionTableViewController()
 @property unsigned long popoverHeight;
@@ -54,56 +55,189 @@
 }
 
 #pragma mark - Private Methods
--(void)buildFriendsList:(Trip*)trip block:(void (^)(BOOL, NSError *))completionBlock{
+-(void)buildPopoverList:(NSDictionary*)data block:(void (^)(BOOL success, NSError *error))completionBlock{
     self.friendsArray = [[NSMutableArray alloc] init];
-    //Ask SocialUtility to return this user's followers
-    [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+    Trip *trip = data[@"trip"];
+    Photo *photo = data[@"photo"];
+    
+    if(data[@"trunkMembers"]){
+        [self.friendsArray addObjectsFromArray:data[@"trunkMembers"]];
+        
+        if([[trip objectForKey:@"isPrivate"] boolValue]){
+            completionBlock(YES, nil);
+        }else{
+        
+            if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
+                //Ask SocialUtility to return this user's followers
+                [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                    //Ask SocialUtility to return this user's following Users
+                    [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                        //tell the block to finish with success
+                        completionBlock(YES, nil);
+                    }];
+                }];
+                
+            }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                //Ask SocialUtility to return this user's followers
+                [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                    //tell the block to finish with success
+                    completionBlock(YES, nil);
+                }];
+                
+            }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
+                //Ask SocialUtility to return this user's following Users
+                [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                    //tell the block to finish with success
+                    completionBlock(YES, nil);
+                }];
+                
+            }else{
+                //tell the block to finish with success
+                completionBlock(NO, nil);
+        }
+            
+        }
+        
+    }else{
+    
+        //Ask SocialUtility to return this user's followers
+        [self buildTrunkMembersList:trip block:^(BOOL success, NSError *error) {
+            
+            if([[trip objectForKey:@"isPrivate"] boolValue]){
+                completionBlock(YES, nil);
+            }else{
+    
+                if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
+                    //Ask SocialUtility to return this user's followers
+                    [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                        //Ask SocialUtility to return this user's following Users
+                        [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                            //tell the block to finish with success
+                            completionBlock(YES, nil);
+                        }];
+                    }];
+                    
+                }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                    //Ask SocialUtility to return this user's followers
+                    [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                        //tell the block to finish with success
+                        completionBlock(YES, nil);
+                    }];
+                    
+                }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
+                    
+                    //Ask SocialUtility to return this user's following Users
+                    [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                        //tell the block to finish with success
+                        completionBlock(YES, nil);
+                    }];
+                    
+                }else{
+                    //tell the block to finish with failyre
+                    completionBlock(NO, error);
+                }
+                
+            }
+            
+        }];
+    }
+
+}
+
+-(void)buildTrunkMembersList:(Trip*)trip block:(void (^)(BOOL, NSError *))completionBlock{
+    [SocialUtility trunkMembers:trip block:^(NSArray *users, NSError *error){
         if(!error){
             //Add ALL users to the array. This list should be the bigger of the two lists so take all of these users
             //and weed out the followingUsers since it will be a smaller list
             [self.friendsArray addObjectsFromArray:users];
-            //Ask SocialUtility to return this user's followingUsers
-            [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error){
-                if(!error){
-                    //Loop through all of the followingUsers
-                    for(PFUser *user in users){
-                        //Check to see if the user is in the array already
-                        if(![self array:self.friendsArray containsPFObjectById:user]){
-                            //if not, add the user to the array
-                            [self.friendsArray addObject:user];
-                        }
-                    }
-                    
-                    [SocialUtility trunkMembers:trip block:^(NSArray *users, NSError *error){
-                        if(!error){
-                            //Loop through all of the followingUsers
-                            for(PFUser *user in users){
-                                //Check to see if the user is in the array already
-                                if(![self array:self.friendsArray containsPFObjectById:user]){
-                                    //if not, add the user to the array
-                                    [self.friendsArray addObject:user];
-                                }
-                            }
-                            
-                            //If the list isn't empty, reload the tableview
-                            if(self.friendsArray.count > 0)
-                                [self.suggestionsTable reloadData];
-                            
-                            //tell the block to finish with success
-                            completionBlock(YES, error);
-                        }
-                    }];
-                    
-                }else{
-                    //tell the block to finish with failure
-                    completionBlock(NO, error);
-                }
-            }];
+            
+            //tell the block to finish with success
+            completionBlock(YES, nil);
         }else{
+            NSLog(@"Error: %@",error);
+            //tell the block to finish with failure
+            completionBlock(NO, error);
+            
+        }
+    }];
+}
+
+-(void)buildFollowingUsersListWithBlock:(void (^)(BOOL, NSError *))completionBlock{
+    //Ask SocialUtility to return this user's followingUsers
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error){
+        if(!error){
+            //Loop through all of the followingUsers
+            for(PFUser *user in users){
+                //Check to see if the user is in the array already
+                if(![self array:self.friendsArray containsPFObjectById:user]){
+                    //if not, add the user to the array
+                    [self.friendsArray addObject:user];
+                }
+            }
+            //tell the block to finish with success
+            completionBlock(YES, nil);
+        }else{
+            NSLog(@"Error: %@",error);
             //tell the block to finish with failure
             completionBlock(NO, error);
         }
     }];
+}
+
+-(void)buildFollowersListWithBlock:(void (^)(BOOL, NSError *))completionBlock{
+    [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if(!error){
+            //Loop through all of the followingUsers
+            for(PFUser *user in users){
+                //Check to see if the user is in the array already
+                if(![self array:self.friendsArray containsPFObjectById:user]){
+                    //if not, add the user to the array
+                    [self.friendsArray addObject:user];
+                }
+            }
+            //tell the block to finish with success
+            completionBlock(YES, nil);
+        }else{
+            NSLog(@"Error: %@",error);
+            //tell the block to finish with failure
+            completionBlock(NO, error);
+        }
+    }];
+}
+
+-(BOOL)displayFollowers:(Photo*)photo{
+    //check to see if current photo owner is private
+    if([photo.user objectForKey:@"private"]){
+        //photo owner is private
+        //check to see if current user owns the photo
+        if([photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            //current user is the photo owner, load the followers
+            return YES;
+        }else{
+            //current user is not the photo owner so don't load the followers
+            return NO;
+        }
+    }else{
+        //photo owner is NOT private so load the followers
+        return YES;
+    }
+    
+    //just default to NO for security even though this should never be executed
+    return NO;
+}
+
+-(BOOL)displayFollowingUsers:(Photo*)photo{
+    //check to see if current photo owner is private
+    if([photo.user objectForKey:@"private"]){
+        //the photo owner is private so don't show the following users
+        return NO;
+    }else{
+        //the photo owner is NOT private so show the following users
+        return YES;
+    }
+    
+    //just default to NO for security even though this should never be executed
+    return NO;
 }
 
 //Update the tableview that is displayed within the popover
@@ -169,7 +303,7 @@
     if(self.displayFriendsArray.count == 0)
         return self.popoverHeight;
     
-    self.popoverHeight = self.displayFriendsArray.count < 3 ? self.displayFriendsArray.count*cellSize : 3;
+    self.popoverHeight = self.displayFriendsArray.count < 3 ? self.displayFriendsArray.count*cellSize : cellSize*3;
     return self.popoverHeight;
 }
 
@@ -187,9 +321,9 @@
     return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
 }
 
--(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo *)photo{
+-(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo *)photo members:(NSArray*)members{
     //save mention to database
-    NSArray *mentionList = [[NSArray alloc] initWithArray:[self commentMentionsWithUsernames:[self separateMentions:comment] previousComment:previousComment]];
+    NSArray *mentionList = [[NSArray alloc] initWithArray:[self commentMentionsWithUsernames:[self separateMentions:comment] previousComment:previousComment photo:(Photo*)photo members:(NSArray*)members]];
     
     if (mentionList) {
         for(PFUser *user in mentionList){
@@ -203,7 +337,7 @@
     
 }
 
--(NSArray*)commentMentionsWithUsernames:(NSString*)comment previousComment:(NSString*)previousComment{
+-(NSArray*)commentMentionsWithUsernames:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo*)photo members:(NSArray*)members{
     
     //quick check to see if the string contains an @ before we do regex
     if([comment containsString:@"@"]){
@@ -221,9 +355,64 @@
                     if(![previousComment containsString:word]){
                         //load user from username
                         PFUser *mentionedUser = [SocialUtility loadUserFromUsername:[word substringFromIndex:1]];
+                        
+                        //1. check if trunk is private
+                        //1. yes,
+                        //  2. check if user is mentioned in the trunk
+                        //  2. yes, mention
+                        //  2. no, ignore
+                        //1. no,
+                        //  3. check if photo owner is private
+                        //  3. yes,
+                        //     4. check if current user is photo owner
+                        //     4. yes,
+                        //        5. check if mention user is a trunk member
+                        //        5. yes, mention
+                        //        5. no,
+                        //           6. Is mentioned user following photo owner
+                        //           6. yes, mention
+                        //           6. no, ignore
+                        //     4. no, go to 2
+                        //  3. no, mention
+                        
                         //If the user is found, add it the array to return
-                        if(mentionedUser)
-                            [array addObject:mentionedUser];
+                        if(mentionedUser){
+                            
+                            if([self privateTrunk:photo]){
+                                if([self tripContainsUserAsMember:mentionedUser photo:(Photo*)photo members:(NSArray*)members]){
+                                    [array addObject:mentionedUser];
+                                }else{
+                                    //do nothing
+                                }
+                            }else{
+                                if([self privatePhotoOwner:photo]){
+                                    if([self currentUserPhotoOwner:photo]){
+                                        if([self tripContainsUserAsMember:mentionedUser photo:(Photo*)photo members:(NSArray*)members]){
+                                            [array addObject:mentionedUser];
+                                        }else{
+                                            if([self mentionUserFollowingCurrentUser:mentionedUser]){
+                                                [array addObject:mentionedUser];
+                                            }else{
+                                                //do nothing
+                                            }
+                                        }
+                                    }else{
+                                        if([self tripContainsUserAsMember:mentionedUser photo:(Photo*)photo members:(NSArray*)members]){
+                                            [array addObject:mentionedUser];
+                                        }else{
+                                            //do nothing
+                                        }
+                                    }
+                                }else{
+                                    [array addObject:mentionedUser];
+                                }
+                            }
+                            
+                        }
+                        
+                        
+                        
+                        
                     }
                 }
             }
@@ -288,6 +477,41 @@
     
     //there are no mentions, just return nil
     return nil;
+}
+
+-(BOOL)privateTrunk:(Photo*)photo{
+    return [[photo.trip objectForKey:@"isPrivate"] boolValue];
+}
+
+-(BOOL)privatePhotoOwner:(Photo*)photo{
+    return [[photo.user objectForKey:@"private"] boolValue];
+}
+
+-(BOOL)tripContainsUserAsMember:(PFUser*)mentionedUser photo:(Photo*)photo members:(NSArray*)members{    
+    for(PFUser *user in members){
+        if([user.objectId isEqualToString:mentionedUser.objectId]){
+            return YES;
+            break;
+        }
+    }
+    
+    return NO;
+}
+
+-(BOOL)currentUserPhotoOwner:(Photo*)photo{
+    return [photo.user.objectId isEqualToString:[PFUser currentUser].objectId];
+}
+
+-(BOOL)mentionUserFollowingCurrentUser:(PFUser*)user{
+    __block BOOL status;
+    [SocialUtility followingStatusFromUser:user toUser:[PFUser currentUser] block:^(NSNumber *followingStatus, NSError *error) {
+        if(!error){
+            status = [followingStatus boolValue];
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
+    return status;
 }
 
 #pragma mark - REFACTOR THIS INTO IT"S OWN CLASS

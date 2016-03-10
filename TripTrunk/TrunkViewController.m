@@ -897,6 +897,7 @@
             vc.photo = [self.photos objectAtIndex:self.path.item -1];
             vc.trip = self.trip;
             vc.arrayInt = self.path.item - 1;
+            vc.trunkMembers = self.members;
 
         } else {
             vc.photo = [self.photos objectAtIndex:self.path.item];

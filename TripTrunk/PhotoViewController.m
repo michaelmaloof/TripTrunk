@@ -180,6 +180,7 @@
         // Open URLs
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
+    
 //############################################# MENTIONS ##################################################
 
 }
@@ -1236,7 +1237,7 @@
 
 //############################################# MENTIONS ##################################################
 -(void)updateMentionsInDatabase:(PFObject*)object{
-    [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo];
+    [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo members:self.trunkMembers];
     [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
 }
 
@@ -1270,7 +1271,12 @@
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
         
             //Build the friends list for the table view in the popover and wait
-            [self.autocompletePopover buildFriendsList:self.trip block:^(BOOL succeeded, NSError *error){
+            NSDictionary *data = @{
+                                   @"trunkMembers" : self.trunkMembers,
+                                   @"trip" : self.trip,
+                                   @"photo" : self.photo
+                                   };
+            [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
                 if(succeeded){
                     //send the current word to the Popover to use for comparison
                     self.autocompletePopover.mentionText = lastWord;

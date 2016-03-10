@@ -467,6 +467,7 @@
     }
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"comment" equalTo:commentObject];
     
@@ -1007,7 +1008,6 @@
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
     [memberQuery whereKey:@"trip" equalTo:trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
-    [memberQuery whereKey:@"toUser" notEqualTo:trip.creator];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
     
@@ -1029,6 +1029,28 @@
             }
             
             completionBlock(members, error);
+        }
+        
+    }];
+}
+
++ (void)memberStatusOfTrunk:(Trip*)trip user:(PFUser*)user block:(void (^)(BOOL followingStatus, NSError *error))completionBlock{
+    
+    PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKey:@"trip" equalTo:trip];
+    [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+    [memberQuery whereKey:@"toUser" equalTo:user];
+    [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    
+    [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(error){
+            NSLog(@"Error: %@",error);
+            completionBlock(false, error);
+            [ParseErrorHandlingController handleError:error];
+        }else{
+            [[TTUtility sharedInstance] internetConnectionFound];
+            if(objects.count >0)
+                completionBlock(true, error);
         }
         
     }];
