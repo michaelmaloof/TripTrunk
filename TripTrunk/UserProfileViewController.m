@@ -353,8 +353,8 @@
         }
         
         if (followingCount < 1){
-            [self.followersButton setTitle:@"Following" forState:UIControlStateNormal];
-            [self.followersButton setTitle:@"Following" forState:UIControlStateDisabled];
+            [self.followingButton setTitle:@"Following" forState:UIControlStateNormal];
+            [self.followingButton setTitle:@"Following" forState:UIControlStateDisabled];
 
         } else {
             [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
