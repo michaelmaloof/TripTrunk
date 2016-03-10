@@ -64,9 +64,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.hideThisButtonAlways.hidden = YES;
+    self.followButton.tag = 0;
     [self setButtonColor];
+    self.followButton.hidden = YES;
     
+    self.hideThisButtonAlways.hidden = YES;
     
     self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
@@ -168,12 +170,25 @@
 
     }
     
-    [self setButtonColor];
 }
 
 -(void)setButtonColor{
-    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    if (self.followButton.tag == 1){
+        [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0];
+        [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
+        [[self.followButton layer] setBorderWidth:0.0f];
+    } else {
+        [self.followButton setTitleColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [UIColor whiteColor];
+    }
+    
 }
+
+
+
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [self.followButton setHidden:YES];
@@ -181,7 +196,7 @@
     self.followingButton.enabled = NO;
     self.mapButton.userInteractionEnabled = NO;
     self.followersButton.enabled = NO;
-
+    
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
@@ -194,7 +209,7 @@
     else {
         // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
-//        }
+        //        }
         
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
@@ -212,11 +227,16 @@
                         self.followingButton.enabled = YES;
                         self.mapButton.userInteractionEnabled = YES;
                     }
-
+                    
+                    self.followButton.tag = 1;
+                    [self setButtonColor];
+                    
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal];
                     [self.followButton setHidden:NO];
                 }
                 else if (followStatus.intValue == 1) { //following
+                    self.followButton.tag = 1;
+                    [self setButtonColor];
                     [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
                     [self.followButton setHidden:NO];
                     self.isFollowing = YES;
@@ -231,18 +251,21 @@
         {
             // Not following this user in CACHE, enable the button and set the selected status
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.followButton setSelected:NO];
+                self.followButton.tag = 0;
+                [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+                [self setButtonColor];
             });
         }
         
         // Now update the followStatus from Parse to ensure it actually is updated
         [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error) {
             if (!error) {
-                if (followingStatus.intValue > 0) //fix
+                
+                if (followingStatus.intValue > 0)
                 {
                     // We have the following status, so update the Selected status and enable the button
                     dispatch_async(dispatch_get_main_queue(), ^{
-                            if (followingStatus.intValue == 2) {
+                        if (followingStatus.intValue == 2) {
                             if ([[self.user valueForKey:@"private"] boolValue] == 1){
                                 self.isFollowing = NO;
                                 self.followersButton.enabled = YES;
@@ -257,20 +280,24 @@
                                 self.followersButton.enabled = YES;
                             }
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal];
+                            self.followButton.tag = 1;
+                            [self setButtonColor];
                             [self.followButton setHidden:NO];
                             [self.followButton setEnabled:YES];
-
-
+                            
+                            
                         }
-                else if (followingStatus.intValue == 1){
-                    self.isFollowing = YES;
-                    self.followersButton.enabled = YES;
-                    self.followingButton.enabled = YES;
-                    self.mapButton.userInteractionEnabled = YES;
-                    self.followersButton.enabled = YES;
-                    [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
-                    [self.followButton setHidden:NO];
-                    [self.followButton setEnabled:YES];
+                        else if (followingStatus.intValue == 1){
+                            self.isFollowing = YES;
+                            self.followersButton.enabled = YES;
+                            self.followingButton.enabled = YES;
+                            self.mapButton.userInteractionEnabled = YES;
+                            self.followersButton.enabled = YES;
+                            self.followButton.tag = 1;
+                            [self setButtonColor];
+                            [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
+                            [self.followButton setHidden:NO];
+                            [self.followButton setEnabled:YES];
                         }
                     });
                 }
@@ -278,8 +305,8 @@
                     // Not following this user, enable the button and set the selected status
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.followButton setEnabled:YES];
-
-
+                        
+                        
                         if ([[self.user valueForKey:@"private"] boolValue] == 1){
                             self.isFollowing = NO;
                             self.followersButton.enabled = YES;
@@ -294,9 +321,12 @@
                             self.followersButton.enabled = YES;
                         }
                         
+                        self.followButton.tag = 0;
+                        [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+                        [self setButtonColor];
                         [self.followButton setHidden:NO];
-
-
+                        
+                        
                     });
                 }
             }
@@ -319,13 +349,13 @@
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
         NSString *followers = NSLocalizedString(@"Followers",@"Followers");
         NSString *following = NSLocalizedString(@"Following",@"Following");
-
+        
         [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
         [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
         
-
-
-
+        
+        
+        
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
@@ -350,11 +380,11 @@
                 [self.mapButton setTitle:@"" forState:UIControlStateNormal];
                 self.listButton.hidden = YES;
             }else {
-                     [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+                [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
                 self.listButton.hidden = NO;
-
-
-                 }
+                
+                
+            }
         });
     }];
 }
@@ -402,13 +432,22 @@
 
 - (IBAction)followButtonPressed:(id)sender {
     
+    self.followButton.enabled = NO;
+
+    
     BOOL isPrivate = [[self.user valueForKey:@"private"] boolValue];
     
-    if ([self.followButton isSelected]) {
+    if (self.followButton.tag == 1) {
         // Unfollow
         
         if (isPrivate == NO){
             [SocialUtility unfollowUser:_user];
+            [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+            self.followButton.tag = 0;
+            [self setButtonColor];
+            self.followButton.enabled = YES;
+
+
         } else if (self.isFollowing == YES){
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
@@ -427,14 +466,25 @@
         // Follow
         
         [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal]; // Set the title to pending, and if it's successful then it'll be set to Following
+        self.followButton.tag = 1;
+        [self setButtonColor];
         
         
         
         [SocialUtility followUserInBackground:_user block:^(BOOL succeeded, NSError *error) {
+            
+            self.followButton.enabled = YES;
+
+            
             if (error) {
                 NSLog(@"Error: %@", error);
+                self.followButton.tag = 0;
+                [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+                [self setButtonColor];
             }
             if (!succeeded) {
+                self.followButton.tag = 0;
+                [self setButtonColor];
                 NSLog(@"Follow NOT success");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Follow Failed",@"Follow Failed")
                                                                 message:NSLocalizedString(@"Please try again",@"Please try again")
@@ -448,6 +498,9 @@
             }
             else if (isPrivate == 0)
             {
+                self.followButton.tag = 1;
+                [self setButtonColor];
+                self.followButton.enabled = YES;
                 [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
             
             }
@@ -569,7 +622,12 @@
         // BLOCK USER
         [SocialUtility blockUser:_user];
     } else if (alertView.tag == 11 && buttonIndex == 1){
+        self.followButton.tag = 0;
+        [self setButtonColor];
+        [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
         [SocialUtility unfollowUser:_user];
+        self.followButton.enabled = YES;
+
     }
 }
 
