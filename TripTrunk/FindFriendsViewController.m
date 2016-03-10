@@ -23,8 +23,6 @@
 
 @property NSString *searchString;
 
-@property int fbCount;
-
 @property PFUser *user;
 @property BOOL loadedOnce;
 
@@ -163,7 +161,6 @@
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 10;
-    friendsQuery.skip = self.fbCount;
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
 
 
@@ -178,7 +175,6 @@
         else
         {
             _friends = [NSMutableArray arrayWithArray:objects];
-            self.fbCount = self.fbCount + 10;
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.isLoadingFacebook = NO;
@@ -200,8 +196,7 @@
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 10;
-    friendsQuery.skip = self.fbCount;
-    friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    friendsQuery.skip = self.friends.count;
     [friendsQuery whereKey:@"objectId" notContainedIn:self.friends];
 
     
@@ -216,12 +211,11 @@
         else
         {
             [[TTUtility sharedInstance] internetConnectionFound];
-//            [_friends addObjectsFromArray:objects];
+            [_friends addObjectsFromArray:objects];
             
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.fbCount = self.fbCount + 10;
                 if (objects.count < 10) {
                     self.friendsMaxed = YES;
                 }
@@ -450,7 +444,6 @@
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
         self.removeResults = YES;
-        self.fbCount = 0;
         self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
             [self filterResults:searchBar.text isScroll:NO];
