@@ -374,11 +374,11 @@
      }];
 }
 
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL, PFObject *, NSError *))completionBlock
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL, PFObject *, PFObject *, NSError *))completionBlock
 {
     if ([comment isEqualToString:@""]) {
         if (completionBlock) {
-            return completionBlock(false, nil, nil);
+            return completionBlock(false, nil, nil, nil);
         }
     }
     
@@ -408,7 +408,7 @@
         [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 if (completionBlock) {
-                    completionBlock(succeeded, object, error);
+                    completionBlock(succeeded, object, commentActivity, error);
                 }
                                 [[TTUtility sharedInstance] internetConnectionFound];
             }

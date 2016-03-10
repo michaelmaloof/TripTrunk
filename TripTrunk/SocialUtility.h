@@ -127,7 +127,7 @@
  *  @param photo           Photo object on which the comment is being written
  *  @param completionBlock completion handler callback
  */
-+ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL succeeded, PFObject *object, NSError *error))completionBlock;
++ (void)addComment:(NSString *)comment forPhoto:(Photo *)photo isCaption:(BOOL)isCaption block:(void (^)(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error))completionBlock;
 
 /**
  *  Adds a user mention on the given comment

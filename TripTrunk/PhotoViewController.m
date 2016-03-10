@@ -815,11 +815,11 @@
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
-                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error) {
+                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                         NSLog(@"caption saved as comment");
                         [self refreshPhotoActivitiesWithUpdateNow:YES];
                         [self.caption endEditing:YES];
-                        [self updateMentionsInDatabase:object];
+                        [self updateMentionsInDatabase:commentObject];
                     }];
                 } else
                 {
@@ -839,10 +839,10 @@
                     
                     if (!save) {
                         
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, NSError *error)
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
                          {
                              [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             [self updateMentionsInDatabase:object];
+                             [self updateMentionsInDatabase:commentObject];
                          }];
                         
                     }else{

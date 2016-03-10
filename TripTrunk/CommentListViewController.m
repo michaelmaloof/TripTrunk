@@ -382,7 +382,7 @@
             [self.tableView reloadData];
             
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
-                                block:^(BOOL succeeded, PFObject *object, NSError *error) {
+                                block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                     
                 if (!error) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
