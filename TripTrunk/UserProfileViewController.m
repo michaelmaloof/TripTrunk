@@ -346,14 +346,19 @@
         
         if (followersCount < 1){
             [self.followersButton setTitle:@"Followers" forState:UIControlStateNormal];
+            [self.followersButton setTitle:@"Followers" forState:UIControlStateDisabled];
         } else {
             [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateDisabled];
         }
         
         if (followingCount < 1){
             [self.followersButton setTitle:@"Following" forState:UIControlStateNormal];
+            [self.followersButton setTitle:@"Following" forState:UIControlStateDisabled];
+
         } else {
             [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
+                   [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateDisabled];
         }
  
     }
@@ -362,6 +367,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *followers = NSLocalizedString(@"Followers",@"Followers");
             [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateNormal];
+                   [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateDisabled];
         });
     }];
     
@@ -369,6 +375,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *following = NSLocalizedString(@"Following",@"Following");
             [self.followingButton setTitle:[NSString stringWithFormat:@"%i %@",count,following] forState:UIControlStateNormal];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i %@",count,following] forState:UIControlStateDisabled];
         });
     }];
     
