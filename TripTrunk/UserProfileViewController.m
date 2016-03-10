@@ -197,7 +197,6 @@
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
     self.mapButton.userInteractionEnabled = NO;
-    self.followersButton.enabled = NO;
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
@@ -205,7 +204,6 @@
         self.followersButton.enabled = YES;
         self.followingButton.enabled = YES;
         self.mapButton.userInteractionEnabled = YES;
-        self.followersButton.enabled = YES;
         
     }
     else {
@@ -245,7 +243,6 @@
                     self.followersButton.enabled = YES;
                     self.followingButton.enabled = YES;
                     self.mapButton.userInteractionEnabled = YES;
-                    self.followersButton.enabled = YES;
                 }
             });
         }
@@ -273,13 +270,11 @@
                                 self.followersButton.enabled = YES;
                                 self.followingButton.enabled = YES;
                                 self.mapButton.userInteractionEnabled = YES;
-                                self.followersButton.enabled = YES;
                             } else {
                                 self.isFollowing = NO;
                                 self.followersButton.enabled = YES;
                                 self.followingButton.enabled = YES;
                                 self.mapButton.userInteractionEnabled = YES;
-                                self.followersButton.enabled = YES;
                             }
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal];
                             self.followButton.tag = 1;
@@ -294,7 +289,6 @@
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
-                            self.followersButton.enabled = YES;
                             self.followButton.tag = 1;
                             [self setButtonColor];
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
@@ -314,13 +308,11 @@
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
-                            self.followersButton.enabled = YES;
                         } else {
                             self.isFollowing = NO;
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
-                            self.followersButton.enabled = YES;
                         }
                         
                         self.followButton.tag = 0;
@@ -352,12 +344,18 @@
         NSString *followers = NSLocalizedString(@"Followers",@"Followers");
         NSString *following = NSLocalizedString(@"Following",@"Following");
         
-        [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
-        [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
+        if (followersCount < 1){
+            [self.followersButton setTitle:@"Followers" forState:UIControlStateNormal];
+        } else {
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
+        }
         
-        
-        
-        
+        if (followingCount < 1){
+            [self.followersButton setTitle:@"Following" forState:UIControlStateNormal];
+        } else {
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
+        }
+ 
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
@@ -384,8 +382,6 @@
             }else {
                 [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
                 self.listButton.hidden = NO;
-                
-                
             }
         });
     }];
