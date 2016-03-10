@@ -50,6 +50,7 @@
 
 
 
+
 @end
 
 @implementation FindFriendsViewController
@@ -191,12 +192,17 @@
 
 -(void)searchFacebookFriends:(NSArray *)fbids {
     // Get the TripTrunk user objects with the list of cached fbid's
+    
+    if (self.isLoadingSearch == NO && self.isLoadingFacebook == NO){
+        self.isLoadingSearch = YES;
+    
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 10;
     friendsQuery.skip = self.fbCount;
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    [friendsQuery whereKey:@"objectId" notContainedIn:self.friends];
 
     
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -204,21 +210,27 @@
         {
             NSLog(@"Error: %@",error);
             [ParseErrorHandlingController handleError:error];
+            self.isLoadingSearch = NO;
+
         }
         else
         {
             [[TTUtility sharedInstance] internetConnectionFound];
-            [_friends addObjectsFromArray:objects];
+//            [_friends addObjectsFromArray:objects];
+            
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.fbCount = self.fbCount + 10;
                 if (objects.count < 10) {
                     self.friendsMaxed = YES;
                 }
+                self.isLoadingSearch = NO;
                 [self.tableView reloadData];
             });
         }
     }];
+    }
 }
 
 - (void)loadFollowing
@@ -312,6 +324,7 @@
 
 
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    self.searchString = nil;
     self.searchController.active = NO;
     [self.tableView reloadData];
 
@@ -343,11 +356,10 @@
     if (self.isLoadingSearch == NO){
         self.isLoadingSearch = YES;
         
-    if (self.searchCount >29){
-        self.isLoadingSearch = NO;
-
+        if (self.searchCount > 29){
+            self.isLoadingSearch = NO;
         }
-    
+        
     if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
     PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];

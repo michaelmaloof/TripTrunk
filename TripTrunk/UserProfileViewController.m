@@ -355,19 +355,19 @@
         if (followingCount < 1){
             [self.followingButton setTitle:@"Following" forState:UIControlStateNormal];
             [self.followingButton setTitle:@"Following" forState:UIControlStateDisabled];
-
+            
         } else {
             [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
-                   [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateDisabled];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateDisabled];
         }
- 
+        
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *followers = NSLocalizedString(@"Followers",@"Followers");
             [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateNormal];
-                   [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateDisabled];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateDisabled];
         });
     }];
     
