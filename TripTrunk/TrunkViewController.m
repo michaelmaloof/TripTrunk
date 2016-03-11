@@ -903,7 +903,7 @@
             vc.photo = [self.photos objectAtIndex:self.path.item];
             vc.trip = self.trip;
             vc.arrayInt = self.path.item;
-
+            vc.trunkMembers = self.members;
 
         }
         vc.photos = self.photos;
@@ -913,6 +913,7 @@
     else if ([segue.identifier isEqualToString:@"addPhotos"]) {
         AddTripPhotosViewController *vc = segue.destinationViewController;
         vc.trip = self.trip;
+        vc.trunkMembers = self.members;
     }
     
 }

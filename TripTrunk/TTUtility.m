@@ -167,7 +167,8 @@ CLCloudinary *cloudinary;
     }
 }
 
-- (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
+
+-(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSError *error))completionBlock
 {
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
@@ -254,7 +255,12 @@ CLCloudinary *cloudinary;
                       // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
                       if (photo.caption && ![photo.caption isEqualToString:@""]) {
                           [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        
+                              if(error){
+                                  completionBlock(NO, nil, nil);
+                                  NSLog(@"Error: %@",error);
+                              }else{
+                                  completionBlock(YES, commentObject, nil);
+                              }
                           }];
                       }
                       

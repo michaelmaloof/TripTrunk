@@ -1378,6 +1378,13 @@
     return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
 }
 
+#pragma mark - UIPopoverPresentationControllerDelegate
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Return no adaptive presentation style, use default presentation behaviour
+    return UIModalPresentationNone;
+}
+
 //############################################# MENTIONS ##################################################
 
 
@@ -1439,15 +1446,6 @@
     [alertView show];
 }
 
-
-
-
-#pragma mark - UIPopoverPresentationControllerDelegate
--(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
-{
-    // Return no adaptive presentation style, use default presentation behaviour
-    return UIModalPresentationNone;
-}
 
 @end
 

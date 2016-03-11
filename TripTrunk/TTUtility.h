@@ -53,7 +53,7 @@
  *  @param photo     TripTrunk parse Photo object
  *  @param imageData NSData of a JPEG image (works with PNG as well, but that takes up more space, so we recommend JPEG)
  */
-- (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData;
+- (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL succeeded, PFObject *commentObject, NSError *error))completionBlock;
 
 /**
  *  Save the given photo to Camera Roll

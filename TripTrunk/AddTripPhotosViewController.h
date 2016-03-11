@@ -21,5 +21,6 @@
 @property NSString *endDate;
 @property BOOL isPrivate;
 @property (nonatomic)BOOL isTripCreation;
+@property (strong, nonatomic) NSArray *trunkMembers;
 @end
 
