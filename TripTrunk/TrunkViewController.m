@@ -682,6 +682,8 @@
         
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
         
+        cell.profileImage.image = nil;
+        
         
         NSInteger index = indexPath.item;
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
