@@ -1081,7 +1081,7 @@
                 for (TrunkListViewController *view in controller.viewControllers)
                 {
                     if ([view isKindOfClass:[TrunkListViewController class]]){
-                        [view reloadTrunkList:self.photo.trip seen:NO];
+                        [view reloadTrunkList:self.photo.trip seen:NO addPhoto:NO photoRemoved:YES];
                     }
                 }
                 
