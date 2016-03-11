@@ -21,7 +21,7 @@
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;
 
--(void)reloadTrunkList:(Trip*)trip seen:(BOOL)hasSeen;
+-(void)reloadTrunkList:(Trip *)trip seen:(BOOL)hasSeen addPhoto:(BOOL)added photoRemoved:(BOOL)removed;
 -(void)deleteItemOnTrunkList:(Trip*)trip;
 
 

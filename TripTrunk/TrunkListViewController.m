@@ -742,8 +742,8 @@
         countString = @"1 Photo";
     }
     else {
-        NSString *photo = NSLocalizedString(@"Photos",@"Photos");
-        countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photo];
+        NSString *photos = NSLocalizedString(@"Photos",@"Photos");
+        countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photos];
     }
     
 //    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -967,19 +967,27 @@
     self.tableView.emptyDataSetDelegate = nil;
 }
 
--(void)reloadTrunkList:(Trip *)trip seen:(BOOL)hasSeen{
+-(void)reloadTrunkList:(Trip *)trip seen:(BOOL)hasSeen addPhoto:(BOOL)added photoRemoved:(BOOL)removed{
         for (Trip *tripP in self.parseLocations){
             if ([trip.objectId isEqualToString:tripP.objectId]){
                 tripP.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
-                tripP.publicTripDetail.photoCount += 1;
+                
+                if (added == YES){
+                    tripP.publicTripDetail.photoCount += 1;
+                } else if (removed == YES){
+                    tripP.publicTripDetail.photoCount -= 1;
+                }
             }
         }
-    //TODO dont need to call this twice just reload once
-
+    
         for (Trip *tripM in self.meParseLocations){
             if ([trip.objectId isEqualToString:tripM.objectId]){
                 tripM.publicTripDetail.mostRecentPhoto = trip.publicTripDetail.mostRecentPhoto;
-                tripM.publicTripDetail.photoCount += 1;
+                if (added == YES){
+                    tripM.publicTripDetail.photoCount += 1;
+                } else if (removed == YES){
+                    tripM.publicTripDetail.photoCount -= 1;
+                }
             }
         }
     Trip *trunk = [[Trip alloc]init];

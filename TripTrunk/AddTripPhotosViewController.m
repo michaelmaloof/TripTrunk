@@ -127,7 +127,7 @@
             {
                 if ([view isKindOfClass:[TrunkListViewController class]])
                 {
-                    [view reloadTrunkList:self.trip seen:NO];
+                    [view reloadTrunkList:self.trip seen:NO addPhoto:YES photoRemoved:NO];
                 }
             }
         }
