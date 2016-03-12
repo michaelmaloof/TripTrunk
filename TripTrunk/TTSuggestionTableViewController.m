@@ -207,7 +207,7 @@
 
 -(BOOL)displayFollowers:(Photo*)photo{
     //check to see if current photo owner is private
-    if([photo.user objectForKey:@"private"]){
+    if([[photo.user objectForKey:@"private"] boolValue]){
         //photo owner is private
         //check to see if current user owns the photo
         if([photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
@@ -228,7 +228,7 @@
 
 -(BOOL)displayFollowingUsers:(Photo*)photo{
     //check to see if current photo owner is private
-    if([photo.user objectForKey:@"private"]){
+    if([[photo.user objectForKey:@"private"] boolValue]){
         //the photo owner is private so don't show the following users
         return NO;
     }else{

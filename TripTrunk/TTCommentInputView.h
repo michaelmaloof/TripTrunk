@@ -7,17 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Photo.h"
 @protocol TTCommentInputViewDelegate;
 
 @interface TTCommentInputView : UIView
 
 @property (nonatomic, weak) id<TTCommentInputViewDelegate> delegate;
-
+@property (strong, nonatomic) NSArray *trunkMembers;
+@property (strong, nonatomic) Photo *photo;
 - (void)setupConstraintsWithView:(UIView *)view;
 @end
 
 @protocol TTCommentInputViewDelegate <NSObject>
+
+@optional
+-(void)displayAutocompletePopover:(NSString*)text;
+-(void)dismissAutocompletePopover;
 
 @required
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment;

@@ -774,6 +774,8 @@
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
 //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
 //    [self presentViewController:navController animated:YES completion:nil];
+    vc.trunkMembers = self.trunkMembers;
+    vc.trip = self.trip;
     [self.navigationController pushViewController:vc animated:YES];
 
 }

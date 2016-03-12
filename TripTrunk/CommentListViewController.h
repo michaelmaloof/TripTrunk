@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Photo.h"
 #import "TTBaseViewController.h"
-
+#import "Trip.h"
 
 @interface CommentListViewController : TTBaseViewController
 
+@property (strong, nonatomic) NSArray *trunkMembers;
+@property (strong, nonatomic) Trip *trip;
 - (id)initWithComments:(NSArray *)comments forPhoto:(Photo *)photo;
 
 @end

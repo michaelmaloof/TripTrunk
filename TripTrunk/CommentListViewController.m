@@ -16,16 +16,19 @@
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "KILabel.h"
+#import "TTSuggestionTableViewController.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
-@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate>
+@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate, UIPopoverPresentationControllerDelegate, TTSuggestionTableViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property (strong, nonatomic) TTCommentInputView *commentInputView;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
 
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
+@property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @end
 
 @implementation CommentListViewController 
@@ -54,9 +57,12 @@
     
     // Setup the comment input overlay
     _commentInputView = [[TTCommentInputView alloc] init];
+    _commentInputView.photo = self.photo;
+    _commentInputView.trunkMembers = self.trunkMembers;
+    _commentInputView.delegate = self;
     [self.view addSubview:_commentInputView];
     [_commentInputView setupConstraintsWithView:self.view];
-    _commentInputView.delegate = self;
+//    _commentInputView.delegate = self;
     
     self.view.backgroundColor = [UIColor colorWithRed:205.0/255.0 green:205.0/255.0 blue:205.0/255.0 alpha:1.0];
     
@@ -399,6 +405,48 @@
             
         }
     }
+}
+
+-(void)displayAutocompletePopover:(NSString *)text{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+    
+    //force the popover to display like an iPad popover otherwise it will be full screen
+    self.popover  = self.autocompletePopover.popoverPresentationController;
+    self.popover.delegate = self;
+    self.popover.sourceView = self.commentInputView;
+    self.popover.sourceRect = [self.commentInputView bounds];
+    self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+    
+    //Build the friends list for the table view in the popover and wait
+    NSDictionary *data = @{
+                           @"trunkMembers" : self.trunkMembers,
+                           @"trip" : self.trip,
+                           @"photo" : self.photo
+                           };
+    [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+        if(succeeded){
+            //send the current word to the Popover to use for comparison
+            self.autocompletePopover.mentionText = text;
+            [self.autocompletePopover updateAutocompleteTableView];
+            //If there are friends to display, now show the popup on the screen
+            if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                self.autocompletePopover.delegate = self;
+                [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+            }
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
+}
+
+#pragma mark - UIPopoverPresentationControllerDelegate
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    // Return no adaptive presentation style, use default presentation behaviour
+    return UIModalPresentationNone;
 }
 
 #pragma mark - LILabelDelegateMethods
