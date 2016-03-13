@@ -149,6 +149,13 @@
     [[self navigationItem] setBackBarButtonItem:newBackButton];
 }
 
+
+-(void)sortTrunkByRecentPhoto{
+    
+    self.parseLocations;
+    
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
 {
@@ -258,12 +265,12 @@
             }
             //                self.filter.tag = 1;
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            [self.tableView reloadData];
+            [self reloadTable];
         }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadTable];
     }
 }
 
@@ -348,12 +355,14 @@
             }
 //            self.trunkListToggle.tag = 0;
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            [self.tableView reloadData];
+            [self reloadTable];
+
         }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadTable];
+        
     }
 }
 
@@ -447,12 +456,13 @@
             }
             //            self.trunkListToggle.tag = 0;
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            [self.tableView reloadData];
+            [self reloadTable];
         }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadTable];
+        
     }
 }
 
@@ -551,10 +561,12 @@
         
     } else
     {    self.navigationItem.rightBarButtonItem.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadTable];
+    
     }
 
 }
+
 
 
 
@@ -582,7 +594,8 @@
             [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            [self.tableView reloadData];
+            [self reloadTable];
+            
         }
         {
             
@@ -636,7 +649,8 @@
         }
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = YES;
-        [self.tableView reloadData];
+        [self reloadTable];
+        
         
     }];
 }
@@ -684,6 +698,54 @@
 
 #pragma mark - UITableView Data Source
 
+-(void)reloadTable{
+    
+    NSMutableArray *copiedTrunks = [[NSMutableArray alloc] init];
+    NSMutableArray *tempArray1 = [[NSMutableArray alloc] init];
+    NSArray *tempArray2 = [[NSArray alloc] init];
+    NSMutableArray *sortedTrunks = [[NSMutableArray alloc] init];
+    
+    if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
+        copiedTrunks = self.parseLocations;
+    } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
+        copiedTrunks = self.mutualTrunks;
+    } else {
+        copiedTrunks = self.meParseLocations;
+    }
+    
+    // sort by recent photos
+    for (Trip *aTrip in copiedTrunks) {
+        NSDate *photoTimeStamp = aTrip.publicTripDetail.mostRecentPhoto;
+        if (!photoTimeStamp) {
+            photoTimeStamp = aTrip.publicTripDetail.createdAt;
+        }
+        double timeDiff =[photoTimeStamp timeIntervalSinceNow];
+        
+        NSDictionary *aTripDict = [[NSDictionary alloc]initWithObjectsAndKeys:aTrip,@"trip",@(fabs(timeDiff)),@"timeValue", nil];
+        
+        [tempArray1 addObject:aTripDict];
+    }
+    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"timeValue"  ascending:YES];
+    tempArray2 = [[NSArray arrayWithArray:tempArray1] sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
+    
+    for (NSDictionary *aTripDict in tempArray2) {
+        [sortedTrunks addObject:aTripDict[@"trip"]];
+    }
+    
+    if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
+        self.parseLocations = sortedTrunks;
+    } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
+        self.mutualTrunks = sortedTrunks;
+    } else {
+        self.meParseLocations = sortedTrunks;
+    }
+    
+    //reload
+    [self.tableView reloadData];
+    
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.filter.tag == 0 && self.parseLocations !=nil && self.user == nil && self.isList == NO) {
@@ -702,9 +764,8 @@
     }
 }
 
--(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-
-{
+-(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.lockImage.hidden = YES;
@@ -712,7 +773,6 @@
     
     if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
-        
     } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
         trip = [self.mutualTrunks objectAtIndex:indexPath.row];
     } else {
@@ -1004,7 +1064,7 @@
         [self.haventSeens removeObject:trunk];
     }
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    [self.tableView reloadData];
+    [self reloadTable];
 
 }
 
@@ -1028,8 +1088,7 @@
     [self.meParseLocations removeObject:tripB];
     self.navigationItem.rightBarButtonItem.enabled = YES;
 
-    [self.tableView reloadData];
-
+    [self reloadTable];
 }
 
 
