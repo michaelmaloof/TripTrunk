@@ -17,13 +17,15 @@
 #import "UIScrollView+EmptyDataSet.h"
 #import "KILabel.h"
 #import "TTSuggestionTableViewController.h"
+#import "TTHashtagMentionColorization.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
-@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate, UIPopoverPresentationControllerDelegate, TTSuggestionTableViewControllerDelegate>
+@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate, UIPopoverPresentationControllerDelegate, TTSuggestionTableViewControllerDelegate, TTCommentInputViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property (strong, nonatomic) TTCommentInputView *commentInputView;
+@property (strong, nonatomic) NSString *comment;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
 
@@ -241,8 +243,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        [SocialUtility deleteComment:[self.activities objectAtIndex:indexPath.row] forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+        PFObject *object = [self.activities objectAtIndex:indexPath.row];
+        [SocialUtility deleteComment:object forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             if (error) {
                 NSLog(@"Error deleting comment: %@", error);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't delete comment, try again",@"Couldn't delete comment, try again") delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
@@ -251,6 +253,9 @@
                 });
             }
             else {
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+                [self.autocompletePopover removeMentionFromDatabase:object comment:@"" previousComment:object[@"content"]];
                 // Post a notification so that the data is reloaded in the Photo View
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 
@@ -391,6 +396,8 @@
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                     
                 if (!error) {
+                    self.comment = comment;
+                    [self updateMentionsInDatabase:commentObject];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {
@@ -405,6 +412,15 @@
             
         }
     }
+}
+
+
+//############################################# MENTIONS ##################################################
+-(void)updateMentionsInDatabase:(PFObject*)object{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    [self.autocompletePopover saveMentionToDatabase:object comment:self.comment previousComment:@"" photo:self.photo members:self.trunkMembers];
+    //    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
 }
 
 -(void)displayAutocompletePopover:(NSString *)text{
@@ -449,6 +465,62 @@
     return UIModalPresentationNone;
 }
 
+- (void)popoverViewControllerShouldDissmissWithNoResults{
+    [self removeAutocompletePopoverFromSuperview];
+}
+
+//Dismiss the popover and reset the delegates
+-(void)removeAutocompletePopoverFromSuperview{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    self.popover.delegate = nil;
+    self.autocompletePopover = nil;
+}
+
+- (void)insertUsernameAsMention:(NSString*)username{
+    //Get the currently typed word
+    UITextRange* selectedRange = [self.commentInputView.commentField selectedTextRange];
+    NSInteger cursorOffset = [self.commentInputView.commentField offsetFromPosition:self.commentInputView.commentField.beginningOfDocument toPosition:selectedRange.start];
+    NSString* substring = [self.commentInputView.commentField.text substringToIndex:cursorOffset];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    //get a mutable copy of the current caption
+    NSMutableString *caption = [NSMutableString stringWithString:self.commentInputView.commentField.text];
+    //create the replacement range of the typed mention
+    NSRange mentionRange = NSMakeRange(cursorOffset-[lastWord length], [lastWord length]);
+    //replace that typed @mention with the user name of the user they want to mention
+    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
+    
+    //display the new caption
+    self.commentInputView.commentField.text = mentionString;
+    //dismiss the popover
+    [self removeAutocompletePopoverFromSuperview];
+    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
+    //FIXME: Cursor position is not being used here, refactor!
+    self.commentInputView.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentInputView.commentField.text];
+    UITextPosition *newPosition = [self.commentInputView.commentField positionFromPosition:self.commentInputView.commentField.beginningOfDocument offset:cursorOffset-[lastWord length]+[username length]+1];
+    UITextRange *newRange = [self.commentInputView.commentField textRangeFromPosition:newPosition toPosition:newPosition];
+    [self.commentInputView.commentField setSelectedTextRange:newRange];
+    self.autocompletePopover.delegate = nil;
+}
+
+//Adjust the height of the popover to fit the number of usernames in the tableview
+-(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
+    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], height);
+}
+
+- (NSString*)getUsernameFromLink:(NSString*)link{
+    return [link substringFromIndex:1];
+}
+
+-(NSString*)separateMentions:(NSString*)comment{
+    if(![comment containsString:@"@"])
+        return comment;
+    
+    NSArray *array = [comment componentsSeparatedByString:@"@"];
+    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+}
+
+
 #pragma mark - LILabelDelegateMethods
 - (void)tappedLink:(NSString *)link cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -462,10 +534,6 @@
     }
 }
 
-- (NSString*)getUsernameFromLink:(NSString*)link{
-    return [link substringFromIndex:1];
-}
-
 -(BOOL)isLinkAMention:(NSString*)link{
     return [[link substringToIndex:1] isEqualToString:@"@"] ? YES : NO;
 }
@@ -473,6 +541,7 @@
 -(BOOL)isLinkAHashtag:(NSString*)link{
     return [[link substringToIndex:1] isEqualToString:@"#"] ? YES : NO;
 }
+//############################################# MENTIONS ##################################################
 
 #pragma mark -
 - (void)dealloc

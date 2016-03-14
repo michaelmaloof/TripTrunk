@@ -17,7 +17,7 @@ UIView *topView;
 
 @interface TTCommentInputView () <UITextFieldDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
 
-@property (strong, nonatomic)UITextField *commentField;
+
 @property (strong, nonatomic)UIButton *submitButton;
 @property (weak, nonatomic)NSLayoutConstraint *bottomConstraint;
 //############################################# MENTIONS ##################################################
@@ -25,7 +25,6 @@ UIView *topView;
 //@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
-@property (strong, nonatomic) NSString *previousComment;
 //############################################# MENTIONS ##################################################
 @end
 
@@ -267,7 +266,7 @@ UIView *topView;
 - (void)submitButtonPressed {    
     // Let the delegate handle the submit button press
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentSubmitButtonPressedWithComment:)]) {
-        [self.delegate commentSubmitButtonPressedWithComment:self.commentField.text];
+        [self.delegate commentSubmitButtonPressedWithComment:[self separateMentions:self.commentField.text]];
     }
     self.commentField.text = @"";
     // hide the keyboard
@@ -303,10 +302,10 @@ UIView *topView;
 //}
 
 //############################################# MENTIONS ##################################################
--(void)updateMentionsInDatabase:(PFObject*)object{
-    [self.autocompletePopover saveMentionToDatabase:object comment:self.commentField.text previousComment:self.previousComment photo:self.photo members:self.trunkMembers];
-//    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
-}
+//-(void)updateMentionsInDatabase:(PFObject*)object{
+//    [self.autocompletePopover saveMentionToDatabase:object comment:self.commentField.text previousComment:self.previousComment photo:self.photo members:self.trunkMembers];
+////    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
+//}
 
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -366,47 +365,47 @@ UIView *topView;
 }
 
 //Dismiss the popover and reset the delegates
--(void)removeAutocompletePopoverFromSuperview{
-//    [self dismissViewControllerAnimated:YES completion:nil]; <-----------------
-    self.popover.delegate = nil;
-    self.autocompletePopover = nil;
-}
+//-(void)removeAutocompletePopoverFromSuperview{
+////    [self dismissViewControllerAnimated:YES completion:nil]; <-----------------
+//    self.popover.delegate = nil;
+//    self.autocompletePopover = nil;
+//}
 
 #pragma mark - TTSuggestionTableViewControllerDelegate
 //The popover is telling this view controller to dismiss it
-- (void)popoverViewControllerShouldDissmissWithNoResults{
-    [self removeAutocompletePopoverFromSuperview];
-}
+//- (void)popoverViewControllerShouldDissmissWithNoResults{
+//    [self removeAutocompletePopoverFromSuperview];
+//}
 
 //replace the currently typed word with the the username
--(void)insertUsernameAsMention:(NSString*)username{
-    //Get the currently typed word
-    UITextRange* selectedRange = [self.commentField selectedTextRange];
-    NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
-    NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
-    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-    //get a mutable copy of the current caption
-    NSMutableString *caption = [NSMutableString stringWithString:self.commentField.text];
-    //create the replacement range of the typed mention
-    NSRange mentionRange = NSMakeRange(cursorOffset-[lastWord length], [lastWord length]);
-    //replace that typed @mention with the user name of the user they want to mention
-    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
-    
-    //display the new caption
-    self.commentField.text = mentionString;
-    //dismiss the popover
-    [self removeAutocompletePopoverFromSuperview];
-    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-    //FIXME: See above
-    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
-
-    //FIXME: Cursor position is not being used here, refactor!
-    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
-    UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.start offset:0];
-    UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
-    [self.commentField setSelectedTextRange:newRange];
-    self.autocompletePopover.delegate = nil;
-}
+//-(void)insertUsernameAsMention:(NSString*)username{
+//    //Get the currently typed word
+//    UITextRange* selectedRange = [self.commentField selectedTextRange];
+//    NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
+//    NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
+//    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+//    //get a mutable copy of the current caption
+//    NSMutableString *caption = [NSMutableString stringWithString:self.commentField.text];
+//    //create the replacement range of the typed mention
+//    NSRange mentionRange = NSMakeRange(cursorOffset-[lastWord length], [lastWord length]);
+//    //replace that typed @mention with the user name of the user they want to mention
+//    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
+//    
+//    //display the new caption
+//    self.commentField.text = mentionString;
+//    //dismiss the popover
+//    [self removeAutocompletePopoverFromSuperview];
+//    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
+//    //FIXME: See above
+//    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
+//
+//    //FIXME: Cursor position is not being used here, refactor!
+//    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
+//    UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.start offset:0];
+//    UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
+//    [self.commentField setSelectedTextRange:newRange];
+//    self.autocompletePopover.delegate = nil;
+//}
 
 //Adjust the height of the popover to fit the number of usernames in the tableview
 -(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
@@ -431,6 +430,10 @@ UIView *topView;
 {
     // Return no adaptive presentation style, use default presentation behaviour
     return UIModalPresentationNone;
+}
+
+-(void)popoverViewControllerShouldDissmissWithNoResults{
+    
 }
 
 //############################################# MENTIONS ##################################################

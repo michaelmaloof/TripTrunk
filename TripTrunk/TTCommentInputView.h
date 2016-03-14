@@ -13,6 +13,8 @@
 @interface TTCommentInputView : UIView
 
 @property (nonatomic, weak) id<TTCommentInputViewDelegate> delegate;
+//@property (strong, nonatomic)NSString *previousComment;
+@property (strong, nonatomic)UITextField *commentField;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
 - (void)setupConstraintsWithView:(UIView *)view;

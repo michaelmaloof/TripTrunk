@@ -327,7 +327,7 @@
     
     if (mentionList) {
         for(PFUser *user in mentionList){
-            [SocialUtility addMention:object isCaption:YES withUser:user forPhoto:photo block:^(BOOL succeeded, NSError *error){
+            [SocialUtility addMention:object isCaption:[object[@"isCaption"] boolValue] withUser:user forPhoto:photo block:^(BOOL succeeded, NSError *error){
                 if(succeeded)
                     NSLog(@"Mention added to db for %@",user.username);
                 else NSLog(@"Error: %@", error);
