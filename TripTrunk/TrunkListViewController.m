@@ -921,11 +921,6 @@
     return [UIColor colorWithWhite:0.0 alpha:0.0];
 }
 
-//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
-//{
-//    return [UIImage imageNamed:@"ticketIcon"];
-//}
-
 - (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
 {
     return CGPointMake(0, 20);
