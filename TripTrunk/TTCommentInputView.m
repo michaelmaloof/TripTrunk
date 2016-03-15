@@ -274,39 +274,7 @@ UIView *topView;
 
 }
 
-////FIXME: This needs to be refactored into a single method
-//- (void)colorHashtagAndMentions{
-//    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.commentField.text];
-//    NSError *error = [[NSError alloc] init];
-//    UIColor *fontColor = [UIColor blueColor];
-//    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:14] range:NSMakeRange(0, self.commentField.text.length)];
-//    
-////    //This is used to highlight and link #hashtags
-////    NSRegularExpression *regExHash = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:&error];
-////    NSArray *matches = [regExHash matchesInString:self.commentField.text options:0 range:NSMakeRange(0, self.commentField.text.length)];
-////    
-////    for(NSTextCheckingResult * match in matches){
-////        NSRange wordRange = [match rangeAtIndex:0];
-////        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRange];
-////    }
-//    
-//    NSRegularExpression *regExAt = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:&error];
-//    NSArray *matchesAt = [regExAt matchesInString:self.commentField.text options:0 range:NSMakeRange(0, self.commentField.text.length)];
-//    
-//    for(NSTextCheckingResult * matchAt in matchesAt){
-//        NSRange wordRangeAt = [matchAt rangeAtIndex:0];
-//        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
-//    }
-//    
-//    self.commentField.attributedText = string;
-//}
-
 //############################################# MENTIONS ##################################################
-//-(void)updateMentionsInDatabase:(PFObject*)object{
-//    [self.autocompletePopover saveMentionToDatabase:object comment:self.commentField.text previousComment:self.previousComment photo:self.photo members:self.trunkMembers];
-////    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
-//}
-
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     UITextRange *cursorPosition = [textField selectedTextRange];
@@ -327,85 +295,9 @@ UIView *topView;
     NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
     
-    //Display the Popover if there is a @ plus a letter typed and only if it is not already showing
-    if([self displayAutocompletePopover:lastWord]){
-        if(!self.autocompletePopover.delegate){
-            //Instantiate the view controller and set its size
-            [self.delegate displayAutocompletePopover:lastWord];
-        }
-    }
-    
-    //Update the table view in the popover but only if it is currently displayed
-    if([self updateAutocompletePopover:lastWord]){
-        self.autocompletePopover.mentionText = lastWord;
-        [self.autocompletePopover updateAutocompleteTableView];
-    }
-    
-    //Remove the popover if a space is typed
-    if([self dismissAutocompletePopover:lastWord]){
-//        [self dismissViewControllerAnimated:YES completion:nil]; <-----------------
-        self.popover.delegate = nil;
-        self.autocompletePopover = nil;
-    }
+    [self.delegate displayAutocompletePopoverFromView:lastWord];
+
 }
-
-//Only true if user has typed an @ and a letter and if the popover is not showing
--(BOOL)displayAutocompletePopover:(NSString*)lastWord{
-    return [lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate;
-}
-
-//Only true if the popover is showing and the user typed a space
--(BOOL)dismissAutocompletePopover:(NSString*)lastWord{
-    return self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""]);
-}
-
-//Only true if the popover is showing and there are friends to show in the table view and the @mention isn't broken
--(BOOL)updateAutocompletePopover:(NSString*)lastWord{
-    return self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""];
-}
-
-//Dismiss the popover and reset the delegates
-//-(void)removeAutocompletePopoverFromSuperview{
-////    [self dismissViewControllerAnimated:YES completion:nil]; <-----------------
-//    self.popover.delegate = nil;
-//    self.autocompletePopover = nil;
-//}
-
-#pragma mark - TTSuggestionTableViewControllerDelegate
-//The popover is telling this view controller to dismiss it
-//- (void)popoverViewControllerShouldDissmissWithNoResults{
-//    [self removeAutocompletePopoverFromSuperview];
-//}
-
-//replace the currently typed word with the the username
-//-(void)insertUsernameAsMention:(NSString*)username{
-//    //Get the currently typed word
-//    UITextRange* selectedRange = [self.commentField selectedTextRange];
-//    NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
-//    NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
-//    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-//    //get a mutable copy of the current caption
-//    NSMutableString *caption = [NSMutableString stringWithString:self.commentField.text];
-//    //create the replacement range of the typed mention
-//    NSRange mentionRange = NSMakeRange(cursorOffset-[lastWord length], [lastWord length]);
-//    //replace that typed @mention with the user name of the user they want to mention
-//    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
-//    
-//    //display the new caption
-//    self.commentField.text = mentionString;
-//    //dismiss the popover
-//    [self removeAutocompletePopoverFromSuperview];
-//    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-//    //FIXME: See above
-//    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
-//
-//    //FIXME: Cursor position is not being used here, refactor!
-//    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
-//    UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.start offset:0];
-//    UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
-//    [self.commentField setSelectedTextRange:newRange];
-//    self.autocompletePopover.delegate = nil;
-//}
 
 //Adjust the height of the popover to fit the number of usernames in the tableview
 -(void)adjustPreferredHeightOfPopover:(NSUInteger)height{
@@ -433,6 +325,10 @@ UIView *topView;
 }
 
 -(void)popoverViewControllerShouldDissmissWithNoResults{
+    
+}
+
+-(void)insertUsernameAsMention:(NSString *)username{
     
 }
 

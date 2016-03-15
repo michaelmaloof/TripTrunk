@@ -23,8 +23,8 @@
 @protocol TTCommentInputViewDelegate <NSObject>
 
 @optional
--(void)displayAutocompletePopover:(NSString*)text;
--(void)dismissAutocompletePopover;
+-(void)displayAutocompletePopoverFromView:(NSString*)text;
+-(void)dismissAutocompletePopoverFromView;
 
 @required
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment;

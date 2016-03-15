@@ -384,18 +384,12 @@
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
     if (comment && ![comment isEqualToString: @""] ) {
         if (_photo) {
-            NSDictionary *activity = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [PFUser currentUser], @"fromUser",
-                                      comment, @"content",
-                                      _photo, @"photo",
-                                      nil];
-            [_activities addObject:activity];
-            [self.tableView reloadData];
-            
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                     
                 if (!error) {
+                    [self.activities addObject:commentObject];
+                    [self.tableView reloadData];
                     self.comment = comment;
                     [self updateMentionsInDatabase:commentObject];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
@@ -420,42 +414,71 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
     [self.autocompletePopover saveMentionToDatabase:object comment:self.comment previousComment:@"" photo:self.photo members:self.trunkMembers];
-    //    [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
 }
 
--(void)displayAutocompletePopover:(NSString *)text{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-    self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
-    
-    //force the popover to display like an iPad popover otherwise it will be full screen
-    self.popover  = self.autocompletePopover.popoverPresentationController;
-    self.popover.delegate = self;
-    self.popover.sourceView = self.commentInputView;
-    self.popover.sourceRect = [self.commentInputView bounds];
-    self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
-    
-    //Build the friends list for the table view in the popover and wait
-    NSDictionary *data = @{
-                           @"trunkMembers" : self.trunkMembers,
-                           @"trip" : self.trip,
-                           @"photo" : self.photo
-                           };
-    [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
-        if(succeeded){
-            //send the current word to the Popover to use for comparison
-            self.autocompletePopover.mentionText = text;
-            [self.autocompletePopover updateAutocompleteTableView];
-            //If there are friends to display, now show the popup on the screen
-            if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
-                self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
-                self.autocompletePopover.delegate = self;
-                [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+-(void)displayAutocompletePopoverFromView:(NSString *)text{
+    if(!self.autocompletePopover.delegate){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+        self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+        
+        //force the popover to display like an iPad popover otherwise it will be full screen
+        self.popover  = self.autocompletePopover.popoverPresentationController;
+        self.popover.delegate = self;
+        self.popover.sourceView = self.commentInputView;
+        self.popover.sourceRect = [self.commentInputView bounds];
+        self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        
+        //Build the friends list for the table view in the popover and wait
+        NSDictionary *data = @{
+                               @"trunkMembers" : self.trunkMembers,
+                               @"trip" : self.trip,
+                               @"photo" : self.photo
+                               };
+        [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+            if(succeeded){
+                //send the current word to the Popover to use for comparison
+                self.autocompletePopover.mentionText = text;
+                [self.autocompletePopover updateAutocompleteTableView];
+                //If there are friends to display, now show the popup on the screen
+                if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                    self.autocompletePopover.delegate = self;
+                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                }
+            }else{
+                NSLog(@"Error: %@",error);
             }
-        }else{
-            NSLog(@"Error: %@",error);
-        }
-    }];
+        }];
+    }
+    
+    //Update the table view in the popover but only if it is currently displayed
+    if([self updateAutocompletePopover:text]){
+        self.autocompletePopover.mentionText = text;
+        [self.autocompletePopover updateAutocompleteTableView];
+    }
+    
+    //Remove the popover if a space is typed
+    if([self dismissAutocompletePopover:text]){
+        [self dismissViewControllerAnimated:YES completion:nil];
+        self.popover.delegate = nil;
+        self.autocompletePopover = nil;
+    }
+}
+
+//Only true if user has typed an @ and a letter and if the popover is not showing
+-(BOOL)displayAutocompletePopover:(NSString*)lastWord{
+    return [lastWord containsString:@"@"] && ![lastWord isEqualToString:@"@"] && !self.popover.delegate;
+}
+
+//Only true if the popover is showing and the user typed a space
+-(BOOL)dismissAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && ([lastWord hasSuffix:@" "] || [lastWord isEqualToString:@""]);
+}
+
+//Only true if the popover is showing and there are friends to show in the table view and the @mention isn't broken
+-(BOOL)updateAutocompletePopover:(NSString*)lastWord{
+    return self.popover.delegate && self.autocompletePopover.displayFriendsArray.count > 0 && ![lastWord isEqualToString:@""];
 }
 
 #pragma mark - UIPopoverPresentationControllerDelegate
@@ -526,9 +549,11 @@
     
     if([self isLinkAMention:link]){
         PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:link]];
-        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        if(vc)
-            [self.navigationController pushViewController:vc animated:YES];
+        if(user){
+            UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+            if(vc)
+                [self.navigationController pushViewController:vc animated:YES];
+        }
     }else if ([self isLinkAHashtag:link]){
         //FIXME: Implement this for hashtags
     }
