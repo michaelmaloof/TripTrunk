@@ -15,6 +15,7 @@
 
 @interface TTSuggestionTableViewController()
 @property unsigned long popoverHeight;
+@property (strong, nonatomic) NSMutableDictionary *photos;
 @end
 
 @implementation TTSuggestionTableViewController
@@ -22,7 +23,7 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    
+    self.photos = [[NSMutableDictionary alloc] init];
 }
 
 #pragma mark - UITableViewDelegate and DataSource Methods
@@ -33,10 +34,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     TTSuggestionViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     PFUser *userToAdd = self.displayFriendsArray[indexPath.row];
+    cell.userPhoto.image = nil;
 //    cell.userFullName.text = [NSString stringWithFormat:@"%@ %@",userToAdd[@"name"],userToAdd[@"lastName"]];
     cell.userFullName.text = userToAdd[@"name"];
     cell.username.text = [NSString stringWithFormat:@"@%@ ",userToAdd.username];
-    [self setProfilePic:userToAdd[@"profilePicUrl"] indexPath:indexPath];
+    cell.userPhoto.contentMode = UIViewContentModeScaleAspectFill;
+    
+    if(self.photos[userToAdd[@"profilePicUrl"]]){
+        UIImage *image = self.photos[userToAdd[@"profilePicUrl"]];
+        cell.userPhoto.image = image;
+    }else{
+        if(userToAdd[@"profilePicUrl"]){
+            [self setProfilePic:userToAdd[@"profilePicUrl"] indexPath:indexPath];
+        }else{
+            cell.userPhoto.image = [UIImage imageNamed:@"defaultProfile"];
+        }
+    }
     
     //stop the tableview from scrolling if the list has 3 or less
     self.suggestionsTable.scrollEnabled = [self preventTableViewFromScrolling];
@@ -90,10 +103,9 @@
                     //tell the block to finish with success
                     completionBlock(YES, nil);
                 }];
-                
-            }else{
-                //tell the block to finish with success
-                completionBlock(NO, nil);
+            }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                //display only trunk members
+                completionBlock(YES, nil);
         }
             
         }
@@ -131,10 +143,6 @@
                         //tell the block to finish with success
                         completionBlock(YES, nil);
                     }];
-                    
-                }else{
-                    //tell the block to finish with failyre
-                    completionBlock(NO, error);
                 }
                 
             }
@@ -514,26 +522,26 @@
     return status;
 }
 
-#pragma mark - REFACTOR THIS INTO IT"S OWN CLASS
+#pragma mark -
 - (void)setProfilePic:(NSString *)urlString indexPath:(NSIndexPath*)indexPath{
+    
     NSURL *pictureURL = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:urlString]];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:pictureURL];
     
     // Run network request asynchronously
-    [NSURLConnection sendAsynchronousRequest:urlRequest
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:
-     ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+    [NSURLConnection sendAsynchronousRequest:urlRequest queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
          if (connectionError == nil && data != nil) {
+             UIImage *image = [[UIImage alloc] initWithData:data];
+             [self.photos setObject:image forKey:urlString];
              
              // Set image on the UI thread
              dispatch_async(dispatch_get_main_queue(), ^{
                  TTSuggestionViewCell *cell = [self.suggestionsTable cellForRowAtIndexPath:indexPath];
                  cell.userPhoto.image = [[UIImage alloc] initWithData:data];
              });
-             
          }
      }];
+
 }
 
 @end
