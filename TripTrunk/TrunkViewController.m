@@ -458,6 +458,12 @@
                 self.cloud.hidden = NO;
             }
             
+            //update photo count when it is not right 
+            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
+                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
+                [self.trip saveInBackground];
+            }
+        
             [self.collectionView reloadData];
             
             //FIXME JUNIL IS THIS NEEDED
@@ -681,6 +687,8 @@
     } else {
         
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
+        
+        cell.profileImage.image = nil;
         
         
         NSInteger index = indexPath.item;

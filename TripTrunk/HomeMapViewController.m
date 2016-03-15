@@ -479,36 +479,39 @@
 
                 }
             }
-            
-            
-            for (Trip *trip in self.parseLocations)
-            {
-                NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                
-                BOOL contains = NO;
-                
-                for (Trip* trunk in self.visitedTrunks){
-                    if ([trunk.objectId isEqualToString:trip.objectId]){
-                        contains = YES;
-                    }
-                }
-                
-                if (self.visitedTrunks.count == 0){
-                    contains = NO;
-                }
-                
-                if (lastTripInterval < 0 && contains == NO)
-                {
-                    [self.haventSeens addObject:location];
-                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-                    [self.haventSeens addObject:location];
-                }
-            }
-            [self placeTrips];
+            [self sortTrips];
+
         }
     }];
+}
+
+-(void)sortIntoHotOrNot{
+    for (Trip *trip in self.parseLocations)
+    {
+        NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+        NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+        CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+        
+        BOOL contains = NO;
+        
+        for (Trip* trunk in self.visitedTrunks){
+            if ([trunk.objectId isEqualToString:trip.objectId]){
+                contains = YES;
+            }
+        }
+        
+        if (self.visitedTrunks.count == 0){
+            contains = NO;
+        }
+        
+        if (lastTripInterval < 0 && contains == NO)
+        {
+            [self.haventSeens addObject:location];
+        } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+            [self.haventSeens addObject:location];
+        }
+    }
+    [self placeTrips];
 }
 
 
@@ -577,32 +580,7 @@
             }
             
             
-            for (Trip *trip in self.parseLocations)
-            {
-                NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-                NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-                
-                BOOL contains = NO;
-                
-                for (Trip* trunk in self.visitedTrunks){
-                    if ([trunk.objectId isEqualToString:trip.objectId]){
-                        contains = YES;
-                    }
-                }
-                
-                if (self.visitedTrunks.count == 0 || self.visitedTrunks){
-                    contains = NO;
-                }
-                
-                if (lastTripInterval < 0 && contains == NO)
-                {
-                    [self.haventSeens addObject:location];
-                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-                    [self.haventSeens addObject:location];
-                }
-            }
-            [self placeTrips];
+            [self sortTrips];
         }
     }];
 }
@@ -1291,6 +1269,41 @@
 
 -(void)backWasTapped:(id)sender{
     self.newsVC = (TTNewsFeedViewController*)sender;
+}
+
+-(void)sortTrips{
+    
+    NSMutableArray *copiedTrunks = [[NSMutableArray alloc] init];
+    NSMutableArray *tempArray1 = [[NSMutableArray alloc] init];
+    NSArray *tempArray2 = [[NSArray alloc] init];
+    NSMutableArray *sortedTrunks = [[NSMutableArray alloc] init];
+    
+    copiedTrunks = self.parseLocations;
+    
+    // sort by recent photos
+    for (Trip *aTrip in copiedTrunks) {
+        NSDate *photoTimeStamp = aTrip.publicTripDetail.mostRecentPhoto;
+        if (!photoTimeStamp) {
+            photoTimeStamp = aTrip.publicTripDetail.createdAt;
+        }
+        double timeDiff =[photoTimeStamp timeIntervalSinceNow];
+        
+        NSDictionary *aTripDict = [[NSDictionary alloc]initWithObjectsAndKeys:aTrip,@"trip",@(fabs(timeDiff)),@"timeValue", nil];
+        
+        [tempArray1 addObject:aTripDict];
+    }
+    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"timeValue"  ascending:YES];
+    tempArray2 = [[NSArray arrayWithArray:tempArray1] sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
+    
+    for (NSDictionary *aTripDict in tempArray2) {
+        [sortedTrunks addObject:aTripDict[@"trip"]];
+    }
+    
+    self.parseLocations = sortedTrunks;
+    
+    [self sortIntoHotOrNot];
+    
 }
 
 @end
