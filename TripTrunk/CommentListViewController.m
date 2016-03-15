@@ -425,7 +425,7 @@
         //force the popover to display like an iPad popover otherwise it will be full screen
         self.popover  = self.autocompletePopover.popoverPresentationController;
         self.popover.delegate = self;
-        self.popover.sourceView = self.commentInputView;
+        self.popover.sourceView = self.commentInputView.commentField;
         self.popover.sourceRect = [self.commentInputView bounds];
         self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
         
