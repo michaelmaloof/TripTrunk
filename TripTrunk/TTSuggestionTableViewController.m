@@ -12,6 +12,7 @@
 #import "TTSuggestionViewCell.h"
 #import "TTUtility.h"
 #import "Trip.h"
+#import "TTCache.h"
 
 @interface TTSuggestionTableViewController()
 @property unsigned long popoverHeight;
@@ -24,6 +25,11 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.photos = [[NSMutableDictionary alloc] init];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    
 }
 
 #pragma mark - UITableViewDelegate and DataSource Methods
@@ -171,46 +177,82 @@
 }
 
 -(void)buildFollowingUsersListWithBlock:(void (^)(BOOL, NSError *))completionBlock{
-    //Ask SocialUtility to return this user's followingUsers
-    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error){
-        if(!error){
-            //Loop through all of the followingUsers
-            for(PFUser *user in users){
-                //Check to see if the user is in the array already
-                if(![self array:self.friendsArray containsPFObjectById:user]){
-                    //if not, add the user to the array
-                    [self.friendsArray addObject:user];
-                }
+    
+    NSMutableArray *friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+    if(friends.count > 0){
+        
+        for(PFUser *user in friends){
+            if(![self array:self.friendsArray containsPFObjectById:user]){
+                //if not, add the user to the array
+                [self.friendsArray addObject:user];
             }
-            //tell the block to finish with success
-            completionBlock(YES, nil);
-        }else{
-            NSLog(@"Error: %@",error);
-            //tell the block to finish with failure
-            completionBlock(NO, error);
         }
-    }];
+        
+        //tell the block to finish with success
+        completionBlock(YES, nil);
+        
+    }else{
+    
+        //Ask SocialUtility to return this user's followingUsers
+        [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error){
+            if(!error){
+                //Loop through all of the followingUsers
+                for(PFUser *user in users){
+                    //Check to see if the user is in the array already
+                    if(![self array:self.friendsArray containsPFObjectById:user]){
+                        //if not, add the user to the array
+                        [self.friendsArray addObject:user];
+                    }
+                }
+                //tell the block to finish with success
+                completionBlock(YES, nil);
+            }else{
+                NSLog(@"Error: %@",error);
+                //tell the block to finish with failure
+                completionBlock(NO, error);
+            }
+        }];
+        
+    }
 }
 
 -(void)buildFollowersListWithBlock:(void (^)(BOOL, NSError *))completionBlock{
-    [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-        if(!error){
-            //Loop through all of the followingUsers
-            for(PFUser *user in users){
-                //Check to see if the user is in the array already
-                if(![self array:self.friendsArray containsPFObjectById:user]){
-                    //if not, add the user to the array
-                    [self.friendsArray addObject:user];
-                }
+    
+    NSMutableArray *friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+    if(friends.count > 0){
+        
+        for(PFUser *user in friends){
+            if(![self array:self.friendsArray containsPFObjectById:user]){
+                //if not, add the user to the array
+                [self.friendsArray addObject:user];
             }
-            //tell the block to finish with success
-            completionBlock(YES, nil);
-        }else{
-            NSLog(@"Error: %@",error);
-            //tell the block to finish with failure
-            completionBlock(NO, error);
         }
-    }];
+        
+        //tell the block to finish with success
+        completionBlock(YES, nil);
+        
+    }else{
+    
+        [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+            if(!error){
+                //Loop through all of the followingUsers
+                for(PFUser *user in users){
+                    //Check to see if the user is in the array already
+                    if(![self array:self.friendsArray containsPFObjectById:user]){
+                        //if not, add the user to the array
+                        [self.friendsArray addObject:user];
+                    }
+                }
+                //tell the block to finish with success
+                completionBlock(YES, nil);
+            }else{
+                NSLog(@"Error: %@",error);
+                //tell the block to finish with failure
+                completionBlock(NO, error);
+            }
+        }];
+        
+    }
 }
 
 -(BOOL)displayFollowers:(Photo*)photo{
