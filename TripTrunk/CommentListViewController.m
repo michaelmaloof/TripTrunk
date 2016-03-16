@@ -417,39 +417,41 @@
 }
 
 -(void)displayAutocompletePopoverFromView:(NSString *)text{
-    if(!self.autocompletePopover.delegate){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-        self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
-        
-        //force the popover to display like an iPad popover otherwise it will be full screen
-        self.popover  = self.autocompletePopover.popoverPresentationController;
-        self.popover.delegate = self;
-        self.popover.sourceView = self.commentInputView.commentField;
-        self.popover.sourceRect = [self.commentInputView bounds];
-        self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
-        
-        //Build the friends list for the table view in the popover and wait
-        NSDictionary *data = @{
-                               @"trunkMembers" : self.trunkMembers,
-                               @"trip" : self.trip,
-                               @"photo" : self.photo
-                               };
-        [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
-            if(succeeded){
-                //send the current word to the Popover to use for comparison
-                self.autocompletePopover.mentionText = text;
-                [self.autocompletePopover updateAutocompleteTableView];
-                //If there are friends to display, now show the popup on the screen
-                if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
-                    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
-                    self.autocompletePopover.delegate = self;
-                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+    if([self displayAutocompletePopover:text]){
+        if(!self.autocompletePopover.delegate){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+            self.autocompletePopover.modalPresentationStyle = UIModalPresentationPopover;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.autocompletePopover.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.commentInputView.commentField;
+            self.popover.sourceRect = [self.commentInputView bounds];
+            self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+            
+            //Build the friends list for the table view in the popover and wait
+            NSDictionary *data = @{
+                                   @"trunkMembers" : self.trunkMembers,
+                                   @"trip" : self.trip,
+                                   @"photo" : self.photo
+                                   };
+            [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+                if(succeeded){
+                    //send the current word to the Popover to use for comparison
+                    self.autocompletePopover.mentionText = text;
+                    [self.autocompletePopover updateAutocompleteTableView];
+                    //If there are friends to display, now show the popup on the screen
+                    if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                        self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                        self.autocompletePopover.delegate = self;
+                        [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                    }
+                }else{
+                    NSLog(@"Error: %@",error);
                 }
-            }else{
-                NSLog(@"Error: %@",error);
-            }
-        }];
+            }];
+        }
     }
     
     //Update the table view in the popover but only if it is currently displayed
