@@ -8,6 +8,8 @@
 
 #import "TTHashtagMentionColorization.h"
 #import <UIKit/UIKit.h>
+#import "TTColor.h"
+#import "TTFont.h"
 
 @implementation TTHashtagMentionColorization
 
@@ -15,10 +17,9 @@
     //Convert caption to Mutable and Attributed
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:text];
     NSError *error = nil;
-    //Set the mention and hashtog font color <-- need to use TripTrunk app blue
-    UIColor *fontColor = [UIColor blueColor];
     //create the attribute to change mentions and hastags blue
-    [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica Neue" size:14] range:NSMakeRange(0, text.length)];
+    [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFont] range:NSMakeRange(0, text.length)];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, text.length)];
     
     //Use regular expressions to search through the string and search for the #(letter) pattern
     //This is currently turned off so hastags will remain black
@@ -37,13 +38,9 @@
     //Loop through all the regular expression matches and wrap them in the attributed properties
     for(NSTextCheckingResult * matchAt in matchesAt){
         NSRange wordRangeAt = [matchAt rangeAtIndex:0];
-        [string addAttribute:NSForegroundColorAttributeName value:fontColor range:wordRangeAt];
+        [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFontBold] range:wordRangeAt];
+        [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkBlueLinkColor] range:wordRangeAt];
     }
-    
-//    //Update caption uitextview field
-//    self.caption.attributedText = string;
-//    //make sure the cursor is in the proper place while typing
-//    [self.caption setSelectedRange:NSMakeRange(cursorPosition, 0)];
     
     return string;
 }

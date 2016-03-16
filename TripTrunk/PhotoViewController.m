@@ -1245,9 +1245,9 @@
 
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    NSRange cursorPosition = [textView selectedRange];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+//    NSRange cursorPosition = [textView selectedRange];
+//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+//    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
     return YES;
 }
 
@@ -1255,6 +1255,9 @@
 - (void)textViewDidChange:(UITextView *)textView{
     //get the word that the user is currently typing
     NSRange cursorPosition = [textView selectedRange];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
     

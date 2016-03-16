@@ -354,13 +354,7 @@
     
 }
 
-
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSRange cursorPosition = [textView selectedRange];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-    
-    
     NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
     if ([text length] == 1 && resultRange.location != NSNotFound) {
         [textView resignFirstResponder];
@@ -606,17 +600,13 @@
 }
 
 #pragma mark - UITextViewDelegate
-//- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-//    NSRange cursorPosition = [textView selectedRange];
-//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
-//    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-//    return YES;
-//}
-
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
     //get the word that the user is currently typing
     NSRange cursorPosition = [textView selectedRange];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
     

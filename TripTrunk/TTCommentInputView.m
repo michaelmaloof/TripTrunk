@@ -276,21 +276,16 @@ UIView *topView;
 
 //############################################# MENTIONS ##################################################
 #pragma mark - UITextFieldDelegate
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    UITextRange *cursorPosition = [textField selectedTextRange];
-    //FIXME: Cursor position is not being used here, refactor!
-    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
-    UITextPosition *newPosition = [textField positionFromPosition:cursorPosition.end offset:0];
-    UITextRange *newRange = [textField textRangeFromPosition:newPosition toPosition:cursorPosition.start];
-    [self.commentField setSelectedTextRange:newRange];
-    return YES;
-}
-
-
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
+    UITextRange *selectedRange = [self.commentField selectedTextRange];
+    //FIXME: Cursor position is not being used here, refactor!
+    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
+    UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.end offset:0];
+    UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
+    [self.commentField setSelectedTextRange:newRange];
+    
     //get the word that the user is currently typing
-    UITextRange* selectedRange = [self.commentField selectedTextRange];
     NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
     NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];

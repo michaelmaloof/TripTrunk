@@ -24,6 +24,8 @@
  ***********************************************************************************/
 
 #import "KILabel.h"
+#import "TTColor.h"
+#import "TTFont.h"
 
 NSString * const KILabelLinkTypeKey = @"linkType";
 NSString * const KILabelRangeKey = @"range";
@@ -248,7 +250,8 @@ NSString * const KILabelLinkKey = @"link";
     
     if (!attributes)
     {
-        attributes = @{NSForegroundColorAttributeName : self.tintColor};
+        attributes = @{NSForegroundColorAttributeName : [TTColor tripTrunkBlueLinkColor],
+                       NSFontAttributeName : [TTFont tripTrunkCommentFontBold]};
     }
     
     return attributes;
@@ -354,7 +357,7 @@ NSString * const KILabelLinkKey = @"link";
     paragraph.alignment = self.textAlignment;
     
     // Create the dictionary
-    NSDictionary *attributes = @{NSFontAttributeName : self.font,
+    NSDictionary *attributes = @{NSFontAttributeName : [TTFont tripTrunkCommentFont],
                                  NSForegroundColorAttributeName : color,
                                  NSShadowAttributeName : shadow,
                                  NSParagraphStyleAttributeName : paragraph,

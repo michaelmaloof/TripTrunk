@@ -53,6 +53,8 @@
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
+		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
+		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
 		272A4AE21C73770D00700DCA /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE11C73770D00700DCA /* KILabel.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
@@ -210,6 +212,10 @@
 		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
+		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
+		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
+		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
+		2715140F1C99E0F80054E43F /* TTFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTFont.m; sourceTree = "<group>"; };
 		272A4AE01C73770D00700DCA /* KILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KILabel.h; sourceTree = "<group>"; };
 		272A4AE11C73770D00700DCA /* KILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KILabel.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
@@ -553,6 +559,10 @@
 				27A581431C888D910095ED94 /* TTPushNotificationHandler.m */,
 				27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */,
 				27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */,
+				2715140B1C99D8AF0054E43F /* TTColor.h */,
+				2715140C1C99D8AF0054E43F /* TTColor.m */,
+				2715140E1C99E0F80054E43F /* TTFont.h */,
+				2715140F1C99E0F80054E43F /* TTFont.m */,
 				220408DD1AED559A009DB060 /* Presentation */,
 				220408E11AED564A009DB060 /* Model */,
 				224F3F9C1AE1D35E003A1DEB /* Images.xcassets */,
@@ -898,6 +908,7 @@
 				22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
+				271514101C99E0F80054E43F /* TTFont.m in Sources */,
 				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
 				C9F6B4F81B5575E8003BD4D5 /* UIColor+HexColors.m in Sources */,
@@ -941,6 +952,7 @@
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
 				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
+				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
