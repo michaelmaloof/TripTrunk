@@ -80,85 +80,100 @@
     Photo *photo = data[@"photo"];
     NSArray *members = data[@"trunkMembers"];
     
-    if(members && members.count > 0){
-        [self.friendsArray addObjectsFromArray:data[@"trunkMembers"]];
-        
-        if([[trip objectForKey:@"isPrivate"] boolValue]){
-            completionBlock(YES, nil);
-        }else{
-        
-            if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
-                //Ask SocialUtility to return this user's followers
-                [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
-                    //Ask SocialUtility to return this user's following Users
-                    [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
-                        //tell the block to finish with success
-                        completionBlock(YES, nil);
-                    }];
-                }];
-                
-            }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
-                //Ask SocialUtility to return this user's followers
-                [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
-                    //tell the block to finish with success
-                    completionBlock(YES, nil);
-                }];
-                
-            }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
-                //Ask SocialUtility to return this user's following Users
-                [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
-                    //tell the block to finish with success
-                    completionBlock(YES, nil);
-                }];
-            }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
-                //display only trunk members
-                completionBlock(YES, nil);
-            }
-            
-        }
-        
-    }else{
+    [photo.user fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if(!error){
     
-        //Ask SocialUtility to return this user's followers
-        [self buildTrunkMembersList:trip block:^(BOOL success, NSError *error) {
-            
-            if([[trip objectForKey:@"isPrivate"] boolValue]){
-                completionBlock(YES, nil);
-            }else{
-    
-                if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
-                    //Ask SocialUtility to return this user's followers
-                    [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+    [trip fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if(!error){
+            if(members && members.count > 0){
+                [self.friendsArray addObjectsFromArray:data[@"trunkMembers"]];
+                
+                if([[trip objectForKey:@"isPrivate"] boolValue]){
+                    completionBlock(YES, nil);
+                }else{
+                
+                    if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
+                        //Ask SocialUtility to return this user's followers
+                        [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                            //Ask SocialUtility to return this user's following Users
+                            [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                                //tell the block to finish with success
+                                completionBlock(YES, nil);
+                            }];
+                        }];
+                        
+                    }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                        //Ask SocialUtility to return this user's followers
+                        [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                            //tell the block to finish with success
+                            completionBlock(YES, nil);
+                        }];
+                        
+                    }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
                         //Ask SocialUtility to return this user's following Users
                         [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
                             //tell the block to finish with success
                             completionBlock(YES, nil);
                         }];
-                    }];
-                    
-                }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
-                    //Ask SocialUtility to return this user's followers
-                    [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
-                        //tell the block to finish with success
+                    }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                        //display only trunk members
                         completionBlock(YES, nil);
-                    }];
+                    }
                     
-                }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
-                    
-                    //Ask SocialUtility to return this user's following Users
-                    [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
-                        //tell the block to finish with success
-                        completionBlock(YES, nil);
-                    }];
-                }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
-                    //display only trunk members
-                    completionBlock(YES, nil);
                 }
                 
-            }
+            }else{
             
-        }];
-    }
+                //Ask SocialUtility to return this user's followers
+                [self buildTrunkMembersList:trip block:^(BOOL success, NSError *error) {
+                    
+                    if([[trip objectForKey:@"isPrivate"] boolValue]){
+                        completionBlock(YES, nil);
+                    }else{
+            
+                        if ([self displayFollowers:photo] && [self displayFollowingUsers:photo]) {
+                            //Ask SocialUtility to return this user's followers
+                            [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                                //Ask SocialUtility to return this user's following Users
+                                [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                                    //tell the block to finish with success
+                                    completionBlock(YES, nil);
+                                }];
+                            }];
+                            
+                        }else if([self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                            //Ask SocialUtility to return this user's followers
+                            [self buildFollowersListWithBlock:^(BOOL success, NSError *error) {
+                                //tell the block to finish with success
+                                completionBlock(YES, nil);
+                            }];
+                            
+                        }else if(![self displayFollowers:photo] && [self displayFollowingUsers:photo]){
+                            
+                            //Ask SocialUtility to return this user's following Users
+                            [self buildFollowingUsersListWithBlock:^(BOOL success, NSError *error) {
+                                //tell the block to finish with success
+                                completionBlock(YES, nil);
+                            }];
+                        }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                            //display only trunk members
+                            completionBlock(YES, nil);
+                        }
+                        
+                    }
+                    
+                }];
+            }
+        }else{
+            completionBlock(NO, error);
+        }
+        
+    }];
+            
+        }
+        
+    }];
+
 
 }
 

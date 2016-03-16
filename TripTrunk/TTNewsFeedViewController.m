@@ -571,6 +571,7 @@
     photoViewController.photos = [self returnPhotosForView:photo];
     photoViewController.arrayInt = 0;
      photoViewController.fromTimeline = YES;
+    photoViewController.trip = photo.trip;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 

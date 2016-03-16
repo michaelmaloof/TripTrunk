@@ -36,6 +36,10 @@
 //                    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
 //                    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
 //                    [homeNavController setSelectedIndex:0];
+                    Photo *myPhoto = (Photo *)photo;
+                    NSArray *trunkMembers = [[NSArray alloc] init];
+                    vc.trip = myPhoto.trip;
+                    vc.trunkMembers = trunkMembers;
                     [controller pushViewController:vc animated:YES];
                     
                 }else {
@@ -67,10 +71,13 @@
                     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
                     [photoQuery getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
                         if (!error) {
-                            
+                            Photo *myPhoto = (Photo *)photo;
+                            NSArray *trunkMembers = [[NSArray alloc] init];
                             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                             PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-                            photoViewController.photo = (Photo *)photo;
+                            photoViewController.photo = myPhoto;
+                            photoViewController.trip = myPhoto.trip;
+                            photoViewController.trunkMembers = trunkMembers;
                             photoViewController.fromNotification = YES;
                             
                             [controller pushViewController:photoViewController animated:YES];
