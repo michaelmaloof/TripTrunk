@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTUserProfileImage.h"
 
 @interface TTSuggestionViewCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UIImageView *userPhoto;
+@property (strong, nonatomic) IBOutlet TTUserProfileImage *userPhoto;
 @property (strong, nonatomic) IBOutlet UILabel *userFullName;
 @property (strong, nonatomic) IBOutlet UILabel *username;
 

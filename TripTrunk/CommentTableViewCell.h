@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "KILabel.h"
+#import "TTUserProfileImage.h"
 
 @protocol CommentTableViewCellDelegate;
 
@@ -16,7 +17,7 @@
 
 @property (nonatomic, strong) id<CommentTableViewCellDelegate> delegate;
 
-@property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
+@property (weak, nonatomic) IBOutlet TTUserProfileImage *profilePicImageView;
 @property (weak, nonatomic) IBOutlet KILabel *contentLabel;
 @property (nonatomic, strong, readonly) PFUser *user;
 @property (nonatomic, strong, readonly) NSDictionary *activity;
