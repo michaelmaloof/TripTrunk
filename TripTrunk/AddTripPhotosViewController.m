@@ -624,6 +624,10 @@
             self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
+            if(!self.trunkMembers)
+                self.trunkMembers = [[NSArray alloc] init];
+            
+            
             //Build the friends list for the table view in the popover and wait
             NSDictionary *data = @{
                                    @"trunkMembers" : self.trunkMembers,
