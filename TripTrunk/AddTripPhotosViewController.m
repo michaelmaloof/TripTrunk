@@ -627,12 +627,15 @@
             if(!self.trunkMembers)
                 self.trunkMembers = [[NSArray alloc] init];
             
+            Photo *photo = [self.photos objectAtIndex:self.path];
+            if(!photo)
+                photo = [[Photo alloc] init];
             
             //Build the friends list for the table view in the popover and wait
             NSDictionary *data = @{
                                    @"trunkMembers" : self.trunkMembers,
                                    @"trip" : self.trip,
-                                   @"photo" : [self.photos objectAtIndex:self.path]
+                                   @"photo" : photo
                                    };
             [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
                 if(succeeded){

@@ -78,8 +78,9 @@
     self.friendsArray = [[NSMutableArray alloc] init];
     Trip *trip = data[@"trip"];
     Photo *photo = data[@"photo"];
+    NSArray *members = data[@"trunkMembers"];
     
-    if(data[@"trunkMembers"]){
+    if(members && members.count > 0){
         [self.friendsArray addObjectsFromArray:data[@"trunkMembers"]];
         
         if([[trip objectForKey:@"isPrivate"] boolValue]){
@@ -112,7 +113,7 @@
             }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
                 //display only trunk members
                 completionBlock(YES, nil);
-        }
+            }
             
         }
         
@@ -149,6 +150,9 @@
                         //tell the block to finish with success
                         completionBlock(YES, nil);
                     }];
+                }else if(![self displayFollowers:photo] && ![self displayFollowingUsers:photo]){
+                    //display only trunk members
+                    completionBlock(YES, nil);
                 }
                 
             }

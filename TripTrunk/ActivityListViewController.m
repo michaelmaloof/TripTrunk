@@ -789,6 +789,7 @@ enum TTActivityViewType : NSUInteger {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     photoViewController.photo = (Photo *)photo;
+    photoViewController.trip = (Trip*)photo.trip;
     
     [self.navigationController showViewController:photoViewController sender:self];
     
