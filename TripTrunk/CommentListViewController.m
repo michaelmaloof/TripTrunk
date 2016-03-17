@@ -430,7 +430,8 @@
             self.popover.sourceRect = [self.commentInputView bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            if([[TTCache sharedCache] mentionUsers]){
+            //FIXME: Do we want to check count? Count of 0 may be corret.
+            if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0){
                 
                 self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
                 

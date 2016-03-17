@@ -85,6 +85,9 @@
     
     self.caption.delegate = self;
     
+    //############################################# MENTIONS ##################################################
+    [self buildMentionUsersCache];
+    //############################################# MENTIONS ##################################################
 }
 
 
@@ -622,7 +625,8 @@
             self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            if([[TTCache sharedCache] mentionUsers]){
+            //FIXME: Do we want to check count? Count of 0 may be corret.
+            if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0){
                 
                 self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
                 
@@ -763,6 +767,58 @@
 {
     // Return no adaptive presentation style, use default presentation behaviour
     return UIModalPresentationNone;
+}
+
+-(void)buildMentionUsersCache{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    
+    //This is the prevent a crash
+    if(!self.trunkMembers)
+        self.trunkMembers = [[NSArray alloc] init];
+    
+    //make sure current user is in the array
+    NSMutableArray *members = [NSMutableArray arrayWithArray:self.trunkMembers];
+    if(![self array:members containsPFObjectById:[PFUser currentUser]]){
+        //if not, add the user to the array
+        [members addObject:[PFUser currentUser]];
+    }
+    
+    //set trunkMembers to new array
+    self.trunkMembers = members;
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    if(!self.trip)
+        self.trip = [[Trip alloc] init];
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    Photo *photo = [[Photo alloc] init];
+    photo.user = [PFUser currentUser];
+    photo.trip = self.trip;
+    
+    //Build the friends list for the table view in the popover and wait
+    NSDictionary *data = @{
+                           @"trunkMembers" : self.trunkMembers,
+                           @"trip" : self.trip,
+                           @"photo" : photo
+                           };
+    [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+        if(succeeded){
+            [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
+}
+
+//Check if the object's objectId matches the objectId of any member of the array.
+- (BOOL) array:(NSArray *)array containsPFObjectById:(PFObject *)object{
+    for (PFObject *arrayObject in array){
+        if ([[arrayObject objectId] isEqual:[object objectId]]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 //############################################# MENTIONS ##################################################

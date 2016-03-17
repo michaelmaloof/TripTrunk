@@ -622,6 +622,7 @@
 
     AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
     addTripPhotosViewController.trip = self.trip;
+    addTripPhotosViewController.trunkMembers = self.membersToAdd;
     addTripPhotosViewController.isTripCreation = YES;
     
 }
