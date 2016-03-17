@@ -1445,6 +1445,11 @@
     }];
 }
 
+#pragma mark - UIPopoverControllerDelegate
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    self.popover.delegate = nil;
+    self.autocompletePopover = nil;
+}
 //############################################# MENTIONS ##################################################
 
 

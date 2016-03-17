@@ -591,6 +591,12 @@
 -(BOOL)isLinkAHashtag:(NSString*)link{
     return [[link substringToIndex:1] isEqualToString:@"#"] ? YES : NO;
 }
+
+#pragma mark - UIPopoverControllerDelegate
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    self.popover.delegate = nil;
+    self.autocompletePopover = nil;
+}
 //############################################# MENTIONS ##################################################
 
 #pragma mark -
