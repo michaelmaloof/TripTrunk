@@ -8,7 +8,6 @@
 
 #import "CommentListViewController.h"
 #import "UIImageView+AFNetworking.h"
-
 #import "SocialUtility.h"
 #import "UserProfileViewController.h"
 #import "CommentTableViewCell.h"
@@ -18,6 +17,7 @@
 #import "KILabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
+#import "TTCache.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
@@ -430,30 +430,49 @@
             self.popover.sourceRect = [self.commentInputView bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            if(!self.trunkMembers)
-                self.trunkMembers = [[NSArray alloc] init];
-            
-            //Build the friends list for the table view in the popover and wait
-            NSDictionary *data = @{
-                                   @"trunkMembers" : self.trunkMembers,
-                                   @"trip" : self.trip,
-                                   @"photo" : self.photo
-                                   };
-            [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
-                if(succeeded){
-                    //send the current word to the Popover to use for comparison
-                    self.autocompletePopover.mentionText = text;
-                    [self.autocompletePopover updateAutocompleteTableView];
-                    //If there are friends to display, now show the popup on the screen
-                    if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
-                        self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
-                        self.autocompletePopover.delegate = self;
-                        [self presentViewController:self.autocompletePopover animated:YES completion:nil];
-                    }
-                }else{
-                    NSLog(@"Error: %@",error);
+            if([[TTCache sharedCache] mentionUsers]){
+                
+                self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
+                
+                self.autocompletePopover.mentionText = text;
+                [self.autocompletePopover updateAutocompleteTableView];
+                //If there are friends to display, now show the popup on the screen
+                if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                    self.autocompletePopover.delegate = self;
+                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
                 }
-            }];
+                
+            }else{
+                
+                if(!self.trunkMembers)
+                    self.trunkMembers = [[NSArray alloc] init];
+                
+                //Build the friends list for the table view in the popover and wait
+                NSDictionary *data = @{
+                                       @"trunkMembers" : self.trunkMembers,
+                                       @"trip" : self.trip,
+                                       @"photo" : self.photo
+                                       };
+                [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+                    if(succeeded){
+                        [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
+                        //send the current word to the Popover to use for comparison
+                        NSLog(@"text: %@",text);
+                        self.autocompletePopover.mentionText = text;
+                        [self.autocompletePopover updateAutocompleteTableView];
+                        //If there are friends to display, now show the popup on the screen
+                        if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                            self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                            self.autocompletePopover.delegate = self;
+                            [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                        }
+                    }else{
+                        NSLog(@"Error: %@",error);
+                    }
+                }];
+                
+            }
         }
     }
     

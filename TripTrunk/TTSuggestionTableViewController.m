@@ -79,11 +79,11 @@
     Trip *trip = data[@"trip"];
     Photo *photo = data[@"photo"];
     NSArray *members = data[@"trunkMembers"];
-    
-    [photo.user fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+
+    [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
     
-    [trip fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    [trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
             if(members && members.count > 0){
                 [self.friendsArray addObjectsFromArray:data[@"trunkMembers"]];

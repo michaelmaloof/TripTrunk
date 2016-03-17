@@ -14,6 +14,7 @@ NSString *const kTTUserDefaultsCacheFacebookFriendsKey      = @"com.triptrunk.Tr
 NSString *const kTTUserDefaultsCachePromotedUsersKey        = @"com.triptrunk.TripTrunk.userDefaults.cache.promotedUsers";
 NSString *const kTTFollowingKey                             = @"followingUsers";
 NSString *const kTTFollowersKey                             = @"usersWhoFollow";
+NSString *const kTTMentionUsersKey                          = @"mentionUsers";
 NSString *const kTTUserTripsKey                             = @"userTripsKey";
 
 NSString *const kTTPhotoAttributesIsLikedByCurrentUserKey = @"isLikedByCurrentUser";
@@ -322,6 +323,14 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     NSArray *friends = [NSArray array];
     
     return friends;
+}
+
+- (void)setMentionUsers:(NSArray *)users{
+    [self.cache setObject:users forKey:kTTMentionUsersKey];
+}
+
+- (NSArray *)mentionUsers{
+    return [self.cache objectForKey:kTTMentionUsersKey] ? [self.cache objectForKey:kTTMentionUsersKey] : [NSArray array];
 }
 
 #pragma mark - Trips

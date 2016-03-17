@@ -279,18 +279,17 @@ UIView *topView;
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
     UITextRange *selectedRange = [self.commentField selectedTextRange];
+    //get the word that the user is currently typing
+    NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
+    NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
+    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+    [self.delegate displayAutocompletePopoverFromView:lastWord];
+    
     //FIXME: Cursor position is not being used here, refactor!
     self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
     UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.end offset:0];
     UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
     [self.commentField setSelectedTextRange:newRange];
-    
-    //get the word that the user is currently typing
-    NSInteger cursorOffset = [self.commentField offsetFromPosition:self.commentField.beginningOfDocument toPosition:selectedRange.start];
-    NSString* substring = [self.commentField.text substringToIndex:cursorOffset];
-    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-    
-    [self.delegate displayAutocompletePopoverFromView:lastWord];
 
 }
 

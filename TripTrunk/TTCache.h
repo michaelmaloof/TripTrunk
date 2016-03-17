@@ -123,6 +123,20 @@
 - (NSArray *)followers;
 
 /**
+ *  Set the cache for the mentioned users list
+ *
+ *  @param followers Array of PFUser objects
+ */
+- (void)setMentionUsers:(NSArray *)users;
+
+/**
+ *  Get the cached mentions list
+ *
+ *  @return Array of PFUser objects
+ */
+- (NSArray *)mentionUsers;
+
+/**
  *  Set the cache for the current user's trips
  *
  *  @param trips Array of Trip objects

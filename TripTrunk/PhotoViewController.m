@@ -181,6 +181,8 @@
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
     
+    [self buildMentionUsersCache];
+    
 //############################################# MENTIONS ##################################################
 
 }
@@ -1255,9 +1257,6 @@
 - (void)textViewDidChange:(UITextView *)textView{
     //get the word that the user is currently typing
     NSRange cursorPosition = [textView selectedRange];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-    
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];
     NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
     
@@ -1275,30 +1274,48 @@
             self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            if(!self.trunkMembers)
-                self.trunkMembers = [[NSArray alloc] init];
-        
-            //Build the friends list for the table view in the popover and wait
-            NSDictionary *data = @{
-                                   @"trunkMembers" : self.trunkMembers,
-                                   @"trip" : self.trip,
-                                   @"photo" : self.photo
-                                   };
-            [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
-                if(succeeded){
-                    //send the current word to the Popover to use for comparison
-                    self.autocompletePopover.mentionText = lastWord;
-                    [self.autocompletePopover updateAutocompleteTableView];
-                    //If there are friends to display, now show the popup on the screen
-                    if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
-                        self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
-                        self.autocompletePopover.delegate = self;
-                        [self presentViewController:self.autocompletePopover animated:YES completion:nil];
-                    }
-                }else{
-                    NSLog(@"Error: %@",error);
+            if([[TTCache sharedCache] mentionUsers]){
+                
+                self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
+                
+                self.autocompletePopover.mentionText = lastWord;
+                [self.autocompletePopover updateAutocompleteTableView];
+                //If there are friends to display, now show the popup on the screen
+                if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                    self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                    self.autocompletePopover.delegate = self;
+                    [self presentViewController:self.autocompletePopover animated:YES completion:nil];
                 }
-            }];
+                
+            }else{
+            
+                if(!self.trunkMembers)
+                    self.trunkMembers = [[NSArray alloc] init];
+            
+                //Build the friends list for the table view in the popover and wait
+                NSDictionary *data = @{
+                                       @"trunkMembers" : self.trunkMembers,
+                                       @"trip" : self.trip,
+                                       @"photo" : self.photo
+                                       };
+                [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+                    if(succeeded){
+                        [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
+                        //send the current word to the Popover to use for comparison
+                        self.autocompletePopover.mentionText = lastWord;
+                        [self.autocompletePopover updateAutocompleteTableView];
+                        //If there are friends to display, now show the popup on the screen
+                        if(self.autocompletePopover.displayFriendsArray.count > 0 || self.autocompletePopover.displayFriendsArray != nil){
+                            self.autocompletePopover.preferredContentSize = CGSizeMake([self.autocompletePopover preferredWidthForPopover], [self.autocompletePopover preferredHeightForPopover]);
+                            self.autocompletePopover.delegate = self;
+                            [self presentViewController:self.autocompletePopover animated:YES completion:nil];
+                        }
+                    }else{
+                        NSLog(@"Error: %@",error);
+                    }
+                }];
+                
+            }
 
         }
     }
@@ -1315,6 +1332,9 @@
         self.popover.delegate = nil;
         self.autocompletePopover = nil;
     }
+    
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
 //Only true if user has typed an @ and a letter and if the popover is not showing
@@ -1391,6 +1411,37 @@
 {
     // Return no adaptive presentation style, use default presentation behaviour
     return UIModalPresentationNone;
+}
+
+-(void)buildMentionUsersCache{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    
+    //This is the prevent a crash
+    if(!self.trunkMembers)
+        self.trunkMembers = [[NSArray alloc] init];
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    if(!self.trip)
+        self.trip = [[Trip alloc] init];
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    if(!self.photo)
+        self.photo = [[Photo alloc] init];
+    
+    //Build the friends list for the table view in the popover and wait
+    NSDictionary *data = @{
+                           @"trunkMembers" : self.trunkMembers,
+                           @"trip" : self.trip,
+                           @"photo" : self.photo
+                           };
+    [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+        if(succeeded){
+            [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
 }
 
 //############################################# MENTIONS ##################################################
