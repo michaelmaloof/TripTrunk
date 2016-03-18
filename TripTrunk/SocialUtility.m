@@ -25,6 +25,17 @@
     return user;
 }
 
++ (void)loadUserFromUsername:(NSString*)username block:(void (^)(PFUser* user, NSError *error))completionBlock{
+    
+    //Connect to Parse and grab the PFUser from the username
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"username" equalTo:username];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        completionBlock((PFUser*)object, error);
+    }];
+    
+}
+
 + (void)followUserInBackground:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock
 {
     if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {

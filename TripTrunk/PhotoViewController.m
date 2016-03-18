@@ -58,6 +58,7 @@
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
+@property (strong, nonatomic) NSMutableArray *softMentions;
 //############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
@@ -163,9 +164,48 @@
     [self refreshPhotoActivitiesWithUpdateNow:NO];
 
 //############################################# MENTIONS ##################################################
+    
+    [self buildMentionUsersCache];
+    
+    self.softMentions = [[NSMutableArray alloc] init];
+    if([self.photo[@"caption"] containsString:@"@"]){
+        NSArray *mentionArray = [self.photo[@"caption"] componentsSeparatedByString:@" "];
+        for(NSString *username in mentionArray){
+            if([username length] > 0){
+                if([[username substringToIndex:1] isEqualToString:@"@"]){
+
+                    //check if user already exists in softMention Array
+                    PFUser *user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:username]];
+                    
+                    //If it doesn't exist in softMentions, check if it is already in cache
+                    if(!user)
+                        user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:username]];
+                    
+                    //If it isn't in cache, get it from Parse
+                    if(!user){
+                        [SocialUtility loadUserFromUsername:[self getUsernameFromLink:username] block:^(PFUser *user, NSError *error) {
+                            if(user)
+                                [self.softMentions addObject:user];
+                            else NSLog(@"Error: %@",error);
+                        }];
+                    }
+                }
+            }
+        }
+    }
+    
     // Attach block for handling taps on usernames
     _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:string]];
+        PFUser *user;
+        
+        //check to see if tapped user exists as a PFObject in the mention cache
+        if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0)
+            user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:string]];
+        
+        //check if user is nil, if so it wasn't in the cache, so go ahead and load it
+        if(!user)
+            user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:string]];
+
         UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
         if(vc)
             [self.navigationController pushViewController:vc animated:YES];
@@ -180,8 +220,6 @@
         // Open URLs
         //        [self attemptOpenURL:[NSURL URLWithString:string]];
     };
-    
-    [self buildMentionUsersCache];
     
 //############################################# MENTIONS ##################################################
 
@@ -1442,6 +1480,26 @@
             NSLog(@"Error: %@",error);
         }
     }];
+}
+
+//Check if the object's objectId matches the objectId of any member of the array.
+- (BOOL) array:(NSArray *)array containsPFObjectById:(PFObject *)object{
+    for (PFObject *arrayObject in array){
+        if ([[arrayObject objectId] isEqual:[object objectId]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+//Check if the user's username matches the username of any member of the array.
+- (PFUser*) array:(NSArray *)array containsPFObjectByUsername:(NSString *)username{
+    for (PFUser *user in array){
+        if ([user.username isEqualToString:username]) {
+            return user;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - UIPopoverControllerDelegate

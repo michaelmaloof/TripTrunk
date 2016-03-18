@@ -22,6 +22,14 @@
 + (PFUser*)loadUserFromUsername:(NSString*)username;
 
 /**
+ *  Load PFUser from username string
+ *
+ *  @param username String to search for user
+  *  @param completionBlock callback with PFUser or error
+ */
++ (void)loadUserFromUsername:(NSString*)username block:(void (^)(PFUser* user, NSError *error))completionBlock;
+
+/**
  *  CurrentUser will follow the given user, asychronous operation
  *
  *  @param user            User to follow
