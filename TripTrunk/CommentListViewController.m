@@ -91,6 +91,23 @@
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
     
+    
+    if(!self.trunkMembers || self.trunkMembers.count == 0){
+        [SocialUtility trunkMembers:self.trip block:^(NSArray *users, NSError *error) {
+            if(!error){
+                self.trunkMembers = [NSArray arrayWithArray:users];
+                if(![[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count == 0)
+                    [self buildMentionUsersCache];
+            }else{
+                NSLog(@"Error: %@",error);
+            }
+        }];
+    }else{
+        if(![[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count == 0)
+            [self buildMentionUsersCache];
+    }
+    
+    
 }
 - (void)viewWillAppear:(BOOL)animated {
 //    self.tabBarController.tabBar.hidden = YES;
@@ -430,7 +447,6 @@
             self.popover.sourceRect = [self.commentInputView bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            //FIXME: Do we want to check count? Count of 0 may be corret.
             if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0){
                 
                 self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
@@ -596,6 +612,37 @@
 - (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
     self.popover.delegate = nil;
     self.autocompletePopover = nil;
+}
+
+-(void)buildMentionUsersCache{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+    
+    //This is the prevent a crash
+    if(!self.trunkMembers)
+        self.trunkMembers = [[NSArray alloc] init];
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    if(!self.trip)
+        self.trip = [[Trip alloc] init];
+    
+    //Added this to prevent a crash but may want to use fetchIfNeeded
+    if(!self.photo)
+        self.photo = [[Photo alloc] init];
+    
+    //Build the friends list for the table view in the popover and wait
+    NSDictionary *data = @{
+                           @"trunkMembers" : self.trunkMembers,
+                           @"trip" : self.trip,
+                           @"photo" : self.photo
+                           };
+    [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
+        if(succeeded){
+            [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
 }
 //############################################# MENTIONS ##################################################
 

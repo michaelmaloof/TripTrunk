@@ -625,8 +625,6 @@
             self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
-            
-            //FIXME: Do we want to check count? Count of 0 may be corret.
             if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0){
                 
                 self.autocompletePopover.friendsArray = [NSMutableArray arrayWithArray:[[TTCache sharedCache] mentionUsers]];
