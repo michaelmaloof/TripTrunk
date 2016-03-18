@@ -89,80 +89,83 @@
     }
     
     // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
-//    [_user fetchIfNeeded];
     [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        self.user = (PFUser*)object;
-    
-        self.title  = self.user.username;
-        [self tabBarTitle];
-    
-        NSString *name;
-        if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
-            name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
-        } else if (self.user[@"firstName"] != nil &&  self.user[@"firstName"] == nil){
-            name = [NSString stringWithFormat:@"%@ %@",self.user[@"firstName"],self.user[@"lastName"]];
-        } else {
-            name = self.user[@"name"];
-        }
-    
-        [self.nameLabel setText:name];
-        [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",self.user[@"username"]]];
-        [self.hometownLabel setText:self.user[@"hometown"]];
-        [self.profilePicImageView setClipsToBounds:YES];
-        [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
-    
-        if (self.user[@"bio"]) {
-            [self.bioTextView setText:self.user[@"bio"]];
-        }else {
-        [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
-        }
-
-        [self.logoutButton setHidden:YES];
-
-        // If it's the current user, set up their profile a bit differently.
-        if ([[self.user objectId] isEqual: [[PFUser currentUser] objectId]]) {
-            [self.followButton setHidden:YES];
-//          [self.logoutButton setHidden:NO];
-
-            // Set Edit button
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings",@"Settings")
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(editButtonPressed:)];
+        if(!error){
+            self.user = (PFUser*)object;
         
+            self.title  = self.user.username;
+            [self tabBarTitle];
         
-            UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
-            picTap.numberOfTapsRequired = 1;
-            self.profilePicImageView.userInteractionEnabled = YES;
-            [self.profilePicImageView addGestureRecognizer:picTap];
+            NSString *name;
+            if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
+                name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
+            } else if (self.user[@"firstName"] != nil &&  self.user[@"firstName"] == nil){
+                name = [NSString stringWithFormat:@"%@ %@",self.user[@"firstName"],self.user[@"lastName"]];
+            } else {
+                name = self.user[@"name"];
+            }
+        
+            [self.nameLabel setText:name];
+            [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",self.user[@"username"]]];
+            [self.hometownLabel setText:self.user[@"hometown"]];
+            [self.profilePicImageView setClipsToBounds:YES];
+            [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
+        
+            if (self.user[@"bio"]) {
+                [self.bioTextView setText:self.user[@"bio"]];
+            }else {
+            [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
+            }
 
-        }
-        // It's not the current user profile. So let's give them an "options" button that lets the block a user
-        else {
-            // Set More button
-            UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"]
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(moreButtonPressed:)];
-            self.navigationItem.rightBarButtonItem = moreButton;
+            [self.logoutButton setHidden:YES];
 
-        }
+            // If it's the current user, set up their profile a bit differently.
+            if ([[self.user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+                [self.followButton setHidden:YES];
+    //          [self.logoutButton setHidden:NO];
 
-        //Check whether user account is private
-        self.privateAccountImageView.hidden = YES;
-        //Add private account icon to user profile pic
-        self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
-        [self.profilePicImageView addSubview:self.privateAccountImageView];
-        [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
-        [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
-        [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
-                                                       self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
-                                                       25.0,
-                                                       25.0)];
-        if ([[self.user valueForKey:@"private"] boolValue]){
-            self.privateAccountImageView.hidden = NO;
-        } else {
+                // Set Edit button
+                self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings",@"Settings")
+                                                                                      style:UIBarButtonItemStylePlain
+                                                                                     target:self
+                                                                                     action:@selector(editButtonPressed:)];
+            
+            
+                UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+                picTap.numberOfTapsRequired = 1;
+                self.profilePicImageView.userInteractionEnabled = YES;
+                [self.profilePicImageView addGestureRecognizer:picTap];
+
+            }
+            // It's not the current user profile. So let's give them an "options" button that lets the block a user
+            else {
+                // Set More button
+                UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"]
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(moreButtonPressed:)];
+                self.navigationItem.rightBarButtonItem = moreButton;
+
+            }
+
+            //Check whether user account is private
             self.privateAccountImageView.hidden = YES;
+            //Add private account icon to user profile pic
+            self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
+            [self.profilePicImageView addSubview:self.privateAccountImageView];
+            [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
+            [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
+            [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
+                                                           self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
+                                                           25.0,
+                                                           25.0)];
+            if ([[self.user valueForKey:@"private"] boolValue]){
+                self.privateAccountImageView.hidden = NO;
+            } else {
+                self.privateAccountImageView.hidden = YES;
+            }
+        }else{
+            NSLog(@"Error: %@",error);
         }
         
     }];

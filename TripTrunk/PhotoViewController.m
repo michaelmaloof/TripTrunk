@@ -207,8 +207,10 @@
             user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:string]];
 
         UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        if(vc)
+        if(vc){
+            vc.user = user;
             [self.navigationController pushViewController:vc animated:YES];
+        }
         
     };
     
