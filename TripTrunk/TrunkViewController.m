@@ -338,7 +338,7 @@
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
         [memberQuery includeKey:@"toUser"];
-
+        [memberQuery setLimit:1000];
     
         [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error)
@@ -444,9 +444,7 @@
     [findPhotosUser includeKey:@"trip.creator"];
     [findPhotosUser includeKey:@"trip"];
     [findPhotosUser includeKey:@"user"];
-
-
-
+    [findPhotosUser setLimit:1000];
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)

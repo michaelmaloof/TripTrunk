@@ -561,6 +561,7 @@
     
     // Get Activities for Photo
     PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+    query.limit = 1000;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];

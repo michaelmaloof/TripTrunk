@@ -409,6 +409,7 @@ CLCloudinary *cloudinary;
     // That SHOULD include all like, and comment activities
     PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
     [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
+    [deleteActivitiesQuery setLimit:1000];
     
     [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
