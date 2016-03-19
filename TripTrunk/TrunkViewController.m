@@ -407,6 +407,7 @@
     [findPhotosUser orderByDescending:@"createdAt"];
     [findPhotosUser includeKey:@"trip.creator"];
     [findPhotosUser includeKey:@"trip.publicTripDetail"];
+    [findPhotosUser setLimit:1000];
 
     
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
