@@ -86,7 +86,7 @@
     [memberQuery whereKey:@"toUser" notEqualTo:_trip.creator];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
-    
+    [memberQuery setLimit:1000];
     
     
     [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

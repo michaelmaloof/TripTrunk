@@ -408,6 +408,7 @@ CLCloudinary *cloudinary;
     // That SHOULD include all like, and comment activities
     PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
     [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
+    [deleteActivitiesQuery setLimit:1000];
     
     [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
@@ -640,11 +641,23 @@ CLCloudinary *cloudinary;
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
 
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
-                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                                                         NSParagraphStyleAttributeName: paraStyle,
-                                                                                         NSKernAttributeName : [NSNull null]
-                                                                                         }];
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
+    
+    if (![type isEqualToString:@"comment"]) {
+    
+        
+        str = [[NSMutableAttributedString alloc] initWithString:contentString
+                                                     attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                  NSParagraphStyleAttributeName: paraStyle,
+                                                                  NSKernAttributeName : [NSNull null]
+                                                                  }];
+        
+    } else {
+        str = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:contentString];
+    }
+    
+    
     
     NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],

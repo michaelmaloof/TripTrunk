@@ -23,6 +23,7 @@
     [query getObjectInBackgroundWithId:photoId block:^(PFObject *photo, NSError *error) {
         if (!error) {
             PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:(Photo*)photo cachePolicy:kPFCachePolicyNetworkOnly];
+            [query setLimit:1000];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
                     NSMutableArray *comments = [[NSMutableArray alloc] init];

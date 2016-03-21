@@ -240,6 +240,7 @@
     // That SHOULD include all addToTrip, like, and comment activities
     PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
     [deleteActivitiesQuery whereKey:@"trip" equalTo:trip];
+    [deleteActivitiesQuery setLimit:1000];
 
     [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
@@ -262,6 +263,7 @@
     // Delete all the photos for this trip
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
     [photoQuery whereKey:@"trip" equalTo:trip];
+    [photoQuery setLimit:1000];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
@@ -304,7 +306,7 @@
     [removeFromTripQuery whereKey:@"toUser" equalTo:user];
     [removeFromTripQuery whereKey:@"type" equalTo:@"addToTrip"];
     [removeFromTripQuery whereKey:@"trip" equalTo:trip];
-    
+    [removeFromTripQuery setLimit:1000];
     [removeFromTripQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
      {
          if (!error) {
@@ -481,7 +483,7 @@
     [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"comment" equalTo:commentObject];
-    
+    [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *object, NSError *error){
         if (!error && object.count != 0){
              [object[0] deleteEventually];
@@ -590,6 +592,7 @@
     [queryExistingLikes whereKey:@"type" equalTo:@"like"];
     [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes setLimit:1000];
     [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];
@@ -881,7 +884,7 @@
     [followingQuery whereKey:@"type" equalTo:@"pending_follow"];
     [followingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [followingQuery includeKey:@"toUser"];
-    [followingQuery setLimit:100];
+    [followingQuery setLimit:100]; //fixme Why isnt this 1000?
     [followingQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -1020,7 +1023,7 @@
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
     [memberQuery includeKey:@"toUser"];
-    
+    [memberQuery setLimit:1000];
     
     
     [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -1051,6 +1054,7 @@
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
     [memberQuery whereKey:@"toUser" equalTo:user];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+    [memberQuery setLimit:1000];
     
     [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error){
