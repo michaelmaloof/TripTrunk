@@ -10,6 +10,8 @@
 #import "UIColor+HexColors.h"
 #import "TTUtility.h"
 #import "TTColor.h"
+#import "TTHashtagMentionColorization.h"
+#import "SocialUtility.h"
 
 #define USER_ACTIVITY_URL @"activity://user"
 #define TOUSER_ACTIVITY_URL @"activity://toUser"
@@ -122,6 +124,15 @@
         
     }
     
+    if([self.contentLabel.text containsString:@"@"]){
+        NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.contentLabel.text];
+        for(NSString *name in usernamesArray){
+            NSRange userRange = [self.contentLabel.text rangeOfString:name];
+            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
+            [self.contentLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
+        }
+    }
+    
     // If it'as an addToTrip or addedPhoto activity, set the Trip Name as a URL
     if ( ( [_activity[@"type"] isEqualToString:@"addToTrip"] || [_activity[@"type"] isEqualToString:@"addedPhoto"])
         && _activity[@"trip"] && [_activity[@"trip"] valueForKey:@"name"])
@@ -138,8 +149,6 @@
 
         NSRange rejectRange = [self.contentLabel.text rangeOfString:@"Reject"];
         [self.contentLabel addLinkToURL:[NSURL URLWithString:kPENDING_FOLLOW_REJECT_URL] withRange:rejectRange];
-
-    
     }
 
 }
@@ -187,7 +196,7 @@
                 [self.delegate activityCell:self didPressUsernameForUser:self.toUser];
             }
         }
-
+        
         else if([[url host] hasPrefix:@"trip"]) {
             /* load user profile screen */
             Trip *trip = (Trip *)_activity[@"trip"];
@@ -208,6 +217,19 @@
             
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didAcceptFollowRequest:fromUser:)]) {
                 [self.delegate activityCell:self didAcceptFollowRequest:NO fromUser:_user];
+            }
+        }else{
+            NSString *urlString = (NSString*)url;
+            if([urlString containsString:@"@"]){
+                /* load user profile screen */
+            
+                // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
+                if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
+                    NSString *username = (NSString*)[url host];
+                    [SocialUtility loadUserFromUsername:username block:^(PFUser *user, NSError *error) {
+                    [   self.delegate activityCell:self didPressUsernameForUser:user];
+                    }];
+                }
             }
         }
     } else {

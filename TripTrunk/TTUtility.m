@@ -16,6 +16,7 @@
 #import "TTCache.h"
 #import "SocialUtility.h"
 #import <CoreText/CoreText.h>
+#import "TTHashtagMentionColorization.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
@@ -641,12 +642,8 @@ CLCloudinary *cloudinary;
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
 
-    
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
-    
     if (![type isEqualToString:@"comment"]) {
-    
-        
         str = [[NSMutableAttributedString alloc] initWithString:contentString
                                                      attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
                                                                   NSParagraphStyleAttributeName: paraStyle,
@@ -656,7 +653,6 @@ CLCloudinary *cloudinary;
     } else {
         str = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:contentString];
     }
-    
     
     
     NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time

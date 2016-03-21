@@ -45,4 +45,17 @@
     return string;
 }
 
++(NSArray*)extractUsernamesFromComment:(NSString*)text{
+    NSMutableArray *output = [[NSMutableArray alloc] init];
+    NSArray *input = [text componentsSeparatedByString:@" "];
+    for(NSString *word in input){
+        if([word length] > 0){
+            if([[word substringToIndex:1] isEqualToString:@"@"])
+                [output addObject:word];
+        }
+    }
+    
+    return output;
+}
+
 @end
