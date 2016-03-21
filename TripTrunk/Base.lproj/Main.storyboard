@@ -3330,7 +3330,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.89411764709999997" green="0.45882352939999999" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.98039215686274506" green="0.68627450980392157" blue="0.1803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="N3C-n6-SAf" firstAttribute="top" secondItem="EQG-Zd-K84" secondAttribute="bottom" constant="8" id="08T-9k-f7U"/>
                             <constraint firstAttribute="centerX" secondItem="tUr-gu-lCz" secondAttribute="centerX" id="0r6-lU-Qdj"/>
