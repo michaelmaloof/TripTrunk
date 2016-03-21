@@ -74,10 +74,9 @@
         _pending = [[NSMutableArray alloc] init];
         
         self.loadedOnce = NO;
-        [self loadPromotedUsers];
-        [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
         
-        _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
+        [self loadPromotedUsers];
+
         
         self.searchResults = [[NSMutableArray alloc] init];
         
@@ -127,6 +126,9 @@
     [query includeKey:@"user"];
     [query orderByAscending:@"priority"];
     
+    _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
+
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
@@ -135,7 +137,8 @@
             [[TTCache sharedCache] setPromotedUsers:_promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
+//                [self.tableView reloadData];
+                [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
             });
         }
         else
