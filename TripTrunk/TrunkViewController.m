@@ -415,7 +415,7 @@
     NSInteger memberWidthTotal = (self.members.count + count + 1) * 60;
 
     
-    if ( self.members.count + count + 1 > 4){
+    if ( self.members.count + count + 1 > 5){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
         self.memberCollectionView.hidden = NO;
 
