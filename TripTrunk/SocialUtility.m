@@ -696,7 +696,7 @@
         
     } else if (isRefresh ==YES && activities.count >0){
         
-        PFObject *object = activities.lastObject;
+        PFObject *object = activities.firstObject;
         NSMutableArray *objIds = [[NSMutableArray alloc]init];
         for (PFObject *obj in activities){
             [objIds addObject:obj.objectId];
