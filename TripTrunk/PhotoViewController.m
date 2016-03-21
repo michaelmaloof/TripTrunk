@@ -23,7 +23,8 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "TTTTimeIntervalFormatter.h"
-#import "KILabel.h"
+//#import "KILabel.h"
+#import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 
@@ -31,7 +32,7 @@
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate, TTTAttributedLabelDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -54,7 +55,7 @@
 @property BOOL isZoomed;
 //############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
-@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
@@ -194,40 +195,45 @@
         }
     }
     
-    // Attach block for handling taps on usernames
-    _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        PFUser *user;
-        
-        //check to see if tapped user exists as a PFObject in the mention cache
-        if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0)
-            user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:string]];
-        
-        //check if user is nil, if so it wasn't in the cache, so go ahead and load it
-        if(!user)
-            user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:string]];
-
-        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        if(vc){
-            vc.user = user;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        
-    };
-    
-    _captionLabel.hashtagLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        //Not implemented yet
-    };
-    
-    _captionLabel.urlLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        // Open URLs
-        //        [self attemptOpenURL:[NSURL URLWithString:string]];
-    };
+//    // Attach block for handling taps on usernames
+//    _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+//        PFUser *user;
+//        
+//        //check to see if tapped user exists as a PFObject in the mention cache
+//        if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0)
+//            user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:string]];
+//        
+//        //check if user is nil, if so it wasn't in the cache, so go ahead and load it
+//        if(!user)
+//            user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:string]];
+//
+//        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+//        if(vc){
+//            vc.user = user;
+//            [self.navigationController pushViewController:vc animated:YES];
+//        }else{
+//            NSLog(@"Error: unable to load view controller");
+//        }
+//        
+//    };
+//    
+//    _captionLabel.hashtagLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+//        //Not implemented yet
+//    };
+//    
+//    _captionLabel.urlLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+//        // Open URLs
+//        //        [self attemptOpenURL:[NSURL URLWithString:string]];
+//    };
     
 //############################################# MENTIONS ##################################################
 
 }
 
-
+//FIXME: added this to silence error on line 145
+-(void)refreshPhotoActivities{
+    
+}
 
 
 

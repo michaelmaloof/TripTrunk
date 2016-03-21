@@ -8,14 +8,15 @@
 
 #import "TTCommentInputView.h"
 #import "UIColor+HexColors.h"
-#import "KILabel.h"
+//#import "KILabel.h"
+#import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "CommentListViewController.h"
 
 UIView *topView;
 
-@interface TTCommentInputView () <UITextFieldDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
+@interface TTCommentInputView () <UITextFieldDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate, TTTAttributedLabelDelegate>
 
 
 @property (strong, nonatomic)UIButton *submitButton;

@@ -9,6 +9,7 @@
 #import "ActivityTableViewCell.h"
 #import "UIColor+HexColors.h"
 #import "TTUtility.h"
+#import "TTColor.h"
 
 #define USER_ACTIVITY_URL @"activity://user"
 #define TOUSER_ACTIVITY_URL @"activity://toUser"
@@ -42,7 +43,7 @@
 
     
     // Set up Link Attributes (bold and colored)
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];//[UIColor colorWithHexString:@"76A4B8"];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
                                      NSFontAttributeName : [UIFont boldSystemFontOfSize:14]

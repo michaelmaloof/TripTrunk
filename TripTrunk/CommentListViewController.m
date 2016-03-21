@@ -14,14 +14,15 @@
 #import "TTUtility.h"
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
-#import "KILabel.h"
+//#import "KILabel.h"
+#import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "TTCache.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
-@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate, UIPopoverPresentationControllerDelegate, TTSuggestionTableViewControllerDelegate, TTCommentInputViewDelegate>
+@interface CommentListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, TTCommentInputViewDelegate, CommentTableViewCellDelegate, UIPopoverPresentationControllerDelegate, TTSuggestionTableViewControllerDelegate, TTCommentInputViewDelegate, TTTAttributedLabelDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property (strong, nonatomic) TTCommentInputView *commentInputView;
@@ -229,19 +230,21 @@
                                                          
                                                      } failure:nil];
     
-    // Block to handle all our taps, we attach this to all the label's handlers
-    KILinkTapHandler tapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        [self tappedLink:string cellForRowAtIndexPath:indexPath];
-    };
+//    // Block to handle all our taps, we attach this to all the label's handlers
+//    KILinkTapHandler tapHandler = ^(KILabel *label, NSString *string, NSRange range) {
+//        [self tappedLink:string cellForRowAtIndexPath:indexPath];
+//    };
+//    
+//    commentCell.contentLabel.userHandleLinkTapHandler = tapHandler;
+////    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
+////    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
     
-    commentCell.contentLabel.userHandleLinkTapHandler = tapHandler;
-//    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
-//    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
-
     
     return weakCell;
     
 }
+
+
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -588,16 +591,16 @@
 #pragma mark - LILabelDelegateMethods
 - (void)tappedLink:(NSString *)link cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if([self isLinkAMention:link]){
-        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:link]];
-        if(user){
-            UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-            if(vc)
-                [self.navigationController pushViewController:vc animated:YES];
-        }
-    }else if ([self isLinkAHashtag:link]){
-        //FIXME: Implement this for hashtags
-    }
+//    if([self isLinkAMention:link]){
+//        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:link]];
+//        if(user){
+//            UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+//            if(vc)
+//                [self.navigationController pushViewController:vc animated:YES];
+//        }
+//    }else if ([self isLinkAHashtag:link]){
+//        //FIXME: Implement this for hashtags
+//    }
 }
 
 -(BOOL)isLinkAMention:(NSString*)link{

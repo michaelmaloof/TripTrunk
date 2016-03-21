@@ -17,7 +17,6 @@
 #import "SocialUtility.h"
 #import <CoreText/CoreText.h>
 
-
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
 static TTTTimeIntervalFormatter *timeFormatter;
