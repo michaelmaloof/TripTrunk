@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Red.png",
+      "filename" : "luggagebag_icon_black.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Red-1.png",
+      "filename" : "luggagebag_icon_black-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Red-2.png",
+      "filename" : "luggagebag_icon_black-2.png",
       "scale" : "3x"
     }
   ],
