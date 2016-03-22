@@ -163,10 +163,9 @@
     CGRect bounds = aScrollView.bounds;
     CGSize size = aScrollView.contentSize;
     UIEdgeInsets inset = aScrollView.contentInset;
-    float y = offset.y + bounds.size.height - inset.bottom;
+    float y = (offset.y + bounds.size.height - inset.bottom)*.9;
     float h = size.height;
-    
-    float reload_distance = -400;
+    float reload_distance = 10;
     
     NSLog(@"%f",y);
     NSLog(@"%f",h + reload_distance);
@@ -214,7 +213,7 @@
             query.limit = 100;
             query.skip = self.objectsCountMe;
         } else {
-            query.limit = self.meParseLocations.count;
+            query.limit = self.objectsCountMe;
             query.skip = 0;
             self.objectsCountTotal = 0;
         }
@@ -528,10 +527,8 @@
         [self loadUserTrunks:YES];
     }
     else if (self.filter.tag == 1 && self.isList == NO) {
-        self.filter = 0;
         [self loadUserTrunks:YES];
     } else if (self.filter.tag == 0 && self.isList == NO) {
-        self.filter.tag = 1;
         [self queryParseMethodEveryone:YES];
     } else if (self.isList == YES  && self.trunkListToggle.tag == 0){
         [self loadTrunkListBasedOnProfile:YES];
@@ -607,7 +604,7 @@
         query.limit = 100;
         query.skip = self.objectsCountTotal;
     } else {
-        query.limit = self.parseLocations.count;
+        query.limit = self.objectsCountTotal;
         query.skip = 0;
         self.objectsCountTotal = 0;
     }
