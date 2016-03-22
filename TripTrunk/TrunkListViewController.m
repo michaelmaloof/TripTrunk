@@ -213,9 +213,13 @@
             query.limit = 100;
             query.skip = self.objectsCountMe;
         } else {
-            query.limit = self.objectsCountMe;
+            if (self.objectsCountMe == 0){
+                query.limit = 100;
+            } else {
+                query.limit = self.objectsCountMe;
+            }
             query.skip = 0;
-            self.objectsCountTotal = 0;
+            self.objectsCountMe = 0;
         }
         
         
@@ -307,8 +311,21 @@
         [query whereKeyExists:@"trip"];
         [query includeKey:@"trip.publicTripDetail"];
 //        [query orderByDescending:@"createdAt"];
-        query.limit = 50;
-        query.skip = self.objectsCountMe;
+        
+        if (isRefresh == NO){
+            query.limit = 50;
+            query.skip = self.objectsCountMe;
+        } else {
+            if (self.objectsCountMe == 0){
+                query.limit = 50;
+            } else {
+                query.limit = self.objectsCountMe;
+
+            }
+            query.skip = 0;
+            self.objectsCountMe = 0;
+        }
+        
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             
@@ -323,6 +340,11 @@
             }
             
             {
+                if (isRefresh == YES){
+                    self.meObjectIDs = [[NSMutableArray alloc]init];;
+                    self.meParseLocations = [[NSMutableArray alloc]init];
+                }
+                
                 self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
                 for (PFObject *activity in objects)
@@ -523,7 +545,7 @@
  */
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
-    if (self.user){
+    if (self.user && self.isList == NO){
         [self loadUserTrunks:YES];
     }
     else if (self.filter.tag == 1 && self.isList == NO) {
@@ -538,16 +560,7 @@
 
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
     // End the refreshing & update the timestamp
-    if (refreshControl) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"MMM d, h:mm a"];
-        NSString *update = NSLocalizedString(@"Last update",@"Last update");
-        NSString *title = [NSString stringWithFormat:@"%@: %@",update, [formatter stringFromDate:[NSDate date]]];
-        NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-                                                                    forKey:NSForegroundColorAttributeName];
-        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-        refreshControl.attributedTitle = attributedTitle;
-        
+    if (refreshControl) {        
         [refreshControl endRefreshing];
     }
 
@@ -604,7 +617,12 @@
         query.limit = 100;
         query.skip = self.objectsCountTotal;
     } else {
-        query.limit = self.objectsCountTotal;
+        
+        if (self.objectsCountTotal == 0){
+            query.limit = 100;
+        } else {
+            query.limit = self.objectsCountTotal;
+        }
         query.skip = 0;
         self.objectsCountTotal = 0;
     }
