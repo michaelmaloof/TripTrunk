@@ -688,7 +688,7 @@
         self.autocompletePopover = nil;
     }
     
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
@@ -738,7 +738,7 @@
     //dismiss the popover
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1 text:self.caption.text];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
     self.autocompletePopover.delegate = nil;
 }

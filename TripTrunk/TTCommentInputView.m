@@ -287,7 +287,7 @@ UIView *topView;
     [self.delegate displayAutocompletePopoverFromView:lastWord];
     
     //FIXME: Cursor position is not being used here, refactor!
-    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentField.text];
+    self.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.commentField.text];
     UITextPosition *newPosition = [self.commentField positionFromPosition:selectedRange.end offset:0];
     UITextRange *newRange = [self.commentField textRangeFromPosition:newPosition toPosition:selectedRange.start];
     [self.commentField setSelectedTextRange:newRange];

@@ -651,7 +651,7 @@ CLCloudinary *cloudinary;
                                                                   }];
         
     } else {
-        str = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:contentString];
+        str = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:contentString];
     }
     
     

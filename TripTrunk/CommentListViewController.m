@@ -562,7 +562,7 @@
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
     //FIXME: Cursor position is not being used here, refactor!
-    self.commentInputView.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentInputView.commentField.text];
+    self.commentInputView.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.commentInputView.commentField.text];
     UITextPosition *newPosition = [self.commentInputView.commentField positionFromPosition:self.commentInputView.commentField.beginningOfDocument offset:cursorOffset-[lastWord length]+[username length]+1];
     UITextRange *newRange = [self.commentInputView.commentField textRangeFromPosition:newPosition toPosition:newPosition];
     [self.commentInputView.commentField setSelectedTextRange:newRange];
