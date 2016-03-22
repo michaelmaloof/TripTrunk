@@ -296,7 +296,7 @@
 
 -(void)loadTrunkListBasedOnProfile:(BOOL)isRefresh{
     
-    if (self.meParseLocations.count == 0) {
+    if (self.meParseLocations.count == 0 || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         if (!self.user){
@@ -406,7 +406,7 @@
 
 -(void)loadMutualTrunkList:(BOOL)isRefresh{
     //fixme this should be a service call
-    if (self.mutualTrunks.count == 0) {
+    if (self.mutualTrunks.count == 0 || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         if (!self.user){
@@ -443,6 +443,8 @@
                 if (!error){
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
+                self.meParseLocations = [[NSMutableArray alloc]init];
+                self.meObjectIDs = [[NSMutableArray alloc]init];
                 self.didLoad = YES;
                 for (PFObject *activity in objects)
                 {
@@ -560,7 +562,7 @@
 
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
     // End the refreshing & update the timestamp
-    if (refreshControl) {        
+    if (refreshControl) {
         [refreshControl endRefreshing];
     }
 
