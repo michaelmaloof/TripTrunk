@@ -14,6 +14,12 @@
 @implementation TTHashtagMentionColorization
 
 +(NSMutableAttributedString*)colorHashtagAndMentionsWithBlack:(BOOL)black text:(NSString*)text{
+    
+    if(!text){
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+        return string;
+    }
+    
     //Convert caption to Mutable and Attributed
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:text];
     NSError *error = nil;
