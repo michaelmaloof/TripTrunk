@@ -38,6 +38,8 @@
 @property NSMutableArray *visitedTrunks;
 @property NSMutableArray *mutualTrunks;
 
+@property BOOL wasError;
+
 
 
 @end
@@ -227,10 +229,14 @@
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
+                self.wasError = YES;
+                [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
             else
             {
+                self.wasError = NO;
+
                 if (isRefresh == YES){
                     self.meParseLocations = [[NSMutableArray alloc]init];
                     self.meObjectIDs = [[NSMutableArray alloc]init];;
@@ -331,15 +337,20 @@
             
             if(error)
             {
+                self.wasError = YES;
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                [self reloadTable];
+
             }
             else if (!error)
             {
+                self.wasError = NO;
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
             
             {
+                
                 if (isRefresh == YES){
                     self.meObjectIDs = [[NSMutableArray alloc]init];;
                     self.meParseLocations = [[NSMutableArray alloc]init];
@@ -436,11 +447,14 @@
         [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
             {
+                self.wasError = YES;
                 [ParseErrorHandlingController handleError:error];
+                [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
             {
                 if (!error){
+                    self.wasError = NO;
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
                 self.meParseLocations = [[NSMutableArray alloc]init];
@@ -635,6 +649,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
+            self.wasError = YES;
             [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -644,6 +659,7 @@
         {
             
             if (!error){
+                self.wasError = NO;
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
             
@@ -856,14 +872,14 @@
         countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photos];
     }
     
-//    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    //    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
     if (self.isList == NO){
         cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
     } else {
-           cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.city, countString];
+        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.city, countString];
     }
-//    }];
-
+    //    }];
+    
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
     
     
@@ -876,12 +892,12 @@
     }
     
     PFUser *possibleFriend = cell.trip.creator;
-//    [possibleFriend fetchIfNeeded:nil];
+    //    [possibleFriend fetchIfNeeded:nil];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak TrunkTableViewCell *weakCell = cell;
-
+    
     [cell.profileImage setImageWithURLRequest:request
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -890,14 +906,14 @@
                                           [weakCell setNeedsLayout];
                                           
                                       } failure:nil];
-
+    
     return cell;
     
     return weakCell;
-
-
-
-
+    
+    
+    
+    
 }
 
 
@@ -909,25 +925,25 @@
         if (self.path.row < self.parseLocations.count)
         {
             [self performSegueWithIdentifier:@"TrunkView" sender:self];
-
+            
         }
     } else if (self.filter.tag == 1 && self.meParseLocations != nil && self.isList == NO){
         if (self.path.row < self.meParseLocations.count)
         {
             [self performSegueWithIdentifier:@"TrunkView" sender:self];
-
+            
         }
     } else if (self.user != nil && self.isList == NO) {
-            [self performSegueWithIdentifier:@"TrunkView" sender:self];
-
+        [self performSegueWithIdentifier:@"TrunkView" sender:self];
+        
     } else if (self.isList == YES && self.trunkListToggle.tag == 0){
-            [self performSegueWithIdentifier:@"TrunkView" sender:self];
-
+        [self performSegueWithIdentifier:@"TrunkView" sender:self];
+        
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){
         [self performSegueWithIdentifier:@"TrunkView" sender:self];
         
     }
-
+    
 }
 
 
@@ -935,17 +951,38 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = NSLocalizedString(@"No One Has Been Here :/",@"No One Has Been Here :/");
+    NSString *text = [[NSString alloc]init];
+    
+    if (self.wasError == NO){
+        
+        text = NSLocalizedString(@"No One Has Been Here :/",@"No One Has Been Here :/");
+        
+    } else {
+        text = NSLocalizedString(@"Error Loading Trunks. Please Try Again :/",@"Error Loading Trunks. Please Try Again :/");
+        
+    }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    
+    
 }
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text =NSLocalizedString(@"Have you visited this city? Create a trunk now!",@"Have you visited this city? Create a trunk now!");
+    
+    NSString *text = [[NSString alloc]init];
+    
+    if (self.wasError == NO){
+        
+        
+        text =NSLocalizedString(@"Have you visited this city? Create a trunk now!",@"Have you visited this city? Create a trunk now!");
+        
+    } else {
+        text = @"";
+    }
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
@@ -962,8 +999,13 @@
 {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
-    
-    return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Create Trunk",@"Create Trunk") attributes:attributes];
+    if (self.wasError == NO){
+        
+        return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Create Trunk",@"Create Trunk") attributes:attributes];
+        
+    } else {
+        return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Reload",@"Reload") attributes:attributes];
+    }
 }
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
@@ -989,7 +1031,7 @@
         return YES;
         
         //if were on the user's profile and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
-    } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES){
+    } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES && self.wasError == NO){
         self.tableView.tableFooterView = [UIView new];
         
         NSMutableArray *locationArray = [[NSMutableArray alloc]init];
@@ -1014,7 +1056,7 @@
     }
     
     //if were on the home map  and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
-    else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES){
+    else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES && self.wasError == NO){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         
@@ -1039,6 +1081,12 @@
         return YES;
     }
     
+    else if (self.wasError == YES){
+        // A little trick for removing the cell separators
+        self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    
     return NO;
 }
 
@@ -1054,12 +1102,31 @@
 
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
 {
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [self.tabBarController setSelectedIndex:2];
+        if (self.wasError == NO){
+            
+            [self.tabBarController setSelectedIndex:2];
+            
+        } else {
+            if (self.user && self.isList == NO){
+                [self loadUserTrunks:YES];
+            }
+            else if (self.filter.tag == 1 && self.isList == NO) {
+                [self loadUserTrunks:YES];
+            } else if (self.filter.tag == 0 && self.isList == NO) {
+                [self queryParseMethodEveryone:YES];
+            } else if (self.isList == YES  && self.trunkListToggle.tag == 0){
+                [self loadTrunkListBasedOnProfile:YES];
+            } else if (self.isList == YES && self.trunkListToggle.tag == 1){
+                [self loadMutualTrunkList:YES];
+            }
+        }
         
     });
-
+    
+    
 }
 
 -(void)photoWasAdded:(id)sender{
