@@ -94,6 +94,13 @@ UIView *topView;
     
 }
 
+
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self.delegate didBeginTyping];
+}
+
+
 - (void)setupInternalContraints {
     
     // CommentField Constraints

@@ -294,6 +294,8 @@
     [self.view endEditing:YES];
 }
 
+
+
 #pragma mark - CommentTableViewCell delegate
 
 - (void)commentCell:(CommentTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
@@ -622,5 +624,16 @@
     self.tableView.emptyDataSetDelegate = nil;
 }
 
+-(void)didBeginTyping{
+    [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
+}
+
+-(void)didEndTyping{
+    [self.view endEditing:YES];
+
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+}
 
 @end
