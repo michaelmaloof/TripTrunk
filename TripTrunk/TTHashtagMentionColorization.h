@@ -10,6 +10,7 @@
 
 @interface TTHashtagMentionColorization : NSObject
 
-+(NSMutableAttributedString*)colorHashtagAndMentions:(NSUInteger)cursorPosition text:(NSString*)text;
++(NSMutableAttributedString*)colorHashtagAndMentionsWithBlack:(BOOL)black text:(NSString*)text;
++(NSArray*)extractUsernamesFromComment:(NSString*)text;
 
 @end

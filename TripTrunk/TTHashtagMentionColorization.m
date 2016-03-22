@@ -13,13 +13,15 @@
 
 @implementation TTHashtagMentionColorization
 
-+(NSMutableAttributedString*)colorHashtagAndMentions:(NSUInteger)cursorPosition text:(NSString*)text{
++(NSMutableAttributedString*)colorHashtagAndMentionsWithBlack:(BOOL)black text:(NSString*)text{
     //Convert caption to Mutable and Attributed
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:text];
     NSError *error = nil;
     //create the attribute to change mentions and hastags blue
     [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFont] range:NSMakeRange(0, text.length)];
-    [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, text.length)];
+    if(black)
+        [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, text.length)];
+    else [string addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, text.length)];
     
     //Use regular expressions to search through the string and search for the #(letter) pattern
     //This is currently turned off so hastags will remain black
@@ -43,6 +45,19 @@
     }
     
     return string;
+}
+
++(NSArray*)extractUsernamesFromComment:(NSString*)text{
+    NSMutableArray *output = [[NSMutableArray alloc] init];
+    NSArray *input = [text componentsSeparatedByString:@" "];
+    for(NSString *word in input){
+        if([word length] > 0){
+            if([[word substringToIndex:1] isEqualToString:@"@"])
+                [output addObject:word];
+        }
+    }
+    
+    return output;
 }
 
 @end

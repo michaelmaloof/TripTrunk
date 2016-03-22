@@ -23,7 +23,7 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "TTTTimeIntervalFormatter.h"
-#import "KILabel.h"
+#import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 
@@ -31,7 +31,7 @@
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
 
-@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
+@interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate, TTTAttributedLabelDelegate>
 // IBOutlets
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
@@ -54,7 +54,7 @@
 @property BOOL isZoomed;
 //############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
-@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
@@ -194,40 +194,26 @@
         }
     }
     
-    // Attach block for handling taps on usernames
-    _captionLabel.userHandleLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        PFUser *user;
-        
-        //check to see if tapped user exists as a PFObject in the mention cache
-        if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0)
-            user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:string]];
-        
-        //check if user is nil, if so it wasn't in the cache, so go ahead and load it
-        if(!user)
-            user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:string]];
-
-        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        if(vc){
-            vc.user = user;
-            [self.navigationController pushViewController:vc animated:YES];
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    if([self.photo.caption containsString:@"@"]){
+        NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.photo.caption];
+        for(NSString *name in usernamesArray){
+            NSRange userRange = [self.photo.caption rangeOfString:name];
+            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
+            [self.captionLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
         }
-        
-    };
+    }
     
-    _captionLabel.hashtagLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        //Not implemented yet
-    };
-    
-    _captionLabel.urlLinkTapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        // Open URLs
-        //        [self attemptOpenURL:[NSURL URLWithString:string]];
-    };
+    self.captionLabel.delegate = self;
     
 //############################################# MENTIONS ##################################################
 
 }
 
-
+//FIXME: added this to silence error on line 145
+-(void)refreshPhotoActivities{
+    
+}
 
 
 
@@ -401,8 +387,7 @@
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     
     NSRange cursorPosition = [self.caption selectedRange];
-//    [self colorHashtagAndMentions:cursorPosition.location];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
@@ -582,7 +567,7 @@
             }
             
             self.caption.text = self.photo.caption;
-            self.captionLabel.text = self.photo.caption;
+            self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
             
@@ -927,7 +912,7 @@
     self.deleteCaption.hidden = YES;
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
-    self.captionLabel.text = self.photo.caption;
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
@@ -948,7 +933,7 @@
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
                             self.caption.text = @"";
-                            self.captionLabel.text = @"";
+                            self.captionLabel.attributedText = @"";
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
@@ -1027,7 +1012,7 @@
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
-    self.captionLabel.text = self.photo.caption;
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
 
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
@@ -1289,7 +1274,7 @@
 #pragma mark - UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
 //    NSRange cursorPosition = [textView selectedRange];
-//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
 //    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
     return YES;
 }
@@ -1374,7 +1359,7 @@
         self.autocompletePopover = nil;
     }
     
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location text:self.caption.text];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
@@ -1424,7 +1409,7 @@
     //dismiss the popover
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:cursorPosition.location-[lastWord length]+[username length]+1 text:self.caption.text];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
     self.autocompletePopover.delegate = nil;
 }
@@ -1510,6 +1495,34 @@
     self.popover.delegate = nil;
     self.autocompletePopover = nil;
 }
+
+#pragma mark - TTTAttributedLabelDelegate methods
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    
+    if ([[url scheme] hasPrefix:@"activity"]) {
+        NSString *urlString = [NSString stringWithFormat:@"%@",url];
+        if([urlString containsString:@"@"]){
+                PFUser *user;
+        
+                //check to see if tapped user exists as a PFObject in the mention cache
+                if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0)
+                    user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[url host]];
+        
+                //check if user is nil, if so it wasn't in the cache, so go ahead and load it
+                if(!user)
+                    user = [self array:self.softMentions containsPFObjectByUsername:[url host]];
+        
+                UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
+                if(vc){
+                    vc.user = user;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }else{
+                    NSLog(@"Error: unable to load view controller");
+                }
+            }
+        }
+
+}
 //############################################# MENTIONS ##################################################
 
 
@@ -1533,7 +1546,7 @@
     }
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
-    self.captionLabel.text = self.photo.caption;
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
     [self.photo saveInBackground];
 
 }

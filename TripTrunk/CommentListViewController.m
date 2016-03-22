@@ -14,7 +14,7 @@
 #import "TTUtility.h"
 #import "TTCommentInputView.h"
 #import "UIScrollView+EmptyDataSet.h"
-#import "KILabel.h"
+#import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "TTCache.h"
@@ -64,7 +64,6 @@
     _commentInputView.delegate = self;
     [self.view addSubview:_commentInputView];
     [_commentInputView setupConstraintsWithView:self.view];
-//    _commentInputView.delegate = self;
     
     self.view.backgroundColor = [UIColor colorWithRed:205.0/255.0 green:205.0/255.0 blue:205.0/255.0 alpha:1.0];
     
@@ -209,7 +208,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     CommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:COMMENT_CELL forIndexPath:indexPath];
-    [commentCell setDelegate:self];
+    commentCell.delegate = self;
     NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
     [commentCell setCommentActivity:activity];
     
@@ -219,6 +218,7 @@
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak CommentTableViewCell *weakCell = commentCell;
+    weakCell.delegate = self;
     
     [commentCell.profilePicImageView setImageWithURLRequest:request
                                             placeholderImage:[UIImage imageNamed:@"defaultProfile"]
@@ -229,19 +229,10 @@
                                                          
                                                      } failure:nil];
     
-    // Block to handle all our taps, we attach this to all the label's handlers
-    KILinkTapHandler tapHandler = ^(KILabel *label, NSString *string, NSRange range) {
-        [self tappedLink:string cellForRowAtIndexPath:indexPath];
-    };
-    
-    commentCell.contentLabel.userHandleLinkTapHandler = tapHandler;
-//    commentCell.contentLabel.urlLinkTapHandler = tapHandler;
-//    commentCell.contentLabel.hashtagLinkTapHandler = tapHandler;
-
-    
     return weakCell;
-    
 }
+
+
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -559,7 +550,7 @@
     [self removeAutocompletePopoverFromSuperview];
     //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
     //FIXME: Cursor position is not being used here, refactor!
-    self.commentInputView.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:self.commentInputView.commentField.text];
+    self.commentInputView.commentField.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.commentInputView.commentField.text];
     UITextPosition *newPosition = [self.commentInputView.commentField positionFromPosition:self.commentInputView.commentField.beginningOfDocument offset:cursorOffset-[lastWord length]+[username length]+1];
     UITextRange *newRange = [self.commentInputView.commentField textRangeFromPosition:newPosition toPosition:newPosition];
     [self.commentInputView.commentField setSelectedTextRange:newRange];
@@ -582,30 +573,6 @@
     NSArray *array = [comment componentsSeparatedByString:@"@"];
     NSString *spacedMentions = [array componentsJoinedByString:@" @"];
     return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
-}
-
-
-#pragma mark - LILabelDelegateMethods
-- (void)tappedLink:(NSString *)link cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    if([self isLinkAMention:link]){
-        PFUser *user = [SocialUtility loadUserFromUsername:[self getUsernameFromLink:link]];
-        if(user){
-            UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-            if(vc)
-                [self.navigationController pushViewController:vc animated:YES];
-        }
-    }else if ([self isLinkAHashtag:link]){
-        //FIXME: Implement this for hashtags
-    }
-}
-
--(BOOL)isLinkAMention:(NSString*)link{
-    return [[link substringToIndex:1] isEqualToString:@"@"] ? YES : NO;
-}
-
--(BOOL)isLinkAHashtag:(NSString*)link{
-    return [[link substringToIndex:1] isEqualToString:@"#"] ? YES : NO;
 }
 
 #pragma mark - UIPopoverControllerDelegate
@@ -644,6 +611,8 @@
         }
     }];
 }
+
+
 //############################################# MENTIONS ##################################################
 
 #pragma mark -

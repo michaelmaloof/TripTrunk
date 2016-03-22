@@ -612,32 +612,23 @@ enum TTActivityViewType : NSUInteger {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (_viewType == TTActivityViewLikes) {
-        
-    
         UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     //    [cell setDelegate:self];
-        
         
         // We assume fromUser contains the full PFUser object
         PFUser *user;
         if (self.filter.tag == 0){
-        
             user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-            
         } else {
             user = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-
         }
         NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
         [cell setUser:user];
-        
         [cell.followButton setHidden:YES];
         
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
         __weak UserTableViewCell *weakCell = cell;
-        
-        
         
         [cell.profilePicImageView setImageWithURLRequest:request
                                         placeholderImage:[UIImage imageNamed:@"defaultProfile"]
@@ -648,7 +639,7 @@ enum TTActivityViewType : NSUInteger {
                                                      
                                                  } failure:nil];
         
-        
+        //FIXME: There is a UIImageView now that handles this. Refactor
         [weakCell.profilePicImageView.layer setCornerRadius:30.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
@@ -672,26 +663,21 @@ enum TTActivityViewType : NSUInteger {
         
         // We assume fromUser contains the full PFUser object
         PFUser *user;
-        
         if ([activity[@"type"] isEqualToString:@"follow"] || [activity[@"type"] isEqualToString:@"like"]){
             
             PFUser *check = activity[@"toUser"];
             if (![[PFUser currentUser].objectId isEqualToString:check.objectId]){
-                
                 if (self.filter.tag == 1){
                     PFUser *toUser;
                     toUser = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"toUser"];
                 }
-
             }
         }
-        
         
         if (self.filter.tag == 0) {
             user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
         } else {
             user = [[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-
         }
         
         NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
@@ -708,6 +694,7 @@ enum TTActivityViewType : NSUInteger {
                                                      
                                                  } failure:nil];
         
+        //FIXME: There is a UIImageView now that handles this. Refactor
         [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
@@ -729,6 +716,7 @@ enum TTActivityViewType : NSUInteger {
                                                              } failure:nil];
         }
         
+        //FIXME: There is a UIImageView now that handles this. Refactor
         [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
@@ -741,8 +729,6 @@ enum TTActivityViewType : NSUInteger {
         activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
         
         return weakCell;
-
-        
     }
     
     return [UITableViewCell new];

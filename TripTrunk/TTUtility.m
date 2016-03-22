@@ -642,12 +642,8 @@ CLCloudinary *cloudinary;
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
 
-    
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
-    
     if (![type isEqualToString:@"comment"]) {
-    
-        
         str = [[NSMutableAttributedString alloc] initWithString:contentString
                                                      attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
                                                                   NSParagraphStyleAttributeName: paraStyle,
@@ -655,9 +651,8 @@ CLCloudinary *cloudinary;
                                                                   }];
         
     } else {
-        str = [TTHashtagMentionColorization colorHashtagAndMentions:0 text:contentString];
+        str = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:contentString];
     }
-    
     
     
     NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
@@ -686,11 +681,7 @@ CLCloudinary *cloudinary;
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
     
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
-                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                                                         NSParagraphStyleAttributeName: paraStyle,
-                                                                                         NSKernAttributeName : [NSNull null]
-                                                                                         }];
+    NSMutableAttributedString *str = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:contentString];
     
     NSAttributedString *timestampStr = [[NSAttributedString alloc] initWithString:time
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
