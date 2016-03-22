@@ -372,14 +372,18 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -120, self.view.frame.size.width, self.view.frame.size.height);
+    int amount = self.view.frame.size.height /2.8;
+    
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - amount, self.view.frame.size.width, self.view.frame.size.height);
     
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
+    int amount = self.view.frame.size.height /2.8;
+
     
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 120, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + amount, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 #pragma mark - Collection View
