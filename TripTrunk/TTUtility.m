@@ -681,11 +681,7 @@ CLCloudinary *cloudinary;
     paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
     
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:contentString
-                                                                            attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                                                         NSParagraphStyleAttributeName: paraStyle,
-                                                                                         NSKernAttributeName : [NSNull null]
-                                                                                         }];
+    NSMutableAttributedString *str = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:contentString];
     
     NSAttributedString *timestampStr = [[NSAttributedString alloc] initWithString:time
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],

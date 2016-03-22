@@ -10,6 +10,9 @@
 #import "UIColor+HexColors.h"
 #import "TTUtility.h"
 #import "TTTAttributedLabel.h"
+#import "SocialUtility.h"
+#import "TTColor.h"
+#import "TTHashtagMentionColorization.h"
 
 #define USER_ACTIVITY_URL @"activity://user"
 
@@ -35,7 +38,7 @@
         
     
     // Set up Link Attributes (bold and colored)
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
                                      NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
@@ -48,6 +51,9 @@
     self.usernameLabel.delegate = self;
     self.usernameLabel.linkAttributes = linkAttributes;
     self.usernameLabel.activeLinkAttributes = activeLinkAttributes;
+    self.contentLabel.delegate = self;
+    self.contentLabel.linkAttributes = linkAttributes;
+    self.contentLabel.activeLinkAttributes = activeLinkAttributes;
     
     
     UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
@@ -81,6 +87,15 @@
     NSRange range = [self.usernameLabel.text rangeOfString:_user.username];
     [self.usernameLabel addLinkToURL:[NSURL URLWithString:USER_ACTIVITY_URL] withRange:range]; // Embedding a custom link in a substring
     
+    if([self.contentLabel.text containsString:@"@"]){
+        NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.contentLabel.text];
+        for(NSString *name in usernamesArray){
+            NSRange userRange = [self.contentLabel.text rangeOfString:name];
+            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
+            [self.contentLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
+        }
+    }
+    
 }
 
 
@@ -105,10 +120,19 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:didPressUsernameForUser:)]) {
                 [self.delegate commentCell:self didPressUsernameForUser:_user];
             }
+        }else{
+            NSString *urlString = [NSString stringWithFormat:@"%@",url];
+            if([urlString containsString:@"@"]){
+                NSString *username = [NSString stringWithFormat:@"%@",[url host]];
+                [SocialUtility loadUserFromUsername:username block:^(PFUser *user, NSError *error) {
+                    [self.delegate commentCell:self didPressUsernameForUser:user];
+                }];
+            }
         }
     } else {
         /* deal with http links here */
     }
+    
 }
 
 

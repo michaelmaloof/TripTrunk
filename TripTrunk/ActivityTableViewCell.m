@@ -219,15 +219,15 @@
                 [self.delegate activityCell:self didAcceptFollowRequest:NO fromUser:_user];
             }
         }else{
-            NSString *urlString = (NSString*)url;
+            NSString *urlString = [NSString stringWithFormat:@"%@",url];
             if([urlString containsString:@"@"]){
                 /* load user profile screen */
             
                 // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
                 if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
-                    NSString *username = (NSString*)[url host];
+                    NSString *username = [NSString stringWithFormat:@"%@",[url host]];
                     [SocialUtility loadUserFromUsername:username block:^(PFUser *user, NSError *error) {
-                    [   self.delegate activityCell:self didPressUsernameForUser:user];
+                    [self.delegate activityCell:self didPressUsernameForUser:user];
                     }];
                 }
             }

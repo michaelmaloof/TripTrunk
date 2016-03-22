@@ -55,7 +55,6 @@
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
-		272A4AE21C73770D00700DCA /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE11C73770D00700DCA /* KILabel.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
@@ -216,8 +215,6 @@
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
 		2715140F1C99E0F80054E43F /* TTFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTFont.m; sourceTree = "<group>"; };
-		272A4AE01C73770D00700DCA /* KILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KILabel.h; sourceTree = "<group>"; };
-		272A4AE11C73770D00700DCA /* KILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KILabel.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		27A581421C888D910095ED94 /* TTPushNotificationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPushNotificationHandler.h; sourceTree = "<group>"; };
@@ -696,8 +693,6 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
-				272A4AE01C73770D00700DCA /* KILabel.h */,
-				272A4AE11C73770D00700DCA /* KILabel.m */,
 				C9D893351BB596FB00259AB4 /* NSObject+Properties.h */,
 				C9D893361BB596FB00259AB4 /* NSObject+Properties.m */,
 				C9D893371BB596FB00259AB4 /* PFObject+NSCoding.h */,
@@ -940,7 +935,6 @@
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */,
-				272A4AE21C73770D00700DCA /* KILabel.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
 				C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */,

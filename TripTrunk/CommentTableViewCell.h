@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-//#import "KILabel.h"
 #import "TTTAttributedLabel.h"
 #import "TTUserProfileImage.h"
 

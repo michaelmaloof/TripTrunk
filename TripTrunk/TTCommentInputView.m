@@ -8,7 +8,6 @@
 
 #import "TTCommentInputView.h"
 #import "UIColor+HexColors.h"
-//#import "KILabel.h"
 #import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
@@ -23,7 +22,7 @@ UIView *topView;
 @property (weak, nonatomic)NSLayoutConstraint *bottomConstraint;
 //############################################# MENTIONS ##################################################
 //@property (weak, nonatomic) IBOutlet UITextView *caption;
-//@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+//@property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 //############################################# MENTIONS ##################################################

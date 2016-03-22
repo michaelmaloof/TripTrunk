@@ -42,7 +42,7 @@
 
 //############################################# MENTIONS ##################################################
 //@property (weak, nonatomic) IBOutlet UITextView *caption;
-//@property (weak, nonatomic) IBOutlet KILabel *captionLabel;
+//@property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
