@@ -122,11 +122,11 @@
         [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
         self.trunkListToggle.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self loadTrunkListBasedOnProfile];
+        [self loadTrunkListBasedOnProfile:NO];
         
     } else if (self.isList == YES){
         self.trunkListToggle.tag = 0;
-        [self loadTrunkListBasedOnProfile];
+        [self loadTrunkListBasedOnProfile:NO];
     }
 
     else if (self.user == nil) {
@@ -135,10 +135,10 @@
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self queryParseMethodEveryone];
+        [self queryParseMethodEveryone:NO];
     } else {
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self loadUserTrunks];
+        [self loadUserTrunks:NO];
     }
     
     UIBarButtonItem *newBackButton =
@@ -166,14 +166,18 @@
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = -250;
+    float reload_distance = -400;
+    
+    NSLog(@"%f",y);
+    NSLog(@"%f",h + reload_distance);
+    
     if(y > h + reload_distance) {
         if (self.isMine == YES && self.isList == NO){
-            [self loadUserTrunks];
+//            [self loadUserTrunks:NO];
         }else if (self.isList == NO){
-            [self queryForTrunks];
+//            [self queryForTrunks:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 0){
-            [self loadTrunkListBasedOnProfile];
+//            [self loadTrunkListBasedOnProfile:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 1){
             //fixme: load mutual trunks but for now idk if we need to since there wont be more than 1000 trips combined. once this is a service method we can do this
         }
@@ -185,9 +189,9 @@
  *
  *
  */
--(void)loadUserTrunks
+-(void)loadUserTrunks:(BOOL)isRefresh
 {
-    if (self.meParseLocations.count == 0 || self.meParseLocations.class == nil) {
+    if (self.meParseLocations.count == 0 || self.meParseLocations.class == nil || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -205,8 +209,16 @@
         [query includeKey:@"trip.creator"];
         [query includeKey:@"trip.publicTripDetail"];
         [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-        query.limit = 100;
-        query.skip = self.objectsCountMe;
+        
+        if (isRefresh == NO){
+            query.limit = 100;
+            query.skip = self.objectsCountMe;
+        } else {
+            query.limit = self.meParseLocations.count;
+            query.skip = 0;
+            self.objectsCountTotal = 0;
+        }
+        
         
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(error)
@@ -216,6 +228,11 @@
             }
             else
             {
+                if (isRefresh == YES){
+                    self.meParseLocations = [[NSMutableArray alloc]init];
+                    self.meObjectIDs = [[NSMutableArray alloc]init];;
+                }
+                
                 [[TTUtility sharedInstance] internetConnectionFound];
                 self.didLoad = YES;
                 self.objectsCountMe = (int)objects.count + self.objectsCountMe;
@@ -274,7 +291,7 @@
     }
 }
 
--(void)loadTrunkListBasedOnProfile{
+-(void)loadTrunkListBasedOnProfile:(BOOL)isRefresh{
     
     if (self.meParseLocations.count == 0) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -366,7 +383,7 @@
     }
 }
 
--(void)loadMutualTrunkList{
+-(void)loadMutualTrunkList:(BOOL)isRefresh{
     //fixme this should be a service call
     if (self.mutualTrunks.count == 0) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -479,23 +496,23 @@
         [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.filter.tag = 1;
         self.isMine = YES;
-        [self loadUserTrunks];
+        [self loadUserTrunks:NO];
     } else if (self.filter.tag == 1 && self.isList == NO) {
         [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
         self.filter.tag = 0;
         self.isMine = NO;
-        [self queryParseMethodEveryone];
+        [self queryParseMethodEveryone:NO];
     } else if (self.isList == YES && self.trunkListToggle.tag == 0){ //switch to mutual
         [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_2"]];
         self.trunkListToggle.tag = 1;
         self.isMine = YES;
-        [self loadMutualTrunkList];
+        [self loadMutualTrunkList:NO];
 // fixme: method to load mutual
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){ //switch to all list
         [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_1"]];
         self.trunkListToggle.tag = 0;
         self.isMine = NO;
-        [self loadTrunkListBasedOnProfile];
+        [self loadTrunkListBasedOnProfile:NO];
 
     }
 }
@@ -507,17 +524,19 @@
  */
 - (void)refresh:(UIRefreshControl *)refreshControl {
     
-    
-    if (self.filter.tag == 1 && self.isList == NO) {
+    if (self.user){
+        [self loadUserTrunks:YES];
+    }
+    else if (self.filter.tag == 1 && self.isList == NO) {
         self.filter = 0;
-        [self loadUserTrunks];
+        [self loadUserTrunks:YES];
     } else if (self.filter.tag == 0 && self.isList == NO) {
         self.filter.tag = 1;
-        [self queryParseMethodEveryone];
+        [self queryParseMethodEveryone:YES];
     } else if (self.isList == YES  && self.trunkListToggle.tag == 0){
-        [self loadTrunkListBasedOnProfile];
+        [self loadTrunkListBasedOnProfile:YES];
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){
-        [self loadMutualTrunkList];
+        [self loadMutualTrunkList:YES];
     }
 
     // TODO: End refreshing when the data actually updates, right now if querying takes awhile, the refresh control will end too early.
@@ -541,9 +560,9 @@
 
 
 
-- (void)queryParseMethodEveryone{ //add the list of users that the user follows to then get their trunks
+- (void)queryParseMethodEveryone:(BOOL)isRefresh{ //add the list of users that the user follows to then get their trunks
 
-    if (self.parseLocations.count == 0)
+    if (self.parseLocations.count == 0 || isRefresh == YES)
     {
 
         self.friends = [[NSMutableArray alloc] init];
@@ -554,7 +573,7 @@
         [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
             if (!error) {
                 [self.friends addObjectsFromArray:users];
-                [self queryForTrunks];
+                [self queryForTrunks:isRefresh];
                 
             }
         }];
@@ -570,7 +589,7 @@
 
 
 
-- (void)queryForTrunks{
+- (void)queryForTrunks:(BOOL)isRefresh{
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
@@ -583,8 +602,16 @@
     [query whereKeyExists:@"trip"];
     [query includeKey:@"trip.publicTripDetail"];
     [query orderByDescending:@"createdAt"];
-    query.limit = 100;
-    query.skip = self.objectsCountTotal;
+    
+    if (isRefresh == NO){
+        query.limit = 100;
+        query.skip = self.objectsCountTotal;
+    } else {
+        query.limit = self.parseLocations.count;
+        query.skip = 0;
+        self.objectsCountTotal = 0;
+    }
+    
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
@@ -602,6 +629,12 @@
             if (!error){
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
+            
+            if (isRefresh == YES){
+                self.parseLocations = [[NSMutableArray alloc]init];
+                self.objectIDs = [[NSMutableArray alloc]init];;
+            }
+            
             self.didLoad = YES;
             self.objectsCountTotal = (int)objects.count + self.objectsCountTotal;
             for (PFObject *activity in objects)
