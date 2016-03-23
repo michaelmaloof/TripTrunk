@@ -16,14 +16,11 @@
 #import "TTPushNotificationHandler.h"
 
 #import "UserProfileViewController.h"
-//#import "PhotoViewController.h"
 #import "TrunkViewController.h"
 #import "Trip.h"
 #import "FindFriendsViewController.h"
 #import "ActivityListViewController.h"
 #import "TTCache.h"
-//#import "CommentListViewController.h"
-//#import "SocialUtility.h"
 
 #if DEBUG == 0 // CHANGE TO 0
 // DEBUG is not defined or defined to be 0
