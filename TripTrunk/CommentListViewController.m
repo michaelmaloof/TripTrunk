@@ -392,8 +392,12 @@
 #pragma mark - TTCommentInputViewDelegate
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
+    
+       self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
     if (comment && ![comment isEqualToString: @""] ) {
         if (_photo) {
+            
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                     
@@ -412,6 +416,9 @@
                     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 }
+                                    
+                                    
+             
             }];
             
         }
@@ -625,6 +632,8 @@
 }
 
 -(void)didBeginTyping{
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
 }
 
