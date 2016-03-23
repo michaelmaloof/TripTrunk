@@ -292,7 +292,12 @@
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     // Dismiss the keyboard when scrolling starts
     [self.view endEditing:YES];
-      self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    if (self.view.frame.origin.y >0){
+        
+        
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+        
+    }
     
 }
 
