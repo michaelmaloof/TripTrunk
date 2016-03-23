@@ -294,6 +294,8 @@
     [self.view endEditing:YES];
 }
 
+
+
 #pragma mark - CommentTableViewCell delegate
 
 - (void)commentCell:(CommentTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
@@ -390,8 +392,12 @@
 #pragma mark - TTCommentInputViewDelegate
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
+    
+       self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
     if (comment && ![comment isEqualToString: @""] ) {
         if (_photo) {
+            
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                     
@@ -410,6 +416,9 @@
                     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 }
+                                    
+                                    
+             
             }];
             
         }
@@ -622,5 +631,18 @@
     self.tableView.emptyDataSetDelegate = nil;
 }
 
+-(void)didBeginTyping{
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
+    [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
+}
+
+-(void)didEndTyping{
+    [self.view endEditing:YES];
+
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+}
 
 @end

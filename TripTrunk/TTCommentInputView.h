@@ -17,14 +17,19 @@
 @property (strong, nonatomic)UITextField *commentField;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
+
 - (void)setupConstraintsWithView:(UIView *)view;
 @end
 
 @protocol TTCommentInputViewDelegate <NSObject>
 
+-(void)didBeginTyping;
+-(void)didEndTyping;
+
 @optional
 -(void)displayAutocompletePopoverFromView:(NSString*)text;
 -(void)dismissAutocompletePopoverFromView;
+
 
 @required
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment;

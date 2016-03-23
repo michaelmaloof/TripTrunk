@@ -83,7 +83,7 @@ UIView *topView;
         topView = window.rootViewController.tabBarController.view;
         
         [self.commentField addTarget:self action:@selector(textViewDidChange:) forControlEvents:UIControlEventEditingChanged];
-
+        
     }
     return self;
 }
@@ -93,6 +93,13 @@ UIView *topView;
     [super updateConstraints];
     
 }
+
+
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self.delegate didBeginTyping];
+}
+
 
 - (void)setupInternalContraints {
     

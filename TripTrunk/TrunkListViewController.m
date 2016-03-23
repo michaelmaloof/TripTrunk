@@ -174,11 +174,11 @@
     
     if(y > h + reload_distance) {
         if (self.isMine == YES && self.isList == NO){
-//            [self loadUserTrunks:NO];
+            [self loadUserTrunks:NO];
         }else if (self.isList == NO){
-//            [self queryForTrunks:NO];
+            [self queryForTrunks:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 0){
-//            [self loadTrunkListBasedOnProfile:NO];
+            [self loadTrunkListBasedOnProfile:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 1){
             //fixme: load mutual trunks but for now idk if we need to since there wont be more than 1000 trips combined. once this is a service method we can do this
         }
