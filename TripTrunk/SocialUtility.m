@@ -459,17 +459,18 @@
         [mentionACL setWriteAccess:YES forUser:photo.trip.creator];
         [mentionACL setPublicReadAccess:YES];
         mentionActivity.ACL = mentionACL;
-        
-        [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                [[TTUtility sharedInstance] internetConnectionFound];
-                if (completionBlock) {
-                    completionBlock(succeeded, error);
+        if(![photo.user.objectId isEqual:user.objectId]){
+            [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [[TTUtility sharedInstance] internetConnectionFound];
+                    if (completionBlock) {
+                        completionBlock(succeeded, error);
+                    }
+                } else if (!error){
+                    [ParseErrorHandlingController handleError:error];
                 }
-            } else if (!error){
-                [ParseErrorHandlingController handleError:error];
-            }
-        }];
+            }];
+        }
     }];
 }
 
@@ -632,6 +633,7 @@
     [query setCachePolicy:cachePolicy];
     [query includeKey:@"fromUser"];
     [query includeKey:@"photo"];
+    [query setLimit:1000];
     //Order by the time and then order by isCaption so that the caption is always first
     [query orderByAscending:@"createdAt"];
     [query orderByDescending:@"isCaption"];

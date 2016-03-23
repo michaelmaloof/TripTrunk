@@ -28,6 +28,8 @@
 @property (strong, nonatomic) NSString *comment;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
+@property NSLayoutConstraint *topCont;
+@property NSLayoutConstraint *topContComment;
 
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
@@ -40,6 +42,7 @@
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:comments];
+        self.activities = [[NSMutableArray alloc]init]; //leave for now.
         _photo = photo;
         self.title = NSLocalizedString(@"Comments",@"Comments");
     }
@@ -90,6 +93,8 @@
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
     
+    [self loadComments];
+
     
     if(!self.trunkMembers || self.trunkMembers.count == 0){
         [SocialUtility trunkMembers:self.trip block:^(NSArray *users, NSError *error) {
@@ -108,12 +113,50 @@
     
     
 }
+
+-(void)loadComments{
+
+    PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKey:@"photo" equalTo:self.photo];
+    [queryComments whereKey:@"type" equalTo:@"comment"];
+    [queryComments setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryComments includeKey:@"fromUser"];
+    [queryComments includeKey:@"photo"];
+    [queryComments setLimit:1000];
+    //Order by the time and then order by isCaption so that the caption is always first
+    [queryComments orderByAscending:@"createdAt"];
+    [queryComments orderByDescending:@"isCaption"];
+    
+    
+    [queryComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            for (PFObject *activity in objects)
+            {
+                if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"])
+                {
+                    [self.activities addObject:activity];
+                }
+            }
+            
+            [self.tableView reloadData];
+            
+        } else {
+            NSLog(@"Error loading photo Activities: %@", error);
+            [ParseErrorHandlingController handleError:error];
+        }
+
+}];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 //    self.tabBarController.tabBar.hidden = YES;
 }
 - (void)viewDidAppear:(BOOL)animated {
     
     // reload the table every time it appears or we get weird results
+    
+    
     [self.tableView reloadData];
 }
 
@@ -152,13 +195,15 @@
     
     
     // vertical algin top of tableview to view
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
+    self.topCont = [NSLayoutConstraint constraintWithItem:self.tableView
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
-                                                           constant:0.0]];
+                                                           constant:0.0];
+    [self.view addConstraint:self.topCont];
+    
     
     // vertical algin bottom to comment box
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView
@@ -292,6 +337,16 @@
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     // Dismiss the keyboard when scrolling starts
     [self.view endEditing:YES];
+    if (self.view.frame.origin.y >0){
+        
+        [self.view removeConstraint:self.topContComment];
+        [self.view addConstraint:self.topCont];
+
+        
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+        
+    }
+    
 }
 
 
@@ -393,6 +448,9 @@
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
     
+    [self.view removeConstraint:self.topContComment];
+    [self.view addConstraint:self.topCont];
+
        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     
     if (comment && ![comment isEqualToString: @""] ) {
@@ -406,6 +464,9 @@
                     [self.tableView reloadData];
                     self.comment = comment;
                     [self updateMentionsInDatabase:commentObject];
+                    
+
+                    
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {
@@ -632,8 +693,21 @@
 }
 
 -(void)didBeginTyping{
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view removeConstraint:self.topCont];
+    // vertical algin top of tableview to view
     
+    
+    self.topContComment= [NSLayoutConstraint constraintWithItem:self.tableView
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:-self.commentInputView.frame.size.height];
+    
+    [self.view addConstraint:self.topContComment];
+
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
 }
 
