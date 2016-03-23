@@ -613,7 +613,7 @@ CLCloudinary *cloudinary;
     }
     
     else if ([type isEqualToString:@"mention"]) {
-        if ((BOOL)activity[@"isCaption"] == YES) {
+        if ([activity[@"isCaption"]boolValue] == YES) {
             content =  NSLocalizedString(@"mentioned you in a photo caption.",@"mentioned you in a photo caption.");
 
         }else {
