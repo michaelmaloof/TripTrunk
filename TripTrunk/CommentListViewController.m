@@ -292,6 +292,8 @@
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     // Dismiss the keyboard when scrolling starts
     [self.view endEditing:YES];
+      self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+    
 }
 
 
@@ -392,7 +394,6 @@
 #pragma mark - TTCommentInputViewDelegate
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
-    
        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     
     if (comment && ![comment isEqualToString: @""] ) {
@@ -406,6 +407,9 @@
                     [self.tableView reloadData];
                     self.comment = comment;
                     [self updateMentionsInDatabase:commentObject];
+                    
+
+                    
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {
@@ -632,6 +636,7 @@
 }
 
 -(void)didBeginTyping{
+
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
