@@ -545,10 +545,16 @@
 //        }
     
         [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            if(object)
+                photo.trip = (Trip*)object;
             
             [photo.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                if(object)
+                    photo.trip.creator = (PFUser*)object;
                 
                 [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                    if(object)
+                        photo.user = (PFUser*)object;
                 
                 // proceed to creating new like
                 PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
