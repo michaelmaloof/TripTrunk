@@ -42,6 +42,7 @@
     self = [super init];
     if (self) {
         _activities = [[NSMutableArray alloc] initWithArray:comments];
+        self.activities = [[NSMutableArray alloc]init]; //leave for now.
         _photo = photo;
         self.title = NSLocalizedString(@"Comments",@"Comments");
     }
@@ -91,6 +92,8 @@
     // Setup Empty Datasets delegate/datasource
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
+    [self loadComments];
 
     
     if(!self.trunkMembers || self.trunkMembers.count == 0){
@@ -110,12 +113,50 @@
     
     
 }
+
+-(void)loadComments{
+
+    PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKey:@"photo" equalTo:self.photo];
+    [queryComments whereKey:@"type" equalTo:@"comment"];
+    [queryComments setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryComments includeKey:@"fromUser"];
+    [queryComments includeKey:@"photo"];
+    [queryComments setLimit:1000];
+    //Order by the time and then order by isCaption so that the caption is always first
+    [queryComments orderByAscending:@"createdAt"];
+    [queryComments orderByDescending:@"isCaption"];
+    
+    
+    [queryComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            for (PFObject *activity in objects)
+            {
+                if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"])
+                {
+                    [self.activities addObject:activity];
+                }
+            }
+            
+            [self.tableView reloadData];
+            
+        } else {
+            NSLog(@"Error loading photo Activities: %@", error);
+            [ParseErrorHandlingController handleError:error];
+        }
+
+}];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
 //    self.tabBarController.tabBar.hidden = YES;
 }
 - (void)viewDidAppear:(BOOL)animated {
     
     // reload the table every time it appears or we get weird results
+    
+    
     [self.tableView reloadData];
 }
 
