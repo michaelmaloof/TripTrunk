@@ -1450,8 +1450,8 @@
         self.trunkMembers = [[NSArray alloc] init];
     
     //Added this to prevent a crash but may want to use fetchIfNeeded
-    if(!self.trip)
-        self.trip = [[Trip alloc] init];
+    if(!self.photo.trip)
+        self.photo.trip = [[Trip alloc] init];
     
     //Added this to prevent a crash but may want to use fetchIfNeeded
     if(!self.photo)
@@ -1460,7 +1460,7 @@
     //Build the friends list for the table view in the popover and wait
     NSDictionary *data = @{
                            @"trunkMembers" : self.trunkMembers,
-                           @"trip" : self.trip,
+                           @"trip" : self.photo.trip,
                            @"photo" : self.photo
                            };
     [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
