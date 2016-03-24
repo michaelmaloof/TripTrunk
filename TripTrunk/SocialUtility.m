@@ -589,7 +589,7 @@
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];
             for (PFObject *activity in activities) {
-                [activity delete];
+                [activity deleteEventually];
             }
             
             if (completionBlock) {
