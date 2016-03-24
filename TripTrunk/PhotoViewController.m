@@ -133,7 +133,7 @@
 //    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
     
     self.likeActivities = [[NSMutableArray alloc] init];
-//    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%ld Likes", (long)self.likeActivities.count] forState:UIControlStateNormal];
+//    [self updateLikesLabel];
     
     [self addGestureRecognizers];
     
@@ -311,7 +311,7 @@
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
     NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", @(self.photo.likes), likes] forState:UIControlStateNormal];
+    [self updateLikesLabel];
 
     //set button selelction
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -338,8 +338,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
 
-    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    [self updateLikesLabel];
     
     NSRange cursorPosition = [self.caption selectedRange];
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
@@ -541,8 +540,7 @@
         
                 NSString *comments = NSLocalizedString(@"Comments",@"Comments");
                 [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-                NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+                [self updateLikesLabel];
                 
                 if (updateNow == YES) {
                     //direct update
@@ -592,8 +590,7 @@
             
             NSString *comments = NSLocalizedString(@"Comments",@"Comments");
             [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-            NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-            [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+            [self updateLikesLabel];
     
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
@@ -660,8 +657,7 @@
             
             NSString *comments = NSLocalizedString(@"Comments",@"Comments");
             [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-            NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-            [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+            [self updateLikesLabel];
 
 
 
@@ -930,14 +926,14 @@
             if (succeeded) {
                 
                 [self refreshPhotoActivitiesWithUpdateNow:YES];
-
+                [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:sender];
                 }
                 NSLog(@"Photo liked");
             }else {
                 [self.likeButton setSelected:NO];
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+                [self updateLikesLabel];
                 NSLog(@"Error liking photo: %@", error);
             }
         }];
@@ -953,14 +949,14 @@
             
             if (succeeded) {
                 [self refreshPhotoActivitiesWithUpdateNow:YES];
- 
+                [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:sender];
                 }
                 NSLog(@"Photo unliked");
             }else {
                 [self.likeButton setSelected:YES];
-                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+                [self updateLikesLabel];
                 NSLog(@"Error unliking photo: %@", error);
             }
         }];
@@ -969,8 +965,7 @@
     [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
+    [self updateLikesLabel];
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
@@ -978,6 +973,18 @@
     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
+
+-(void)updateLikesLabel{
+    NSNumber *likeCount = [[TTCache sharedCache] likeCountForPhoto:self.photo];
+    if([likeCount intValue] > 0){
+        [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateNormal];
+        self.likeCountButton.hidden = NO;
+    }else{
+        [self.likeCountButton setTitle:@"" forState:UIControlStateNormal];
+        self.likeCountButton.hidden = YES;
+    }
+}
+
 - (IBAction)trunkNameButtonPressed:(id)sender {
     
     //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
