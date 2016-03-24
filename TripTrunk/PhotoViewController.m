@@ -163,51 +163,6 @@
     
     [self refreshPhotoActivitiesWithUpdateNow:NO];
 
-//############################################# MENTIONS ##################################################
-    
-    [self buildMentionUsersCache];
-    
-    self.softMentions = [[NSMutableArray alloc] init];
-    if([self.photo[@"caption"] containsString:@"@"]){
-        NSArray *mentionArray = [self.photo[@"caption"] componentsSeparatedByString:@" "];
-        for(NSString *username in mentionArray){
-            if([username length] > 0){
-                if([[username substringToIndex:1] isEqualToString:@"@"]){
-
-                    //check if user already exists in softMention Array
-                    PFUser *user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:username]];
-                    
-                    //If it doesn't exist in softMentions, check if it is already in cache
-                    if(!user)
-                        user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:username]];
-                    
-                    //If it isn't in cache, get it from Parse
-                    if(!user){
-                        [SocialUtility loadUserFromUsername:[self getUsernameFromLink:username] block:^(PFUser *user, NSError *error) {
-                            if(user)
-                                [self.softMentions addObject:user];
-                            else NSLog(@"Error: %@",error);
-                        }];
-                    }
-                }
-            }
-        }
-    }
-    
-    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
-    if([self.photo.caption containsString:@"@"]){
-        NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.photo.caption];
-        for(NSString *name in usernamesArray){
-            NSRange userRange = [self.photo.caption rangeOfString:name];
-            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
-            [self.captionLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
-        }
-    }
-    
-    self.captionLabel.delegate = self;
-    
-//############################################# MENTIONS ##################################################
-
 }
 
 //FIXME: added this to silence error on line 145
@@ -534,6 +489,12 @@
                 
             }];
         }
+        else {
+            NSLog(@"Error loading trip: %@", error);
+            [ParseErrorHandlingController handleError:error];
+        }
+        
+        [self initializeMentions];
     }];
 
     
@@ -1264,6 +1225,49 @@
 
 
 //############################################# MENTIONS ##################################################
+-(void)initializeMentions{
+    [self buildMentionUsersCache];
+    
+    self.softMentions = [[NSMutableArray alloc] init];
+    if([self.photo[@"caption"] containsString:@"@"]){
+        NSArray *mentionArray = [self.photo[@"caption"] componentsSeparatedByString:@" "];
+        for(NSString *username in mentionArray){
+            if([username length] > 0){
+                if([[username substringToIndex:1] isEqualToString:@"@"]){
+                    
+                    //check if user already exists in softMention Array
+                    PFUser *user = [self array:self.softMentions containsPFObjectByUsername:[self getUsernameFromLink:username]];
+                    
+                    //If it doesn't exist in softMentions, check if it is already in cache
+                    if(!user)
+                        user = [self array:[[TTCache sharedCache] mentionUsers] containsPFObjectByUsername:[self getUsernameFromLink:username]];
+                    
+                    //If it isn't in cache, get it from Parse
+                    if(!user){
+                        [SocialUtility loadUserFromUsername:[self getUsernameFromLink:username] block:^(PFUser *user, NSError *error) {
+                            if(user)
+                                [self.softMentions addObject:user];
+                            else NSLog(@"Error: %@",error);
+                        }];
+                    }
+                }
+            }
+        }
+    }
+    
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    if([self.photo.caption containsString:@"@"]){
+        NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.photo.caption];
+        for(NSString *name in usernamesArray){
+            NSRange userRange = [self.photo.caption rangeOfString:name];
+            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
+            [self.captionLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
+        }
+    }
+    
+    self.captionLabel.delegate = self;
+}
+
 -(void)updateMentionsInDatabase:(PFObject*)object{
     [self.autocompletePopover saveMentionToDatabase:object comment:self.photo.caption previousComment:self.previousComment photo:self.photo members:self.trunkMembers];
     [self.autocompletePopover removeMentionFromDatabase:object comment:self.photo.caption previousComment:self.previousComment];
