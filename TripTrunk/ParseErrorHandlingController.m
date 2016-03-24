@@ -9,6 +9,8 @@
 #import "ParseErrorHandlingController.h"
 #import <Parse/Parse.h>
 #import "TTUtility.h"
+#import "TTCache.h"
+
 @implementation ParseErrorHandlingController
 
 + (void)handleError:(NSError *)error {
@@ -49,6 +51,14 @@
     // UIViewController *presentingViewController = [[UIApplication sharedApplication].keyWindow.rootViewController;
     // PFLogInViewController *logInViewController = [[PFLogInViewController alloc] init];
     // [presentingViewController presentViewController:logInViewController animated:YES completion:nil];
+}
+
++(void)errorLikingPhoto:(Photo*)photo{
+    [[TTCache sharedCache] decrementLikerCountForPhoto:photo];
+}
+
++(void)errorUnlikingPhoto:(Photo*)photo{
+    [[TTCache sharedCache] incrementLikerCountForPhoto:photo];
 }
 
 @end

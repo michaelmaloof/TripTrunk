@@ -11,7 +11,6 @@
 #import "MBProgressHUD.h"
 #import "ParseErrorHandlingController.h"
 #import "TTUtility.h"
-#import "TTErrorHandler.h"
 
 @implementation SocialUtility
 
@@ -561,7 +560,7 @@
                     if (completionBlock){
                         //has to be done this way because saveEventually will continue to try over and over. We don't want to decrement the likerCount until it FAILS completely
                         if(error){
-                            [TTErrorHandler errorLikingPhoto:photo];
+                            [ParseErrorHandlingController errorLikingPhoto:photo];
                         }
                         completionBlock(succeeded,error);
                     }
@@ -596,7 +595,7 @@
             completionBlock(NO,error);
         } else if (error){
             [ParseErrorHandlingController handleError:error];
-            [TTErrorHandler errorUnlikingPhoto:photo];
+            [ParseErrorHandlingController errorUnlikingPhoto:photo];
         }
     }];
 }

@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Photo.h"
 
 @interface ParseErrorHandlingController : NSObject
 + (void)handleError:(NSError *)error;
++(void)errorLikingPhoto:(Photo*)photo;
++(void)errorUnlikingPhoto:(Photo*)photo;
 @end
