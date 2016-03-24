@@ -530,32 +530,12 @@
 
 + (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
-//    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
-//    [queryExistingLikes whereKey:@"photo" equalTo:photo];
-//    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
-//    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-//    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
-//    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
-//        if (!error) {
-//            [[TTUtility sharedInstance] internetConnectionFound];
-//            for (PFObject *activity in activities) {
-//                [activity delete];
-//            }
-//        } else if (error){
-//            [ParseErrorHandlingController handleError:error];
-//        }
     
-        [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            if(object)
-                photo.trip = (Trip*)object;
+    [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
+        [photo.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
             
-            [photo.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                if(object)
-                    photo.trip.creator = (PFUser*)object;
-                
-                [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                    if(object)
-                        photo.user = (PFUser*)object;
+            [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 
                 // proceed to creating new like
                 PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
@@ -567,28 +547,23 @@
                 
                 PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
                 [likeACL setPublicReadAccess:YES];
-                
                 [likeACL setWriteAccess:YES forUser:photo.user];
                 [likeACL setWriteAccess:YES forUser:photo.trip.creator];
                 
                 likeActivity.ACL = likeACL;
                 
-                [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    
-                    if (error){
+                [likeActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (error)
                         [ParseErrorHandlingController handleError:error];
-                    } else {
-                        [[TTUtility sharedInstance] internetConnectionFound];
-                    }
+                    else [[TTUtility sharedInstance] internetConnectionFound];
                     
-                    if (completionBlock) {
+                    if (completionBlock)
                         completionBlock(succeeded,error);
-                    }
-                }];
+                    
                 }];
             }];
         }];
-//    }];
+    }];
     
 }
 
