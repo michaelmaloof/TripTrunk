@@ -13,4 +13,5 @@
 + (void)handleError:(NSError *)error;
 +(void)errorLikingPhoto:(Photo*)photo;
 +(void)errorUnlikingPhoto:(Photo*)photo;
++(void)errorCommentingOnPhoto:(Photo*)photo;
 @end

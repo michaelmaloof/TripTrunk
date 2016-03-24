@@ -465,8 +465,6 @@
                     self.comment = comment;
                     [self updateMentionsInDatabase:commentObject];
                     
-
-                    
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {

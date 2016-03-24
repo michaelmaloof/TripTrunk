@@ -418,19 +418,22 @@
         [commentACL setPublicReadAccess:YES];
         commentActivity.ACL = commentACL;
         
-        [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                if (completionBlock) {
-                    completionBlock(succeeded, object, commentActivity, error);
-                }
-                                [[TTUtility sharedInstance] internetConnectionFound];
-            }
-            else {
-                // Error, so decrement the cache count again.
+        [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error)
                 [ParseErrorHandlingController handleError:error];
-                [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
+            else [[TTUtility sharedInstance] internetConnectionFound];
+            
+            if (completionBlock){
+                //has to be done this way because saveEventually will continue to try over and over. We don't want to decrement the likerCount until it FAILS completely
+                if(error){
+                    [ParseErrorHandlingController errorCommentingOnPhoto:photo];
+                }
+                completionBlock(succeeded, object, commentActivity, error);
             }
+            
+            
         }];
+        
     }];
 }
 
@@ -464,10 +467,12 @@
                 if (succeeded) {
                     [[TTUtility sharedInstance] internetConnectionFound];
                     if (completionBlock) {
+                        NSLog(@"Comment added");
                         completionBlock(succeeded, error);
                     }
                 } else if (!error){
                     [ParseErrorHandlingController handleError:error];
+                    NSLog(@"Comment NOT added");
                 }
             }];
         }

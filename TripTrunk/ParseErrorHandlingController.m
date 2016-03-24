@@ -61,4 +61,8 @@
     [[TTCache sharedCache] incrementLikerCountForPhoto:photo];
 }
 
++(void)errorCommentingOnPhoto:(Photo*)photo{
+    [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
+}
+
 @end

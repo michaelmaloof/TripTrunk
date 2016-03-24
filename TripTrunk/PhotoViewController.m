@@ -890,7 +890,8 @@
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
                             self.caption.text = @"";
-                            self.captionLabel.attributedText = @"";
+                            NSAttributedString * emptyString= [[NSAttributedString alloc] initWithString:@""];
+                            self.captionLabel.attributedText = emptyString;
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
