@@ -25,6 +25,9 @@
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
 
+@property NSMutableArray *friendObjectIds;
+
+
 @end
 
 @implementation FriendsListViewController
@@ -42,9 +45,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.friendObjectIds = [[NSMutableArray alloc]init];
+    
     // Register Cell Classes
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     self.tableView.sectionHeaderHeight = 0;
+    
+    
     
     if (_isFollowing) {
         _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
@@ -70,8 +77,14 @@
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
             _friends = nil;
-            _friends = [[NSMutableArray alloc] initWithArray:users];
+            _friends = [[NSMutableArray alloc] init];
             
+            for (PFUser *user in users){
+                if (![self.friendObjectIds containsObject:user.objectId]){
+                    [self.friendObjectIds addObject:user.objectId];
+                    [self.friends addObject:user];
+                }
+            }
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -89,7 +102,14 @@
     [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
             _friends = nil;
-            _friends = [[NSMutableArray alloc] initWithArray:users];
+            _friends = [[NSMutableArray alloc] init];
+            
+            for (PFUser *user in users){
+                if (![self.friendObjectIds containsObject:user.objectId]){
+                    [self.friendObjectIds addObject:user.objectId];
+                    [self.friends addObject:user];
+                }
+            }
 
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
