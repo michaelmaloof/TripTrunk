@@ -591,11 +591,14 @@
                 completionBlock(YES,nil);
             }
         }
-        else if (completionBlock) {
-            completionBlock(NO,error);
-        } else if (error){
+        
+        else if (error){
             [ParseErrorHandlingController handleError:error];
             [ParseErrorHandlingController errorUnlikingPhoto:photo];
+            
+            if (completionBlock) {
+                completionBlock(NO,error);
+            }
         }
     }];
 }
