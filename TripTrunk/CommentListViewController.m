@@ -97,7 +97,7 @@
 
     
     if(!self.trunkMembers || self.trunkMembers.count == 0){
-        [SocialUtility trunkMembers:self.trip block:^(NSArray *users, NSError *error) {
+        [SocialUtility trunkMembers:self.photo.trip block:^(NSArray *users, NSError *error) {
             if(!error){
                 self.trunkMembers = [NSArray arrayWithArray:users];
                 if(![[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count == 0)
@@ -529,7 +529,7 @@
                 //Build the friends list for the table view in the popover and wait
                 NSDictionary *data = @{
                                        @"trunkMembers" : self.trunkMembers,
-                                       @"trip" : self.trip,
+                                       @"trip" : self.photo.trip,
                                        @"photo" : self.photo
                                        };
                 [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
@@ -660,8 +660,8 @@
         self.trunkMembers = [[NSArray alloc] init];
     
     //Added this to prevent a crash but may want to use fetchIfNeeded
-    if(!self.trip)
-        self.trip = [[Trip alloc] init];
+    if(!self.photo.trip)
+        self.photo.trip = [[Trip alloc] init];
     
     //Added this to prevent a crash but may want to use fetchIfNeeded
     if(!self.photo)
@@ -670,7 +670,7 @@
     //Build the friends list for the table view in the popover and wait
     NSDictionary *data = @{
                            @"trunkMembers" : self.trunkMembers,
-                           @"trip" : self.trip,
+                           @"trip" : self.photo.trip,
                            @"photo" : self.photo
                            };
     [self.autocompletePopover buildPopoverList:data block:^(BOOL succeeded, NSError *error){
