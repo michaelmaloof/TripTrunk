@@ -53,6 +53,7 @@
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
+		270E46E21CA4445A00253D9C /* TTErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 270E46E11CA4445A00253D9C /* TTErrorHandler.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
@@ -211,6 +212,8 @@
 		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
+		270E46E01CA4445A00253D9C /* TTErrorHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTErrorHandler.h; sourceTree = "<group>"; };
+		270E46E11CA4445A00253D9C /* TTErrorHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTErrorHandler.m; sourceTree = "<group>"; };
 		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
@@ -552,6 +555,8 @@
 				C9F0D66A1B73D15900957F59 /* TTCache.m */,
 				C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */,
 				C9996DD41B45CB2C00326A51 /* ParseErrorHandlingController.m */,
+				270E46E01CA4445A00253D9C /* TTErrorHandler.h */,
+				270E46E11CA4445A00253D9C /* TTErrorHandler.m */,
 				27A581421C888D910095ED94 /* TTPushNotificationHandler.h */,
 				27A581431C888D910095ED94 /* TTPushNotificationHandler.m */,
 				27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */,
@@ -936,6 +941,7 @@
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
+				270E46E21CA4445A00253D9C /* TTErrorHandler.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
 				C9F0D66B1B73D15900957F59 /* TTCache.m in Sources */,
 				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,

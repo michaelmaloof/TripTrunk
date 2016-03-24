@@ -958,48 +958,6 @@
 }
 
 - (IBAction)likeButtonPressed:(id)sender {
-//    //Toggle like button
-//    self.likeButton.selected = !self.likeButton.selected;
-//    
-//    // Like Photo
-//    if (!self.likeButton.selected){
-//        [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-//            self.likeButton.enabled = YES;
-//            if (succeeded) {
-//                [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
-//                [self refreshPhotoActivitiesWithUpdateNow:YES];
-//                
-//                if (self.photo.trip.publicTripDetail)
-//                    [self.delegate photoWasLiked:sender];
-//                NSLog(@"Photo liked successfully");
-//            }
-//            else {
-//                NSLog(@"Error liking photo: %@", error);
-//                //untoggle like button because it failed
-//                self.likeButton.selected = !self.likeButton.selected;
-//            }
-//        }];
-//    }
-//    // Unlike Photo
-//    else if (self.likeButton.selected) {
-//        [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-//            if (succeeded) {
-//                self.likeButton.enabled = YES;
-//                [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-//                [self refreshPhotoActivitiesWithUpdateNow:YES];
-//                
-//                if (self.photo.trip.publicTripDetail)
-//                    [self.delegate photoWasDisliked:sender];
-//                NSLog(@"Photo liked successfully");
-//            }
-//            else {
-//                NSLog(@"Error unliking photo: %@", error);
-//                //untoggle like button because it failed
-//                self.likeButton.selected = !self.likeButton.selected;
-//            }
-//        }];
-//    }
-    
     // Like Photo
     if (!self.likeButton.selected)
     {
@@ -1017,7 +975,6 @@
                 }
                 NSLog(@"Photo liked");
             }else {
-                [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
                 [self.likeButton setSelected:NO];
                 NSLog(@"Error liking photo: %@", error);
             }
@@ -1040,7 +997,6 @@
                 }
                 NSLog(@"Photo unliked");
             }else {
-                [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
                 [self.likeButton setSelected:YES];
                 NSLog(@"Error unliking photo: %@", error);
             }
