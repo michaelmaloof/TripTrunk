@@ -937,6 +937,7 @@
                 NSLog(@"Photo liked");
             }else {
                 [self.likeButton setSelected:NO];
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 NSLog(@"Error liking photo: %@", error);
             }
         }];
@@ -959,6 +960,7 @@
                 NSLog(@"Photo unliked");
             }else {
                 [self.likeButton setSelected:YES];
+                [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] likeCountForPhoto:self.photo],likes] forState:UIControlStateNormal];
                 NSLog(@"Error unliking photo: %@", error);
             }
         }];
