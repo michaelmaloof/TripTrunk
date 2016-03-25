@@ -529,6 +529,12 @@
 + (void)deleteComment:(PFObject *)commentActivity forPhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
     [commentActivity deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error)
+            [commentActivity deleteEventually];
+        
+        if(succeeded)
+            [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
+        
         completionBlock(succeeded, error);
     }];
 }

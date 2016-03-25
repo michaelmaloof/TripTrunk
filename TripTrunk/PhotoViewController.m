@@ -127,13 +127,8 @@
 
     }
     
-
-    
     self.commentActivities = [[NSMutableArray alloc] init];
-//    [self.comments setTitle:[NSString stringWithFormat:@"%ld Comments", (long)self.commentActivities.count] forState:UIControlStateNormal];
-    
     self.likeActivities = [[NSMutableArray alloc] init];
-//    [self updateLikesLabel];
     
     [self addGestureRecognizers];
     
@@ -307,10 +302,11 @@
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+    
     //set button titles with numbers
-    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
-    NSString *likes = NSLocalizedString(@"Likes",@"Likes");
+    [self updateCommentsLabel];
     [self updateLikesLabel];
 
     //set button selelction
@@ -337,11 +333,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-
-    [self updateLikesLabel];
-    
     NSRange cursorPosition = [self.caption selectedRange];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
@@ -538,8 +530,7 @@
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
         
-                NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-                [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+                [self updateCommentsLabel];
                 [self updateLikesLabel];
                 
                 if (updateNow == YES) {
@@ -588,8 +579,7 @@
             }
             
             
-            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+            [self updateCommentsLabel];
             [self updateLikesLabel];
     
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
@@ -655,8 +645,7 @@
             self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
 
             
-            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+            [self updateCommentsLabel];
             [self updateLikesLabel];
 
 
@@ -803,10 +792,17 @@
                 {
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        NSLog(@"caption saved as comment");
-                        [self refreshPhotoActivitiesWithUpdateNow:YES];
-                        [self.caption endEditing:YES];
-                        [self updateMentionsInDatabase:commentObject];
+                        if(!error){
+                            NSLog(@"Caption saved as comment");
+                            [self updateCommentsLabel];
+                            [self refreshPhotoActivitiesWithUpdateNow:YES];
+                            [self.caption endEditing:YES];
+                            [self updateMentionsInDatabase:commentObject];
+                        }else{
+                            NSLog(@"Error saving caption");
+                            [self updateCommentsLabel];
+                            [self.caption endEditing:YES];
+                        }
                     }];
                 } else
                 {
@@ -819,8 +815,25 @@
                             save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
-                            [obj saveInBackground];
-                            [self updateMentionsInDatabase:obj];
+//                            [obj saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//                                if(!error){
+//                                    NSLog(@"Caption saved as comment");
+//                                    [self updateCommentsLabel];
+//                                    [self updateMentionsInDatabase:obj];
+//                                }else{
+//                                    NSLog(@"Error saving caption");
+//                                }
+//                            }];
+                            [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                if(!error){
+                                    NSLog(@"Caption saved as comment");
+                                    [self updateCommentsLabel];
+                                    [self updateMentionsInDatabase:obj];
+                                }else{
+                                    NSLog(@"Error saving caption");
+                                }
+                            }];
+                            
                         }
                     }
                     
@@ -828,8 +841,14 @@
                         
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
                          {
-                             [self refreshPhotoActivitiesWithUpdateNow:YES];
-                             [self updateMentionsInDatabase:commentObject];
+                             if(!error){
+                                 [self refreshPhotoActivitiesWithUpdateNow:YES];
+                                 [self updateCommentsLabel];
+                                 [self updateMentionsInDatabase:commentObject];
+                             }else{
+                                 NSLog(@"Error saving caption");
+                                 [self updateCommentsLabel];
+                             }
                          }];
                         
                     }else{
@@ -889,24 +908,23 @@
                     [commentToDelete addObject:obj];
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
+                            NSLog(@"Caption deleted");
                             self.caption.text = @"";
                             NSAttributedString * emptyString= [[NSAttributedString alloc] initWithString:@""];
                             self.captionLabel.attributedText = emptyString;
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
-                            NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-                            [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+                            [self updateCommentsLabel];
                         } else {
-                            
+                            NSLog(@"Error deleting caption");
                         }
                     }];
                     break;
                 }
             }
             
-        }
-        if (error){
+        }else{
             [ParseErrorHandlingController handleError:error];
         }
         
@@ -964,8 +982,7 @@
     }
     
     [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
-    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", [[TTCache sharedCache] commentCountForPhoto:self.photo],comments] forState:UIControlStateNormal];
+    [self updateCommentsLabel];
     [self updateLikesLabel];
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
@@ -984,6 +1001,15 @@
         [self.likeCountButton setTitle:@"" forState:UIControlStateNormal];
         self.likeCountButton.hidden = YES;
     }
+}
+
+-(void)updateCommentsLabel{
+    NSString *comments = NSLocalizedString(@"Comments",@"Comments");
+    NSNumber *commentCount = [[TTCache sharedCache] commentCountForPhoto:self.photo];
+    if([commentCount intValue] == 1)
+        comments = NSLocalizedString(@"Comment",@"Comment");
+    
+    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
 }
 
 - (IBAction)trunkNameButtonPressed:(id)sender {
