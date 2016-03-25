@@ -306,11 +306,12 @@
                 });
             }
             else {
+                self.photo.caption = @"";
                 UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                 self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
                 [self.autocompletePopover removeMentionFromDatabase:object comment:@"" previousComment:object[@"content"]];
                 // Post a notification so that the data is reloaded in the Photo View
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:self.photo];
                 
             }
         }];
