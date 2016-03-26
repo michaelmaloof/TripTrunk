@@ -49,7 +49,7 @@
         alert.message = NSLocalizedString(@"If you'd like to instead link your Facebook to an already existing TripTrunk account, please go to settings within your TripTrunk account", @"If you'd like to link your Facebook to an already existing TripTrunk account, please go to settings within your TripTrunk account");
         alert.delegate = self;
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel!")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Great, Create Account!",@"Great, Create Account!")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Great, Begin Creating Account!",@"Great, Begin Create Account!")];
         [alert show];
 
           }
