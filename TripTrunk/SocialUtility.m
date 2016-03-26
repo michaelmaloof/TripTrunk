@@ -532,10 +532,29 @@
         if(error)
             [commentActivity deleteEventually];
         
-        if(succeeded)
+        if(succeeded){
             [[TTCache sharedCache] decrementCommentCountForPhoto:photo];
+            //delete photo caption if it actually is a caption
+            if([commentActivity[@"isCaption"] boolValue]){
+                PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
+                [query whereKey:@"objectId" equalTo:photo.objectId];
+                
+                [query getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                    if (error){
+                        [ParseErrorHandlingController handleError:error];
+                    } else {
+                        [[TTUtility sharedInstance] internetConnectionFound];
+                        [object setObject:@"" forKey:@"caption"];
+                        [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                            completionBlock(succeeded, error);
+                        }];
+                        
+                    }
+                }];
+            }
+        }
         
-        completionBlock(succeeded, error);
+//        completionBlock(succeeded, error);
     }];
 }
 
