@@ -744,7 +744,6 @@
 
 - (IBAction)onCommentsTapped:(id)sender {
     
-    
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
 //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
 //    [self presentViewController:navController animated:YES completion:nil];
@@ -810,8 +809,7 @@
                     //if there already is a caption we edit it and save it
                     __block BOOL save = NO;
                     for (PFObject *obj in self.commentActivities){
-                        if ((BOOL)[obj objectForKey:@"isCaption"] && !save)
-                        {
+                        if ([[obj objectForKey:@"isCaption"] boolValue] && !save){
                             save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
@@ -842,12 +840,15 @@
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
                          {
                              if(!error){
+                                 NSLog(@"Caption saved as comment");
                                  [self refreshPhotoActivitiesWithUpdateNow:YES];
                                  [self updateCommentsLabel];
+                                 [self.caption endEditing:YES];
                                  [self updateMentionsInDatabase:commentObject];
                              }else{
                                  NSLog(@"Error saving caption");
                                  [self updateCommentsLabel];
+                                 [self.caption endEditing:YES];
                              }
                          }];
                         
@@ -897,6 +898,7 @@
 
 
 }
+
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
     [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         self.photo.caption = @"";
