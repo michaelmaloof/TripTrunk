@@ -322,18 +322,19 @@ enum TTActivityViewType : NSUInteger {
                 
                 [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error)
                 {
-                    //        self.activities = [[NSMutableArray alloc]init];
+                    int index = 0;
                     for (PFObject *obj in activities)
                     {
+                        index += 1;
                         PFUser *toUser = obj[@"toUser"];
                         PFUser *fromUser = obj[@"fromUser"];
                         if (obj[@"trip"] && toUser != nil && fromUser != nil)
                         {
-                            [self.activities insertObject:obj atIndex:0];
+                            [self.activities insertObject:obj atIndex:index-1];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
                         {
                             if (toUser != nil && fromUser != nil){
-                                [self.activities insertObject:obj atIndex:0];
+                                [self.activities insertObject:obj atIndex:index-1];
                             }
                             
                         }
