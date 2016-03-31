@@ -584,8 +584,13 @@ CLCloudinary *cloudinary;
         }
     }
     else if ([type isEqualToString:@"comment"]) {
-        NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
-        content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
+        if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
+            NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
+            content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
+        } else {
+            isAllActivity = YES;
+            content = NSLocalizedString(@"commented on a photo by",@"commented on a photo by");
+        }
     }
     else if ([type isEqualToString:@"addToTrip"]) {
         if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
