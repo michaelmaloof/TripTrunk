@@ -103,6 +103,13 @@
     
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
     
+    if (self.isList == YES) {
+        self.title = self.user.username;
+    } else {
+        self.title = self.city;
+        
+    }
+    
     self.visitedTrunks = [[NSMutableArray alloc]init];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
