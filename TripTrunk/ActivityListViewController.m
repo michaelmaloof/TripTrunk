@@ -186,8 +186,8 @@ enum TTActivityViewType : NSUInteger {
                              
                              for (PFObject *obj in activities){
                                  PFUser *toUser = obj[@"toUser"];
-                                 PFUser *fromUser = obj[@"fromUser"];
-                                 if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                                 PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                                 if (obj[@"trip"] && toUser != nil && fromUser != nil){
                                      [self.activities addObject:obj];
                                  } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                                      
@@ -444,8 +444,8 @@ enum TTActivityViewType : NSUInteger {
                 [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
                     for (PFObject *obj in activities){
                         PFUser *toUser = obj[@"toUser"];
-                        PFUser *fromUser = obj[@"fromUser"];
-                        if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                        PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                        if (obj[@"trip"] && toUser != nil && fromUser != nil){
                             [self.activities addObject:obj];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                             if (toUser != nil && fromUser != nil){
@@ -472,8 +472,8 @@ enum TTActivityViewType : NSUInteger {
                         PFUser *toUser = obj[@"toUser"];
                         PFUser *fromUser = obj[@"fromUser"];
                         if (obj[@"trip"]){
-                            Trip *trip = obj[@"trip"];
-                            if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                            Trip *trip = obj[@"trip"]; //FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                            if (trip.name != nil  && toUser != nil && fromUser != nil){
                                 [self.followingActivities addObject:obj];
                                 
                             }
@@ -962,8 +962,8 @@ enum TTActivityViewType : NSUInteger {
                     PFUser *toUser = obj[@"toUser"];
                     PFUser *fromUser = obj[@"fromUser"];
                     if (obj[@"trip"]){
-                        Trip *trip = obj[@"trip"];
-                        if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                        Trip *trip = obj[@"trip"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                        if (trip.name != nil  && toUser != nil && fromUser != nil){
                             [self.followingActivities addObject:obj];
                         }
                     }

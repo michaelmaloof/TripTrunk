@@ -680,8 +680,8 @@
     PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
     [photos whereKey:@"trip" containedIn:trips];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
-    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [query whereKeyExists:@"trip"];
+    [photos whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [photos whereKeyExists:@"trip"];
   
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
@@ -744,6 +744,8 @@
 
 + (void)queryForFollowingActivities:(NSInteger)count friends:(NSMutableArray*)friends activities:(NSMutableArray*)activities isRefresh:(BOOL)isRefresh query:(void (^)(NSArray *, NSError *))completionBlock
 {
+    
+    
     PFQuery *likes = [PFQuery queryWithClassName:@"Activity"];
     [likes whereKey:@"fromUser" containedIn:friends];
     [likes whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
@@ -755,7 +757,20 @@
     [following whereKey:@"type" equalTo:@"follow"];
     [following whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
     
-    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[likes, following]];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:@"fromUser"];
+    [likes whereKey:@"fromUser" containedIn:friends];
+    [query whereKeyExists:@"trip"];
+    
+    PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+    [photos whereKey:@"type" equalTo:@"addedPhoto"];
+    [photos whereKey:@"fromUser" containedIn:friends];
+    [photos whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
+    [photos whereKeyExists:@"trip"];
+    
+    PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[likes, following, photos,query]];
     subqueries.limit = 20;
     [subqueries orderByDescending:@"createdAt"];
     [subqueries includeKey:@"fromUser"];
