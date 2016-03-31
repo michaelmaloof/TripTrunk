@@ -758,9 +758,12 @@
     [following whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [likes whereKey:@"toUser" containedIn:friends];
+    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"fromUser"];
+    [query whereKey:@"type" equalTo:@"comment"];
+
     [likes whereKey:@"fromUser" containedIn:friends];
     [query whereKeyExists:@"trip"];
     

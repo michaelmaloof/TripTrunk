@@ -371,22 +371,26 @@ enum TTActivityViewType : NSUInteger {
             } else if (self.filter.tag ==1) {
                 [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:self.followingActivities isRefresh:YES query:^(NSArray *activities, NSError *error) {
                  
-                     for (PFObject *obj in activities)
-                     {
-                         
-                         if (obj[@"trip"])
-                         {
-                             Trip *trip = obj[@"trip"];
-                             if (trip.name != nil)
-                             {
-                                 [self.followingActivities insertObject:obj atIndex:0];
-                             }
-                         }
-                         else if ([obj[@"type"] isEqualToString:@"follow"]){
-                             [self.followingActivities insertObject:obj atIndex:0];
-                             
-                         }
-                     }
+                    
+                    int index = 0;
+                    for (PFObject *obj in activities)
+                    {
+                        index += 1;
+                        PFUser *toUser = obj[@"toUser"];
+                        PFUser *fromUser = obj[@"fromUser"];
+                        if (obj[@"trip"] && toUser != nil && fromUser != nil)
+                        {
+                            [self.followingActivities insertObject:obj atIndex:index-1];
+                        } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
+                        {
+                            if (toUser != nil && fromUser != nil){
+                                [self.followingActivities insertObject:obj atIndex:index-1];
+                            }
+                            
+                        }
+                    }
+
+                    
                      //        _activities = [NSMutableArray arrayWithArray:activities];
                      dispatch_async(dispatch_get_main_queue(), ^
                                     {
