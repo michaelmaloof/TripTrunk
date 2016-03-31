@@ -464,8 +464,6 @@
                     self.wasError = NO;
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
-                self.meParseLocations = [[NSMutableArray alloc]init];
-                self.meObjectIDs = [[NSMutableArray alloc]init];
                 self.didLoad = YES;
                 for (PFObject *activity in objects)
                 {
@@ -1091,6 +1089,12 @@
     else if (self.wasError == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    
+    if (self.isList == YES && self.trunkListToggle.tag == 1 && self.mutualTrunks.count ==0){
+        self.tableView.tableFooterView = [UIView new];
+
         return YES;
     }
     
