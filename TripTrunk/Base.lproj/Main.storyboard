@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -60,7 +60,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="398" height="407"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
@@ -910,7 +910,7 @@
                                         <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AKn-8L-1Iv" id="f0d-3e-NRL">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rsa-WS-Nbe">
@@ -985,8 +985,18 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fZa-em-grD">
+                                                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="342" y="20" width="15" height="21"/>
+                                                    </variation>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="fZa-em-grD" firstAttribute="width" secondItem="Xop-ab-F2N" secondAttribute="width" id="4sw-2n-Nkx"/>
                                                 <constraint firstItem="muc-qy-oH5" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gQe-bu-GJg" secondAttribute="bottom" constant="-5" id="ELQ-1P-KLX">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                                 </constraint>
@@ -999,6 +1009,9 @@
                                                     <variation key="heightClass=regular-widthClass=compact" constant="-4"/>
                                                 </constraint>
                                                 <constraint firstItem="T3i-EO-myC" firstAttribute="top" secondItem="Xop-ab-F2N" secondAttribute="bottom" constant="4.5" id="Zi3-0p-pOP"/>
+                                                <constraint firstItem="fZa-em-grD" firstAttribute="height" secondItem="Xop-ab-F2N" secondAttribute="height" id="bEg-aR-mCR"/>
+                                                <constraint firstItem="rsa-WS-Nbe" firstAttribute="leading" secondItem="fZa-em-grD" secondAttribute="trailing" constant="5" id="cJF-F2-3qH"/>
+                                                <constraint firstItem="fZa-em-grD" firstAttribute="top" secondItem="Xop-ab-F2N" secondAttribute="bottom" constant="0.5" id="cUA-Z5-L0M"/>
                                                 <constraint firstItem="rsa-WS-Nbe" firstAttribute="centerY" secondItem="f0d-3e-NRL" secondAttribute="centerY" id="i1W-2n-LeW"/>
                                                 <constraint firstItem="Xop-ab-F2N" firstAttribute="top" secondItem="f0d-3e-NRL" secondAttribute="topMargin" constant="-3.5" id="lcb-nQ-5OR"/>
                                                 <constraint firstAttribute="leadingMargin" secondItem="muc-qy-oH5" secondAttribute="leading" id="lfT-Gd-y1S"/>
@@ -1017,6 +1030,7 @@
                                                     <exclude reference="muc-qy-oH5"/>
                                                     <exclude reference="Xop-ab-F2N"/>
                                                     <exclude reference="T3i-EO-myC"/>
+                                                    <exclude reference="fZa-em-grD"/>
                                                 </mask>
                                                 <mask key="constraints">
                                                     <exclude reference="LXZ-FF-CPw"/>
@@ -1025,11 +1039,15 @@
                                                     <exclude reference="ELQ-1P-KLX"/>
                                                     <exclude reference="lfT-Gd-y1S"/>
                                                     <exclude reference="wJ4-lM-bhY"/>
-                                                    <exclude reference="Zi3-0p-pOP"/>
                                                     <exclude reference="lcb-nQ-5OR"/>
                                                     <exclude reference="nJF-MP-Nss"/>
                                                     <exclude reference="q8V-M9-2Fp"/>
+                                                    <exclude reference="4sw-2n-Nkx"/>
+                                                    <exclude reference="bEg-aR-mCR"/>
+                                                    <exclude reference="cUA-Z5-L0M"/>
+                                                    <exclude reference="Zi3-0p-pOP"/>
                                                     <exclude reference="NqU-ov-UMn"/>
+                                                    <exclude reference="cJF-F2-3qH"/>
                                                     <exclude reference="i1W-2n-LeW"/>
                                                     <exclude reference="wIR-OA-eDH"/>
                                                     <exclude reference="yif-Qe-M01"/>
@@ -1042,6 +1060,7 @@
                                                     <include reference="muc-qy-oH5"/>
                                                     <include reference="Xop-ab-F2N"/>
                                                     <include reference="T3i-EO-myC"/>
+                                                    <include reference="fZa-em-grD"/>
                                                 </mask>
                                                 <mask key="constraints">
                                                     <include reference="LXZ-FF-CPw"/>
@@ -1050,11 +1069,15 @@
                                                     <include reference="ELQ-1P-KLX"/>
                                                     <include reference="lfT-Gd-y1S"/>
                                                     <include reference="wJ4-lM-bhY"/>
-                                                    <include reference="Zi3-0p-pOP"/>
                                                     <include reference="lcb-nQ-5OR"/>
                                                     <exclude reference="nJF-MP-Nss"/>
                                                     <exclude reference="q8V-M9-2Fp"/>
+                                                    <include reference="4sw-2n-Nkx"/>
+                                                    <include reference="bEg-aR-mCR"/>
+                                                    <include reference="cUA-Z5-L0M"/>
+                                                    <include reference="Zi3-0p-pOP"/>
                                                     <include reference="NqU-ov-UMn"/>
+                                                    <include reference="cJF-F2-3qH"/>
                                                     <include reference="i1W-2n-LeW"/>
                                                     <include reference="wIR-OA-eDH"/>
                                                     <include reference="yif-Qe-M01"/>
@@ -1062,6 +1085,7 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="emoji" destination="fZa-em-grD" id="2Of-Qy-pnU"/>
                                             <outlet property="lockImage" destination="Xop-ab-F2N" id="FnL-JX-uUy"/>
                                             <outlet property="profileImage" destination="rsa-WS-Nbe" id="fBy-HR-1EQ"/>
                                             <outlet property="seenLogo" destination="T3i-EO-myC" id="UKf-Nd-btK"/>
@@ -2825,7 +2849,7 @@
                                 <rect key="frame" x="0.0" y="28" width="300" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tri-Yb-OfN" id="02l-cE-yPL">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Load" translatesAutoresizingMaskIntoConstraints="NO" id="Mfs-wT-q7x" customClass="TTUserProfileImage">
@@ -3922,7 +3946,7 @@
                                 <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hgo-b2-68r" id="3WF-8I-k7n">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

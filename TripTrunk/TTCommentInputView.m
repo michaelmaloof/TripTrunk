@@ -18,7 +18,6 @@ UIView *topView;
 @interface TTCommentInputView () <UITextFieldDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate, TTTAttributedLabelDelegate>
 
 
-@property (strong, nonatomic)UIButton *submitButton;
 @property (weak, nonatomic)NSLayoutConstraint *bottomConstraint;
 //############################################# MENTIONS ##################################################
 //@property (weak, nonatomic) IBOutlet UITextView *caption;
