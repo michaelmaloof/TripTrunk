@@ -127,11 +127,30 @@
         }
     }
     
+    if (self.user == nil){
+        [self setTitleImage];
+    } else {
+        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+        NSString *s = NSLocalizedString(@"'s",@"'s");
+        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+    }
+
+    
 //    if (self.hasLoadedOnce == NO && self.) i was doing stuff here fixme
 
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    
+    if (self.user == nil){
+        [self setTitleImage];
+    } else {
+        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+        NSString *s = NSLocalizedString(@"'s",@"'s");
+        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+    }
+
+    
     self.visitedTrunks = [[NSMutableArray alloc]init];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {

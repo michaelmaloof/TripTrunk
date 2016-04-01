@@ -182,6 +182,7 @@
     } else {
         [self.followButton setTitleColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0] forState:UIControlStateNormal];
         self.followButton.backgroundColor = [UIColor whiteColor];
+        [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
         [[self.followButton layer] setBorderWidth:2.0f];
 
     }

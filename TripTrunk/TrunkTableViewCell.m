@@ -15,7 +15,8 @@
     [self.profileImage.layer setCornerRadius:15.0f];
     [self.profileImage.layer setMasksToBounds:YES];
     [self.profileImage.layer setBorderWidth:2.0f];
-    self.profileImage.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);}
+    self.profileImage.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

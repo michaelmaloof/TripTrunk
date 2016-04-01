@@ -17,6 +17,8 @@
 @property (strong, nonatomic)UITextField *commentField;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
+@property (strong, nonatomic)UIButton *submitButton;
+
 
 - (void)setupConstraintsWithView:(UIView *)view;
 @end

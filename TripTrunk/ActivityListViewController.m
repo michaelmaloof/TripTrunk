@@ -186,8 +186,8 @@ enum TTActivityViewType : NSUInteger {
                              
                              for (PFObject *obj in activities){
                                  PFUser *toUser = obj[@"toUser"];
-                                 PFUser *fromUser = obj[@"fromUser"];
-                                 if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                                 PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                                 if (obj[@"trip"] && toUser != nil && fromUser != nil){
                                      [self.activities addObject:obj];
                                  } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                                      
@@ -225,20 +225,20 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-    
-//    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-//    [self.navigationController setTabBarItem:searchItem];
-    
+        
     [self.tableView reloadData];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-    UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    [self.navigationController setTabBarItem:searchItem];
+    
+    if (_viewType == TTActivityViewAllActivities){
+    
+        UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+        [self.navigationController setTabBarItem:searchItem];
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -322,18 +322,19 @@ enum TTActivityViewType : NSUInteger {
                 
                 [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error)
                 {
-                    //        self.activities = [[NSMutableArray alloc]init];
+                    int index = 0;
                     for (PFObject *obj in activities)
                     {
+                        index += 1;
                         PFUser *toUser = obj[@"toUser"];
                         PFUser *fromUser = obj[@"fromUser"];
                         if (obj[@"trip"] && toUser != nil && fromUser != nil)
                         {
-                            [self.activities insertObject:obj atIndex:0];
+                            [self.activities insertObject:obj atIndex:index-1];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
                         {
                             if (toUser != nil && fromUser != nil){
-                                [self.activities insertObject:obj atIndex:0];
+                                [self.activities insertObject:obj atIndex:index-1];
                             }
                             
                         }
@@ -370,22 +371,26 @@ enum TTActivityViewType : NSUInteger {
             } else if (self.filter.tag ==1) {
                 [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:self.followingActivities isRefresh:YES query:^(NSArray *activities, NSError *error) {
                  
-                     for (PFObject *obj in activities)
-                     {
-                         
-                         if (obj[@"trip"])
-                         {
-                             Trip *trip = obj[@"trip"];
-                             if (trip.name != nil)
-                             {
-                                 [self.followingActivities insertObject:obj atIndex:0];
-                             }
-                         }
-                         else if ([obj[@"type"] isEqualToString:@"follow"]){
-                             [self.followingActivities insertObject:obj atIndex:0];
-                             
-                         }
-                     }
+                    
+                    int index = 0;
+                    for (PFObject *obj in activities)
+                    {
+                        index += 1;
+                        PFUser *toUser = obj[@"toUser"];
+                        PFUser *fromUser = obj[@"fromUser"];
+                        if (obj[@"trip"] && toUser != nil && fromUser != nil)
+                        {
+                            [self.followingActivities insertObject:obj atIndex:index-1];
+                        } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"])
+                        {
+                            if (toUser != nil && fromUser != nil){
+                                [self.followingActivities insertObject:obj atIndex:index-1];
+                            }
+                            
+                        }
+                    }
+
+                    
                      //        _activities = [NSMutableArray arrayWithArray:activities];
                      dispatch_async(dispatch_get_main_queue(), ^
                                     {
@@ -443,8 +448,8 @@ enum TTActivityViewType : NSUInteger {
                 [SocialUtility queryForAllActivities:self.activities.count trips:self.trips activities:self.activities isRefresh:NO query:^(NSArray *activities, NSError *error) {
                     for (PFObject *obj in activities){
                         PFUser *toUser = obj[@"toUser"];
-                        PFUser *fromUser = obj[@"fromUser"];
-                        if (obj[@"trip"] && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                        PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                        if (obj[@"trip"] && toUser != nil && fromUser != nil){
                             [self.activities addObject:obj];
                         } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
                             if (toUser != nil && fromUser != nil){
@@ -471,8 +476,8 @@ enum TTActivityViewType : NSUInteger {
                         PFUser *toUser = obj[@"toUser"];
                         PFUser *fromUser = obj[@"fromUser"];
                         if (obj[@"trip"]){
-                            Trip *trip = obj[@"trip"];
-                            if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                            Trip *trip = obj[@"trip"]; //FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                            if (trip.name != nil  && toUser != nil && fromUser != nil){
                                 [self.followingActivities addObject:obj];
                                 
                             }
@@ -961,8 +966,8 @@ enum TTActivityViewType : NSUInteger {
                     PFUser *toUser = obj[@"toUser"];
                     PFUser *fromUser = obj[@"fromUser"];
                     if (obj[@"trip"]){
-                        Trip *trip = obj[@"trip"];
-                        if (trip.name != nil && ![toUser.objectId isEqualToString:fromUser.objectId] && toUser != nil && fromUser != nil){
+                        Trip *trip = obj[@"trip"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                        if (trip.name != nil  && toUser != nil && fromUser != nil){
                             [self.followingActivities addObject:obj];
                         }
                     }
