@@ -15,14 +15,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppStoreIcon_NEW_noBG" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
-                    <rect key="frame" x="165" y="175" width="150" height="130"/>
+                    <rect key="frame" x="195" y="205" width="90" height="70"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="150" id="dpu-om-igL"/>
-                        <constraint firstAttribute="height" constant="130" id="vzd-MQ-CHk"/>
+                        <constraint firstAttribute="width" constant="90" id="dpu-om-igL"/>
+                        <constraint firstAttribute="height" constant="70" id="vzd-MQ-CHk"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tripTrunkTitle" translatesAutoresizingMaskIntoConstraints="NO" id="EfB-bH-lR1">
-                    <rect key="frame" x="150.5" y="405" width="179" height="57"/>
+                    <rect key="frame" x="150" y="405" width="179" height="57"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="57" id="HK0-i3-as8"/>
                         <constraint firstAttribute="width" constant="179" id="Mzr-oW-NIi"/>
@@ -56,7 +56,7 @@
         </view>
     </objects>
     <resources>
-        <image name="AppStoreIcon_NEW_noBG" width="50" height="43"/>
+        <image name="AppStoreIcon_NEW_noBG" width="300" height="254"/>
         <image name="lake_background" width="500" height="889"/>
         <image name="tripTrunkTitle" width="286" height="78"/>
     </resources>
