@@ -571,21 +571,38 @@ CLCloudinary *cloudinary;
     NSString *content = @"";
     
     BOOL isAllActivity = NO;
+    BOOL engagedOnOwnContent = NO;
     
     PFUser *toUser = activity[@"toUser"];
+    PFUser *user = activity[@"fromUser"];
+
     
     if ([type isEqualToString:@"like"]) {
         
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
             content = NSLocalizedString(@"liked your photo.",@"liked your photo.");
-        } else {
+        } else if ([toUser.objectId isEqualToString:user.objectId]){
+            isAllActivity = YES;
+            engagedOnOwnContent = YES;
+            content = NSLocalizedString(@"liked their own photo",@"liked their own photo");
+        }
+        else {
             isAllActivity = YES;
             content = NSLocalizedString(@"liked a photo by",@"liked a photo by");
         }
     }
     else if ([type isEqualToString:@"comment"]) {
-        NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
-        content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
+        if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
+            NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
+            content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
+        } else if ([toUser.objectId isEqualToString:user.objectId]){
+            isAllActivity = YES;
+            engagedOnOwnContent = YES;
+            content = NSLocalizedString(@"commented on their own photo",@"commented on their own photo");
+        } else {
+            isAllActivity = YES;
+            content = NSLocalizedString(@"commented on a photo by",@"commented on a photo by");
+        }
     }
     else if ([type isEqualToString:@"addToTrip"]) {
         if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
@@ -621,8 +638,6 @@ CLCloudinary *cloudinary;
         }
     }
     
-    
-    PFUser *user = activity[@"fromUser"];
     NSString *time = @"";
 
     if ([activity valueForKey:@"createdAt"]) {
@@ -632,9 +647,10 @@ CLCloudinary *cloudinary;
     
     NSString *contentString = @"";
     
-    if (isAllActivity == NO){
+    if (isAllActivity == NO || engagedOnOwnContent == YES){
         contentString = [NSString stringWithFormat:@"%@ %@", user.username, content];
-    } else {
+    }
+    else {
         contentString = [NSString stringWithFormat:@"%@ %@ %@ ", user.username, content, toUser.username];
     }
 

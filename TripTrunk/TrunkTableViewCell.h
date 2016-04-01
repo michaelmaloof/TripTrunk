@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *lockImage;
 @property (weak, nonatomic) IBOutlet UIImageView *seenLogo;
+@property (weak, nonatomic) IBOutlet UILabel *emoji;
 
 @end

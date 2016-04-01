@@ -103,6 +103,13 @@
     
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
     
+    if (self.isList == YES) {
+        self.title = self.user.username;
+    } else {
+        self.title = self.city;
+        
+    }
+    
     self.visitedTrunks = [[NSMutableArray alloc]init];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
@@ -457,8 +464,6 @@
                     self.wasError = NO;
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
-                self.meParseLocations = [[NSMutableArray alloc]init];
-                self.meObjectIDs = [[NSMutableArray alloc]init];
                 self.didLoad = YES;
                 for (PFObject *activity in objects)
                 {
@@ -859,6 +864,14 @@
     
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
+    cell.emoji.adjustsFontSizeToFitWidth = YES;
+    if (cell.trip.publicTripDetail.totalLikes <10){
+        cell.emoji.text = @"";
+    } else if (cell.trip.publicTripDetail.totalLikes < 50){
+        cell.emoji.text = @"🔥";
+    } else{
+        cell.emoji.text = @"⚡️";
+    }
     
     NSString *countString;
     if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
@@ -1084,6 +1097,12 @@
     else if (self.wasError == YES){
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
+        return YES;
+    }
+    
+    if (self.isList == YES && self.trunkListToggle.tag == 1 && self.mutualTrunks.count ==0){
+        self.tableView.tableFooterView = [UIView new];
+
         return YES;
     }
     

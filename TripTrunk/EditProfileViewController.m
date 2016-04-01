@@ -128,7 +128,7 @@
     NSString *bio = self.bioTextView.text;
     NSString *firstName = self.firstName.text;
     NSString *lastName = self.nameTextView.text;
-    NSString *fullName = [NSString stringWithFormat:@"%@, %@", firstName, lastName];
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
 
     [_user setValue:hometown forKey:@"hometown"];
     [_user setValue:bio forKey:@"bio"];
