@@ -231,7 +231,7 @@ enum TTActivityViewType : NSUInteger {
 
 -(void)viewDidDisappear:(BOOL)animated{
     
-    if (_viewType == TTActivityViewLikes){
+    if (_viewType == TTActivityViewAllActivities){
     
         UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
