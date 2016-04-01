@@ -55,7 +55,6 @@
 @property NSMutableArray *visitedTrunks;
 @property TTNewsFeedViewController *newsVC;
 @property BOOL exists;
-
 @end
 
 @implementation HomeMapViewController
@@ -248,6 +247,12 @@
             
             self.isLoading = YES;
             [self queryParseMethodEveryone];
+//            [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:@{@"user": [PFUser currentUser].objectId}
+//                                        block:^(NSString *response, NSError *error) {
+//                                            if (!error) {
+//                                                NSLog(@"%@",response);
+//                                            }
+//                                        }];
             //We're on the home tab so register the user's notifications
             
         } else {
@@ -420,69 +425,124 @@
  *
  *
  */
--(void)queryParseMethodForUser:(PFUser*)user
-{
-    //Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
-    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"toUser" equalTo:user];
-    [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query includeKey:@"trip"];
-    [query includeKey:@"trip.publicTripDetail"];
-    [query includeKey:@"toUser"];
-    [query includeKey:@"creator"];
-    [query includeKey:@"createdAt"];
-    [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-    [query whereKeyExists:@"trip"];
-    [query setLimit: self.limit];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        //we finished loading so switch the bool and renable the refresh icon
-        self.isLoading = NO;
-        
-        if (self.buttonsMaded == NO){
-            [self createButtons];
-        } else {
-            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-                leftButton.enabled = YES;
-            }
-        }
-        
-        
-        //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-            if (self.user == nil){
-                [self setTitleImage];
+-(void)queryParseMethodForUser:(PFUser*)user{
+    NSDictionary *params = @{
+                             @"objectId" : user.objectId,
+                             @"limit" : [NSString stringWithFormat:@"%d",self.limit]
+                             };
+    [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+        if (!error) {
+            //we finished loading so switch the bool and renable the refresh icon
+            self.isLoading = NO;
+            
+            if (self.buttonsMaded == NO){
+                [self createButtons];
             } else {
-                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-                NSString *s = NSLocalizedString(@"'s",@"'s");
-                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+                for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+                    leftButton.enabled = YES;
+                }
             }
-            [ParseErrorHandlingController handleError:error];
-        }
-        
-        //there is no error loading the trunks so begin the process of placing them on the map
-        else
-        {
-            [[TTUtility sharedInstance] internetConnectionFound];
-            self.parseLocations = [[NSMutableArray alloc]init];
-            for (PFObject *activity in objects)
+            
+            
+            //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
+            if(error)
             {
-                Trip *trip = activity[@"trip"];
-                if (trip.name != nil && trip.publicTripDetail != nil)
-                {
-                    [self.parseLocations addObject:trip];
+                NSLog(@"Error: %@",error);
+                if (self.user == nil){
+                    [self setTitleImage];
+                } else {
+                    NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+                    NSString *s = NSLocalizedString(@"'s",@"'s");
+                    self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
                 }
-                else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-                    [self.parseLocations addObject:trip];
-
-                }
+                [ParseErrorHandlingController handleError:error];
             }
-            [self sortTrips];
-
+            
+            //there is no error loading the trunks so begin the process of placing them on the map
+            else
+            {
+                [[TTUtility sharedInstance] internetConnectionFound];
+                self.parseLocations = [[NSMutableArray alloc]init];
+                for (PFObject *activity in response)
+                {
+                    Trip *trip = activity[@"trip"];
+                    if (trip.name != nil && trip.publicTripDetail != nil)
+                    {
+                        [self.parseLocations addObject:trip];
+                    }
+                    else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+                        [self.parseLocations addObject:trip];
+                        
+                    }
+                }
+                [self sortTrips];
+                
+            }
         }
     }];
+    
+//    
+//    //Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
+//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//    [query whereKey:@"toUser" equalTo:user];
+//    [query whereKey:@"type" equalTo:@"addToTrip"];
+//    [query includeKey:@"trip"];
+//    [query includeKey:@"trip.publicTripDetail"];
+//    [query includeKey:@"toUser"];
+//    [query includeKey:@"creator"];
+//    [query includeKey:@"createdAt"];
+//    [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+//    [query whereKeyExists:@"trip"];
+//    [query setLimit: self.limit];
+//    
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        //we finished loading so switch the bool and renable the refresh icon
+//        self.isLoading = NO;
+//        
+//        if (self.buttonsMaded == NO){
+//            [self createButtons];
+//        } else {
+//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+//                leftButton.enabled = YES;
+//            }
+//        }
+//        
+//        
+//        //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
+//        if(error)
+//        {
+//            NSLog(@"Error: %@",error);
+//            if (self.user == nil){
+//                [self setTitleImage];
+//            } else {
+//                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+//                NSString *s = NSLocalizedString(@"'s",@"'s");
+//                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+//            }
+//            [ParseErrorHandlingController handleError:error];
+//        }
+//        
+//        //there is no error loading the trunks so begin the process of placing them on the map
+//        else
+//        {
+//            [[TTUtility sharedInstance] internetConnectionFound];
+//            self.parseLocations = [[NSMutableArray alloc]init];
+//            for (PFObject *activity in objects)
+//            {
+//                Trip *trip = activity[@"trip"];
+//                if (trip.name != nil && trip.publicTripDetail != nil)
+//                {
+//                    [self.parseLocations addObject:trip];
+//                }
+//                else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+//                    [self.parseLocations addObject:trip];
+//
+//                }
+//            }
+//            [self sortTrips];
+//
+//        }
+//    }];
 }
 
 -(void)sortIntoHotOrNot{
