@@ -456,10 +456,14 @@
     
     if (comment && ![comment isEqualToString: @""] ) {
         if (_photo) {
-            
+            self.commentInputView.userInteractionEnabled = NO;
+            self.commentInputView.hidden = YES;
+
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                                    
+                self.commentInputView.userInteractionEnabled = YES;
+                self.commentInputView.hidden = NO;
+
                 if (!error) {
                     [self.activities addObject:commentObject];
                     [self.tableView reloadData];
