@@ -864,6 +864,14 @@
     
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
+    cell.emoji.adjustsFontSizeToFitWidth = YES;
+    if (cell.trip.publicTripDetail.totalLikes <10){
+        cell.emoji.text = @"";
+    } else if (cell.trip.publicTripDetail.totalLikes < 50){
+        cell.emoji.text = @"🔥";
+    } else{
+        cell.emoji.text = @"⚡️";
+    }
     
     NSString *countString;
     if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
