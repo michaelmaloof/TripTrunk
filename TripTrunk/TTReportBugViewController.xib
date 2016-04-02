@@ -1,15 +1,125 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TTReportBugViewController">
+            <connections>
+                <outlet property="view" destination="iN0-l3-epB" id="1GR-qo-4S0"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email For Us To Contact You With Questions Regarding This Bug" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8Bv-1P-Cw9">
+                    <rect key="frame" x="115" y="371" width="370" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Kvg-Mm-HKy"/>
+                        <constraint firstAttribute="width" constant="370" id="Rvs-nB-II6"/>
+                        <constraint firstAttribute="height" constant="30" id="Vhb-sU-MR5"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Rvs-nB-II6"/>
+                            <exclude reference="Vhb-sU-MR5"/>
+                        </mask>
+                    </variation>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBA-ux-obt">
+                    <rect key="frame" x="276" y="437" width="49" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Drs-K0-sA7"/>
+                        <constraint firstAttribute="height" constant="30" id="IMi-kn-WQz"/>
+                        <constraint firstAttribute="width" constant="49" id="T8c-dn-mf1"/>
+                        <constraint firstAttribute="width" constant="49" id="sFp-F2-UJ2"/>
+                    </constraints>
+                    <state key="normal" title="Submit"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Drs-K0-sA7"/>
+                            <exclude reference="sFp-F2-UJ2"/>
+                        </mask>
+                    </variation>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" text="Please tell us your bug and what steps you did in the app to make it occur. Thanks for your help! (Type in the box below)" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w52-4P-72k">
+                    <rect key="frame" x="20" y="19" width="560" height="65"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="65" id="kga-y9-WrS"/>
+                        <constraint firstAttribute="width" constant="560" id="kqs-gt-P6h"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="kqs-gt-P6h"/>
+                        </mask>
+                    </variation>
+                </textView>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Click here to type" translatesAutoresizingMaskIntoConstraints="NO" id="gfc-u7-hir">
+                    <rect key="frame" x="20" y="150" width="560" height="150"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="150" id="EBT-7b-1q6"/>
+                        <constraint firstAttribute="height" constant="150" id="XcF-yn-6oA"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="XcF-yn-6oA"/>
+                        </mask>
+                    </variation>
+                </textView>
+            </subviews>
+            <color key="backgroundColor" red="0.98039215690000003" green="0.68627450980000004" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="w52-4P-72k" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="5FJ-uY-tov"/>
+                <constraint firstItem="w52-4P-72k" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="7Gg-r0-q89"/>
+                <constraint firstItem="w52-4P-72k" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8aN-8d-66C"/>
+                <constraint firstItem="LBA-ux-obt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8aa-ZF-gHj"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="A7n-a2-RWp"/>
+                <constraint firstItem="w52-4P-72k" firstAttribute="width" secondItem="gfc-u7-hir" secondAttribute="width" id="E3n-Gn-Q1h"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FTQ-Q6-9Vq"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="150" id="Gtq-AA-U1Q"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-20" id="Ieh-rK-7KI"/>
+                <constraint firstItem="w52-4P-72k" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="JF1-xa-aoC"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="width" secondItem="w52-4P-72k" secondAttribute="width" constant="-40" id="L9q-yw-XUW"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="MpG-iQ-YCL"/>
+                <constraint firstItem="LBA-ux-obt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="RO9-W7-x0G"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="top" secondItem="w52-4P-72k" secondAttribute="bottom" constant="20" id="Xrq-s0-ED4"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="width" secondItem="w52-4P-72k" secondAttribute="width" constant="-40" id="cOh-OM-LGY"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="top" secondItem="gfc-u7-hir" secondAttribute="bottom" constant="20" id="eS1-0y-5aA"/>
+                <constraint firstItem="LBA-ux-obt" firstAttribute="top" secondItem="8Bv-1P-Cw9" secondAttribute="bottom" constant="20" id="emB-8u-Uoj"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="top" secondItem="gfc-u7-hir" secondAttribute="bottom" constant="8" id="iM5-Es-cdy"/>
+                <constraint firstItem="LBA-ux-obt" firstAttribute="top" secondItem="8Bv-1P-Cw9" secondAttribute="bottom" constant="20" id="mrh-Va-ywN"/>
+                <constraint firstItem="w52-4P-72k" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-40" id="pIW-Zu-iMz"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="top" secondItem="w52-4P-72k" secondAttribute="bottom" constant="10" id="rNP-4p-WdU"/>
+                <constraint firstItem="8Bv-1P-Cw9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="rs7-f5-gGk"/>
+                <constraint firstItem="gfc-u7-hir" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-40" id="thb-hi-h5B"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="5FJ-uY-tov"/>
+                    <exclude reference="7Gg-r0-q89"/>
+                    <exclude reference="E3n-Gn-Q1h"/>
+                    <exclude reference="FTQ-Q6-9Vq"/>
+                    <exclude reference="Gtq-AA-U1Q"/>
+                    <exclude reference="rNP-4p-WdU"/>
+                    <exclude reference="thb-hi-h5B"/>
+                    <exclude reference="A7n-a2-RWp"/>
+                    <exclude reference="Ieh-rK-7KI"/>
+                    <exclude reference="iM5-Es-cdy"/>
+                    <exclude reference="RO9-W7-x0G"/>
+                    <exclude reference="mrh-Va-ywN"/>
+                </mask>
+            </variation>
         </view>
     </objects>
 </document>
