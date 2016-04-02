@@ -12,7 +12,7 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "AppDelegate.h"
-
+#import "TTReportBugViewController.h"
 
 
 
@@ -402,4 +402,10 @@
 
 }
 
+- (IBAction)reportBug:(id)sender {
+    TTReportBugViewController *eula = [[TTReportBugViewController alloc] initWithNibName:@"TTReportBugViewController" bundle:[NSBundle mainBundle]];
+    UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
+    
+    [self presentViewController:homeNavController animated:YES completion:nil];
+}
 @end

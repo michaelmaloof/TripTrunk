@@ -990,9 +990,6 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="342" y="20" width="15" height="21"/>
-                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>
@@ -1033,19 +1030,19 @@
                                                     <exclude reference="fZa-em-grD"/>
                                                 </mask>
                                                 <mask key="constraints">
+                                                    <exclude reference="4sw-2n-Nkx"/>
+                                                    <exclude reference="bEg-aR-mCR"/>
+                                                    <exclude reference="cUA-Z5-L0M"/>
                                                     <exclude reference="LXZ-FF-CPw"/>
                                                     <exclude reference="PJg-ts-W18"/>
                                                     <exclude reference="TNi-v2-cft"/>
                                                     <exclude reference="ELQ-1P-KLX"/>
                                                     <exclude reference="lfT-Gd-y1S"/>
                                                     <exclude reference="wJ4-lM-bhY"/>
+                                                    <exclude reference="Zi3-0p-pOP"/>
                                                     <exclude reference="lcb-nQ-5OR"/>
                                                     <exclude reference="nJF-MP-Nss"/>
                                                     <exclude reference="q8V-M9-2Fp"/>
-                                                    <exclude reference="4sw-2n-Nkx"/>
-                                                    <exclude reference="bEg-aR-mCR"/>
-                                                    <exclude reference="cUA-Z5-L0M"/>
-                                                    <exclude reference="Zi3-0p-pOP"/>
                                                     <exclude reference="NqU-ov-UMn"/>
                                                     <exclude reference="cJF-F2-3qH"/>
                                                     <exclude reference="i1W-2n-LeW"/>
@@ -1063,19 +1060,19 @@
                                                     <include reference="fZa-em-grD"/>
                                                 </mask>
                                                 <mask key="constraints">
+                                                    <include reference="4sw-2n-Nkx"/>
+                                                    <include reference="bEg-aR-mCR"/>
+                                                    <include reference="cUA-Z5-L0M"/>
                                                     <include reference="LXZ-FF-CPw"/>
                                                     <exclude reference="PJg-ts-W18"/>
                                                     <include reference="TNi-v2-cft"/>
                                                     <include reference="ELQ-1P-KLX"/>
                                                     <include reference="lfT-Gd-y1S"/>
                                                     <include reference="wJ4-lM-bhY"/>
+                                                    <include reference="Zi3-0p-pOP"/>
                                                     <include reference="lcb-nQ-5OR"/>
                                                     <exclude reference="nJF-MP-Nss"/>
                                                     <exclude reference="q8V-M9-2Fp"/>
-                                                    <include reference="4sw-2n-Nkx"/>
-                                                    <include reference="bEg-aR-mCR"/>
-                                                    <include reference="cUA-Z5-L0M"/>
-                                                    <include reference="Zi3-0p-pOP"/>
                                                     <include reference="NqU-ov-UMn"/>
                                                     <include reference="cJF-F2-3qH"/>
                                                     <include reference="i1W-2n-LeW"/>
