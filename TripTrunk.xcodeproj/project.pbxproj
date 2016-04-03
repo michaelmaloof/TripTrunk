@@ -55,6 +55,7 @@
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
+		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
@@ -216,6 +217,8 @@
 		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
+		22FEABC11CB159BD0001AE18 /* ReportedBug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportedBug.h; sourceTree = "<group>"; };
+		22FEABC21CB159BD0001AE18 /* ReportedBug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportedBug.m; sourceTree = "<group>"; };
 		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
@@ -516,6 +519,8 @@
 			children = (
 				22560FD11BFCE459005D81E2 /* PublicTripDetail.h */,
 				22560FD21BFCE459005D81E2 /* PublicTripDetail.m */,
+				22FEABC11CB159BD0001AE18 /* ReportedBug.h */,
+				22FEABC21CB159BD0001AE18 /* ReportedBug.m */,
 				223547F21AE322C3001FE916 /* Trip.h */,
 				223547F31AE322C3001FE916 /* Trip.m */,
 				223547F51AE333F2001FE916 /* Photo.h */,
@@ -957,6 +962,7 @@
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
 				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
 				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,
+				22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,

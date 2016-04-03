@@ -408,6 +408,7 @@
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];
+            
             //add the users to self.friends. Now its containing the current user and all the people they are following
             [self.friends addObjectsFromArray:users];
             

@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TTReportBugViewController">
             <connections>
+                <outlet property="bugTextView" destination="gfc-u7-hir" id="xda-VV-A5k"/>
+                <outlet property="emailTextField" destination="8Bv-1P-Cw9" id="mEH-C0-SlL"/>
                 <outlet property="view" destination="iN0-l3-epB" id="1GR-qo-4S0"/>
             </connections>
         </placeholder>
@@ -46,6 +48,9 @@
                             <exclude reference="sFp-F2-UJ2"/>
                         </mask>
                     </variation>
+                    <connections>
+                        <action selector="submitWasTapped:" destination="-1" eventType="touchUpInside" id="8PT-eb-uFh"/>
+                    </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" text="Please tell us your bug and what steps you did in the app to make it occur. Thanks for your help! (Type in the box below)" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w52-4P-72k">
                     <rect key="frame" x="20" y="19" width="560" height="65"/>
@@ -62,7 +67,7 @@
                         </mask>
                     </variation>
                 </textView>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Click here to type" translatesAutoresizingMaskIntoConstraints="NO" id="gfc-u7-hir">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gfc-u7-hir">
                     <rect key="frame" x="20" y="150" width="560" height="150"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>

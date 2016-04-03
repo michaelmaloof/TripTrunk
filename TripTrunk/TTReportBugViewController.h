@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TTReportBugViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextView *bugTextView;
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 
 @end
