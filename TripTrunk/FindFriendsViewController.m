@@ -61,7 +61,7 @@
         [self.tabBarController setSelectedIndex:0];
     } else {
         
-        self.title = @"Find Friends";
+        self.title = @"🐘 Find Friends 🐘";
         
         
         [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
