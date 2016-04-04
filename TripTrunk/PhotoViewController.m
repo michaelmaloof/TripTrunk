@@ -917,10 +917,10 @@
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
-                            [self updateCommentsLabel];
                         } else {
                             NSLog(@"Error deleting caption");
                         }
+                        [self updateCommentsLabel];
                     }];
                     break;
                 }
