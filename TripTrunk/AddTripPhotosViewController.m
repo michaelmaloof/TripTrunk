@@ -267,6 +267,8 @@
         photo.tripName = self.trip.name;
         photo.city = self.trip.city;
         
+        
+        //FIXME: This does nothing but waste time becuase addObject is commented out
         for (UINavigationController *controller in self.tabBarController.viewControllers)
         {
             for (HomeMapViewController *view in controller.viewControllers)

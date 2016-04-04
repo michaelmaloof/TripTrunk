@@ -53,8 +53,7 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
-    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
@@ -147,6 +146,10 @@
 
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            NSLog(@"Red Badge Cleared");
+        }];
         //tabbar number here
     } else {
         //normal tab here
@@ -281,6 +284,8 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup

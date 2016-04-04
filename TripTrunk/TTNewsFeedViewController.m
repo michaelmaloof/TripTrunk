@@ -33,8 +33,11 @@
 @property BOOL isLoading;
 @property NSMutableArray *mainPhotos;
 @property NSMutableArray *duplicatePhotoStrings;
+@property NSMutableArray *duplicatePhotos;
 @property BOOL reachedBottom;
 @property NSMutableArray *arrayToSend;
+@property (strong, nonatomic) NSMutableArray *trips;
+@property NSMutableArray *photoUsers;
 @end
 
 @implementation TTNewsFeedViewController
@@ -43,10 +46,13 @@
     [super viewDidLoad];
     [self setTitleImage];
     [self createLeftButtons];
+    self.trips = [[NSMutableArray alloc] init];
     self.photos = [[NSMutableArray alloc]init];
     self.arrayToSend = [[NSMutableArray alloc]init];
     self.mainPhotos = [[NSMutableArray alloc]init];
+    self.photoUsers = [[NSMutableArray alloc]init];
     self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
+    self.duplicatePhotos = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
                        action:@selector(refresh:)
@@ -72,115 +78,225 @@
     }];
 }
 
--(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
+-(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl
+{
     
-    if (self.isLoading == NO){
+    if (self.isLoading == NO)
+    {
         self.isLoading = YES;
-        
         int mainCount = (int)self.mainPhotos.count;
         
+        PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+        [memberQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
+        [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
+        [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+        [memberQuery setLimit:100];
         
-        PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
-        [photos whereKey:@"type" equalTo:@"addedPhoto"];
-        [photos whereKey:@"fromUser" containedIn:self.following];
-        [photos whereKeyExists:@"trip"];
-        photos.limit = 100;
-        [photos orderByDescending:@"createdAt"];
-        if (self.photos.count > 0 && isRefresh == NO){
-            Photo *photo = self.photos.lastObject;
-            [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
-            [photos whereKey:@"objectId" notContainedIn:self.objid];
-        } else if (self.photos.count > 0 && isRefresh == YES){
-            Photo *photo = self.photos.firstObject;
-            [photos whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
-            [photos whereKey:@"objectId" notContainedIn:self.objid];
-        }
-        [photos includeKey:@"fromUser"];
-        [photos includeKey:@"photo"];
-        [photos includeKey:@"trip"];
-        [photos includeKey:@"trip.publicTripDetail"];
-        [photos setCachePolicy:kPFCachePolicyNetworkOnly];
+        [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+         {
+             if(!error)
+             {
+                 [[TTUtility sharedInstance] internetConnectionFound];
+                 for(id object in objects)
+                 {
+                     [self.trips addObject:object[@"trip"]];
+                 }
+                 
+                 PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+                 [photos whereKey:@"type" equalTo:@"addedPhoto"];
+                 [photos whereKey:@"fromUser" containedIn:self.following];
+                 [photos whereKeyExists:@"trip"];
+                 if (self.photos.count > 0 && isRefresh == NO)
+                 {
+                     Photo *photo = self.photos.lastObject;
+                     [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
+                     [photos whereKey:@"objectId" notContainedIn:self.objid];
+                 } else if (self.photos.count > 0 && isRefresh == YES)
+                 {
+                     Photo *photo = self.photos.firstObject;
+                     [photos whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
+                     [photos whereKey:@"objectId" notContainedIn:self.objid];
+                 }
+                 
+                 PFQuery *photos2 = [PFQuery queryWithClassName:@"Activity"];
+                 [photos2 whereKey:@"type" equalTo:@"addedPhoto"];
+                 [photos2 whereKey:@"trip" containedIn:self.trips];
+                 [photos2 whereKeyExists:@"trip"];
+                 if (self.photos.count > 0 && isRefresh == NO)
+                 {
+                     Photo *photo = self.photos.lastObject;
+                     [photos2 whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
+                     [photos2 whereKey:@"objectId" notContainedIn:self.objid];
+                 } else if (self.photos.count > 0 && isRefresh == YES)
+                 {
+                     Photo *photo = self.photos.firstObject;
+                     [photos2 whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
+                     [photos2 whereKey:@"objectId" notContainedIn:self.objid];
+                 }
+                 
+                 PFQuery *photoQuery = [PFQuery orQueryWithSubqueries:@[photos,photos2]];
+                 [photoQuery includeKey:@"fromUser"];
+                 [photoQuery includeKey:@"photo"];
+                 [photoQuery includeKey:@"trip"];
+                 [photoQuery includeKey:@"trip.publicTripDetail"];
+                 [photoQuery setCachePolicy:kPFCachePolicyNetworkOnly];
+                 photoQuery.limit = 100;
+                 [photoQuery orderByDescending:@"createdAt"];
+                 
+                 [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
+                  {
+                      
+                      if (error)
+                      {
+                          [ParseErrorHandlingController handleError:error];
+                      }
+                      
+                      if (!error)
+                      {
+                          if (isRefresh == NO && objects.count == 0)
+                          {
+                              self.reachedBottom = YES;
+                          }
+                          [[TTUtility sharedInstance] internetConnectionFound];
+                          
+                          for (PFObject *activity in objects)
+                          {
+                              Photo *photo = activity[@"photo"];
+                              photo.user = activity[@"fromUser"];
+                              photo.trip = activity[@"trip"];
+                              if (photo.trip != nil)
+                              {
+                                  
+                                  if (isRefresh == NO)
+                                  {
+                                      [self.photos addObject:photo];
+                                      [self.arrayToSend addObject:photo];
+                                  } else
+                                  {
+                                      [self.photos insertObject:photo atIndex:0];
+                                      [self.arrayToSend insertObject:photo atIndex:0];
+                                  }
+                                  if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId])
+                                  {
+                                      if (isRefresh == YES)
+                                      {
+                                          [self.mainPhotos insertObject:photo atIndex:0];
+                                          [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                          [self.duplicatePhotos addObject:photo.objectId];
+                                          [self.photoUsers addObject:photo.user.objectId];
+                                      } else
+                                      {
+                                          [self.mainPhotos addObject:photo];
+                                          [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                          [self.duplicatePhotos addObject:photo.objectId];
+                                          [self.photoUsers addObject:photo.user.objectId];
+                                      }
+                                  }
+                                  
+                                  else if ([self.duplicatePhotoStrings containsObject:photo.trip.objectId])
+                                  {
+                                      if (![_duplicatePhotos containsObject:photo.objectId])
+                                      {
+                                          
+                                          if (![self.photoUsers containsObject:photo.user.objectId])
+                                          {
+                                              if (isRefresh == YES)
+                                              {
+                                                  [self.mainPhotos insertObject:photo atIndex:0];
+                                                  [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                                  [self.duplicatePhotos addObject:photo.objectId];
+                                                  [self.photoUsers addObject:photo.user.objectId];
+                                              } else
+                                              {
+                                                  [self.mainPhotos addObject:photo];
+                                                  [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                                  [self.duplicatePhotos addObject:photo.objectId];
+                                                  [self.photoUsers addObject:photo.user.objectId];
+                                              }
+                                          } else
+                                          {
+                                              NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId];
+                                              NSString *tripID = self.duplicatePhotoStrings[fooIndex];
+                                              
+                                              if (![tripID isEqualToString:photo.trip.objectId])
+                                              {
+                                                  if (isRefresh == YES)
+                                                  {
+                                                      [self.mainPhotos insertObject:photo atIndex:0];
+                                                      [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                                      [self.duplicatePhotos addObject:photo.objectId];
+                                                      [self.photoUsers addObject:photo.user.objectId];
+                                                  } else
+                                                  {
+                                                      [self.mainPhotos addObject:photo];
+                                                      [self.duplicatePhotoStrings addObject:photo.trip.objectId];
+                                                      [self.duplicatePhotos addObject:photo.objectId];
+                                                      [self.photoUsers addObject:photo.user.objectId];
+                                                  }
+                                                  
+                                              }
+                                              
+                                          }
+                                      }
+                                      
+                                  }
+                                  
+                                  [self.objid addObject:activity.objectId];
+                              }
+                          }
+                          
+                          
+                          
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              
+                              if (self.mainPhotos.count < 2 && self.reachedBottom == NO){
+                                  self.isLoading = NO;
+                                  [self loadNewsFeed:NO refresh:nil];
+                              } else if (mainCount == (int)self.mainPhotos && self.reachedBottom == NO){
+                                  self.isLoading = NO;
+                                  [self loadNewsFeed:NO refresh:nil];
+                              }
+                              
+                              if (refreshControl) {
+                                  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                                  [formatter setDateFormat:@"MMM d, h:mm a"];
+                                  NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                                  NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                  NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                                              forKey:NSForegroundColorAttributeName];
+                                  NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                                  refreshControl.attributedTitle = attributedTitle;
+                                  
+                                  [refreshControl endRefreshing];
+                                  [self.collectionView reloadData];
+                                  self.isLoading = NO;
+                                  
+                                  
+                              } else {
+                                  [self.collectionView reloadData];
+                                  
+                                  
+                                  self.isLoading = NO;
+                                  
+                              }
+                              
+                          });
+                      }
+                      
+                      [self.collectionView reloadData];
+                      
+                  }];
+                 
+             }else
+             {
+                 [ParseErrorHandlingController handleError:error];
+                 NSLog(@"Error: %@",error);
+             }
+             
+         }];
         
-        [photos findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            
-            if (error){
-                [ParseErrorHandlingController handleError:error];
-            }
-            
-            if (!error){
-                if (isRefresh == NO && objects.count == 0){
-                    self.reachedBottom = YES;
-                }
-                [[TTUtility sharedInstance] internetConnectionFound];
-            
-            for (PFObject *activity in objects)
-            {
-                Photo *photo = activity[@"photo"];
-                photo.user = activity[@"fromUser"];
-                photo.trip = activity[@"trip"];
-                if (photo.trip != nil)
-                {
-                    
-                    if (isRefresh == NO){
-                        [self.photos addObject:photo];
-                        [self.arrayToSend addObject:photo];
-                        
-                        if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
-                            [self.mainPhotos addObject:photo];
-                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-                        }
-                        
-                    } else {
-                        [self.photos insertObject:photo atIndex:0];
-                        [self.arrayToSend insertObject:photo atIndex:0];
-                        
-                        if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
-                            [self.mainPhotos insertObject:photo atIndex:0];
-                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-                        }
-                        
-                    }
-                    [self.objid addObject:activity.objectId];
-                }
-            }
-            
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if (self.mainPhotos.count < 2 && self.reachedBottom == NO){
-                    self.isLoading = NO;
-                    [self loadNewsFeed:NO refresh:nil];
-                } else if (mainCount == (int)self.mainPhotos && self.reachedBottom == NO){
-                    self.isLoading = NO;
-                    [self loadNewsFeed:NO refresh:nil];
-                }
-                
-                if (refreshControl) {
-                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                    [formatter setDateFormat:@"MMM d, h:mm a"];
-                    NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-                    NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-                                                                                forKey:NSForegroundColorAttributeName];
-                    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-                    refreshControl.attributedTitle = attributedTitle;
-                    
-                    [refreshControl endRefreshing];
-                    [self.collectionView reloadData];
-                    self.isLoading = NO;
-                    
-                    
-                } else {
-                    [self.collectionView reloadData];
-                    
-            
-                    self.isLoading = NO;
-                    
-                }
-                
-            });
-            }
-        }];
+        
+        
         
     }
 }
@@ -298,7 +414,8 @@
     __block int indexCount = 0;
     for (Photo *smallPhoto in self.photos){
         indexCount += 1;
-        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId]){
+        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId] && [smallPhoto.user.objectId isEqualToString:photo.user.objectId])
+            {
             
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:smallPhoto.imageUrl];
             NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];

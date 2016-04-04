@@ -51,16 +51,29 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     self.tableView.sectionHeaderHeight = 0;
     
-    
+    //fixme, chaching needs fixed it flashes everytime
     
     if (_isFollowing) {
-        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+        if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
+            _friends = [[NSMutableArray alloc]init];
+//            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+        } else {
+            _friends = [[NSMutableArray alloc]init];
+//            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+
+        }
         [self loadFollowing];
         self.title = @"Following";
     }
     else
     {
-        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+        if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
+            _friends = [[NSMutableArray alloc]init];
+//            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+        }else {
+            _friends = [[NSMutableArray alloc]init];
+            //            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+        }
         [self loadFollowers];
         self.title = @"Followers";
     }

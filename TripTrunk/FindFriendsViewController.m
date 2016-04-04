@@ -61,13 +61,13 @@
         [self.tabBarController setSelectedIndex:0];
     } else {
         
-        self.title = @"Find Friends";
+        self.title = @"🐘 Find Friends 🐘";
         
         
         [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
         
         self.tabBarController.tabBar.translucent = false;
-        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1]];
+       [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
         
         _friends = [[NSMutableArray alloc] init];
         _following = [[NSMutableArray alloc] init];

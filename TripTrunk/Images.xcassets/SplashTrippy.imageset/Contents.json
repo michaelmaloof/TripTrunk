@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "AppStoreIcon_NEW_noBG.png",
+      "filename" : "SplashTrippy.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "AppStoreIcon_NEW_noBG@2x.png",
+      "filename" : "SplashTrippy@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "AppStoreIcon_NEW_noBG@3x.png",
+      "filename" : "SplashTrippy@3x.png",
       "scale" : "3x"
     }
   ],

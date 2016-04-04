@@ -1011,7 +1011,11 @@
     if([commentCount intValue] == 1)
         comments = NSLocalizedString(@"Comment",@"Comment");
     
-    [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
+    if (commentCount == 0){
+        [self.comments setTitle:comments forState:UIControlStateNormal];
+    } else {
+        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)trunkNameButtonPressed:(id)sender {
