@@ -11,14 +11,11 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lake_background" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppStoreIcon_NEW_noBG" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
-                    <rect key="frame" x="195" y="205" width="90" height="70"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashTrippy" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
+                    <rect key="frame" x="140" y="155.5" width="200" height="169"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="90" id="dpu-om-igL"/>
-                        <constraint firstAttribute="height" constant="70" id="vzd-MQ-CHk"/>
+                        <constraint firstAttribute="width" constant="200" id="dpu-om-igL"/>
+                        <constraint firstAttribute="height" constant="169" id="vzd-MQ-CHk"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tripTrunkTitle" translatesAutoresizingMaskIntoConstraints="NO" id="EfB-bH-lR1">
@@ -27,6 +24,9 @@
                         <constraint firstAttribute="height" constant="57" id="HK0-i3-as8"/>
                         <constraint firstAttribute="width" constant="179" id="Mzr-oW-NIi"/>
                     </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lake_background" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="0.36862745098039218" green="0.58039215686274503" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
@@ -56,7 +56,7 @@
         </view>
     </objects>
     <resources>
-        <image name="AppStoreIcon_NEW_noBG" width="300" height="254"/>
+        <image name="SplashTrippy" width="200" height="169"/>
         <image name="lake_background" width="500" height="889"/>
         <image name="tripTrunkTitle" width="286" height="78"/>
     </resources>
