@@ -54,13 +54,22 @@
     
     
     if (_isFollowing) {
-        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+        if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
+            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+        } else {
+            _friends = [[NSMutableArray alloc]init];
+        }
         [self loadFollowing];
         self.title = @"Following";
     }
     else
     {
-        _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+        if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
+            
+            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
+        }else {
+            _friends = [[NSMutableArray alloc]init];
+        }
         [self loadFollowers];
         self.title = @"Followers";
     }
