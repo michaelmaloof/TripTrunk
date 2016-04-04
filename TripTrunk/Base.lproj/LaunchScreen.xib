@@ -11,6 +11,9 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lake_background" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashTrippy" translatesAutoresizingMaskIntoConstraints="NO" id="bhu-yy-h3K">
                     <rect key="frame" x="140" y="155.5" width="200" height="169"/>
                     <constraints>
@@ -24,9 +27,6 @@
                         <constraint firstAttribute="height" constant="57" id="HK0-i3-as8"/>
                         <constraint firstAttribute="width" constant="179" id="Mzr-oW-NIi"/>
                     </constraints>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lake_background" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-Rh-3lx">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="0.36862745098039218" green="0.58039215686274503" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
