@@ -35,8 +35,9 @@
 }
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
     NSError *error;
-    
-    [PFUser logInWithUsername:_usernameTextField.text
+    NSString *username = [_usernameTextField.text lowercaseString];
+
+    [PFUser logInWithUsername:username
                      password:_passwordTextField.text
                         error:&error];
     if (error) {
