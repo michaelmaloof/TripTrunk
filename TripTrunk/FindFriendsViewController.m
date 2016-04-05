@@ -449,7 +449,8 @@
         self.removeResults = YES;
         self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
-            [self filterResults:searchBar.text isScroll:NO];
+            NSString *searchLower = [searchBar.text lowercaseString];
+            [self filterResults:searchLower isScroll:NO];
         }
     }
     return YES;
