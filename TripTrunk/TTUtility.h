@@ -78,7 +78,7 @@
  *
  *  @param photo Photo object
  */
-- (void)deletePhoto:(Photo *)photo;
+- (void)deletePhoto:(Photo *)photo withblock:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
  *  Takes a Photo's imageUrl and alters it to be a Cloudinary url with thumbnail transformations
