@@ -219,7 +219,7 @@
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (objects.count < 10) {
+                if (objects.count == 0) {
                     self.friendsMaxed = YES;
                 }
                 self.isLoadingSearch = NO;
@@ -338,9 +338,11 @@
     float h = size.height;
     
     float reload_distance = -250;
-    if(y > h + reload_distance && self.searchString) {
+    if(y > h + reload_distance && self.searchString)
+    {
         self.removeResults = NO;
-        if (![self.searchString isEqualToString:@""]){
+        if (![self.searchString isEqualToString:@""])
+        {
             [self filterResults:self.searchString isScroll:YES];
         }
     } else if (y > h + reload_distance && self.friendsMaxed == NO){
