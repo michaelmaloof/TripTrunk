@@ -31,10 +31,10 @@
 
 
 // THIS IS DEBUG MODE
-//#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
-//#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
-#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
+#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+//#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
+//#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
 #endif
 
@@ -85,6 +85,14 @@
         [self launchWithoutQuickAction:launchOptions];
         
     }
+    
+//    [PFCloud callFunctionInBackground:@"copyColumnUsernameToUsernameBack" withParameters:nil block:^(NSString *response, NSError *error) {
+//        if (!error) {
+//            NSLog(@"Copy response: done");
+//        }else{
+//            NSLog(@"Copy response: %@", error);
+//        }
+//    }];
     
     
     return YES;
