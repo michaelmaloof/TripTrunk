@@ -711,7 +711,7 @@
 #pragma mark - Button Actions
 
 - (IBAction)onSavePhotoTapped:(id)sender {
-
+    
     UIActionSheet *actionSheet;
     
     if ([[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]){
@@ -917,10 +917,10 @@
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
-                            [self updateCommentsLabel];
                         } else {
                             NSLog(@"Error deleting caption");
                         }
+                        [self updateCommentsLabel];
                     }];
                     break;
                 }
@@ -1049,85 +1049,102 @@
             
             [self.photo.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 
-            self.photo.trip.publicTripDetail.totalLikes = self.photo.trip.publicTripDetail.totalLikes - (int)[[TTCache sharedCache] likeCountForPhoto:self.photo];
-   
-            if ([self.photo isEqual:[self.photos objectAtIndex:0]]){
-                if (self.photos.count > 1){
-                    Photo *photoMost = [self.photos objectAtIndex:1];
-                    self.photo.trip.publicTripDetail.mostRecentPhoto = photoMost.createdAt;
-                    //reload map color here
-                } else {
-                    NSString *dateString = @"1200-01-01 01:01:01";
-                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                    [dateFormat setTimeZone:[NSTimeZone systemTimeZone]];
-                    [dateFormat setLocale:[NSLocale currentLocale]];
-                    [dateFormat setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
-                    [dateFormat setFormatterBehavior:NSDateFormatterBehaviorDefault];
+                if (!error) {
+                    self.photo.trip.publicTripDetail.totalLikes = self.photo.trip.publicTripDetail.totalLikes - (int)[[TTCache sharedCache] likeCountForPhoto:self.photo];
                     
-                    NSDate *date = [dateFormat dateFromString:dateString];
-                    self.photo.trip.publicTripDetail.mostRecentPhoto = date;
-                }
-        
-            }
-            
-            if (self.trip.publicTripDetail.photoCount > 0){
-                self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount -1;
-            }
-            
-            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo]];
-            
-            [[TTUtility sharedInstance] deletePhoto:self.photo];
-            
-            NSDate *today = [NSDate date];
-            NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
-            
-            BOOL color = 0;
-            if (tripInterval < 86400)
-            {
-                color = 1;
-            } else{
-                color = 0;
-            }
-            
-            for (UINavigationController *controller in self.tabBarController.viewControllers)
-            {
-                for (UIViewController *view in controller.viewControllers)
-                {
-                    if ([view isKindOfClass:[HomeMapViewController class]]){
-                        if (self.photos.count < 1){
-                            [(HomeMapViewController*)view dontRefreshMap];
-                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
-                        } else  //instead, find interval and update is HOT
-                        {
-                            [(HomeMapViewController*)view dontRefreshMap];
-                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                    if ([self.photo isEqual:[self.photos objectAtIndex:0]]){
+                        if (self.photos.count > 1){
+                            Photo *photoMost = [self.photos objectAtIndex:1];
+                            self.photo.trip.publicTripDetail.mostRecentPhoto = photoMost.createdAt;
+                            //reload map color here
+                        } else {
+                            NSString *dateString = @"1200-01-01 01:01:01";
+                            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                            [dateFormat setTimeZone:[NSTimeZone systemTimeZone]];
+                            [dateFormat setLocale:[NSLocale currentLocale]];
+                            [dateFormat setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+                            [dateFormat setFormatterBehavior:NSDateFormatterBehaviorDefault];
+                            
+                            NSDate *date = [dateFormat dateFromString:dateString];
+                            self.photo.trip.publicTripDetail.mostRecentPhoto = date;
                         }
-                    } else if ([view isKindOfClass:[ActivityListViewController class]])
-                    {
-                        [(ActivityListViewController*)view photoWasDeleted:self.photo];
                         
                     }
-                }
-                
-                for (TrunkListViewController *view in controller.viewControllers)
-                {
-                    if ([view isKindOfClass:[TrunkListViewController class]]){
-                        [view reloadTrunkList:self.photo.trip seen:NO addPhoto:NO photoRemoved:YES];
+                    
+                    if (self.trip.publicTripDetail.photoCount > 0){
+                        self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount -1;
                     }
+                    
+                    [[TTUtility sharedInstance] deletePhoto:self.photo withblock:^(BOOL succeeded, NSError *error) {
+                        if (error) {
+                            //error!!
+                            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount +1;
+                            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+                            [errorAlert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }]];
+                            [self presentViewController:errorAlert animated:YES completion:nil];
+                        }
+                        else{
+                            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo]];
+                            
+                            
+                            NSDate *today = [NSDate date];
+                            NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
+                            
+                            BOOL color = 0;
+                            if (tripInterval < 86400)
+                            {
+                                color = 1;
+                            } else{
+                                color = 0;
+                            }
+                            
+                            for (UINavigationController *controller in self.tabBarController.viewControllers)
+                            {
+                                for (UIViewController *view in controller.viewControllers)
+                                {
+                                    if ([view isKindOfClass:[HomeMapViewController class]]){
+                                        if (self.photos.count < 1){
+                                            [(HomeMapViewController*)view dontRefreshMap];
+                                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
+                                        } else  //instead, find interval and update is HOT
+                                        {
+                                            [(HomeMapViewController*)view dontRefreshMap];
+                                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                                        }
+                                    } else if ([view isKindOfClass:[ActivityListViewController class]])
+                                    {
+                                        [(ActivityListViewController*)view photoWasDeleted:self.photo];
+                                        
+                                    }
+                                }
+                                
+                                for (TrunkListViewController *view in controller.viewControllers)
+                                {
+                                    if ([view isKindOfClass:[TrunkListViewController class]]){
+                                        [view reloadTrunkList:self.photo.trip seen:NO addPhoto:NO photoRemoved:YES];
+                                    }
+                                }
+                                
+                            }
+                            
+                            [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                // dismiss the view
+                            }];
+                            
+                            [self.navigationController popViewControllerAnimated:YES];
+                            
+                        }
+                    }];
                 }
-                
-            }
-
-            [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                // dismiss the view
-            }];
-            
-            [self.navigationController popViewControllerAnimated:YES];
-
+                else{
+                    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+                    [errorAlert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }]];
+                    [self presentViewController:errorAlert animated:YES completion:nil];
+                }
             }];
 
         }
-             // Download Photo
+        // Download Photo
         else if (alertView.tag == 1) {
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
         }
