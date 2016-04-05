@@ -219,7 +219,7 @@
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (objects.count < 10) {
+                if (objects.count == 0) {
                     self.friendsMaxed = YES;
                 }
                 self.isLoadingSearch = NO;
@@ -338,9 +338,11 @@
     float h = size.height;
     
     float reload_distance = -250;
-    if(y > h + reload_distance && self.searchString) {
+    if(y > h + reload_distance && self.searchString)
+    {
         self.removeResults = NO;
-        if (![self.searchString isEqualToString:@""]){
+        if (![self.searchString isEqualToString:@""])
+        {
             [self filterResults:self.searchString isScroll:YES];
         }
     } else if (y > h + reload_distance && self.friendsMaxed == NO){
@@ -449,7 +451,8 @@
         self.removeResults = YES;
         self.friendsMaxed  = NO;
         if (![searchBar.text isEqualToString:@""]){
-            [self filterResults:searchBar.text isScroll:NO];
+            NSString *searchLower = [searchBar.text lowercaseString];
+            [self filterResults:searchLower isScroll:NO];
         }
     }
     return YES;
@@ -458,8 +461,9 @@
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    NSString *searchString = searchController.searchBar.text;
-    if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
+    NSString *searchString = [self.searchController.searchBar.text lowercaseString];
+    
+    if (![searchString isEqualToString:self.searchString] && ![searchString isEqualToString:@""]){
         self.removeResults = YES;
         self.searchCount = 0;
 //        [self filterResults:searchString];

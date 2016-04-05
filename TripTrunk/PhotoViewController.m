@@ -1008,10 +1008,10 @@
 -(void)updateCommentsLabel{
     NSString *comments = NSLocalizedString(@"Comments",@"Comments");
     NSNumber *commentCount = [[TTCache sharedCache] commentCountForPhoto:self.photo];
-    if([commentCount intValue] == 1)
+    if([commentCount intValue] < 2)
         comments = NSLocalizedString(@"Comment",@"Comment");
     
-    if (commentCount == 0){
+    if (commentCount.integerValue == 0){
         [self.comments setTitle:comments forState:UIControlStateNormal];
     } else {
         [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
