@@ -244,8 +244,10 @@
     PFUser *possibleFriend;
     
     
+    NSString *searchString = [self.searchController.searchBar.text lowercaseString];
+
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
-    if (self.searchController.active && ![self.searchController.searchBar.text isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
+    if (self.searchController.active && ![searchString isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
@@ -602,7 +604,8 @@
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     if (![searchBar.text isEqualToString:@""]){
         self.isSearching = YES;
-            [self filterResults:searchBar.text];
+        NSString *searchLower = [searchBar.text lowercaseString];
+            [self filterResults:searchLower];
     }
 }
 

@@ -459,8 +459,9 @@
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    NSString *searchString = searchController.searchBar.text;
-    if (![searchString isEqualToString:self.searchString] && ![self.searchController.searchBar.text isEqualToString:@""]){
+    NSString *searchString = [self.searchController.searchBar.text lowercaseString];
+    
+    if (![searchString isEqualToString:self.searchString] && ![searchString isEqualToString:@""]){
         self.removeResults = YES;
         self.searchCount = 0;
 //        [self filterResults:searchString];
