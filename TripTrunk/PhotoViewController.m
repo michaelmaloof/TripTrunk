@@ -455,6 +455,9 @@
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
+    self.bottomButtonWrapper.hidden = YES;
+    self.topButtonWrapper.hidden = YES;
+    
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             
@@ -475,6 +478,8 @@
                     
                     if (error){
                         NSLog(@"error %@", error);
+                        [ParseErrorHandlingController handleError:error];
+
                     }
                 }
                 
@@ -548,6 +553,9 @@
             NSLog(@"Error loading photo Activities: %@", error);
             [ParseErrorHandlingController handleError:error];
         }
+        
+        self.bottomButtonWrapper.hidden = NO;
+        self.topButtonWrapper.hidden = NO;
     }];
 }
 
