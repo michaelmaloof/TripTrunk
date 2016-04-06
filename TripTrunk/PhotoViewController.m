@@ -1484,13 +1484,38 @@
     return [link substringFromIndex:1];
 }
 
+//-(NSString*)separateMentions:(NSString*)comment{
+//    if(![comment containsString:@"@"])
+//        return comment;
+//
+//    NSArray *array = [comment componentsSeparatedByString:@"@"];
+//    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+//    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+//}
+
 -(NSString*)separateMentions:(NSString*)comment{
     if(![comment containsString:@"@"])
         return comment;
     
+    //separate the mentions
     NSArray *array = [comment componentsSeparatedByString:@"@"];
     NSString *spacedMentions = [array componentsJoinedByString:@" @"];
-    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+    spacedMentions = [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+    
+    //make all mentions lowercase
+    array = [spacedMentions componentsSeparatedByString:@" "];
+    NSMutableArray *lcArray = [[NSMutableArray alloc] init];
+    for(NSString *string in array){
+        //check if this is a mention
+        if(![string isEqualToString:@""]){
+            if([[string substringToIndex:1] isEqualToString:@"@"]){
+                [lcArray addObject:[string lowercaseString]];
+            }else{
+                [lcArray addObject:string];
+            }
+        }
+    }
+    return [lcArray componentsJoinedByString:@" "];
 }
 
 #pragma mark - UIPopoverPresentationControllerDelegate

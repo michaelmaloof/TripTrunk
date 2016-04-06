@@ -381,13 +381,38 @@
     return self.displayFriendsArray.count < 3 ? NO : YES;
 }
 
+//-(NSString*)separateMentions:(NSString*)comment{
+//    if(![comment containsString:@"@"])
+//        return comment;
+//    
+//    NSArray *array = [comment componentsSeparatedByString:@"@"];
+//    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
+//    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+//}
+
 -(NSString*)separateMentions:(NSString*)comment{
     if(![comment containsString:@"@"])
         return comment;
     
+    //separate the mentions
     NSArray *array = [comment componentsSeparatedByString:@"@"];
     NSString *spacedMentions = [array componentsJoinedByString:@" @"];
-    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+    spacedMentions = [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
+    
+    //make all mentions lowercase
+    array = [spacedMentions componentsSeparatedByString:@" "];
+    NSMutableArray *lcArray = [[NSMutableArray alloc] init];
+    for(NSString *string in array){
+        //check if this is a mention
+        if(![string isEqualToString:@""]){
+            if([[string substringToIndex:1] isEqualToString:@"@"]){
+                [lcArray addObject:[string lowercaseString]];
+            }else{
+                [lcArray addObject:string];
+            }
+        }
+    }
+    return [lcArray componentsJoinedByString:@" "];
 }
 
 -(void)saveMentionToDatabase:(PFObject*)object comment:(NSString*)comment previousComment:(NSString*)previousComment photo:(Photo *)photo members:(NSArray*)members{
