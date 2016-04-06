@@ -22,21 +22,17 @@
 #import "ActivityListViewController.h"
 #import "TTCache.h"
 
-#if DEBUG == 0 // CHANGE TO 0
-// DEBUG is not defined or defined to be 0
-// THIS IS PROD MODE
-#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
-#else
+//TripTrunk-DEV
+//#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
+//#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
 
-
-// THIS IS DEBUG MODE
-#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
-#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+//TripTrunk-PROD
 //#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
 //#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
-#endif
+//TripTrunk-PROD-CLONE
+#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
+#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
 
 @interface AppDelegate ()
 
@@ -47,8 +43,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSString *appName = @"DEV";
+    if([kPARSE_APP_ID isEqualToString:@"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"])
+        appName = @"PROD";
     
-    NSLog(@"PARSE APP ID: %@",kPARSE_APP_ID);
+    if([kPARSE_APP_ID isEqualToString:@"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"])
+        appName = @"PROD-CONE";
+    
+    NSLog(@"%@ APP ID: %@",appName,kPARSE_APP_ID);
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
@@ -86,7 +88,7 @@
         
     }
     
-//    [PFCloud callFunctionInBackground:@"copyColumnUsernameToUsernameBack" withParameters:nil block:^(NSString *response, NSError *error) {
+//    [PFCloud callFunctionInBackground:@"copyColumnLowercaseUsernameToUsername" withParameters:nil block:^(NSString *response, NSError *error) {
 //        if (!error) {
 //            NSLog(@"Copy response: done");
 //        }else{
