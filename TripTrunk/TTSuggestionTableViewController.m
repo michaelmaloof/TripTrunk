@@ -381,15 +381,6 @@
     return self.displayFriendsArray.count < 3 ? NO : YES;
 }
 
-//-(NSString*)separateMentions:(NSString*)comment{
-//    if(![comment containsString:@"@"])
-//        return comment;
-//    
-//    NSArray *array = [comment componentsSeparatedByString:@"@"];
-//    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
-//    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
-//}
-
 -(NSString*)separateMentions:(NSString*)comment{
     if(![comment containsString:@"@"])
         return comment;

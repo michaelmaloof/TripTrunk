@@ -639,15 +639,6 @@
     return [link substringFromIndex:1];
 }
 
-//-(NSString*)separateMentions:(NSString*)comment{
-//    if(![comment containsString:@"@"])
-//        return comment;
-//
-//    NSArray *array = [comment componentsSeparatedByString:@"@"];
-//    NSString *spacedMentions = [array componentsJoinedByString:@" @"];
-//    return [spacedMentions stringByReplacingOccurrencesOfString:@"  @" withString:@" @"];
-//}
-
 -(NSString*)separateMentions:(NSString*)comment{
     if(![comment containsString:@"@"])
         return comment;
