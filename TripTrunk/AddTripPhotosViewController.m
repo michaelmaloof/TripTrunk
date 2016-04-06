@@ -207,9 +207,7 @@
     
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
-        
         int originalCount = self.trip.publicTripDetail.photoCount;
-        
         
         if (self.photos.count > 0){
             if (!self.trip.publicTripDetail){
@@ -256,6 +254,9 @@
 }
 
 -(void)savePhotosToParse{
+    
+    __block int uploadingFailCount = 0;
+    
     for (Photo *photo in self.photos)
     {
         // Set all the trip info on the Photo object
@@ -292,16 +293,23 @@
         [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
         [options setNetworkAccessAllowed:YES];
         
-        [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset
-                                                          options:options
+        [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
                                                     resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                                                         // Calls the method to actually upload the image and save the Photo to parse
                                                         [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData block:^(BOOL succeeded, PFObject *commentObject, NSError *error) {
-                                                            if(!error)
+                                                            if(!error){
                                                                 [self updateMentionsInDatabase:commentObject];
-                                                            else  NSLog(@"Error: %@",error);
+                                                            }
+                                                            else{
+                                                                NSLog(@"Error: %@",error);
+                                                                uploadingFailCount++;
+                                                            }
                                                         }];
                                                     }];
+    }
+    
+    if (uploadingFailCount > 0) {
+        [self updateTripDetailForUploadingError:uploadingFailCount];
     }
     
     /* THIS IS A HACK
@@ -352,6 +360,30 @@
     self.navigationItem.rightBarButtonItem.enabled = YES;
 
 }
+
+-(void)updateTripDetailForUploadingError:(int)errorCount{
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        
+        if (self.photos.count > 0){
+            if (!self.trip.publicTripDetail){
+                self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+            }
+            self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
+            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photos.count -errorCount;
+        }
+        [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error){
+                NSLog(@"Error yo %@", error);
+                [ParseErrorHandlingController handleError:error];
+            } else {
+                [[TTUtility sharedInstance] internetConnectionFound];
+            }
+            
+        }];
+    }];
+}
+
+
 
 #pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

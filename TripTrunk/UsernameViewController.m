@@ -180,7 +180,7 @@
     else if ([identifier isEqualToString:@"submitUnwind"])
     {
     
-        NSString *username = _usernameTextField.text;
+        NSString *username =  [_usernameTextField.text lowercaseString];
         NSString *firstName = _firstNameTextField.text;
         NSString *lastName = _fullnameTextField.text;
         NSString *email = _emailTextField.text;

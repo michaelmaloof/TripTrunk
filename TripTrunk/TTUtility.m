@@ -398,44 +398,54 @@ CLCloudinary *cloudinary;
     
 }
 
-- (void)deletePhoto:(Photo *)photo;
+- (void)deletePhoto:(Photo *)photo withblock:(void (^)(BOOL succeeded, NSError *error))completionBlock
 {
     // If the user isn't the trip nor photo creator, don't let them delete this trip
     if (![[[PFUser currentUser] objectId] isEqualToString:photo.user.objectId] && ![[[PFUser currentUser] objectId] isEqualToString:photo.trip.creator.objectId]) {
         return;
     }
-    
-    // Delete any activities that directly references this photo
-    // That SHOULD include all like, and comment activities
-    PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
-    [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
-    [deleteActivitiesQuery setLimit:1000];
-    
-    [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-     {
-         if (!error) {
-             // The find succeeded.
-             // Delete the found objects
-            [[TTUtility sharedInstance] internetConnectionFound];
-             
-             for (PFObject *object in objects) {
-                 [object deleteEventually];
+
+    else{
+        [photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+         {
+             if (!error) {
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                 
+                 // Delete any activities that directly references this photo
+                 // That SHOULD include all like, and comment activities
+                 PFQuery *deleteActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+                 [deleteActivitiesQuery whereKey:@"photo" equalTo:photo];
+                 [deleteActivitiesQuery setLimit:1000];
+                 [deleteActivitiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+                  {
+                      if (!error) {
+                          // The find succeeded.
+                          // Delete the found objects
+                          [[TTUtility sharedInstance] internetConnectionFound];
+                          
+                          for (PFObject *object in objects) {
+                              [object deleteEventually];
+                          }
+                          
+                          [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+                          
+                           completionBlock(YES,nil);
+                          
+                      } else {
+                          NSLog(@"Error: %@ %@", error, [error userInfo]);
+                          completionBlock(NO,error);
+                          [ParseErrorHandlingController handleError:error];
+                      }
+                  }];
+                 
+             }
+             else{
+                 completionBlock(NO,error);
              }
              
-             [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
-             
-         } else {
-             NSLog(@"Error: %@ %@", error, [error userInfo]);
-             [ParseErrorHandlingController handleError:error];
-         }
-     }];
+         }];
+    }
     
-    [photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-    }];
-    
-  
 }
 
 - (NSString *)thumbnailImageUrl:(NSString *)urlString;
