@@ -19,7 +19,7 @@
     //Connect to Parse and grab the PFUser from the username
     //FIXME: Some sort of user caching would be a good idea so we don't have to do this everytime
     PFQuery *query = [PFUser query];
-    [query whereKey:@"username" equalTo:username];
+    [query whereKey:@"username" equalTo:[username lowercaseString]];
     PFUser *user = (PFUser *)[query getFirstObject];
     
     return user;
@@ -29,7 +29,7 @@
     
     //Connect to Parse and grab the PFUser from the username
     PFQuery *query = [PFUser query];
-    [query whereKey:@"username" equalTo:username];
+    [query whereKey:@"username" equalTo:[username lowercaseString]];
     [query getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         completionBlock((PFUser*)object, error);
     }];
