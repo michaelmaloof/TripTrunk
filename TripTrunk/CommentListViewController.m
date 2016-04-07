@@ -33,7 +33,6 @@
 
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
-@property BOOL isPushingToNewUsers;
 
 @end
 
@@ -165,7 +164,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     self.tabBarController.tabBar.hidden = NO;
-    self.isPushingToNewUsers = NO;
     self.tableView.userInteractionEnabled = YES;
 
 }
@@ -362,17 +360,13 @@
 
 - (void)commentCell:(CommentTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
     
-    if (self.isPushingToNewUsers == NO){
-        self.isPushingToNewUsers = YES;
-        self.tableView.userInteractionEnabled = NO;
-        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    self.tableView.userInteractionEnabled = NO;
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
         if (vc) {
             [self.navigationController pushViewController:vc animated:YES];
         } else {
-            self.isPushingToNewUsers = NO;
             self.tableView.userInteractionEnabled = YES;
         }
-    }
 }
 
 #pragma mark - DZNEmptyDataSetSource
