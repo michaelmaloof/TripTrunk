@@ -33,6 +33,8 @@
 
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
+@property BOOL isPushingToNewUsers;
+
 @end
 
 @implementation CommentListViewController 
@@ -149,6 +151,7 @@
 }];
 }
 
+
 - (void)viewWillAppear:(BOOL)animated {
 //    self.tabBarController.tabBar.hidden = YES;
 }
@@ -162,6 +165,9 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     self.tabBarController.tabBar.hidden = NO;
+    self.isPushingToNewUsers = NO;
+    self.tableView.userInteractionEnabled = YES;
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -355,9 +361,17 @@
 #pragma mark - CommentTableViewCell delegate
 
 - (void)commentCell:(CommentTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
-    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
+    
+    if (self.isPushingToNewUsers == NO){
+        self.isPushingToNewUsers = YES;
+        self.tableView.userInteractionEnabled = NO;
+        UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+        if (vc) {
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            self.isPushingToNewUsers = NO;
+            self.tableView.userInteractionEnabled = YES;
+        }
     }
 }
 
