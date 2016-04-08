@@ -337,13 +337,7 @@
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
         }else{
             
-            if (locationDetails != nil){
-                
-                self.city = locationDetails[@"geobytescity"];
-                self.state = locationDetails[@"geobytesregion"];
-                self.country = locationDetails[@"geobytescountry"];
-                
-            } else if ([location isEqualToString:@"Barcelona, CT, Spain"]){
+           if ([location isEqualToString:@"Barcelona, CT, Spain"]){
                 self.city = @"Barcelona";
                 self.state =@"Catalonia";
                 self.country = @"Spain";
@@ -351,6 +345,16 @@
                 self.city = @"Sao Paulo";
                 self.state =@"Sao Paulo";
                 self.country = @"Brazil";
+            }else if  ([location isEqualToString:@"Taipei, TP, Taiwan"]){
+                self.city = @"Taipei";
+                self.state =@"Taipei City";
+                self.country = @"Taiwan";
+                
+            }else if (locationDetails != nil){
+                    
+                    self.city = locationDetails[@"geobytescity"];
+                    self.state = locationDetails[@"geobytesregion"];
+                    self.country = locationDetails[@"geobytescountry"];
             }else {
                 iserror = YES;
             }
