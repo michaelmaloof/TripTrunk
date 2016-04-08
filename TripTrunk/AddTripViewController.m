@@ -349,12 +349,14 @@
                 self.city = @"Taipei";
                 self.state =@"Taipei City";
                 self.country = @"Taiwan";
-                
+            }else if ([location isEqualToString:@"Freeport, FP, The Bahamas"]){
+                self.city = @"Freeport";
+                self.state =@"Bahamas";
+                self.country = @"Bahamas";
             }else if (locationDetails != nil){
-                    
-                    self.city = locationDetails[@"geobytescity"];
-                    self.state = locationDetails[@"geobytesregion"];
-                    self.country = locationDetails[@"geobytescountry"];
+                self.city = locationDetails[@"geobytescity"];
+                self.state = locationDetails[@"geobytesregion"];
+                self.country = locationDetails[@"geobytescountry"];
             }else {
                 iserror = YES;
             }
