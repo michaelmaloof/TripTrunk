@@ -366,7 +366,7 @@
         self.isPushingToNewUsers = YES;
         self.tableView.userInteractionEnabled = NO;
         UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
-        if (vc) {
+        if (vc && user) {
             [self.navigationController pushViewController:vc animated:YES];
         } else {
             self.isPushingToNewUsers = NO;

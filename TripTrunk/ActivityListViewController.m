@@ -720,7 +720,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)activityCell:(ActivityTableViewCell *)cellView didPressUsernameForUser:(PFUser *)user {
     UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
-    if (vc) {
+    if (vc && user) {
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

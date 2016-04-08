@@ -1609,7 +1609,7 @@
                     user = [self array:self.softMentions containsPFObjectByUsername:[url host]];
         
                 UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-                if(vc){
+            if (vc && user) {
                     vc.user = user;
                     [self.navigationController pushViewController:vc animated:YES];
                 }else{
