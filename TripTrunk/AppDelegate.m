@@ -27,12 +27,12 @@
 //#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
 
 //TripTrunk-PROD
-#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+//#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
+//#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
 //TripTrunk-PROD-CLONE
-//#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
-//#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
+#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
+#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
 
 @interface AppDelegate ()
 
