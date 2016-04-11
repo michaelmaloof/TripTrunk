@@ -686,9 +686,10 @@
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
     [subqueries orderByDescending:@"createdAt"];
+    [subqueries whereKeyExists:@"fromUser"];
+    [subqueries whereKeyExists:@"toUser"];
     [subqueries includeKey:@"fromUser"];
     [subqueries includeKey:@"toUser"];
-
     [subqueries includeKey:@"photo"];
     [subqueries includeKey:@"trip"];
     [subqueries includeKey:@"trip.publicTripDetail"];
