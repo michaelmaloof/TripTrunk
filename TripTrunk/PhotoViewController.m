@@ -1593,6 +1593,8 @@
 #pragma mark - TTTAttributedLabelDelegate methods
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     
+    self.captionLabel.enabled = NO;
+    
     if ([[url scheme] hasPrefix:@"activity"]) {
         NSString *urlString = [NSString stringWithFormat:@"%@",url];
         if([urlString containsString:@"@"]){
@@ -1607,16 +1609,24 @@
                     user = [self array:self.softMentions containsPFObjectByUsername:[url host]];
         
                 UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-                if(vc){
+            if (vc && user) {
                     vc.user = user;
                     [self.navigationController pushViewController:vc animated:YES];
                 }else{
                     NSLog(@"Error: unable to load view controller");
+                    self.captionLabel.enabled = YES;
+
                 }
             }
         }
 
 }
+
+-(void)viewDidDisappear:(BOOL)animated{
+    self.captionLabel.enabled = YES;
+
+}
+
 //############################################# MENTIONS ##################################################
 
 

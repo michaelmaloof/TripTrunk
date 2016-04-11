@@ -181,10 +181,13 @@
     
     if(y > h + reload_distance) {
         if (self.isMine == YES && self.isList == NO){
+            self.navigationItem.rightBarButtonItem.enabled = NO;
             [self loadUserTrunks:NO];
         }else if (self.isList == NO){
+            self.navigationItem.rightBarButtonItem.enabled = NO;
             [self queryForTrunks:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 0){
+            self.navigationItem.rightBarButtonItem.enabled = NO;
             [self loadTrunkListBasedOnProfile:NO];
         } else if (self.isList == YES && self.trunkListToggle.tag == 1){
             //fixme: load mutual trunks but for now idk if we need to since there wont be more than 1000 trips combined. once this is a service method we can do this
@@ -200,6 +203,9 @@
 -(void)loadUserTrunks:(BOOL)isRefresh
 {
     if (self.meParseLocations.count == 0 || self.meParseLocations.class == nil || isRefresh == YES) {
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -236,6 +242,7 @@
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.wasError = YES;
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
@@ -310,6 +317,9 @@
 -(void)loadTrunkListBasedOnProfile:(BOOL)isRefresh{
     
     if (self.meParseLocations.count == 0 || isRefresh == YES) {
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
         if (!self.user){
@@ -347,6 +357,8 @@
                 self.wasError = YES;
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+
                 [self reloadTable];
 
             }
@@ -423,7 +435,12 @@
 }
 
 -(void)loadMutualTrunkList:(BOOL)isRefresh{
+    
     //fixme this should be a service call
+    
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+
+    
     if (self.mutualTrunks.count == 0 || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
@@ -456,6 +473,8 @@
             {
                 self.wasError = YES;
                 [ParseErrorHandlingController handleError:error];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
@@ -621,7 +640,8 @@
 
 
 - (void)queryForTrunks:(BOOL)isRefresh{
-    
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"toUser" containedIn:self.friends];
     [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS

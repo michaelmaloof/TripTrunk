@@ -608,7 +608,13 @@ CLCloudinary *cloudinary;
         } else if ([toUser.objectId isEqualToString:user.objectId]){
             isAllActivity = YES;
             engagedOnOwnContent = YES;
-            content = NSLocalizedString(@"commented on their own photo",@"commented on their own photo");
+            
+            if ([activity[@"isCaption"]boolValue] == NO){
+            
+                content = NSLocalizedString(@"commented on their own photo",@"commented on their own photo");
+            } else {
+                content = NSLocalizedString(@"wrote a caption for their photo",@"wrote a caption for their photo");
+            }
         } else {
             isAllActivity = YES;
             content = NSLocalizedString(@"commented on a photo by",@"commented on a photo by");
