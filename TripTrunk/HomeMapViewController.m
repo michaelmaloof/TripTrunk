@@ -446,8 +446,13 @@
  *
  */
 -(void)queryParseMethodForUser:(PFUser*)user{
+    //Build an array to send up to CC
+    NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+    //we only have a single user but we still need to add it to an array and send up the params
+    [friendsObjectIds addObject:user.objectId];
+    
     NSDictionary *params = @{
-                             @"objectId" : user.objectId,
+                             @"objectIds" : friendsObjectIds,
                              @"limit" : [NSString stringWithFormat:@"%d",self.limit]
                              };
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
@@ -500,69 +505,6 @@
             }
         }
     }];
-    
-//    
-//    //Query to get trunks only from the user whose profile we are on. We get trunks that they made and that they're members of
-//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//    [query whereKey:@"toUser" equalTo:user];
-//    [query whereKey:@"type" equalTo:@"addToTrip"];
-//    [query includeKey:@"trip"];
-//    [query includeKey:@"trip.publicTripDetail"];
-//    [query includeKey:@"toUser"];
-//    [query includeKey:@"creator"];
-//    [query includeKey:@"createdAt"];
-//    [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-//    [query whereKeyExists:@"trip"];
-//    [query setLimit: self.limit];
-//    
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        //we finished loading so switch the bool and renable the refresh icon
-//        self.isLoading = NO;
-//        
-//        if (self.buttonsMaded == NO){
-//            [self createButtons];
-//        } else {
-//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-//                leftButton.enabled = YES;
-//            }
-//        }
-//        
-//        
-//        //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
-//        if(error)
-//        {
-//            NSLog(@"Error: %@",error);
-//            if (self.user == nil){
-//                [self setTitleImage];
-//            } else {
-//                NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-//                NSString *s = NSLocalizedString(@"'s",@"'s");
-//                self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
-//            }
-//            [ParseErrorHandlingController handleError:error];
-//        }
-//        
-//        //there is no error loading the trunks so begin the process of placing them on the map
-//        else
-//        {
-//            [[TTUtility sharedInstance] internetConnectionFound];
-//            self.parseLocations = [[NSMutableArray alloc]init];
-//            for (PFObject *activity in objects)
-//            {
-//                Trip *trip = activity[@"trip"];
-//                if (trip.name != nil && trip.publicTripDetail != nil)
-//                {
-//                    [self.parseLocations addObject:trip];
-//                }
-//                else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-//                    [self.parseLocations addObject:trip];
-//
-//                }
-//            }
-//            [self sortTrips];
-//
-//        }
-//    }];
 }
 
 -(void)sortIntoHotOrNot{
@@ -600,27 +542,18 @@
  *
  */
 -(void)queryForTrunks{
+    //Build an array to send up to CC
+    NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+    for(PFUser *friendObjectId in self.friends){
+        // add just the objectIds to the array, no PFObjects can be sent as a param
+        [friendsObjectIds addObject:friendObjectId.objectId];
+    }
     
-    //TODO:City filter if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId]) should be moved here to place less pins down later
-    
-    //This is documented in the method above.
-    //TODO This method and the one above should be merged into one method during refactoring
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"toUser" containedIn:self.friends];
-    [query whereKey:@"type" equalTo:@"addToTrip"];
-    [query includeKey:@"trip"];
-    [query includeKey:@"toUser"];
-    [query includeKey:@"creator"];
-    [query includeKey:@"createdAt"];
-    [query whereKeyExists:@"trip"];
-    [query includeKey:@"trip.publicTripDetail"];
-    [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-    [query setLimit: self.limit];
-    
-    
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    NSDictionary *params = @{
+                             @"objectIds" : friendsObjectIds,
+                             @"limit" : [NSString stringWithFormat:@"%d",self.limit]
+                             };
+    [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
         self.isLoading = NO;
         if (self.buttonsMaded == NO){
             [self createButtons];
@@ -648,9 +581,9 @@
         else
         {
             [[TTUtility sharedInstance] internetConnectionFound];
-
+            
             self.parseLocations = [[NSMutableArray alloc]init];
-            for (PFObject *activity in objects)
+            for (PFObject *activity in response)
             {
                 Trip *trip = activity[@"trip"];
                 if (trip.name != nil && trip.publicTripDetail != nil)
