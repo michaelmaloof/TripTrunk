@@ -463,6 +463,8 @@
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
     
+    
+    //FIXME 5s Doesnt work. Black Bar added
     [self.view removeConstraint:self.topContComment];
     [self.view addConstraint:self.topCont];
 
