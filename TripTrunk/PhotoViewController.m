@@ -461,6 +461,11 @@
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             
+            if ([self.photo.caption isEqualToString:@""] && self.photo.caption == nil){
+                self.deleteCaption.hidden = YES;
+            }
+
+            
             [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 if (!error){
                     
@@ -881,7 +886,10 @@
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
-    self.deleteCaption.hidden = NO;
+    
+   if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
+       self.deleteCaption.hidden = NO;
+   }
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
 
@@ -910,6 +918,7 @@
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
     [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         self.photo.caption = @"";
+        self.deleteCaption.hidden = YES;
         if (!error){
             [[TTUtility sharedInstance] internetConnectionFound];
             NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
