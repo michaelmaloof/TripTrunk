@@ -156,7 +156,9 @@
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
     
-    [self refreshPhotoActivitiesWithUpdateNow:NO];
+    
+    //load the first photo (which is the one the user clicked to get here)
+    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
 
 }
 
@@ -453,10 +455,13 @@
                                success:nil failure:nil];
 }
 
--(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
+
+-(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
     
-    self.bottomButtonWrapper.hidden = YES;
-    self.topButtonWrapper.hidden = YES;
+    if (isCurrentPhoto == NO){
+        self.bottomButtonWrapper.hidden = YES;
+        self.topButtonWrapper.hidden = YES;
+    }
     
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
@@ -508,7 +513,7 @@
     
     // Get Activities for Photo
     PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
-    query.limit = 1000;
+    query.limit = 1000; //fixme this limit wont work for popular photos
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];
@@ -591,10 +596,11 @@
                 
             }
             
-            
-            [self updateCommentsLabel];
-            [self updateLikesLabel];
+            //update the label and likes now in case the user has already seen these and its cached
+//            [self updateCommentsLabel];
+//            [self updateLikesLabel];
     
+            //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -615,7 +621,8 @@
                 }
             }
             
-            [self refreshPhotoActivitiesWithUpdateNow:NO];
+            //load the new photo the user swiped too
+            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
         }
@@ -657,13 +664,7 @@
                [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
             self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
 
-            
-            [self updateCommentsLabel];
-            [self updateLikesLabel];
-
-
-
-            
+            //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -684,9 +685,8 @@
                 }
             }
             
-
-            
-            [self refreshPhotoActivitiesWithUpdateNow:NO];
+            //load photo on swipe left
+            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
         }
@@ -758,8 +758,6 @@
 - (IBAction)onCommentsTapped:(id)sender {
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navController animated:YES completion:nil];
     vc.trunkMembers = self.trunkMembers;
     vc.trip = self.trip;
     [self.navigationController pushViewController:vc animated:YES];
@@ -769,14 +767,13 @@
 - (IBAction)likeCountButtonPressed:(id)sender {
     if (self.likeActivities.count > 0){
         ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
-        //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-        //    [self presentViewController:navController animated:YES completion:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
 - (IBAction)editCaptionTapped:(id)sender {
     
+    //edit caption
     if (self.addCaption.tag == 0){
         //store the mentioned users from the current comment
         if (self.caption.text.length > 0)
@@ -785,38 +782,52 @@
         self.captionLabel.hidden = YES;
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
-        
+    //add caption
     } else {
+        
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
+        //begin process of adding a caption to the current photo
         self.addCaption.enabled = NO;
         self.photo.caption = [self separateMentions:self.caption.text];
         self.caption.hidden = YES;
         self.captionLabel.hidden = NO;
+        
+        [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
+        [self updateCommentsLabel];
 
-        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
-        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
                 [[TTUtility sharedInstance] internetConnectionFound];
+                
+                //if there are no comments on the photo
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        if(!error){
+                        if(!error)
+                        {
                             NSLog(@"Caption saved as comment");
-                            [self updateCommentsLabel];
-                            [self refreshPhotoActivitiesWithUpdateNow:YES];
-                            [self.caption endEditing:YES];
+//                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                             [self updateMentionsInDatabase:commentObject];
-                        }else{
+                            [self.caption endEditing:YES];
+                        }else
+                        {
                             NSLog(@"Error saving caption");
+                            [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
                             [self updateCommentsLabel];
                             [self.caption endEditing:YES];
                         }
                     }];
-                } else
+                }
+                //if there are already comments on the photo
+                else
                 {
                     [ParseErrorHandlingController handleError:error];
                     //if there already is a caption we edit it and save it
@@ -854,8 +865,7 @@
                          {
                              if(!error){
                                  NSLog(@"Caption saved as comment");
-                                 [self refreshPhotoActivitiesWithUpdateNow:YES];
-                                 [self updateCommentsLabel];
+//                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                  [self.caption endEditing:YES];
                                  [self updateMentionsInDatabase:commentObject];
                              }else{
@@ -964,10 +974,10 @@
         self.likeButton.userInteractionEnabled = NO;
         
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            
             if (succeeded) {
                 
                 [self updateLikesLabel];
+//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
@@ -984,10 +994,6 @@
                 }
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
-
-                //FIXME: Should we add alert view here warning the like didnt go through?
-                
-                
             }
         }];
     }
@@ -1002,9 +1008,10 @@
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
-            
+
             if (succeeded) {
                 [self updateLikesLabel];
+//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
@@ -1021,8 +1028,6 @@
                 }
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
-                
-                //FIXME: Should we add alert view here warning the like didnt go through?
                 
             }
         }];

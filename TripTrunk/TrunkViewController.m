@@ -933,6 +933,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+//fixme this cant be right
 -(void)photoWasLiked:(BOOL)isFromError{
 
     int likes = [self.totalLikeButton.text intValue] + 1;
