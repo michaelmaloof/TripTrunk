@@ -92,8 +92,8 @@
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
     self.isLoading = NO;
     
-    //we load 250 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
-    self.limit = 250;
+    //we load 50 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
+    self.limit = 50;
     
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
@@ -266,12 +266,7 @@
             
             self.isLoading = YES;
             [self queryParseMethodEveryone];
-//            [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:@{@"user": [PFUser currentUser].objectId}
-//                                        block:^(NSString *response, NSError *error) {
-//                                            if (!error) {
-//                                                NSLog(@"%@",response);
-//                                            }
-//                                        }];
+
             //We're on the home tab so register the user's notifications
             
         } else {

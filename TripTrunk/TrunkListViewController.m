@@ -683,12 +683,19 @@
                 for (PFObject *activity in response)
                 {
                     Trip *trip = activity[@"trip"];
-                    
+                    BOOL tripToTripCheck = NO;
+                    BOOL activityToCheck = YES;
                     for (PFObject *check in response){
                         
                         Trip *tripCheck = check[@"trip"];
+                        if([trip.objectId isEqualToString:tripCheck.objectId]){
+                            tripToTripCheck = YES;
+                        }
+                        if(![activity.objectId isEqualToString:check.objectId]){
+                            activityToCheck = NO;
+                        }
                         
-                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId] && trip.publicTripDetail != nil){
+                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && tripToTripCheck && activityToCheck && trip.publicTripDetail != nil){
                             
                             if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
                                 [self.mutualTrunks addObject:tripCheck];
