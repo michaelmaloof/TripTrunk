@@ -814,7 +814,7 @@
                         if(!error)
                         {
                             NSLog(@"Caption saved as comment");
-                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+//                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                             [self updateMentionsInDatabase:commentObject];
                             [self.caption endEditing:YES];
                         }else
@@ -865,7 +865,7 @@
                          {
                              if(!error){
                                  NSLog(@"Caption saved as comment");
-                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+//                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                  [self.caption endEditing:YES];
                                  [self updateMentionsInDatabase:commentObject];
                              }else{
@@ -974,11 +974,10 @@
         self.likeButton.userInteractionEnabled = NO;
         
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            //FIXME I need to implement the refresh in here
             if (succeeded) {
                 
                 [self updateLikesLabel];
-                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
@@ -1009,11 +1008,10 @@
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
-            //FIXME I need to implement the refresh in here
 
             if (succeeded) {
                 [self updateLikesLabel];
-                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
