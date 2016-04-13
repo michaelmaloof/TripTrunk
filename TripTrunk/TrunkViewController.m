@@ -933,7 +933,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void)photoWasLiked:(id)sender{
+-(void)photoWasLiked:(BOOL)isFromError{
 
     int likes = [self.totalLikeButton.text intValue] + 1;
     [self.totalLikeButton setText:[NSString stringWithFormat:@"%d",likes]];
@@ -943,23 +943,22 @@
     self.totalLikeHeart.hidden = NO;
 
     //direct update after calculation
+    //FIXME this should be done in the utility for liking a photo
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
-        [self.trip.publicTripDetail saveInBackground];
+        if (isFromError == NO && !error){
+            [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
+            [self.trip.publicTripDetail saveInBackground];
+    }
     }];
     
 }
 
--(void)photoWasDisliked:(id)sender{
+-(void)photoWasDisliked:(BOOL)isFromError{
     
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        
     
     int likes = [self.totalLikeButton.text intValue];
     if (likes > 0){
         likes = likes - 1;
-//        [self.trip.publicTripDetail saveInBackground];
-        
     }
     if (likes < 1){
         self.totalLikeButton.hidden = YES;
@@ -973,10 +972,13 @@
     }
     
     //direct update after calculation
-    [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
-    [self.trip.publicTripDetail saveInBackground];
+    //FIXME this should be done in the utility for liking a photo
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (isFromError == NO && !error){
+            [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
+            [self.trip.publicTripDetail saveInBackground];
+    }
     }];
-
     
 }
 

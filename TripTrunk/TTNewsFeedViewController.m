@@ -137,6 +137,8 @@
                  PFQuery *photoQuery = [PFQuery orQueryWithSubqueries:@[photos,photos2]];
                  [photoQuery includeKey:@"fromUser"];
                  [photoQuery includeKey:@"photo"];
+                 [photoQuery whereKeyExists:@"fromUser"];
+                 [photoQuery whereKeyExists:@"toUser"];
                  [photoQuery includeKey:@"trip"];
                  [photoQuery includeKey:@"trip.publicTripDetail"];
                  [photoQuery setCachePolicy:kPFCachePolicyNetworkOnly];
@@ -176,6 +178,8 @@
                                       [self.photos insertObject:photo atIndex:0];
                                       [self.arrayToSend insertObject:photo atIndex:0];
                                   }
+                                  
+                                  //this trip hasnt been represnted yet
                                   if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId])
                                   {
                                       if (isRefresh == YES)
@@ -183,21 +187,33 @@
                                           [self.mainPhotos insertObject:photo atIndex:0];
                                           [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                           [self.duplicatePhotos addObject:photo.objectId];
-                                          [self.photoUsers addObject:photo.user.objectId];
+                                          
+                                          if (![self.photoUsers containsObject:photo.user.objectId]){
+                                              
+                                              [self.photoUsers addObject:photo.user.objectId];
+                                              
+                                          }
                                       } else
                                       {
                                           [self.mainPhotos addObject:photo];
                                           [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                           [self.duplicatePhotos addObject:photo.objectId];
-                                          [self.photoUsers addObject:photo.user.objectId];
+                                          if (![self.photoUsers containsObject:photo.user.objectId]){
+                                              
+                                              [self.photoUsers addObject:photo.user.objectId];
+                                          }
                                       }
                                   }
                                   
+                                  
+                                  //this trip has been represented
                                   else if ([self.duplicatePhotoStrings containsObject:photo.trip.objectId])
                                   {
+                                      
+                                      //this photo hasnt been represented
                                       if (![_duplicatePhotos containsObject:photo.objectId])
                                       {
-                                          
+                                          //this user hasnt been represented
                                           if (![self.photoUsers containsObject:photo.user.objectId])
                                           {
                                               if (isRefresh == YES)
@@ -205,19 +221,30 @@
                                                   [self.mainPhotos insertObject:photo atIndex:0];
                                                   [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                                   [self.duplicatePhotos addObject:photo.objectId];
-                                                  [self.photoUsers addObject:photo.user.objectId];
+                                                  if (![self.photoUsers containsObject:photo.user.objectId]){
+                                                      
+                                                      [self.photoUsers addObject:photo.user.objectId];
+                                                  }
                                               } else
                                               {
                                                   [self.mainPhotos addObject:photo];
                                                   [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                                   [self.duplicatePhotos addObject:photo.objectId];
-                                                  [self.photoUsers addObject:photo.user.objectId];
+                                                  if (![self.photoUsers containsObject:photo.user.objectId]){
+                                                      
+                                                      [self.photoUsers addObject:photo.user.objectId];
+                                                      
+                                                  }
                                               }
+                                              
+                                        //this user has been represented
                                           } else
                                           {
+                                        //so the photo and trip and user have been represnted. Lets make sure its all from one trunk though (in case a user is represented but its from a different trunk)
                                               NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId];
                                               NSString *tripID = self.duplicatePhotoStrings[fooIndex];
                                               
+                                              //this user is represnted in a different trunk, so it doesnt count as being represtened already in this case
                                               if (![tripID isEqualToString:photo.trip.objectId])
                                               {
                                                   if (isRefresh == YES)
@@ -225,13 +252,20 @@
                                                       [self.mainPhotos insertObject:photo atIndex:0];
                                                       [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                                       [self.duplicatePhotos addObject:photo.objectId];
-                                                      [self.photoUsers addObject:photo.user.objectId];
-                                                  } else
+                                                      if (![self.photoUsers containsObject:photo.user.objectId]){
+                                                          
+                                                          [self.photoUsers addObject:photo.user.objectId];
+                                                      }
+                                                  }
+                                                  else
                                                   {
                                                       [self.mainPhotos addObject:photo];
                                                       [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                                       [self.duplicatePhotos addObject:photo.objectId];
-                                                      [self.photoUsers addObject:photo.user.objectId];
+                                                      if (![self.photoUsers containsObject:photo.user.objectId]){
+                                                          
+                                                          [self.photoUsers addObject:photo.user.objectId];
+                                                      }
                                                   }
                                                   
                                               }

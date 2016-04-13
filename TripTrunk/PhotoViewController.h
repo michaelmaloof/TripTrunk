@@ -12,8 +12,8 @@
 #import "TTBaseViewController.h"
 
 @protocol PhotoDelegate
--(void)photoWasLiked:(id)sender;
--(void)photoWasDisliked:(id)sender;
+-(void)photoWasLiked:(BOOL)isFromError;
+-(void)photoWasDisliked:(BOOL)isFromError;
 -(void)photoWasDeleted:(NSNumber*)likes;
 -(void)photoWasViewed:(Photo*)photo;
 @end

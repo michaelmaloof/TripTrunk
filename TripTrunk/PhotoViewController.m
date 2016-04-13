@@ -461,6 +461,11 @@
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             
+            if ([self.photo.caption isEqualToString:@""] && self.photo.caption == nil){
+                self.deleteCaption.hidden = YES;
+            }
+
+            
             [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 if (!error){
                     
@@ -881,7 +886,10 @@
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
-    self.deleteCaption.hidden = NO;
+    
+   if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
+       self.deleteCaption.hidden = NO;
+   }
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
 
@@ -910,6 +918,7 @@
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
     [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         self.photo.caption = @"";
+        self.deleteCaption.hidden = YES;
         if (!error){
             [[TTUtility sharedInstance] internetConnectionFound];
             NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
@@ -943,62 +952,87 @@
     
 }
 
+//FIXME: Should we do saveEventually for likes or does it need to be real time responsive like this?
 - (IBAction)likeButtonPressed:(id)sender {
     // Like Photo
     if (!self.likeButton.selected)
     {
-        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
-
         [self.likeButton setSelected:YES];
+        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
+        [self updateLikesLabel];
+        [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        self.likeButton.userInteractionEnabled = NO;
+        
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.likeButton.enabled = YES;
+            
             if (succeeded) {
                 
-                [self refreshPhotoActivitiesWithUpdateNow:YES];
                 [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasLiked:sender];
+                    [self.delegate photoWasLiked:NO];
                 }
-                NSLog(@"Photo liked");
+                self.likeButton.userInteractionEnabled = YES;
+                [[TTUtility sharedInstance] internetConnectionFound];
+                
             }else {
                 [self.likeButton setSelected:NO];
+                [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
                 [self updateLikesLabel];
-                NSLog(@"Error liking photo: %@", error);
+                [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                if (self.photo.trip.publicTripDetail){
+                    [self.delegate photoWasDisliked:YES];
+                }
+                self.likeButton.userInteractionEnabled = YES;
+                [ParseErrorHandlingController handleError:error];
+
+                //FIXME: Should we add alert view here warning the like didnt go through?
+                
+                
             }
         }];
     }
     // Unlike Photo
     else if (self.likeButton.selected) {
         
-        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-
         [self.likeButton setSelected:NO];
+        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
+        [self updateLikesLabel];
+        [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        self.likeButton.userInteractionEnabled = NO;
+
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
             
             if (succeeded) {
-                [self refreshPhotoActivitiesWithUpdateNow:YES];
                 [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasDisliked:sender];
+                    [self.delegate photoWasDisliked:NO];
                 }
-                NSLog(@"Photo unliked");
+                self.likeButton.userInteractionEnabled = YES;
+                [[TTUtility sharedInstance] internetConnectionFound];
+
             }else {
                 [self.likeButton setSelected:YES];
+                [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
                 [self updateLikesLabel];
-                NSLog(@"Error unliking photo: %@", error);
+                [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                if (self.photo.trip.publicTripDetail){
+                    [self.delegate photoWasLiked:YES];
+                }
+                self.likeButton.userInteractionEnabled = YES;
+                [ParseErrorHandlingController handleError:error];
+                
+                //FIXME: Should we add alert view here warning the like didnt go through?
+                
             }
         }];
     }
     
-    [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
-    [self updateCommentsLabel];
-    [self updateLikesLabel];
-    self.caption.hidden = YES;
-    self.caption.text = self.photo.caption;
-    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    [self updateCommentsLabel]; //FIXME Why is this here?
+    self.caption.hidden = YES;  //FIXME Why is this here?
+    self.caption.text = self.photo.caption;  //FIXME Why is this here?
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];  //FIXME Why is this here?
 
-    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
 
