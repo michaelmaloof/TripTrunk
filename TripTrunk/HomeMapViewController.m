@@ -1157,18 +1157,13 @@
 }
 
 - (void)addMoreTrunks{
-    if (self.limit < 100){
-        self.limit = self.limit + 250;
-    } else if (self.limit < 300){
-        self.limit = self.limit + 400;
-    }
+    self.limit += 50;
     [self beginLoadingTrunks];
 }
+
 - (IBAction)compassTaped:(id)sender {
         self.compassRose.hidden = !self.compassRose.hidden;
 }
-
-
 
 -(void)dontRefreshMap{
     self.dontRefresh = YES;

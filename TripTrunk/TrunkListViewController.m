@@ -208,37 +208,38 @@
         
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        //Build an array to send up to CC
+        NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+        //we only have a single user but we still need to add it to an array and send up the params
         if (!self.user){
-            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+            [friendsObjectIds addObject:[PFUser currentUser].objectId];
             
         }else{
-            [query whereKey:@"toUser" equalTo:self.user];
+            [friendsObjectIds addObject:self.user.objectId];
         }
-        [query whereKey:@"type" equalTo:@"addToTrip"];
-        [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
-        [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
-        [query includeKey:@"trip"];
-        [query whereKeyExists:@"trip"];
-        [query includeKey:@"trip.creator"];
-        [query includeKey:@"trip.publicTripDetail"];
-        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+        
+        int limit;
+        int skip;
         
         if (isRefresh == NO){
-            query.limit = 100;
-            query.skip = self.objectsCountMe;
+            limit = 100;
+            skip = self.objectsCountMe;
         } else {
-            if (self.objectsCountMe == 0){
-                query.limit = 100;
-            } else {
-                query.limit = self.objectsCountMe;
-            }
-            query.skip = 0;
+            if (self.objectsCountMe == 0)
+                limit = 100;
+            else limit = self.objectsCountMe;
+            skip = 0;
             self.objectsCountMe = 0;
         }
         
-        
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSDictionary *params = @{
+                                 @"objectIds" : friendsObjectIds,
+                                 @"limit" : [NSString stringWithFormat:@"%d",limit],
+                                 @"skip" : [NSString stringWithFormat:@"%d",skip],
+                                 @"latitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.latitude],
+                                 @"longitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.longitude]
+                                 };
+        [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
@@ -250,7 +251,7 @@
             else
             {
                 self.wasError = NO;
-
+                
                 if (isRefresh == YES){
                     self.meParseLocations = [[NSMutableArray alloc]init];
                     self.meObjectIDs = [[NSMutableArray alloc]init];;
@@ -258,12 +259,12 @@
                 
                 [[TTUtility sharedInstance] internetConnectionFound];
                 self.didLoad = YES;
-                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
-                for (PFObject *activity in objects)
+                self.objectsCountMe = (int)response.count + self.objectsCountMe;
+                for (PFObject *activity in response)
                 {
                     
                     Trip *trip = activity[@"trip"];
-
+                    
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
@@ -281,7 +282,7 @@
                     
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-
+                    
                     BOOL contains = NO;
                     
                     for (Trip* trunk in self.visitedTrunks){
@@ -307,6 +308,107 @@
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
         }];
+//        
+//        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        if (!self.user){
+//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//            
+//        }else{
+//            [query whereKey:@"toUser" equalTo:self.user];
+//        }
+//        [query whereKey:@"type" equalTo:@"addToTrip"];
+//        [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
+//        [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
+//        [query includeKey:@"trip"];
+//        [query whereKeyExists:@"trip"];
+//        [query includeKey:@"trip.creator"];
+//        [query includeKey:@"trip.publicTripDetail"];
+//        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
+//        
+//        if (isRefresh == NO){
+//            query.limit = 100;
+//            query.skip = self.objectsCountMe;
+//        } else {
+//            if (self.objectsCountMe == 0){
+//                query.limit = 100;
+//            } else {
+//                query.limit = self.objectsCountMe;
+//            }
+//            query.skip = 0;
+//            self.objectsCountMe = 0;
+//        }
+//        
+//        
+//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            if(error)
+//            {
+//                [ParseErrorHandlingController handleError:error];
+//                self.navigationItem.rightBarButtonItem.enabled = YES;
+//                self.wasError = YES;
+//                [self reloadTable];
+//                NSLog(@"Error: %@",error);
+//            }
+//            else
+//            {
+//                self.wasError = NO;
+//
+//                if (isRefresh == YES){
+//                    self.meParseLocations = [[NSMutableArray alloc]init];
+//                    self.meObjectIDs = [[NSMutableArray alloc]init];;
+//                }
+//                
+//                [[TTUtility sharedInstance] internetConnectionFound];
+//                self.didLoad = YES;
+//                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
+//                for (PFObject *activity in objects)
+//                {
+//                    
+//                    Trip *trip = activity[@"trip"];
+//
+//                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
+//                    {
+//                        [self.meParseLocations addObject:trip];
+//                        [self.meObjectIDs addObject:trip.objectId];
+//                        
+//                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
+//                    {
+//                        [self.meParseLocations addObject:trip];
+//                        [self.meObjectIDs addObject:trip.objectId];
+//                    }
+//                }
+//                
+//                for (Trip *trip in self.meParseLocations)
+//                {
+//                    
+//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+//
+//                    BOOL contains = NO;
+//                    
+//                    for (Trip* trunk in self.visitedTrunks){
+//                        if ([trunk.objectId isEqualToString:trip.objectId]){
+//                            contains = YES;
+//                        }
+//                    }
+//                    
+//                    if (self.visitedTrunks.count == 0){
+//                        contains = NO;
+//                    }
+//                    
+//                    if (lastTripInterval < 0 && contains == NO)
+//                    {
+//                        [self.haventSeens addObject:trip];
+//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+//                        [self.haventSeens addObject:trip];
+//                    }
+//                }
+//                
+//            }
+//            //                self.filter.tag = 1;
+//            self.navigationItem.rightBarButtonItem.enabled = YES;
+//            [self reloadTable];
+//        }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -321,36 +423,37 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
 
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+        
+        //Build an array to send up to CC
+        NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+        //we only have a single user but we still need to add it to an array and send up the params
         if (!self.user){
-            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+            [friendsObjectIds addObject:[PFUser currentUser].objectId];
             
         }else{
-            [query whereKey:@"toUser" equalTo:self.user];
+            [friendsObjectIds addObject:self.user.objectId];
         }
-        [query whereKey:@"type" equalTo:@"addToTrip"];  
-        [query includeKey:@"trip"];
-        [query includeKey:@"trip.creator"];
-        [query whereKeyExists:@"trip"];
-        [query includeKey:@"trip.publicTripDetail"];
-//        [query orderByDescending:@"createdAt"];
+        
+        int limit;
+        int skip;
         
         if (isRefresh == NO){
-            query.limit = 50;
-            query.skip = self.objectsCountMe;
+            limit = 50;
+            skip = self.objectsCountMe;
         } else {
-            if (self.objectsCountMe == 0){
-                query.limit = 50;
-            } else {
-                query.limit = self.objectsCountMe;
-
-            }
-            query.skip = 0;
+            if (self.objectsCountMe == 0)
+                limit = 50;
+            else limit = self.objectsCountMe;
+            skip = 0;
             self.objectsCountMe = 0;
         }
         
-        
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSDictionary *params = @{
+                                 @"objectIds" : friendsObjectIds,
+                                 @"limit" : [NSString stringWithFormat:@"%d",limit],
+                                 @"skip" : [NSString stringWithFormat:@"%d",skip]
+                                 };
+        [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
             
             if(error)
             {
@@ -358,9 +461,9 @@
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
                 self.navigationItem.rightBarButtonItem.enabled = YES;
-
+                
                 [self reloadTable];
-
+                
             }
             else if (!error)
             {
@@ -376,12 +479,12 @@
                 }
                 
                 self.didLoad = YES;
-                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
-                for (PFObject *activity in objects)
+                self.objectsCountMe = (int)response.count + self.objectsCountMe;
+                for (PFObject *activity in response)
                 {
                     
                     Trip *trip = activity[@"trip"];
-
+                    
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
@@ -421,11 +524,118 @@
                 }
                 
             }
-//            self.trunkListToggle.tag = 0;
+            //            self.trunkListToggle.tag = 0;
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
-
+            
         }];
+        
+        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        if (!self.user){
+//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//            
+//        }else{
+//            [query whereKey:@"toUser" equalTo:self.user];
+//        }
+//        [query whereKey:@"type" equalTo:@"addToTrip"];  
+//        [query includeKey:@"trip"];
+//        [query includeKey:@"trip.creator"];
+//        [query whereKeyExists:@"trip"];
+//        [query includeKey:@"trip.publicTripDetail"];
+////        [query orderByDescending:@"createdAt"];
+//        
+//        if (isRefresh == NO){
+//            query.limit = 50;
+//            query.skip = self.objectsCountMe;
+//        } else {
+//            if (self.objectsCountMe == 0){
+//                query.limit = 50;
+//            } else {
+//                query.limit = self.objectsCountMe;
+//
+//            }
+//            query.skip = 0;
+//            self.objectsCountMe = 0;
+//        }
+//        
+//        
+//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            
+//            if(error)
+//            {
+//                self.wasError = YES;
+//                NSLog(@"Error: %@",error);
+//                [ParseErrorHandlingController handleError:error];
+//                self.navigationItem.rightBarButtonItem.enabled = YES;
+//
+//                [self reloadTable];
+//
+//            }
+//            else if (!error)
+//            {
+//                self.wasError = NO;
+//                [[TTUtility sharedInstance] internetConnectionFound];
+//            }
+//            
+//            {
+//                
+//                if (isRefresh == YES){
+//                    self.meObjectIDs = [[NSMutableArray alloc]init];;
+//                    self.meParseLocations = [[NSMutableArray alloc]init];
+//                }
+//                
+//                self.didLoad = YES;
+//                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
+//                for (PFObject *activity in objects)
+//                {
+//                    
+//                    Trip *trip = activity[@"trip"];
+//
+//                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
+//                    {
+//                        [self.meParseLocations addObject:trip];
+//                        [self.meObjectIDs addObject:trip.objectId];
+//                        
+//                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
+//                    {
+//                        [self.meParseLocations addObject:trip];
+//                        [self.meObjectIDs addObject:trip.objectId];
+//                    }
+//                }
+//                
+//                for (Trip *trip in self.meParseLocations)
+//                {
+//                    
+//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+//                    
+//                    BOOL contains = NO;
+//                    
+//                    for (Trip* trunk in self.visitedTrunks){
+//                        if ([trunk.objectId isEqualToString:trip.objectId]){
+//                            contains = YES;
+//                        }
+//                    }
+//                    
+//                    if (self.visitedTrunks.count == 0){
+//                        contains = NO;
+//                    }
+//                    
+//                    if (lastTripInterval < 0 && contains == NO)
+//                    {
+//                        [self.haventSeens addObject:trip];
+//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+//                        [self.haventSeens addObject:trip];
+//                    }
+//                }
+//                
+//            }
+////            self.trunkListToggle.tag = 0;
+//            self.navigationItem.rightBarButtonItem.enabled = YES;
+//            [self reloadTable];
+//
+//        }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -443,38 +653,24 @@
     
     if (self.mutualTrunks.count == 0 || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-        if (!self.user){
-            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-            
-        }else{
-            [query whereKey:@"toUser" equalTo:self.user];
-        }
-        [query whereKey:@"type" equalTo:@"addToTrip"];
-        
-        
-        PFQuery *queryMine = [PFQuery queryWithClassName:@"Activity"];
-        [queryMine whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [queryMine whereKey:@"type" equalTo:@"addToTrip"];
 
-        PFQuery *subQuery = [PFQuery orQueryWithSubqueries:@[queryMine, query]];
-
+        NSString *user;
+        if (!self.user)
+            user = [PFUser currentUser].objectId;
+        else user = self.user.objectId;
         
-        subQuery.limit = 1000;
-        
-        [subQuery includeKey:@"trip"];
-        [subQuery includeKey:@"trip.creator"];
-        [subQuery whereKeyExists:@"trip"];
-        [subQuery includeKey:@"trip.publicTripDetail"];
-
-        
-        [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSDictionary *params = @{
+                                 @"user1" : user,
+                                 @"user2" : [PFUser currentUser].objectId,
+                                 @"limit" : @"1000"
+                                 };
+        [PFCloud callFunctionInBackground:@"queryForMutualTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
             if(error)
             {
                 self.wasError = YES;
                 [ParseErrorHandlingController handleError:error];
                 self.navigationItem.rightBarButtonItem.enabled = YES;
-
+                
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
@@ -484,12 +680,12 @@
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
                 self.didLoad = YES;
-                for (PFObject *activity in objects)
+                for (PFObject *activity in response)
                 {
                     Trip *trip = activity[@"trip"];
-
-                    for (PFObject *check in objects){
                     
+                    for (PFObject *check in response){
+                        
                         Trip *tripCheck = check[@"trip"];
                         
                         if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId] && trip.publicTripDetail != nil){
@@ -499,10 +695,10 @@
                                 [self.mutualObjectIDs addObject:tripCheck.objectId];
                             }
                         }
-                    
-                    
+                        
+                        
                     }
-
+                    
                 }
                 
                 for (Trip *trip in self.mutualTrunks)
@@ -535,7 +731,103 @@
             //            self.trunkListToggle.tag = 0;
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
+
         }];
+        
+        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        if (!self.user){
+//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//            
+//        }else{
+//            [query whereKey:@"toUser" equalTo:self.user];
+//        }
+//        [query whereKey:@"type" equalTo:@"addToTrip"];
+//        
+//        
+//        PFQuery *queryMine = [PFQuery queryWithClassName:@"Activity"];
+//        [queryMine whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//        [queryMine whereKey:@"type" equalTo:@"addToTrip"];
+//
+//        PFQuery *subQuery = [PFQuery orQueryWithSubqueries:@[queryMine, query]];
+//
+//        
+//        subQuery.limit = 1000;
+//        
+//        [subQuery includeKey:@"trip"];
+//        [subQuery includeKey:@"trip.creator"];
+//        [subQuery whereKeyExists:@"trip"];
+//        [subQuery includeKey:@"trip.publicTripDetail"];
+//
+//        
+//        [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            if(error)
+//            {
+//                self.wasError = YES;
+//                [ParseErrorHandlingController handleError:error];
+//                self.navigationItem.rightBarButtonItem.enabled = YES;
+//
+//                [self reloadTable];
+//                NSLog(@"Error: %@",error);
+//            }
+//            {
+//                if (!error){
+//                    self.wasError = NO;
+//                    [[TTUtility sharedInstance] internetConnectionFound];
+//                }
+//                self.didLoad = YES;
+//                for (PFObject *activity in objects)
+//                {
+//                    Trip *trip = activity[@"trip"];
+//
+//                    for (PFObject *check in objects){
+//                    
+//                        Trip *tripCheck = check[@"trip"];
+//                        
+//                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId] && trip.publicTripDetail != nil){
+//                            
+//                            if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
+//                                [self.mutualTrunks addObject:tripCheck];
+//                                [self.mutualObjectIDs addObject:tripCheck.objectId];
+//                            }
+//                        }
+//                    
+//                    
+//                    }
+//
+//                }
+//                
+//                for (Trip *trip in self.mutualTrunks)
+//                {
+//                    
+//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+//                    
+//                    BOOL contains = NO;
+//                    
+//                    for (Trip* trunk in self.visitedTrunks){
+//                        if ([trunk.objectId isEqualToString:trip.objectId]){
+//                            contains = YES;
+//                        }
+//                    }
+//                    
+//                    if (self.visitedTrunks.count == 0){
+//                        contains = NO;
+//                    }
+//                    
+//                    if (lastTripInterval < 0 && contains == NO)
+//                    {
+//                        [self.haventSeens addObject:trip];
+//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+//                        [self.haventSeens addObject:trip];
+//                    }
+//                }
+//                
+//            }
+//            //            self.trunkListToggle.tag = 0;
+//            self.navigationItem.rightBarButtonItem.enabled = YES;
+//            [self reloadTable];
+//        }];
     } else
     {
         self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -641,37 +933,37 @@
 
 - (void)queryForTrunks:(BOOL)isRefresh{
     self.navigationItem.rightBarButtonItem.enabled = NO;
-
-    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"toUser" containedIn:self.friends];
-    [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
-    [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
-    [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
-    //    [query whereKey:@"content" equalTo:self.city];
-    [query includeKey:@"trip"];
-    [query includeKey:@"trip.creator"];
-    [query whereKeyExists:@"trip"];
-    [query includeKey:@"trip.publicTripDetail"];
-    [query orderByDescending:@"createdAt"];
-    
-    if (isRefresh == NO){
-        query.limit = 100;
-        query.skip = self.objectsCountTotal;
-    } else {
-        
-        if (self.objectsCountTotal == 0){
-            query.limit = 100;
-        } else {
-            query.limit = self.objectsCountTotal;
-        }
-        query.skip = 0;
-        self.objectsCountTotal = 0;
-    }
-    
-    
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //Build an array to send up to CC
+    NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+    for(PFUser *friendObjectId in self.friends){
+        // add just the objectIds to the array, no PFObjects can be sent as a param
+        [friendsObjectIds addObject:friendObjectId.objectId];
+    }
+    
+    int limit;
+    int skip;
+    
+    if (isRefresh == NO){
+        limit = 100;
+        skip = self.objectsCountMe;
+    } else {
+        if (self.objectsCountMe == 0)
+            limit = 100;
+        else limit = self.objectsCountMe;
+        skip = 0;
+        self.objectsCountMe = 0;
+    }
+    
+    NSDictionary *params = @{
+                             @"objectIds" : friendsObjectIds,
+                             @"limit" : [NSString stringWithFormat:@"%d",limit],
+                             @"skip" : [NSString stringWithFormat:@"%d",skip],
+                             @"latitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.latitude],
+                             @"longitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.longitude]
+                             };
+    [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
         if(error)
         {
             self.wasError = YES;
@@ -694,8 +986,8 @@
             }
             
             self.didLoad = YES;
-            self.objectsCountTotal = (int)objects.count + self.objectsCountTotal;
-            for (PFObject *activity in objects)
+            self.objectsCountTotal = (int)response.count + self.objectsCountTotal;
+            for (PFObject *activity in response)
             {
                 
                 Trip *trip = activity[@"trip"];
@@ -741,9 +1033,110 @@
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = YES;
         [self reloadTable];
-        
-        
     }];
+    
+//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//    [query whereKey:@"toUser" containedIn:self.friends];
+//    [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
+//    [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
+//    [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
+//    //    [query whereKey:@"content" equalTo:self.city];
+//    [query includeKey:@"trip"];
+//    [query includeKey:@"trip.creator"];
+//    [query whereKeyExists:@"trip"];
+//    [query includeKey:@"trip.publicTripDetail"];
+//    [query orderByDescending:@"createdAt"];
+//    
+//    if (isRefresh == NO){
+//        query.limit = 100;
+//        query.skip = self.objectsCountTotal;
+//    } else {
+//        
+//        if (self.objectsCountTotal == 0){
+//            query.limit = 100;
+//        } else {
+//            query.limit = self.objectsCountTotal;
+//        }
+//        query.skip = 0;
+//        self.objectsCountTotal = 0;
+//    }
+//    
+//    
+//    
+//    
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if(error)
+//        {
+//            self.wasError = YES;
+//            [ParseErrorHandlingController handleError:error];
+//            NSLog(@"Error: %@",error);
+//            self.navigationItem.rightBarButtonItem.enabled = YES;
+//            [self reloadTable];
+//            
+//        }
+//        {
+//            
+//            if (!error){
+//                self.wasError = NO;
+//                [[TTUtility sharedInstance] internetConnectionFound];
+//            }
+//            
+//            if (isRefresh == YES){
+//                self.parseLocations = [[NSMutableArray alloc]init];
+//                self.objectIDs = [[NSMutableArray alloc]init];;
+//            }
+//            
+//            self.didLoad = YES;
+//            self.objectsCountTotal = (int)objects.count + self.objectsCountTotal;
+//            for (PFObject *activity in objects)
+//            {
+//                
+//                Trip *trip = activity[@"trip"];
+//                
+//                if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
+//                {
+//                    [self.parseLocations addObject:trip];
+//                    [self.objectIDs addObject:trip.objectId];
+//                    
+//                } else if ( trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+//                    [self.parseLocations addObject:trip];
+//                    [self.objectIDs addObject:trip.objectId];
+//                }
+//            }
+//            
+//            for (Trip *trip in self.parseLocations)
+//            {
+//                
+//                NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
+//                NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
+//                
+//                BOOL contains = NO;
+//                
+//                for (Trip* trunk in self.visitedTrunks){
+//                    if ([trunk.objectId isEqualToString:trip.objectId]){
+//                        contains = YES;
+//                    }
+//                }
+//                
+//                if (self.visitedTrunks.count == 0){
+//                    contains = NO;
+//                }
+//                
+//                if (lastTripInterval < 0 && contains == NO)
+//                {
+//                    [self.haventSeens addObject:trip];
+//                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
+//                    [self.haventSeens addObject:trip];
+//                }
+//            }
+//            
+//        }
+//        self.filter.tag = 0;
+//        self.navigationItem.rightBarButtonItem.enabled = YES;
+//        [self reloadTable];
+//        
+//        
+//    }];
 }
 
 
@@ -882,6 +1275,7 @@
         cell.seenLogo.hidden = YES;
     }
     
+
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
     cell.emoji.adjustsFontSizeToFitWidth = YES;
@@ -905,13 +1299,13 @@
         countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photos];
     }
     
-    //    [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//        [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
     if (self.isList == NO){
         cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
     } else {
         cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.city, countString];
     }
-    //    }];
+//        }];
     
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
     
@@ -941,12 +1335,7 @@
                                       } failure:nil];
     
     return cell;
-    
     return weakCell;
-    
-    
-    
-    
 }
 
 

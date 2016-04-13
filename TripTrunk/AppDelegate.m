@@ -460,25 +460,20 @@
         TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
         
         [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
-
+        //Build an array to send up to CC
+        NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+        //we only have a single user but we still need to add it to an array and send up the params
+        [friendsObjectIds addObject:[PFUser currentUser].objectId];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
-        [query includeKey:@"trip"];
-        [query includeKey:@"toUser"];
-        [query includeKey:@"fromUser"];
-        [query whereKeyExists:@"trip"];
-        [query includeKey:@"trip.publicTripDetail"];
-        [query orderByDescending:@"createdAt"];
-        query.limit = 5;
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            
-            if(!error)
-            {
+        NSDictionary *params = @{
+                                 @"objectIds" : friendsObjectIds,
+                                 @"limit" : @"5"
+                                 };
+        [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+            if (!error) {
                 __block BOOL pushed;
                 pushed = NO;
-                for (PFObject *act in objects){
+                for (PFObject *act in response){
                     Trip *trip = act[@"trip"];
                     trunkViewController.trip = trip;
                     
@@ -491,6 +486,37 @@
                 }
             }
         }];
+
+        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
+//        [query includeKey:@"trip"];
+//        [query includeKey:@"toUser"];
+//        [query includeKey:@"fromUser"];
+//        [query whereKeyExists:@"trip"];
+//        [query includeKey:@"trip.publicTripDetail"];
+//        [query orderByDescending:@"createdAt"];
+//        query.limit = 5;
+//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            
+//            if(!error)
+//            {
+//                __block BOOL pushed;
+//                pushed = NO;
+//                for (PFObject *act in objects){
+//                    Trip *trip = act[@"trip"];
+//                    trunkViewController.trip = trip;
+//                    
+//                    if (trunkViewController.trip != nil && pushed == NO){
+//                        pushed = YES;
+//                        [nav pushViewController:trunkViewController animated:YES];
+//                        break;
+//                        
+//                    }
+//                }
+//            }
+//        }];
     }
 }
 
