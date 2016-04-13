@@ -453,6 +453,8 @@
                                success:nil failure:nil];
 }
 
+
+//FIXME this needs to be totally overhauled
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
     
     self.bottomButtonWrapper.hidden = YES;
@@ -758,8 +760,6 @@
 - (IBAction)onCommentsTapped:(id)sender {
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:navController animated:YES completion:nil];
     vc.trunkMembers = self.trunkMembers;
     vc.trip = self.trip;
     [self.navigationController pushViewController:vc animated:YES];
@@ -769,14 +769,13 @@
 - (IBAction)likeCountButtonPressed:(id)sender {
     if (self.likeActivities.count > 0){
         ActivityListViewController *vc = [[ActivityListViewController alloc] initWithLikes:self.likeActivities];
-        //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-        //    [self presentViewController:navController animated:YES completion:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
 - (IBAction)editCaptionTapped:(id)sender {
     
+    //edit caption
     if (self.addCaption.tag == 0){
         //store the mentioned users from the current comment
         if (self.caption.text.length > 0)
@@ -785,38 +784,52 @@
         self.captionLabel.hidden = YES;
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
-        
+    //add caption
     } else {
+        
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
+        //begin process of adding a caption to the current photo
         self.addCaption.enabled = NO;
         self.photo.caption = [self separateMentions:self.caption.text];
         self.caption.hidden = YES;
         self.captionLabel.hidden = NO;
+        
+        [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
+        [self updateCommentsLabel];
 
-        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
-        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
                 [[TTUtility sharedInstance] internetConnectionFound];
+                
+                //if there are no comments on the photo
                 if (self.commentActivities.count == 0)
                 {
                     [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        if(!error){
+                        if(!error)
+                        {
                             NSLog(@"Caption saved as comment");
-                            [self updateCommentsLabel];
-                            [self refreshPhotoActivitiesWithUpdateNow:YES];
-                            [self.caption endEditing:YES];
+                            [self refreshPhotoActivitiesWithUpdateNow:YES]; // do i need to call this here
                             [self updateMentionsInDatabase:commentObject];
-                        }else{
+                            [self.caption endEditing:YES];
+                        }else
+                        {
                             NSLog(@"Error saving caption");
+                            [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
                             [self updateCommentsLabel];
                             [self.caption endEditing:YES];
                         }
                     }];
-                } else
+                }
+                //if there are already comments on the photo
+                else
                 {
                     [ParseErrorHandlingController handleError:error];
                     //if there already is a caption we edit it and save it
