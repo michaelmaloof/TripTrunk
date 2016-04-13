@@ -933,7 +933,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-//fixme this cant be right
+//fixme this cant be right. We need this to be cloud code to update the total
 -(void)photoWasLiked:(BOOL)isFromError{
 
     int likes = [self.totalLikeButton.text intValue] + 1;
