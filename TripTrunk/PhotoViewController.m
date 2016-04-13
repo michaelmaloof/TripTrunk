@@ -952,62 +952,90 @@
     
 }
 
+//FIXME: Should we do saveEventually for likes or does it need to be real time responsive like this?
 - (IBAction)likeButtonPressed:(id)sender {
     // Like Photo
     if (!self.likeButton.selected)
     {
-        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
-
         [self.likeButton setSelected:YES];
+        [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
+        [self updateLikesLabel];
+        [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        self.likeButton.userInteractionEnabled = NO;
+        
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.likeButton.enabled = YES;
+            
             if (succeeded) {
                 
-                [self refreshPhotoActivitiesWithUpdateNow:YES];
                 [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasLiked:sender];
+                    [self.delegate photoWasLiked:NO];
                 }
-                NSLog(@"Photo liked");
+                self.likeButton.userInteractionEnabled = YES;
+                [[TTUtility sharedInstance] internetConnectionFound];
+                
             }else {
                 [self.likeButton setSelected:NO];
+                [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
                 [self updateLikesLabel];
-                NSLog(@"Error liking photo: %@", error);
+                [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                if (self.photo.trip.publicTripDetail){
+                    [self.delegate photoWasDisliked:YES];
+                }
+                self.likeButton.userInteractionEnabled = YES;
+                [ParseErrorHandlingController handleError:error];
+
+                
+                //update delegate
+                
+                //add alert view here warning the like didnt go through
+                
+                
             }
         }];
     }
     // Unlike Photo
     else if (self.likeButton.selected) {
         
-        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-
         [self.likeButton setSelected:NO];
+        [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
+        [self updateLikesLabel];
+        [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        self.likeButton.userInteractionEnabled = NO;
+
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
             
             if (succeeded) {
-                [self refreshPhotoActivitiesWithUpdateNow:YES];
                 [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasDisliked:sender];
+                    [self.delegate photoWasDisliked:NO];
                 }
-                NSLog(@"Photo unliked");
+                self.likeButton.userInteractionEnabled = YES;
+                [[TTUtility sharedInstance] internetConnectionFound];
+
             }else {
                 [self.likeButton setSelected:YES];
+                [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
                 [self updateLikesLabel];
-                NSLog(@"Error unliking photo: %@", error);
+                [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                if (self.photo.trip.publicTripDetail){
+                    [self.delegate photoWasLiked:YES];
+                }
+                self.likeButton.userInteractionEnabled = YES;
+                [ParseErrorHandlingController handleError:error];
+                
+                //FIXME: Should we add alert view here warning the like didnt go through?
+                
             }
         }];
     }
     
-    [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
-    [self updateCommentsLabel];
-    [self updateLikesLabel];
-    self.caption.hidden = YES;
-    self.caption.text = self.photo.caption;
-    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    [self updateCommentsLabel]; //FIXME Why is this here?
+    self.caption.hidden = YES;  //FIXME Why is this here?
+    self.caption.text = self.photo.caption;  //FIXME Why is this here?
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];  //FIXME Why is this here?
 
-    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     
 }
 
