@@ -156,7 +156,9 @@
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
     
-    [self refreshPhotoActivitiesWithUpdateNow:NO];
+    
+    //load the first photo (which is the one the user clicked to get here)
+    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
 
 }
 
@@ -454,11 +456,12 @@
 }
 
 
-//FIXME this needs to be totally overhauled
--(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow {
+-(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
     
-    self.bottomButtonWrapper.hidden = YES;
-    self.topButtonWrapper.hidden = YES;
+    if (isCurrentPhoto == NO){
+        self.bottomButtonWrapper.hidden = YES;
+        self.topButtonWrapper.hidden = YES;
+    }
     
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
@@ -510,7 +513,7 @@
     
     // Get Activities for Photo
     PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
-    query.limit = 1000;
+    query.limit = 1000; //fixme this limit wont work for popular photos
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             [[TTUtility sharedInstance] internetConnectionFound];
@@ -593,10 +596,11 @@
                 
             }
             
-            
-            [self updateCommentsLabel];
-            [self updateLikesLabel];
+            //update the label and likes now in case the user has already seen these and its cached
+//            [self updateCommentsLabel];
+//            [self updateLikesLabel];
     
+            //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -617,7 +621,8 @@
                 }
             }
             
-            [self refreshPhotoActivitiesWithUpdateNow:NO];
+            //load the new photo the user swiped too
+            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
         }
@@ -659,13 +664,7 @@
                [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
             self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
 
-            
-            [self updateCommentsLabel];
-            [self updateLikesLabel];
-
-
-
-            
+            //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
             for (UINavigationController *controller in self.tabBarController.viewControllers)
@@ -686,9 +685,8 @@
                 }
             }
             
-
-            
-            [self refreshPhotoActivitiesWithUpdateNow:NO];
+            //load photo on swipe left
+            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
         }
@@ -816,7 +814,7 @@
                         if(!error)
                         {
                             NSLog(@"Caption saved as comment");
-                            [self refreshPhotoActivitiesWithUpdateNow:YES]; // do i need to call this here
+                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                             [self updateMentionsInDatabase:commentObject];
                             [self.caption endEditing:YES];
                         }else
@@ -867,8 +865,7 @@
                          {
                              if(!error){
                                  NSLog(@"Caption saved as comment");
-                                 [self refreshPhotoActivitiesWithUpdateNow:YES];
-                                 [self updateCommentsLabel];
+                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                  [self.caption endEditing:YES];
                                  [self updateMentionsInDatabase:commentObject];
                              }else{
@@ -977,10 +974,11 @@
         self.likeButton.userInteractionEnabled = NO;
         
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            
+            //FIXME I need to implement the refresh in here
             if (succeeded) {
                 
                 [self updateLikesLabel];
+                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
@@ -997,10 +995,6 @@
                 }
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
-
-                //FIXME: Should we add alert view here warning the like didnt go through?
-                
-                
             }
         }];
     }
@@ -1015,9 +1009,11 @@
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             self.likeButton.enabled = YES;
-            
+            //FIXME I need to implement the refresh in here
+
             if (succeeded) {
                 [self updateLikesLabel];
+                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
@@ -1034,8 +1030,6 @@
                 }
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
-                
-                //FIXME: Should we add alert view here warning the like didnt go through?
                 
             }
         }];
