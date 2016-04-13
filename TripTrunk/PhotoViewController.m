@@ -985,10 +985,7 @@
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
 
-                
-                //update delegate
-                
-                //add alert view here warning the like didnt go through
+                //FIXME: Should we add alert view here warning the like didnt go through?
                 
                 
             }
