@@ -28,7 +28,6 @@
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
-@property NSMutableArray *mutualObjectIDs;
 
 @property NSMutableArray *haventSeens;
 @property int objectsCountTotal;
@@ -53,7 +52,6 @@
     self.meParseLocations = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
     self.haventSeens = [[NSMutableArray alloc]init];
-    self.mutualObjectIDs = [[NSMutableArray alloc]init];
     
     if (self.isList == YES) {
         self.title = self.user.username;
@@ -680,32 +678,8 @@
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
                 self.didLoad = YES;
-                for (PFObject *activity in response)
-                {
-                    Trip *trip = activity[@"trip"];
-                    BOOL tripToTripCheck = NO;
-                    BOOL activityToCheck = YES;
-                    for (PFObject *check in response){
-                        
-                        Trip *tripCheck = check[@"trip"];
-                        if([trip.objectId isEqualToString:tripCheck.objectId]){
-                            tripToTripCheck = YES;
-                        }
-                        if(![activity.objectId isEqualToString:check.objectId]){
-                            activityToCheck = NO;
-                        }
-                        
-                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && tripToTripCheck && activityToCheck && trip.publicTripDetail != nil){
-                            
-                            if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
-                                [self.mutualTrunks addObject:tripCheck];
-                                [self.mutualObjectIDs addObject:tripCheck.objectId];
-                            }
-                        }
-                        
-                        
-                    }
-                    
+                for (PFObject *activity in response){
+                    [self.mutualTrunks addObject:activity[@"trip"]];
                 }
                 
                 for (Trip *trip in self.mutualTrunks)
