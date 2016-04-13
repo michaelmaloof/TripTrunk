@@ -23,16 +23,16 @@
 #import "TTCache.h"
 
 //TripTrunk-DEV
-//#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
-//#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
+#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
 
 //TripTrunk-PROD
 //#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
 //#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
 //TripTrunk-PROD-CLONE
-#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
-#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
+//#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
+//#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
 
 @interface AppDelegate ()
 
@@ -87,6 +87,14 @@
         [self launchWithoutQuickAction:launchOptions];
         
     }
+    
+//    [PFCloud callFunctionInBackground:@"copyColumnLowercaseUsernameToUsername" withParameters:nil block:^(NSString *response, NSError *error) {
+//        if (!error) {
+//            NSLog(@"Copy response: done");
+//        }else{
+//            NSLog(@"Copy response: %@", error);
+//        }
+//    }];
     
     
     return YES;
@@ -452,25 +460,20 @@
         TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
         
         [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
-
+        //Build an array to send up to CC
+        NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
+        //we only have a single user but we still need to add it to an array and send up the params
+        [friendsObjectIds addObject:[PFUser currentUser].objectId];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
-        [query includeKey:@"trip"];
-        [query includeKey:@"toUser"];
-        [query includeKey:@"fromUser"];
-        [query whereKeyExists:@"trip"];
-        [query includeKey:@"trip.publicTripDetail"];
-        [query orderByDescending:@"createdAt"];
-        query.limit = 5;
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            
-            if(!error)
-            {
+        NSDictionary *params = @{
+                                 @"objectIds" : friendsObjectIds,
+                                 @"limit" : @"5"
+                                 };
+        [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+            if (!error) {
                 __block BOOL pushed;
                 pushed = NO;
-                for (PFObject *act in objects){
+                for (PFObject *act in response){
                     Trip *trip = act[@"trip"];
                     trunkViewController.trip = trip;
                     
@@ -483,6 +486,37 @@
                 }
             }
         }];
+
+        
+//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+//        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+//        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
+//        [query includeKey:@"trip"];
+//        [query includeKey:@"toUser"];
+//        [query includeKey:@"fromUser"];
+//        [query whereKeyExists:@"trip"];
+//        [query includeKey:@"trip.publicTripDetail"];
+//        [query orderByDescending:@"createdAt"];
+//        query.limit = 5;
+//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            
+//            if(!error)
+//            {
+//                __block BOOL pushed;
+//                pushed = NO;
+//                for (PFObject *act in objects){
+//                    Trip *trip = act[@"trip"];
+//                    trunkViewController.trip = trip;
+//                    
+//                    if (trunkViewController.trip != nil && pushed == NO){
+//                        pushed = YES;
+//                        [nav pushViewController:trunkViewController animated:YES];
+//                        break;
+//                        
+//                    }
+//                }
+//            }
+//        }];
     }
 }
 
