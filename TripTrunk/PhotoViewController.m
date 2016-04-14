@@ -459,8 +459,16 @@
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
     
     if (isCurrentPhoto == NO){
+        self.isLikedByCurrentUser = NO;
         self.bottomButtonWrapper.hidden = YES;
         self.topButtonWrapper.hidden = YES;
+    } else {
+        if (self.likeButton.selected == YES){
+            self.isLikedByCurrentUser = YES;
+        }else {
+            self.isLikedByCurrentUser = NO;
+        }
+
     }
     
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -475,9 +483,10 @@
                 if (!error){
                     
                     if (self.shouldShowTrunkNameButton) {
-                        [self.photo.trip fetchIfNeeded];
-                        [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
-                        [self.trunkNameButton setHidden:NO];
+                        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
+                            [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
+                            [self.trunkNameButton setHidden:NO];
+                        }];
                     }
                     
                     if ([self.photo.user[@"private"] boolValue] == YES && self.photo.trip.isPrivate == NO) {
@@ -504,26 +513,28 @@
     }];
 
     
-    self.likeActivities = [[NSMutableArray alloc] init];
-    self.commentActivities = [[NSMutableArray alloc] init];
     self.caption.hidden = YES;
-
-    
-    self.isLikedByCurrentUser = NO;
     
     // Get Activities for Photo
-    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+//    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+        PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
     query.limit = 1000; //fixme this limit wont work for popular photos
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            
+            self.likeActivities = [[NSMutableArray alloc] init];
+            self.commentActivities = [[NSMutableArray alloc] init];
+            
             [[TTUtility sharedInstance] internetConnectionFound];
             for (PFObject *activity in objects) {
                 // Separate the Activities into Likes and Comments
                 if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
                     [self.likeActivities addObject: activity];
+                    //need to double check the local file to see if its been liked or not by user
                 }
                 else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
                     [self.commentActivities addObject:activity];
+                    //need to double check the local file to see if its been commented or not by user
                 }
                 
                 if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
@@ -544,18 +555,22 @@
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-        
-                [self updateCommentsLabel];
-                [self updateLikesLabel];
+                    [self updateCommentsLabel];
+                    [self updateLikesLabel];
                 
                 if (updateNow == YES) {
                     //direct update
+                    //FIXME Should only save photo if user as ACL Permission
                     [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-                    [self.photo saveInBackground];
+                    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    }];
                 }
                 
                 //
-                [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+                
+                if (isCurrentPhoto == NO){
+                    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+            }
             });
             
         }
@@ -814,7 +829,7 @@
                         if(!error)
                         {
                             NSLog(@"Caption saved as comment");
-//                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                             [self updateMentionsInDatabase:commentObject];
                             [self.caption endEditing:YES];
                         }else
@@ -865,7 +880,7 @@
                          {
                              if(!error){
                                  NSLog(@"Caption saved as comment");
-//                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                  [self.caption endEditing:YES];
                                  [self updateMentionsInDatabase:commentObject];
                              }else{
@@ -969,26 +984,25 @@
     {
         [self.likeButton setSelected:YES];
         [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
-        [self updateLikesLabel];
         [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        [self updateLikesLabel];
         self.likeButton.userInteractionEnabled = NO;
         
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
-                
+                [[TTUtility sharedInstance] internetConnectionFound];
                 [self updateLikesLabel];
-//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
                 self.likeButton.userInteractionEnabled = YES;
-                [[TTUtility sharedInstance] internetConnectionFound];
                 
             }else {
                 [self.likeButton setSelected:NO];
                 [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-                [self updateLikesLabel];
                 [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:YES];
                 }
@@ -1002,8 +1016,8 @@
         
         [self.likeButton setSelected:NO];
         [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
-        [self updateLikesLabel];
         [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+        [self updateLikesLabel];
         self.likeButton.userInteractionEnabled = NO;
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
@@ -1011,7 +1025,7 @@
 
             if (succeeded) {
                 [self updateLikesLabel];
-//                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
@@ -1021,8 +1035,8 @@
             }else {
                 [self.likeButton setSelected:YES];
                 [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
-                [self updateLikesLabel];
                 [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
+                [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:YES];
                 }
