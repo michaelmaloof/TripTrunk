@@ -35,6 +35,8 @@
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property BOOL isPushingToNewUsers;
 
+@property NSMutableArray *tempComments;
+
 @end
 
 @implementation CommentListViewController 
@@ -94,6 +96,8 @@
     // Setup Empty Datasets delegate/datasource
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
+    
+    self.tempComments = [[NSMutableArray alloc]init];
     
     [self loadComments];
 
@@ -158,8 +162,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     
     // reload the table every time it appears or we get weird results
-    
-    
     [self.tableView reloadData];
 }
 
@@ -238,7 +240,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _activities.count;
+    return _activities.count + self.tempComments.count;
 }
 
 
@@ -246,7 +248,16 @@
     
     
     // Get a variable cell height to make sure we can fit long comments
-    NSAttributedString *cellText = [[TTUtility sharedInstance] attributedStringForCommentActivity:[_activities objectAtIndex:indexPath.row]];
+    
+    NSAttributedString *cellText = [[NSAttributedString alloc]init];
+    NSLog(@"index path = %ld", (long)indexPath.row);
+    if ((int)indexPath.row < (int)self.activities.count - 1){
+    
+        cellText = [[TTUtility sharedInstance] attributedStringForCommentActivity:[_activities objectAtIndex:indexPath.row]];
+        
+    } else {
+        cellText = [[TTUtility sharedInstance] attributedStringForCommentActivity:[self.tempComments objectAtIndex:indexPath.row - self.activities.count + 1 ]];
+    }
     CGSize constraintSize = CGSizeMake(280.0f, MAXFLOAT);
     
     CGSize labelSize = [cellText boundingRectWithSize:constraintSize
@@ -260,11 +271,27 @@
     
     CommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:COMMENT_CELL forIndexPath:indexPath];
     commentCell.delegate = self;
-    NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
-    [commentCell setCommentActivity:activity];
+    
+    PFUser *user = [[PFUser alloc]init];
+    
+    if (indexPath.row < self.activities.count){
+    
+        NSDictionary *activity = [_activities objectAtIndex:indexPath.row];
+        [commentCell setCommentActivity:activity];
     
     // We assume fromUser contains the full PFUser object
-    PFUser *user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
+        
+        commentCell.alpha = 1;
+        
+    } else {
+        user = [PFUser currentUser];
+        int indexTempPath = (int)(indexPath.row - self.activities.count + 1);
+        commentCell.contentLabel.text = self.tempComments[indexTempPath];
+        
+        commentCell.alpha = .5;
+
+    }
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -287,13 +314,18 @@
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
-    // You can delete comments if you're the commenter, photo creator
-    // TODO: or trip creator
-    if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
-        || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-        return YES;
+    //only editable if its an activity and not a temp comment
+    if (indexPath.row < self.activities.count -1)
+    {
+        
+        PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
+        // You can delete comments if you're the commenter, photo creator
+        // TODO: or trip creator
+        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
+            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+            return YES;
+        }
+        
     }
     
     return NO;
@@ -435,7 +467,7 @@
 {
     
     // Search Controller and the regular table view have different data sources
-    if (self.activities.count == 0) {
+    if (self.activities.count + self.tempComments.count == 0) {
         // A little trick for removing the cell separators
         self.tableView.tableFooterView = [UIView new];
         return YES;
@@ -463,25 +495,44 @@
 
 - (void)commentSubmitButtonPressedWithComment:(NSString *)comment {
     
-    
+    //Adjust TableView and Keyboard
     //FIXME 5s Doesnt work. Black Bar added
     [self.view removeConstraint:self.topContComment];
     [self.view addConstraint:self.topCont];
 
        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
     
+    
+    
     if (comment && ![comment isEqualToString: @""] ) {
         if (_photo) {
             self.commentInputView.userInteractionEnabled = NO;
             self.commentInputView.hidden = YES;
+            
+            [self.tempComments addObject:comment];
+            
+            [self.tableView reloadData];
 
+            //update comment count here
+            
             [SocialUtility addComment:comment forPhoto:_photo isCaption:NO
                                 block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                 self.commentInputView.userInteractionEnabled = YES;
                 self.commentInputView.hidden = NO;
 
-                if (!error) {
+                if (!error)
+                {
                     [self.activities addObject:commentObject];
+                    
+                    //loop through the activities (comments), if the activies now contains the tempComment, remove it from the tempComments array
+                    for (PFObject *comment in self.activities){
+                        if ([self.tempComments containsObject:comment[@"comment"]])
+                        {
+                            [self.tempComments removeObject:commentObject[@"comment"]];
+                        }
+                            
+                    }
+                    
                     [self.tableView reloadData];
                     self.comment = comment;
                     [self updateMentionsInDatabase:commentObject];
@@ -489,6 +540,15 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:_photo];
                 }
                 else {
+                    
+                    //fixme, say the trunk and comment that failed to load. and the users photo. maybe a screen shot of the photo too
+                    
+                    //fixme im sure comment gets lost by this point
+                    
+                    self.commentInputView.commentField.text = comment;
+                    [self.tempComments removeObject:comment];
+                    [self.tableView reloadData];
+                    
                     UIAlertView *alertView = [[UIAlertView alloc] init];
                     alertView.delegate = self;
                     alertView.title = NSLocalizedString(@"Error adding comment. Please try again",@"Error adding comment. Please try again");
