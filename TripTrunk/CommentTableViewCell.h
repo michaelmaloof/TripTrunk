@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *contentLabel;
 @property (nonatomic, strong, readonly) PFUser *user;
 @property (nonatomic, strong, readonly) NSDictionary *activity;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *usernameLabel;
 - (void)setUser:(PFUser *)user;
 
 - (void)setCommentActivity:(NSDictionary *)activity;

@@ -20,7 +20,6 @@
 
 @property (nonatomic, strong, readwrite) PFUser *user;
 
-@property (weak, nonatomic) IBOutlet TTTAttributedLabel *usernameLabel;
 @property (nonatomic, strong, readwrite) NSDictionary *activity;
 
 @end
