@@ -81,6 +81,8 @@
     
     // Query all user's that are in this trip
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKeyExists:@"fromUser"];
+    [memberQuery whereKeyExists:@"toUser"];
     [memberQuery whereKey:@"trip" equalTo:_trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
     [memberQuery whereKey:@"toUser" notEqualTo:_trip.creator];

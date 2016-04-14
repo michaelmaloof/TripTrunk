@@ -181,6 +181,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"fromUser"];
+    [query whereKeyExists:@"toUser"];
     [query whereKey:@"type" equalTo:@"like"];
     [query whereKey:@"trip" equalTo:self.trip];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
@@ -336,7 +338,9 @@
     if (self.firstLoadDone == NO){
         self.collectionView.hidden = YES;
     }
-        PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+        [memberQuery whereKeyExists:@"fromUser"];
+        [memberQuery whereKeyExists:@"toUser"];
         [memberQuery whereKey:@"trip" equalTo:self.trip];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];

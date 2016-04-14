@@ -153,11 +153,13 @@ enum TTActivityViewType : NSUInteger {
      self.trips = [[NSMutableArray alloc]init];
     
     PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
+    [trips whereKeyExists:@"trip"];
+    [trips whereKeyExists:@"fromUser"];
+    [trips whereKeyExists:@"toUser"];
     [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [trips whereKey:@"type" equalTo:@"addToTrip"];
     [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [trips includeKey:@"trip"];
-    [trips whereKeyExists:@"trip"];
     [trips setLimit:1000];
     [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
      {

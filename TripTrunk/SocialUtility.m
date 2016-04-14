@@ -331,9 +331,9 @@
 + (void)updateActivityContent:(NSString *)string forTrip:(Trip *)trip;
 {
     PFQuery *updateQuery = [PFQuery queryWithClassName:@"Activity"];
+    [updateQuery whereKeyExists:@"trip"];
     [updateQuery whereKey:@"type" equalTo:@"addToTrip"];
     [updateQuery whereKey:@"trip" equalTo:trip];
-    [updateQuery whereKeyExists:@"trip"];
     [updateQuery setLimit:1000];
     [updateQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
     {
@@ -507,6 +507,8 @@
 {
     // Query all user's that
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"fromUser"];
+    [query whereKeyExists:@"toUser"];
     [query whereKey:@"photo" equalTo:photo];
     [query whereKey:@"type" equalTo:@"comment"];
     [query includeKey:@"fromUser"];
@@ -636,10 +638,14 @@
 + (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
 {
     PFQuery *queryLikes = [PFQuery queryWithClassName:@"Activity"];
+    [queryLikes whereKeyExists:@"fromUser"];
+    [queryLikes whereKeyExists:@"toUser"];
     [queryLikes whereKey:@"photo" equalTo:photo];
     [queryLikes whereKey:@"type" equalTo:@"like"];
     
     PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKeyExists:@"fromUser"];
+    [queryComments whereKeyExists:@"toUser"];
     [queryComments whereKey:@"photo" equalTo:photo];
     [queryComments whereKey:@"type" equalTo:@"comment"];
     
@@ -660,28 +666,28 @@
 {
     // Query all user's that
     PFQuery *Pfollow = [PFQuery queryWithClassName:@"Activity"];
+    [Pfollow whereKeyExists:@"fromUser"];
     [Pfollow whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [Pfollow whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [Pfollow whereKeyExists:@"fromUser"];
     [Pfollow whereKey:@"type" equalTo:@"pending_follow"];
     
     PFQuery *follow = [PFQuery queryWithClassName:@"Activity"];
+    [follow whereKeyExists:@"fromUser"];
     [follow whereKey:@"toUser" equalTo:[PFUser currentUser]];
     [follow whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [follow whereKeyExists:@"fromUser"];
     [follow whereKey:@"type" equalTo:@"follow"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-    [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"fromUser"];
     [query whereKeyExists:@"trip"];
+    [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     
     PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+    [photos whereKeyExists:@"trip"];
     [photos whereKey:@"trip" containedIn:trips];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
     [photos whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [photos whereKeyExists:@"trip"];
   
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[Pfollow, follow ,query, photos]];
     subqueries.limit = 20;
@@ -748,10 +754,13 @@
     
     
     PFQuery *likes = [PFQuery queryWithClassName:@"Activity"];
+    [likes whereKeyExists:@"trip"];
+    [likes whereKeyExists:@"fromUser"];
+    [likes whereKeyExists:@"toUser"];
     [likes whereKey:@"fromUser" containedIn:friends];
     [likes whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
     [likes whereKey:@"type" equalTo:@"like"];
-    [likes whereKeyExists:@"trip"];
+    [likes whereKey:@"fromUser" containedIn:friends];
 
     PFQuery *following = [PFQuery queryWithClassName:@"Activity"];
     [following whereKey:@"fromUser" containedIn:friends];
@@ -759,20 +768,21 @@
     [following whereKey:@"toUser" notEqualTo:[PFUser currentUser]];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"toUser"];
+    [query whereKeyExists:@"trip"];
     [likes whereKey:@"toUser" containedIn:friends];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:@"fromUser"];
     [query whereKey:@"type" equalTo:@"comment"];
-
-    [likes whereKey:@"fromUser" containedIn:friends];
-    [query whereKeyExists:@"trip"];
     
     PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+    [photos whereKeyExists:@"trip"];
+    [photos whereKeyExists:@"fromUser"];
+    [photos whereKeyExists:@"toUser"];
     [photos whereKey:@"type" equalTo:@"addedPhoto"];
     [photos whereKey:@"fromUser" containedIn:friends];
     [photos whereKey:@"fromUser" notEqualTo:[PFUser currentUser]];
-    [photos whereKeyExists:@"trip"];
     
     PFQuery *subqueries = [PFQuery orQueryWithSubqueries:@[likes, following, photos,query]];
     subqueries.limit = 20;
@@ -838,6 +848,8 @@
 + (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock; {
     // Determine the follow status of the user
     PFQuery *isFollowingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [isFollowingQuery whereKeyExists:@"fromUser"];
+    [isFollowingQuery whereKeyExists:@"toUser"];
     [isFollowingQuery whereKey:@"fromUser" equalTo:fromUser];
     [isFollowingQuery whereKey:@"type" equalTo:@"follow"];
     [isFollowingQuery whereKey:@"toUser" equalTo:toUser];
@@ -857,6 +869,8 @@
         // Not Following, so check if it's Pending before we return.
         else {
             PFQuery *isPendingQuery = [PFQuery queryWithClassName:@"Activity"];
+            [isPendingQuery whereKeyExists:@"fromUser"];
+            [isPendingQuery whereKeyExists:@"toUser"];
             [isPendingQuery whereKey:@"fromUser" equalTo:fromUser];
             [isPendingQuery whereKey:@"type" equalTo:@"pending_follow"];
             [isPendingQuery whereKey:@"toUser" equalTo:toUser];
@@ -882,6 +896,8 @@
     NSMutableArray *friends = [[NSMutableArray alloc] init];
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKeyExists:@"fromUser"];
+    [followingQuery whereKeyExists:@"toUser"];
     [followingQuery whereKey:@"fromUser" equalTo:user];
     [followingQuery whereKey:@"type" equalTo:@"follow"];
     [followingQuery setCachePolicy:kPFCachePolicyNetworkOnly];
@@ -921,6 +937,8 @@
     NSMutableArray *friends = [[NSMutableArray alloc] init];
 
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingQuery whereKeyExists:@"fromUser"];
+    [followingQuery whereKeyExists:@"toUser"];
     [followingQuery whereKey:@"fromUser" equalTo:user];
     [followingQuery whereKey:@"type" equalTo:@"pending_follow"];
     [followingQuery setCachePolicy:kPFCachePolicyCacheThenNetwork];
@@ -960,9 +978,10 @@
     NSMutableArray *friends = [[NSMutableArray alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"fromUser"];
+    [query whereKeyExists:@"toUser"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"follow"];
-    [query whereKeyExists:@"fromUser"];
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     [query includeKey:@"fromUser"];
     [query setLimit:1000];
@@ -998,10 +1017,11 @@
 + (void)followerCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
 {
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"toUser"];
+    [query whereKeyExists:@"fromUser"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"fromUser" notEqualTo:user];
     [query whereKey:@"type" equalTo:@"follow"];
-    [query whereKeyExists:@"fromUser"];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query setLimit:1000];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
@@ -1014,10 +1034,11 @@
 + (void)followingCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
 {
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"toUser"];
+    [query whereKeyExists:@"fromUser"];
     [query whereKey:@"fromUser" equalTo:user];
     [query whereKey:@"toUser" notEqualTo:user];
     [query whereKey:@"type" equalTo:@"follow"];
-    [query whereKeyExists:@"toUser"];
     [query setLimit:1000];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
@@ -1029,6 +1050,8 @@
 + (void)trunkCount:(PFUser *)user block:(void (^)(int count, NSError *error))completionBlock;
 {
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKeyExists:@"toUser"];
+    [query whereKeyExists:@"fromUser"];
     [query whereKey:@"toUser" equalTo:user];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query includeKey:@"trip"];
@@ -1060,6 +1083,8 @@
     NSMutableArray *members = [[NSMutableArray alloc] init];
     
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKeyExists:@"fromUser"];
+    [memberQuery whereKeyExists:@"toUser"];
     [memberQuery whereKey:@"trip" equalTo:trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
     [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
@@ -1091,6 +1116,8 @@
 + (void)memberStatusOfTrunk:(Trip*)trip user:(PFUser*)user block:(void (^)(BOOL followingStatus, NSError *error))completionBlock{
     
     PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+    [memberQuery whereKeyExists:@"fromUser"];
+    [memberQuery whereKeyExists:@"toUser"];
     [memberQuery whereKey:@"trip" equalTo:trip];
     [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
     [memberQuery whereKey:@"toUser" equalTo:user];

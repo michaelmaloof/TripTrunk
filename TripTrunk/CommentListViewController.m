@@ -119,6 +119,8 @@
 -(void)loadComments{
 
     PFQuery *queryComments = [PFQuery queryWithClassName:@"Activity"];
+    [queryComments whereKeyExists:@"fromUser"];
+    [queryComments whereKeyExists:@"toUser"];
     [queryComments whereKey:@"photo" equalTo:self.photo];
     [queryComments whereKey:@"type" equalTo:@"comment"];
     [queryComments setCachePolicy:kPFCachePolicyNetworkOnly];
