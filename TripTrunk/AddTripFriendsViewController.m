@@ -524,9 +524,9 @@
         
         PFQuery *nameQuery = [PFUser query];
         [nameQuery whereKeyExists:@"lowercaseName"];  //this is based on whatever query you are trying to accomplish
+        [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
         [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
         [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
-        [nameQuery whereKeyExists:@"completedRegistration"];// Make sure we don't get half-registered users with the weird random usernames
         
         PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
         query.limit = 10;

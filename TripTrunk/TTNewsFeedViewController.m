@@ -87,6 +87,8 @@
         int mainCount = (int)self.mainPhotos.count;
         
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
+        [memberQuery whereKeyExists:@"fromUser"];
+        [memberQuery whereKeyExists:@"toUser"];
         [memberQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
         [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
         [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
@@ -103,9 +105,9 @@
                  }
                  
                  PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
+                 [photos whereKeyExists:@"trip"];
                  [photos whereKey:@"type" equalTo:@"addedPhoto"];
                  [photos whereKey:@"fromUser" containedIn:self.following];
-                 [photos whereKeyExists:@"trip"];
                  if (self.photos.count > 0 && isRefresh == NO)
                  {
                      Photo *photo = self.photos.lastObject;
@@ -119,9 +121,9 @@
                  }
                  
                  PFQuery *photos2 = [PFQuery queryWithClassName:@"Activity"];
+                 [photos2 whereKeyExists:@"trip"];
                  [photos2 whereKey:@"type" equalTo:@"addedPhoto"];
                  [photos2 whereKey:@"trip" containedIn:self.trips];
-                 [photos2 whereKeyExists:@"trip"];
                  if (self.photos.count > 0 && isRefresh == NO)
                  {
                      Photo *photo = self.photos.lastObject;
@@ -135,10 +137,10 @@
                  }
                  
                  PFQuery *photoQuery = [PFQuery orQueryWithSubqueries:@[photos,photos2]];
-                 [photoQuery includeKey:@"fromUser"];
-                 [photoQuery includeKey:@"photo"];
                  [photoQuery whereKeyExists:@"fromUser"];
                  [photoQuery whereKeyExists:@"toUser"];
+                 [photoQuery includeKey:@"fromUser"];
+                 [photoQuery includeKey:@"photo"];
                  [photoQuery includeKey:@"trip"];
                  [photoQuery includeKey:@"trip.publicTripDetail"];
                  [photoQuery setCachePolicy:kPFCachePolicyNetworkOnly];
