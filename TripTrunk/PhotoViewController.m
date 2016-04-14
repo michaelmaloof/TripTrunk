@@ -529,8 +529,18 @@
             for (PFObject *activity in objects) {
                 // Separate the Activities into Likes and Comments
                 if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
-                    [self.likeActivities addObject: activity];
+                    PFUser *user = activity[@"fromUser"];
                     //need to double check the local file to see if its been liked or not by user
+                    if (![user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                        [self.likeActivities addObject: activity];
+                    } else {
+                        //only add the like if the user has liked it
+                        if ([[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo] == YES && isCurrentPhoto == YES){
+                            [self.likeActivities addObject: activity];
+                        } else if (isCurrentPhoto == NO){
+                            [self.likeActivities addObject: activity];
+                        }
+                    }
                 }
                 else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
                     [self.commentActivities addObject:activity];
