@@ -773,8 +773,8 @@
 //        [tripth setPublicReadAccess:NO];
 //        NSLog(@"Set private read permissions - role name: %@", roleName);
 //    }
-    if (self.trip.isPrivate != 1){
-        self.trip.isPrivate = self.isPrivate;
+    if (self.trip.isPrivate == NO){
+        [tripACL setPublicReadAccess:YES];
     }
     
     // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
