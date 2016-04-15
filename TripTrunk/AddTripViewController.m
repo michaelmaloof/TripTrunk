@@ -761,21 +761,19 @@
     }
     
     PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
-
-    [tripACL setPublicReadAccess:YES];
     
     [[PFUser currentUser] fetch]; // Fetch the currentu
 
-// TRUNKS ARE ALWAYS PUBLIC, SO THIS ISN'T NEEDED ANYMORE. 
-//    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
-//    NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
-//    if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
-//        [tripth setPublicReadAccess:NO];
-//        NSLog(@"Set private read permissions - role name: %@", roleName);
-//    }
+    //    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
+ 
     if (self.trip.isPrivate != 1){
         self.trip.isPrivate = self.isPrivate;
     }
+    
+    if (self.trip.isPrivate == NO) {
+        [tripACL setPublicReadAccess:YES];
+    }
+    
     
     // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
     // TODO: only update ACL if private status changed during editing.
@@ -795,7 +793,7 @@
         NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
         [tripACL setReadAccess:YES forRoleWithName:roleName];
     }
-
+    
     self.trip.ACL = tripACL;
     
 
