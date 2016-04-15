@@ -156,6 +156,15 @@
 
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
+        
+        UIImage *image = [UIImage imageNamed:@"redComment"];
+        UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
+        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+        searchItem.badgeValue = [NSString stringWithFormat:@"%ld",(long)currentInstallation.badge];
+        [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
+        
+        
         currentInstallation.badge = 0;
         [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"Red Badge Cleared");
@@ -312,16 +321,16 @@
 //            [self.window addSubview:imageView];
                 
                 
-                UITabBarController *tabNumber = (UITabBarController*)self.window.rootViewController;
-                
-                UIImage *image = [UIImage imageNamed:@"redComment"];
-                UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-                UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
-                [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-                int value = [[tabNumber.tabBar.items objectAtIndex:3].badgeValue
- intValue] + 1;
-                searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
-                [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
+//                UITabBarController *tabNumber = (UITabBarController*)self.window.rootViewController;
+//                
+//                UIImage *image = [UIImage imageNamed:@"redComment"];
+//                UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+//                UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
+//                [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//                int value = [[tabNumber.tabBar.items objectAtIndex:3].badgeValue
+// intValue] + 1;
+//                searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
+//                [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
             }
         }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.
