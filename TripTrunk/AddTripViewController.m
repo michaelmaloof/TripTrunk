@@ -493,17 +493,27 @@
                      
                      CLPlacemark *placemark = placemarks.firstObject;
                      
-                     self.trip.lat = placemark.location.coordinate.latitude;
-                     self.trip.longitude = placemark.location.coordinate.longitude;
-                     
-                     self.trip.country = placemark.country;
-                     
-                     if (placemark.locality == nil){
-                         [self setTripCityName:placemark.administrativeArea];
-                         self.trip.state = placemark.administrativeArea;
-                     } else{
-                         [self setTripCityName:placemark.locality];
-                         self.trip.state = placemark.administrativeArea;
+                     if ([self.locationTextField.text isEqualToString:@"Rincon, Puerto Rico, Puerto Rico"]){
+                         self.trip.lat = 18.338371;
+                         self.trip.longitude = -67.251679;
+                         self.trip.state = @"Puerto Rico";
+                         self.trip.city = @"Rincon";
+                         self.trip.country = @"Puerto Rico";
+                     } else {
+                         
+                         self.trip.lat = placemark.location.coordinate.latitude;
+                         self.trip.longitude = placemark.location.coordinate.longitude;
+                         self.trip.country = placemark.country;
+          
+                    
+                         if (placemark.locality == nil){
+                             [self setTripCityName:placemark.administrativeArea];
+                             self.trip.state = placemark.administrativeArea;
+                         } else{
+                             [self setTripCityName:placemark.locality];
+                             self.trip.state = placemark.administrativeArea;
+                             
+                         }
                          
                      }
                      [self parseTrip];
