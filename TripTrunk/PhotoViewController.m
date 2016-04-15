@@ -1084,6 +1084,7 @@
     NSNumber *commentCount = [[TTCache sharedCache] commentCountForPhoto:self.photo];
     if([commentCount intValue] < 2){
         comments = NSLocalizedString(@"Comment",@"Comment");
+        comments = NSLocalizedString(@"Comments",@"Comments");
     }
     
     if (commentCount.integerValue == 0){
