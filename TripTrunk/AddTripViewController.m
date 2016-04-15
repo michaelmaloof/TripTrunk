@@ -764,15 +764,10 @@
     
     [[PFUser currentUser] fetch]; // Fetch the currentu
 
-// TRUNKS ARE ALWAYS PUBLIC, SO THIS ISN'T NEEDED ANYMORE. 
-//    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
-//    NSLog(@"Private value: %@", [[PFUser currentUser] objectForKey:@"private"]);
-//    if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
-//        [tripth setPublicReadAccess:NO];
-//        NSLog(@"Set private read permissions - role name: %@", roleName);
-//    }
-    if (self.trip.isPrivate == NO){
-        [tripACL setPublicReadAccess:YES];
+    //    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
+ 
+    if (self.trip.isPrivate != 1){
+        self.trip.isPrivate = self.isPrivate;
     }
     
     if (self.trip.isPrivate == NO) {
