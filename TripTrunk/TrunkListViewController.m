@@ -674,6 +674,7 @@
             }
             {
                 if (!error){
+                    self.mutualTrunks = [[NSMutableArray alloc] init];
                     self.wasError = NO;
                     [[TTUtility sharedInstance] internetConnectionFound];
                 }
