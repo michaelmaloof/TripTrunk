@@ -92,6 +92,9 @@
         self.addCaption.hidden = YES;
 
     }
+    
+    self.bottomButtonWrapper.hidden = YES;
+    self.topButtonWrapper.hidden = YES;
 
     self.timeStamp.text = @"";
     
