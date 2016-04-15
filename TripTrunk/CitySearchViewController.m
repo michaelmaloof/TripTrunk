@@ -119,6 +119,11 @@
     NSString *searchString = searchController.searchBar.text;
 
     [[TTUtility sharedInstance] locationsForSearch:searchString block:^(NSArray *objects, NSError *error) {
+        
+        if (error){
+            [self handleError];
+        }
+        
         [_locations removeAllObjects];
 
         if (objects && objects.count > 0) {
@@ -128,6 +133,17 @@
             });
         }
     }];
+}
+
+-(void)handleError{
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    alertView.delegate = self;
+    alertView.title = NSLocalizedString(@"Something Went Wrong :/",@"Something Went Wrong :/");
+    alertView.message = NSLocalizedString(@"The search engine seems to have hiccuped. Please try again.",@"The search engine seems to have hiccuped. Please try again.");
+    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+    alertView.tag = 17;
+    [alertView show];
 }
 
 /**
