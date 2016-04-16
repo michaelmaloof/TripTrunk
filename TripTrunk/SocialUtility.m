@@ -923,7 +923,10 @@
             }
             // Update the cache
             if (friends.count > 0) {
-                [[TTCache sharedCache] setFollowing:friends];
+                //FIXME at some point we should cache and display everyone
+                if ([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                    [[TTCache sharedCache] setFollowing:friends];
+                }
             }
             
             completionBlock(friends, error);
@@ -1005,7 +1008,10 @@
             }
             // Update the cache
             if (friends.count > 0) {
-                [[TTCache sharedCache] setFollowers:friends];
+                //FIXME at some point we should cache and display everyone
+                if ([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                    [[TTCache sharedCache] setFollowers:friends];
+                }
             }
             
             completionBlock(friends, error);
