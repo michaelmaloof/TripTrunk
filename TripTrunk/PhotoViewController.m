@@ -568,8 +568,10 @@
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-                    [self updateCommentsLabel];
-                    [self updateLikesLabel];
+                [self updateCommentsLabel];
+                [self updateLikesLabel];
+                self.likeButton.userInteractionEnabled = YES;
+
                 
                 if (updateNow == YES) {
                     //direct update
@@ -583,7 +585,8 @@
                 
                 if (isCurrentPhoto == NO){
                     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-            }
+                }
+                
             });
             
         }
@@ -1009,8 +1012,6 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
-                self.likeButton.userInteractionEnabled = YES;
-                
             }else {
                 [self.likeButton setSelected:NO];
                 [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
@@ -1034,7 +1035,6 @@
         self.likeButton.userInteractionEnabled = NO;
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.likeButton.enabled = YES;
 
             if (succeeded) {
                 [self updateLikesLabel];
@@ -1042,7 +1042,6 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
-                self.likeButton.userInteractionEnabled = YES;
                 [[TTUtility sharedInstance] internetConnectionFound];
 
             }else {
