@@ -286,13 +286,35 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.isNext == YES && self.isSearching == NO){
-        [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+    if (self.membersToAdd.count + self.existingMembers.count >= 199){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Someone is Popular",@"Someone is Popular")
+                                                        message:NSLocalizedString(@"Unfortunately, only 200 users can be members of one Trunk. We apologize for the inconvenience.",@"Unfortunately, only 200 users can be members of one Trunk. We apologize for the inconvenience.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+       [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [alert show];
+        
+    }
     
-    } else if (self.isSearching == YES){
-        [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
+    else if (self.membersToAdd.count < 50){
+        if (self.isNext == YES && self.isSearching == NO){
+            [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+            
+        } else if (self.isSearching == YES){
+            [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
+        } else {
+            [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        }
     } else {
-        [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Someone is Popular",@"Someone is Popular")
+                                                        message:NSLocalizedString(@"Unfortunately, only 50 users can be added to a Trunk at once. We apologize for the inconvenience.",@"Unfortunately, only 50 users can be added to a Trunk at once. We apologize for the inconvenience.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [alert show];
     }
     
 }
