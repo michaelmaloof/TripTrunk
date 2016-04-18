@@ -32,6 +32,8 @@
 @property NSMutableArray *membersToAdd;
 @property BOOL isSearching;
 
+@property NSMutableArray *friendsObjectIds;
+
 @property BOOL didTapCreated;
 
 
@@ -57,6 +59,8 @@
     if (!self.existingMembers) {
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
+    
+    self.friendsObjectIds = [[NSMutableArray alloc]init];
     
     self.title = NSLocalizedString(@"Add Friends",@"Add Friends");
     
@@ -150,7 +154,18 @@
     
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            [[_friends objectAtIndex:0] addObjectsFromArray:users];
+            
+            NSMutableArray *friendsToAdd = [[NSMutableArray alloc]init];
+            
+            for (PFUser *user in users){
+                if (![self.friendsObjectIds containsObject:user.objectId]){
+                    [self.friendsObjectIds addObject:user.objectId];
+                    [friendsToAdd addObject:user];
+                }
+            }
+            
+            [[_friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
+
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -167,7 +182,19 @@
 {
     [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            [[_friends objectAtIndex:1] addObjectsFromArray:users];
+            
+            NSMutableArray *friendsToAdd = [[NSMutableArray alloc]init];
+
+            for (PFUser *user in users){
+                if (![self.friendsObjectIds containsObject:user.objectId]){
+                    [self.friendsObjectIds addObject:user.objectId];
+                    [friendsToAdd addObject:user];
+                }
+            }
+            
+            [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
+
+
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
