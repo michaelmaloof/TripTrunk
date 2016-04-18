@@ -743,9 +743,11 @@
                 }
             }
         }
-        [self.hotDots addObject:annotation.title];
-        [self.mapView addAnnotation:annotation];
         
+        if (annotation.title != nil){
+            [self.hotDots addObject:annotation.title];
+            [self.mapView addAnnotation:annotation];
+        }
     }
     // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
     else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
