@@ -45,7 +45,7 @@
 @property BOOL isLoadingFacebook;
 @property BOOL isLoadingSearch;
 
-
+@property int privateUserCellIndex;
 
 
 
@@ -717,17 +717,23 @@
         // Unfollow
         //FIXME FOR INTERNATIONAL, USING STRING COMPARISSON
         if ([user[@"private"] boolValue] == YES && ![cellView.followButton.titleLabel.text isEqual:@"Pending"]){
-            self.user = user;
-            UIAlertView *alertView = [[UIAlertView alloc] init];
-            alertView.delegate = self;
-            alertView.tag = 11;
-            NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
-            alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, user.username];
-            alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-            [alertView addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel")];
-            [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
-            [alertView show];
+//            self.user = user;
+//            UIAlertView *alertView = [[UIAlertView alloc] init];
+//            alertView.delegate = self;
+//            alertView.tag = 11;
+//            NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
+//            alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, user.username];
+//            alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
+//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel")];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
+//            [alertView show];
+            
+            //FIXME the aboive code is the behavior we want. We want the user to be warned about unfollowing a private user. For now, it is commented out but it needs to be uncommeted and then the bug with it fixed. The bug is that when you unfollow a private user the button doesnt change
+            [cellView.followButton setSelected:NO];
+            [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+            [self.following removeObject:user.objectId];
+            [SocialUtility unfollowUser:user];
         } else {
             // change the button for immediate user feedback
             [cellView.followButton setSelected:NO];
