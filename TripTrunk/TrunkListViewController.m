@@ -241,7 +241,6 @@
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
                 self.wasError = YES;
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
@@ -303,7 +302,6 @@
                 
             }
             //                self.filter.tag = 1;
-            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
         }];
 //        
@@ -409,7 +407,6 @@
 //        }];
     } else
     {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self reloadTable];
     }
 }
@@ -458,8 +455,6 @@
                 self.wasError = YES;
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                
                 [self reloadTable];
                 
             }
@@ -523,7 +518,6 @@
                 
             }
             //            self.trunkListToggle.tag = 0;
-            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
             
         }];
@@ -636,7 +630,6 @@
 //        }];
     } else
     {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self reloadTable];
         
     }
@@ -667,8 +660,6 @@
             {
                 self.wasError = YES;
                 [ParseErrorHandlingController handleError:error];
-                self.navigationItem.rightBarButtonItem.enabled = YES;
-                
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
@@ -710,7 +701,6 @@
                 
             }
             //            self.trunkListToggle.tag = 0;
-            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
 
         }];
@@ -811,7 +801,6 @@
 //        }];
     } else
     {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self reloadTable];
         
     }
@@ -902,7 +891,7 @@
         }];
         
     } else
-    {    self.navigationItem.rightBarButtonItem.enabled = YES;
+    {
         [self reloadTable];
     
     }
@@ -950,7 +939,6 @@
             self.wasError = YES;
             [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
-            self.navigationItem.rightBarButtonItem.enabled = YES;
             [self reloadTable];
             
         }
@@ -1012,7 +1000,6 @@
             
         }
         self.filter.tag = 0;
-        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self reloadTable];
     }];
     
@@ -1208,7 +1195,8 @@
     
     //reload
     [self.tableView reloadData];
-    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -1584,7 +1572,6 @@
     if (hasSeen == YES){
         [self.haventSeens removeObject:trunk];
     }
-    self.navigationItem.rightBarButtonItem.enabled = YES;
     [self reloadTable];
 
 }
@@ -1607,8 +1594,6 @@
     
     [self.parseLocations removeObject:tripA];
     [self.meParseLocations removeObject:tripB];
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-
     [self reloadTable];
 }
 

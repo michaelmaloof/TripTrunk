@@ -31,6 +31,7 @@
 @property NSLayoutConstraint *topCont;
 @property NSLayoutConstraint *topContComment;
 
+
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property BOOL isPushingToNewUsers;
@@ -117,6 +118,7 @@
             [self buildMentionUsersCache];
     }
     
+
     
 }
 
@@ -507,11 +509,15 @@
         if (_photo) {
             
             //Adjust TableView and Keyboard
-            //FIXME 5s Doesnt work. Black Bar added
-            [self.view removeConstraint:self.topContComment];
-            [self.view addConstraint:self.topCont];
             
-            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+            if (self.view.frame.origin.y > 0){
+            
+                [self.view removeConstraint:self.topContComment];
+                [self.view addConstraint:self.topCont];
+            
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.commentInputView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+                
+            }
             
             self.commentInputView.userInteractionEnabled = NO;
             self.commentInputView.hidden = YES;

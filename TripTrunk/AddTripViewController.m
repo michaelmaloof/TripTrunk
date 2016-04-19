@@ -774,7 +774,6 @@
         [tripACL setPublicReadAccess:YES];
     }
     
-    
     // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
     // TODO: only update ACL if private status changed during editing.
     if (self.trip.isPrivate == YES) {

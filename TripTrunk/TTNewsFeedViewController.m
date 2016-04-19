@@ -153,6 +153,7 @@
                       if (error)
                       {
                           [ParseErrorHandlingController handleError:error];
+                          [refreshControl endRefreshing];
                       }
                       
                       if (!error)
@@ -201,8 +202,9 @@
                                           [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                           [self.duplicatePhotos addObject:photo.objectId];
                                           if (![self.photoUsers containsObject:photo.user.objectId]){
-                                              
-                                              [self.photoUsers addObject:photo.user.objectId];
+                                              if (photo.user.objectId != nil){
+                                                  [self.photoUsers addObject:photo.user.objectId];
+                                              }
                                           }
                                       }
                                   }
@@ -233,9 +235,9 @@
                                                   [self.duplicatePhotoStrings addObject:photo.trip.objectId];
                                                   [self.duplicatePhotos addObject:photo.objectId];
                                                   if (![self.photoUsers containsObject:photo.user.objectId]){
-                                                      
-                                                      [self.photoUsers addObject:photo.user.objectId];
-                                                      
+                                                      if (photo.user.objectId != nil){
+                                                          [self.photoUsers addObject:photo.user.objectId];
+                                                      }
                                                   }
                                               }
                                               
@@ -296,8 +298,9 @@
                               if (refreshControl) {
                                   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                                   [formatter setDateFormat:@"MMM d, h:mm a"];
-                                  NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-                                  NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+//                                  NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+//                                  NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                NSString *title = @"";
                                   NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
                                                                                               forKey:NSForegroundColorAttributeName];
                                   NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
@@ -309,16 +312,15 @@
                                   
                                   
                               } else {
+                                  [refreshControl endRefreshing];
                                   [self.collectionView reloadData];
-                                  
-                                  
                                   self.isLoading = NO;
                                   
                               }
                               
                           });
                       }
-                      
+                      [refreshControl endRefreshing];
                       [self.collectionView reloadData];
                       
                   }];

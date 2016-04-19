@@ -568,8 +568,11 @@
             
             // Update number of likes & comments
             dispatch_async(dispatch_get_main_queue(), ^{
-                    [self updateCommentsLabel];
-                    [self updateLikesLabel];
+                [self updateCommentsLabel];
+                [self updateLikesLabel];
+                self.likeButton.alpha = 1;
+                self.likeButton.userInteractionEnabled = YES;
+
                 
                 if (updateNow == YES) {
                     //direct update
@@ -583,7 +586,8 @@
                 
                 if (isCurrentPhoto == NO){
                     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-            }
+                }
+                
             });
             
         }
@@ -999,6 +1003,7 @@
         [[TTCache sharedCache] incrementLikerCountForPhoto:self.photo];
         [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
         [self updateLikesLabel];
+        self.likeButton.alpha = .3;
         self.likeButton.userInteractionEnabled = NO;
         
         [SocialUtility likePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
@@ -1009,8 +1014,6 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:NO];
                 }
-                self.likeButton.userInteractionEnabled = YES;
-                
             }else {
                 [self.likeButton setSelected:NO];
                 [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
@@ -1019,6 +1022,7 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:YES];
                 }
+                self.likeButton.alpha = 1;
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
             }
@@ -1031,10 +1035,10 @@
         [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
         [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
         [self updateLikesLabel];
+        self.likeButton.alpha = .3;
         self.likeButton.userInteractionEnabled = NO;
 
         [SocialUtility unlikePhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            self.likeButton.enabled = YES;
 
             if (succeeded) {
                 [self updateLikesLabel];
@@ -1042,7 +1046,6 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasDisliked:NO];
                 }
-                self.likeButton.userInteractionEnabled = YES;
                 [[TTUtility sharedInstance] internetConnectionFound];
 
             }else {
@@ -1053,6 +1056,7 @@
                 if (self.photo.trip.publicTripDetail){
                     [self.delegate photoWasLiked:YES];
                 }
+                self.likeButton.alpha = 1;
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
                 
