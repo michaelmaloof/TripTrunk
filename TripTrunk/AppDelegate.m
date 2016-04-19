@@ -96,6 +96,18 @@
 //        }
 //    }];
     
+    PFUser *user = PFUser.currentUser;
+    NSDictionary *params = @{
+                             @"date" : user[@"lastUsed"]
+                             };
+    
+    [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
+        if (!error) {
+            [self setActivityBadgeIcon:[response intValue]];
+        }else{
+            [self setActivityBadgeIcon:0];
+        }
+    }];
     
     return YES;
 }
@@ -156,14 +168,6 @@
 
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
-        
-        UIImage *image = [UIImage imageNamed:@"redComment"];
-        UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
-        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-        searchItem.badgeValue = [NSString stringWithFormat:@"%ld",(long)currentInstallation.badge];
-        [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
-        
         
         currentInstallation.badge = 0;
         [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
@@ -302,9 +306,53 @@
     
 }
 
+-(void)setActivityBadgeIcon:(int)increment{
+    NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue] + increment;
+    [[NSUserDefaults standardUserDefaults] setInteger:internalBadge forKey:@"internalBadge"];
+    if(internalBadge>0){
+        UIImage *image = [UIImage imageNamed:@"redComment"];
+        UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
+        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+        searchItem.badgeValue = [NSString stringWithFormat:@"%ld",(long)internalBadge];
+        [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
+        
+        UITabBarController *tbc = (UITabBarController *)self.window.rootViewController;
+        if(tbc.selectedIndex == 3){
+            ActivityListViewController *activity = [[ActivityListViewController alloc] init];
+            [activity didReceivePushNotification];
+        }
+    }
+}
+
+//For when app is in background
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+
+    [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
+    
+    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+    if(state == UIApplicationStateActive)
+        NSLog(@"STATE: (%li) - Active",(long)state);
+    if(state == UIApplicationStateInactive)
+        NSLog(@"STATE: (%li) - Inactive",(long)state);
+    if(state == UIApplicationStateBackground)
+        NSLog(@"STATE: (%li) - Background",(long)state);
+    
+    if(state != UIApplicationStateInactive){
+        [self setActivityBadgeIcon:1];
+    }
+    
+    if (completionHandler) {
+        completionHandler(UIBackgroundFetchResultNewData);
+    }
+}
+
+//For when app is in foreground
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
+    
+    [self setActivityBadgeIcon:1];
     
     if (application.applicationState == UIApplicationStateActive ) {
         // Let Parse handle the push notificatin -- they'll display a popup
@@ -320,17 +368,6 @@
 //            imageView.frame = (CGRectMake(self.window.frame.size.width*.8, self.window.frame.origin.y + self.window.frame.size.height - 15, 10, 10));
 //            [self.window addSubview:imageView];
                 
-                
-//                UITabBarController *tabNumber = (UITabBarController*)self.window.rootViewController;
-//                
-//                UIImage *image = [UIImage imageNamed:@"redComment"];
-//                UIImage *render = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//                UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
-//                [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-//                int value = [[tabNumber.tabBar.items objectAtIndex:3].badgeValue
-// intValue] + 1;
-//                searchItem.badgeValue = [NSString stringWithFormat:@"%d",value];
-//                [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
             }
         }
         //TODO: Present an Alert with the notification and let the user choose to "view" it.

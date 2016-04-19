@@ -18,7 +18,7 @@
 #import "TrunkViewController.h"
 #import "UIColor+HexColors.h"
 #import "MBProgressHUD.h"
-
+#import "TTColor.h"
 
 #define USER_CELL @"user_table_view_cell"
 #define ACTIVITY_CELL @"activity_table_view_cell"
@@ -43,7 +43,7 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL isLoading;
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
-
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 
 @end
@@ -85,6 +85,7 @@ enum TTActivityViewType : NSUInteger {
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
+    self.tableView.tag = 10000;
     [self.view addSubview:self.tableView];
 
     [self setupTableViewConstraints];
@@ -107,15 +108,15 @@ enum TTActivityViewType : NSUInteger {
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         // Initialize the refresh control.
-        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-        [refreshControl addTarget:self
+        self.refreshControl = [[UIRefreshControl alloc] init];
+        [self.refreshControl addTarget:self
                            action:@selector(refresh:)
                  forControlEvents:UIControlEventValueChanged];
-        [self.tableView addSubview:refreshControl];
-        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+        [self.tableView addSubview:self.refreshControl];
+//        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
-        refreshControl.tintColor = ttBlueColor;
-        [refreshControl endRefreshing];
+        self.refreshControl.tintColor = [TTColor tripTrunkBlueLinkColor];
+        [self.refreshControl endRefreshing];
     }
 }
 
@@ -123,8 +124,6 @@ enum TTActivityViewType : NSUInteger {
     [super viewDidLoad];
     
     self.trips = [[NSMutableArray alloc]init];
-
-    
     
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
@@ -234,6 +233,8 @@ enum TTActivityViewType : NSUInteger {
 -(void)viewDidDisappear:(BOOL)animated{
     
     if (_viewType == TTActivityViewAllActivities){
+        
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
     
         UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
@@ -304,13 +305,20 @@ enum TTActivityViewType : NSUInteger {
     
 }
 
-- (void)refresh:(UIRefreshControl *)refreshControl
-{
+-(void)clearTabbarIconBadge{
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
     
     UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
     UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
     [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     [self.navigationController setTabBarItem:searchItem];
+}
+
+- (void)refresh:(UIRefreshControl *)refreshControl
+{
+    
+    if(refreshControl)
+        [self clearTabbarIconBadge];
     
     if (self.isLikes == NO)
     {
@@ -989,6 +997,61 @@ enum TTActivityViewType : NSUInteger {
             }];
         }
     }
+}
+
+-(void)didReceivePushNotification{
+//    [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error){
+//        if (error){
+//            self.navigationItem.rightBarButtonItem.enabled = YES;
+//            self.isLoading = NO;
+//        }else{
+//             int index = 0;
+//             for (PFObject *obj in activities){
+//                 index ++;
+//                 if (obj[@"trip"] && obj[@"toUser"] != nil && obj[@"fromUser"] != nil){
+//                     [self.activities insertObject:obj atIndex:index-1];
+//                 } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+//                     if (obj[@"toUser"] != nil && obj[@"fromUser"] != nil)
+//                         [self.activities insertObject:obj atIndex:index-1];
+//                 }
+//             }
+//            
+//             dispatch_async(dispatch_get_main_queue(), ^{
+//                self.isLoading = NO;
+//                self.navigationItem.rightBarButtonItem.enabled = YES;
+//                [[self.view.subviews objectAtIndex:0] setDelegate:self];
+//                [[self.view.subviews objectAtIndex:0] setDataSource:self];
+//                [[self.view.subviews objectAtIndex:0] reloadData];
+//            });
+//        }
+//     }];
+    
+    UITableView *tv = (UITableView *)[self.view viewWithTag:10000];
+    [tv performSelectorOnMainThread:@selector(removeFromSuperview) withObject:nil waitUntilDone:NO];
+    
+//    self.trips = [[NSMutableArray alloc]init];
+//    
+//    if (![PFUser currentUser]) {
+//        [self.tabBarController setSelectedIndex:0];
+//    } else {
+//        
+//        [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+//        [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
+//        
+//        self.tabBarController.tabBar.translucent = false;
+//        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+//        
+//        
+//        // Setup tableview delegate/datasource
+//        [self.tableView setDelegate:self];
+//        [self.tableView setDataSource:self];
+//        // Setup Empty Datasets
+//        self.tableView.emptyDataSetDelegate = self;
+//        self.tableView.emptyDataSetSource = self;
+//        
+//        [self loadTrips];
+//    }
+
 }
 
 @end

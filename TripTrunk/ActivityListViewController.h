@@ -19,7 +19,7 @@
 
 -(void)trunkWasDeleted:(Trip*)trip;
 -(void)photoWasDeleted:(Photo*)photo;
-
+-(void)didReceivePushNotification;
 
 
 
