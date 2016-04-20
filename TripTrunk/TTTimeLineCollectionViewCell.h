@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TTTimeLineCollectionViewCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *privateImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *userprofile;
 @property (weak, nonatomic) IBOutlet UIImageView *newsfeedPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *username;

@@ -403,6 +403,13 @@
     
     Photo *photo = self.mainPhotos[indexPath.row];
     
+    if (photo.trip.isPrivate == NO){
+        cell.privateImageView.hidden = YES;
+    } else {
+        cell.privateImageView.hidden = NO;
+
+    }
+    
     NSString *timeStamp = [self stringForTimeStamp:photo.createdAt];
     cell.timeStamp.text = timeStamp;
     [cell.username setTitle:photo.user.username forState:UIControlStateNormal];
