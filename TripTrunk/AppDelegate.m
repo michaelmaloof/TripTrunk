@@ -96,19 +96,6 @@
 //        }
 //    }];
     
-    PFUser *user = PFUser.currentUser;
-    NSDictionary *params = @{
-                             @"date" : user[@"lastUsed"]
-                             };
-    
-    [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
-        if (!error) {
-            [self setActivityBadgeIcon:[response intValue]];
-        }else{
-            [self setActivityBadgeIcon:0];
-        }
-    }];
-    
     return YES;
 }
 
@@ -177,6 +164,19 @@
     } else {
         //normal tab here
     }
+    
+    PFUser *user = [PFUser currentUser];
+    NSDictionary *params = @{
+                             @"date" : user[@"lastUsed"]
+                             };
+    
+    [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
+        if (!error) {
+            [self setActivityBadgeIcon:[response intValue]];
+        }else{
+            [self setActivityBadgeIcon:0];
+        }
+    }];
 
 }
 
@@ -317,11 +317,6 @@
         searchItem.badgeValue = [NSString stringWithFormat:@"%ld",(long)internalBadge];
         [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
         
-        UITabBarController *tbc = (UITabBarController *)self.window.rootViewController;
-        if(tbc.selectedIndex == 3){
-            ActivityListViewController *activity = [[ActivityListViewController alloc] init];
-            [activity didReceivePushNotification];
-        }
     }
 }
 
@@ -331,12 +326,12 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
     
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
-    if(state == UIApplicationStateActive)
-        NSLog(@"STATE: (%li) - Active",(long)state);
-    if(state == UIApplicationStateInactive)
-        NSLog(@"STATE: (%li) - Inactive",(long)state);
-    if(state == UIApplicationStateBackground)
-        NSLog(@"STATE: (%li) - Background",(long)state);
+//    if(state == UIApplicationStateActive)
+//        NSLog(@"STATE: (%li) - Active",(long)state);
+//    if(state == UIApplicationStateInactive)
+//        NSLog(@"STATE: (%li) - Inactive",(long)state);
+//    if(state == UIApplicationStateBackground)
+//        NSLog(@"STATE: (%li) - Background",(long)state);
     
     if(state != UIApplicationStateInactive){
         [self setActivityBadgeIcon:1];

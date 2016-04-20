@@ -43,7 +43,6 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL isLoading;
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
-@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 
 @end
@@ -85,7 +84,6 @@ enum TTActivityViewType : NSUInteger {
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
-    self.tableView.tag = 10000;
     [self.view addSubview:self.tableView];
 
     [self setupTableViewConstraints];
@@ -108,15 +106,15 @@ enum TTActivityViewType : NSUInteger {
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         // Initialize the refresh control.
-        self.refreshControl = [[UIRefreshControl alloc] init];
-        [self.refreshControl addTarget:self
+        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self
                            action:@selector(refresh:)
                  forControlEvents:UIControlEventValueChanged];
-        [self.tableView addSubview:self.refreshControl];
+        [self.tableView addSubview:refreshControl];
 //        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
-        self.refreshControl.tintColor = [TTColor tripTrunkBlueLinkColor];
-        [self.refreshControl endRefreshing];
+        refreshControl.tintColor = [TTColor tripTrunkBlueLinkColor];
+        [refreshControl endRefreshing];
     }
 }
 
@@ -999,59 +997,5 @@ enum TTActivityViewType : NSUInteger {
     }
 }
 
--(void)didReceivePushNotification{
-//    [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error){
-//        if (error){
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//            self.isLoading = NO;
-//        }else{
-//             int index = 0;
-//             for (PFObject *obj in activities){
-//                 index ++;
-//                 if (obj[@"trip"] && obj[@"toUser"] != nil && obj[@"fromUser"] != nil){
-//                     [self.activities insertObject:obj atIndex:index-1];
-//                 } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-//                     if (obj[@"toUser"] != nil && obj[@"fromUser"] != nil)
-//                         [self.activities insertObject:obj atIndex:index-1];
-//                 }
-//             }
-//            
-//             dispatch_async(dispatch_get_main_queue(), ^{
-//                self.isLoading = NO;
-//                self.navigationItem.rightBarButtonItem.enabled = YES;
-//                [[self.view.subviews objectAtIndex:0] setDelegate:self];
-//                [[self.view.subviews objectAtIndex:0] setDataSource:self];
-//                [[self.view.subviews objectAtIndex:0] reloadData];
-//            });
-//        }
-//     }];
-    
-    UITableView *tv = (UITableView *)[self.view viewWithTag:10000];
-    [tv performSelectorOnMainThread:@selector(removeFromSuperview) withObject:nil waitUntilDone:NO];
-    
-//    self.trips = [[NSMutableArray alloc]init];
-//    
-//    if (![PFUser currentUser]) {
-//        [self.tabBarController setSelectedIndex:0];
-//    } else {
-//        
-//        [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-//        [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-//        
-//        self.tabBarController.tabBar.translucent = false;
-//        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
-//        
-//        
-//        // Setup tableview delegate/datasource
-//        [self.tableView setDelegate:self];
-//        [self.tableView setDataSource:self];
-//        // Setup Empty Datasets
-//        self.tableView.emptyDataSetDelegate = self;
-//        self.tableView.emptyDataSetSource = self;
-//        
-//        [self loadTrips];
-//    }
-
-}
 
 @end
