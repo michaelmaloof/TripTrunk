@@ -1402,7 +1402,7 @@
         NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.photo.caption];
         for(NSString *name in usernamesArray){
             NSRange userRange = [self.photo.caption rangeOfString:name];
-            NSString *link = [NSString stringWithFormat:@"activity://%@",name];
+            NSString *link = [NSString stringWithFormat:@"activity://%@",[name lowercaseString]];
             [self.captionLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
         }
     }
@@ -1564,7 +1564,7 @@
 }
 
 - (NSString*)getUsernameFromLink:(NSString*)link{
-    return [link substringFromIndex:1];
+    return [[link substringFromIndex:1] lowercaseString];
 }
 
 //-(NSString*)separateMentions:(NSString*)comment{
