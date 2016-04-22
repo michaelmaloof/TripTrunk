@@ -87,15 +87,7 @@
         [self launchWithoutQuickAction:launchOptions];
         
     }
-    
-//    [PFCloud callFunctionInBackground:@"copyColumnLowercaseUsernameToUsername" withParameters:nil block:^(NSString *response, NSError *error) {
-//        if (!error) {
-//            NSLog(@"Copy response: done");
-//        }else{
-//            NSLog(@"Copy response: %@", error);
-//        }
-//    }];
-    
+
     return YES;
 }
 
