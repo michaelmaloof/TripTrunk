@@ -158,17 +158,19 @@
     }
     
     PFUser *user = [PFUser currentUser];
-    NSDictionary *params = @{
-                             @"date" : user[@"lastUsed"]
-                             };
-    
-    [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
-        if (!error) {
-            [self setActivityBadgeIcon:[response intValue]];
-        }else{
-            [self setActivityBadgeIcon:0];
-        }
-    }];
+    if(user){
+        NSDictionary *params = @{
+                                 @"date" : user[@"lastUsed"]
+                                 };
+        
+        [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
+            if (!error) {
+                [self setActivityBadgeIcon:[response intValue]];
+            }else{
+                [self setActivityBadgeIcon:0];
+            }
+        }];
+    }
 
 }
 
