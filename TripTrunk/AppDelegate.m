@@ -87,7 +87,11 @@
         [self launchWithoutQuickAction:launchOptions];
         
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> f0263d435dad85ecc487a8743f65d5f3a89bb6af
     return YES;
 }
 
