@@ -216,7 +216,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ecuador 2.4.10(14)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EgC-bx-0B9">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fiji 2.4.11(15)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EgC-bx-0B9">
                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="M7y-Ru-hL3"/>
@@ -251,8 +251,7 @@
                                             <exclude reference="fkR-un-0lj"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                        <rect key="frame" x="158" y="560" width="86" height="30"/>
+                                    <variation key="heightClass=regular-widthClass=compact">
                                         <mask key="constraints">
                                             <include reference="erV-3V-6qk"/>
                                             <include reference="fkR-un-0lj"/>
