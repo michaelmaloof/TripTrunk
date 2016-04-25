@@ -28,6 +28,7 @@
 @property id<PhotoDelegate> delegate;
 @property BOOL fromNotification;
 @property BOOL fromTimeline;
+@property BOOL fromProfile;
 
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
 
