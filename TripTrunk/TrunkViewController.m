@@ -86,8 +86,6 @@
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
     self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
-
-    
     
     [self refreshTripDataViews];
         
@@ -261,13 +259,15 @@
     
     UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
     navButton.frame = CGRectMake(0, 0, 100, 40);
-    [navButton setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+//    [navButton setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [navButton setTitle:self.title forState:UIControlStateNormal];
     [navButton setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [navButton addTarget:self
                  action:@selector(titleTapped)
        forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.titleView = navButton;
+        
+
         
     }
     
@@ -431,16 +431,12 @@
         self.memberCollectionView.hidden = NO;
 
     }
-    
-    
-    
+
     if (self.firstLoadDone == NO){
         [self queryParseMethod];
     }
     [self.memberCollectionView reloadData];
 
-
-    
 }
 
 -(void)queryParseMethod{
