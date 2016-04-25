@@ -50,7 +50,7 @@
     if([kPARSE_APP_ID isEqualToString:@"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"])
         appName = @"PROD-CONE";
     
-    NSLog(@"%@ APP ID: %@",appName,kPARSE_APP_ID);
+    NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
