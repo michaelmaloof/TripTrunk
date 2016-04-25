@@ -455,6 +455,7 @@
                             user.objectId, @"toUserId",
                             [PFUser currentUser].objectId, @"fromUserId",
                             trip.objectId, @"tripId",
+                            trip.creator.objectId, @"tripCreatorId",
                             [NSString stringWithFormat:@"%@", trip.city], @"content",
                             [NSNumber numberWithDouble:trip.lat], @"latitude",
                             [NSNumber numberWithDouble:trip.longitude], @"longitude",
