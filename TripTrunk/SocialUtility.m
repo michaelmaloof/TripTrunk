@@ -281,6 +281,18 @@
              [ParseErrorHandlingController handleError:error];
          }
      }];
+    
+    
+    NSDictionary *params = @{
+       @"tripId" : trip.objectId
+    };
+    [PFCloud callFunctionInBackground:@"removePublicTripDetailsForTrip" withParameters:params block:^(NSString *response, NSError *error) {
+         if (!error) {
+             NSLog(@"Delete publicTripDetails: success");
+         }else{
+             NSLog(@"Delete publicTripDetails error: %@",error);
+         }
+     }];
 
     // Delete the trip itself
     [trip deleteEventually];
