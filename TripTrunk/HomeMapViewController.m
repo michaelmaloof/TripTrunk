@@ -18,6 +18,8 @@
 #import "EULAViewController.h"
 #import "TutorialViewController.h"
 #import "TTNewsFeedViewController.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 #define METERS_PER_MILE 1609.344
 
@@ -49,6 +51,7 @@
 @property BOOL isFirstUserLoad;
 @property BOOL buttonsMaded;
 @property (weak, nonatomic) IBOutlet UIButton *compasButton;
+@property (weak, nonatomic) IBOutlet UIButton *lugggagebutton;
 
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
@@ -61,7 +64,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    self.lugggagebutton.hidden = YES;
     
     self.exists = NO;
     //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
@@ -133,6 +136,12 @@
         NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
         NSString *s = NSLocalizedString(@"'s",@"'s");
         self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+    }
+    
+    if (self.user){
+        self.lugggagebutton.hidden = NO;
+        self.lugggagebutton.layer.cornerRadius = 22;
+        self.lugggagebutton.layer.masksToBounds = YES;
     }
 
     
@@ -1311,6 +1320,14 @@
     
 }
 
+- (IBAction)luggageWasTapped:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkListViewController *vc = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+    vc.user = self.user;
+    vc.isList = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+
+}
 @end
 
 

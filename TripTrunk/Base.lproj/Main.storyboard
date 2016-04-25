@@ -825,6 +825,25 @@
                                     <action selector="zoomOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9ga-7t-Vo3"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Group" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
+                                <rect key="frame" x="11" y="319" width="180" height="168"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="110"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="168" id="cHb-Dp-cfa">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="100"/>
+                                    </constraint>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mu4-OW-6jB">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" red="0.92941176469999998" green="0.54901960780000003" blue="0.55294117649999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" image="luggagebag_icon"/>
+                                <connections>
+                                    <action selector="luggageWasTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0aV-qe-j5J"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cRD-4f-3M6">
                                 <rect key="frame" x="539" y="456" width="25" height="25"/>
                                 <constraints>
@@ -836,20 +855,6 @@
                                     <action selector="compassTaped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cmT-ug-1Je"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Group" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
-                                <rect key="frame" x="11" y="319" width="180" height="168"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="110"/>
-                                    </constraint>
-                                    <constraint firstAttribute="height" constant="168" id="cHb-Dp-cfa">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="100"/>
-                                    </constraint>
-                                </constraints>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="660" width="101" height="83"/>
-                                </variation>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -860,11 +865,14 @@
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="-5" id="6qP-MR-7xQ">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="mu4-OW-6jB" firstAttribute="height" secondItem="itu-Co-AEg" secondAttribute="height" id="81r-bk-1fp"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8xa-m3-jvs"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="J9S-fj-2gt"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="L2j-Ip-k0z"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="MTC-j5-esn"/>
+                            <constraint firstItem="cRD-4f-3M6" firstAttribute="centerY" secondItem="itu-Co-AEg" secondAttribute="centerY" id="NU2-5l-vEF"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Obx-lh-siw"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="cRD-4f-3M6" secondAttribute="trailing" constant="15" id="PoQ-1A-lNk"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="SQU-bT-ERF"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="28" id="SVE-ZS-caH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="paW-Ly-ly2" secondAttribute="bottom" id="SxR-ba-ohE"/>
@@ -872,6 +880,9 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="20"/>
                             </constraint>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="49" id="YcW-f7-EHV"/>
+                            <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="mu4-OW-6jB" secondAttribute="bottom" constant="40" id="Zew-BV-1Ke">
+                                <variation key="heightClass=regular-widthClass=compact" constant="15"/>
+                            </constraint>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="bpc-pe-WhI"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="cDq-av-4cz"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="cFN-xs-xFq"/>
@@ -880,20 +891,29 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="itu-Co-AEg" secondAttribute="bottom" constant="10" id="f3N-di-oIY"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="481" id="fKL-EK-TQ8"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="486" id="g6L-lA-y2w"/>
+                            <constraint firstItem="mu4-OW-6jB" firstAttribute="width" secondItem="itu-Co-AEg" secondAttribute="width" id="gz9-qb-Hdv"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="hMG-y3-LMl"/>
                             <constraint firstItem="cRD-4f-3M6" firstAttribute="centerX" secondItem="itu-Co-AEg" secondAttribute="centerX" id="iIu-52-7MH"/>
                             <constraint firstItem="paW-Ly-ly2" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="lyP-HK-IOG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" constant="5" id="oWF-EG-AeR"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="ow4-Qa-GyF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="itu-Co-AEg" secondAttribute="trailing" id="qO6-K8-mEr"/>
+                            <constraint firstItem="mu4-OW-6jB" firstAttribute="centerX" secondItem="itu-Co-AEg" secondAttribute="centerX" id="tKb-1F-Ga0"/>
                             <constraint firstItem="itu-Co-AEg" firstAttribute="top" secondItem="cRD-4f-3M6" secondAttribute="bottom" constant="15" id="uB9-pb-hve"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="mu4-OW-6jB"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="8xa-m3-jvs"/>
                                 <exclude reference="MTC-j5-esn"/>
                                 <exclude reference="hMG-y3-LMl"/>
                                 <exclude reference="lyP-HK-IOG"/>
+                                <exclude reference="81r-bk-1fp"/>
+                                <exclude reference="gz9-qb-Hdv"/>
+                                <exclude reference="tKb-1F-Ga0"/>
+                                <exclude reference="NU2-5l-vEF"/>
                                 <exclude reference="J9S-fj-2gt"/>
                                 <exclude reference="SVE-ZS-caH"/>
                                 <exclude reference="YcW-f7-EHV"/>
@@ -903,6 +923,8 @@
                                 <exclude reference="f3N-di-oIY"/>
                                 <exclude reference="L2j-Ip-k0z"/>
                                 <exclude reference="Obx-lh-siw"/>
+                                <exclude reference="PoQ-1A-lNk"/>
+                                <exclude reference="Zew-BV-1Ke"/>
                                 <exclude reference="cDq-av-4cz"/>
                                 <exclude reference="eab-Oc-Hyx"/>
                                 <exclude reference="fKL-EK-TQ8"/>
@@ -913,6 +935,9 @@
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="mu4-OW-6jB"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="1P8-u6-Hev"/>
                                 <exclude reference="5Rc-rz-BTx"/>
@@ -921,7 +946,15 @@
                                 <exclude reference="SQU-bT-ERF"/>
                                 <include reference="hMG-y3-LMl"/>
                                 <include reference="lyP-HK-IOG"/>
+                                <include reference="81r-bk-1fp"/>
+                                <include reference="gz9-qb-Hdv"/>
+                                <include reference="tKb-1F-Ga0"/>
+                                <include reference="NU2-5l-vEF"/>
+                                <exclude reference="iIu-52-7MH"/>
                                 <exclude reference="SxR-ba-ohE"/>
+                                <include reference="PoQ-1A-lNk"/>
+                                <include reference="Zew-BV-1Ke"/>
+                                <exclude reference="uB9-pb-hve"/>
                             </mask>
                         </variation>
                     </view>
@@ -934,6 +967,7 @@
                     <connections>
                         <outlet property="compasButton" destination="cRD-4f-3M6" id="a7L-hi-obL"/>
                         <outlet property="compassRose" destination="P4J-Qq-oHp" id="7Q5-hy-IgD"/>
+                        <outlet property="lugggagebutton" destination="mu4-OW-6jB" id="6md-Pl-X6E"/>
                         <outlet property="mapView" destination="paW-Ly-ly2" id="9lx-nl-eZC"/>
                         <outlet property="zoomOut" destination="itu-Co-AEg" id="rW6-oE-g8A"/>
                         <segue destination="iaX-sL-1aH" kind="show" identifier="Trunk" id="xca-d8-iVW"/>
@@ -4989,6 +5023,7 @@
         <image name="lock" width="100" height="100"/>
         <image name="lockedGray" width="88" height="88"/>
         <image name="logo_large" width="200" height="174"/>
+        <image name="luggagebag_icon" width="30" height="26"/>
         <image name="map" width="25" height="25"/>
         <image name="moreIcon" width="20" height="5"/>
         <image name="nightSkyline_background" width="500" height="889"/>

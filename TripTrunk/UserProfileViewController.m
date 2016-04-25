@@ -389,7 +389,7 @@
                 self.listButton.hidden = YES;
             }else {
                 [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-                self.listButton.hidden = NO;
+//                self.listButton.hidden = NO; // we dont use this button so keep hidden for now
             }
         });
     }];
