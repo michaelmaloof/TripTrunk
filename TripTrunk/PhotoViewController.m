@@ -67,8 +67,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 @property (weak, nonatomic) IBOutlet UIButton *privateButton;
 
-
-
 // Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
@@ -82,70 +80,106 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setOriginalUIForPhoto]; //sets UI for photo exlcuding Trunk things
+    [self setOriginalUIForTrunk]; //sets UI for trunk photi is in
+    self.commentActivities = [[NSMutableArray alloc] init];
+    self.likeActivities = [[NSMutableArray alloc] init];
+    [self addGestureRecognizers]; //adds gestures for the photo (swipe, etc)
+    [self loadImageForPhoto:self.photo]; // Load initial data for the photo/UIImage
+    [self setNotificationCenter];
+    [self setScrollViewUI];
+    //load the first photo (which is the one the user clicked to get here)
+    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
+    
+    if (self.fromProfile == YES){
+        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            self.trip = self.photo.trip;
+            [self.trip.publicTripDetail fetchIfNeeded];
+        }];
+    }
+}
+
+#pragma On Appear
+
+-(void)viewWillAppear:(BOOL)animated {
+    self.navigationController.navigationBarHidden = YES;
+    self.tabBarController.tabBar.hidden = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+    //set button titles with numbers
+    [self updateCommentsLabel];
+    [self updateLikesLabel];
+    //set button selelction
+    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+    [self markPhotoAsViewed];
+}
+
+-(void)markPhotoAsViewed{
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        
+                        [view.viewedPhotos addObject:self.photo.objectId];
+                        [self.delegate photoWasViewed:self.photo];
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    NSRange cursorPosition = [self.caption selectedRange];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+}
+
+#pragma Original Photo UI on ViewDidLoad
+-(void)setOriginalUIForPhoto{
     self.privateButton.hidden = YES;
     self.deleteCaption.hidden = YES;
     // Set initial UI
-    
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
         self.addCaption.hidden = NO;
     } else {
         self.addCaption.hidden = YES;
-
     }
-    
     self.bottomButtonWrapper.hidden = YES;
     self.topButtonWrapper.hidden = YES;
-
     self.timeStamp.text = @"";
-    
     self.caption.selectable = NO;
     self.caption.editable = NO;
     self.caption.delegate = self;
-
     self.photoTakenBy.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.timeStamp.adjustsFontSizeToFitWidth = YES;
-    
-    //FIXME: if I self.photo.user.username it crashes thee app
-
-
-    
     [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
-    
     self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
-    
-    // Decide if we should show the trunkNameButton
-    // - If we're on the Activity tab, then we want the user to be able to get to the Trunk from the Photo view
-    // Any other tab, we already know the trunk (we can go back!).
-    // Tab Index 3 is the Activity Tab.
-    // NOTE: just because shouldShowTrunkNameButton = YES, the button may still be hidden if the user toggles it of.
-    self.shouldShowTrunkNameButton = NO;
-    UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    if (tabbarcontroller.selectedIndex == 3) {
-        self.shouldShowTrunkNameButton = YES;
-    }
-    [self.trunkNameButton setHidden:YES];
-    
-    if (self.fromNotification == YES || self.fromTimeline){
-        self.shouldShowTrunkNameButton = YES;
-
-    }
-    
-    self.commentActivities = [[NSMutableArray alloc] init];
-    self.likeActivities = [[NSMutableArray alloc] init];
-    
-    [self addGestureRecognizers];
-    
-    // Load initial data (photo and comments)
-    [self loadImageForPhoto:self.photo];
-    
-    //FIXME was there a mehtod for this before (refreshPhotoActivities)? 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(refreshPhotoActivities)
-                                                 name:@"commentUpdatedOnPhoto"
-                                               object:nil];
-    
     self.caption.hidden = YES;
+}
 
+-(void)setOriginalUIForTrunk{
+    self.shouldShowTrunkNameButton = NO;
+    if (self.fromProfile == NO){
+        UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        if (tabbarcontroller.selectedIndex == 3) {
+            self.shouldShowTrunkNameButton = YES;
+        }
+        [self.trunkNameButton setHidden:YES];
+        if (self.fromNotification == YES || self.fromTimeline){
+            self.shouldShowTrunkNameButton = YES;
+        }
+    } else {
+        self.shouldShowTrunkNameButton = YES;
+    }
+}
+
+-(void)setScrollViewUI{
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
     // Setup the scroll view - needed for Zooming
@@ -158,11 +192,15 @@
     self.originX = self.scrollView.frame.origin.x;
     self.width = self.scrollView.frame.size.width;
     self.height = self.scrollView.frame.size.height;
-    
-    
-    //load the first photo (which is the one the user clicked to get here)
-    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
+}
 
+
+-(void)setNotificationCenter{
+    //FIXME was there a metod for this before (refreshPhotoActivities)? Junil I think deleted the code in refreshPhotoActivities
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPhotoActivities)
+                                                 name:@"commentUpdatedOnPhoto"
+                                               object:nil];
 }
 
 //FIXME: added this to silence error on line 145
@@ -170,41 +208,32 @@
     
 }
 
-
-
 - (NSString *)stringForTimeStamp:(NSDate*)created {
-    
     self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
-    
     NSString *time = @"";
     time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
-    
     return time;
 }
 
+#pragma Handle Gestures
 
 - (void)handleDoubleTapFrom:(UITapGestureRecognizer *)recognizer {
     CGFloat originalTouchX, originalTouchY, originalWidth, originalHeight, zoomOriginX, zoomOriginY, zoomTouchX, zoomTouchY, zoomedWidth, zoomedHeight, zoomFactor;
     CGRect originalImageRect, zoomedImageRect;
-
     zoomFactor = 3.0;
-
     //Original image attributes
     originalWidth = screenWidth;
     originalHeight = originalWidth * self.imageView.image.size.height / self.imageView.image.size.width;
     originalImageRect = CGRectMake(0.0, (screenHeight / 2.0) - (originalHeight / 2.0), originalWidth, originalHeight);
     originalTouchX = [recognizer locationInView:self.scrollView].x;
     originalTouchY = [recognizer locationInView:self.scrollView].y;
-
     zoomedWidth = self.imageView.frame.size.width * zoomFactor;
     zoomedHeight = zoomedWidth * self.imageView.image.size.height / self.imageView.image.size.width;
     zoomedImageRect = CGRectMake(0.0, self.imageView.frame.size.height - (zoomedHeight / 2.0), zoomedWidth, zoomedHeight);
-
     if (CGRectContainsPoint(originalImageRect, [recognizer locationInView:self.imageView]) && !self.imageZoomed)
     {
         zoomTouchX = [recognizer locationInView:self.imageView].x * zoomFactor;
         zoomTouchY = ([recognizer locationInView:self.imageView].y - originalImageRect.origin.y) * zoomFactor;
-
         //Set Zoom Origin
         if (zoomTouchX < screenWidth)
         {
@@ -231,22 +260,17 @@
         {
             zoomOriginY = -zoomTouchY + screenHeight / 2.0;
         }
-
         [UIView animateWithDuration:0.45 animations:^{
             [self.imageView setTransform:CGAffineTransformMakeScale(zoomFactor, zoomFactor)];
             [self.imageView setFrame:CGRectMake(zoomOriginX, zoomOriginY, self.imageView.frame.size.width, self.imageView.frame.size.height)];
         }];
         self.imageZoomed = YES;
         self.isZoomed = YES;
-        
-        
         [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
             self.topButtonWrapper.hidden = YES;
             self.bottomButtonWrapper.hidden = YES;
         } completion:nil];
-        
         _scrollView.scrollEnabled = YES;
-
     }
     else
     {
@@ -255,20 +279,15 @@
         [UIView animateWithDuration:0.45 animations:^{
             [self.imageView setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
             [self.imageView setFrame:CGRectMake(0.0, 0.0, screenWidth, screenHeight)];
-            
         }];
         self.imageZoomed = NO;
         self.isZoomed = NO;
-        
-        
         [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
             self.topButtonWrapper.hidden = NO;
             self.bottomButtonWrapper.hidden = NO;
         } completion:nil];
     }
 }
-
-
 
 - (CAGradientLayer*) greyGradientForTop:(BOOL)isTop {
     
@@ -301,56 +320,10 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    self.navigationController.navigationBarHidden = YES;
-    self.tabBarController.tabBar.hidden = YES;
-
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
-    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-    
-    //set button titles with numbers
-    [self updateCommentsLabel];
-    [self updateLikesLabel];
-
-    //set button selelction
-    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-    
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
-
-                            [view.viewedPhotos addObject:self.photo.objectId];
-                            [self.delegate photoWasViewed:self.photo];
-
-                    }
-                }
-            }
-        }
-    }
-
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    NSRange cursorPosition = [self.caption selectedRange];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-}
-
 -(void)viewDidLayoutSubviews {
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
-
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
-    
-    
-
     [self centerScrollViewContents];
-    
     // Set up gradients for top and bottom button wrappers
     CAGradientLayer *gradient = [self greyGradientForTop:YES];
     gradient.frame = self.topButtonWrapper.bounds;
@@ -358,7 +331,6 @@
     bottomGradient.frame = self.bottomButtonWrapper.bounds;
     [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
     [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -368,29 +340,23 @@
     if (self.isEditingCaption){
         [self.caption endEditing:YES];
     }
-    
 }
 
 - (void)centerScrollViewContents {
     self.isZoomed = NO;
     CGSize boundsSize = self.scrollView.bounds.size;
     CGRect contentsFrame = self.imageView.frame;
-    
     if (contentsFrame.size.width < boundsSize.width) {
         contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
     } else {
         contentsFrame.origin.x = 0.0f;
     }
-    
     if (contentsFrame.size.height < boundsSize.height) {
         contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f;
     } else {
         contentsFrame.origin.y = 0.0f;
     }
-    
     self.imageView.frame = contentsFrame;
-    
-    
 }
 
 - (void)addGestureRecognizers {
@@ -422,18 +388,15 @@
 //    [self.view addGestureRecognizer:dblRecognizer];
 //    
 //    [tapGesture requireGestureRecognizerToFail:dblRecognizer];
-    
 
 }
 
 - (void)toggleButtonVisibility {
-    
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
         self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
         self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
         self.captionLabel.hidden = self.bottomButtonWrapper.hidden;
     } completion:nil];
-
 }
 
 - (void)tripLoaded:(Trip *)trip {
@@ -447,7 +410,6 @@
 #pragma mark - Photo Data
 
 - (void)loadImageForPhoto: (Photo *)photo {
-    
     NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     UIImage *placeholderImage = photo.image;
@@ -471,9 +433,7 @@
         }else {
             self.isLikedByCurrentUser = NO;
         }
-
     }
-    
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             
@@ -481,7 +441,6 @@
                 self.deleteCaption.hidden = YES;
             }
 
-            
             [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 if (!error){
                     
@@ -501,24 +460,20 @@
                     if (error){
                         NSLog(@"error %@", error);
                         [ParseErrorHandlingController handleError:error];
-
                     }
                 }
-                
             }];
         }
         else {
             NSLog(@"Error loading trip: %@", error);
             [ParseErrorHandlingController handleError:error];
         }
-        
         [self initializeMentions];
     }];
 
-    
     self.caption.hidden = YES;
     
-    // Get Activities for Photo
+// Get Activities for Photo
 //    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
         PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
     query.limit = 1000; //fixme this limit wont work for popular photos
@@ -582,8 +537,6 @@
                     }];
                 }
                 
-                //
-                
                 if (isCurrentPhoto == NO){
                     [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
                 }
@@ -635,23 +588,8 @@
             //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
-            for (UINavigationController *controller in self.tabBarController.viewControllers)
-            {
-                for (HomeMapViewController *view in controller.viewControllers)
-                {
-                    if ([view isKindOfClass:[HomeMapViewController class]])
-                    {
-                        if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                            if (view == (HomeMapViewController*)controller.viewControllers[0]){
-  
-                                    [view.viewedPhotos addObject:self.photo.objectId];
-                                    [self.delegate photoWasViewed:self.photo];
-
-                            }
-                        }
-                    }
-                }
-            }
+            
+            [self markPhotoAsViewed];
             
             //load the new photo the user swiped too
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
@@ -699,24 +637,8 @@
             //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
             
-            for (UINavigationController *controller in self.tabBarController.viewControllers)
-            {
-                for (HomeMapViewController *view in controller.viewControllers)
-                {
-                    if ([view isKindOfClass:[HomeMapViewController class]])
-                    {
-                        if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                            if (view == (HomeMapViewController*)controller.viewControllers[0]){
+            [self markPhotoAsViewed];
 
-                                    [view.viewedPhotos addObject:self.photo.objectId];
-                                    [self.delegate photoWasViewed:self.photo];
-
-                            }
-                        }
-                    }
-                }
-            }
-            
             //load photo on swipe left
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
@@ -727,28 +649,26 @@
 }
 
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
-{    if (self.isZoomed == NO){
-
+{    if (self.isZoomed == NO)
+    {
+    
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
-    //    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    //    [self presentViewController:navController animated:YES completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
-}
+    }
 }
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (self.isZoomed == NO){
-
-    [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
 - (void)handleTap:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     [self toggleButtonVisibility];
-    
-    if (self.isEditingCaption == YES){
+    if (self.isEditingCaption == YES)
+    {
         [self.caption endEditing:YES];
     }
 }
@@ -791,8 +711,15 @@
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
     vc.trunkMembers = self.trunkMembers;
-    vc.trip = self.trip;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (_fromProfile == NO){
+        vc.trip = self.trip;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        [self.photo.trip fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            vc.trip = self.photo.trip;
+            [self.navigationController pushViewController:vc animated:YES];
+        }];
+    }
 
 }
 
@@ -951,10 +878,6 @@
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
-
-
-
-
 }
 
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
@@ -1151,7 +1074,6 @@
                             NSDate *date = [dateFormat dateFromString:dateString];
                             self.photo.trip.publicTripDetail.mostRecentPhoto = date;
                         }
-                        
                     }
                     
                     if (self.trip.publicTripDetail.photoCount > 0){
@@ -1463,6 +1385,7 @@
                     self.trunkMembers = [[NSArray alloc] init];
             
                 //Build the friends list for the table view in the popover and wait
+                
                 NSDictionary *data = @{
                                        @"trunkMembers" : self.trunkMembers,
                                        @"trip" : self.trip,
