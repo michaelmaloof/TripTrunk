@@ -414,8 +414,10 @@
     
     [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
-        [commentACL setWriteAccess:YES forUser:photo.trip.creator];
         [commentACL setPublicReadAccess:YES];
+        [commentACL setWriteAccess:YES forUser:photo.trip.creator];
+        [commentACL setWriteAccess:YES forUser:[PFUser currentUser]];
+        [commentACL setWriteAccess:YES forUser:photo.user];
         commentActivity.ACL = commentACL;
         
         [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
