@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "FriendsListViewController.h"
 #import "SocialUtility.h"
+#import "UIImageView+AFNetworking.h"
 #import "TTUtility.h"
 #import "TTCache.h"
 #import "HomeMapViewController.h"
@@ -44,7 +45,7 @@ static BOOL nibMyCellloaded = NO;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
-@property (strong, nonatomic) NSMutableArray *myPhotos;
+@property (strong, nonatomic) NSArray *myPhotos;
 @property int numberOfImagesPerRow;
 @end
 
@@ -77,6 +78,9 @@ static BOOL nibMyCellloaded = NO;
     self.followButton.tag = 0;
     [self setButtonColor];
     self.followButton.hidden = YES;
+    
+    self.myPhotos = [[NSArray alloc] init];
+
     
     [self.profilePicImageView.layer setCornerRadius:35.0f];
     [self.profilePicImageView.layer setMasksToBounds:YES];
@@ -124,7 +128,6 @@ static BOOL nibMyCellloaded = NO;
             }
         
             [self.nameLabel setText:name];
-            self.title = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
             [self.hometownLabel setText:self.user[@"hometown"]];
             [self.profilePicImageView setClipsToBounds:YES];
             [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
@@ -184,13 +187,7 @@ static BOOL nibMyCellloaded = NO;
             }
             
             
-            //GET USER'S PHOTOS TO LOAD
-            self.myPhotos = [[NSMutableArray alloc] init];
-            //FIXME: get rid of all of this and build this array with photo list from parse
-            for(int i=0;i<30;i++){
-                NSObject *object = [[NSObject alloc] init];
-                [self.myPhotos addObject:object];
-            }
+            [self loadUserImages];
             
             CGRect screenRect = [[UIScreen mainScreen] bounds];
             CGFloat screenWidth = screenRect.size.width;
@@ -211,6 +208,31 @@ static BOOL nibMyCellloaded = NO;
     
 }
 
+-(void)loadUserImages{
+    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
+    [findPhotosUser whereKey:@"user" equalTo:self.user];
+    [findPhotosUser orderByDescending:@"createdAt"];
+    [findPhotosUser includeKey:@"trip.creator"];
+    [findPhotosUser includeKey:@"trip"];
+    [findPhotosUser includeKey:@"user"];
+    [findPhotosUser setLimit:1000];
+    
+    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error)
+        {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            // Objects is an array of Parse Photo objects
+            self.myPhotos = [NSArray arrayWithArray:objects];
+            //update photo count when it is not right
+            [self.collectionView reloadData];
+        } else {
+            [ParseErrorHandlingController handleError:error];
+        }
+        
+    }];
+
+}
+
 -(void)setButtonColor{
     
     if (self.followButton.tag == 1){
@@ -227,9 +249,6 @@ static BOOL nibMyCellloaded = NO;
     }
     
 }
-
-
-
 
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -805,19 +824,49 @@ static BOOL nibMyCellloaded = NO;
     }
     
     
-//    [collectionView registerClass:[TTUserProfileViewCell class] forCellWithReuseIdentifier:@"myImagesCell"];
+
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
-    cell.image.image = [UIImage imageNamed:@"Load"];
+    Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
+    
+    [cell.image setContentMode:UIViewContentModeScaleAspectFill];
+    //        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
+    cell.image.clipsToBounds = YES;
+    cell.image.translatesAutoresizingMaskIntoConstraints = NO;
+    cell.image.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
+    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+    NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:photo.imageUrl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
+    __weak TTUserProfileViewCell *weakCell = cell;
+    [weakCell.image setContentMode:UIViewContentModeScaleAspectFill];
+    weakCell.image.clipsToBounds = YES;
+    weakCell.image.translatesAutoresizingMaskIntoConstraints = NO;
+    weakCell.image.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    NSInteger index = indexPath.item;
+    
+    [cell.image setImageWithURLRequest:request
+                      placeholderImage:placeholderImage
+                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                [(Photo *)[self.myPhotos objectAtIndex:index] setImage:image];
+                                weakCell.image.image = image;
+                                [weakCell layoutIfNeeded];
+                                   
+                               } failure:nil];
+    return weakCell;
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    return CGSizeMake(screenWidth/3,screenWidth/self.numberOfImagesPerRow);
-}
 
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+
+}
 
 
 
