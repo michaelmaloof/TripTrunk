@@ -20,6 +20,10 @@
 #import "TrunkListViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "TTUserProfileViewCell.h"
+#import "TTUserProfileCollectionView.h"
+
+NSString *identifier = @"myImagesCell";
+static BOOL nibMyCellloaded = NO;
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -38,7 +42,10 @@
 @property int trunkCount;
 @property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
+@property (strong, nonatomic) NSMutableArray *myPhotos;
+@property int numberOfImagesPerRow;
 @end
 
 @implementation UserProfileViewController
@@ -82,7 +89,7 @@
     self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
     
-    
+    self.numberOfImagesPerRow = 3;
     
 
     self.privateCount = 0;
@@ -176,7 +183,25 @@
                 self.privateAccountImageView.hidden = YES;
             }
             
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.bottomMargainView.frame.origin.y);
+            
+            //GET USER'S PHOTOS TO LOAD
+            self.myPhotos = [[NSMutableArray alloc] init];
+            //FIXME: get rid of all of this and build this array with photo list from parse
+            for(int i=0;i<30;i++){
+                NSObject *object = [[NSObject alloc] init];
+                [self.myPhotos addObject:object];
+            }
+            
+            CGRect screenRect = [[UIScreen mainScreen] bounds];
+            CGFloat screenWidth = screenRect.size.width;
+            NSInteger imageHeight = screenWidth/self.numberOfImagesPerRow;
+            NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
+            NSInteger heightOfScroll = imageHeight*numOfRows+159;
+            
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
+            self.scrollViewHeightConstraint.constant = heightOfScroll;
+            self.contentViewHeightConstraint.constant = heightOfScroll;
+            
             
         }else{
             NSLog(@"Error: %@",error);
@@ -768,20 +793,32 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 30; //temp value
+    return self.myPhotos.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    [collectionView registerClass:[TTUserProfileViewCell class] forCellWithReuseIdentifier:@"myImagesCell"];
+
+    if(!nibMyCellloaded){
+        UINib *nib = [UINib nibWithNibName:@"TTUserProfileViewCell" bundle: nil];
+        [collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
+        nibMyCellloaded = YES;
+    }
+    
+    
+//    [collectionView registerClass:[TTUserProfileViewCell class] forCellWithReuseIdentifier:@"myImagesCell"];
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
     cell.image.image = [UIImage imageNamed:@"Load"];
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(125,125); //temp value - get screen width and devide by number of desired images per row
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    return CGSizeMake(screenWidth/3,screenWidth/self.numberOfImagesPerRow);
 }
+
+
+
+
 @end
