@@ -35,6 +35,10 @@
 @property UIImageView *privateAccountImageView;
 @property int privateCount;
 @property int trunkCount;
+@property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHieght;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
+
 @end
 
 @implementation UserProfileViewController
@@ -63,6 +67,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.contentViewHeight.constant = 554;
+    self.scrollViewHieght.constant = 554;
     self.followButton.tag = 0;
     [self setButtonColor];
     self.followButton.hidden = YES;
@@ -77,6 +83,8 @@
     
     self.logoutButton.hidden = YES;
     self.listButton.hidden = YES;
+    
+    
     
 
     self.privateCount = 0;
@@ -169,6 +177,11 @@
             } else {
                 self.privateAccountImageView.hidden = YES;
             }
+            
+            //This sets the scrollview to the height of the last view in the scrollView. I placed a view in there just to hold this value
+            //it is called bottomMargainView
+//            self.contentViewHeight.constant = self.bottomMargainView.frame.origin.y;
+//            self.scrollViewHieght.constant = self.bottomMargainView.frame.origin.y;
         }else{
             NSLog(@"Error: %@",error);
         }
