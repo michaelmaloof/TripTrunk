@@ -180,6 +180,8 @@
             
             //This sets the scrollview to the height of the last view in the scrollView. I placed a view in there just to hold this value
             //it is called bottomMargainView
+            CGRect frame = [self.scrollView convertRect:self.bottomMargainView.frame fromView:self.contentView];
+            NSLog(@"FRAME: %f",frame.origin.y);
 //            self.contentViewHeight.constant = self.bottomMargainView.frame.origin.y;
 //            self.scrollViewHieght.constant = self.bottomMargainView.frame.origin.y;
         }else{
