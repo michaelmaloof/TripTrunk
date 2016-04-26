@@ -215,11 +215,12 @@ static BOOL nibMyCellloaded = NO;
             //update photo count when it is not right
             [self.collectionView reloadData];
  
+            CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
             NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
             NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
             if(self.myPhotos.count % self.numberOfImagesPerRow != 0)
                 numOfRows++;
-            NSInteger heightOfScroll = imageHeight*numOfRows+159;
+            NSInteger heightOfScroll = imageHeight*numOfRows+collectionViewPosition.y;
             
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
             self.scrollViewHeightConstraint.constant = heightOfScroll;
