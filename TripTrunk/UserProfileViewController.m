@@ -19,8 +19,9 @@
 #import "EditProfileViewController.h"
 #import "TrunkListViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "TTUserProfileViewCell.h"
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIButton *listButton;
@@ -36,6 +37,7 @@
 @property int privateCount;
 @property int trunkCount;
 @property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @end
 
@@ -84,8 +86,8 @@
     
 
     self.privateCount = 0;
-//    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -760,6 +762,26 @@
 
 }
 
+#pragma mark - UICollectionVireDataSource
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
 
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 30; //temp value
+}
 
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    [collectionView registerClass:[TTUserProfileViewCell class] forCellWithReuseIdentifier:@"myImagesCell"];
+    TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
+    cell.image.image = [UIImage imageNamed:@"Load"];
+    return cell;
+}
+
+#pragma mark - UICollectionViewDelegate
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(125,125); //temp value - get screen width and devide by number of desired images per row
+}
 @end

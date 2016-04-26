@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="bioTextView" destination="GgT-HY-Vrp" id="u0C-5s-oUe"/>
                 <outlet property="bottomMargainView" destination="DmG-In-uOM" id="Ihc-av-UEI"/>
+                <outlet property="collectionView" destination="vbt-ru-KW2" id="xtg-fC-jK1"/>
                 <outlet property="contentView" destination="cSp-5v-4If" id="T98-qU-JwY"/>
                 <outlet property="followButton" destination="9Hn-fr-0Yg" id="hCG-5s-aUx"/>
                 <outlet property="followersButton" destination="k8T-73-v3H" id="Led-Ma-XaL"/>
@@ -395,14 +396,18 @@
                                         </mask>
                                     </variation>
                                 </button>
-                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vbt-ru-KW2">
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" indicatorStyle="white" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vbt-ru-KW2" customClass="TTUserProfileCollectionView">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Tz7-Ng-WKs">
-                                        <size key="itemSize" width="50" height="50"/>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="YFm-jx-jf0">
+                                        <size key="itemSize" width="125" height="125"/>
                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </collectionViewFlowLayout>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-1" id="Wj8-iR-oFR"/>
+                                        <outlet property="delegate" destination="-1" id="HEr-nX-cnQ"/>
+                                    </connections>
                                 </collectionView>
                             </subviews>
                             <constraints>
@@ -780,6 +785,53 @@
             </variation>
             <point key="canvasLocation" x="858.5" y="553.5"/>
         </view>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="myImagesCell" id="klK-H7-C7g" customClass="TTUserProfileViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5jR-EA-ffU">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <constraints>
+                <constraint firstItem="5jR-EA-ffU" firstAttribute="top" secondItem="klK-H7-C7g" secondAttribute="top" id="2BQ-LQ-d98"/>
+                <constraint firstItem="5jR-EA-ffU" firstAttribute="leading" secondItem="klK-H7-C7g" secondAttribute="leading" id="FQI-5t-zHV"/>
+                <constraint firstAttribute="trailing" secondItem="5jR-EA-ffU" secondAttribute="trailing" id="HND-yK-Xat"/>
+                <constraint firstAttribute="bottom" secondItem="5jR-EA-ffU" secondAttribute="bottom" id="O67-HT-6dT"/>
+            </constraints>
+            <size key="customSize" width="82" height="114"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="5jR-EA-ffU"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="2BQ-LQ-d98"/>
+                    <exclude reference="FQI-5t-zHV"/>
+                    <exclude reference="HND-yK-Xat"/>
+                    <exclude reference="O67-HT-6dT"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="subviews">
+                    <include reference="5jR-EA-ffU"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="2BQ-LQ-d98"/>
+                    <include reference="FQI-5t-zHV"/>
+                    <include reference="HND-yK-Xat"/>
+                    <include reference="O67-HT-6dT"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="image" destination="5jR-EA-ffU" id="SeT-Ct-q8M"/>
+            </connections>
+            <point key="canvasLocation" x="1149.5" y="542.5"/>
+        </collectionViewCell>
     </objects>
     <resources>
         <image name="defaultProfile" width="150" height="150"/>
