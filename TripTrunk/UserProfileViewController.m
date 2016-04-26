@@ -27,7 +27,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *hideThisButtonAlways;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
@@ -68,6 +67,12 @@
     [self setButtonColor];
     self.followButton.hidden = YES;
     
+    [self.profilePicImageView.layer setCornerRadius:35.0f];
+    [self.profilePicImageView.layer setMasksToBounds:YES];
+    [self.profilePicImageView.layer setBorderWidth:3.0f];
+    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:195.0/255.0 green:122.0/255.0 blue:108.0/255.0 alpha:1.0] CGColor]];
+
+    
     self.hideThisButtonAlways.hidden = YES;
     
     self.logoutButton.hidden = YES;
@@ -93,7 +98,7 @@
         if(!error){
             self.user = (PFUser*)object;
         
-            self.title  = self.user.username;
+            self.title  = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
             [self tabBarTitle];
         
             NSString *name;
@@ -106,7 +111,7 @@
             }
         
             [self.nameLabel setText:name];
-            [self.usernameLabel setText:[NSString stringWithFormat:@"@%@",self.user[@"username"]]];
+            self.title = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
             [self.hometownLabel setText:self.user[@"hometown"]];
             [self.profilePicImageView setClipsToBounds:YES];
             [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
@@ -342,41 +347,38 @@
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         NSUInteger followersCount = [[TTCache sharedCache] followers].count;
         NSUInteger followingCount = [[TTCache sharedCache] following].count;
-        NSString *followers = NSLocalizedString(@"Followers",@"Followers");
-        NSString *following = NSLocalizedString(@"Following",@"Following");
+
         
-        if (followersCount < 1){
-            [self.followersButton setTitle:@"Followers" forState:UIControlStateNormal];
-            [self.followersButton setTitle:@"Followers" forState:UIControlStateDisabled];
+        if (followersCount < 1){ //FOLLOWERS
+            [self.followersButton setTitle:@"" forState:UIControlStateNormal];
+            [self.followersButton setTitle:@"" forState:UIControlStateDisabled];
         } else {
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateNormal];
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followersCount,followers] forState:UIControlStateDisabled];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followersCount] forState:UIControlStateNormal];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followersCount] forState:UIControlStateDisabled];
         }
         
-        if (followingCount < 1){
-            [self.followingButton setTitle:@"Following" forState:UIControlStateNormal];
-            [self.followingButton setTitle:@"Following" forState:UIControlStateDisabled];
+        if (followingCount < 1){ //FOLLOWING
+            [self.followingButton setTitle:@"" forState:UIControlStateNormal];
+            [self.followingButton setTitle:@"" forState:UIControlStateDisabled];
             
         } else {
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateNormal];
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu %@",(unsigned long)followingCount,following] forState:UIControlStateDisabled];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followingCount] forState:UIControlStateNormal];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followingCount] forState:UIControlStateDisabled];
         }
         
     }
     
     [SocialUtility followerCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *followers = NSLocalizedString(@"Followers",@"Followers");
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateNormal];
-            [self.followersButton setTitle:[NSString stringWithFormat:@"%i %@",count,followers] forState:UIControlStateDisabled];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
         });
     }];
     
     [SocialUtility followingCount:_user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *following = NSLocalizedString(@"Following",@"Following");
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%i %@",count,following] forState:UIControlStateNormal];
-            [self.followingButton setTitle:[NSString stringWithFormat:@"%i %@",count,following] forState:UIControlStateDisabled];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
         });
     }];
     

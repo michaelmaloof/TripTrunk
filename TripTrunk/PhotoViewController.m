@@ -133,7 +133,6 @@
     }
 }
 
-
 -(void)viewDidAppear:(BOOL)animated{
     NSRange cursorPosition = [self.caption selectedRange];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
@@ -1260,9 +1259,7 @@
         _scrollView.scrollEnabled = NO;
         [self centerScrollViewContents];
 //        self.isZoomed = NO;
-
-        
-        
+    
     }
 }
 //-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
