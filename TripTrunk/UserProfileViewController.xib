@@ -11,7 +11,6 @@
                 <outlet property="bioTextView" destination="GgT-HY-Vrp" id="u0C-5s-oUe"/>
                 <outlet property="bottomMargainView" destination="DmG-In-uOM" id="Ihc-av-UEI"/>
                 <outlet property="contentView" destination="cSp-5v-4If" id="T98-qU-JwY"/>
-                <outlet property="contentViewHeight" destination="b98-mZ-osX" id="9q4-ni-ijc"/>
                 <outlet property="followButton" destination="9Hn-fr-0Yg" id="hCG-5s-aUx"/>
                 <outlet property="followersButton" destination="k8T-73-v3H" id="Led-Ma-XaL"/>
                 <outlet property="followingButton" destination="G68-Y4-O01" id="xvm-h6-93O"/>
@@ -21,7 +20,6 @@
                 <outlet property="nameLabel" destination="T27-K3-6wj" id="T1K-RA-cYz"/>
                 <outlet property="profilePicImageView" destination="FVi-Q8-ebI" id="sH6-ih-88Q"/>
                 <outlet property="scrollView" destination="TsW-sg-QxN" id="hn2-KW-6a4"/>
-                <outlet property="scrollViewHieght" destination="D5N-yF-Vnv" id="VGY-xz-p4f"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Uqn-Go-iJm"/>
             </connections>
         </placeholder>
@@ -467,7 +465,6 @@
                                     <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                                 </constraint>
                                 <constraint firstItem="G68-Y4-O01" firstAttribute="centerY" secondItem="FVi-Q8-ebI" secondAttribute="centerY" id="aJ3-KX-2YD"/>
-                                <constraint firstAttribute="height" constant="554" id="b98-mZ-osX"/>
                                 <constraint firstItem="aRl-Kc-Hyq" firstAttribute="centerY" secondItem="FVi-Q8-ebI" secondAttribute="centerY" id="bxo-qL-uPD"/>
                                 <constraint firstItem="G68-Y4-O01" firstAttribute="leading" secondItem="FVi-Q8-ebI" secondAttribute="trailing" constant="15" id="c7Z-cH-G2m">
                                     <variation key="heightClass=regular-widthClass=compact" constant="30"/>
@@ -502,6 +499,7 @@
                                 <constraint firstItem="aRl-Kc-Hyq" firstAttribute="centerY" secondItem="FVi-Q8-ebI" secondAttribute="centerY" id="tt2-Fp-cHK"/>
                                 <constraint firstItem="GgT-HY-Vrp" firstAttribute="leading" secondItem="cSp-5v-4If" secondAttribute="leading" constant="30" id="v6f-Ng-Sqy"/>
                                 <constraint firstAttribute="bottom" secondItem="GgT-HY-Vrp" secondAttribute="bottom" priority="750" constant="58" id="wg0-tf-T1N"/>
+                                <constraint firstAttribute="height" constant="554" id="x5M-Pu-4A5"/>
                                 <constraint firstAttribute="trailing" secondItem="k8T-73-v3H" secondAttribute="trailing" constant="18" id="ykY-Zu-Xgx"/>
                                 <constraint firstItem="DmG-In-uOM" firstAttribute="leading" secondItem="cSp-5v-4If" secondAttribute="leading" id="z3X-6D-SxE"/>
                             </constraints>
@@ -523,7 +521,7 @@
                                 </mask>
                                 <mask key="constraints">
                                     <exclude reference="Ipy-ap-laY"/>
-                                    <exclude reference="b98-mZ-osX"/>
+                                    <exclude reference="x5M-Pu-4A5"/>
                                     <exclude reference="28m-yg-uLp"/>
                                     <exclude reference="H28-85-o48"/>
                                     <exclude reference="ngR-46-z5U"/>
@@ -606,7 +604,7 @@
                                 </mask>
                                 <mask key="constraints">
                                     <exclude reference="Ipy-ap-laY"/>
-                                    <include reference="b98-mZ-osX"/>
+                                    <include reference="x5M-Pu-4A5"/>
                                     <include reference="28m-yg-uLp"/>
                                     <exclude reference="H28-85-o48"/>
                                     <exclude reference="ngR-46-z5U"/>
@@ -674,10 +672,11 @@
                         </view>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="554" id="D5N-yF-Vnv"/>
+                        <constraint firstAttribute="height" constant="554" id="2J7-Pb-ZVl"/>
                         <constraint firstAttribute="width" secondItem="cSp-5v-4If" secondAttribute="width" id="DFD-r1-N3W"/>
                         <constraint firstItem="cSp-5v-4If" firstAttribute="leading" secondItem="TsW-sg-QxN" secondAttribute="leading" id="EAJ-FR-0Du"/>
                         <constraint firstAttribute="bottom" secondItem="cSp-5v-4If" secondAttribute="bottom" id="PYX-8X-Ncn"/>
+                        <constraint firstAttribute="width" constant="375" id="TVG-RS-e3f"/>
                         <constraint firstAttribute="trailing" secondItem="cSp-5v-4If" secondAttribute="trailing" id="Uyr-Zv-8If"/>
                         <constraint firstAttribute="height" secondItem="cSp-5v-4If" secondAttribute="height" id="Vu4-6B-LrI"/>
                         <constraint firstItem="cSp-5v-4If" firstAttribute="leading" secondItem="TsW-sg-QxN" secondAttribute="leading" id="Xwz-HT-9Js"/>
@@ -692,7 +691,8 @@
                             <exclude reference="cSp-5v-4If"/>
                         </mask>
                         <mask key="constraints">
-                            <exclude reference="D5N-yF-Vnv"/>
+                            <exclude reference="2J7-Pb-ZVl"/>
+                            <exclude reference="TVG-RS-e3f"/>
                             <exclude reference="DFD-r1-N3W"/>
                             <exclude reference="EAJ-FR-0Du"/>
                             <exclude reference="PYX-8X-Ncn"/>
@@ -711,7 +711,8 @@
                             <include reference="cSp-5v-4If"/>
                         </mask>
                         <mask key="constraints">
-                            <include reference="D5N-yF-Vnv"/>
+                            <include reference="2J7-Pb-ZVl"/>
+                            <include reference="TVG-RS-e3f"/>
                             <exclude reference="DFD-r1-N3W"/>
                             <include reference="EAJ-FR-0Du"/>
                             <include reference="PYX-8X-Ncn"/>

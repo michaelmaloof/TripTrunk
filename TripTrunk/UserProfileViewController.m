@@ -36,8 +36,6 @@
 @property int privateCount;
 @property int trunkCount;
 @property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHieght;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeight;
 
 @end
 
@@ -67,8 +65,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.contentViewHeight.constant = 554;
-    self.scrollViewHieght.constant = 554;
     self.followButton.tag = 0;
     [self setButtonColor];
     self.followButton.hidden = YES;
@@ -88,8 +84,8 @@
     
 
     self.privateCount = 0;
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
@@ -178,12 +174,8 @@
                 self.privateAccountImageView.hidden = YES;
             }
             
-            //This sets the scrollview to the height of the last view in the scrollView. I placed a view in there just to hold this value
-            //it is called bottomMargainView
-            CGRect frame = [self.scrollView convertRect:self.bottomMargainView.frame fromView:self.contentView];
-            NSLog(@"FRAME: %f",frame.origin.y);
-//            self.contentViewHeight.constant = self.bottomMargainView.frame.origin.y;
-//            self.scrollViewHieght.constant = self.bottomMargainView.frame.origin.y;
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.bottomMargainView.frame.origin.y);
+            
         }else{
             NSLog(@"Error: %@",error);
         }
