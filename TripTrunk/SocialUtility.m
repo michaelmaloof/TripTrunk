@@ -456,6 +456,7 @@
     // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *mentionACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [mentionACL setWriteAccess:YES forUser:photo.user];
+    [mentionACL setWriteAccess:YES forUser:photo.trip.creator];
     
     [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
