@@ -189,17 +189,6 @@ static BOOL nibMyCellloaded = NO;
             
             [self loadUserImages];
             
-            CGRect screenRect = [[UIScreen mainScreen] bounds];
-            CGFloat screenWidth = screenRect.size.width;
-            NSInteger imageHeight = screenWidth/self.numberOfImagesPerRow;
-            NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
-            NSInteger heightOfScroll = imageHeight*numOfRows+159;
-            
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
-            self.scrollViewHeightConstraint.constant = heightOfScroll;
-            self.contentViewHeightConstraint.constant = heightOfScroll;
-            
-            
         }else{
             NSLog(@"Error: %@",error);
         }
@@ -225,6 +214,15 @@ static BOOL nibMyCellloaded = NO;
             self.myPhotos = [NSArray arrayWithArray:objects];
             //update photo count when it is not right
             [self.collectionView reloadData];
+            
+            NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
+            NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
+            NSInteger heightOfScroll = imageHeight*numOfRows+159;
+            
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
+            self.scrollViewHeightConstraint.constant = heightOfScroll;
+            self.contentViewHeightConstraint.constant = heightOfScroll;
+            
         } else {
             [ParseErrorHandlingController handleError:error];
         }
@@ -864,7 +862,7 @@ static BOOL nibMyCellloaded = NO;
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+    return CGSizeMake(self.view.frame.size.width/self.numberOfImagesPerRow, self.view.frame.size.width/self.numberOfImagesPerRow);
 
 }
 
