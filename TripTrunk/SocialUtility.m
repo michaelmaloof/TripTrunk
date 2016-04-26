@@ -57,6 +57,7 @@
         
         PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
         [followACL setPublicReadAccess:YES];
+        [followACL setWriteAccess:true forUser:user];
         followActivity.ACL = followACL;
         
         [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
