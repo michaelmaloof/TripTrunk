@@ -24,9 +24,6 @@
 #import "TTUserProfileCollectionView.h"
 #import "PhotoViewController.h"
 
-NSString *identifier = @"myImagesCell";
-static BOOL nibMyCellloaded = NO;
-
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
@@ -849,12 +846,8 @@ static BOOL nibMyCellloaded = NO;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
 
-    if(!nibMyCellloaded){
-        UINib *nib = [UINib nibWithNibName:@"TTUserProfileViewCell" bundle: nil];
-        [collectionView registerNib:nib forCellWithReuseIdentifier:identifier];
-        nibMyCellloaded = YES;
-    }
-    
+    UINib *nib = [UINib nibWithNibName:@"TTUserProfileViewCell" bundle: nil];
+    [collectionView registerNib:nib forCellWithReuseIdentifier:@"myImagesCell"];
     
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
