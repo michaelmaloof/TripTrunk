@@ -27,7 +27,7 @@
 NSString *identifier = @"myImagesCell";
 static BOOL nibMyCellloaded = NO;
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIButton *listButton;
@@ -45,9 +45,10 @@ static BOOL nibMyCellloaded = NO;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
-@property (strong, nonatomic) NSArray *myPhotos;
+@property (strong, nonatomic) NSMutableArray *myPhotos;
 @property int numberOfImagesPerRow;
 @property BOOL isFirstLoad;
+@property NSMutableArray *photosSeen;
 @end
 
 @implementation UserProfileViewController
@@ -80,7 +81,7 @@ static BOOL nibMyCellloaded = NO;
     [self setButtonColor];
     self.followButton.hidden = YES;
     
-    self.myPhotos = [[NSArray alloc] init];
+    self.myPhotos = [[NSMutableArray alloc] init];
 
     
 //    [self.profilePicImageView.layer setCornerRadius:35.0f];
@@ -95,6 +96,23 @@ static BOOL nibMyCellloaded = NO;
     self.listButton.hidden = YES;
     
     self.numberOfImagesPerRow = 3;
+    
+    //FIXME MOVE THIS LOGIC ALL TO A UTILITY
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        self.photosSeen = [[NSMutableArray alloc]init];
+                        self.photosSeen = view.viewedPhotos;
+                    }
+                }
+            }
+        }
+    }
     
 
     self.privateCount = 0;
@@ -202,7 +220,7 @@ static BOOL nibMyCellloaded = NO;
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
-            self.myPhotos = [NSArray arrayWithArray:objects];
+            self.myPhotos = [NSMutableArray arrayWithArray:objects];
             //update photo count when it is not right
             [self.collectionView reloadData];
  
@@ -232,6 +250,7 @@ static BOOL nibMyCellloaded = NO;
     vc.trip = vc.photo.trip;
     vc.arrayInt = indexPath.row;
     vc.photos = self.myPhotos;
+    vc.delegate = self;
     vc.fromProfile = YES;
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -837,9 +856,24 @@ static BOOL nibMyCellloaded = NO;
     }
     
     
-
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
+    
+    NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+    
+    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:photo.createdAt];
+    if (lastPhotoInterval < 0)
+    {
+        if (![self.photosSeen containsObject:photo.objectId]){
+            cell.logo.hidden = NO;
+        } else {
+            cell.logo.hidden = YES;
+        }
+        
+    } else {
+        cell.logo.hidden = YES;
+    }
+
     
     [cell.image setContentMode:UIViewContentModeScaleAspectFill];
     //        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
@@ -879,6 +913,27 @@ static BOOL nibMyCellloaded = NO;
 {
     return CGSizeMake(self.view.frame.size.width/self.numberOfImagesPerRow, self.view.frame.size.width/self.numberOfImagesPerRow);
 
+}
+
+#pragma  Photo Delegate
+
+-(void)photoWasLiked:(BOOL)isFromError{
+    
+}
+
+-(void)photoWasDisliked:(BOOL)isFromError{
+
+}
+
+-(void)photoWasViewed:(Photo *)photo{
+    [self.photosSeen addObject:photo.objectId];
+    [self.collectionView reloadData];
+}
+
+
+-(void)photoWasDeleted:(NSNumber *)likes photo:(Photo *)photo{
+    [self.myPhotos removeObject:photo];
+    [self.collectionView reloadData];
 }
 
 

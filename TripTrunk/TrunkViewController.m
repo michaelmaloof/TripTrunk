@@ -983,7 +983,7 @@
 }
 
 
--(void)photoWasDeleted:(NSNumber*)likes{
+-(void)photoWasDeleted:(NSNumber*)likes photo:(Photo *)photo{
 //    if (self.trip.publicTripDetail.totalLikes > 0){
 //        self.trip.publicTripDetail.totalLikes -= likes.intValue;
 //        [self.trip.publicTripDetail saveInBackground];

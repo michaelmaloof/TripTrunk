@@ -11,5 +11,6 @@
 @interface TTUserProfileViewCell : UICollectionViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *image;
+@property (weak, nonatomic) IBOutlet UIImageView *logo;
 
 @end

@@ -17,20 +17,33 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fo9-xL-BlV">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo_large" translatesAutoresizingMaskIntoConstraints="NO" id="lcM-LV-Dsj">
+                        <rect key="frame" x="222" y="222" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="C4C-Lh-PU0"/>
+                            <constraint firstAttribute="width" constant="20" id="FYl-iy-yM9"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="fo9-xL-BlV" secondAttribute="bottom" id="6gJ-x1-Ebm"/>
                 <constraint firstItem="fo9-xL-BlV" firstAttribute="top" secondItem="0UV-OC-24G" secondAttribute="top" id="8EE-YB-kfk"/>
+                <constraint firstAttribute="bottom" secondItem="lcM-LV-Dsj" secondAttribute="bottom" constant="6" id="EDf-RA-kbi"/>
                 <constraint firstItem="fo9-xL-BlV" firstAttribute="leading" secondItem="0UV-OC-24G" secondAttribute="leading" id="Zou-p6-K3Y"/>
+                <constraint firstAttribute="trailing" secondItem="lcM-LV-Dsj" secondAttribute="trailing" constant="3" id="cP8-wi-uQx"/>
                 <constraint firstAttribute="trailing" secondItem="fo9-xL-BlV" secondAttribute="trailing" id="evt-gv-TNM"/>
             </constraints>
             <size key="customSize" width="228" height="237"/>
             <connections>
                 <outlet property="image" destination="fo9-xL-BlV" id="8aM-kz-yBf"/>
+                <outlet property="logo" destination="lcM-LV-Dsj" id="tRl-YL-axX"/>
             </connections>
             <point key="canvasLocation" x="359" y="508"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="logo_large" width="200" height="174"/>
+    </resources>
 </document>

@@ -1088,7 +1088,7 @@
                             [self presentViewController:errorAlert animated:YES completion:nil];
                         }
                         else{
-                            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo]];
+                            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
                             
                             
                             NSDate *today = [NSDate date];
