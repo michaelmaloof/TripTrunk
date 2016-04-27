@@ -31,15 +31,14 @@ static BOOL nibMyCellloaded = NO;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIButton *listButton;
-
 @property (weak, nonatomic) IBOutlet UIButton *hideThisButtonAlways;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
+@property (weak, nonatomic) IBOutlet UIImageView *privateAccountImageView;
 @property BOOL isFollowing;
-@property UIImageView *privateAccountImageView;
 @property int privateCount;
 @property int trunkCount;
 @property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
@@ -48,6 +47,7 @@ static BOOL nibMyCellloaded = NO;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
 @property (strong, nonatomic) NSArray *myPhotos;
 @property int numberOfImagesPerRow;
+@property BOOL isFirstLoad;
 @end
 
 @implementation UserProfileViewController
@@ -83,8 +83,8 @@ static BOOL nibMyCellloaded = NO;
     self.myPhotos = [[NSArray alloc] init];
 
     
-    [self.profilePicImageView.layer setCornerRadius:35.0f];
-    [self.profilePicImageView.layer setMasksToBounds:YES];
+//    [self.profilePicImageView.layer setCornerRadius:35.0f];
+//    [self.profilePicImageView.layer setMasksToBounds:YES];
     [self.profilePicImageView.layer setBorderWidth:3.0f];
     [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:195.0/255.0 green:122.0/255.0 blue:108.0/255.0 alpha:1.0] CGColor]];
 
@@ -172,23 +172,13 @@ static BOOL nibMyCellloaded = NO;
 
             //Check whether user account is private
             self.privateAccountImageView.hidden = YES;
-            //Add private account icon to user profile pic
-            self.privateAccountImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"locked"]];
-            [self.profilePicImageView addSubview:self.privateAccountImageView];
-            [self.privateAccountImageView setContentMode:UIViewContentModeScaleAspectFill];
-            [self.privateAccountImageView setTranslatesAutoresizingMaskIntoConstraints:YES];
-            [self.privateAccountImageView setFrame: CGRectMake(self.profilePicImageView.frame.origin.x + self.profilePicImageView.image.size.width,
-                                                           self.profilePicImageView.frame.origin.y + self.profilePicImageView.image.size.height,
-                                                           25.0,
-                                                           25.0)];
             if ([[self.user valueForKey:@"private"] boolValue]){
                 self.privateAccountImageView.hidden = NO;
             } else {
                 self.privateAccountImageView.hidden = YES;
+                [self loadUserImages];
             }
             
-            
-            [self loadUserImages];
             
         }else{
             NSLog(@"Error: %@",error);
@@ -316,6 +306,11 @@ static BOOL nibMyCellloaded = NO;
                     self.followersButton.enabled = YES;
                     self.followingButton.enabled = YES;
                     self.mapButton.userInteractionEnabled = YES;
+                    
+                    if (self.isFirstLoad == NO){
+                        [self loadUserImages];
+                        self.isFirstLoad = YES;
+                    }
                 }
             });
         }
@@ -367,6 +362,10 @@ static BOOL nibMyCellloaded = NO;
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
                             [self.followButton setHidden:NO];
                             [self.followButton setEnabled:YES];
+                            if (self.isFirstLoad == NO){
+                                [self loadUserImages];
+                                self.isFirstLoad = YES;
+                            }
                         }
                     });
                 }
@@ -586,7 +585,7 @@ static BOOL nibMyCellloaded = NO;
 
 -(void)increaseLockSize{
     if (self.privateCount < 3){
-        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x - 10, self.privateAccountImageView.frame.origin.y - 10, self.privateAccountImageView.frame.size.width + 10, self.privateAccountImageView.frame.size.width + 10);
+        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x - 5, self.privateAccountImageView.frame.origin.y - 5, self.privateAccountImageView.frame.size.width + 5, self.privateAccountImageView.frame.size.width + 5);
         self.privateCount = self.privateCount + 1;
     }
 }
