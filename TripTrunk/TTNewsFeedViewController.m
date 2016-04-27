@@ -86,6 +86,8 @@
         self.isLoading = YES;
         int mainCount = (int)self.mainPhotos.count;
         
+        //CREATE DICTIONARY WITH self.following objectIds
+        
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKeyExists:@"fromUser"];
         [memberQuery whereKeyExists:@"toUser"];
