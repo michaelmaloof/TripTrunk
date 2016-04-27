@@ -187,7 +187,18 @@
 
             //Check whether user account is private
             self.privateAccountImageView.hidden = YES;
-            if ([[self.user valueForKey:@"private"] boolValue]){
+            
+            if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]){
+                [self loadUserImages];
+                
+                if ([[self.user valueForKey:@"private"] boolValue]){
+                    self.privateAccountImageView.hidden = NO;
+                } else {
+                    self.privateAccountImageView.hidden = YES;
+                }
+            }
+            
+            else if ([[self.user valueForKey:@"private"] boolValue]){
                 self.privateAccountImageView.hidden = NO;
             } else {
                 self.privateAccountImageView.hidden = YES;
