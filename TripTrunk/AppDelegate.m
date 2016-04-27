@@ -30,9 +30,7 @@
 //#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
 //#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
-//TripTrunk-PROD-CLONE
-//#define kPARSE_APP_ID @"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"
-//#define kPARSE_CLIENT_KEY @"nZPaM2hS3R9KoR6rNxCRnQUEhzMQihnaT6Zstp5O"
+
 
 @interface AppDelegate ()
 
@@ -46,9 +44,6 @@
     NSString *appName = @"DEV";
     if([kPARSE_APP_ID isEqualToString:@"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"])
         appName = @"PROD";
-    
-    if([kPARSE_APP_ID isEqualToString:@"XjQckrZ6iHb0g4CANnuxiEFBvxRGHGyIuRUarKWT"])
-        appName = @"PROD-CONE";
     
     NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
     
