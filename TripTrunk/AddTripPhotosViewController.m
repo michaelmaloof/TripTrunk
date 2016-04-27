@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 @property (weak, nonatomic) IBOutlet UILabel *borderLabel;
 @property NSMutableArray *currentSelectionPhotos;
+@property float amount;
 
 //############################################# MENTIONS ##################################################
 //@property (weak, nonatomic) IBOutlet UITextView *caption;
@@ -56,6 +57,8 @@
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
+
 //if self.trip is valid then we are editing a trip, not creating a new one
     if (self.trip){
         self.alreadyTrip = YES;
@@ -406,19 +409,22 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     
-    int amount = self.view.frame.size.height /2.8;
-    
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - amount, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.amount, self.view.frame.size.width, self.view.frame.size.height);
     
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
-    int amount = self.view.frame.size.height /2.8;
-
     
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + amount, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.amount, self.view.frame.size.width, self.view.frame.size.height);
 }
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    self.amount = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    self.amount = self.amount - self.navigationController.navigationBar.frame.size.height - 10;
+}
+
+
 
 #pragma mark - Collection View
 
