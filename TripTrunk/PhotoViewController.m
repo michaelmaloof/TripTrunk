@@ -916,6 +916,7 @@
 }
 
 //FIXME: Should we do saveEventually for likes or does it need to be real time responsive like this?
+//FIXME: Total Like Handled Here
 - (IBAction)likeButtonPressed:(id)sender {
     // Like Photo
     if (!self.likeButton.selected)

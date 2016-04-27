@@ -22,6 +22,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "TTUserProfileViewCell.h"
 #import "TTUserProfileCollectionView.h"
+#import "PhotoViewController.h"
 
 NSString *identifier = @"myImagesCell";
 static BOOL nibMyCellloaded = NO;
@@ -233,6 +234,18 @@ static BOOL nibMyCellloaded = NO;
     }];
 
 }
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *vc = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    vc.photo = [self.myPhotos objectAtIndex:indexPath.row];
+    vc.trip = vc.photo.trip;
+    vc.arrayInt = indexPath.row;
+    vc.photos = self.myPhotos;
+    vc.fromProfile = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 -(void)setButtonColor{
     
