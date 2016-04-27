@@ -57,6 +57,7 @@
         
         PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
         [followACL setPublicReadAccess:YES];
+        [followACL setWriteAccess:true forUser:user];
         followActivity.ACL = followACL;
         
         [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
@@ -281,6 +282,18 @@
              [ParseErrorHandlingController handleError:error];
          }
      }];
+    
+    
+    NSDictionary *params = @{
+       @"tripId" : trip.objectId
+    };
+    [PFCloud callFunctionInBackground:@"removePublicTripDetailsForTrip" withParameters:params block:^(NSString *response, NSError *error) {
+         if (!error) {
+             NSLog(@"Delete publicTripDetails: success");
+         }else{
+             NSLog(@"Delete publicTripDetails error: %@",error);
+         }
+     }];
 
     // Delete the trip itself
     [trip deleteEventually];
@@ -414,8 +427,10 @@
     
     [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
-        [commentACL setWriteAccess:YES forUser:photo.trip.creator];
         [commentACL setPublicReadAccess:YES];
+        [commentACL setWriteAccess:YES forUser:photo.trip.creator];
+        [commentACL setWriteAccess:YES forUser:[PFUser currentUser]];
+        [commentACL setWriteAccess:YES forUser:photo.user];
         commentActivity.ACL = commentACL;
         
         [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
@@ -456,6 +471,7 @@
     // Permissions: commenter and photo owner can edit/delete comments.
     PFACL *mentionACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [mentionACL setWriteAccess:YES forUser:photo.user];
+    [mentionACL setWriteAccess:YES forUser:photo.trip.creator];
     
     [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
