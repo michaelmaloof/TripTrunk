@@ -956,29 +956,8 @@
 -(void)photoWasDisliked:(BOOL)isFromError{
     
     
-    int likes = [self.totalLikeButton.text intValue];
-    if (likes > 0){
-        likes = likes - 1;
-    }
-    if (likes < 1){
-        self.totalLikeButton.hidden = YES;
-        self.totalLikeHeart.hidden = YES;
-    } else {
-        [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-        self.totalLikeButton.textColor = [UIColor whiteColor];
-        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", likes];
-        self.totalLikeButton.hidden = NO;
-        self.totalLikeHeart.hidden = NO;
-    }
+
     
-    //direct update after calculation
-    //FIXME this should be done in the utility for liking a photo
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (isFromError == NO && !error){
-            [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
-            [self.trip.publicTripDetail saveInBackground];
-    }
-    }];
     
 }
 

@@ -671,7 +671,7 @@
     [query includeKey:@"photo"];
     [query setLimit:1000];
     //Order by the time and then order by isCaption so that the caption is always first
-    [query orderByAscending:@"createdAt"];
+    [query orderByDescending:@"createdAt"];
     [query orderByDescending:@"isCaption"];
     
 
