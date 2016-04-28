@@ -231,7 +231,8 @@
                                                       
                                                       [self.photoUsers addObject:photo.user.objectId];
                                                   }
-                                              } else
+                                              }
+                                              else
                                               {
                                                   [self.mainPhotos addObject:photo];
                                                   [self.duplicatePhotoStrings addObject:photo.trip.objectId];
@@ -244,10 +245,11 @@
                                               }
                                               
                                         //this user has been represented
-                                          } else
+                                          }
+                                          else
                                           {
                                         //so the photo and trip and user have been represnted. Lets make sure its all from one trunk though (in case a user is represented but its from a different trunk)
-                                              NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId];
+                                              NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId]; //BUG BUG BUG FIXME YOU IDIOT MICHAEL. THE INDEX OF THE USER IN PHOTOUSERS IS NOT ALWAYS THE SAME AS IN THE TRIPS
                                               NSString *tripID = self.duplicatePhotoStrings[fooIndex];
                                               
                                               //this user is represnted in a different trunk, so it doesnt count as being represtened already in this case
