@@ -153,7 +153,7 @@
     }
     
     PFUser *user = [PFUser currentUser];
-    if(user){
+    if(user[@"lastUsed"]){
         NSDictionary *params = @{
                                  @"date" : user[@"lastUsed"]
                                  };
