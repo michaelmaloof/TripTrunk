@@ -86,7 +86,9 @@
         self.isLoading = YES;
         int mainCount = (int)self.mainPhotos.count;
         
-        //CREATE DICTIONARY WITH self.following objectIds
+        //CREATE DICTIONARY WITH self.following objectIds array
+        //current photo createdDate array
+        //And isRefresh array
         
         PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
         [memberQuery whereKeyExists:@"fromUser"];
