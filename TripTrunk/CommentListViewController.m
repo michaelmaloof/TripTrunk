@@ -376,6 +376,45 @@
     }
 }
 
+
+-(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    UITableViewRowAction *button4 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                     {
+                                         [self.tableView setEditing:YES];
+                                         [self.activities removeObjectAtIndex:indexPath.row];
+                                         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                         [self.tableView reloadData];;
+                                     }];
+    button4.backgroundColor = [UIColor colorWithRed:(91/255.0) green:(237/255.0) blue:(255/255.0) alpha:1]; //delete color
+    
+    UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                    {
+                                        cell.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1];
+                                        
+                                    }];
+    button.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1]; //most important color
+    
+    UITableViewRowAction *button2 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                     {
+                                         cell.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(239/255.0) blue:(107/255.0) alpha:1];
+                                     }];
+    button2.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(239/255.0) blue:(107/255.0) alpha:1]; //kind of important color
+    
+    UITableViewRowAction *button3 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                     {
+                                         cell.backgroundColor = [UIColor colorWithRed:(86/255.0) green:(241/255.0) blue:(144/255.0) alpha:1];
+                                     }];
+    button3.backgroundColor = [UIColor colorWithRed:(86/255.0) green:(241/255.0) blue:(144/255.0) alpha:1]; //not important color
+    
+    
+    
+    return @[button4, button, button2, button3]; //array with all the buttons you want. 1,2,3, etc...
+}
+
+
 #pragma mark - Table view delegate
 
 // On Row Selection, push to the user's profile
