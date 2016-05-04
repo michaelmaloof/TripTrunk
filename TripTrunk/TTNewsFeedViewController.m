@@ -633,7 +633,7 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     
-    int count = 0; int indexCount = 0;
+    int count = 0;
     [cell.userprofile setImageWithURLRequest:request
                              placeholderImage:[UIImage imageNamed:@"defaultProfile"]
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
@@ -654,7 +654,7 @@
                 tap.numberOfTapsRequired = 1;
                 [cell.newsfeedPhoto addGestureRecognizer:tap];
                 cell.newsfeedPhoto.userInteractionEnabled = YES;
-                tap.view.tag =  indexCount - 1;
+                tap.view.tag =  indexPath.row; //indexCount - 1;
     
     
                 [cell.newsfeedPhoto setImageWithURLRequest:requestNew
@@ -1073,12 +1073,12 @@
 - (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    Photo *photo = self.photos[gestureRecognizer.view.tag];
-    photoViewController.photo = (Photo *)photo;
-    photoViewController.photos = [self returnPhotosForView:photo];
+    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)mainPhoto;
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
     photoViewController.arrayInt = 0;
      photoViewController.fromTimeline = YES;
-    photoViewController.trip = photo.trip;
+    photoViewController.trip = mainPhoto.trip;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
