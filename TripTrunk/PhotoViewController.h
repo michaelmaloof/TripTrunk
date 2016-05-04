@@ -24,7 +24,7 @@
 @property Trip *trip;
 @property NSArray *photos;
 @property NSArray *trunkAlbum;
-@property NSInteger arrayInt;
+@property int arrayInt;
 @property id<PhotoDelegate> delegate;
 @property BOOL fromNotification;
 @property BOOL fromTimeline;

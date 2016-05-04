@@ -1002,7 +1002,7 @@
     NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
     Photo *photo = array[0];
     photoViewController.photo = (Photo *)photo;
-    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
     photoViewController.arrayInt = 1;
     photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
@@ -1015,9 +1015,9 @@
     NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
     Photo *photo = array[1];
     photoViewController.photo = (Photo *)photo;
-    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
     photoViewController.arrayInt = 2;
-     photoViewController.fromTimeline = YES;
+    photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -1028,9 +1028,9 @@
     NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
     Photo *photo = array[2];
     photoViewController.photo = (Photo *)photo;
-    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
     photoViewController.arrayInt = 3;
-     photoViewController.fromTimeline = YES;
+    photoViewController.fromTimeline = YES;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -1042,26 +1042,37 @@
     Photo *photo = array[3];
     photoViewController.photo = (Photo *)photo;
     photoViewController.arrayInt = 4;
-     photoViewController.fromTimeline = YES;
-    photoViewController.photos = [self returnPhotosForView:photo];
+    photoViewController.fromTimeline = YES;
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
--(NSArray*)returnPhotosForView:(Photo*)photo
-{
-    
-    NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
-    for (Photo *smallPhoto in self.arrayToSend)
-    {
-        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
-        {
-            [mutablePhotos addObject:smallPhoto];
-        }
+-(NSArray*)returnPhotosForView:(Photo*)mainPhoto{
+    NSMutableArray *allPhotosInTrunkForThisUser = [NSMutableArray arrayWithObject:mainPhoto];
+    NSArray *photos = [self.subPhotos objectForKey:mainPhoto.objectId];
+    for(Photo* obj in photos){
+        [allPhotosInTrunkForThisUser addObject:obj];
+        if(allPhotosInTrunkForThisUser.count == 5)
+            break;
     }
-    
-    NSArray *array = [mutablePhotos mutableCopy];
-    return array;
+    return allPhotosInTrunkForThisUser;
 }
+
+//-(NSArray*)returnPhotosForView:(Photo*)photo
+//{
+//    
+//    NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
+//    for (Photo *smallPhoto in self.arrayToSend)
+//    {
+//        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
+//        {
+//            [mutablePhotos addObject:smallPhoto];
+//        }
+//    }
+//    
+//    NSArray *array = [mutablePhotos mutableCopy];
+//    return array;
+//}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout*)collectionViewLayout
