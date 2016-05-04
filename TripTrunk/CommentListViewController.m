@@ -325,93 +325,87 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     //only editable if its an activity and not a temp comment
-    if (indexPath.row < self.activities.count)
-    {
-        
-        PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
-        // You can delete comments if you're the commenter, photo creator
-        // TODO: or trip creator
-        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
-            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
-            return YES;
-        }
-        
-    }
-    
-    return NO;
+//    if (indexPath.row < self.activities.count)
+//    {
+//        
+//        PFObject *commentActivity = [self.activities objectAtIndex:indexPath.row];
+//        // You can delete comments if you're the commenter, photo creator
+//        // TODO: or trip creator
+//        if ([[[commentActivity valueForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]
+//            || [[PFUser currentUser].objectId isEqualToString:self.photo.user.objectId]) {
+//            return YES;
+//        }
+//        
+//    }
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        PFObject *object = [self.activities objectAtIndex:indexPath.row];
-        [SocialUtility deleteComment:object forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                NSLog(@"Error deleting comment: %@", error);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't delete comment, try again",@"Couldn't delete comment, try again") delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [alert show];
-                });
-            }
-            else {
-                self.photo.caption = @"";
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-                [self.autocompletePopover removeMentionFromDatabase:object comment:@"" previousComment:object[@"content"]];
-                // Post a notification so that the data is reloaded in the Photo View
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:self.photo];
-                
-            }
-        }];
-        
-        // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_activities removeObjectAtIndex:indexPath.row];
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        });
-        
+        [self deleteCommentforRowAtIndexPath:indexPath tableView:tableView];
     }
     else {
         NSLog(@"Unhandled Editing Style: %ld", (long)editingStyle);
     }
 }
 
+-(void)deleteCommentforRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView*)tableView{
+    PFObject *object = [self.activities objectAtIndex:indexPath.row];
+    [SocialUtility deleteComment:object forPhoto:self.photo block:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            NSLog(@"Error deleting comment: %@", error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error") message:NSLocalizedString(@"Couldn't delete comment, try again",@"Couldn't delete comment, try again") delegate:self cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay") otherButtonTitles:nil, nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [alert show];
+            });
+        }
+        else {
+            self.photo.caption = @"";
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            self.autocompletePopover = [storyboard instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+            [self.autocompletePopover removeMentionFromDatabase:object comment:@"" previousComment:object[@"content"]];
+            // Post a notification so that the data is reloaded in the Photo View
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"commentUpdatedOnPhoto" object:self.photo];
+        }
+    }];
+    
+    // Remove from the array and reload the data separately from actually deleting so that we can give a responsive UI to the user.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_activities removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    });
+    
+
+}
+
+-(void)reply{
+    
+}
 
 -(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+        
+    PFObject *obj = self.activities[indexPath.row];
+    PFUser *user = obj[@"fromUser"];
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    
-    UITableViewRowAction *button4 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
-                                     {
-                                         [self.tableView setEditing:YES];
-                                         [self.activities removeObjectAtIndex:indexPath.row];
-                                         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                                         [self.tableView reloadData];;
-                                     }];
-    button4.backgroundColor = [UIColor colorWithRed:(91/255.0) green:(237/255.0) blue:(255/255.0) alpha:1]; //delete color
-    
-    UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+    UITableViewRowAction *reply = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"reply" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
                                     {
-                                        cell.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1];
+                                        [self reply];
                                         
                                     }];
-    button.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1]; //most important color
+    reply.backgroundColor = [UIColor colorWithRed:(91/255.0) green:(237/255.0) blue:(255/255.0) alpha:1];
     
-    UITableViewRowAction *button2 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
-                                     {
-                                         cell.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(239/255.0) blue:(107/255.0) alpha:1];
-                                     }];
-    button2.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(239/255.0) blue:(107/255.0) alpha:1]; //kind of important color
-    
-    UITableViewRowAction *button3 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"     " handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
-                                     {
-                                         cell.backgroundColor = [UIColor colorWithRed:(86/255.0) green:(241/255.0) blue:(144/255.0) alpha:1];
-                                     }];
-    button3.backgroundColor = [UIColor colorWithRed:(86/255.0) green:(241/255.0) blue:(144/255.0) alpha:1]; //not important color
-    
-    
-    
-    return @[button4, button, button2, button3]; //array with all the buttons you want. 1,2,3, etc...
+    if ([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+        UITableViewRowAction *delete = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                         {
+                                             [self deleteCommentforRowAtIndexPath:indexPath tableView:self.tableView];
+                                         }];
+        
+        delete.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1];
+        return @[delete,reply]; //array with all the buttons you want. 1,2,3, etc...
+    } else {
+        return @[reply]; //array with all the buttons you want. 1,2,3, etc...
+    }
 }
 
 
