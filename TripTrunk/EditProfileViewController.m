@@ -124,24 +124,38 @@
 - (IBAction)saveButtonPressed:(id)sender {
 //    [self.saveButton setEnabled:NO];
     
-    NSString *hometown = self.hometownTextField.text;
-    NSString *bio = self.bioTextView.text;
-    NSString *firstName = self.firstName.text;
-    NSString *lastName = self.nameTextView.text;
-    NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-
-    [_user setValue:hometown forKey:@"hometown"];
-    [_user setValue:bio forKey:@"bio"];
-    [_user setValue:firstName forKey:@"firstName"];
-    [_user setValue:lastName forKey:@"lastName"];
-    [_user setValue:fullName forKey:@"name"];
-
+    if ([self.firstName.text isEqualToString:@""] || [self.nameTextView.text isEqualToString:@""]){
+        UIAlertView *alertView = [[UIAlertView alloc] init];
+        alertView.delegate = self;
+        alertView.title = NSLocalizedString(@"Please have a first and last name",@"Please have a first and last name");
+        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
+        [alertView show];
+    }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
-        [self.delegate shouldSaveUserAndClose:_user];
+    else {
+        
+        NSString *hometown = self.hometownTextField.text;
+        NSString *bio = self.bioTextView.text;
+        NSString *firstName = self.firstName.text;
+        NSString *lastName = self.nameTextView.text;
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        
+        [_user setValue:hometown forKey:@"hometown"];
+        [_user setValue:bio forKey:@"bio"];
+        [_user setValue:firstName forKey:@"firstName"];
+        [_user setValue:lastName forKey:@"lastName"];
+        [_user setValue:fullName forKey:@"name"];
+        
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
+            [self.delegate shouldSaveUserAndClose:_user];
+        }
+        
     }
     
 }
+
 - (IBAction)termsOfServiceButtonPressed:(id)sender {
     EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
     eula.alreadyAccepted = YES;
