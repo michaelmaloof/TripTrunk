@@ -101,11 +101,15 @@
     if (self.photos.count > 0 && !isRefresh)
         photo = self.photos.lastObject;
     else photo = self.photos.firstObject;
+        
+    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+    [dateformate setDateFormat:@"YYYY-MM-dd"];
+    NSString *dateString=[dateformate stringFromDate:[NSDate date]];
     
     NSDictionary *params = @{
                              @"objectIds" : followingObjectIds,
                              @"activityObjectIds" : objIds,
-                             @"createdDate" : photo.createdAt ? photo.createdAt : @"2066-10-14",
+                             @"createdDate" : photo.createdAt ? photo.createdAt : dateString,
                              @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"]
                              };
     [PFCloud callFunctionInBackground:@"queryForNewsFeed" withParameters:params block:^(NSArray *response, NSError *error) {
@@ -136,9 +140,6 @@
                     NSMutableArray *p = [[NSMutableArray alloc] init];
                     for (PFObject *activities in response[1]){
                         Trip *trip = activities[@"trip"];
-                        if([trip.objectId isEqualToString:@"HtNez9hBI1"] && [photo.trip.objectId isEqualToString:@"HtNez9hBI1"]){
-                            NSLog(@"%@ - %@",photo.user.objectId,trip.creator.objectId);
-                        }
                         Photo *photo2 = activities[@"photo"];
                         photo2.user = activities[@"fromUser"];
                         photo2.trip = activities[@"trip"];
