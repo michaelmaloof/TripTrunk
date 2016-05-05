@@ -379,18 +379,22 @@
 
 }
 
--(void)reply{
-    
+-(void)setUpreply:(NSIndexPath *)indexPath {
+    self.commentInputView.commentField.text = @"";
+    PFObject *obj = self.activities[indexPath.row];
+    PFUser *user = obj[@"fromUser"];
+    self.commentInputView.commentField.text = [NSString stringWithFormat:@"@%@ ",user.username ];
+    [self.commentInputView.commentField becomeFirstResponder];
 }
 
 -(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-        
+    
     PFObject *obj = self.activities[indexPath.row];
     PFUser *user = obj[@"fromUser"];
     
     UITableViewRowAction *reply = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"reply" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
                                     {
-                                        [self reply];
+                                        [self setUpreply:indexPath];
                                         
                                     }];
     reply.backgroundColor = [UIColor colorWithRed:(91/255.0) green:(237/255.0) blue:(255/255.0) alpha:1];
