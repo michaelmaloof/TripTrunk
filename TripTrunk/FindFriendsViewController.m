@@ -599,7 +599,7 @@
         
     } else {
     
-        cell.followButton.hidden = YES;
+        cell.followButton.hidden = NO;
 
 //    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
 //    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
