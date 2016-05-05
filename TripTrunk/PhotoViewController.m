@@ -599,13 +599,13 @@
 
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    if (self.isZoomed == NO && self.isEditingCaption == NO){
+    if (!self.isZoomed && !self.isEditingCaption){
 
         if (!self.photos || self.photos.count == 0) {
             return;
         }
         
-        if (self.fromTimeline == YES && self.arrayInt == 5){
+        if (self.fromTimeline && self.arrayInt == 4){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
             [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -615,17 +615,15 @@
             }];
      
         } else {
-
-        
+            
         if (self.arrayInt != self.photos.count - 1)
         {
-            self.arrayInt = self.arrayInt + 1;
+            self.arrayInt++;
             self.photo = [self.photos objectAtIndex:self.arrayInt];
             if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
                 self.addCaption.hidden = NO;
             } else {
                 self.addCaption.hidden = YES;
-                
             }
             [self loadImageForPhoto:self.photo];
             self.title = self.photo.userName;
