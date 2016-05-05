@@ -34,6 +34,7 @@
     self = [super init]; // nil is ok if the nib is included in the main bundle
     if (self) {
         _trip = trip;
+        _tripCreator = trip.creator;
 
     }
     return self;
@@ -60,6 +61,7 @@
     
     // initialize array for table view data source
     _tripMembers = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] membersForTrip:self.trip]];
+    
     
 
     
@@ -112,28 +114,6 @@
             
             // Cache the members
             [[TTCache sharedCache] setMembers:_tripMembers forTrip:self.trip];
-            
-            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
-        }
-        
-    }];
-    
-    // Get the Trip Creator
-    //TODO: Chnage trip.user to be a pointer, not a username String
-    // After trip.user is a pointer, we no longer need a separate query to get the creator, it will be part of the Trip object
-    PFQuery *creatorQuery = [PFUser query];
-    [creatorQuery whereKey:@"username" equalTo:_trip.user];
-    [creatorQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-        if(error)
-        {
-            NSLog(@"Error: %@",error);
-        }
-        else
-        {
-            _tripCreator = (PFUser *)object;
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
