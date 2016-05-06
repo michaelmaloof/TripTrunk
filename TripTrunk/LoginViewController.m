@@ -31,6 +31,10 @@
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
     
+    [_usernameTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    [_passwordTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+
+    
     [self handleLoginDisplay];
 
 }
@@ -170,6 +174,13 @@
     }
 }
 
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    [self handleLoginDisplay];
+}
+
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    [self handleLoginDisplay];
+}
 
 
 
