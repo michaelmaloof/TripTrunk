@@ -167,6 +167,10 @@
                                 //remove old subphotos array from dictionary
                                 [self.subPhotos removeObjectForKey:originalPhoto.objectId];
                                 updatedOldPhoto = YES;
+                                
+                                if(!sub)
+                                    [refreshControl endRefreshing];  //this is temp to stop a very hard to reproduce bug where sometimes sub is nil and it makes the refresh hang
+                                    
                                 break;
                             }
                             index++;
@@ -189,9 +193,20 @@
                         photo2.user = activities[@"fromUser"];
                         photo2.trip = activities[@"trip"];
                         if([trip.objectId isEqual:photo.trip.objectId] && [photo2.user.objectId isEqual:photo.user.objectId]){
-                            if(p.count<5)
+                            if(isRefresh){
+                                NSMutableArray *sub = [self.subPhotos objectForKey:photo.objectId];
+                                [sub insertObject:photo2 atIndex:0];
+//FIXME MONDAY: The order of the subphotos is backwards because I am using insert at index 0 but the are coming down descending
+//PLAY WITH CC descending and ascending orders based on isRefresh
+//                                NSSortDescriptor *descriptor=[[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:NO];
+//                                NSArray *descriptors=[NSArray arrayWithObject: descriptor];
+//                                NSArray *newOrder=[sub sortedArrayUsingDescriptors:descriptors];
+                                [self.subPhotos removeObjectForKey:photo.objectId];
+                                [self.subPhotos setObject:sub forKey:photo.objectId];
+                            }else{
                                 [p addObject:photo2];
-                            [self.subPhotos setObject:p forKey:photo.objectId];
+                                [self.subPhotos setObject:p forKey:photo.objectId];
+                            }
                         }
                     }
                     
