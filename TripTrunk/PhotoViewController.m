@@ -88,12 +88,6 @@
     [self loadImageForPhoto:self.photo]; // Load initial data for the photo/UIImage
     [self setNotificationCenter];
     [self setScrollViewUI];
-    if (self.fromProfile == YES){ //if its from a users profile photos, set self.trip to the trip of the photo
-        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            self.trip = self.photo.trip;
-            [self.trip.publicTripDetail fetchIfNeeded];
-        }];
-    }
     //load the first photo (which is the one the user clicked to get here)
     [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
 }
@@ -434,7 +428,7 @@
     }
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
-            
+            self.trip = self.photo.trip;
             if ([self.photo.caption isEqualToString:@""] && self.photo.caption == nil){
                 self.deleteCaption.hidden = YES;
             }
@@ -444,6 +438,7 @@
                     
                     if (self.shouldShowTrunkNameButton) {
                         [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
+                            self.trip = self.photo.trip;
                             [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
                             [self.trunkNameButton setHidden:NO];
                         }];
