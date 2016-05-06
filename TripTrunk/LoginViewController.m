@@ -18,6 +18,7 @@
 
 @property (strong, nonatomic) IBOutlet MSTextField *usernameTextField;
 @property (strong, nonatomic) IBOutlet MSTextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
 @end
 
@@ -27,12 +28,17 @@
     [super viewDidLoad];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 
-    
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
     
-    
+    [self handleLoginDisplay];
+
 }
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self handleLoginDisplay];
+}
+
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
     NSError *error;
     NSString *username = [_usernameTextField.text lowercaseString];
@@ -135,13 +141,14 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
+    [self handleLoginDisplay];
     [super touchesBegan:touches withEvent:event];
 }
 
 // Go to the next textfield or close the keyboard when the return button is pressed
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
-    
+    [self handleLoginDisplay];
     BOOL didResign = [textField resignFirstResponder];
     if (!didResign) return NO;
     
@@ -151,6 +158,16 @@
     
     return YES;
     
+}
+
+-(void)handleLoginDisplay{
+    if ([self.usernameTextField.text isEqualToString:@""] || [self.passwordTextField.text isEqualToString:@""]){
+        self.loginButton.enabled = NO;
+        self.loginButton.alpha = .5;
+    } else {
+        self.loginButton.enabled = YES;
+        self.loginButton.alpha = 1;
+    }
 }
 
 

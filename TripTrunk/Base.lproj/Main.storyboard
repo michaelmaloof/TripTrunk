@@ -60,7 +60,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
@@ -3818,7 +3818,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rs-Y7-aUD">
@@ -4426,6 +4426,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="yxD-Kr-bR8"/>
                     <connections>
+                        <outlet property="loginButton" destination="AzN-pd-PID" id="41R-Zr-Jqz"/>
                         <outlet property="passwordTextField" destination="sQV-bh-HVU" id="6DK-Zl-Eh8"/>
                         <outlet property="usernameTextField" destination="vRa-e1-FEv" id="y6D-9e-EIL"/>
                         <segue destination="pNM-SA-knj" kind="show" identifier="setUsernameSegue" id="bhX-wL-LGH"/>
@@ -5045,8 +5046,8 @@
         <image name="zoomGlass" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hXf-dS-IMJ"/>
-        <segue reference="UVS-2K-sz0"/>
+        <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
+        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>
