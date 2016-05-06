@@ -256,7 +256,7 @@
     PhotoViewController *vc = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
     vc.photo = [self.myPhotos objectAtIndex:indexPath.row];
     vc.trip = vc.photo.trip;
-    vc.arrayInt = indexPath.row;
+    vc.arrayInt = (int)indexPath.row;
     vc.photos = self.myPhotos;
     vc.delegate = self;
     vc.fromProfile = YES;
