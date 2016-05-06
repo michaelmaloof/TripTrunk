@@ -149,7 +149,7 @@
                         //go through and check to see if this photo updates a current trip
                         int index = 0; BOOL updatedOldPhoto = NO;
                         for(Photo *oldPhoto in self.mainPhotos){
-                            if([oldPhoto.trip.objectId isEqualToString:photo.trip.objectId]){
+                            if([oldPhoto.trip.objectId isEqualToString:photo.trip.objectId] && [oldPhoto.user.objectId isEqualToString:photo.user.objectId]){
                                 
                                 Photo *originalPhoto = oldPhoto;
                                 
