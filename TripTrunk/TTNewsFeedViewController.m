@@ -64,9 +64,7 @@
     refreshControl.tintColor = ttBlueColor;
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
-}
-
--(void)viewDidAppear:(BOOL)animated{
+    
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
@@ -78,6 +76,21 @@
         }
         [self loadNewsFeed:NO refresh:nil];
     }];
+
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+//        if (!error)
+//        {
+//            self.following = [[NSMutableArray alloc]init];
+//            for (PFUser *user in users)
+//            {
+//                [self.following addObject:user];
+//            }
+//        }
+//        [self loadNewsFeed:NO refresh:nil];
+//    }];
 }
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
@@ -138,19 +151,21 @@
                         for(Photo *oldPhoto in self.mainPhotos){
                             if([oldPhoto.trip.objectId isEqualToString:photo.trip.objectId]){
                                 
+                                Photo *originalPhoto = oldPhoto;
+                                
                                 //remove the old photo for this trip
                                 [self.mainPhotos removeObjectAtIndex:index];
                                 //insert new photo for this trip
                                 [self.mainPhotos insertObject:photo atIndex:0];
                                 
                                 //get the subphoto array for this trip
-                                NSMutableArray *sub = [self.subPhotos objectForKey:oldPhoto.objectId];
+                                NSMutableArray *sub = [self.subPhotos objectForKey:originalPhoto.objectId];
                                 //add old photo to top of array
-                                [sub insertObject:oldPhoto atIndex:0];
+                                [sub insertObject:originalPhoto atIndex:0];
                                 //insert array into subphotos dictionary with new photo key
                                 [self.subPhotos setObject:sub forKey:photo.objectId];
                                 //remove old subphotos array from dictionary
-                                [self.subPhotos removeObjectForKey:oldPhoto.objectId];
+                                [self.subPhotos removeObjectForKey:originalPhoto.objectId];
                                 updatedOldPhoto = YES;
                                 break;
                             }
