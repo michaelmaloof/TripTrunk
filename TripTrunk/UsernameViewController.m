@@ -69,7 +69,7 @@
                 }];
                  }];
             } else {
-                [self dismissViewControllerAnimated:YES completion:nil];
+//                [self dismissViewControllerAnimated:YES completion:nil];
 
             }
     }
@@ -136,7 +136,6 @@
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
 
 }
 
