@@ -686,7 +686,12 @@
     PFUser *possibleFriend;
     
     if (self.searchController.active) {
-        possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+        if (self.searchResults.count > 0 && ![self.searchController.searchBar.text isEqualToString:@""])
+        {
+            possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
+        } else {
+            possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
+        }
     }
     else {
         if (indexPath.section == 0) {
