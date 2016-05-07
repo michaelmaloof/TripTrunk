@@ -590,30 +590,30 @@ CLCloudinary *cloudinary;
     if ([type isEqualToString:@"like"]) {
         
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
-            content = NSLocalizedString(@"liked your photo.",@"liked your photo.");
+            content = NSLocalizedString(@"liked your photo. ",@"liked your photo. ");
         } else if ([toUser.objectId isEqualToString:user.objectId]){
             isAllActivity = YES;
             engagedOnOwnContent = YES;
-            content = NSLocalizedString(@"liked their own photo",@"liked their own photo");
+            content = NSLocalizedString(@"liked their own photo. ",@"liked their own photo. ");
         }
         else {
             isAllActivity = YES;
-            content = NSLocalizedString(@"liked a photo by",@"liked a photo by");
+            content = NSLocalizedString(@"liked a photo by ",@"liked a photo by ");
         }
     }
     else if ([type isEqualToString:@"comment"]) {
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
             NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
-            content = [NSString stringWithFormat:@"%@: %@", commented,activity[@"content"]];
+            content = [NSString stringWithFormat:@"%@: %@ ", commented,activity[@"content"]];
         } else if ([toUser.objectId isEqualToString:user.objectId]){
             isAllActivity = YES;
             engagedOnOwnContent = YES;
             
             if ([activity[@"isCaption"]boolValue] == NO){
             
-                content = NSLocalizedString(@"commented on their own photo",@"commented on their own photo");
+                content = NSLocalizedString(@"commented on their own photo ",@"commented on their own photo ");
             } else {
-                content = NSLocalizedString(@"wrote a caption for their photo",@"wrote a caption for their photo");
+                content = NSLocalizedString(@"wrote a caption for their photo ",@"wrote a caption for their photo ");
             }
         } else {
             isAllActivity = YES;
@@ -623,34 +623,34 @@ CLCloudinary *cloudinary;
     else if ([type isEqualToString:@"addToTrip"]) {
         if (activity[@"trip"] && [activity[@"trip"] valueForKey:@"name"]) {
             NSString *added = NSLocalizedString(@"added you to the trunk",@"added you to the trunk");
-            content = [NSString stringWithFormat:@"%@ %@", added,[activity[@"trip"] valueForKey:@"name"]];
+            content = [NSString stringWithFormat:@"%@ %@ ", added,[activity[@"trip"] valueForKey:@"name"]];
         }
         else {
-            content =  NSLocalizedString(@"added you to a trip.",@"added you to a trip.");
+            content =  NSLocalizedString(@"added you to a trip. ",@"added you to a trip. ");
         }
     }
     else if ([type isEqualToString:@"follow"]) {
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
-            content = NSLocalizedString(@"followed you.",@"followed you.");
+            content = NSLocalizedString(@"followed you. ",@"followed you. ");
         } else {
             isAllActivity = YES;
-            content = NSLocalizedString(@"followed",@"followed");
+            content = NSLocalizedString(@"followed ",@"followed ");
         }
     }
     else if ([type isEqualToString:@"addedPhoto"]) {
         NSString *addedPhoto = NSLocalizedString(@"added a photo to",@"added a photo to");
-        content = [NSString stringWithFormat:@"%@ %@",addedPhoto, [activity[@"trip"] valueForKey:@"name"]];
+        content = [NSString stringWithFormat:@"%@ %@ ",addedPhoto, [activity[@"trip"] valueForKey:@"name"]];
     }
     else if ([type isEqualToString:@"pending_follow"]) {
-        content =  NSLocalizedString(@"requested to follow you.",@"requested to follow you.");
+        content =  NSLocalizedString(@"requested to follow you. ",@"requested to follow you. ");
     }
     
     else if ([type isEqualToString:@"mention"]) {
         if ([activity[@"isCaption"]boolValue] == YES) {
-            content =  NSLocalizedString(@"mentioned you in a photo caption.",@"mentioned you in a photo caption.");
+            content =  NSLocalizedString(@"mentioned you in a photo caption. ",@"mentioned you in a photo caption. ");
 
         }else {
-            content =  NSLocalizedString(@"mentioned you in a comment.",@"mentioned you in a comment.");
+            content =  NSLocalizedString(@"mentioned you in a comment. ",@"mentioned you in a comment. ");
         }
     }
     
