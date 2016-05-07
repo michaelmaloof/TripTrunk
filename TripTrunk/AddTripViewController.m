@@ -268,9 +268,12 @@
 
 }
 -(void)textFieldDidChange :(UITextField *)theTextField{
+    if ([theTextField.text length] > 1){
+
     NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
     if ([code isEqualToString:@" "]){
         [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
     }
 }
 
@@ -916,9 +919,12 @@
 }
 
 -(void)textViewDidChange:(UITextView *)textView{
+    if ([textView.text length] > 1){
+
     NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
     if ([code isEqualToString:@" "]){
         [textView setKeyboardType:UIKeyboardTypeDefault];
+    }
     }
 }
 

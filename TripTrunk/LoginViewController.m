@@ -45,9 +45,14 @@
 
 -(void)textFieldDidChange :(UITextField *)theTextField{
     [self handleLoginDisplay];
-    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
-    if ([code isEqualToString:@" "]){
-        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    
+    if ([theTextField.text length] > 1){
+        
+        NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+        if ([code isEqualToString:@" "]){
+            [theTextField setKeyboardType:UIKeyboardTypeDefault];
+        }
+        
     }
 }
 

@@ -43,6 +43,7 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL isLoading;
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
+@property UIRefreshControl *refreshController;
 
 
 @end
@@ -106,15 +107,15 @@ enum TTActivityViewType : NSUInteger {
         self.filter.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         // Initialize the refresh control.
-        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-        [refreshControl addTarget:self
+        self.refreshController = [[UIRefreshControl alloc] init];
+        [self.refreshController addTarget:self
                            action:@selector(refresh:)
                  forControlEvents:UIControlEventValueChanged];
-        [self.tableView addSubview:refreshControl];
+        [self.tableView addSubview: self.refreshController];
 //        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
-        refreshControl.tintColor = [TTColor tripTrunkBlueLinkColor];
-        [refreshControl endRefreshing];
+         self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
+        [ self.refreshController endRefreshing];
     }
 }
 
@@ -224,7 +225,13 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-        
+    
+    NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue];
+    
+    if (internalBadge > 0 && self.filter.tag == 0){
+        [self refresh: self.refreshController];
+    }
+    
     [self.tableView reloadData];
 }
 
