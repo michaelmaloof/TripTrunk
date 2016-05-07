@@ -729,7 +729,7 @@ enum TTActivityViewType : NSUInteger {
     photoViewController.trip = (Trip*)photo.trip;
     
     [self.navigationController showViewController:photoViewController sender:self];
-    
+        
 //    [self.navigationController presentViewController:photoViewController animated:YES completion:nil];
 }
 

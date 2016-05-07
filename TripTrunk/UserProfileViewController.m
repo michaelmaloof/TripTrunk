@@ -254,13 +254,13 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PhotoViewController *vc = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    vc.photo = [self.myPhotos objectAtIndex:indexPath.row];
-    vc.trip = vc.photo.trip;
+    vc.photo = (Photo*)[self.myPhotos objectAtIndex:indexPath.row];
+    vc.trip = (Trip*)vc.photo.trip;
     vc.arrayInt = (int)indexPath.row;
     vc.photos = self.myPhotos;
     vc.delegate = self;
     vc.fromProfile = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController showViewController:vc sender:self];
 }
 
 
