@@ -43,6 +43,14 @@
     [self handleLoginDisplay];
 }
 
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    [self handleLoginDisplay];
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
     NSError *error;
     NSString *username = [_usernameTextField.text lowercaseString];
@@ -178,9 +186,7 @@
     [self handleLoginDisplay];
 }
 
--(void)textFieldDidChange :(UITextField *)theTextField{
-    [self handleLoginDisplay];
-}
+
 
 
 

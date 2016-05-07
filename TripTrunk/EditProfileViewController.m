@@ -236,6 +236,13 @@
     
 }
 
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if ([textField isEqual:self.hometownTextField]) {
         [textField resignFirstResponder];
@@ -422,4 +429,12 @@
     
     [self presentViewController:homeNavController animated:YES completion:nil];
 }
+
+-(void)textViewDidChange:(UITextView *)textView{
+    NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [textView setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 @end

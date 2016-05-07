@@ -94,6 +94,8 @@
 }
 
 
+
+
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -650,6 +652,13 @@
 #pragma mark - UITextViewDelegate
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
+    
+    
+        NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
+        if ([code isEqualToString:@" "]){
+            [textView setKeyboardType:UIKeyboardTypeDefault];
+        }
+    
     //get the word that the user is currently typing
     NSRange cursorPosition = [textView selectedRange];
     NSString* substring = [textView.text substringToIndex:cursorPosition.location];

@@ -984,6 +984,13 @@
     [self.collectionView reloadData];
 }
 
+-(void)textViewDidChange:(UITextView *)textView{
+    NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [textView setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 @end
 
 
