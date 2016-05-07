@@ -1157,7 +1157,12 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
 
 #pragma mark - UIActionSheetDelegate
 

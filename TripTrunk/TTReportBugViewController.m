@@ -52,6 +52,13 @@
     
 }
 
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 -(void)reportBug{
     ReportedBug *bug = [[ReportedBug alloc]init];
     bug.email = self.emailTextField.text;

@@ -265,7 +265,13 @@
 {
 
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
-    
+
+}
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{

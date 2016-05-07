@@ -93,6 +93,13 @@ UIView *topView;
     
 }
 
+-(void)textFieldDidChange :(UITextField *)theTextField{
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    if ([code isEqualToString:@" "]){
+        [theTextField setKeyboardType:UIKeyboardTypeDefault];
+    }
+}
+
 
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
