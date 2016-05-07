@@ -47,6 +47,8 @@
 
 @property int privateUserCellIndex;
 
+@property BOOL facebookRefreshed;
+
 
 
 @end
@@ -156,14 +158,16 @@
 
     if (fbids.count == 0) {
         self.isLoadingFacebook = NO;
-        [self refreshFacebookFriends];
+        if (self.facebookRefreshed == NO){
+            [self refreshFacebookFriends];
+        }
         return;
     }
     // Get the TripTrunk user objects with the list of cached fbid's
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
-    friendsQuery.limit = 10;
+    friendsQuery.limit = 200;
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
 
 
@@ -182,6 +186,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.isLoadingFacebook = NO;
                 [self.tableView reloadData];
+                if (self.facebookRefreshed == NO){
+                    [self refreshFacebookFriends];
+                }
             });
         }
     }];
@@ -198,7 +205,7 @@
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
-    friendsQuery.limit = 10;
+    friendsQuery.limit = 200;
     friendsQuery.skip = self.friends.count;
     [friendsQuery whereKey:@"objectId" notContainedIn:self.friends];
 
@@ -290,8 +297,14 @@
         
         // Get the user's Facebook Friends who are already on TripTrunk
         // Facebook doesn't allow us to get the whole friends list, only friends on the app.
-        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/friends" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        NSMutableString *facebookRequest = [NSMutableString new];
+        [facebookRequest appendString:@"/me/friends"];
+        [facebookRequest appendString:@"?limit=1000"];
+        
+        [[[FBSDKGraphRequest alloc] initWithGraphPath:facebookRequest parameters:@{@"fields": @"id"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             if (!error) {
+                
+                self.facebookRefreshed = YES;
                 // result will contain an array with user's friends in the "data" key
                 self.isLoadingFacebook = NO;
 
