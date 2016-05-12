@@ -104,6 +104,7 @@
     for(PFUser *user in self.following){
         [followingObjectIds addObject:user.objectId];
     }
+        [followingObjectIds addObject:[PFUser currentUser].objectId];
     
     Photo *photo = [[Photo alloc] init];
     if (self.mainPhotos.count > 0 && !isRefresh)
