@@ -188,6 +188,7 @@
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TripTrunk" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T27-K3-6wj">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                    <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="35.5" id="00l-uv-Lyq">
                                             <variation key="heightClass=regular-widthClass=compact" constant="20"/>
@@ -200,7 +201,7 @@
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                     <color key="textColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
-                                    <color key="shadowColor" red="0.17504041200000001" green="0.37969204829999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="shadowColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <variation key="default">
                                         <mask key="constraints">
                                             <exclude reference="00l-uv-Lyq"/>
