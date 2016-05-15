@@ -2223,7 +2223,7 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Next" id="web-eM-3Yn">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="onNextTapped:" destination="VtI-4S-iQ3" id="xRM-KO-kfi"/>
                             </connections>

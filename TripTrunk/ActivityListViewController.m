@@ -95,13 +95,11 @@ enum TTActivityViewType : NSUInteger {
 //        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 //                                                                                               target:self
 //                                                                                               action:@selector(closeView)];
-        [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     }
     // Else, it's the All Activities list
     else {
         self.friends= [[NSMutableArray alloc]init];
         self.followingActivities = [[NSMutableArray alloc]init];
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         self.filter.tag = 0;
@@ -123,6 +121,8 @@ enum TTActivityViewType : NSUInteger {
     [super viewDidLoad];
     
     self.trips = [[NSMutableArray alloc]init];
+    
+     self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
     
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
