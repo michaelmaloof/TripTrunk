@@ -1253,7 +1253,7 @@
 -(void)createLeftButtons{
  
     self.navigationItem.leftBarButtonItem = nil;
-    UIImage *image = [UIImage imageNamed:@"globeRight"];
+    UIImage *image = [UIImage imageNamed:@"newspaper"];
     CGRect buttonFrame = CGRectMake(0, 0, 40, 40);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];

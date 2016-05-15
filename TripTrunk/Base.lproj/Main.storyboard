@@ -76,7 +76,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="13"/>
                                                     <state key="normal" title="Username">
-                                                        <color key="titleColor" red="0.17504041198272502" green="0.37969204828074166" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.55686274509803924" green="0.82745098039215681" blue="0.99215686274509807" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -193,7 +193,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <state key="normal" title="Location">
-                                                        <color key="titleColor" red="0.007886144352435176" green="0.69949904576666344" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.55686274509803924" green="0.82745098039215681" blue="0.99215686274509807" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -219,7 +219,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <state key="normal" title="Trip Name">
-                                                        <color key="titleColor" red="0.1161094447536527" green="0.56636016434561642" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.55686274509803924" green="0.82745098039215681" blue="0.99215686274509807" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <variation key="default">
                                                         <mask key="constraints">

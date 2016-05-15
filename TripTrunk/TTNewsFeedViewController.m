@@ -45,6 +45,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.hidesBackButton = YES;
+
     [self setTitleImage];
     [self createLeftButtons];
     self.trips = [[NSMutableArray alloc] init];
@@ -272,7 +274,6 @@
 }
 
 -(void)createLeftButtons{
-    
     self.navigationItem.rightBarButtonItem = nil;
     UIImage *image = [UIImage imageNamed:@"globeRight"];
     CGRect buttonFrame = CGRectMake(0, 0, 40, 40);
