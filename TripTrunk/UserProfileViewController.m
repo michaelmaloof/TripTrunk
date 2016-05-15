@@ -83,7 +83,7 @@
 //    [self.profilePicImageView.layer setCornerRadius:35.0f];
 //    [self.profilePicImageView.layer setMasksToBounds:YES];
     [self.profilePicImageView.layer setBorderWidth:3.0f];
-    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:195.0/255.0 green:122.0/255.0 blue:108.0/255.0 alpha:1.0] CGColor]];
+    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:142/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0] CGColor]];
 
     
     self.hideThisButtonAlways.hidden = YES;
