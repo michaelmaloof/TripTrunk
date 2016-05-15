@@ -21,7 +21,7 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.profilePicImageView setClipsToBounds:YES];
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+    UIColor *ttBlueColor = [UIColor colorWithHexString:@"8ED3FD"];
     [self.followButton setTintColor:ttBlueColor];
 }
 
