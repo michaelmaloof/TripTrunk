@@ -273,9 +273,9 @@
 
 -(void)createLeftButtons{
     
-    self.navigationItem.leftBarButtonItem = nil;
-    UIImage *image = [UIImage imageNamed:@"newsFeedListToggle"];
-    CGRect buttonFrame = CGRectMake(0, 0, 80, 25);
+    self.navigationItem.rightBarButtonItem = nil;
+    UIImage *image = [UIImage imageNamed:@"globeRight"];
+    CGRect buttonFrame = CGRectMake(0, 0, 40, 40);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToMap) forControlEvents:UIControlEventTouchUpInside];
@@ -285,7 +285,7 @@
     
     UIBarButtonItem *buttonOne= [[UIBarButtonItem alloc] initWithCustomView:bttn];
     
-    self.navigationItem.leftBarButtonItem = buttonOne;
+    self.navigationItem.rightBarButtonItem = buttonOne;
     
 }
 
