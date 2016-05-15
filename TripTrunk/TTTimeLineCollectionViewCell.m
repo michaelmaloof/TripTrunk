@@ -19,28 +19,28 @@
     [self.image1.layer setCornerRadius:25.0f];
     [self.image1.layer setMasksToBounds:YES];
     [self.image1.layer setBorderWidth:3.0f];
-    [self.image1.layer setBorderColor: [[UIColor colorWithRed:118.0/255.0 green:164.0/255.0 blue:184.0/255.0 alpha:1.0] CGColor]];
-    [self.image1 setBackgroundColor:[UIColor colorWithRed:118.0/255.0 green:164.0/255.0 blue:184.0/255.0 alpha:1.0]];
+    [self.image1.layer setBorderColor: [[UIColor colorWithRed:142.0/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0] CGColor]];
+    [self.image1 setBackgroundColor:[UIColor colorWithRed:142.0/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0]];
     
     [self.image2.layer setCornerRadius:25.0f];
     [self.image2.layer setMasksToBounds:YES];
     [self.image2.layer setBorderWidth:3.0f];
-    [self.image2.layer setBorderColor: [[UIColor colorWithRed:217.0/255.0 green:135.0/255.0 blue:135.0/255.0 alpha:1.0] CGColor]];
-    [self.image2 setBackgroundColor:[UIColor colorWithRed:217.0/255.0 green:135.0/255.0 blue:135.0/255.0 alpha:1.0]];
+    [self.image2.layer setBorderColor: [[UIColor colorWithRed:255.0/255.0 green:192.0/255.0 blue:159.0/255.0 alpha:1.0] CGColor]];
+    [self.image2 setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:192.0/255.0 blue:159.0/255.0 alpha:1.0]];
 
     
     [self.image3.layer setCornerRadius:25.0f];
     [self.image3.layer setMasksToBounds:YES];
     [self.image3.layer setBorderWidth:3.0f];
-    [self.image3.layer setBorderColor: [[UIColor colorWithRed:221.0/255.0 green:203.0/255.0 blue:178.0/255.0 alpha:1.0] CGColor]];
-    [self.image3 setBackgroundColor:[UIColor colorWithRed:221.0/255.0 green:203.0/255.0 blue:178.0/255.0 alpha:1.0]];
+    [self.image3.layer setBorderColor: [[UIColor colorWithRed:252.0/255.0 green:245.0/255.0 blue:199.0/255.0 alpha:1.0] CGColor]];
+    [self.image3 setBackgroundColor:[UIColor colorWithRed:252.0/255.0 green:245.0/255.0 blue:199.0/255.0 alpha:1.0]];
 
     
     [self.image4.layer setCornerRadius:25.0f];
     [self.image4.layer setMasksToBounds:YES];
     [self.image4.layer setBorderWidth:3.0f];
-    [self.image4.layer setBorderColor: [[UIColor colorWithRed:174.0/255.0 green:221.0/255.0 blue:177.0/255.0 alpha:1.0] CGColor]];
-    [self.image4 setBackgroundColor:[UIColor colorWithRed:174.0/255.0 green:221.0/255.0 blue:177.0/255.0 alpha:1.0]];
+    [self.image4.layer setBorderColor: [[UIColor colorWithRed:173.0/255.0 green:247.0/255.0 blue:182.0/255.0 alpha:1.0] CGColor]];
+    [self.image4 setBackgroundColor:[UIColor colorWithRed:173.0/255.0 green:247.0/255.0 blue:182.0/255.0 alpha:1.0]];
 
     
     [self.image5.layer setCornerRadius:25.0f];
