@@ -268,7 +268,7 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HAm-vg-quU">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                                    <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="FDn-n1-fSZ"/>
                                                         <constraint firstAttribute="height" constant="50" id="M8k-sc-rgF"/>
@@ -323,6 +323,7 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GsE-hG-GbG">
                                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                    <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="0aa-ok-COR"/>
                                                         <constraint firstAttribute="width" constant="50" id="BGU-l6-y49"/>
