@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Blue.png",
+      "filename" : "blueTrunkCircle.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Blue@2x.png",
+      "filename" : "blueTrunkCircle@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Blue@3x.png",
+      "filename" : "blueTrunkCircle@3x.png",
       "scale" : "3x"
     }
   ],

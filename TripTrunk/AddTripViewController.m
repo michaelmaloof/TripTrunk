@@ -91,7 +91,6 @@
         
         //self.clear is just for development. It allows us to quickly clear all the textfields
         self.clear.hidden = YES;
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.tripDatePicker.hidden = YES;
         self.startTripTextField.delegate = self;
         self.endTripTextField.delegate = self;
@@ -154,7 +153,7 @@
             _isEditing = NO;
             
             // initialize the trip object
-            self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
+            self.title  = NSLocalizedString(@"Create Trunk", @"Create Trunk");
             [self tabBarTitle];
             
             self.descriptionTextView.text = @"";
@@ -309,8 +308,8 @@
     else if (textField == self.startTripTextField){
         //        [self.view endEditing:YES];
         self.datePicker.tag = 0;
-        self.startTripTextField.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
-        self.datePicker.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        self.startTripTextField.backgroundColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+        self.datePicker.backgroundColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
@@ -341,7 +340,7 @@
     [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
         
         if (error){
-            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
             [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
         }else{
@@ -451,12 +450,12 @@
     
     if ([self.tripNameTextField.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
-        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
         [self tabBarTitle];
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else if ([self.locationTextField.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a location.",@"Please give your trunk a location.")];
-        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
         [self tabBarTitle];
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
@@ -473,21 +472,21 @@
              {
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
                  // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
                  self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks == nil && !error) {
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
                  // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
                  self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks.count == 0){
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
                  // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
                  [self tabBarTitle];
                  [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
                  self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -532,14 +531,14 @@
                  else
                  {
                      [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
-                     self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                     self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
                      [self tabBarTitle];
                      self.navigationItem.rightBarButtonItem.enabled = YES;
                      
                  }
              }
              
-             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+             self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
              [self tabBarTitle];
              
              return;
@@ -832,13 +831,13 @@
              {
                  [self performSegueWithIdentifier:@"addFriends" sender:self];
                  self.navigationItem.rightBarButtonItem.enabled = YES;
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
 
              }
              
              else {
                  [self.navigationController popViewControllerAnimated:YES];
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                 self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
                  self.navigationItem.rightBarButtonItem.enabled = YES;
 
              }
@@ -914,7 +913,7 @@
         [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
     }
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    self.title = @"Add New Trunk";
+    self.title = @"Create Trunk";
     [self tabBarTitle];
 }
 

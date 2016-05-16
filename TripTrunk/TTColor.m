@@ -11,7 +11,7 @@
 @implementation TTColor
 
 + (UIColor *)tripTrunkBlueLinkColor {
-    return [UIColor colorWithRed:(95.0/255.0) green:(148.0/255.0) blue:(172.0/255.0) alpha:1];
+    return [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
 }
 
 + (UIColor *)subPhotoPink {

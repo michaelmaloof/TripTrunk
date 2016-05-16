@@ -70,7 +70,8 @@
     return self;
 }
 
-
+-(void)viewDidAppear:(BOOL)animated{
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -79,12 +80,9 @@
     self.followButton.hidden = YES;
     
     self.myPhotos = [[NSMutableArray alloc] init];
-
     
-//    [self.profilePicImageView.layer setCornerRadius:35.0f];
-//    [self.profilePicImageView.layer setMasksToBounds:YES];
     [self.profilePicImageView.layer setBorderWidth:3.0f];
-    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:195.0/255.0 green:122.0/255.0 blue:108.0/255.0 alpha:1.0] CGColor]];
+    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:142/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0] CGColor]];
 
     
     self.hideThisButtonAlways.hidden = YES;
@@ -115,8 +113,6 @@
     self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -657,6 +653,11 @@
     EditProfileViewController *vc = [[EditProfileViewController alloc] initWithUser:_user];
     vc.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nav.navigationBar setBarTintColor:[UIColor whiteColor]];
+    
+    [nav.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1], NSForegroundColorAttributeName,
+                                                           [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
     [self presentViewController:nav animated:YES completion:nil];
 
 }
@@ -762,12 +763,8 @@
     picker.delegate = self;
     picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     picker.navigationController.title =NSLocalizedString( @"Select profile picture.",@"Select profile picture.");
     [picker.navigationController setTitle:NSLocalizedString( @"Select profile picture.",@"Select profile picture.")];
-    
-    picker.navigationBar.tintColor = [UIColor whiteColor];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self presentViewController:picker animated:YES completion:NULL];
 }
 

@@ -2,18 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "unnamed.png"
+      "filename" : "Font_TopofScreen@2x.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Font_TopofScreen@2x.png"
+      "filename" : "unnamed-1.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "unnamed-1.png"
+      "filename" : "unnamed-2.png",
+      "scale" : "3x"
     }
   ],
   "info" : {

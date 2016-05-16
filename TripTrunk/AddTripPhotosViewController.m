@@ -176,7 +176,7 @@
             UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
             
             // tint color
-            navBar.tintColor = [UIColor whiteColor];
+            navBar.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
             
             // init picker
             CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
@@ -275,22 +275,22 @@
         
         
         //FIXME: This does nothing but waste time becuase addObject is commented out
-        for (UINavigationController *controller in self.tabBarController.viewControllers)
-        {
-            for (HomeMapViewController *view in controller.viewControllers)
-            {
-                if ([view isKindOfClass:[HomeMapViewController class]])
-                {
-                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                        if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                            
-//                            [view.viewedPhotos addObject:photo.objectId];
-                            
-                        }
-                    }
-                }
-            }
-        }
+//        for (UINavigationController *controller in self.tabBarController.viewControllers)
+//        {
+//            for (HomeMapViewController *view in controller.viewControllers)
+//            {
+//                if ([view isKindOfClass:[HomeMapViewController class]])
+//                {
+//                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+//                        if (view == (HomeMapViewController*)controller.viewControllers[0]){
+//                            
+////                            [view.viewedPhotos addObject:photo.objectId];
+//                            
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];

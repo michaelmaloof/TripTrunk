@@ -73,9 +73,7 @@
 
     
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-    
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
+        
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
@@ -86,7 +84,8 @@
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
-    refreshControl.tintColor = [UIColor whiteColor];
+    refreshControl.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+
     [refreshControl endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
     
@@ -123,7 +122,6 @@
     }
     
     if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
        //fixme: change image
         self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
@@ -137,7 +135,6 @@
     }
 
     else if (self.user == nil) {
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         self.filter.tag = 0;
@@ -154,6 +151,7 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
 }
 
 

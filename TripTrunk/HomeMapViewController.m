@@ -76,6 +76,9 @@
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
     
+    self.zoomOut.hidden = YES;
+
+    
     //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
     //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
     self.hotDots = [[NSMutableArray alloc]init];
@@ -190,7 +193,7 @@
                 self.compasButton.hidden = YES;
                 self.compassRose.hidden = YES;
             } else  if (!self.user){
-                self.compasButton.hidden = NO;
+                self.compasButton.hidden = YES;
             } else if (self.user){
                 self.compasButton.hidden = YES;
             }
@@ -235,7 +238,7 @@
     MKCoordinateRegion region;
     region.center = center;
     region.span = span;
-    self.zoomOut.hidden = NO;
+    self.zoomOut.hidden = YES;
     
     [self.mapView setRegion:region animated:YES];
     [self.mapView selectAnnotation:self.annotationPinToZoomOn animated:NO];
@@ -255,15 +258,15 @@
     if (self.isLoading == NO){
         
         //disable the refresh button until we finish loading the trunks
-        if (self.buttonsMaded == NO){
-            self.navigationItem.rightBarButtonItems = nil;
-        } else
-        {
-            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-                leftButton.enabled = NO;
-            }
-
-        }
+//        if (self.buttonsMaded == NO){
+//            self.navigationItem.rightBarButtonItems = nil;
+//        } else
+//        {
+//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+//                leftButton.enabled = NO;
+//            }
+//
+//        }
         
         //save the current pins on the map so we can delete them once we place the new ones
         self.annotationsToDelete = self.mapView.annotations;
@@ -334,7 +337,6 @@
         self.title = [NSString stringWithFormat:@"%@'s Trunks", self.user.username];
     }
     
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.tabBarController.tabBar.translucent = false;
     [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
 }
@@ -464,13 +466,13 @@
             //we finished loading so switch the bool and renable the refresh icon
             self.isLoading = NO;
             
-            if (self.buttonsMaded == NO){
-                [self createButtons];
-            } else {
-                for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-                    leftButton.enabled = YES;
-                }
-            }
+//            if (self.buttonsMaded == NO){
+//                [self createButtons];
+//            } else {
+//                for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+//                    leftButton.enabled = YES;
+//                }
+//            }
             
             
             //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
@@ -559,13 +561,17 @@
                              };
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
         self.isLoading = NO;
-        if (self.buttonsMaded == NO){
-            [self createButtons];
-        } else {
-            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-                leftButton.enabled = YES;
-            }
-        }
+        
+        
+//        if (self.buttonsMaded == NO){
+//            [self createButtons];
+//        }
+        
+//        else {
+//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
+//                leftButton.enabled = YES;
+//            }
+//        }
         
         if(error)
         {
@@ -803,7 +809,7 @@
     MKCoordinateRegion region;
     region.center = center;
     region.span = span;
-    self.zoomOut.hidden = NO;
+    self.zoomOut.hidden = YES;
     
     view.layer.zPosition = 1;
     
@@ -844,7 +850,7 @@
         startAnnotation.alpha = 1.0;
         //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
         startAnnotation.layer.zPosition = 1;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.3, startAnnotation.frame.size.height*1.3);
         
     } else {
         if (hasSeen == NO){
@@ -857,7 +863,7 @@
         startAnnotation.alpha = 1.0;
         //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
         startAnnotation.layer.zPosition = .9;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.9, startAnnotation.frame.size.height*.9);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
         
         
         
@@ -1236,19 +1242,19 @@
     UIBarButtonItem *buttonTwo= [[UIBarButtonItem alloc] initWithCustomView:bttn];
     
     NSArray *buttons = @[button, buttonTwo];
-    
-    self.navigationItem.rightBarButtonItems = buttons;
+    //For now, we dont want these buttons
+//    self.navigationItem.rightBarButtonItems = buttons;
 
     self.buttonsMaded = YES;
     
     
 }
-
+//Now creates right
 -(void)createLeftButtons{
  
     self.navigationItem.leftBarButtonItem = nil;
-    UIImage *image = [UIImage imageNamed:@"newsFeedMapToggle"];
-    CGRect buttonFrame = CGRectMake(0, 0, 80, 25);
+    UIImage *image = [UIImage imageNamed:@"newspaper"];
+    CGRect buttonFrame = CGRectMake(0, 0, 40, 40);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
@@ -1258,7 +1264,7 @@
     
     UIBarButtonItem *buttonOne= [[UIBarButtonItem alloc] initWithCustomView:bttn];
 
-    self.navigationItem.leftBarButtonItem = buttonOne;
+    self.navigationItem.rightBarButtonItem = buttonOne;
     
 
 }

@@ -33,7 +33,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
+        [self setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
         [self setupUI];
     }
     return self;
@@ -44,7 +44,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
+        [self setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
         [self setupUI];
     }
     return self;
@@ -80,7 +80,7 @@
     
     //TODO: Implement the actual progress bar UI
     _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, 2)];
-    [_progressView setProgressTintColor:[UIColor colorWithHexString:@"F6C530"]];
+    [_progressView setProgressTintColor:[UIColor whiteColor]];
     [self addSubview:_progressView];
 }
 

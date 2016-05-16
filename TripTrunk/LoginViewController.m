@@ -26,7 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
