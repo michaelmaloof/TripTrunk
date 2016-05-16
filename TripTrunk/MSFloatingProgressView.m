@@ -33,7 +33,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
+        [self setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
         [self setupUI];
     }
     return self;
