@@ -11,5 +11,10 @@
 @interface TTColor : UIColor
 
 + (UIColor *)tripTrunkBlueLinkColor;
++ (UIColor *)subPhotoBlue;
++ (UIColor *)subPhotoPink;
++ (UIColor *)subPhotoTan;
++ (UIColor *)subPhotoGreen;
++ (UIColor *)subPhotoGray;
 
 @end

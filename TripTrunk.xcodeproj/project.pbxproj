@@ -66,6 +66,7 @@
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
+		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
 		66ABD90AD9444AC11462D4FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 900CAF97ED54CF7422AA80B6 /* libPods.a */; };
@@ -241,6 +242,8 @@
 		27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionViewCell.m; sourceTree = "<group>"; };
 		27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileImage.h; sourceTree = "<group>"; };
 		27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileImage.m; sourceTree = "<group>"; };
+		27C7159D1CE6834100A67C5D /* TTSubPhotoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSubPhotoButton.h; sourceTree = "<group>"; };
+		27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSubPhotoButton.m; sourceTree = "<group>"; };
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
@@ -519,6 +522,8 @@
 		220408E01AED560B009DB060 /* ImageView */ = {
 			isa = PBXGroup;
 			children = (
+				27C7159D1CE6834100A67C5D /* TTSubPhotoButton.h */,
+				27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */,
 				27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */,
 				27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */,
 				229D42841AE850C700458244 /* TripImageView.h */,
@@ -953,6 +958,7 @@
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
+				27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
