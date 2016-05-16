@@ -91,7 +91,6 @@
         
         //self.clear is just for development. It allows us to quickly clear all the textfields
         self.clear.hidden = YES;
-        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.tripDatePicker.hidden = YES;
         self.startTripTextField.delegate = self;
         self.endTripTextField.delegate = self;

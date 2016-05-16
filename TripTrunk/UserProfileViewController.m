@@ -70,7 +70,8 @@
     return self;
 }
 
-
+-(void)viewDidAppear:(BOOL)animated{
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -80,8 +81,6 @@
     
     self.myPhotos = [[NSMutableArray alloc] init];
     
-//    [self.profilePicImageView.layer setCornerRadius:35.0f];
-//    [self.profilePicImageView.layer setMasksToBounds:YES];
     [self.profilePicImageView.layer setBorderWidth:3.0f];
     [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:142/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0] CGColor]];
 

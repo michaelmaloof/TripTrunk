@@ -71,7 +71,6 @@
     self.cloud.hidden = YES;
     self.memberCollectionView.hidden = YES;
     self.navigationController.navigationItem.rightBarButtonItem = nil;
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.memberCollectionView.backgroundColor = [UIColor clearColor];
     

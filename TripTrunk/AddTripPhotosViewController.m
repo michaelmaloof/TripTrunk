@@ -176,7 +176,7 @@
             UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
             
             // tint color
-            navBar.tintColor = [UIColor whiteColor];
+            navBar.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
             
             // init picker
             CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
