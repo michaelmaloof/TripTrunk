@@ -244,6 +244,12 @@
 		27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileImage.m; sourceTree = "<group>"; };
 		27C7159D1CE6834100A67C5D /* TTSubPhotoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSubPhotoButton.h; sourceTree = "<group>"; };
 		27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSubPhotoButton.m; sourceTree = "<group>"; };
+		27C715B71CEBA75600A67C5D /* CLCloudinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLCloudinary.h; sourceTree = "<group>"; };
+		27C715B81CEBA75600A67C5D /* CLEagerTransformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLEagerTransformation.h; sourceTree = "<group>"; };
+		27C715B91CEBA75600A67C5D /* CLLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLLayer.h; sourceTree = "<group>"; };
+		27C715BA1CEBA75600A67C5D /* Cloudinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
+		27C715BB1CEBA75600A67C5D /* CLTransformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
+		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
@@ -294,11 +300,6 @@
 		C910B1921B66B97700788BE0 /* ActivityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityListViewController.h; sourceTree = "<group>"; };
 		C910B1931B66B97700788BE0 /* ActivityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityListViewController.m; sourceTree = "<group>"; };
 		C9525A331B251FC100185713 /* libCloudinary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCloudinary.a; sourceTree = "<group>"; };
-		C9525A371B251FD400185713 /* CLCloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLCloudinary.h; sourceTree = "<group>"; };
-		C9525A381B251FD400185713 /* CLEagerTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLEagerTransformation.h; sourceTree = "<group>"; };
-		C9525A391B251FD400185713 /* Cloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
-		C9525A3A1B251FD400185713 /* CLTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
-		C9525A3B1B251FD400185713 /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
 		C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
@@ -712,11 +713,12 @@
 		C9525A361B251FD400185713 /* Cloudinary */ = {
 			isa = PBXGroup;
 			children = (
-				C9525A371B251FD400185713 /* CLCloudinary.h */,
-				C9525A381B251FD400185713 /* CLEagerTransformation.h */,
-				C9525A391B251FD400185713 /* Cloudinary.h */,
-				C9525A3A1B251FD400185713 /* CLTransformation.h */,
-				C9525A3B1B251FD400185713 /* CLUploader.h */,
+				27C715B71CEBA75600A67C5D /* CLCloudinary.h */,
+				27C715B81CEBA75600A67C5D /* CLEagerTransformation.h */,
+				27C715B91CEBA75600A67C5D /* CLLayer.h */,
+				27C715BA1CEBA75600A67C5D /* Cloudinary.h */,
+				27C715BB1CEBA75600A67C5D /* CLTransformation.h */,
+				27C715BC1CEBA75600A67C5D /* CLUploader.h */,
 			);
 			path = Cloudinary;
 			sourceTree = "<group>";
