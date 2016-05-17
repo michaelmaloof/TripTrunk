@@ -26,7 +26,7 @@
 #import "TTSubPhotoButton.h"
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource
-, UICollectionViewDelegate>
+, UICollectionViewDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property NSMutableArray *following;
 //@property NSMutableArray *photos;
@@ -59,8 +59,8 @@
     self.mainPhotos = [[NSMutableArray alloc]init];
     self.subPhotos = [[NSMutableDictionary alloc]init];
     self.photoUsers = [[NSMutableArray alloc]init];
-    self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
-    self.duplicatePhotos = [[NSMutableArray alloc]init];
+//    self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
+//    self.duplicatePhotos = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
                        action:@selector(refresh:)
@@ -343,6 +343,7 @@
     [profileTap setNumberOfTapsRequired:1];
     [profileTap.view setTag:indexPath.row];
     [cell.userprofile addGestureRecognizer:profileTap];
+    
     [cell.userprofile setUserInteractionEnabled:YES];
     [cell.location setTag:indexPath.row];
 //    cell.imageBUtton.tag = indexPath.row;
@@ -374,6 +375,12 @@
     [cell.newsfeedPhoto addGestureRecognizer:tap];
     [cell.newsfeedPhoto setUserInteractionEnabled:YES];
     [tap.view setTag:indexPath.row];
+    
+    UISwipeGestureRecognizer *swipeleft = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft:)];
+    swipeleft.direction = UISwipeGestureRecognizerDirectionLeft;
+    swipeleft.delegate = self;
+    [swipeleft.view setTag:indexPath.row];
+    [cell.newsfeedPhoto addGestureRecognizer:swipeleft];
 
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.newsfeedPhoto setImage:image];
@@ -405,6 +412,7 @@
                 [button setImage:image forState:UIControlStateNormal];
                 button.hidden = NO;
                 if(i==4){
+                    [button setImage:[UIImage imageNamed:@"moreTrunk"] forState:UIControlStateNormal];
                     float buttonFrame = button.frame.size.width/2;
                     [elipsis setFrame:CGRectMake(buttonFrame-eWidth/2, buttonFrame-eHeight/2, eWidth, eHeight)];
                     [button addSubview:elipsis];
@@ -736,6 +744,14 @@
     }
 }
 
+-(void)swipeLeft:(UIGestureRecognizer *)gestureRecognizer {
+    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
+    Trip *trip = mainPhoto.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
 
 
 -(NSArray*)returnPhotosForView:(Photo*)mainPhoto{
