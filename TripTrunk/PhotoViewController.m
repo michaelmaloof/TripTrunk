@@ -600,7 +600,7 @@
             return;
         }
         
-        if (self.fromTimeline && self.arrayInt == 4){
+        if (self.fromTimeline && self.arrayInt == self.photos.count - 1){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
             [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
