@@ -12,15 +12,14 @@
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import "TTPushNotificationHandler.h"
-
 #import "UserProfileViewController.h"
 #import "TrunkViewController.h"
 #import "Trip.h"
 #import "FindFriendsViewController.h"
 #import "ActivityListViewController.h"
 #import "TTCache.h"
+#import "Cloudinary.h"
 
 //TripTrunk-DEV
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -46,6 +45,7 @@
         appName = @"PROD";
     
     NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
+    NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
     
     [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];    

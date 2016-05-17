@@ -389,12 +389,14 @@
     
     for(int i=0;i<5;i++){
         UIButton *button = cell.subPhotoButtons[i];
-        button.imageView.image = nil;
         button.hidden = YES;
         button.tag = 0;
-        for(UIImageView *subview in button.subviews) {
-            if(subview.tag == 9999)
-                [subview removeFromSuperview];
+        if(i<4){
+            button.imageView.image = nil;
+            for(UIImageView *subview in button.subviews) {
+                if(subview.tag == 9999)
+                    [subview removeFromSuperview];
+            }
         }
     }
     
@@ -408,19 +410,17 @@
         if(i<5){
             __weak UIButton *button = cell.subPhotoButtons[i];
             button.tag = indexPath.row;
-            [button.imageView setImageWithURLRequest:requestNew placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                [button setImage:image forState:UIControlStateNormal];
+            if(i<4){
+                [button.imageView setImageWithURLRequest:requestNew placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    [button setImage:image forState:UIControlStateNormal];
+                    button.hidden = NO;
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    NSLog(@"Error loading subPhotoButtonimage: %@",error);
+                }];
+            }
+            
+            if(i==4 && subPhotoArray.count>4)
                 button.hidden = NO;
-                if(i==4){
-                    [button setImage:[UIImage imageNamed:@"moreTrunk"] forState:UIControlStateNormal];
-                    float buttonFrame = button.frame.size.width/2;
-                    [elipsis setFrame:CGRectMake(buttonFrame-eWidth/2, buttonFrame-eHeight/2, eWidth, eHeight)];
-                    [button addSubview:elipsis];
-                    button.imageView.alpha = 0.35;
-                }
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                NSLog(@"Error loading subPhotoButtonimage: %@",error);
-            }];
         }else{
             break;
         }

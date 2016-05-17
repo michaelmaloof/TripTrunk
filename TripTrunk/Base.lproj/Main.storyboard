@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -59,7 +59,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="407"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
@@ -337,6 +337,7 @@
                                                         <constraint firstAttribute="width" constant="50" id="Mqk-fe-YTm"/>
                                                         <constraint firstAttribute="height" constant="50" id="XWi-Hh-9ei"/>
                                                     </constraints>
+                                                    <state key="normal" image="ellipsis" backgroundImage="moreTrunk"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
                                                             <integer key="value" value="5"/>
@@ -631,7 +632,7 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hWn-6E-iwD"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Co-AEg">
                                 <rect key="frame" x="540" y="496" width="45" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="4Q6-LS-RyW"/>
@@ -639,7 +640,6 @@
                                     <constraint firstAttribute="width" constant="45" id="lDe-eQ-zQd"/>
                                     <constraint firstAttribute="height" constant="45" id="pYX-Zc-7zh"/>
                                 </constraints>
-                                <state key="normal" image="zoomGlass"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="4Q6-LS-RyW"/>
@@ -650,7 +650,7 @@
                                     <action selector="zoomOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9ga-7t-Vo3"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P4J-Qq-oHp">
                                 <rect key="frame" x="20" y="375" width="180" height="168"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="JSh-ZP-tnI">
@@ -669,13 +669,12 @@
                                     <action selector="luggageWasTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0aV-qe-j5J"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cRD-4f-3M6">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cRD-4f-3M6">
                                 <rect key="frame" x="550" y="456" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="Ivt-7D-rVg"/>
                                     <constraint firstAttribute="width" constant="25" id="T3a-Ch-oap"/>
                                 </constraints>
-                                <state key="normal" image="rose"/>
                                 <connections>
                                     <action selector="compassTaped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cmT-ug-1Je"/>
                                 </connections>
@@ -3578,7 +3577,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rs-Y7-aUD">
@@ -4757,15 +4756,15 @@
     </scenes>
     <resources>
         <image name="Cancel" width="100" height="100"/>
-        <image name="Group" width="108" height="114"/>
         <image name="Load" width="152" height="132"/>
         <image name="Plus Circle" width="100" height="100"/>
         <image name="addCaption" width="100" height="100"/>
         <image name="addTrunk_tabIcon" width="40" height="35"/>
-        <image name="add_trunk" width="35" height="30"/>
+        <image name="add_trunk" width="40" height="35"/>
         <image name="checkCircle" width="100" height="100"/>
         <image name="deletePhoto" width="100" height="100"/>
         <image name="editPencil" width="100" height="100"/>
+        <image name="ellipsis" width="32" height="32"/>
         <image name="heart" width="31" height="27"/>
         <image name="heartLikes" width="31" height="27"/>
         <image name="heartSelected" width="31" height="27"/>
@@ -4775,12 +4774,11 @@
         <image name="luggagebag_icon" width="30" height="26"/>
         <image name="map" width="25" height="25"/>
         <image name="moreIcon" width="20" height="5"/>
+        <image name="moreTrunk" width="150" height="150"/>
         <image name="removeCaption" width="100" height="100"/>
-        <image name="rose" width="50" height="50"/>
         <image name="save" width="100" height="100"/>
         <image name="unlocked" width="88" height="88"/>
         <image name="yellowSkyMountain_background" width="400" height="713"/>
-        <image name="zoomGlass" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="bhX-wL-LGH"/>
