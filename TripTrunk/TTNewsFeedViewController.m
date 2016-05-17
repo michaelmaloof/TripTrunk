@@ -405,6 +405,7 @@
                 [button setImage:image forState:UIControlStateNormal];
                 button.hidden = NO;
                 if(i==4){
+                    [button setImage:[UIImage imageNamed:@"moreTrunk"] forState:UIControlStateNormal];
                     float buttonFrame = button.frame.size.width/2;
                     [elipsis setFrame:CGRectMake(buttonFrame-eWidth/2, buttonFrame-eHeight/2, eWidth, eHeight)];
                     [button addSubview:elipsis];
