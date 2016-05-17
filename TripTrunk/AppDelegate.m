@@ -48,11 +48,17 @@
     NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
     
     [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];    
+    
     [[UINavigationBar appearance] setTintColor: [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1], NSForegroundColorAttributeName,
                                                            [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
+    
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+
+
+    
     // Check API availiability
     // UIApplicationShortcutItem is available in iOS 9 or later.
     if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
@@ -223,7 +229,6 @@
     UINavigationController *searchNavController = [[UINavigationController alloc] initWithRootViewController:ffvc];
     UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass_tabIcon"] tag:3];
     [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    
     [searchNavController setTabBarItem:searchItem];
     NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
     

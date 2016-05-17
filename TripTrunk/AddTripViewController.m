@@ -72,7 +72,7 @@
     } else {
         
         self.tabBarController.tabBar.translucent = false;
-        [self.tabBarController.tabBar setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+ 
         
         self.descriptionTextView = [[UITextView alloc]init];
         self.descriptionTextView.hidden = YES;

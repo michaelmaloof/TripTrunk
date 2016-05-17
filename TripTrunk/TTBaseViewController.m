@@ -69,6 +69,7 @@
     [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
     [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+    
 }
 
 @end
