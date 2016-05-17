@@ -308,26 +308,26 @@
 }
 
 //For when app is in background
--(void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
-
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
-    
-    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
-//    if(state == UIApplicationStateActive)
-//        NSLog(@"STATE: (%li) - Active",(long)state);
-//    if(state == UIApplicationStateInactive)
-//        NSLog(@"STATE: (%li) - Inactive",(long)state);
-//    if(state == UIApplicationStateBackground)
-//        NSLog(@"STATE: (%li) - Background",(long)state);
-    
-    if(state != UIApplicationStateInactive){
-        [self setActivityBadgeIcon:1];
-    }
-    
-    if (completionHandler) {
-        completionHandler(UIBackgroundFetchResultNewData);
-    }
-}
+//-(void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+//
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
+//    
+//    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+////    if(state == UIApplicationStateActive)
+////        NSLog(@"STATE: (%li) - Active",(long)state);
+////    if(state == UIApplicationStateInactive)
+////        NSLog(@"STATE: (%li) - Inactive",(long)state);
+////    if(state == UIApplicationStateBackground)
+////        NSLog(@"STATE: (%li) - Background",(long)state);
+//    
+//    if(state != UIApplicationStateInactive){
+//        [self setActivityBadgeIcon:1];
+//    }
+//    
+//    if (completionHandler) {
+//        completionHandler(UIBackgroundFetchResultNewData);
+//    }
+//}
 
 //For when app is in foreground
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -515,36 +515,6 @@
             }
         }];
 
-        
-//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//        [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//        [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
-//        [query includeKey:@"trip"];
-//        [query includeKey:@"toUser"];
-//        [query includeKey:@"fromUser"];
-//        [query whereKeyExists:@"trip"];
-//        [query includeKey:@"trip.publicTripDetail"];
-//        [query orderByDescending:@"createdAt"];
-//        query.limit = 5;
-//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            
-//            if(!error)
-//            {
-//                __block BOOL pushed;
-//                pushed = NO;
-//                for (PFObject *act in objects){
-//                    Trip *trip = act[@"trip"];
-//                    trunkViewController.trip = trip;
-//                    
-//                    if (trunkViewController.trip != nil && pushed == NO){
-//                        pushed = YES;
-//                        [nav pushViewController:trunkViewController animated:YES];
-//                        break;
-//                        
-//                    }
-//                }
-//            }
-//        }];
     }
 }
 
