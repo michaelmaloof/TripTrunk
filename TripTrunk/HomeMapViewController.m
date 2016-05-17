@@ -850,7 +850,7 @@
         startAnnotation.alpha = 1.0;
         //        [[startAnnotation superview] bringSubviewToFront:startAnnotation];
         startAnnotation.layer.zPosition = 1;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.3, startAnnotation.frame.size.height*1.3);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.0, startAnnotation.frame.size.height*1.0);
         
     } else {
         if (hasSeen == NO){
@@ -863,7 +863,7 @@
         startAnnotation.alpha = 1.0;
         //        [[startAnnotation superview] sendSubviewToBack:startAnnotation];
         startAnnotation.layer.zPosition = .9;
-        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*1.1, startAnnotation.frame.size.height*1.1);
+        startAnnotation.frame = CGRectMake(startAnnotation.frame.origin.x, startAnnotation.frame.origin.y, startAnnotation.frame.size.width*.9, startAnnotation.frame.size.height*.9);
         
         
         
