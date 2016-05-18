@@ -35,8 +35,9 @@
 @property BOOL isLoading;
 @property NSMutableArray *mainPhotos;
 @property NSMutableDictionary *subPhotos;
-@property NSMutableArray *duplicatePhotoStrings;
-@property NSMutableArray *duplicatePhotos;
+//@property NSMutableArray *duplicatePhotoStrings;
+//@property NSMutableArray *duplicatePhotos;
+@property NSMutableArray *userTrips;
 @property BOOL reachedBottom;
 //@property NSMutableArray *arrayToSend;
 @property (strong, nonatomic) NSMutableArray *trips;
@@ -59,6 +60,7 @@
     self.mainPhotos = [[NSMutableArray alloc]init];
     self.subPhotos = [[NSMutableDictionary alloc]init];
     self.photoUsers = [[NSMutableArray alloc]init];
+    self.userTrips = [[NSMutableArray alloc] init];
 //    self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
 //    self.duplicatePhotos = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -126,13 +128,15 @@
     NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
     [dateformate setDateFormat:@"YYYY-MM-dd"];
     NSString *dateString=[dateformate stringFromDate:tomorrow];
-    
+
     NSDictionary *params = @{
                              @"objectIds" : followingObjectIds,
                              @"activityObjectIds" : self.objid,
                              @"createdDate" : photo.createdAt ? photo.createdAt : dateString,
-                             @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"]
+                             @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"],
+                             @"userTrips" : self.userTrips
                              };
+
     [PFCloud callFunctionInBackground:@"queryForNewsFeed" withParameters:params block:^(NSArray *response, NSError *error) {
         if (!error) {
             if (!isRefresh && response.count == 0)
@@ -141,6 +145,11 @@
             [[TTUtility sharedInstance] internetConnectionFound];
             
             for (PFObject *activity in response[0]){
+                Trip *atrip = activity[@"trip"];
+                PFUser *auser = activity[@"fromUser"];
+                NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
+                if(![self.userTrips containsObject:mashup])
+                    [self.userTrips addObject:mashup];
                 Photo *photo = activity[@"photo"];
                 photo.user = activity[@"fromUser"];
                 photo.trip = activity[@"trip"];
@@ -192,7 +201,11 @@
                     
                     NSMutableArray *p = [[NSMutableArray alloc] init];
                     for (PFObject *activities in response[1]){
-                        
+                        Trip *atrip = activities[@"trip"];
+                        PFUser *auser = activities[@"fromUser"];
+                        NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
+                        if(![self.userTrips containsObject:mashup])
+                            [self.userTrips addObject:mashup];
                         [self.objid addObject:activities.objectId];
                         
                         Trip *trip = activities[@"trip"];
@@ -252,6 +265,12 @@
             [refreshControl endRefreshing];
         }
         }
+            
+            for(PFObject *activity in response[2]){
+                if(![self.userTrips containsObject:activity])
+                    [self.userTrips addObject:activity];
+            }
+            
         }
         
         self.isLoading = NO;
