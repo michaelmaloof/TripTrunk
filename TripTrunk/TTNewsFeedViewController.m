@@ -397,6 +397,33 @@
                 if(subview.tag == 9999)
                     [subview removeFromSuperview];
             }
+            
+            //force color correction when you scroll through the uicollectionview
+            switch(i){
+                case 0:
+                    [button.layer setBorderColor:[[TTColor subPhotoBlue] CGColor]];
+                    [button setBackgroundColor:[TTColor subPhotoBlue]];
+                    break;
+                case 1:
+                    [button.layer setBorderColor:[[TTColor subPhotoPink] CGColor]];
+                    [button setBackgroundColor:[TTColor subPhotoPink]];
+                    break;
+                case 2:
+                    [button.layer setBorderColor:[[TTColor subPhotoTan] CGColor]];
+                    [button setBackgroundColor:[TTColor subPhotoTan]];
+                    break;
+                case 3:
+                    [button.layer setBorderColor:[[TTColor subPhotoGreen] CGColor]];
+                    [button setBackgroundColor:[TTColor subPhotoGreen]];
+                    break;
+                case 4:{
+                    [button.layer setBorderColor:[[TTColor subPhotoGray] CGColor]];
+                    [button setBackgroundColor:[TTColor subPhotoGray]];
+                    break;
+                }
+                default:
+                    break;
+            }
         }
     }
     
