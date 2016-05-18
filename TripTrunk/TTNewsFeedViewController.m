@@ -425,19 +425,22 @@
             break;
         }
         
-        if(subPhotoArray.count<5 && smallPhoto.trip.publicTripDetail.photoCount > subPhotoArray.count){
-            UIButton *button = cell.subPhotoButtons[subPhotoArray.count];
-            button.tag = indexPath.row;
-            button.hidden = NO;
-            [button setImage:[UIImage imageNamed:@"moreTrunk"] forState:UIControlStateNormal];
-            float buttonFrame = button.frame.size.width/2;
-            [elipsis setFrame:CGRectMake(buttonFrame-eWidth/2, buttonFrame-eHeight/2, eWidth, eHeight)];
-            elipsis.tag = 9999;
-            [button addSubview:elipsis];
-            [button.layer setBorderColor:[[TTColor subPhotoGray] CGColor]];
-            [button setBackgroundColor:[TTColor subPhotoGray]];
+        if(i==subPhotoArray.count-1){
+            //subPhotoArray.count+1 because we have to account for the mainPhoto
+            if(subPhotoArray.count<5 && smallPhoto.trip.publicTripDetail.photoCount > subPhotoArray.count+1){
+                UIButton *button = cell.subPhotoButtons[subPhotoArray.count];
+                button.tag = indexPath.row;
+                button.hidden = NO;
+                [button setImage:[UIImage imageNamed:@"moreTrunk"] forState:UIControlStateNormal];
+                float buttonFrame = button.frame.size.width/2;
+                [elipsis setFrame:CGRectMake(buttonFrame-eWidth/2, buttonFrame-eHeight/2, eWidth, eHeight)];
+                elipsis.tag = 9999;
+                [button addSubview:elipsis];
+                [button.layer setBorderColor:[[TTColor subPhotoGray] CGColor]];
+                [button setBackgroundColor:[TTColor subPhotoGray]];
+            }
         }
-//        
+//
 //        
 //
 //        
