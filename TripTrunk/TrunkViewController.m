@@ -407,17 +407,11 @@
     
     self.collectionView.hidden = NO;
     
-    int count;
-    if (self.isMember == YES){
-        count =1;
-    } else {
-        count = 0;
-    }
     
-    NSInteger memberWidthTotal = (self.members.count + count + 1) * 60;
+    NSInteger memberWidthTotal = (self.members.count + 1) * 60;
 
     
-    if ( self.members.count + count + 1 > 5){
+    if ( self.members.count + 1 > 5){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
         self.memberCollectionView.hidden = NO;
 
