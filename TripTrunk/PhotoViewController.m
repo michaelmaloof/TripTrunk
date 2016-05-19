@@ -316,13 +316,17 @@
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
     [self centerScrollViewContents];
+    self.topButtonWrapper.backgroundColor = [UIColor whiteColor];
+    self.bottomButtonWrapper.backgroundColor = [UIColor whiteColor];
+    
     // Set up gradients for top and bottom button wrappers
-    CAGradientLayer *gradient = [self greyGradientForTop:YES];
-    gradient.frame = self.topButtonWrapper.bounds;
-    CAGradientLayer *bottomGradient = [self greyGradientForTop:NO];
-    bottomGradient.frame = self.bottomButtonWrapper.bounds;
-    [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
-    [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
+    //    CAGradientLayer *gradient = [self greyGradientForTop:YES];
+    //    gradient.frame = self.topButtonWrapper.bounds;
+    //    CAGradientLayer *bottomGradient = [self greyGradientForTop:NO];
+    //    bottomGradient.frame = self.bottomButtonWrapper.bounds;
+    //    [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
+    //    [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
