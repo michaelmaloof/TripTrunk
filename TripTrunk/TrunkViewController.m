@@ -76,6 +76,7 @@
         
         self.descriptionTextView = [[UITextView alloc]init];
         self.descriptionTextView.hidden = YES;
+        //FIXME: Move this to TTFont
         [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
         self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
         self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
@@ -628,6 +629,7 @@
             {
                 cell.logo.hidden = YES;
             }
+        }
         
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
@@ -651,7 +653,7 @@
                                            
                                        } failure:nil];
             return weakCell;
-        }
+        
         return cell;
         
     } else {
