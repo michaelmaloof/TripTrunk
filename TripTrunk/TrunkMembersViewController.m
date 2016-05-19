@@ -49,9 +49,16 @@
 
     //this array will be used to store members that are in the process of being uploaded to the trunk
     self.loadingMembers = [[NSMutableArray alloc]init];
+    [self setTitleAndNavBarItems];
+    [self removeTripCreatorFromArray];
+}
+
+/**
+ * Sets the title and nav bar items
+ */
+-(void)setTitleAndNavBarItems{
     self.title = NSLocalizedString(@"Trunk Members",@"Trunk Members");
     [self setUpAddTrunkMembersButton];
-    [self removeTripCreatorFromArray];
 }
 
 /**
@@ -79,16 +86,19 @@
     [self setUpTableView];
 }
 
--(void)setUpTableView{
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-
-}
-
 
 #pragma mark - Table view data source
 
+/**
+ * Setup tableview
+ */
+-(void)setUpTableView{
+    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+}
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
+    // Return the number of sections (Trip Creator and Trip Members)
     return 2;
 }
 
@@ -98,19 +108,17 @@
     switch (section) {
         case 0:
             if (_tripCreator) {
-
                 return 1;
             }
-
             return 0; // make sure we have the _tripCreator already otherwise we'll get an error here
             break;
+    // The second section is the trip members (excluding the creator)
         case 1:
             return _tripMembers.count;
             break;
         default:
             break;
     }
-    
     return 0;
 }
 
@@ -172,7 +180,6 @@
     [cell.followButton setSelected:_isFollowing];
     
     
-    
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
@@ -198,27 +205,20 @@
 
 // On Row Selection, push to the user's profile
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-
     UserProfileViewController *vc;
-    
     if (indexPath.section == 0) {
         vc = [[UserProfileViewController alloc] initWithUser:_tripCreator];
     }
     else
     {
         vc = [[UserProfileViewController alloc] initWithUser:[_tripMembers objectAtIndex:indexPath.row]];
-        
     }
-    
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     if (indexPath.section == 0) {
         // You can't remove the trip creator. If they want to leave, they have to delete the trip
         return NO;
@@ -246,7 +246,7 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [alert show];
-                        //FIXME Add user back to array of members
+                        //FIXME Add user back to array of tripMembers if it fails removing him
                     });
                 }
                 else {
@@ -268,7 +268,6 @@
 
 - (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
 {
-    
     if ([cellView.followButton isSelected]) {
         // Unfollow
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
