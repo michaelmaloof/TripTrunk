@@ -258,24 +258,24 @@
     
     
     if (![self.trip.descriptionStory isEqualToString:@""] ||  self.trip.descriptionStory != nil){
-    
-    UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
-    navButton.frame = CGRectMake(0, 0, 100, 40);
-    [navButton setTitle:self.title forState:UIControlStateNormal];
-    [navButton setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
-    [navButton addTarget:self
-                 action:@selector(titleTapped)
-       forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.titleView = navButton;
         
-
+        UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
+        navButton.frame = CGRectMake(0, 0, 100, 40);
+        [navButton setTitle:self.title forState:UIControlStateNormal];
+        [navButton setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+        [navButton addTarget:self
+                      action:@selector(titleTapped)
+            forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.titleView = navButton;
+        
+        
         
     }
     
     self.descriptionTextView.text = self.trip.descriptionStory;
     
-       [self.view addSubview:self.descriptionTextView];
-
+    [self.view addSubview:self.descriptionTextView];
+    
     
     
     if (self.trip.isPrivate) {
@@ -291,13 +291,13 @@
     } else {
         self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@",self.trip.city, self.trip.country];
     }
-        self.startDate.text = self.trip.startDate;
+    self.startDate.text = self.trip.startDate;
     
     self.endDate.text = @"";
     if (![self.trip.startDate isEqualToString:self.trip.endDate]){
         self.endDate.text = self.trip.endDate;
     }
-
+    
 }
 
 -(void)titleTapped{
@@ -579,21 +579,14 @@
 #pragma mark - UICollectionView Data Source
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    if (collectionView == self.collectionView){
-        return 1;
-    } else {
-        return 1;
-    }
+    return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (collectionView == self.collectionView){
-        if (self.isMember == NO) {
-            return self.photos.count;
-        } else {
-            return self.photos.count + 1;
-        }
+        return self.photos.count;
+        
     } else {
         if (self.isMember == YES){
             if (self.trip.isPrivate == NO){
@@ -613,45 +606,29 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView == self.collectionView){
-    
+    if (collectionView == self.collectionView)
+    {
+        
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
         
         cell.logo.hidden = YES;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
-//        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
         cell.photo.clipsToBounds = YES;
         cell.photo.translatesAutoresizingMaskIntoConstraints = NO;
         cell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        if(indexPath.item == 0 && self.isMember == YES)
+        cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+        NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+        NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
+        if (lastPhotoInterval < 0)
         {
-            cell.photo.image = [UIImage imageNamed:@"addPhoto"];
-            [cell layoutIfNeeded];
-
-        }
-        // This is the images
-        //    else if (indexPath.item > 0)
-        else
-        {
-            if (self.isMember == YES) {
-                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item - 1];
-            } else {
-                cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
-            }
-            
-            NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-            
-            NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
-            if (lastPhotoInterval < 0)
+            if (![self.photosSeen containsObject:cell.tripPhoto.objectId])
             {
-                if (![self.photosSeen containsObject:cell.tripPhoto.objectId]){
-                    cell.logo.hidden = NO;
-                } else {
-                    cell.logo.hidden = YES;
-                }
-
+                cell.logo.hidden = NO;
+            } else
+            {
+                cell.logo.hidden = YES;
             }
-            
+        
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -669,38 +646,19 @@
                                            
                                            // Set the image to the Photo object in the array
                                            
-                                           if (self.isMember == YES) {
-                                              
-                                               if (index - 1 > 0) {
-                                                   [(Photo *)[self.photos objectAtIndex:index - 1] setImage:image];
-                                               }
-                                               
-                                           } else {
-                                               [(Photo *)[self.photos objectAtIndex:index] setImage:image];
-                                               
-                                           }
-//                                           weakCell.photo.frame = CGRectMake(weakCell.frame.origin.x, weakCell.frame.origin.y, weakCell.frame.size.width, weakCell.frame.size.height);
+                                           
+                                           [(Photo *)[self.photos objectAtIndex:index] setImage:image];
+                                           //                                           weakCell.photo.frame = CGRectMake(weakCell.frame.origin.x, weakCell.frame.origin.y, weakCell.frame.size.width, weakCell.frame.size.height);
                                            weakCell.photo.image = image;
                                            
-//                                           [weakCell setNeedsLayout];
+                                           //                                           [weakCell setNeedsLayout];
                                            [weakCell layoutIfNeeded];
                                            
                                        } failure:nil];
-            
-            
-
-            
             return weakCell;
-            
         }
-        
-        
         return cell;
-        
-
-        
     } else {
-        
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
         
         cell.profileImage.image = nil;
@@ -772,17 +730,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.collectionView){
-        if (indexPath.item == 0 && self.isMember == YES)
-        {
-            [self performSegueWithIdentifier:@"addPhotos" sender:self];
-        }
-        
-        else
-        {
-            self.path = indexPath;            
-            [self performSegueWithIdentifier:@"photo" sender:self];
 
-        }
+        self.path = indexPath;
+        [self performSegueWithIdentifier:@"photo" sender:self];
     } else {
         if (indexPath.item == 0){
             TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
@@ -790,24 +740,8 @@
             vc.tripMembers = self.members;
             vc.isMember = self.isMember;
             [self.navigationController pushViewController:vc animated:YES];
-            
-        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == NO){
-//            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
-//            [members addObject:self.trip.creator];
-//            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
-//            vc.delegate = self;
-//            [self.navigationController pushViewController:vc animated:YES];
-            
-        } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES){
-//            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
-//            [members addObject:self.trip.creator];
-//            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
-//            vc.delegate = self;
-//            [self.navigationController pushViewController:vc animated:YES];
-            
-        } else {
+        }else {
             PFUser *user = [[PFUser alloc]init];
-
             if (self.isMember == NO){
                 user = [self.members objectAtIndex:indexPath.row -1];
             } else if (self.isMember == YES && self.trip.isPrivate == NO) {
@@ -817,10 +751,8 @@
             } else {
                 user = [self.members objectAtIndex:indexPath.row -1];
             }
-            
             if (user) {
                 UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-                
                 [self.navigationController pushViewController:vc animated:YES];
             }
             
@@ -854,8 +786,6 @@
         
     }
 
-    
-    
     //FIXME Should only remove the member properly added
     [self.loadingMembers removeAllObjects];
     [self.memberCollectionView reloadData];
@@ -910,19 +840,10 @@
     else if([segue.identifier isEqualToString:@"photo"]){
         PhotoViewController *vc = segue.destinationViewController;
         vc.delegate = self;
-        if (self.isMember == YES) {
-            vc.photo = [self.photos objectAtIndex:self.path.item -1];
-            vc.trip = self.trip;
-            vc.arrayInt = self.path.item - 1;
-            vc.trunkMembers = self.members;
-
-        } else {
-            vc.photo = [self.photos objectAtIndex:self.path.item];
-            vc.trip = self.trip;
-            vc.arrayInt = self.path.item;
-            vc.trunkMembers = self.members;
-
-        }
+        vc.photo = [self.photos objectAtIndex:self.path.item];
+        vc.trip = self.trip;
+        vc.arrayInt = (int)self.path.item;
+        vc.trunkMembers = self.members;
         vc.photos = self.photos;
         self.path = nil;
     }
