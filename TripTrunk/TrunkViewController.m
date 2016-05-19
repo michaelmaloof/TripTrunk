@@ -923,6 +923,9 @@
     }
 }
 
+- (IBAction)addPhotoWasTapped:(id)sender {
+    [self performSegueWithIdentifier:@"addPhotos" sender:self];
+}
 @end
 
 
