@@ -297,8 +297,6 @@
 
 }
 
-
-
 -(void)titleTapped{
     
     if ([self.trip.descriptionStory length] > 0){
@@ -315,7 +313,6 @@
 
     }
 }
-
 
 
 #pragma mark - Queries
@@ -511,8 +508,6 @@
 
 }
 
-
-
 -(void)editTapped{
     [self performSegueWithIdentifier:NSLocalizedString(@"Edit",@"Edit") sender:self];
     self.descriptionTextView.hidden = YES;
@@ -581,9 +576,9 @@
     } else {
         if (self.isMember == YES){
             if (self.trip.isPrivate == NO){
-                return self.members.count +2;
+                return self.members.count +1;
             } else if (self.trip.isPrivate == YES){
-                return self.members.count +2;
+                return self.members.count +1;
             } else {
                 return self.members.count +1;
             }
@@ -703,22 +698,14 @@
             cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"members"];
             
-        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == NO){
-            cell.profileImage.alpha = 1;
-            cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
-            
-        } else if (indexPath.item == 1 && self.isMember == YES && self.trip.isPrivate == YES){
-            cell.profileImage.alpha = 1;
-            cell.profileImage.image = [UIImage imageNamed:@"addCaption"];
-            
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
             if (self.isMember == NO){
                 possibleFriend = [self.members objectAtIndex:index - 1];
             } else if (self.isMember == YES && self.trip.isPrivate == NO) {
-                possibleFriend = [self.members objectAtIndex:index - 2];
+                possibleFriend = [self.members objectAtIndex:index - 1];
             } else if (self.isMember == YES && self.trip.isPrivate == YES){
-                possibleFriend = [self.members objectAtIndex:index - 2];
+                possibleFriend = [self.members objectAtIndex:index - 1];
             } else {
                 possibleFriend = [self.members objectAtIndex:index - 1];
 
@@ -803,9 +790,9 @@
             if (self.isMember == NO){
                 user = [self.members objectAtIndex:indexPath.row -1];
             } else if (self.isMember == YES && self.trip.isPrivate == NO) {
-                user = [self.members objectAtIndex:indexPath.row -2];
+                user = [self.members objectAtIndex:indexPath.row -1];
             } else if (self.isMember == YES && self.trip.isPrivate == YES){
-                user = [self.members objectAtIndex:indexPath.row -2];
+                user = [self.members objectAtIndex:indexPath.row -1];
             } else {
                 user = [self.members objectAtIndex:indexPath.row -1];
             }
@@ -834,7 +821,7 @@
         count = 0;
     }
         
-    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
+    NSInteger memberWidthTotal = (self.members.count + 1) * 60;
     NSInteger oneThirdView = self.view.frame.size.width / 1.5;
     if (oneThirdView < memberWidthTotal){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
@@ -859,7 +846,7 @@
     [self.members addObject:profile];
     [self.loadingMembers addObject:profile];
     
-    NSInteger memberWidthTotal = (self.members.count + 2) * 60;
+    NSInteger memberWidthTotal = (self.members.count + 1) * 60;
     NSInteger oneThirdView = self.view.frame.size.width / 1.5;
     if (oneThirdView < memberWidthTotal){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
