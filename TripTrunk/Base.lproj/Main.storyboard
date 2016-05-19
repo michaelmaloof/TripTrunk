@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -4362,9 +4362,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yellowSkyMountain_background" translatesAutoresizingMaskIntoConstraints="NO" id="tOU-RS-3DX">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                            </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sWd-tE-uEx" customClass="TPKeyboardAvoidingScrollView">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <subviews>
@@ -4669,18 +4666,13 @@
                             <constraint firstItem="sWd-tE-uEx" firstAttribute="leading" secondItem="evn-J0-pdg" secondAttribute="leadingMargin" constant="-16" id="E4e-sw-t4P"/>
                             <constraint firstItem="sWd-tE-uEx" firstAttribute="leading" secondItem="evn-J0-pdg" secondAttribute="leadingMargin" constant="-16" id="FSm-GT-rHI"/>
                             <constraint firstItem="sWd-tE-uEx" firstAttribute="top" secondItem="KD9-0R-WnF" secondAttribute="bottom" constant="-20" id="HF7-pj-w8A"/>
-                            <constraint firstAttribute="centerY" secondItem="tOU-RS-3DX" secondAttribute="centerY" id="J3b-nA-4PW"/>
-                            <constraint firstAttribute="centerX" secondItem="tOU-RS-3DX" secondAttribute="centerX" id="K6D-aX-ysq"/>
                             <constraint firstItem="dgi-lY-sHg" firstAttribute="top" secondItem="sWd-tE-uEx" secondAttribute="bottom" id="N52-wx-dze"/>
                             <constraint firstAttribute="trailingMargin" secondItem="sWd-tE-uEx" secondAttribute="trailing" constant="-22" id="NAZ-3Z-v0d"/>
-                            <constraint firstItem="tOU-RS-3DX" firstAttribute="width" secondItem="evn-J0-pdg" secondAttribute="width" id="XB0-gY-On7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="sWd-tE-uEx" secondAttribute="trailing" constant="-22" id="rbE-cQ-IPX"/>
-                            <constraint firstItem="tOU-RS-3DX" firstAttribute="height" secondItem="evn-J0-pdg" secondAttribute="height" id="wQ8-KQ-i9P"/>
                             <constraint firstItem="sWd-tE-uEx" firstAttribute="top" secondItem="KD9-0R-WnF" secondAttribute="bottom" constant="-20" id="wk8-ry-3hW"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="tOU-RS-3DX"/>
                                 <exclude reference="sWd-tE-uEx"/>
                             </mask>
                             <mask key="constraints">
@@ -4693,15 +4685,10 @@
                                 <exclude reference="NAZ-3Z-v0d"/>
                                 <exclude reference="rbE-cQ-IPX"/>
                                 <exclude reference="wk8-ry-3hW"/>
-                                <exclude reference="J3b-nA-4PW"/>
-                                <exclude reference="K6D-aX-ysq"/>
-                                <exclude reference="XB0-gY-On7"/>
-                                <exclude reference="wQ8-KQ-i9P"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
-                                <include reference="tOU-RS-3DX"/>
                                 <include reference="sWd-tE-uEx"/>
                             </mask>
                             <mask key="constraints">
@@ -4714,10 +4701,6 @@
                                 <include reference="NAZ-3Z-v0d"/>
                                 <exclude reference="rbE-cQ-IPX"/>
                                 <exclude reference="wk8-ry-3hW"/>
-                                <include reference="J3b-nA-4PW"/>
-                                <include reference="K6D-aX-ysq"/>
-                                <include reference="XB0-gY-On7"/>
-                                <include reference="wQ8-KQ-i9P"/>
                             </mask>
                         </variation>
                     </view>
@@ -4778,7 +4761,6 @@
         <image name="removeCaption" width="100" height="100"/>
         <image name="save" width="100" height="100"/>
         <image name="unlocked" width="88" height="88"/>
-        <image name="yellowSkyMountain_background" width="400" height="713"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="bhX-wL-LGH"/>

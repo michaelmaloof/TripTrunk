@@ -2,17 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "blueTrunk.png",
+      "filename" : "blue paw.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "blueTrunk@2x.png",
+      "filename" : "blue paw 2.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "blueTrunk@3x.png",
       "scale" : "3x"
     }
   ],
