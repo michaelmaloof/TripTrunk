@@ -14,6 +14,9 @@
 
 @protocol MemberListDelegate
 -(void)memberWasRemoved:(PFUser*)sender;
+-(void)memberWasAdded:(id)sender;
+-(void)memberWasAddedTemporary:(PFUser*)profile;
+-(void)memberFailedToLoad:(PFUser*)sender;
 
 @end
 
@@ -29,5 +32,7 @@
 - (id)initWithTrip:(Trip *)trip;
 @property BOOL isMember;
 @property id<MemberListDelegate> delegate;
+@property (strong, nonatomic) NSMutableArray *tripMembers;
+
 
 @end

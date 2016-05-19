@@ -12,7 +12,7 @@
 #import "Trip.h"
 #import "TTBaseTableViewController.h"
 
-@protocol MemberDelegate
+@protocol AddMemberDelegate
 -(void)memberWasAdded:(id)sender;
 -(void)memberWasAddedTemporary:(PFUser*)profile;
 -(void)memberFailedToLoad:(PFUser*)sender;
@@ -33,7 +33,7 @@
  */
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
-@property id<MemberDelegate> delegate;
+@property id<AddMemberDelegate> delegate;
 
 
 @property (strong, nonatomic) Trip *trip;

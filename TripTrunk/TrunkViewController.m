@@ -24,7 +24,7 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout,MemberDelegate, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -779,22 +779,23 @@
         if (indexPath.item == 0){
             TrunkMembersViewController *vc = [[TrunkMembersViewController alloc] initWithTrip:self.trip];
             vc.delegate = self;
+            vc.tripMembers = self.members;
             vc.isMember = self.isMember;
             [self.navigationController pushViewController:vc animated:YES];
             
         } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == NO){
-            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
-            [members addObject:self.trip.creator];
-            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
-            vc.delegate = self;
-            [self.navigationController pushViewController:vc animated:YES];
+//            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
+//            [members addObject:self.trip.creator];
+//            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+//            vc.delegate = self;
+//            [self.navigationController pushViewController:vc animated:YES];
             
         } else if (indexPath.item == 1 && self.isMember ==YES && self.trip.isPrivate == YES){
-            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
-            [members addObject:self.trip.creator];
-            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
-            vc.delegate = self;
-            [self.navigationController pushViewController:vc animated:YES];
+//            NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.members];
+//            [members addObject:self.trip.creator];
+//            AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+//            vc.delegate = self;
+//            [self.navigationController pushViewController:vc animated:YES];
             
         } else {
             PFUser *user = [[PFUser alloc]init];
@@ -847,9 +848,8 @@
 
     
     
-    
+    //FIXME Should only remove the member properly added
     [self.loadingMembers removeAllObjects];
-    
     [self.memberCollectionView reloadData];
 
 }
@@ -878,6 +878,7 @@
 -(void)memberFailedToLoad:(PFUser*)sender{
     self.firstLoadDone = YES;
     [self.members removeObject:sender];
+    [self.loadingMembers removeObject:sender];
     [self.memberCollectionView reloadData];
     NSString *title = NSLocalizedString(@"was unable to be added to",@"was unable to be added to");
     NSString *finalTitle = [NSString stringWithFormat:@"%@ %@ %@",sender.username, title, self.trip.name];
