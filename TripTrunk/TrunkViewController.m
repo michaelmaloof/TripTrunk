@@ -495,8 +495,8 @@
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
-                                    destructiveButtonTitle:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos")
-                                         otherButtonTitles:NSLocalizedString(@"Edit Trunk",@"Edit Trunk"),nil];
+                                    destructiveButtonTitle:nil
+                                         otherButtonTitles:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos"),NSLocalizedString(@"Edit Trunk",@"Edit Trunk"),nil];
         
     }
     
@@ -504,8 +504,8 @@
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
-                                    destructiveButtonTitle:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos")
-                                         otherButtonTitles:NSLocalizedString(@"Leave Trunk",@"Leave Trunk"),nil];
+                                    destructiveButtonTitle:nil
+                                         otherButtonTitles:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos"),NSLocalizedString(@"Leave Trunk",@"Leave Trunk"),nil];
     }
     
     [actionSheet showInView:self.view];
@@ -564,10 +564,10 @@
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    // button index == 0 then it cancels the action
-    if (buttonIndex == 1){
+    // button index == 2 then it cancels the action
+    if (buttonIndex == 0){
         [self downloadTrunkPhotos];
-    } else if (buttonIndex == 2){
+    } else if (buttonIndex == 1){
            if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
                [self editTapped];
            } else {
