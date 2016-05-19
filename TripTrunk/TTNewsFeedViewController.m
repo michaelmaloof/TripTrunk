@@ -25,21 +25,16 @@
 #import "TTColor.h"
 #import "TTSubPhotoButton.h"
 
-@interface TTNewsFeedViewController () <UICollectionViewDataSource
-, UICollectionViewDelegate, UIGestureRecognizerDelegate>
+@interface TTNewsFeedViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property NSMutableArray *following;
-//@property NSMutableArray *photos;
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property NSMutableArray *objid;
 @property BOOL isLoading;
 @property NSMutableArray *mainPhotos;
 @property NSMutableDictionary *subPhotos;
-//@property NSMutableArray *duplicatePhotoStrings;
-//@property NSMutableArray *duplicatePhotos;
 @property NSMutableArray *userTrips;
 @property BOOL reachedBottom;
-//@property NSMutableArray *arrayToSend;
 @property (strong, nonatomic) NSMutableArray *trips;
 @property NSMutableArray *photoUsers;
 
@@ -55,14 +50,10 @@
     [self setTitleImage];
     [self createLeftButtons];
     self.trips = [[NSMutableArray alloc] init];
-//    self.photos = [[NSMutableArray alloc]init];
-//    self.arrayToSend = [[NSMutableArray alloc]init];
     self.mainPhotos = [[NSMutableArray alloc]init];
     self.subPhotos = [[NSMutableDictionary alloc]init];
     self.photoUsers = [[NSMutableArray alloc]init];
     self.userTrips = [[NSMutableArray alloc] init];
-//    self.duplicatePhotoStrings = [[NSMutableArray alloc]init];
-//    self.duplicatePhotos = [[NSMutableArray alloc]init];
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
                        action:@selector(refresh:)
@@ -88,17 +79,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-//        if (!error)
-//        {
-//            self.following = [[NSMutableArray alloc]init];
-//            for (PFUser *user in users)
-//            {
-//                [self.following addObject:user];
-//            }
-//        }
-//        [self loadNewsFeed:NO refresh:nil];
-//    }];
+
 }
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
@@ -159,8 +140,6 @@
                     
                     if (!isRefresh){
                         [self.mainPhotos addObject:photo];
-//                        [self.photos addObject:photo]; //obsolete?
-//                        [self.arrayToSend addObject:photo]; //obsolete?
                     } else {
                         //go through and check to see if this photo updates a current trip
                         int index = 0; BOOL updatedOldPhoto = NO;
@@ -195,8 +174,6 @@
                         if(!updatedOldPhoto)
                             [self.mainPhotos insertObject:photo atIndex:0];
                         
-//                        [self.photos insertObject:photo atIndex:0]; //obsolete?
-//                        [self.arrayToSend insertObject:photo atIndex:0]; //obsolete?
                     }
                     
                     NSMutableArray *p = [[NSMutableArray alloc] init];
@@ -320,26 +297,13 @@
 
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
+    __weak TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
     [cell.username.titleLabel setText:nil];
     [cell.tripName.titleLabel setText:nil];
     [cell.location.titleLabel setText:nil];
     [cell.userprofile setImage:nil];
     [cell.newsfeedPhoto setImage:nil];
     [cell.timeStamp setText:nil];
-//    cell.image1.image = nil;
-//    cell.image2.image = nil;
-//    cell.image3.image = nil;
-//    cell.image4.image = nil;
-//    cell.image5.image = nil;
-    
-//    cell.image1.hidden = YES;
-//    cell.image2.hidden = YES;
-//    cell.image3.hidden = YES;
-//    cell.image4.hidden = YES;
-//    cell.image5.hidden = YES;
-//    cell.imageBUtton.hidden = YES;
-//    cell.labelButton.hidden = YES;
     
     Photo *photo = self.mainPhotos[indexPath.row];
     if (!photo.trip.isPrivate)
@@ -355,7 +319,6 @@
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
-//    [cell.imageBUtton addTarget:self action:@selector(moreWasTapped:) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapProfile:)];
     [profileTap setCancelsTouchesInView:YES];
@@ -365,7 +328,6 @@
     
     [cell.userprofile setUserInteractionEnabled:YES];
     [cell.location setTag:indexPath.row];
-//    cell.imageBUtton.tag = indexPath.row;
     [cell.username.titleLabel adjustsFontSizeToFitWidth];
     [cell.tripName.titleLabel adjustsFontSizeToFitWidth];
     [cell.username setTag:indexPath.row];
@@ -379,7 +341,6 @@
     float eWidth = elipsisImage.size.width;
     float eHeight = elipsisImage.size.height;
     
-//    int count = 0;
     [cell.userprofile setImageWithURLRequest:request placeholderImage:[UIImage imageNamed:@"defaultProfile"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.userprofile setImage:image];
         [cell setNeedsLayout];
@@ -451,7 +412,6 @@
         Photo *smallPhoto = subPhotoArray[i];
         NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:smallPhoto.imageUrl];
         NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-//        UIImage *placeholderImage = nil;
         
         if(i<5){
             __weak UIButton *button = cell.subPhotoButtons[i];
@@ -486,180 +446,6 @@
                 [button setBackgroundColor:[TTColor subPhotoGray]];
             }
         }
-//
-//        
-//
-//        
-//        
-//        
-//        
-//        
-//        
-//        
-//        
-//        count++;
-//        
-//        if (count == 1)
-//        {
-//            
-//            UITapGestureRecognizer *imageOneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapOne:)];
-//            
-//            imageOneTap.cancelsTouchesInView = YES;
-//            imageOneTap.numberOfTapsRequired = 1;
-//            [cell.image1 addGestureRecognizer:imageOneTap];
-//            cell.image1.userInteractionEnabled = YES;
-//            imageOneTap.view.tag = indexPath.row; //indexCount - 1;
-//            cell.image1.hidden = NO;
-//            
-//            [cell.image1 setImageWithURLRequest:requestNew
-//                               placeholderImage:placeholderImage
-//                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                            [cell.image1 setImage:image];
-//                                            cell.image1.hidden = NO;
-////                                            [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                            [smallPhoto setImage:image];
-////                                            [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                            [cell setNeedsLayout];
-//                                        } failure:nil];
-//        }
-//        
-//        else if (count == 2)
-//        {
-//            UITapGestureRecognizer *imageTwoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapTwo:)];
-//            
-//            imageTwoTap.cancelsTouchesInView = YES;
-//            imageTwoTap.numberOfTapsRequired = 1;
-////            [cell.image2 addGestureRecognizer:imageTwoTap];
-//            cell.image2.userInteractionEnabled = YES;
-//            imageTwoTap.view.tag = indexPath.row; //indexCount - 1;
-//            cell.image2.hidden = NO;
-//            
-//            [cell.image2 setImageWithURLRequest:requestNew
-//                               placeholderImage:placeholderImage
-//                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                            [cell.image2 setImage:image];
-//                                            cell.image2.hidden = NO;
-////                                            [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                            [smallPhoto setImage:image];
-////                                            [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                            [cell setNeedsLayout];
-//                                        } failure:nil];
-//        }
-//        
-//        else if (count == 3)
-//        {
-//            UITapGestureRecognizer *imageThreeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapThree:)];
-//            imageThreeTap.cancelsTouchesInView = YES;
-//            imageThreeTap.numberOfTapsRequired = 1;
-////            [cell.image3 addGestureRecognizer:imageThreeTap];
-//            cell.image3.userInteractionEnabled = YES;
-//            imageThreeTap.view.tag = indexPath.row; //indexCount - 1;
-//            cell.image3.hidden = NO;
-//            
-//            
-//            [cell.image3 setImageWithURLRequest:requestNew
-//                               placeholderImage:placeholderImage
-//                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                            [cell.image3 setImage:image];
-//                                            
-//                                            
-////                                            [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                            [smallPhoto setImage:image];
-////                                            [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                            
-//                                            
-//                                            [cell setNeedsLayout];
-//                                        } failure:nil];
-//        }
-//        
-//        else if (count == 4)
-//        {
-//            UITapGestureRecognizer *imageFourTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapFour:)];
-//            
-//            imageFourTap.cancelsTouchesInView = YES;
-//            imageFourTap.numberOfTapsRequired = 1;
-////            [cell.image4 addGestureRecognizer:imageFourTap];
-//            cell.image4.userInteractionEnabled = YES;
-//            imageFourTap.view.tag = indexPath.row; //indexCount - 1;
-//            cell.image4.hidden = NO;
-//            [cell.image4 setImageWithURLRequest:requestNew
-//                               placeholderImage:placeholderImage
-//                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                            [cell.image4 setImage:image];
-////                                            [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                            [smallPhoto setImage:image];
-////                                            [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                            
-//                                            
-//                                            [cell setNeedsLayout];
-//                                        } failure:nil];
-//        }
-//        
-//        else if (count == 5)
-//        {
-//            
-//            cell.image5.hidden = NO;
-//            cell.labelButton.hidden = NO;
-//            cell.imageBUtton.hidden = NO;
-//            
-//            [cell.image5 setImageWithURLRequest:requestNew
-//                               placeholderImage:placeholderImage
-//                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                            [cell.image5 setImage:image];
-////                                            [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                            [smallPhoto setImage:image];
-////                                            [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                            
-//                                            [cell setNeedsLayout];
-//                                        } failure:nil];
-//        }
-//        
-//        if(subPhotoArray.count<5 && smallPhoto.trip.publicTripDetail.photoCount > subPhotoArray.count && subPhotoArray.count == count){
-//            
-//            UIImage *elipsisImage = [UIImage imageNamed:@"ellipsis"];
-//            UIImageView *elipsis = [[UIImageView alloc] initWithImage:elipsisImage];
-//            [elipsis setFrame:CGRectMake(cell.image1.frame.size.width/2-elipsisImage.size.width/2, cell.image1.frame.size.height/2-elipsisImage.size.height/2, elipsisImage.size.width, elipsisImage.size.height)];
-//            UIColor *grayColorHack = [UIColor colorWithRed:78.0/255.0 green:79.0/255.0 blue:85.0/255.0 alpha:1.0];
-//            UITapGestureRecognizer *moreTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreTrunkWasTapped:)];
-//            moreTap.cancelsTouchesInView = YES;
-//            moreTap.numberOfTapsRequired = 1;
-//            moreTap.view.tag = indexPath.row;
-//            NSLog(@"<%ld>",(long)indexPath.row);
-//            NSLog(@"%ld",(long)moreTap.view);
-//            
-//            if(count == 1){
-//                cell.image2.hidden = NO;
-//                [cell.image2 setImage:[UIImage imageNamed:@"moreTrunk"]];
-//                [cell.image2.layer setBorderColor:[grayColorHack CGColor]];
-//                [cell.image2 setBackgroundColor:grayColorHack];
-//                [cell.image2 addSubview:elipsis];
-//                [cell.image2 addGestureRecognizer:moreTap];
-//            }else if(count == 2){
-//                cell.image3.hidden = NO;
-//                [cell.image3 setImage:[UIImage imageNamed:@"moreTrunk"]];
-//                [cell.image3.layer setBorderColor:[grayColorHack CGColor]];
-//                [cell.image3 setBackgroundColor:grayColorHack];
-//                [cell.image3 addSubview:elipsis];
-//                NSArray *arr = cell.image3.gestureRecognizers;
-//                if(arr.count == 0)
-//                    [cell.image3 addGestureRecognizer:moreTap];
-//            }else if(count == 3){
-//                cell.image4.hidden = NO;
-//                [cell.image4 setImage:[UIImage imageNamed:@"moreTrunk"]];
-//                [cell.image4.layer setBorderColor:[grayColorHack CGColor]];
-//                [cell.image4 setBackgroundColor:grayColorHack];
-//                [cell.image4 addSubview:elipsis];
-//                [cell.image4 addGestureRecognizer:moreTap];
-//            }else if(count == 4){
-//                cell.image5.hidden = NO;
-//                [cell.image5 setImage:[UIImage imageNamed:@"moreTrunk"]];
-//                [cell.image5.layer setBorderColor:[grayColorHack CGColor]];
-//                [cell.image5 setBackgroundColor:grayColorHack];
-//                [cell.image5 addSubview:elipsis];
-//                [cell.image5 addGestureRecognizer:moreTap];
-//            }
-//
-//        }
     }
 
     return  cell;
@@ -699,77 +485,6 @@
     trunkViewController.location = location;
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
-
-//-(void)moreWasTapped:(UIButton*)sender{
-//    Photo *photo = self.mainPhotos[sender.tag];
-//    Trip *trip = photo.trip;
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-//    trunkViewController.trip = (Trip *)trip;
-//    [self.navigationController pushViewController:trunkViewController animated:YES];
-//}
-//
-//-(void)moreTrunkWasTapped:(UITapGestureRecognizer*)gestureRecognizer{
-//    NSLog(@">%ld<",(long)gestureRecognizer.view.tag);
-//    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
-//    Trip *trip = photo.trip;
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-//    trunkViewController.trip = (Trip *)trip;
-//    [self.navigationController pushViewController:trunkViewController animated:YES];
-//}
-//
-//-(void)handleImageTapOne:(UIGestureRecognizer *)gestureRecognizer {
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-//    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-//    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
-//    Photo *photo = array[0];
-//    photoViewController.photo = (Photo *)photo;
-//    photoViewController.photos = [self returnPhotosForView:mainPhoto];
-//    photoViewController.arrayInt = 1;
-//    photoViewController.fromTimeline = YES;
-//    [self.navigationController showViewController:photoViewController sender:self];
-//}
-//
-//-(void)handleImageTapTwo:(UIGestureRecognizer *)gestureRecognizer {
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-//    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-//    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
-//    Photo *photo = array[1];
-//    photoViewController.photo = (Photo *)photo;
-//    photoViewController.photos = [self returnPhotosForView:mainPhoto];
-//    photoViewController.arrayInt = 2;
-//    photoViewController.fromTimeline = YES;
-//    [self.navigationController showViewController:photoViewController sender:self];
-//}
-//
-//-(void)handleImageTapThree:(UIGestureRecognizer *)gestureRecognizer {
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-//    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-//    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
-//    Photo *photo = array[2];
-//    photoViewController.photo = (Photo *)photo;
-//    photoViewController.photos = [self returnPhotosForView:mainPhoto];
-//    photoViewController.arrayInt = 3;
-//    photoViewController.fromTimeline = YES;
-//    [self.navigationController showViewController:photoViewController sender:self];
-//}
-//
-//-(void)handleImageTapFour:(UIGestureRecognizer *)gestureRecognizer {
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-//    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-//    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
-//    Photo *photo = array[3];
-//    photoViewController.photo = (Photo *)photo;
-//    photoViewController.arrayInt = 4;
-//    photoViewController.fromTimeline = YES;
-//    photoViewController.photos = [self returnPhotosForView:mainPhoto];
-//    [self.navigationController showViewController:photoViewController sender:self];
-//}
 
 - (IBAction)subPhotoButtonWasTapped:(TTSubPhotoButton *)sender {
     Photo *mainPhoto = self.mainPhotos[sender.tag];
@@ -814,23 +529,6 @@
     return allPhotosInTrunkForThisUser;
 }
 
-
-
-//-(NSArray*)returnPhotosForView:(Photo*)photo
-//{
-//    
-//    NSMutableArray *mutablePhotos = [[NSMutableArray alloc]init];
-//    for (Photo *smallPhoto in self.arrayToSend)
-//    {
-//        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId])
-//        {
-//            [mutablePhotos addObject:smallPhoto];
-//        }
-//    }
-//    
-//    NSArray *array = [mutablePhotos mutableCopy];
-//    return array;
-//}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout*)collectionViewLayout
@@ -891,505 +589,5 @@
     [self loadNewsFeed:YES refresh:refreshControl];
 }
 
-
-
-//MOVING THIS OUT OF MY WAY
-
-//LOADNEWSFEED
-// I don't think we'll need duplicatePhotoStrings anymore
-// I don't think we'll need duplicatePhotos anymore
-//this trip hasnt been represnted yet
-//                    if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId]){
-//                        if (isRefresh == YES){
-//                            [self.mainPhotos insertObject:photo atIndex:0];
-//                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                            [self.duplicatePhotos addObject:photo.objectId];
-//
-//                            if (![self.photoUsers containsObject:photo.user.objectId])
-//                                [self.photoUsers addObject:photo.user.objectId];
-//
-//
-//                        } else {
-//                            [self.mainPhotos addObject:photo];
-//                            [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                            [self.duplicatePhotos addObject:photo.objectId];
-//                            if (![self.photoUsers containsObject:photo.user.objectId]){
-//                                if (photo.user.objectId != nil)
-//                                    [self.photoUsers addObject:photo.user.objectId];
-//                            }
-//                        }
-//                    } else if ([self.duplicatePhotoStrings containsObject:photo.trip.objectId]) {
-//
-//                        if (![_duplicatePhotos containsObject:photo.objectId]){
-//                            if (![self.photoUsers containsObject:photo.user.objectId]){
-//                                if (isRefresh == YES) {
-//                                    [self.mainPhotos insertObject:photo atIndex:0];
-//                                    [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                    [self.duplicatePhotos addObject:photo.objectId];
-//                                    if (![self.photoUsers containsObject:photo.user.objectId])
-//                                        [self.photoUsers addObject:photo.user.objectId];
-//                                }else{
-//                                    [self.mainPhotos addObject:photo];
-//                                    [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                    [self.duplicatePhotos addObject:photo.objectId];
-//                                    if (![self.photoUsers containsObject:photo.user.objectId]){
-//                                        if (photo.user.objectId != nil)
-//                                            [self.photoUsers addObject:photo.user.objectId];
-//                                    }
-//                                }
-//
-//                            }else{
-//                                //so the photo and trip and user have been represnted. Lets make sure its all from one trunk though (in case a user is represented but its from a different trunk)
-//                                NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId]; //BUG BUG BUG FIXME YOU IDIOT MICHAEL. THE INDEX OF THE USER IN PHOTOUSERS IS NOT ALWAYS THE SAME AS IN THE TRIPS
-//                                NSString *tripID = self.duplicatePhotoStrings[fooIndex];
-//
-//                                //this user is represnted in a different trunk, so it doesnt count as being represtened already in this case
-//                                if (![tripID isEqualToString:photo.trip.objectId]){
-//                                    if (isRefresh == YES) {
-//                                        [self.mainPhotos insertObject:photo atIndex:0];
-//                                        [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                        [self.duplicatePhotos addObject:photo.objectId];
-//                                        if (![self.photoUsers containsObject:photo.user.objectId])
-//                                            [self.photoUsers addObject:photo.user.objectId];
-//                                    }else{
-//                                        [self.mainPhotos addObject:photo];
-//                                        [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                        [self.duplicatePhotos addObject:photo.objectId];
-//                                        if (![self.photoUsers containsObject:photo.user.objectId])
-//                                            [self.photoUsers addObject:photo.user.objectId];
-//                                    }
-//
-//                                }
-//
-//                            }
-//                        }
-//
-//                    }
-
-
-
-
-
-
-//    if (self.isLoading == NO)
-//    {
-//        self.isLoading = YES;
-//        int mainCount = (int)self.mainPhotos.count;
-//
-//        PFQuery *memberQuery = [PFQuery queryWithClassName:@"Activity"];
-//        [memberQuery whereKeyExists:@"fromUser"];
-//        [memberQuery whereKeyExists:@"toUser"];
-//        [memberQuery whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//        [memberQuery whereKey:@"type" equalTo:@"addToTrip"];
-//        [memberQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-//        [memberQuery setLimit:100];
-//
-//        [memberQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
-//         {
-//             if(!error)
-//             {
-//                 [[TTUtility sharedInstance] internetConnectionFound];
-//                 for(id object in objects)
-//                 {
-//                     [self.trips addObject:object[@"trip"]];
-//                 }
-//
-//                 PFQuery *photos = [PFQuery queryWithClassName:@"Activity"];
-//                 [photos whereKeyExists:@"trip"];
-//                 [photos whereKey:@"type" equalTo:@"addedPhoto"];
-//                 [photos whereKey:@"fromUser" containedIn:self.following];
-//                 if (self.photos.count > 0 && isRefresh == NO)
-//                 {
-//                     Photo *photo = self.photos.lastObject;
-//                     [photos whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
-//                     [photos whereKey:@"objectId" notContainedIn:self.objid];
-//                 } else if (self.photos.count > 0 && isRefresh == YES)
-//                 {
-//                     Photo *photo = self.photos.firstObject;
-//                     [photos whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
-//                     [photos whereKey:@"objectId" notContainedIn:self.objid];
-//                 }
-//
-//                 PFQuery *photos2 = [PFQuery queryWithClassName:@"Activity"];
-//                 [photos2 whereKeyExists:@"trip"];
-//                 [photos2 whereKey:@"type" equalTo:@"addedPhoto"];
-//                 [photos2 whereKey:@"trip" containedIn:self.trips];
-//                 if (self.photos.count > 0 && isRefresh == NO)
-//                 {
-//                     Photo *photo = self.photos.lastObject;
-//                     [photos2 whereKey:@"createdAt" lessThanOrEqualTo:photo.createdAt];
-//                     [photos2 whereKey:@"objectId" notContainedIn:self.objid];
-//                 } else if (self.photos.count > 0 && isRefresh == YES)
-//                 {
-//                     Photo *photo = self.photos.firstObject;
-//                     [photos2 whereKey:@"createdAt" greaterThanOrEqualTo:photo.createdAt];
-//                     [photos2 whereKey:@"objectId" notContainedIn:self.objid];
-//                 }
-//
-//                 PFQuery *photoQuery = [PFQuery orQueryWithSubqueries:@[photos,photos2]];
-//                 [photoQuery whereKeyExists:@"fromUser"];
-//                 [photoQuery whereKeyExists:@"toUser"];
-//                 [photoQuery includeKey:@"fromUser"];
-//                 [photoQuery includeKey:@"photo"];
-//                 [photoQuery includeKey:@"trip"];
-//                 [photoQuery includeKey:@"trip.publicTripDetail"];
-//                 [photoQuery setCachePolicy:kPFCachePolicyNetworkOnly];
-//                 photoQuery.limit = 100;
-//                 [photoQuery orderByDescending:@"createdAt"];
-//
-//                 [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
-//                  {
-//
-//                      if (error)
-//                      {
-//                          [ParseErrorHandlingController handleError:error];
-//                          [refreshControl endRefreshing];
-//                      }
-//
-//                      if (!error)
-//                      {
-//                          if (isRefresh == NO && objects.count == 0)
-//                          {
-//                              self.reachedBottom = YES;
-//                          }
-//                          [[TTUtility sharedInstance] internetConnectionFound];
-//
-//                          for (PFObject *activity in objects)
-//                          {
-//                              Photo *photo = activity[@"photo"];
-//                              photo.user = activity[@"fromUser"];
-//                              photo.trip = activity[@"trip"];
-//                              if (photo.trip != nil)
-//                              {
-//
-//                                  if (isRefresh == NO)
-//                                  {
-//                                      [self.photos addObject:photo];
-//                                      [self.arrayToSend addObject:photo];
-//                                  } else
-//                                  {
-//                                      [self.photos insertObject:photo atIndex:0];
-//                                      [self.arrayToSend insertObject:photo atIndex:0];
-//                                  }
-//
-//                                  //this trip hasnt been represnted yet
-//                                  if (![self.duplicatePhotoStrings containsObject:photo.trip.objectId])
-//                                  {
-//                                      if (isRefresh == YES)
-//                                      {
-//                                          [self.mainPhotos insertObject:photo atIndex:0];
-//                                          [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                          [self.duplicatePhotos addObject:photo.objectId];
-//
-//                                          if (![self.photoUsers containsObject:photo.user.objectId]){
-//
-//                                              [self.photoUsers addObject:photo.user.objectId];
-//
-//                                          }
-//                                      } else
-//                                      {
-//                                          [self.mainPhotos addObject:photo];
-//                                          [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                          [self.duplicatePhotos addObject:photo.objectId];
-//                                          if (![self.photoUsers containsObject:photo.user.objectId]){
-//                                              if (photo.user.objectId != nil){
-//                                                  [self.photoUsers addObject:photo.user.objectId];
-//                                              }
-//                                          }
-//                                      }
-//                                  }
-//
-//
-//                                  //this trip has been represented
-//                                  else if ([self.duplicatePhotoStrings containsObject:photo.trip.objectId])
-//                                  {
-//
-//                                      //this photo hasnt been represented
-//                                      if (![_duplicatePhotos containsObject:photo.objectId])
-//                                      {
-//                                          //this user hasnt been represented
-//                                          if (![self.photoUsers containsObject:photo.user.objectId])
-//                                          {
-//                                              if (isRefresh == YES)
-//                                              {
-//                                                  [self.mainPhotos insertObject:photo atIndex:0];
-//                                                  [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                                  [self.duplicatePhotos addObject:photo.objectId];
-//                                                  if (![self.photoUsers containsObject:photo.user.objectId]){
-//
-//                                                      [self.photoUsers addObject:photo.user.objectId];
-//                                                  }
-//                                              }
-//                                              else
-//                                              {
-//                                                  [self.mainPhotos addObject:photo];
-//                                                  [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                                  [self.duplicatePhotos addObject:photo.objectId];
-//                                                  if (![self.photoUsers containsObject:photo.user.objectId]){
-//                                                      if (photo.user.objectId != nil){
-//                                                          [self.photoUsers addObject:photo.user.objectId];
-//                                                      }
-//                                                  }
-//                                              }
-//
-//                                        //this user has been represented
-//                                          }
-//                                          else
-//                                          {
-//                                        //so the photo and trip and user have been represnted. Lets make sure its all from one trunk though (in case a user is represented but its from a different trunk)
-//                                              NSUInteger fooIndex = [self.photoUsers indexOfObject:photo.user.objectId]; //BUG BUG BUG FIXME YOU IDIOT MICHAEL. THE INDEX OF THE USER IN PHOTOUSERS IS NOT ALWAYS THE SAME AS IN THE TRIPS
-//                                              NSString *tripID = self.duplicatePhotoStrings[fooIndex];
-//
-//                                              //this user is represnted in a different trunk, so it doesnt count as being represtened already in this case
-//                                              if (![tripID isEqualToString:photo.trip.objectId])
-//                                              {
-//                                                  if (isRefresh == YES)
-//                                                  {
-//                                                      [self.mainPhotos insertObject:photo atIndex:0];
-//                                                      [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                                      [self.duplicatePhotos addObject:photo.objectId];
-//                                                      if (![self.photoUsers containsObject:photo.user.objectId]){
-//
-//                                                          [self.photoUsers addObject:photo.user.objectId];
-//                                                      }
-//                                                  }
-//                                                  else
-//                                                  {
-//                                                      [self.mainPhotos addObject:photo];
-//                                                      [self.duplicatePhotoStrings addObject:photo.trip.objectId];
-//                                                      [self.duplicatePhotos addObject:photo.objectId];
-//                                                      if (![self.photoUsers containsObject:photo.user.objectId]){
-//
-//                                                          [self.photoUsers addObject:photo.user.objectId];
-//                                                      }
-//                                                  }
-//
-//                                              }
-//
-//                                          }
-//                                      }
-//
-//                                  }
-//
-//                                  [self.objid addObject:activity.objectId];
-//                              }
-//                          }
-//
-//
-//
-//                          dispatch_async(dispatch_get_main_queue(), ^{
-//
-//                              if (self.mainPhotos.count < 2 && self.reachedBottom == NO){
-//                                  self.isLoading = NO;
-//                                  [self loadNewsFeed:NO refresh:nil];
-//                              } else if (mainCount == (int)self.mainPhotos && self.reachedBottom == NO){
-//                                  self.isLoading = NO;
-//                                  [self loadNewsFeed:NO refresh:nil];
-//                              }
-//
-//                              if (refreshControl) {
-//                                  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//                                  [formatter setDateFormat:@"MMM d, h:mm a"];
-////                                  NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-////                                  NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-//                                NSString *title = @"";
-//                                  NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
-//                                                                                              forKey:NSForegroundColorAttributeName];
-//                                  NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-//                                  refreshControl.attributedTitle = attributedTitle;
-//
-//                                  [refreshControl endRefreshing];
-//                                  [self.collectionView reloadData];
-//                                  self.isLoading = NO;
-//
-//
-//                              } else {
-//                                  [refreshControl endRefreshing];
-//                                  [self.collectionView reloadData];
-//                                  self.isLoading = NO;
-//
-//                              }
-//
-//                          });
-//                      }
-//                      [refreshControl endRefreshing];
-//                      [self.collectionView reloadData];
-//
-//                  }];
-//
-//             }else
-//             {
-//                 [ParseErrorHandlingController handleError:error];
-//                 NSLog(@"Error: %@",error);
-//             }
-//
-//         }];
-//
-//
-//
-//
-//    }
-
-
-
-
-//CELLFORROWATINDEXPATH
-//
-//
-//    __block int count = 0;
-//    __block int indexCount = 0;
-//    for (Photo *smallPhoto in self.photos){
-//        indexCount += 1;
-//        if ([photo.trip.objectId isEqualToString:smallPhoto.trip.objectId] && ![photo.objectId isEqualToString:smallPhoto.objectId] && [smallPhoto.user.objectId isEqualToString:photo.user.objectId])
-//            {
-//
-//            NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:smallPhoto.imageUrl];
-//            NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-//            UIImage *placeholderImage = nil;
-//            count +=1;
-//
-//            if (count == 1)
-//            {
-//
-//                UITapGestureRecognizer *imageOneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapOne:)];
-//
-//                imageOneTap.cancelsTouchesInView = YES;
-//                imageOneTap.numberOfTapsRequired = 1;
-//                [cell.image1 addGestureRecognizer:imageOneTap];
-//                cell.image1.userInteractionEnabled = YES;
-//                imageOneTap.view.tag = indexCount - 1;
-//                cell.image1.hidden = NO;
-//
-//            [cell.image1 setImageWithURLRequest:requestNew
-//                                      placeholderImage:placeholderImage
-//                                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                   [cell.image1 setImage:image];
-//                                                   cell.image1.hidden = NO;
-//                                                   [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                   [smallPhoto setImage:image];
-//                                                   [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                                   [cell setNeedsLayout];
-//                                               } failure:nil];
-//            }
-//
-//            else if (count == 2)
-//            {
-//                UITapGestureRecognizer *imageTwoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapTwo:)];
-//
-//                imageTwoTap.cancelsTouchesInView = YES;
-//                imageTwoTap.numberOfTapsRequired = 1;
-//                [cell.image2 addGestureRecognizer:imageTwoTap];
-//                cell.image2.userInteractionEnabled = YES;
-//                imageTwoTap.view.tag = indexCount - 1;
-//                cell.image2.hidden = NO;
-//
-//                [cell.image2 setImageWithURLRequest:requestNew
-//                                   placeholderImage:placeholderImage
-//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                [cell.image2 setImage:image];
-//                                                cell.image2.hidden = NO;
-//                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                [smallPhoto setImage:image];
-//                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                                [cell setNeedsLayout];
-//                                            } failure:nil];
-//            }
-//
-//            else if (count == 3)
-//            {
-//                 UITapGestureRecognizer *imageThreeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapThree:)];
-//                imageThreeTap.cancelsTouchesInView = YES;
-//                imageThreeTap.numberOfTapsRequired = 1;
-//                [cell.image3 addGestureRecognizer:imageThreeTap];
-//                cell.image3.userInteractionEnabled = YES;
-//                imageThreeTap.view.tag = indexCount - 1;
-//                cell.image3.hidden = NO;
-//
-//
-//                [cell.image3 setImageWithURLRequest:requestNew
-//                                   placeholderImage:placeholderImage
-//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                [cell.image3 setImage:image];
-//
-//
-//                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                [smallPhoto setImage:image];
-//                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//
-//
-//                                                [cell setNeedsLayout];
-//                                            } failure:nil];
-//            }
-//
-//            else if (count == 4)
-//            {
-//                UITapGestureRecognizer *imageFourTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapFour:)];
-//
-//                imageFourTap.cancelsTouchesInView = YES;
-//                imageFourTap.numberOfTapsRequired = 1;
-//                [cell.image4 addGestureRecognizer:imageFourTap];
-//                cell.image4.userInteractionEnabled = YES;
-//                imageFourTap.view.tag = indexCount - 1;
-//                cell.image4.hidden = NO;
-//                [cell.image4 setImageWithURLRequest:requestNew
-//                                   placeholderImage:placeholderImage
-//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                [cell.image4 setImage:image];
-//                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                [smallPhoto setImage:image];
-//                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//
-//
-//                                                [cell setNeedsLayout];
-//                                            } failure:nil];
-//            }
-//
-//            else if (count == 5)
-//            {
-//
-//                cell.image5.hidden = NO;
-//                cell.labelButton.hidden = NO;
-//                cell.imageBUtton.hidden = NO;
-//
-//                [cell.image5 setImageWithURLRequest:requestNew
-//                                   placeholderImage:placeholderImage
-//                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                [cell.image5 setImage:image];
-//                                                [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                [smallPhoto setImage:image];
-//                                                [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//
-//                                                [cell setNeedsLayout];
-//                                            } failure:nil];
-//            }
-//
-//        }  else if ([photo.objectId isEqualToString:smallPhoto.objectId]){
-//
-//            NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
-//            NSURLRequest *requestNew = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-//            UIImage *placeholderImage = photo.image;
-//
-//            //within cellForRowAtIndexPath (where customer table cell with imageview is created and reused)
-//            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTap:)];
-//
-//            tap.cancelsTouchesInView = YES;
-//            tap.numberOfTapsRequired = 1;
-//            [cell.newsfeedPhoto addGestureRecognizer:tap];
-//            cell.newsfeedPhoto.userInteractionEnabled = YES;
-//            tap.view.tag =  indexCount - 1;
-//
-//
-//            [cell.newsfeedPhoto setImageWithURLRequest:requestNew
-//                                      placeholderImage:placeholderImage
-//                                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-//                                                   [cell.newsfeedPhoto setImage:image];
-//                                                   [self.arrayToSend removeObjectAtIndex:indexCount-1];
-//                                                   [smallPhoto setImage:image];
-//                                                   [self.arrayToSend insertObject:smallPhoto atIndex:indexCount-1];
-//                                                   [cell setNeedsLayout];
-//                                               } failure:nil];
-//        }
-//
-//    }
 
 @end
