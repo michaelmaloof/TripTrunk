@@ -24,7 +24,7 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 
-@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate>
+@interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate,UIActionSheetDelegate>
 
 /**
  *  Array holding Photo objects for the photos in this trunk
@@ -64,110 +64,110 @@
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
     } else {
-    
-    self.constraintLabel.hidden = YES;
-    self.totalLikeButton.hidden = YES;
-    self.totalLikeHeart.hidden = YES;
-    self.cloud.hidden = YES;
-    self.memberCollectionView.hidden = YES;
-    self.navigationController.navigationItem.rightBarButtonItem = nil;
-    self.collectionView.backgroundColor = [UIColor clearColor];
-    self.memberCollectionView.backgroundColor = [UIColor clearColor];
-    
-    self.descriptionTextView = [[UITextView alloc]init];
-    self.descriptionTextView.hidden = YES;
-    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
-    self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
-    self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
-    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
-    self.descriptionTextView.editable = NO;
-    self.descriptionTextView.selectable = NO;
-    self.descriptionTextView.scrollEnabled = YES;
-    self.descriptionTextView.delegate = self;
-    self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
-    
-    [self refreshTripDataViews];
         
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        
-
-    if (self.trip.publicTripDetail.totalLikes > 0) {
-        self.totalLikeButton.tintColor = [UIColor whiteColor];
-        self.totalLikeButton.textColor = [UIColor whiteColor];
-        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-        self.totalLikeButton.hidden = NO;
-        self.totalLikeHeart.hidden = NO;
-    }
-    else{
+        self.constraintLabel.hidden = YES;
         self.totalLikeButton.hidden = YES;
         self.totalLikeHeart.hidden = YES;
-    }
+        self.cloud.hidden = YES;
+        self.memberCollectionView.hidden = YES;
+        self.navigationController.navigationItem.rightBarButtonItem = nil;
+        self.collectionView.backgroundColor = [UIColor clearColor];
+        self.memberCollectionView.backgroundColor = [UIColor clearColor];
         
-    }];
-
-    self.photos = [[NSArray alloc] init];
-    self.members = [[NSMutableArray alloc] init];
-    
-    // Load initial data
-    [self checkIfIsMember];
-    
-
-    // Add observer for when uploading is finished.
-    // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
-    // Notification is also used if a photo is deleted.
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(queryParseMethod)
-                                                 name:@"parsePhotosUpdatedNotification"
-                                               object:nil];
-    
-    self.loadingMembers = [[NSMutableArray alloc]init];
-    
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
+        self.descriptionTextView = [[UITextView alloc]init];
+        self.descriptionTextView.hidden = YES;
+        [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
+        self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
+        self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
+        self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
+        self.descriptionTextView.editable = NO;
+        self.descriptionTextView.selectable = NO;
+        self.descriptionTextView.scrollEnabled = YES;
+        self.descriptionTextView.delegate = self;
+        self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
+        
+        [self refreshTripDataViews];
+        
+        [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            
+            
+            if (self.trip.publicTripDetail.totalLikes > 0) {
+                self.totalLikeButton.tintColor = [UIColor whiteColor];
+                self.totalLikeButton.textColor = [UIColor whiteColor];
+                self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+                self.totalLikeButton.hidden = NO;
+                self.totalLikeHeart.hidden = NO;
+            }
+            else{
+                self.totalLikeButton.hidden = YES;
+                self.totalLikeHeart.hidden = YES;
+            }
+            
+        }];
+        
+        self.photos = [[NSArray alloc] init];
+        self.members = [[NSMutableArray alloc] init];
+        
+        // Load initial data
+        [self checkIfIsMember];
+        
+        
+        // Add observer for when uploading is finished.
+        // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
+        // Notification is also used if a photo is deleted.
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(queryParseMethod)
+                                                     name:@"parsePhotosUpdatedNotification"
+                                                   object:nil];
+        
+        self.loadingMembers = [[NSMutableArray alloc]init];
+        
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
         {
-            if ([view isKindOfClass:[HomeMapViewController class]])
+            for (HomeMapViewController *view in controller.viewControllers)
             {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        if (![view.viewedTrunks containsObject:self.trip])
-                        {
-                            [view.viewedTrunks addObject:self.trip];
-
+                if ([view isKindOfClass:[HomeMapViewController class]])
+                {
+                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                        if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                            if (![view.viewedTrunks containsObject:self.trip])
+                            {
+                                [view.viewedTrunks addObject:self.trip];
+                                
+                            }
+                            
+                            self.photosSeen = [[NSMutableArray alloc]init];
+                            self.photosSeen = view.viewedPhotos;
                         }
-                        
-                        self.photosSeen = [[NSMutableArray alloc]init];
-                        self.photosSeen = view.viewedPhotos;
                     }
                 }
             }
         }
-    }
-    
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
+        
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
         {
-            if ([view isKindOfClass:[HomeMapViewController class]])
+            for (HomeMapViewController *view in controller.viewControllers)
             {
-                [view addTripToViewArray:self.trip];
+                if ([view isKindOfClass:[HomeMapViewController class]])
+                {
+                    [view addTripToViewArray:self.trip];
+                }
             }
         }
-    }
-    
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (TrunkListViewController *view in controller.viewControllers)
+        
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
         {
-            if ([view isKindOfClass:[TrunkListViewController class]])
+            for (TrunkListViewController *view in controller.viewControllers)
             {
-                [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
+                if ([view isKindOfClass:[TrunkListViewController class]])
+                {
+                    [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
+                }
             }
         }
-    }
-
-    
-//    }];
+        
+        
+        //    }];
     }
 }
 
@@ -195,6 +195,12 @@
         }
     }];
     
+    [self setPhotosSeenLoop];
+    [self refreshTripDataViews];
+    
+}
+
+-(void)setPhotosSeenLoop{
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)
@@ -203,17 +209,14 @@
             {
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
-
-                            self.photosSeen = [[NSMutableArray alloc]init];
-                            self.photosSeen = view.viewedPhotos;
+                        
+                        self.photosSeen = [[NSMutableArray alloc]init];
+                        self.photosSeen = view.viewedPhotos;
                     }
                 }
             }
         }
     }
-    
-    [self refreshTripDataViews];
-    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -323,11 +326,6 @@
     if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Edit",@"Edit")
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(editTapped)];
-
     }
     
     if (self.firstLoadDone == NO){
@@ -355,8 +353,6 @@
             }
             
         }];
-    
-
 }
 
 -(void)memberWasRemoved:(PFUser *)sender{
@@ -394,23 +390,13 @@
 
     }
     
-    if (self.isMember == YES && ![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
+    if (self.isMember == YES)
     {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Leave",@"Leave")
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(leaveTrunk)];
-        
-    } else {
-
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"] style:UIBarButtonItemStylePlain  target:self action:@selector(moreTapped)];
     }
     
     self.collectionView.hidden = NO;
-    
-    
     NSInteger memberWidthTotal = (self.members.count + 1) * 60;
-
-    
     if ( self.members.count + 1 > 5){
         self.memberCollectionWidth.constant = self.view.frame.size.width;
         self.memberCollectionView.hidden = NO;
@@ -489,7 +475,7 @@
 
 #pragma mark - Button Actions 
 
-- (IBAction)onPhotoTapped:(id)sender {
+-(void)downloadTrunkPhotos{
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
@@ -499,6 +485,30 @@
     [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
     alertView.tag = 3;
     [alertView show];
+
+}
+
+-(void)moreTapped{
+    UIActionSheet *actionSheet;
+    
+    if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos")
+                                         otherButtonTitles:NSLocalizedString(@"Edit Trunk",@"Edit Trunk"),nil];
+        
+    }
+    
+    else if (self.isMember == YES) {
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                    destructiveButtonTitle:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos")
+                                         otherButtonTitles:NSLocalizedString(@"Leave Trunk",@"Leave Trunk"),nil];
+    }
+    
+    [actionSheet showInView:self.view];
 
 }
 
@@ -518,6 +528,8 @@
     
     [alertView show];
 }
+
+
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -546,6 +558,21 @@
                 [[TTUtility sharedInstance] downloadPhotos:self.photos];
             }
         }
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // button index == 0 then it cancels the action
+    if (buttonIndex == 1){
+        [self downloadTrunkPhotos];
+    } else if (buttonIndex == 2){
+           if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+               [self editTapped];
+           } else {
+               [self leaveTrunk];
+           }
     }
 }
 
