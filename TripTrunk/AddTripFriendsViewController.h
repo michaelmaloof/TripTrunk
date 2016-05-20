@@ -34,10 +34,7 @@
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
 @property id<AddMemberDelegate> delegate;
-
-
 @property (strong, nonatomic) Trip *trip;
-
 @property (nonatomic)BOOL isTripCreation;
 
 @end

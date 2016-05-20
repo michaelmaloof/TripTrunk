@@ -26,10 +26,18 @@
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    
+    if (selected) {
+        self.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:.3];
+    }
+    else {
+        self.backgroundColor = [UIColor whiteColor];
+    }
+    
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
 }
+
 
 - (void)setUser:(PFUser *)user {
     _user = user;

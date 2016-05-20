@@ -3817,7 +3817,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odd-SO-VOD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1182" y="-421"/>
+            <point key="canvasLocation" x="1267.5" y="-378.75"/>
         </scene>
         <!--Home-->
         <scene sceneID="JHG-qy-leG">
@@ -4732,7 +4732,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="bhX-wL-LGH"/>
-        <segue reference="JSU-Dg-jAI"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="yXb-jN-ymd"/>
     </inferredMetricsTieBreakers>
 </document>

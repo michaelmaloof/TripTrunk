@@ -22,7 +22,6 @@
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *searchResults;
-
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
@@ -31,9 +30,7 @@
 @property BOOL isNext;
 @property NSMutableArray *membersToAdd;
 @property BOOL isSearching;
-
 @property NSMutableArray *friendsObjectIds;
-
 @property BOOL didTapCreated;
 
 
@@ -62,7 +59,7 @@
     
     self.friendsObjectIds = [[NSMutableArray alloc]init];
     
-    self.title = NSLocalizedString(@"Add Friends",@"Add Friends");
+    self.title = NSLocalizedString(@"Add Members",@"Add Members");
     
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
@@ -72,8 +69,7 @@
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(saveFriendsAndClose)];
-        
-        UIBarButtonItem *newBackButton =
+                UIBarButtonItem *newBackButton =
         [[UIBarButtonItem alloc] initWithTitle:@""
                                          style:UIBarButtonItemStylePlain
                                         target:nil
@@ -87,10 +83,6 @@
     
     }
     
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    
-    [self.tableView setTintColor:ttBlueColor];
-        
     _thisUser = [PFUser currentUser];
     
     // Create nested arrays to populate the table view
@@ -144,10 +136,6 @@
     self.definesPresentationContext = YES;
 
 }
-
-
-
-
 
 - (void)loadFollowing
 {
@@ -211,7 +199,6 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
     return 1;
 }
 
@@ -234,8 +221,15 @@
     return nil;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    view.tintColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[UIColor whiteColor]];
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active) {
         return [[_friends objectAtIndex:section] count];
@@ -268,11 +262,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFUser *possibleFriend;
-    
-    
-    NSString *searchString = [self.searchController.searchBar.text lowercaseString];
 
+    PFUser *possibleFriend;
+    NSString *searchString = [self.searchController.searchBar.text lowercaseString];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![searchString isEqualToString:@""] && self.isNext == NO && self.isSearching == YES) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
@@ -280,13 +272,11 @@
     else {
         possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
-    
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setEditing:YES animated:YES];
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    [cell.followButton setSelected:_isFollowing];
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
@@ -321,7 +311,6 @@
                                               otherButtonTitles:nil, nil];
        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [alert show];
-        
     }
     
     else if (self.membersToAdd.count < 50){
@@ -333,6 +322,7 @@
         } else {
             [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         }
+                
     } else {
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Someone is Popular",@"Someone is Popular")
@@ -372,18 +362,17 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UserTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     // Set selection of existing members
     if ([self userExists:cell.user inArray:self.existingMembers] == YES){
-//        [cell setSelected:YES];
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([self userExists:cell.user inArray:self.membersToAdd] == YES){
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else {
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
-    
 }
+
+
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
@@ -393,15 +382,6 @@
     return UITableViewCellEditingStyleNone;
 }
 
-
-//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    
-//}
-//
-//-(NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//}
 
 #pragma mark - UserTableViewCellDelegate
 
