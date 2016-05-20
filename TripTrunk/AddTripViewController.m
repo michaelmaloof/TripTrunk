@@ -22,11 +22,13 @@
 @interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
 // Text Fields
-@property (weak, nonatomic) IBOutlet UITextField *tripNameTextField;
+
+@property (weak, nonatomic) IBOutlet UITextView *tripNameTextView;
 @property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
 @property (weak, nonatomic) IBOutlet UITextField *endTripTextField;
 @property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
-@property (strong, nonatomic) IBOutlet UITextField *locationTextField;
+@property (weak, nonatomic) IBOutlet UITextView *locationTextView;
+
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
 @property (weak, nonatomic) IBOutlet UIButton *helpButton;
 
@@ -94,8 +96,8 @@
         self.tripDatePicker.hidden = YES;
         self.startTripTextField.delegate = self;
         self.endTripTextField.delegate = self;
-        self.tripNameTextField.delegate = self;
-        self.locationTextField.delegate = self;
+        self.tripNameTextView.delegate = self;
+        self.locationTextView.delegate = self;
         self.formatter = [[NSDateFormatter alloc]init];
         [self.formatter setDateFormat:@"MM/dd/yyyy"];
         self.startTripTextField.tintColor = [UIColor clearColor];
@@ -128,8 +130,8 @@
             [self tabBarTitle];
             
             //if they're editing the trunk we fill in the text fields with the correct info
-            self.tripNameTextField.text = self.trip.name;
-            self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
+            self.tripNameTextView.text = self.trip.name;
+            self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
             self.startTripTextField.text = self.trip.startDate;
             self.endTripTextField.text = self.trip.endDate;
             
@@ -313,7 +315,7 @@
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
-    else if ([textField isEqual:self.locationTextField]) {
+    else if ([textField isEqual:self.locationTextView]) {
         [textField resignFirstResponder];
         
         CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
@@ -328,6 +330,21 @@
         self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return  YES;
     }
+}
+
+
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    UITextView *tv = object;
+    //Center vertical alignment
+    //CGFloat topCorrect = ([tv bounds].size.height - [tv contentSize].height * [tv zoomScale])/2.0;
+    //topCorrect = ( topCorrect < 0.0 ? 0.0 : topCorrect );
+    //tv.contentOffset = (CGPoint){.x = 0, .y = -topCorrect};
+    
+    //Bottom vertical alignment
+    CGFloat topCorrect = ([tv bounds].size.height - [tv contentSize].height);
+    topCorrect = (topCorrect <0.0 ? 0.0 : topCorrect);
+    tv.contentOffset = (CGPoint){.x = 0, .y = -topCorrect};
 }
 
 #pragma mark - CitySearchViewController Delegate
@@ -371,7 +388,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (iserror == NO){
-                    self.locationTextField.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
+                    self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
                 } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Unavailable",@"Location Unavailable")
                                                                     message:NSLocalizedString(@"We apologize. Please try another location.",@"We apologize. Please try another location.")
@@ -448,12 +465,12 @@
 {
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
-    if ([self.tripNameTextField.text isEqualToString:@""]){
+    if ([self.tripNameTextView.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
         [self tabBarTitle];
         self.navigationItem.rightBarButtonItem.enabled = YES;
-    } else if ([self.locationTextField.text isEqualToString:@""]){
+    } else if ([self.locationTextView.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a location.",@"Please give your trunk a location.")];
         self.title  = NSLocalizedString(@"Create Trunk",@"Create Trunk");
         [self tabBarTitle];
@@ -464,7 +481,7 @@
         [self tabBarTitle];
         //take the location the user typed in, make sure its a real location and meets the correct requirements
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        NSString *address = self.locationTextField.text;
+        NSString *address = self.locationTextView.text;
         
         [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
          {
@@ -495,13 +512,13 @@
              else if (!error)
              {
                  //make sure the user filled in all the correct text fields
-                 if (![self.tripNameTextField.text isEqualToString:@""] && ![self.locationTextField.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+                 if (![self.tripNameTextView.text isEqualToString:@""] && ![self.locationTextView.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
                  {
                      // Trip Input has correct data - save the trip!
                      
                      CLPlacemark *placemark = placemarks.firstObject;
                      
-                     if ([self.locationTextField.text isEqualToString:@"Rincon, Puerto Rico, Puerto Rico"]){
+                     if ([self.locationTextView.text isEqualToString:@"Rincon, Puerto Rico, Puerto Rico"]){
                          self.trip.lat = 18.338371;
                          self.trip.longitude = -67.251679;
                          self.trip.state = @"Puerto Rico";
@@ -566,8 +583,8 @@
  */
 - (void)resetForm {
     // Initialize the view with no data
-    self.tripNameTextField.text = @"";
-    self.locationTextField.text = @"";
+    self.tripNameTextView.text = @"";
+    self.locationTextView.text = @"";
     
     // Set initial date to the field - should be Today's date.
     self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
@@ -732,7 +749,7 @@
     
     //FIXME Should only parse if things have been changed
     
-    [self setTripName: self.tripNameTextField.text];
+    [self setTripName: self.tripNameTextView.text];
     self.trip.startDate = self.startTripTextField.text;
     self.trip.descriptionStory = self.descriptionTextView.text;
     self.trip.endDate = self.endTripTextField.text;

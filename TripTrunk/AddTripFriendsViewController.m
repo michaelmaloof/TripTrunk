@@ -92,7 +92,6 @@
     
     [self.tableView setEditing:YES animated:YES];
     [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
-    
     [self.tableView setAllowsSelectionDuringEditing:YES];
     
     
