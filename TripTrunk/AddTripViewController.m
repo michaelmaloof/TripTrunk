@@ -26,7 +26,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *startTripTextView;
 @property (weak, nonatomic) IBOutlet UITextView *endTripTextView;
 @property (weak, nonatomic) IBOutlet UITextView *locationTextView;
-@property UITextView *descriptionTextView;
 // Date Pickers
 @property (strong, nonatomic) UIDatePicker *datePicker;
 //Buttons
@@ -74,24 +73,6 @@
 
 #pragma mark - Initial Setup
 
-/**
- *  Sets up the ability for the user to add a trunk description (currently not used)
- *
- *
- */
--(void)setUpTrunkDescription{
-    self.descriptionTextView = [[UITextView alloc]init];
-    self.descriptionTextView.hidden = YES;
-    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
-    self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
-    self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
-    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 20, self.view.frame.origin.y + 100, self.view.frame.size.width - 40, self.view.frame.size.height - 200);
-    self.descriptionTextView.editable = YES;
-    self.descriptionTextView.selectable = YES;
-    self.descriptionTextView.scrollEnabled = YES;
-    self.descriptionTextView.delegate = self;
-    [self.view addSubview:self.descriptionTextView];
-}
 
 /**
  *  Determine if this is the user editing an exisiting trunk or creating a new one
@@ -149,7 +130,6 @@
     _isEditing = NO;
     self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
     [self tabBarTitle];
-    self.descriptionTextView.text = @"";
     // Set initial date to the field - should be Today's date.
     self.startTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
     self.endTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
@@ -577,9 +557,7 @@
     [alertView addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete")];
     alertView.tag = 0;
     [alertView show];
-    
     [self tabBarTitle];
-    
     
 }
 
@@ -610,8 +588,11 @@
     self.tripNameTextView.text = @"";
     self.locationTextView.text = @"";
     // Set initial date to the field - should be Today's date.
-    self.startTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
-    self.endTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    //FIXME How do I format this without weird spaces
+    self.startTripTextView.text = @"        Select Start Date";
+    self.endTripTextView.text = @"Select           End Date";
+    
+//    [self.formatter stringFromDate:[NSDate date]];
     
     if (!_isEditing) {
         self.trip = [[Trip alloc] init];
@@ -732,7 +713,6 @@
     
     [self setTripName: self.tripNameTextView.text];
     self.trip.startDate = self.startTripTextView.text;
-    self.trip.descriptionStory = self.descriptionTextView.text;
     self.trip.endDate = self.endTripTextView.text;
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
