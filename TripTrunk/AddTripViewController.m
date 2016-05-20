@@ -149,8 +149,8 @@
     //FIXME How do I format this without weird spaces
     [self.startTripTextView setTextAlignment:NSTextAlignmentRight];
     [self.endTripTextView setTextAlignment:NSTextAlignmentLeft];
-    self.startTripTextView.text = @"        Select Start Date";
-    self.endTripTextView.text = @"Select           End Date";
+    self.startTripTextView.text = @"Select \nStart Date";
+    self.endTripTextView.text = @"Select \nEnd Date";
     [self.startTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
     [self.endTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
 }
@@ -475,17 +475,22 @@
 - (IBAction)onNextTapped:(id)sender
 {
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    if ([self.tripNameTextView.text isEqualToString:@""]){
+    NSString *city = NSLocalizedString(@"City", @"City");
+    NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
+    if ([self.tripNameTextView.text isEqualToString:@""] || [self.tripNameTextView.text isEqualToString:trunkName]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-        [self tabBarTitle];
         self.navigationItem.rightBarButtonItem.enabled = YES;
-    } else if ([self.locationTextView.text isEqualToString:@""]){
+    } else if ([self.locationTextView.text isEqualToString:@""] || [self.locationTextView.text isEqualToString:city]){
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a location.",@"Please give your trunk a location.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-        [self tabBarTitle];
         self.navigationItem.rightBarButtonItem.enabled = YES;
-    } else {
+    } else if ([self.trip.startDate isEqualToString:@""] || [self.trip.endDate isEqualToString:@""] || self.trip.startDate == nil || self.trip.endDate == nil){
+        [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a start and end date.",@"Please give your trunk a start and end date.")];
+        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+
+    }else {
         //FIXME dont do this every time they click next. only if they changed location text fields
         self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
         [self tabBarTitle];
