@@ -1209,7 +1209,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="52" id="0tt-70-cJm"/>
-                                                    <constraint firstAttribute="width" constant="400" id="ccM-m4-mhV"/>
+                                                    <constraint firstAttribute="width" constant="400" id="jJe-kf-fZl"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="9uG-qj-cp1">
                                                     <size key="itemSize" width="50" height="50"/>
@@ -1267,13 +1267,14 @@
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="0tt-70-cJm"/>
-                                                        <exclude reference="ccM-m4-mhV"/>
+                                                        <exclude reference="jJe-kf-fZl"/>
                                                     </mask>
                                                 </variation>
-                                                <variation key="heightClass=regular-widthClass=compact">
+                                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                    <rect key="frame" x="0.0" y="1" width="401" height="52"/>
                                                     <mask key="constraints">
                                                         <include reference="0tt-70-cJm"/>
-                                                        <exclude reference="ccM-m4-mhV"/>
+                                                        <include reference="jJe-kf-fZl"/>
                                                     </mask>
                                                 </variation>
                                                 <connections>
@@ -1427,9 +1428,7 @@
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="o2X-FD-baW" secondAttribute="trailing" constant="1" id="1bJ-wG-sde"/>
                                             <constraint firstAttribute="trailing" secondItem="uTu-gi-m3c" secondAttribute="trailing" constant="16" id="3TS-vv-2eC"/>
-                                            <constraint firstAttribute="trailing" secondItem="Vaa-OY-0Ij" secondAttribute="trailing" id="3i3-ld-1v2"/>
                                             <constraint firstItem="eQQ-ju-bPp" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="2" id="49e-eW-tw7"/>
-                                            <constraint firstItem="Vaa-OY-0Ij" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" id="5Sq-o4-jF8"/>
                                             <constraint firstItem="uTu-gi-m3c" firstAttribute="leading" secondItem="eQQ-ju-bPp" secondAttribute="trailing" constant="8" id="6qq-ec-Zd8"/>
                                             <constraint firstItem="YXB-LB-7B6" firstAttribute="top" secondItem="Vaa-OY-0Ij" secondAttribute="bottom" constant="8" id="7mo-K0-b1G"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="bottom" secondItem="eQQ-ju-bPp" secondAttribute="bottom" id="9OF-JT-Ma0"/>
@@ -1448,11 +1447,12 @@
                                             <constraint firstItem="nRB-Dp-eMo" firstAttribute="top" secondItem="zUW-ht-yVP" secondAttribute="bottom" constant="4" id="azU-TC-RZk"/>
                                             <constraint firstItem="o2X-FD-baW" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="-1" id="c5Y-hH-zs2"/>
                                             <constraint firstItem="zUW-ht-yVP" firstAttribute="top" secondItem="YXB-LB-7B6" secondAttribute="bottom" constant="4" id="dyP-ua-aO5"/>
+                                            <constraint firstItem="Vaa-OY-0Ij" firstAttribute="centerX" secondItem="GJ8-pj-bOJ" secondAttribute="centerX" id="f47-ZW-9R4"/>
                                             <constraint firstItem="o2X-FD-baW" firstAttribute="top" secondItem="uTu-gi-m3c" secondAttribute="bottom" constant="3" id="fEh-ZP-ZBK"/>
                                             <constraint firstItem="uTu-gi-m3c" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="1" id="pT1-om-hzX"/>
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="6" id="sIb-NO-491"/>
                                             <constraint firstItem="zUW-ht-yVP" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="yEX-gC-Rag"/>
-                                            <constraint firstItem="Vaa-OY-0Ij" firstAttribute="top" secondItem="GJ8-pj-bOJ" secondAttribute="top" constant="1" id="zkO-gR-k1t"/>
+                                            <constraint firstItem="Vaa-OY-0Ij" firstAttribute="top" secondItem="GJ8-pj-bOJ" secondAttribute="top" constant="2" id="zkO-gR-k1t"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="subviews">
@@ -1468,8 +1468,7 @@
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="MMh-fd-C1l"/>
-                                                <exclude reference="3i3-ld-1v2"/>
-                                                <exclude reference="5Sq-o4-jF8"/>
+                                                <exclude reference="f47-ZW-9R4"/>
                                                 <exclude reference="zkO-gR-k1t"/>
                                                 <exclude reference="7mo-K0-b1G"/>
                                                 <exclude reference="K0V-Go-5wU"/>
@@ -1511,8 +1510,7 @@
                                             </mask>
                                             <mask key="constraints">
                                                 <include reference="MMh-fd-C1l"/>
-                                                <include reference="3i3-ld-1v2"/>
-                                                <include reference="5Sq-o4-jF8"/>
+                                                <include reference="f47-ZW-9R4"/>
                                                 <include reference="zkO-gR-k1t"/>
                                                 <include reference="7mo-K0-b1G"/>
                                                 <include reference="K0V-Go-5wU"/>
@@ -1615,7 +1613,7 @@
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
                         <outlet property="lock" destination="uTu-gi-m3c" id="dAX-ff-Ptd"/>
                         <outlet property="memberCollectionView" destination="Vaa-OY-0Ij" id="euj-O5-iW9"/>
-                        <outlet property="memberCollectionWidth" destination="ccM-m4-mhV" id="6QV-e0-bPf"/>
+                        <outlet property="memberCollectionWidth" destination="jJe-kf-fZl" id="axE-Z2-XFA"/>
                         <outlet property="scrollView" destination="a3W-cA-gYY" id="puk-dZ-8OP"/>
                         <outlet property="scrollViewHeightConstraint" destination="MeU-Sm-MtP" id="bnj-X0-smj"/>
                         <outlet property="startDate" destination="zUW-ht-yVP" id="tk4-q5-aiY"/>
