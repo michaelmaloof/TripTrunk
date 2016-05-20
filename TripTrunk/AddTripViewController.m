@@ -19,46 +19,39 @@
 #import "TrunkListViewController.h"
 #import "ActivityListViewController.h"
 
-@interface AddTripViewController () <UIAlertViewDelegate, UITextFieldDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
+@interface AddTripViewController () <UIAlertViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
-// Text Fields
-
+// Text Views
 @property (weak, nonatomic) IBOutlet UITextView *tripNameTextView;
-@property (weak, nonatomic) IBOutlet UITextField *startTripTextField;
-@property (weak, nonatomic) IBOutlet UITextField *endTripTextField;
-@property (weak, nonatomic) IBOutlet UIDatePicker *tripDatePicker;
+@property (weak, nonatomic) IBOutlet UITextView *startTripTextView;
+@property (weak, nonatomic) IBOutlet UITextView *endTripTextView;
 @property (weak, nonatomic) IBOutlet UITextView *locationTextView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;
-@property (weak, nonatomic) IBOutlet UIButton *helpButton;
-
-@property (strong, nonatomic) CLLocationManager *locationManager;
-@property (weak, nonatomic) IBOutlet UIButton *delete;
-@property (weak, nonatomic) IBOutlet UIButton *public;
-@property (weak, nonatomic) IBOutlet UIButton *private;
-@property BOOL isPrivate;
+@property UITextView *descriptionTextView;
+// Date Pickers
+@property (strong, nonatomic) UIDatePicker *datePicker;
+//Buttons
+@property (weak, nonatomic) IBOutlet UIButton *delete; //delete the trunk
+@property (weak, nonatomic) IBOutlet UIButton *public; //make trunk public
+@property (weak, nonatomic) IBOutlet UIButton *private; // make trunk private
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBar;
+@property (weak, nonatomic) IBOutlet UIButton *descriptionButton; //No Longer Implemented but will make a return
+// Date Properties
+@property NSDateFormatter *formatter;
+// Trunk
 @property BOOL needsCityUpdate; // if the trunk already exists and we changed the city of the trip
 @property BOOL needsNameUpdate; // if the trunk already exists and we changed the name of the trip
 @property BOOL isEditing; // if the trunk already exists and we're editing it
-@property (weak, nonatomic) IBOutlet UIButton *clear;
-@property (weak, nonatomic) IBOutlet UIButton *descriptionButton;
-@property UITextView *descriptionTextView;
-// Date Properties
-@property NSDateFormatter *formatter;
-
-@property (strong, nonatomic) UIDatePicker *datePicker;
-
-
-@property (strong, nonatomic) NSString *city;
-@property (strong, nonatomic) NSString *state;
-@property (strong, nonatomic) NSString *country;
-@property (weak, nonatomic) IBOutlet UILabel *publicTrunkLabel;
+@property (strong, nonatomic) NSString *city; //the city the trunk occured in
+@property (strong, nonatomic) NSString *state; //the state/region the trunk occured in
+@property (strong, nonatomic) NSString *country; //the country the trunk occured in
+@property BOOL isPrivate;
+// Location Manager
+@property (strong, nonatomic) CLLocationManager *locationManager;
+// Labels
+@property (weak, nonatomic) IBOutlet UILabel *publicTrunkLabel; //@"Public"
 @property (weak, nonatomic) IBOutlet UILabel *publicTrunkDescription;
-@property (weak, nonatomic) IBOutlet UILabel *privateTrunkLabel;
+@property (weak, nonatomic) IBOutlet UILabel *privateTrunkLabel; //@"Private"
 @property (weak, nonatomic) IBOutlet UILabel *privateTrunkDescription;
-
-
 
 @end
 
@@ -66,113 +59,121 @@
 
 
 - (void)viewDidLoad {
-    
     //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
-    
     [super viewDidLoad];
-    if (![PFUser currentUser]) {
+    if (![PFUser currentUser]) { //if the user isn't logged in take them to the map and force login
         [self.tabBarController setSelectedIndex:0];
     } else {
-        
-        self.tabBarController.tabBar.translucent = false;
-        self.descriptionTextView = [[UITextView alloc]init];
-        self.descriptionTextView.hidden = YES;
-        [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
-        self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
-        self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
-        self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 20, self.view.frame.origin.y + 100, self.view.frame.size.width - 40, self.view.frame.size.height - 200);
-        self.descriptionTextView.editable = YES;
-        self.descriptionTextView.selectable = YES;
-        self.descriptionTextView.scrollEnabled = YES;
-        self.descriptionTextView.delegate = self;
-        [self.view addSubview:self.descriptionTextView];
-        self.clear.hidden = YES;
-        self.tripDatePicker.hidden = YES;
-        self.startTripTextField.delegate = self;
-        self.endTripTextField.delegate = self;
-        self.tripNameTextView.delegate = self;
-        self.locationTextView.delegate = self;
-        self.formatter = [[NSDateFormatter alloc]init];
-        [self.formatter setDateFormat:@"MM/dd/yyyy"];
-        self.startTripTextField.tintColor = [UIColor clearColor];
-        self.endTripTextField.tintColor = [UIColor clearColor];
-        
-        //FIXME This may not be necessary anymore since we no longer need the users location
-        [self.locationManager requestWhenInUseAuthorization];
-        self.locationManager = [[CLLocationManager alloc] init];
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
-        self.locationManager.delegate = self;
-        
-        //if self.trip is not nil then it means the user is editing a trunk and not creating a new one.
-        if (self.trip) {
-            _isEditing = YES;
-            self.helpButton.hidden = YES;
-            self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
-            
-            self.descriptionTextView.text = self.trip.descriptionStory;
-            
-            if ([self.descriptionTextView.text isEqualToString:@""]){
-                [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-            } else {
-                [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
-            }
-            
-            //Not sure why but in this view if we don't call this when we change the nav title then the tab bar title changes too.
-            [self tabBarTitle];
-            
-            //if they're editing the trunk we fill in the text fields with the correct info
-            self.tripNameTextView.text = self.trip.name;
-            self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
-            self.startTripTextField.text = self.trip.startDate;
-            self.endTripTextField.text = self.trip.endDate;
-            
-            self.city = self.trip.city;
-            self.state = self.trip.state;
-            self.country = self.trip.country;
-            
-            self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Update",@"Update");
-            self.navigationItem.rightBarButtonItem.tag = 1;
-            self.navigationItem.leftBarButtonItem.tag = 1;
-            self.delete.hidden = NO;
-            //currently we don't want users being able to change a trunk tp public or private once the trunk has been created
-            self.public.hidden = YES;
-            self.private.hidden = YES;
-            
-            self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
-            self.cancelBar.enabled = YES;
-        }
-        //if self.trip is  nil then it means the user is creating a new trunk and not simply editing one
-        
-        else {
-            _isEditing = NO;
-            
-            // initialize the trip object
-            self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
-            [self tabBarTitle];
-            
-            self.descriptionTextView.text = @"";
-            
-            // Set initial date to the field - should be Today's date.
-            self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
-            self.endTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
-            
-            self.trip = [[Trip alloc] init];
-            self.cancelBar.title = @"";
-            self.cancelBar.enabled = FALSE;
-            
-            
-            self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"Next");
-            self.navigationItem.rightBarButtonItem.tag = 0;
-            self.navigationItem.leftBarButtonItem.tag = 0;
-            self.delete.hidden = YES;
-            
-        }
-        
+        [self setUpDatesAndTextViews];
+        [self setUpCurrentUsersLocation];
+        [self determineEditingVsCreationMode];
         [self setupDatePicker];
-        
         [self checkPublicPrivate];
     }
+}
+
+#pragma mark - Initial Setup
+
+/**
+ *  Sets up the ability for the user to add a trunk description (currently not used)
+ *
+ *
+ */
+-(void)setUpTrunkDescription{
+    self.descriptionTextView = [[UITextView alloc]init];
+    self.descriptionTextView.hidden = YES;
+    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
+    self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
+    self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
+    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 20, self.view.frame.origin.y + 100, self.view.frame.size.width - 40, self.view.frame.size.height - 200);
+    self.descriptionTextView.editable = YES;
+    self.descriptionTextView.selectable = YES;
+    self.descriptionTextView.scrollEnabled = YES;
+    self.descriptionTextView.delegate = self;
+    [self.view addSubview:self.descriptionTextView];
+}
+
+/**
+ *  Determine if this is the user editing an exisiting trunk or creating a new one
+ *
+ *
+ */
+-(void)determineEditingVsCreationMode{
+    //if self.trip is not nil then it means the user is editing a trunk and not creating a new one.
+    if (self.trip) {
+        [self setUpTrunkEditing];
+    }
+    //if self.trip is  nil then it means the user is creating a new trunk and not simply editing one
+    else {
+        [self setUpTrunkCreation];
+    }
+}
+
+/**
+ *  Sets up the ability for the user to edit an exisiting trunk
+ *
+ *
+ */
+-(void)setUpTrunkEditing{
+    _isEditing = YES;
+    self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
+    //if they're editing the trunk we fill in the text fields with the correct info
+    self.tripNameTextView.text = self.trip.name;
+    self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
+    self.startTripTextView.text = self.trip.startDate;
+    self.endTripTextView.text = self.trip.endDate;
+    self.city = self.trip.city;
+    self.state = self.trip.state;
+    self.country = self.trip.country;
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Update",@"Update");
+    self.navigationItem.rightBarButtonItem.tag = 1;
+    self.navigationItem.leftBarButtonItem.tag = 1;
+    self.delete.hidden = NO;
+    //currently we don't want users being able to change a trunk tp public or private once the trunk has been created
+    self.public.hidden = YES;
+    self.private.hidden = YES;
+    self.publicTrunkLabel.hidden = YES;
+    self.publicTrunkDescription.hidden = YES;
+    self.privateTrunkLabel.hidden = YES;
+    self.privateTrunkDescription.hidden = YES;
+    self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
+    self.cancelBar.enabled = YES;
+}
+
+/**
+ *  Sets up the ability for the user to createa a new trunk
+ *
+ *
+ */
+-(void)setUpTrunkCreation{
+    _isEditing = NO;
+    self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
+    [self tabBarTitle];
+    self.descriptionTextView.text = @"";
+    // Set initial date to the field - should be Today's date.
+    self.startTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    self.endTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    self.trip = [[Trip alloc] init];
+    self.cancelBar.title = @"";
+    self.cancelBar.enabled = FALSE;
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Next", @"Next");
+    self.navigationItem.rightBarButtonItem.tag = 0;
+    self.navigationItem.leftBarButtonItem.tag = 0;
+    self.delete.hidden = YES;
+}
+
+/**
+ *  Sets up the user's current location
+ *
+ *
+ */
+-(void)setUpCurrentUsersLocation{
+    //FIXME This may not be necessary anymore since we no longer need the users location
+    [self.locationManager requestWhenInUseAuthorization];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.distanceFilter = kCLLocationAccuracyKilometer;
+    self.locationManager.delegate = self;
 }
 
 /**
@@ -182,47 +183,45 @@
  */
 - (void)setupDatePicker {
     self.datePicker = [[UIDatePicker alloc] init];
+    [self.datePicker setValue:[UIColor colorWithRed:(255.0/255.0) green:(102.0/255.0) blue:(102.0/255.0) alpha:1.0]forKey:@"textColor"];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
-    
     [self.datePicker addTarget:self
                         action:@selector(dateChanged:)
               forControlEvents:UIControlEventValueChanged];
-    
     // Generic Flexible Space
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
     // Start Date Toolbar
     UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
     UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"Next")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
+    self.datePicker.backgroundColor = [UIColor whiteColor];
+    //Set Title of Start Date Picker
     UILabel *startLabel = [[UILabel alloc] init];
     [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
     [startLabel setFont:[UIFont systemFontOfSize:12.0]];
-    [startLabel setTextColor:[UIColor blackColor]];
+    [startLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [startLabel sizeToFit];
     UIBarButtonItem *labelbutton = [[UIBarButtonItem alloc] initWithCustomView:startLabel];
     startTripToolbar.items = [[NSArray alloc] initWithObjects:labelbutton, space, barButtonNext,nil];
-    barButtonNext.tintColor=[UIColor blackColor];
-    
-    self.startTripTextField.inputView = self.datePicker; // set the textfield to use the picker instead of a keyboard
-    self.startTripTextField.inputAccessoryView = startTripToolbar;
+    barButtonNext.tintColor=[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+    self.startTripTextView.inputView = self.datePicker; // set the textfield to use the picker instead of a keyboard
+    self.startTripTextView.inputAccessoryView = startTripToolbar;
 
     // End Date Toolbar
     UIToolbar *endTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
     UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
-    
+    //Set Title of End Date Picker
     UILabel *endLabel = [[UILabel alloc] init];
     [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
     [endLabel setFont:[UIFont systemFontOfSize:12.0]];
-    [endLabel setTextColor:[UIColor blackColor]];
+    [endLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [endLabel sizeToFit];
     UIBarButtonItem *endLabelButton = [[UIBarButtonItem alloc] initWithCustomView:endLabel];
     endTripToolbar.items = [[NSArray alloc] initWithObjects:endLabelButton, space, barButtonDone, nil];
-    barButtonDone.tintColor=[UIColor blackColor];
-
-    self.endTripTextField.inputView = self.datePicker;
-    self.endTripTextField.inputAccessoryView = endTripToolbar;
+    barButtonDone.tintColor= [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+    self.endTripTextView.inputView = self.datePicker;
+    self.endTripTextView.inputAccessoryView = endTripToolbar;
 }
 
 /**
@@ -239,6 +238,24 @@
         [self makeTrunkPrivate];
     }
 }
+
+/**
+ *  Setup ability to select dates and type in the textviews
+ *
+ *
+ */
+-(void)setUpDatesAndTextViews{
+    self.startTripTextView.delegate = self;
+    self.endTripTextView.delegate = self;
+    self.tripNameTextView.delegate = self;
+    self.locationTextView.delegate = self;
+    self.formatter = [[NSDateFormatter alloc]init];
+    [self.formatter setDateFormat:@"MM/dd/yyyy"];
+    self.startTripTextView.tintColor = [UIColor clearColor];
+    self.endTripTextView.tintColor = [UIColor clearColor];
+}
+
+#pragma mark - Trunk Privacy
 
 /**
  *  Make the Trunk private (only Trunk members can see it)
@@ -272,64 +289,47 @@
     self.privateTrunkDescription.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
 }
 
-#pragma mark = TextField Delegate Methods
+#pragma mark - TextView Delegate Methods
 
 //move the view up and down if the user starts typing to adjust for the keyboard
--(void)textFieldDidBeginEditing:(UITextField *)textField
+-(void)textViewDidBeginEditing:(UITextView *)textView
 {
-
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
-
-}
--(void)textFieldDidChange :(UITextField *)theTextField{
-    if ([theTextField.text length] > 1){
-
-    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
-    if ([code isEqualToString:@" "]){
-        [theTextField setKeyboardType:UIKeyboardTypeDefault];
-    }
+    if (textView != self.tripNameTextView){
+    
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
     }
 }
 
--(void)textFieldDidEndEditing:(UITextField *)textField{
-
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    if (textView != self.tripNameTextView){
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
+    }
 }
 
-// Go to the next textfield or close the keyboard when the return button is pressed
-
-- (BOOL)textFieldShouldReturn:(UITextField *) textField {
-    
-    BOOL didResign = [textField resignFirstResponder];
-    if (!didResign) return NO;
-    
-    if ([textField isKindOfClass:[MSTextField class]])
-        dispatch_async(dispatch_get_main_queue(),
-                       ^ { [[(MSTextField *)textField nextField] becomeFirstResponder]; });
-    
-    return YES;
-    
+-(void)textViewDidChange :(UITextView *)textView{
+    if ([textView.text length] > 1){
+        
+        NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
+        if ([code isEqualToString:@" "]){
+            [textView setKeyboardType:UIKeyboardTypeDefault];
+        }
+    }
 }
+
 //we adjusts the designs of the textfield based on which one the user is typing in
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (textField == self.endTripTextField) {
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    if (textView == self.endTripTextView) {
         self.datePicker.tag = 1;
-        self.endTripTextField.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
-        self.datePicker.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:182.0/255.0 blue:34.0/255.0 alpha:1.0];
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
     
-    else if (textField == self.startTripTextField){
+    else if (textView == self.startTripTextView){
         //        [self.view endEditing:YES];
         self.datePicker.tag = 0;
-        self.startTripTextField.backgroundColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
-        self.datePicker.backgroundColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return YES;
     }
-    else if ([textField isEqual:self.locationTextView]) {
-        [textField resignFirstResponder];
+    else if ([textView isEqual:self.locationTextView]) {
+        [textView resignFirstResponder];
         
         CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
         searchView.delegate = self;
@@ -339,12 +339,9 @@
     }
     
     else {
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
         return  YES;
     }
 }
-
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -374,7 +371,7 @@
             [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
         }else{
-            
+            //Certain locations are messed up with our third party city selector so we manually fix them here
            if ([location isEqualToString:@"Barcelona, CT, Spain"]){
                 self.city = @"Barcelona";
                 self.state =@"Catalonia";
@@ -420,15 +417,11 @@
 #pragma mark - Keyboard delegate methods
 
 // The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
-
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
-    self.startTripTextField.backgroundColor = [UIColor whiteColor];
-    self.endTripTextField.backgroundColor = [UIColor whiteColor];
 }
-
 
 
 #pragma mark - Date Picker
@@ -440,11 +433,11 @@
 - (void)dateChanged:(id)sender {
     
     if (self.datePicker.tag == 0) {
-        self.startTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
+        self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
         self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
     }
     else if (self.datePicker.tag == 1) {
-        self.endTripTextField.text = [self.formatter stringFromDate:self.datePicker.date];
+        self.endTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
         self.trip.endDate = [self.formatter stringFromDate:self.datePicker.date];
     }
 }
@@ -452,12 +445,10 @@
 -(void)dismissPickerView:(id)sender
 {
     if (self.datePicker.tag == 0) {
-        [self.endTripTextField becomeFirstResponder];
+        [self.endTripTextView becomeFirstResponder];
     }
     else {
         [self.view endEditing:YES];
-        self.startTripTextField.backgroundColor = [UIColor whiteColor];
-        self.endTripTextField.backgroundColor = [UIColor whiteColor];
     }
 }
 
@@ -468,7 +459,6 @@
     {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-    
     else {
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -477,7 +467,6 @@
 - (IBAction)onNextTapped:(id)sender
 {
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    
     if ([self.tripNameTextView.text isEqualToString:@""]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
@@ -525,7 +514,7 @@
              else if (!error)
              {
                  //make sure the user filled in all the correct text fields
-                 if (![self.tripNameTextView.text isEqualToString:@""] && ![self.locationTextView.text isEqualToString:@""] && ![self.startTripTextField.text isEqualToString:@""] && ![self.endTripTextField.text isEqualToString:@""])
+                 if (![self.tripNameTextView.text isEqualToString:@""] && ![self.locationTextView.text isEqualToString:@""] && ![self.startTripTextView.text isEqualToString:@""] && ![self.endTripTextView.text isEqualToString:@""])
                  {
                      // Trip Input has correct data - save the trip!
                      
@@ -578,62 +567,6 @@
     
 }
 
-/**
- *  Clears text fields, no longer used
- *
- *
- */
-- (IBAction)clearButtonPressed:(id)sender {
-    
-    [self resetForm];
-
-}
-
-/**
- * Clears textfields
- *
- *
- */
-- (void)resetForm {
-    // Initialize the view with no data
-    self.tripNameTextView.text = @"";
-    self.locationTextView.text = @"";
-    
-    // Set initial date to the field - should be Today's date.
-    self.startTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
-    self.endTripTextField.text = [self.formatter stringFromDate:[NSDate date]];
-    
-    if (!_isEditing) {
-        self.trip = [[Trip alloc] init];
-    }
-}
-
-// Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
-// This is mainly so we know if we need to update the Activity models with a new city or not.
-- (BOOL)setTripCityName:(NSString *)cityName
-{
-    if (![self.trip.city isEqualToString:cityName]) {
-        self.trip.city = cityName;
-        _needsCityUpdate = YES;
-    }
-    else{
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL)setTripName:(NSString *)name
-{
-    if (![self.trip.name isEqualToString:name]) {
-        self.trip.name = name;
-        _needsNameUpdate = YES;
-    }
-    else{
-        return NO;
-    }
-    return YES;
-}
-
 - (IBAction)onDeleteWasTapped:(id)sender {
     
     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -667,6 +600,52 @@
     }
 }
 
+/**
+ * Clears textfields
+ *
+ *
+ */
+- (void)resetForm {
+    // Initialize the view with no data
+    self.tripNameTextView.text = @"";
+    self.locationTextView.text = @"";
+    // Set initial date to the field - should be Today's date.
+    self.startTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    self.endTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    
+    if (!_isEditing) {
+        self.trip = [[Trip alloc] init];
+    }
+}
+
+#pragma mark - Trunk Info
+
+// Sets the cityname for self.trip, and if it changed then sets the global flag to tell use we changed the cityname
+// This is mainly so we know if we need to update the Activity models with a new city or not.
+- (BOOL)setTripCityName:(NSString *)cityName
+{
+    if (![self.trip.city isEqualToString:cityName]) {
+        self.trip.city = cityName;
+        _needsCityUpdate = YES;
+    }
+    else{
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)setTripName:(NSString *)name
+{
+    if (![self.trip.name isEqualToString:name]) {
+        self.trip.name = name;
+        _needsNameUpdate = YES;
+    }
+    else{
+        return NO;
+    }
+    return YES;
+}
+
 - (void)notEnoughInfo:(NSString*)message {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
@@ -677,6 +656,8 @@
     
     [self tabBarTitle];
 }
+
+#pragma mark - AlertView
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -750,9 +731,9 @@
     //FIXME Should only parse if things have been changed
     
     [self setTripName: self.tripNameTextView.text];
-    self.trip.startDate = self.startTripTextField.text;
+    self.trip.startDate = self.startTripTextView.text;
     self.trip.descriptionStory = self.descriptionTextView.text;
-    self.trip.endDate = self.endTripTextField.text;
+    self.trip.endDate = self.endTripTextView.text;
     self.trip.user = [PFUser currentUser].username;
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
@@ -889,59 +870,6 @@
     
     // Remove any observers
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (IBAction)questionMarkTapped:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Public vs. Private Trunks",@"Public vs. Private Trunks")
-                                                    message:NSLocalizedString(@"\xF0\x9F\x94\x93 = Public Trunk - anyone can view \n \xF0\x9F\x94\x92= Private Trunk - only members can view",@"\xF0\x9F\x94\x93 = Public Trunk - anyone can view \n \xF0\x9F\x94\x92= Private Trunk - only members can view")
-                                                   delegate:self
-                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                          otherButtonTitles:nil, nil];
-    [alert show];
-}
-
-- (IBAction)descriptionTapped:(id)sender {
-    self.descriptionTextView.hidden = NO;
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    [self.descriptionTextView becomeFirstResponder];
-    self.title = NSLocalizedString(@"Tell This Trunk's Story", @"Tell This Trunk's Story");
-    [self tabBarTitle];
-
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    
-    self.descriptionTextView.text = self.trip.descriptionStory;
-    
-    if ([self.descriptionTextView.text isEqualToString:@""]){
-        [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    } else {
-        [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
-    }
-    
-}
-
--(void)textViewDidEndEditing:(UITextView *)textView{
-    self.descriptionTextView.hidden = YES;
-    self.trip.descriptionStory = self.descriptionTextView.text;
-    if ([self.descriptionTextView.text isEqualToString:@""]){
-        [self.descriptionButton setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    } else {
-        [self.descriptionButton setImage:[UIImage imageNamed:@"checkCircle"] forState:UIControlStateNormal];
-    }
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-    self.title = @"Add New Trunk";
-    [self tabBarTitle];
-}
-
--(void)textViewDidChange:(UITextView *)textView{
-    if ([textView.text length] > 1){
-
-    NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
-    if ([code isEqualToString:@" "]){
-        [textView setKeyboardType:UIKeyboardTypeDefault];
-    }
-    }
 }
 
 @end

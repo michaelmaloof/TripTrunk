@@ -1841,7 +1841,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="        Select Start Date" textAlignment="right" translatesAutoresizingMaskIntoConstraints="NO" id="nLI-Np-KIm">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="lxC-sy-wEo"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="43" id="lzx-pu-907"/>
@@ -1920,6 +1920,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Select           End Date" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-nL-Rvr">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Dex-GY-vkF"/>
                                     <constraint firstAttribute="height" constant="43" id="wY2-m7-b30"/>
@@ -2326,6 +2327,7 @@
                     <connections>
                         <outlet property="cancelBar" destination="Vnt-qn-Tgn" id="QX2-cn-feN"/>
                         <outlet property="delete" destination="Wse-wM-OZQ" id="0r7-MR-oBW"/>
+                        <outlet property="endTripTextView" destination="5u8-nL-Rvr" id="kjh-ln-fwR"/>
                         <outlet property="locationTextView" destination="P7A-D9-UVc" id="ikK-1m-SI0"/>
                         <outlet property="private" destination="7qF-bR-mRZ" id="cf2-gO-iL6"/>
                         <outlet property="privateTrunkDescription" destination="vGJ-Vd-awa" id="PU9-GC-gag"/>
@@ -2333,6 +2335,7 @@
                         <outlet property="public" destination="DHN-Iy-6C3" id="3Vq-2S-F9O"/>
                         <outlet property="publicTrunkDescription" destination="toz-pw-wEs" id="fuP-gz-51E"/>
                         <outlet property="publicTrunkLabel" destination="B0c-bY-vG9" id="T5c-ua-nhD"/>
+                        <outlet property="startTripTextView" destination="nLI-Np-KIm" id="b6h-eM-cvI"/>
                         <outlet property="tripNameTextView" destination="DrO-BB-Aur" id="PWf-yQ-61j"/>
                         <segue destination="Eme-WN-YvW" kind="show" identifier="addFriends" id="Zqm-R8-ltx"/>
                     </connections>
