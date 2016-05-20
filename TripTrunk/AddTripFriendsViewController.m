@@ -92,6 +92,7 @@
     
     [self.tableView setEditing:YES animated:YES];
     [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
+    
     [self.tableView setAllowsSelectionDuringEditing:YES];
     
     
@@ -137,6 +138,8 @@
 
 }
 
+
+
 - (void)loadFollowing
 {
     
@@ -164,6 +167,10 @@
         }
     }];
     
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
 }
 
 - (void)loadFollowers
@@ -273,7 +280,6 @@
         possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
-    [cell setEditing:YES animated:YES];
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
@@ -376,10 +382,6 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewCellEditingStyleNone;
 }
 
 

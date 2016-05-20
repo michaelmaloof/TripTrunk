@@ -23,6 +23,7 @@
     [self.profilePicImageView setClipsToBounds:YES];
     UIColor *ttBlueColor = [UIColor colorWithHexString:@"8ED3FD"];
     [self.followButton setTintColor:ttBlueColor];
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -33,6 +34,7 @@
     else {
         self.backgroundColor = [UIColor whiteColor];
     }
+    
     
     [super setSelected:selected animated:animated];
 
