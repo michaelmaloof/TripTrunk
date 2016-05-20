@@ -322,7 +322,6 @@
         }
         return YES;
     }
-    
     else if (textView == self.startTripTextView){
         self.datePicker.tag = 0;
         if (self.trip.startDate == nil){

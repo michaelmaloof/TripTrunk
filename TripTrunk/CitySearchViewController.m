@@ -50,9 +50,6 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"?" style:UIBarButtonItemStylePlain target:self action:@selector(question)];
     
-    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
-    
-    
     // Add keyboard notifications so that the keyboard won't cover the table when searching
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
