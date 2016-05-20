@@ -33,7 +33,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *helpButton;
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property (weak, nonatomic) IBOutlet UIButton *delete;
 @property (weak, nonatomic) IBOutlet UIButton *public;
 @property (weak, nonatomic) IBOutlet UIButton *private;
@@ -43,7 +42,6 @@
 @property BOOL needsNameUpdate; // if the trunk already exists and we changed the name of the trip
 @property BOOL isEditing; // if the trunk already exists and we're editing it
 @property (weak, nonatomic) IBOutlet UIButton *clear;
-@property (weak, nonatomic) IBOutlet UILabel *lockLabel;
 @property (weak, nonatomic) IBOutlet UIButton *descriptionButton;
 @property UITextView *descriptionTextView;
 // Date Properties
@@ -55,6 +53,10 @@
 @property (strong, nonatomic) NSString *city;
 @property (strong, nonatomic) NSString *state;
 @property (strong, nonatomic) NSString *country;
+@property (weak, nonatomic) IBOutlet UILabel *publicTrunkLabel;
+@property (weak, nonatomic) IBOutlet UILabel *publicTrunkDescription;
+@property (weak, nonatomic) IBOutlet UILabel *privateTrunkLabel;
+@property (weak, nonatomic) IBOutlet UILabel *privateTrunkDescription;
 
 
 
@@ -68,14 +70,11 @@
     //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     
     [super viewDidLoad];
-    
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
     } else {
         
         self.tabBarController.tabBar.translucent = false;
- 
-        
         self.descriptionTextView = [[UITextView alloc]init];
         self.descriptionTextView.hidden = YES;
         [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
@@ -87,11 +86,6 @@
         self.descriptionTextView.scrollEnabled = YES;
         self.descriptionTextView.delegate = self;
         [self.view addSubview:self.descriptionTextView];
-        
-        //currently we don't want users being able to change a trunk tp public or private once the trunk has been created
-        self.lockLabel.hidden = YES;
-        
-        //self.clear is just for development. It allows us to quickly clear all the textfields
         self.clear.hidden = YES;
         self.tripDatePicker.hidden = YES;
         self.startTripTextField.delegate = self;
@@ -102,8 +96,6 @@
         [self.formatter setDateFormat:@"MM/dd/yyyy"];
         self.startTripTextField.tintColor = [UIColor clearColor];
         self.endTripTextField.tintColor = [UIColor clearColor];
-        
-        
         
         //FIXME This may not be necessary anymore since we no longer need the users location
         [self.locationManager requestWhenInUseAuthorization];
@@ -143,6 +135,7 @@
             self.navigationItem.rightBarButtonItem.tag = 1;
             self.navigationItem.leftBarButtonItem.tag = 1;
             self.delete.hidden = NO;
+            //currently we don't want users being able to change a trunk tp public or private once the trunk has been created
             self.public.hidden = YES;
             self.private.hidden = YES;
             
@@ -233,30 +226,50 @@
 }
 
 /**
- *  Update the screen based on if the trunk is private or public
+ *  Update the screen based on if the trunk is private or public on viewDidLoad
  *
  *
  */
 -(void)checkPublicPrivate{
     if (self.trip.isPrivate == NO || self.trip == nil)
     {
-        [self.private setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
-        [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"yellowSkyMountain_background"];
-
-
-        self.public.tag = 1;
-        self.private.tag = 0;
+        [self makeTrunkPublic];
     }
-    
     else {
-        [self.private setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
-        [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"blueSkyMountain_background"];
-
-        self.public.tag = 0;
-        self.private.tag = 1;
+        [self makeTrunkPrivate];
     }
+}
+
+/**
+ *  Make the Trunk private (only Trunk members can see it)
+ *
+ *
+ */
+-(void)makeTrunkPrivate{
+    [self.public setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
+    [self.private setImage:[UIImage imageNamed:@"lock"] forState:UIControlStateNormal];
+    self.public.tag = 0;
+    self.private.tag = 1;
+    self.privateTrunkLabel.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    self.privateTrunkDescription.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    self.publicTrunkLabel.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
+    self.publicTrunkDescription.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
+}
+
+/**
+ *  Make the Trunk public (all users can see it)
+ *
+ *
+ */
+-(void)makeTrunkPublic{
+    [self.public setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
+    [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
+    self.public.tag = 1;
+    self.private.tag = 0;
+    self.publicTrunkLabel.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    self.publicTrunkDescription.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    self.privateTrunkLabel.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
+    self.privateTrunkDescription.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
 }
 
 #pragma mark = TextField Delegate Methods
@@ -640,31 +653,18 @@
 - (IBAction)publicTapped:(id)sender {
     if (self.public.tag == 0)
     {
-        [self.public setImage:[UIImage imageNamed:@"unlocked"] forState:UIControlStateNormal];
-        [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"yellowSkyMountain_background"];
-        self.public.tag = 1;
-        self.private.tag = 0;
         self.isPrivate = NO;
-
+        [self makeTrunkPublic];
     }
-    
 }
 
 
 - (IBAction)privateTapped:(id)sender {
     if (self.private.tag == 0)
     {
-        [self.public setImage:[UIImage imageNamed:@"unlockedGray"] forState:UIControlStateNormal];
-        [self.private setImage:[UIImage imageNamed:@"locked"] forState:UIControlStateNormal];
-        self.backGroundImage.image = [UIImage imageNamed:@"blueSkyMountain_background"];
-        
-        self.public.tag = 0;
-        self.private.tag = 1;
+        [self makeTrunkPrivate];
         self.isPrivate = YES;
-
     }
-
 }
 
 - (void)notEnoughInfo:(NSString*)message {
