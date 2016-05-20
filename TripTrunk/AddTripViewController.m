@@ -183,7 +183,7 @@
  */
 - (void)setupDatePicker {
     self.datePicker = [[UIDatePicker alloc] init];
-    [self.datePicker setValue:[UIColor colorWithRed:(255.0/255.0) green:(102.0/255.0) blue:(102.0/255.0) alpha:1.0]forKey:@"textColor"];
+    [self.datePicker setValue:[TTColor tripTrunkRed] forKey:@"textColor"];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
     [self.datePicker addTarget:self
                         action:@selector(dateChanged:)
@@ -194,16 +194,16 @@
     UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
     UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
-    self.datePicker.backgroundColor = [UIColor whiteColor];
+    self.datePicker.backgroundColor = [TTColor tripTrunkWhite];
     //Set Title of Start Date Picker
     UILabel *startLabel = [[UILabel alloc] init];
     [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
     [startLabel setFont:[UIFont systemFontOfSize:16.0]];
-    [startLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+    [startLabel setTextColor:[TTColor tripTrunkBlue]];
     [startLabel sizeToFit];
     UIBarButtonItem *labelbutton = [[UIBarButtonItem alloc] initWithCustomView:startLabel];
     startTripToolbar.items = [[NSArray alloc] initWithObjects:labelbutton, space, barButtonNext,nil];
-    barButtonNext.tintColor=[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+    barButtonNext.tintColor=[TTColor tripTrunkBlue];;
     self.startTripTextView.inputView = self.datePicker; // set the textfield to use the picker instead of a keyboard
     self.startTripTextView.inputAccessoryView = startTripToolbar;
 
@@ -215,11 +215,11 @@
     UILabel *endLabel = [[UILabel alloc] init];
     [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
     [endLabel setFont:[UIFont systemFontOfSize:16.0]];
-    [endLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+    [endLabel setTextColor:[TTColor tripTrunkBlue]];
     [endLabel sizeToFit];
     UIBarButtonItem *endLabelButton = [[UIBarButtonItem alloc] initWithCustomView:endLabel];
     endTripToolbar.items = [[NSArray alloc] initWithObjects:endLabelButton, space, barButtonDone, nil];
-    barButtonDone.tintColor= [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+    barButtonDone.tintColor= [TTColor tripTrunkBlue];
     self.endTripTextView.inputView = self.datePicker;
     self.endTripTextView.inputAccessoryView = endTripToolbar;
 }
@@ -267,10 +267,10 @@
     [self.private setImage:[UIImage imageNamed:@"lock"] forState:UIControlStateNormal];
     self.public.tag = 0;
     self.private.tag = 1;
-    self.privateTrunkLabel.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
-    self.privateTrunkDescription.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
-    self.publicTrunkLabel.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
-    self.publicTrunkDescription.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
+    self.privateTrunkLabel.textColor = [TTColor tripTrunkRed];
+    self.privateTrunkDescription.textColor = [TTColor tripTrunkRed];
+    self.publicTrunkLabel.textColor = [TTColor tripTrunkGray];
+    self.publicTrunkDescription.textColor = [TTColor tripTrunkGray];
 }
 
 /**
@@ -283,10 +283,10 @@
     [self.private setImage:[UIImage imageNamed:@"lockedGray"] forState:UIControlStateNormal];
     self.public.tag = 1;
     self.private.tag = 0;
-    self.publicTrunkLabel.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
-    self.publicTrunkDescription.textColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
-    self.privateTrunkLabel.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
-    self.privateTrunkDescription.textColor = [UIColor colorWithRed:194.0/255.0 green:196.0/255.0 blue:198.0/255.0 alpha:1.0];
+    self.publicTrunkLabel.textColor = [TTColor tripTrunkRed];
+    self.publicTrunkDescription.textColor = [TTColor tripTrunkRed];
+    self.privateTrunkLabel.textColor = [TTColor tripTrunkGray];
+    self.privateTrunkDescription.textColor = [TTColor tripTrunkGray];
 }
 
 #pragma mark - TextView Delegate Methods
