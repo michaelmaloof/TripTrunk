@@ -1911,7 +1911,9 @@
                             <constraint firstItem="DrO-BB-Aur" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="1Dk-ep-bee"/>
                             <constraint firstItem="P7A-D9-UVc" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="30" id="1Gw-Un-qRd"/>
                             <constraint firstItem="RzC-Q5-kqk" firstAttribute="top" secondItem="DrO-BB-Aur" secondAttribute="bottom" constant="1" id="2B3-xO-ZXc"/>
-                            <constraint firstItem="1AQ-Jc-jpb" firstAttribute="top" secondItem="53v-2W-Pnv" secondAttribute="bottom" constant="100" id="30Q-Dc-kdS"/>
+                            <constraint firstItem="1AQ-Jc-jpb" firstAttribute="top" secondItem="53v-2W-Pnv" secondAttribute="bottom" constant="100" id="30Q-Dc-kdS">
+                                <variation key="heightClass=regular-widthClass=compact" constant="50"/>
+                            </constraint>
                             <constraint firstItem="P7A-D9-UVc" firstAttribute="top" secondItem="RzC-Q5-kqk" secondAttribute="bottom" constant="13" id="33X-u7-378"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5u8-nL-Rvr" secondAttribute="trailing" constant="30" id="3dN-8V-JDF"/>
                             <constraint firstItem="nLI-Np-KIm" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="30" id="5Vc-Dv-5ah"/>
@@ -1965,6 +1967,7 @@
                             <constraint firstItem="euX-sE-76i" firstAttribute="top" secondItem="5u8-nL-Rvr" secondAttribute="bottom" constant="1" id="u0Z-be-LlK"/>
                             <constraint firstItem="iV0-Fu-xk9" firstAttribute="bottom" secondItem="1AQ-Jc-jpb" secondAttribute="bottom" id="uTF-Rt-K2S"/>
                             <constraint firstItem="53v-2W-Pnv" firstAttribute="top" secondItem="P7A-D9-UVc" secondAttribute="bottom" constant="1" id="uhF-AU-CbA"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="euX-sE-76i" secondAttribute="trailing" constant="30" id="vtV-SZ-u5y"/>
                             <constraint firstItem="RzC-Q5-kqk" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="x8i-9Q-QN0"/>
                             <constraint firstAttribute="bottomMargin" secondItem="DHN-Iy-6C3" secondAttribute="bottom" constant="250" id="yL4-5z-cWC"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="7qF-bR-mRZ" secondAttribute="bottom" constant="8" id="yak-9S-5Ht"/>
@@ -2028,6 +2031,7 @@
                                 <exclude reference="gfl-DK-xnJ"/>
                                 <exclude reference="lNs-yA-SNI"/>
                                 <exclude reference="u0Z-be-LlK"/>
+                                <exclude reference="vtV-SZ-u5y"/>
                                 <exclude reference="FVI-1D-Olv"/>
                                 <exclude reference="JAT-nn-gXO"/>
                                 <exclude reference="yL4-5z-cWC"/>
@@ -2094,8 +2098,9 @@
                                 <include reference="9dG-HM-jIJ"/>
                                 <exclude reference="S1T-P9-CKF"/>
                                 <include reference="gfl-DK-xnJ"/>
-                                <include reference="lNs-yA-SNI"/>
+                                <exclude reference="lNs-yA-SNI"/>
                                 <include reference="u0Z-be-LlK"/>
+                                <include reference="vtV-SZ-u5y"/>
                                 <include reference="FVI-1D-Olv"/>
                                 <exclude reference="JAT-nn-gXO"/>
                                 <include reference="yL4-5z-cWC"/>
