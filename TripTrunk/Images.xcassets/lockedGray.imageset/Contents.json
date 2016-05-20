@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "lockedGray.png",
+      "filename" : "lock_gray.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "lockedGray@2x.png",
+      "filename" : "lock_gray-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "lockedGray@3x.png",
+      "filename" : "lock_gray-2.png",
       "scale" : "3x"
     }
   ],
