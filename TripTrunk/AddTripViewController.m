@@ -317,7 +317,8 @@
         self.datePicker.tag = 1;
         if (self.trip.endDate == nil){
             [self.formatter stringFromDate:[NSDate date]];
-            self.endTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+            NSString *endDate = [self.formatter stringFromDate:self.datePicker.date];
+            self.endTripTextView.text = [NSString stringWithFormat:@"\n%@",endDate];
             self.trip.endDate = [self.formatter stringFromDate:[NSDate date]];
         }
         return YES;
@@ -326,7 +327,8 @@
         self.datePicker.tag = 0;
         if (self.trip.startDate == nil){
             [self.formatter stringFromDate:[NSDate date]];
-            self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+            NSString *startDate = [self.formatter stringFromDate:self.datePicker.date];
+            self.startTripTextView.text = [NSString stringWithFormat:@"\n%@",startDate];
             self.trip.startDate = [self.formatter stringFromDate:[NSDate date]];
         }
         return YES;
@@ -435,11 +437,15 @@
 - (void)dateChanged:(id)sender {
     
     if (self.datePicker.tag == 0) {
-        self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+        [self.formatter stringFromDate:self.datePicker.date];
+        NSString *startDate = [self.formatter stringFromDate:self.datePicker.date];
+        self.startTripTextView.text = [NSString stringWithFormat:@"\n%@",startDate];
         self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
     }
     else if (self.datePicker.tag == 1) {
-        self.endTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+        [self.formatter stringFromDate:self.datePicker.date];
+        NSString *endDate = [self.formatter stringFromDate:self.datePicker.date];
+        self.endTripTextView.text = [NSString stringWithFormat:@"\n%@",endDate];
         self.trip.endDate = [self.formatter stringFromDate:self.datePicker.date];
     }
 }
@@ -726,9 +732,8 @@
     //FIXME Should only parse if things have been changed
     
     [self setTripName: self.tripNameTextView.text];
-    self.trip.startDate = self.startTripTextView.text;
-    self.trip.endDate = self.endTripTextView.text;
     self.trip.user = [PFUser currentUser].username;
+    //FIXME Why do we have a NSDATE start on trip but not end?
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
     
