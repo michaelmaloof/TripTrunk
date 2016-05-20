@@ -192,13 +192,13 @@
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     // Start Date Toolbar
     UIToolbar *startTripToolbar= [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.datePicker.frame.size.width, 40)];
-    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"Next")
+    UIBarButtonItem *barButtonNext = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done")
                                                                       style:UIBarButtonItemStyleDone target:self action:@selector(dismissPickerView:)];
     self.datePicker.backgroundColor = [UIColor whiteColor];
     //Set Title of Start Date Picker
     UILabel *startLabel = [[UILabel alloc] init];
     [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
-    [startLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [startLabel setFont:[UIFont systemFontOfSize:16.0]];
     [startLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [startLabel sizeToFit];
     UIBarButtonItem *labelbutton = [[UIBarButtonItem alloc] initWithCustomView:startLabel];
@@ -214,7 +214,7 @@
     //Set Title of End Date Picker
     UILabel *endLabel = [[UILabel alloc] init];
     [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
-    [endLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [endLabel setFont:[UIFont systemFontOfSize:16.0]];
     [endLabel setTextColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
     [endLabel sizeToFit];
     UIBarButtonItem *endLabelButton = [[UIBarButtonItem alloc] initWithCustomView:endLabel];
