@@ -130,9 +130,7 @@
     _isEditing = NO;
     self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
     [self tabBarTitle];
-    // Set initial date to the field - should be Today's date.
-    self.startTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
-    self.endTripTextView.text = [self.formatter stringFromDate:[NSDate date]];
+    [self setOriginalDateTextViews];
     self.trip = [[Trip alloc] init];
     self.cancelBar.title = @"";
     self.cancelBar.enabled = FALSE;
@@ -140,6 +138,21 @@
     self.navigationItem.rightBarButtonItem.tag = 0;
     self.navigationItem.leftBarButtonItem.tag = 0;
     self.delete.hidden = YES;
+}
+
+/**
+ *  Sets up the date textViews to original states (Select Start Date & Select End Date)
+ *
+ *
+ */
+-(void)setOriginalDateTextViews{
+    //FIXME How do I format this without weird spaces
+    [self.startTripTextView setTextAlignment:NSTextAlignmentRight];
+    [self.endTripTextView setTextAlignment:NSTextAlignmentLeft];
+    self.startTripTextView.text = @"        Select Start Date";
+    self.endTripTextView.text = @"Select           End Date";
+    [self.startTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
+    [self.endTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
 }
 
 /**
@@ -296,21 +309,33 @@
     }
 }
 
+//self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+//self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
+//[self.formatter stringFromDate:[NSDate date]];
+
 //we adjusts the designs of the textfield based on which one the user is typing in
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     if (textView == self.endTripTextView) {
         self.datePicker.tag = 1;
+        if (self.trip.endDate == nil){
+            [self.formatter stringFromDate:[NSDate date]];
+            self.endTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+            self.trip.endDate = [self.formatter stringFromDate:[NSDate date]];
+        }
         return YES;
     }
     
     else if (textView == self.startTripTextView){
-        //        [self.view endEditing:YES];
         self.datePicker.tag = 0;
+        if (self.trip.startDate == nil){
+            [self.formatter stringFromDate:[NSDate date]];
+            self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
+            self.trip.startDate = [self.formatter stringFromDate:[NSDate date]];
+        }
         return YES;
     }
     else if ([textView isEqual:self.locationTextView]) {
         [textView resignFirstResponder];
-        
         CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
         searchView.delegate = self;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchView];
@@ -587,13 +612,7 @@
     // Initialize the view with no data
     self.tripNameTextView.text = @"";
     self.locationTextView.text = @"";
-    // Set initial date to the field - should be Today's date.
-    //FIXME How do I format this without weird spaces
-    self.startTripTextView.text = @"        Select Start Date";
-    self.endTripTextView.text = @"Select           End Date";
-    
-//    [self.formatter stringFromDate:[NSDate date]];
-    
+    [self setOriginalDateTextViews];
     if (!_isEditing) {
         self.trip = [[Trip alloc] init];
     }
