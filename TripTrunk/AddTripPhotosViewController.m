@@ -70,7 +70,7 @@
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
-    self.tripCollectionView.backgroundColor = [UIColor clearColor];
+    self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     
 //we hide all these things and only show them if the user has selected a photo to write a caption for
@@ -176,7 +176,7 @@
             UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
             
             // tint color
-            navBar.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+            navBar.tintColor = [TTColor tripTrunkBlue];
             
             // init picker
             CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
@@ -244,7 +244,7 @@
                     UIAlertView *alertView = [[UIAlertView alloc] init];
                     alertView.delegate = self;
                     alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
-                    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 } else {
@@ -442,7 +442,7 @@
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     Photo *photo = [self.photos objectAtIndex:indexPath.row];
     cell.tripImageView.caption = photo.caption;
-    cell.backgroundColor = [UIColor whiteColor];
+    cell.backgroundColor = [TTColor tripTrunkWhite];
     
     
     [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
@@ -545,7 +545,7 @@
         UIAlertView *alertView = [[UIAlertView alloc] init];
         alertView.delegate = self;
         alertView.title = NSLocalizedString(@"No caption is typed",@"No caption is typed");
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        alertView.backgroundColor = [TTColor tripTrunkLightBlue];
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }

@@ -26,8 +26,8 @@
     //create the attribute to change mentions and hastags blue
     [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFont] range:NSMakeRange(0, text.length)];
     if(black)
-        [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, text.length)];
-    else [string addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, text.length)];
+        [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkBlack] range:NSMakeRange(0, text.length)];
+    else [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkWhite] range:NSMakeRange(0, text.length)];
     
     //Use regular expressions to search through the string and search for the #(letter) pattern
     //This is currently turned off so hastags will remain black

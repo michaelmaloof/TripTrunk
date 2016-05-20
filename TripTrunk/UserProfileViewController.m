@@ -82,7 +82,7 @@
     self.myPhotos = [[NSMutableArray alloc] init];
     
     [self.profilePicImageView.layer setBorderWidth:3.0f];
-    [self.profilePicImageView.layer setBorderColor: [[UIColor colorWithRed:142/255.0 green:211.0/255.0 blue:253.0/255.0 alpha:1.0] CGColor]];
+    [self.profilePicImageView.layer setBorderColor: [[TTColor tripTrunkBlue] CGColor]];
 
     
     self.hideThisButtonAlways.hidden = YES;
@@ -263,14 +263,14 @@
 -(void)setButtonColor{
     
     if (self.followButton.tag == 1){
-        [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.followButton.backgroundColor = [UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0];
-        [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
+        [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [TTColor tripTrunkLightBlue];
+        [[self.followButton layer] setBorderColor:[TTColor tripTrunkLightBlue].CGColor];
         [[self.followButton layer] setBorderWidth:0.0f];
     } else {
-        [self.followButton setTitleColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-        self.followButton.backgroundColor = [UIColor whiteColor];
-        [[self.followButton layer] setBorderColor:[UIColor colorWithRed:170.0/255.0 green:228.0/255.0 blue:236.0/255.0 alpha:1.0].CGColor];
+        [self.followButton setTitleColor:[TTColor tripTrunkLightBlue] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [TTColor tripTrunkWhite];
+        [[self.followButton layer] setBorderColor:[TTColor tripTrunkLightBlue].CGColor];
         [[self.followButton layer] setBorderWidth:2.0f];
 
     }
@@ -552,7 +552,7 @@
             NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
             alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, self.user.username];
             alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            alertView.backgroundColor = [TTColor tripTrunkLightBlue];
             [alertView addButtonWithTitle:NSLocalizedString(@"Cancel",@"Cancel")];
             [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
             [alertView show];
@@ -653,10 +653,10 @@
     EditProfileViewController *vc = [[EditProfileViewController alloc] initWithUser:_user];
     vc.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    [nav.navigationBar setBarTintColor:[UIColor whiteColor]];
+    [nav.navigationBar setBarTintColor:[TTColor tripTrunkWhite]];
     
     [nav.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1], NSForegroundColorAttributeName,
+                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
                                                            [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
     [self presentViewController:nav animated:YES completion:nil];
 

@@ -10,7 +10,6 @@
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
-#import "UIColor+HexColors.h"
 
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
@@ -229,9 +228,9 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
-    view.tintColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
+    view.tintColor = [TTColor tripTrunkRed];
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    [header.textLabel setTextColor:[UIColor whiteColor]];
+    [header.textLabel setTextColor:[TTColor tripTrunkWhite]];
 }
 
 
@@ -291,7 +290,7 @@
     [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
     [weakCell.profilePicImageView.layer setMasksToBounds:YES];
     [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
     
     [cell.profilePicImageView setImageWithURLRequest:request
                                     placeholderImage:[UIImage imageNamed:@"defaultProfile"]

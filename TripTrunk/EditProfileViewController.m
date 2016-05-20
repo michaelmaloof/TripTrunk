@@ -127,7 +127,7 @@
         UIAlertView *alertView = [[UIAlertView alloc] init];
         alertView.delegate = self;
         alertView.title = NSLocalizedString(@"Please have a first and last name",@"Please have a first and last name");
-        alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+        alertView.backgroundColor = [TTColor tripTrunkLightBlue];
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }
@@ -288,7 +288,7 @@
                  alertView.delegate = self;
                  alertView.title = NSLocalizedString(@"Something went wrong",@"Something went wrong");
                  alertView.message = NSLocalizedString(@"Please try again or contact austinbarnard@triptrunkapp.com.",@"Please try again or contact austinbarnard@triptrunkapp.com.");
-                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                  [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                  [alertView show];
                  
@@ -304,7 +304,7 @@
                               UIAlertView *alertView = [[UIAlertView alloc] init];
                               alertView.delegate = self;
                               alertView.title = NSLocalizedString(@"Your Facebook account was linked!. Please log back in using Facebook to continue.",@"Your Facebook account was linked!. Please log back in using Facebook to continue.");
-                              alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                              alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                               [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                               [alertView show];
                               
@@ -339,7 +339,7 @@
                  UIAlertView *alertView = [[UIAlertView alloc] init];
                  alertView.delegate = self;
                  alertView.title = NSLocalizedString(@"Your Facebook account was linked!. Please log back in using Facebook to continue.",@"Your Facebook account was linked!. Please log back in using Facebook to continue.");
-                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                  [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                  [alertView show];
                  
@@ -357,7 +357,7 @@
                  UIAlertView *alertView = [[UIAlertView alloc] init];
                  alertView.delegate = self;
                  alertView.title = NSLocalizedString(@"Your Facebook account was linked!. Please log back in using Facebook to continue.",@"Your Facebook account was linked!. Please log back in using Facebook to continue.");
-                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                  [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                  [alertView show];
                  
@@ -389,7 +389,7 @@
                              UIAlertView *alertView = [[UIAlertView alloc] init];
                              alertView.delegate = self;
                              alertView.title = NSLocalizedString(@"Your Facebook account was linked!. Please log back in using Facebook to continue.",@"Your Facebook account was linked!. Please log back in using Facebook to continue.");
-                             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                             alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                              [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                              [alertView show];
                              

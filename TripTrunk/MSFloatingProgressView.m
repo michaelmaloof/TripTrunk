@@ -7,7 +7,7 @@
 //
 
 #import "MSFloatingProgressView.h"
-#import "UIColor+HexColors.h"
+#import "TTColor.h"
 
 @interface MSFloatingProgressView ()
 @property (strong, nonatomic)UIProgressView *progressView;
@@ -33,7 +33,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+        [self setBackgroundColor:[TTColor tripTrunkBlue]];
         [self setupUI];
     }
     return self;
@@ -44,7 +44,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+        [self setBackgroundColor:[TTColor tripTrunkBlue]];
         [self setupUI];
     }
     return self;
@@ -57,7 +57,7 @@
     if (self) {
         _taskCount = 1;
         _completedTaskCount = 0;
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self setBackgroundColor:[TTColor tripTrunkWhite]];
         [self setupUI];
     }
     return self;
@@ -74,18 +74,18 @@
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 20)];
     [_titleLabel setFont:[UIFont systemFontOfSize:9]];
-    [_titleLabel setTextColor:[UIColor blackColor]];
+    [_titleLabel setTextColor:[TTColor tripTrunkBlack]];
     [self addSubview:_titleLabel];
     [self updateLabel:_completedTaskCount + 1 of:_taskCount];
     
     //TODO: Implement the actual progress bar UI
     _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, 2)];
-    [_progressView setProgressTintColor:[UIColor whiteColor]];
+    [_progressView setProgressTintColor:[TTColor tripTrunkWhite]];
     [self addSubview:_progressView];
 }
 
 - (void)updateLabel:(int)current of:(int)total {
-    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.textColor = [TTColor tripTrunkWhite];
     [_titleLabel setText:[NSString stringWithFormat:@"Uploading %i of %i", current, total]];
 }
 

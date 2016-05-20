@@ -7,7 +7,6 @@
 //
 
 #import "TutorialViewController.h"
-#import "UIColor+HexColors.h"
 
 @interface TutorialViewController () <UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
@@ -33,7 +32,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navbarItemTextDefaultColor = [UIColor whiteColor];
+    self.navbarItemTextDefaultColor = [TTColor tripTrunkWhite];
     //Set Master Scroll Size
     [self.masterScrollView setFrame:CGRectMake(0.0,
                                                0.0,
@@ -94,10 +93,10 @@
     [self.pageIndicator setNumberOfPages:5];
 
     //Configure nav bar buttons
-    [self.navigationBar setBackgroundColor:[UIColor colorWithHexString:@"76A4B8"]];
+    [self.navigationBar setBackgroundColor:[TTColor subPhotoBlue]];
     [self.backButton setTitle:@"Back"];
     [self.backButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.navbarItemTextDefaultColor, NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
-    [self.backButton setTintColor:[UIColor clearColor]];
+    [self.backButton setTintColor:[TTColor tripTrunkClear]];
     [self.backButton setEnabled:NO];
     [self.nextDoneButton setTitle:@"Next"];
     [self.nextDoneButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:self.navbarItemTextDefaultColor, NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
@@ -119,7 +118,7 @@
     //Determine whether to hide or show the Back button
     if (self.masterScrollView.contentOffset.x / screenWidth == 0)
     {
-        [self.backButton setTintColor:[UIColor clearColor]];
+        [self.backButton setTintColor:[TTColor tripTrunkClear]];
         [self.backButton setEnabled:NO];
     }
     else if (self.masterScrollView.contentOffset.x / screenWidth > 0)

@@ -7,7 +7,6 @@
 //
 
 #import "CommentTableViewCell.h"
-#import "UIColor+HexColors.h"
 #import "TTUtility.h"
 #import "TTTAttributedLabel.h"
 #import "SocialUtility.h"

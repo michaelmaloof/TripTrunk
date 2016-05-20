@@ -47,15 +47,15 @@
     NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
     NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
     
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];    
+    [[UINavigationBar appearance] setBackgroundColor:[TTColor tripTrunkWhite]];
+    [[UINavigationBar appearance] setBarTintColor:[TTColor tripTrunkWhite]];
     
-    [[UINavigationBar appearance] setTintColor: [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+    [[UINavigationBar appearance] setTintColor: [TTColor tripTrunkBlue]];
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1], NSForegroundColorAttributeName,
+                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
                                                            [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
     
-    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+    [[UITabBar appearance] setTintColor:[TTColor tripTrunkBlue]];
 
 
     

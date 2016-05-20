@@ -285,7 +285,7 @@
     
     UIColor *colorOne = [UIColor colorWithWhite:0.0 alpha:0.3];
     UIColor *colorTwo = [UIColor colorWithWhite:0.0 alpha:0.2];
-    UIColor *colorThree     = [UIColor colorWithWhite:0.0 alpha:0.0];
+    UIColor *colorThree = [UIColor colorWithWhite:0.0 alpha:0.0];
     
     NSArray *colors;
     NSNumber *stopTwo;
@@ -316,8 +316,8 @@
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
     [self centerScrollViewContents];
-    self.topButtonWrapper.backgroundColor = [UIColor whiteColor];
-    self.bottomButtonWrapper.backgroundColor = [UIColor whiteColor];
+    self.topButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
+    self.bottomButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
     
     // Set up gradients for top and bottom button wrappers
     //    CAGradientLayer *gradient = [self greyGradientForTop:YES];
@@ -1181,7 +1181,7 @@
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
             alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo?",@"Are you sure you want to delete this photo?");
-            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+            alertView.backgroundColor = [TTColor tripTrunkLightBlue];
             [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
             [alertView addButtonWithTitle:NSLocalizedString(@"Yes",@"Yes")];
             alertView.tag = 0;
@@ -1690,7 +1690,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
     alertView.title = NSLocalizedString(@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and by members of the trunk where the photo is located.",@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and members of the trunk where the photo is located.");
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
    [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
     alertView.tag = 3;
     [alertView show];

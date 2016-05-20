@@ -8,7 +8,6 @@
 
 #import "CitySearchViewController.h"
 #import "TTUtility.h"
-#import "UIColor+HexColors.h"
 
 @interface CitySearchViewController () <UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
@@ -35,9 +34,8 @@
     [self.searchController.searchBar sizeToFit];
     
     // Make the search Cancel button TTBlue
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                                                  ttBlueColor,
+                                                                                                  [TTColor tripTrunkBlue],
                                                                                                   NSForegroundColorAttributeName,
                                                                                                   nil]
                                                                                         forState:UIControlStateNormal];
@@ -52,7 +50,7 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"?" style:UIBarButtonItemStylePlain target:self action:@selector(question)];
     
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
     
     
     // Add keyboard notifications so that the keyboard won't cover the table when searching
@@ -140,7 +138,7 @@
     alertView.delegate = self;
     alertView.title = NSLocalizedString(@"Something Went Wrong :/",@"Something Went Wrong :/");
     alertView.message = NSLocalizedString(@"The search engine seems to have hiccuped. Please try again.",@"The search engine seems to have hiccuped. Please try again.");
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    alertView.backgroundColor = [TTColor tripTrunkBlue];
     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
     alertView.tag = 17;
     [alertView show];

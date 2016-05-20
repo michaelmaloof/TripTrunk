@@ -7,7 +7,7 @@
 //
 
 #import "FriendTableViewCell.h"
-#import "UIColor+HexColors.h"
+#import "TTColor.h"
 
 @interface FriendTableViewCell ()
 
@@ -20,9 +20,8 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.userImageView setClipsToBounds:YES];
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
-    [self.followButton setTintColor:ttBlueColor];
+    [self.followButton setTintColor:[TTColor tripTrunkBlue]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

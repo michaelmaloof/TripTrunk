@@ -16,7 +16,6 @@
 #import "TTUtility.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TrunkViewController.h"
-#import "UIColor+HexColors.h"
 #import "MBProgressHUD.h"
 #import "TTColor.h"
 
@@ -81,7 +80,7 @@ enum TTActivityViewType : NSUInteger {
     
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self.view setBackgroundColor:[TTColor tripTrunkWhite]];
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
@@ -110,7 +109,6 @@ enum TTActivityViewType : NSUInteger {
                            action:@selector(refresh:)
                  forControlEvents:UIControlEventValueChanged];
         [self.tableView addSubview: self.refreshController];
-//        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
 
          self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
         [ self.refreshController endRefreshing];
@@ -122,7 +120,7 @@ enum TTActivityViewType : NSUInteger {
     
     self.trips = [[NSMutableArray alloc]init];
     
-     self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+     self.navigationController.navigationBar.tintColor = [TTColor tripTrunkBlue];
     
     if (![PFUser currentUser]) {
         [self.tabBarController setSelectedIndex:0];
@@ -364,7 +362,7 @@ enum TTActivityViewType : NSUInteger {
                             [formatter setDateFormat:@"MMM d, h:mm a"];
                             NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                             NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                         forKey:NSForegroundColorAttributeName];
                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
                             refreshControl.attributedTitle = attributedTitle;
@@ -416,7 +414,7 @@ enum TTActivityViewType : NSUInteger {
                                             [formatter setDateFormat:@"MMM d, h:mm a"];
                                             NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                                             NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                                         forKey:NSForegroundColorAttributeName];
                                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
                                             refreshControl.attributedTitle = attributedTitle;
@@ -594,7 +592,7 @@ enum TTActivityViewType : NSUInteger {
         [weakCell.profilePicImageView.layer setCornerRadius:30.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
         
         return weakCell;
         
@@ -649,7 +647,7 @@ enum TTActivityViewType : NSUInteger {
         [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
 
         
         if ([activity valueForKey:@"photo"]) {
@@ -671,13 +669,13 @@ enum TTActivityViewType : NSUInteger {
         [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
         [weakCell.profilePicImageView.layer setMasksToBounds:YES];
         [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
         
         //currently its a square but just change the radius to make it a circle
         [activityCell.photoImageView.layer setCornerRadius:1.0f];
         [activityCell.photoImageView.layer setMasksToBounds:YES];
         [activityCell.photoImageView.layer setBorderWidth:2.0f];
-        activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
         
         return weakCell;
     }
@@ -794,7 +792,7 @@ enum TTActivityViewType : NSUInteger {
     }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
-                                 NSForegroundColorAttributeName: [UIColor blackColor]};
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
@@ -812,7 +810,7 @@ enum TTActivityViewType : NSUInteger {
     paragraph.alignment = NSTextAlignmentCenter;
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
-                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -824,7 +822,7 @@ enum TTActivityViewType : NSUInteger {
     //TODO: commented out code creates a button
     
         NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
-                                     NSForegroundColorAttributeName: [UIColor blackColor]};
+                                     NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
         return [[NSAttributedString alloc] initWithString:@"Reload" attributes:attributes];
     
@@ -833,7 +831,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIColor colorWithWhite:1.0 alpha:1.0];
+    return [TTColor tripTrunkWhite];
 }
 
 //- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView

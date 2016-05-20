@@ -19,7 +19,6 @@
 #import "PhotoViewController.h"
 #import "TTTTimeIntervalFormatter.h"
 #import <CoreText/CoreText.h>
-#import "UIColor+HexColors.h"
 #import "TrunkListViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "TTColor.h"
@@ -59,8 +58,7 @@
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:refreshControl];
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
-    refreshControl.tintColor = ttBlueColor;
+    refreshControl.tintColor = [TTColor tripTrunkBlue];
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
     
@@ -218,7 +216,7 @@
                             //NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                             //NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
                             NSString *title = @"";
-                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                         forKey:NSForegroundColorAttributeName];
                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
                             refreshControl.attributedTitle = attributedTitle;

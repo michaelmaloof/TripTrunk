@@ -7,7 +7,6 @@
 //
 
 #import "ActivityTableViewCell.h"
-//#import "UIColor+HexColors.h" FIXME: ALL OF A SUDDEN IT SAYS THIS IS MISSING!!!!!!!
 #import "TTUtility.h"
 #import "TTColor.h"
 #import "TTHashtagMentionColorization.h"
@@ -45,13 +44,13 @@
 
     
     // Set up Link Attributes (bold and colored)
-    UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];//[UIColor colorWithHexString:@"76A4B8"];
+    UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
                                      NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
                                      };
     NSDictionary *activeLinkAttributes = @{
-                                           (id)kCTForegroundColorAttributeName : (id)[UIColor darkGrayColor].CGColor,
+                                           (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkDarkGray].CGColor,
                                            NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
                                            };
     

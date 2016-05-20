@@ -59,7 +59,7 @@
     
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    [self.view setBackgroundColor:[UIColor whiteColor]]; // make the view bg white to avoid the black glitch if a keyboard appears
+    [self.view setBackgroundColor:[TTColor tripTrunkWhite]]; // make the view bg white to avoid the black glitch if a keyboard appears
     self.tableView = [[UITableView alloc] init];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
@@ -73,7 +73,7 @@
     [self.view addSubview:_commentInputView];
     [_commentInputView setupConstraintsWithView:self.view];
     
-    self.view.backgroundColor = [UIColor colorWithRed:205.0/255.0 green:205.0/255.0 blue:205.0/255.0 alpha:1.0];
+    self.view.backgroundColor = [TTColor tripTrunkLightGray];
     
     [self setupTableViewConstraints];
     
@@ -81,7 +81,7 @@
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 //                                                                                           target:self
 //                                                                                           action:@selector(closeView)];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
 
 }
 
@@ -397,7 +397,7 @@
                                         [self setUpreply:indexPath];
                                         
                                     }];
-    reply.backgroundColor = [UIColor colorWithRed:(91/255.0) green:(237/255.0) blue:(255/255.0) alpha:1];
+    reply.backgroundColor = [TTColor tripTrunkTurquoise];
     
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]){
         UITableViewRowAction *delete = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
@@ -405,7 +405,7 @@
                                              [self deleteCommentforRowAtIndexPath:indexPath tableView:self.tableView];
                                          }];
         
-        delete.backgroundColor = [UIColor colorWithRed:(255/255.0) green:(93/255.0) blue:(112/255.0) alpha:1];
+        delete.backgroundColor = [TTColor tripTrunkRed];
         return @[delete,reply]; //array with all the buttons you want. 1,2,3, etc...
     } else {
         return @[reply]; //array with all the buttons you want. 1,2,3, etc...
@@ -461,7 +461,7 @@
     NSString *text = NSLocalizedString(@"No Comments",@"No Comments");
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
-                                 NSForegroundColorAttributeName: [UIColor blackColor]};
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
@@ -475,7 +475,7 @@
     paragraph.alignment = NSTextAlignmentCenter;
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
-                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -487,7 +487,7 @@
     //TODO: commented out code creates a button
     
     //    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
-    //                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+    //                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     //
     //    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
     return nil;
@@ -495,7 +495,7 @@
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIColor colorWithWhite:1.0 alpha:1.0];
+    return [TTColor tripTrunkWhite];
 }
 
 //- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
@@ -602,7 +602,7 @@
                     UIAlertView *alertView = [[UIAlertView alloc] init];
                     alertView.delegate = self;
                     alertView.title = NSLocalizedString(@"Error adding comment. Please try again",@"Error adding comment. Please try again");
-                    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
                     [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                     [alertView show];
                 }

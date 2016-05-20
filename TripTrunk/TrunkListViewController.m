@@ -84,7 +84,7 @@
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
-    refreshControl.tintColor = [UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1];
+    refreshControl.tintColor = [TTColor tripTrunkBlue];
 
     [refreshControl endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
@@ -1278,11 +1278,11 @@
     
     
     if (tripInterval < 86400 && trip.publicTripDetail.mostRecentPhoto != NULL) {
-        cell.backgroundColor = [UIColor colorWithRed:(228.0/255.0) green:(117.0/255.0) blue:(98.0/255.0) alpha:1];
+        cell.backgroundColor = [TTColor tripTrunkRed];
     }
     else
     {
-        cell.backgroundColor = [UIColor colorWithRed:135.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0];
+        cell.backgroundColor = [TTColor tripTrunkLightBlue];
     }
     
     PFUser *possibleFriend = cell.trip.creator;
@@ -1352,7 +1352,7 @@
     }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
-                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
     
@@ -1378,7 +1378,7 @@
     paragraph.alignment = NSTextAlignmentCenter;
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
-                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -1387,7 +1387,7 @@
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
 {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
-                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     if (self.wasError == NO){
         
         return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Create Trunk",@"Create Trunk") attributes:attributes];
@@ -1399,7 +1399,7 @@
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIColor colorWithWhite:0.0 alpha:0.0];
+    return [TTColor tripTrunkClear];
 }
 
 - (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView

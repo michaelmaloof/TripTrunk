@@ -7,7 +7,7 @@
 //
 
 #import "UserTableViewCell.h"
-#import "UIColor+HexColors.h"
+#import "TTColor.h"
 
 @interface UserTableViewCell ()
 
@@ -21,18 +21,17 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.profilePicImageView setClipsToBounds:YES];
-    UIColor *ttBlueColor = [UIColor colorWithHexString:@"8ED3FD"];
-    [self.followButton setTintColor:ttBlueColor];
+    [self.followButton setTintColor:[TTColor tripTrunkBlue]];
     
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     
     if (selected) {
-        self.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:.3];
+        self.backgroundColor = [TTColor tripTrunkRedThirdAlpha];
     }
     else {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [TTColor tripTrunkWhite];
     }
     
     

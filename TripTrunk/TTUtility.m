@@ -691,7 +691,7 @@ CLCloudinary *cloudinary;
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
                                                                                NSParagraphStyleAttributeName: paraStyle,
                                                                                NSKernAttributeName : [NSNull null],
-                                                                               (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
+                                                                               (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkGray].CGColor
                                                                                }];
     [str appendAttributedString:timeStr];
     
@@ -719,7 +719,7 @@ CLCloudinary *cloudinary;
                                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
                                                                                NSParagraphStyleAttributeName: paraStyle,
                                                                                NSKernAttributeName : [NSNull null],
-                                                                               (id)kCTForegroundColorAttributeName : (id)[UIColor grayColor].CGColor
+                                                                               (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkGray].CGColor
                                                                                }];
     [str appendAttributedString:timestampStr];
     return str;

@@ -74,15 +74,15 @@
         self.cloud.hidden = YES;
         self.memberCollectionView.hidden = YES;
         self.navigationController.navigationItem.rightBarButtonItem = nil;
-        self.collectionView.backgroundColor = [UIColor clearColor];
-        self.memberCollectionView.backgroundColor = [UIColor clearColor];
+        self.collectionView.backgroundColor = [TTColor tripTrunkClear];
+        self.memberCollectionView.backgroundColor = [TTColor tripTrunkClear];
         
         self.descriptionTextView = [[UITextView alloc]init];
         self.descriptionTextView.hidden = YES;
         //FIXME: Move this to TTFont
         [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
-        self.descriptionTextView.backgroundColor = [UIColor colorWithRed:250.0/255.0 green:244.0/255.0 blue:229.0/255.0 alpha:1.0];
-        self.descriptionTextView.textColor = [UIColor colorWithRed:95.0/255.0 green:148.0/255.0 blue:172.0/255.0 alpha:1.0];
+        self.descriptionTextView.backgroundColor = [TTColor tripTrunkOffWhite];
+        self.descriptionTextView.textColor = [TTColor tripTrunkBlue];
         self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
         self.descriptionTextView.editable = NO;
         self.descriptionTextView.selectable = NO;
@@ -96,8 +96,8 @@
             
             
             if (self.trip.publicTripDetail.totalLikes > 0) {
-                self.totalLikeButton.tintColor = [UIColor whiteColor];
-                self.totalLikeButton.textColor = [UIColor whiteColor];
+                self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
+                self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
                 self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
                 self.totalLikeButton.hidden = NO;
                 self.totalLikeHeart.hidden = NO;
@@ -191,8 +191,8 @@
             self.totalLikeButton.hidden = YES;
             self.totalLikeHeart.hidden = YES;
         } else {
-            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-            self.totalLikeButton.textColor = [UIColor whiteColor];
+            [self.totalLikeButton setTintColor:[TTColor tripTrunkWhite]];
+            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
             self.totalLikeButton.text = [NSString stringWithFormat:@"%d", number];
             self.totalLikeButton.hidden = NO;
             self.totalLikeHeart.hidden = NO;
@@ -249,7 +249,7 @@
     alertView.delegate = self;
     alertView.title =NSLocalizedString(@"Private Trunk", @"Private Trunk");
     alertView.message = NSLocalizedString(@"Only the Trunk Creator and Trunk Members can see that this trunk exists",@"Only the Trunk Creator and Trunk Members can see that this trunk exists");
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
     [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
     alertView.tag = 4;
     [alertView show];
@@ -266,7 +266,7 @@
         UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
         navButton.frame = CGRectMake(0, 0, 100, 40);
         [navButton setTitle:self.title forState:UIControlStateNormal];
-        [navButton setTintColor:[UIColor colorWithRed:(142.0/255.0) green:(211.0/255.0) blue:(253.0/255.0) alpha:1]];
+        [navButton setTintColor:[TTColor tripTrunkBlue]];
         [navButton addTarget:self
                       action:@selector(titleTapped)
             forControlEvents:UIControlEventTouchUpInside];
@@ -498,7 +498,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
     alertView.title = NSLocalizedString(@"Save Trunk photos to phone?",@"Save Trunk photos to phone?");
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
     [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
     [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
     alertView.tag = 3;
@@ -539,7 +539,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
     alertView.title = [NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited",@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited")];
-    alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
     [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss",@"Dismiss")];
     [alertView addButtonWithTitle:NSLocalizedString(@"Leave Trunk",@"Leave Trunk")];
     alertView.tag = 2;
@@ -686,7 +686,7 @@
         [cell.layer setCornerRadius:25.0f];
         [cell.layer setMasksToBounds:YES];
         [cell.layer setBorderWidth:2.0f];
-        cell.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+        cell.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
         
         if (indexPath.item == 0){
             cell.profileImage.alpha = 1;
@@ -881,8 +881,8 @@
 
     int likes = [self.totalLikeButton.text intValue] + 1;
     [self.totalLikeButton setText:[NSString stringWithFormat:@"%d",likes]];
-    [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-    self.totalLikeButton.textColor = [UIColor whiteColor];
+    [self.totalLikeButton setTintColor:[TTColor tripTrunkWhite]];
+    self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
     self.totalLikeButton.hidden = NO;
     self.totalLikeHeart.hidden = NO;
 
@@ -915,8 +915,8 @@
 //            self.totalLikeButton.hidden = YES;
 //            self.totalLikeHeart.hidden = YES;
 //        } else {
-//            [self.totalLikeButton setTintColor:[UIColor whiteColor]];
-//            self.totalLikeButton.textColor = [UIColor whiteColor];
+//            [self.totalLikeButton setTintColor:[TTColor tripTrunkWhite]];
+//            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
 //            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
 //            self.totalLikeButton.hidden = NO;
 //            self.totalLikeHeart.hidden = NO;

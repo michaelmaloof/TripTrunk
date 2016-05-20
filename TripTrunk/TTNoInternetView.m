@@ -7,7 +7,7 @@
 //
 
 #import "TTNoInternetView.h"
-#import "UIColor+HexColors.h"
+#import "TTColor.h"
 
 @interface TTNoInternetView ()
 @property (strong, nonatomic)UIProgressView *progressView;
@@ -22,7 +22,7 @@
     CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, 30);
     self = [super initWithFrame:rect];
     if (self) {
-        [self setBackgroundColor:[UIColor colorWithHexString:@"d98787"]];
+        [self setBackgroundColor:[TTColor tripTrunkCoral]];
         [self setupUI];
     }
     return self;
@@ -31,7 +31,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundColor:[UIColor colorWithHexString:@"d98787"]];
+        [self setBackgroundColor:[TTColor tripTrunkCoral]];
         [self setupUI];
     }
     return self;
@@ -42,7 +42,7 @@
     CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, height);
     self = [super initWithFrame:rect];
     if (self) {
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self setBackgroundColor:[TTColor tripTrunkWhite]];
         [self setupUI];
     }
     return self;
@@ -51,7 +51,7 @@
 - (void)setupUI {
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     [_titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [_titleLabel setTextColor:[UIColor whiteColor]];
+    [_titleLabel setTextColor:[TTColor tripTrunkWhite]];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [_titleLabel setText:@"No Internet Connection"];
     [self addSubview:_titleLabel];

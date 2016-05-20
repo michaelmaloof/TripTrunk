@@ -15,7 +15,6 @@
 #import "TTUtility.h"
 #import "TTCache.h"
 #import "UIScrollView+EmptyDataSet.h"
-#import "UIColor+HexColors.h"
 
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate>
 
@@ -88,10 +87,9 @@
         self.searchController.searchBar.delegate = self;
         [self.searchController.searchBar sizeToFit];
         [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-        // Make the search Cancel button TTBlue
-        UIColor *ttBlueColor = [UIColor colorWithHexString:@"76A4B8"];
+
         [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                                                      ttBlueColor,
+                                                                                                      [TTColor tripTrunkBlue],
                                                                                                       NSForegroundColorAttributeName,
                                                                                                       nil]
                                                                                             forState:UIControlStateNormal];
@@ -104,7 +102,7 @@
         self.tableView.emptyDataSetDelegate = self;
         self.tableView.emptyDataSetSource = self;
         
-        [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
         
         // Add keyboard notifications so that the keyboard won't cover the table when searching
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -683,7 +681,7 @@
     [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
     [weakCell.profilePicImageView.layer setMasksToBounds:YES];
     [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor whiteColor]);
+    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
     
     
     
@@ -817,7 +815,7 @@
     NSString *text = @"No Users Found";
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
-                                 NSForegroundColorAttributeName: [UIColor blackColor]};
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
@@ -838,7 +836,7 @@
     paragraph.alignment = NSTextAlignmentCenter;
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
-                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -850,7 +848,7 @@
         //TODO: Add a facebook invite button - commented code creates the button
     
 //    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
-//                                 NSForegroundColorAttributeName: [UIColor whiteColor]};
+//                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
 //    
 //    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
     return nil;
@@ -858,7 +856,7 @@
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIColor colorWithWhite:1.0 alpha:1.0];
+    return [TTColor tripTrunkWhite];
 }
 
 //- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView

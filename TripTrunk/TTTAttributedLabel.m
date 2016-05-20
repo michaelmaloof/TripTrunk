@@ -409,12 +409,12 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 
     if ([NSMutableParagraphStyle class]) {
         [mutableLinkAttributes setObject:[TTColor tripTrunkBlueLinkColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-        [mutableActiveLinkAttributes setObject:[UIColor redColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-        [mutableInactiveLinkAttributes setObject:[UIColor grayColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:[TTColor tripTrunkRed] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableInactiveLinkAttributes setObject:[TTColor tripTrunkGray] forKey:(NSString *)kCTForegroundColorAttributeName];
     } else {
         [mutableLinkAttributes setObject:(__bridge id)[[TTColor tripTrunkBlueLinkColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-        [mutableActiveLinkAttributes setObject:(__bridge id)[[UIColor redColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-        [mutableInactiveLinkAttributes setObject:(__bridge id)[[UIColor grayColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableActiveLinkAttributes setObject:(__bridge id)[[TTColor tripTrunkRed] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        [mutableInactiveLinkAttributes setObject:(__bridge id)[[TTColor tripTrunkGray] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
     }
 
     self.linkAttributes = [NSDictionary dictionaryWithDictionary:mutableLinkAttributes];
@@ -1229,7 +1229,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
 - (UIColor *)textColor {
 	UIColor *color = [super textColor];
 	if (!color) {
-		color = [UIColor blackColor];
+		color = [TTColor tripTrunkBlack];
 	}
 
 	return color;

@@ -7,7 +7,6 @@
 //
 
 #import "TTCommentInputView.h"
-#import "UIColor+HexColors.h"
 #import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
@@ -41,15 +40,15 @@ UIView *topView;
     if (self) {
         
         [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-        self.backgroundColor = [UIColor colorWithHexString:@"cccccc"];
+        self.backgroundColor = [TTColor tripTrunkLightGray];
         
         // Initialize the comment text field and submit button
         _commentField = [[UITextField alloc] initWithFrame:CGRectZero];
         [_commentField setTranslatesAutoresizingMaskIntoConstraints:NO];
         // Style the comment field
-        _commentField.backgroundColor = [UIColor whiteColor];
+        _commentField.backgroundColor = [TTColor tripTrunkWhite];
         _commentField.borderStyle = UITextBorderStyleRoundedRect;
-        _commentField.textColor = [UIColor blackColor];
+        _commentField.textColor = [TTColor tripTrunkBlack];
         _commentField.font = [UIFont systemFontOfSize:14.0];
         _commentField.placeholder = NSLocalizedString(@"Add a comment...",@"Add a comment...");
         _commentField.autocorrectionType = UITextAutocorrectionTypeYes;
@@ -61,8 +60,8 @@ UIView *topView;
         _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [_submitButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_submitButton setTitle:NSLocalizedString(@"Send",@"Send") forState:UIControlStateNormal];
-        [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_submitButton setBackgroundColor:[UIColor colorWithHexString:@"00b300"]];
+        [_submitButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+        [_submitButton setBackgroundColor:[TTColor tripTrunkGreen]];
         _submitButton.layer.cornerRadius = 4.0;
         [_submitButton addTarget:self
                           action:@selector(submitButtonPressed)

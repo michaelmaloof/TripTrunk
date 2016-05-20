@@ -16,5 +16,19 @@
 + (UIColor *)subPhotoTan;
 + (UIColor *)subPhotoGreen;
 + (UIColor *)subPhotoGray;
-
++ (UIColor *)tripTrunkBlue;
++ (UIColor *)tripTrunkRed;
++ (UIColor *)tripTrunkGray;
++ (UIColor *)tripTrunkYellow;
++ (UIColor *)tripTrunkWhite;
++ (UIColor *)tripTrunkLightBlue;
++ (UIColor *)tripTrunkLightGray;
++ (UIColor *)tripTrunkTurquoise;
++ (UIColor *)tripTrunkOffWhite;
++ (UIColor *)tripTrunkRedThirdAlpha;
++ (UIColor *)tripTrunkBlack;
++ (UIColor *)tripTrunkDarkGray;
++ (UIColor *)tripTrunkClear;
++ (UIColor *)tripTrunkGreen;
++ (UIColor *)tripTrunkCoral;
 @end

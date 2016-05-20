@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ParseErrorHandlingController.h"
-
+#import "TTColor.h"
+#import "TTFont.h"
 
 @interface TTBaseViewController : UIViewController
 
