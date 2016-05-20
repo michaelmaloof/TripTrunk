@@ -309,12 +309,10 @@
     }
 }
 
-//self.startTripTextView.text = [self.formatter stringFromDate:self.datePicker.date];
-//self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
-//[self.formatter stringFromDate:[NSDate date]];
-
 //we adjusts the designs of the textfield based on which one the user is typing in
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    
+    //if the date is nil it means the users on the current date but never scrolled, so set it for them since by default Apple doesnt
     if (textView == self.endTripTextView) {
         self.datePicker.tag = 1;
         if (self.trip.endDate == nil){
@@ -716,8 +714,6 @@
                 [self.navigationController popToViewController:[listArray lastObject] animated:YES];
             }
     }
-    
-    
 }
 
 #pragma mark - Parse
