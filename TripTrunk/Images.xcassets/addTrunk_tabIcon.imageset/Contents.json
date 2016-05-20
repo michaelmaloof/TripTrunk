@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "TTtabBarIcon.png",
+      "filename" : "new trunk.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TTtabBarIcon@2x.png",
+      "filename" : "new trunk-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TTtabBarIcon@3x.png",
+      "filename" : "new trunk-2.png",
       "scale" : "3x"
     }
   ],
