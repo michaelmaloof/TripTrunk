@@ -63,115 +63,98 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.constraintLabel.hidden = YES;
+    self.totalLikeButton.hidden = YES;
+    self.totalLikeHeart.hidden = YES;
+    self.cloud.hidden = YES;
+    self.memberCollectionView.hidden = YES;
+    self.navigationController.navigationItem.rightBarButtonItem = nil;
+    self.collectionView.backgroundColor = [TTColor tripTrunkClear];
+    self.memberCollectionView.backgroundColor = [TTColor tripTrunkClear];
+    self.descriptionTextView = [[UITextView alloc]init];
+    self.descriptionTextView.hidden = YES;
+    //FIXME: Move this to TTFont
+    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
+    self.descriptionTextView.backgroundColor = [TTColor tripTrunkOffWhite];
+    self.descriptionTextView.textColor = [TTColor tripTrunkBlue];
+    self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
+    self.descriptionTextView.editable = NO;
+    self.descriptionTextView.selectable = NO;
+    self.descriptionTextView.scrollEnabled = YES;
+    self.descriptionTextView.delegate = self;
+    self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
+    [self refreshTripDataViews];
+    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (self.trip.publicTripDetail.totalLikes > 0) {
+            self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
+            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
+            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+            self.totalLikeButton.hidden = NO;
+            self.totalLikeHeart.hidden = NO;
+        }
+        else{
+            self.totalLikeButton.hidden = YES;
+            self.totalLikeHeart.hidden = YES;
+        }
+        
+    }];
+    self.photos = [[NSArray alloc] init];
+    self.members = [[NSMutableArray alloc] init];
+    self.numberOfImagesPerRow = 3;
+    // Load initial data
+    [self checkIfIsMember];
+    // Add observer for when uploading is finished.
+    // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
+    // Notification is also used if a photo is deleted.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(queryParseMethod)
+                                                 name:@"parsePhotosUpdatedNotification"
+                                               object:nil];
     
-    if (![PFUser currentUser]) {
-        [self.tabBarController setSelectedIndex:0];
-    } else {
-        
-        self.constraintLabel.hidden = YES;
-        self.totalLikeButton.hidden = YES;
-        self.totalLikeHeart.hidden = YES;
-        self.cloud.hidden = YES;
-        self.memberCollectionView.hidden = YES;
-        self.navigationController.navigationItem.rightBarButtonItem = nil;
-        self.collectionView.backgroundColor = [TTColor tripTrunkClear];
-        self.memberCollectionView.backgroundColor = [TTColor tripTrunkClear];
-        
-        self.descriptionTextView = [[UITextView alloc]init];
-        self.descriptionTextView.hidden = YES;
-        //FIXME: Move this to TTFont
-        [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
-        self.descriptionTextView.backgroundColor = [TTColor tripTrunkOffWhite];
-        self.descriptionTextView.textColor = [TTColor tripTrunkBlue];
-        self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);
-        self.descriptionTextView.editable = NO;
-        self.descriptionTextView.selectable = NO;
-        self.descriptionTextView.scrollEnabled = YES;
-        self.descriptionTextView.delegate = self;
-        self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
-        
-        [self refreshTripDataViews];
-        
-        [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            
-            
-            if (self.trip.publicTripDetail.totalLikes > 0) {
-                self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
-                self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
-                self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-                self.totalLikeButton.hidden = NO;
-                self.totalLikeHeart.hidden = NO;
-            }
-            else{
-                self.totalLikeButton.hidden = YES;
-                self.totalLikeHeart.hidden = YES;
-            }
-            
-        }];
-        
-        self.photos = [[NSArray alloc] init];
-        self.members = [[NSMutableArray alloc] init];
-        self.numberOfImagesPerRow = 3;
-        // Load initial data
-        [self checkIfIsMember];
-        
-        
-        // Add observer for when uploading is finished.
-        // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
-        // Notification is also used if a photo is deleted.
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(queryParseMethod)
-                                                     name:@"parsePhotosUpdatedNotification"
-                                                   object:nil];
-        
-        self.loadingMembers = [[NSMutableArray alloc]init];
-        
-        for (UINavigationController *controller in self.tabBarController.viewControllers)
+    self.loadingMembers = [[NSMutableArray alloc]init];
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
         {
-            for (HomeMapViewController *view in controller.viewControllers)
+            if ([view isKindOfClass:[HomeMapViewController class]])
             {
-                if ([view isKindOfClass:[HomeMapViewController class]])
-                {
-                    if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                        if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                            if (![view.viewedTrunks containsObject:self.trip])
-                            {
-                                [view.viewedTrunks addObject:self.trip];
-                                
-                            }
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        if (![view.viewedTrunks containsObject:self.trip])
+                        {
+                            [view.viewedTrunks addObject:self.trip];
                             
-                            self.photosSeen = [[NSMutableArray alloc]init];
-                            self.photosSeen = view.viewedPhotos;
                         }
+                        
+                        self.photosSeen = [[NSMutableArray alloc]init];
+                        self.photosSeen = view.viewedPhotos;
                     }
                 }
             }
         }
-        
-        for (UINavigationController *controller in self.tabBarController.viewControllers)
+    }
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
         {
-            for (HomeMapViewController *view in controller.viewControllers)
+            if ([view isKindOfClass:[HomeMapViewController class]])
             {
-                if ([view isKindOfClass:[HomeMapViewController class]])
-                {
-                    [view addTripToViewArray:self.trip];
-                }
+                [view addTripToViewArray:self.trip];
             }
         }
-        
-        for (UINavigationController *controller in self.tabBarController.viewControllers)
+    }
+    
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (TrunkListViewController *view in controller.viewControllers)
         {
-            for (TrunkListViewController *view in controller.viewControllers)
+            if ([view isKindOfClass:[TrunkListViewController class]])
             {
-                if ([view isKindOfClass:[TrunkListViewController class]])
-                {
-                    [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
-                }
+                [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
             }
         }
-        
-        
-        //    }];
     }
 }
 

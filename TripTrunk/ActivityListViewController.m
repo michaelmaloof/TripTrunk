@@ -76,6 +76,32 @@ enum TTActivityViewType : NSUInteger {
     return self;
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.trips = [[NSMutableArray alloc]init];
+    
+    self.navigationController.navigationBar.tintColor = [TTColor tripTrunkBlue];
+    
+    
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
+    
+    self.tabBarController.tabBar.translucent = false;
+    
+    
+    
+    // Setup tableview delegate/datasource
+    [self.tableView setDelegate:self];
+    [self.tableView setDataSource:self];
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
+    
+    [self loadTrips];
+}
+
 - (void)loadView {
     
     // Initialize the view & tableview
@@ -112,35 +138,6 @@ enum TTActivityViewType : NSUInteger {
 
          self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
         [ self.refreshController endRefreshing];
-    }
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.trips = [[NSMutableArray alloc]init];
-    
-     self.navigationController.navigationBar.tintColor = [TTColor tripTrunkBlue];
-    
-    if (![PFUser currentUser]) {
-        [self.tabBarController setSelectedIndex:0];
-    } else {
-        
-        [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-        [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-        
-        self.tabBarController.tabBar.translucent = false;
-
-        
-        
-        // Setup tableview delegate/datasource
-        [self.tableView setDelegate:self];
-        [self.tableView setDataSource:self];
-        // Setup Empty Datasets
-        self.tableView.emptyDataSetDelegate = self;
-        self.tableView.emptyDataSetSource = self;
-        
-        [self loadTrips];
     }
 }
 

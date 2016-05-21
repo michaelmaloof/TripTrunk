@@ -60,16 +60,12 @@
 - (void)viewDidLoad {
     //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     [super viewDidLoad];
-    if (![PFUser currentUser]) { //if the user isn't logged in take them to the map and force login
-        [self.tabBarController setSelectedIndex:0];
-    } else {
-        [self setUpDatesAndTextViews];
-        [self setUpCurrentUsersLocation];
-        [self determineEditingVsCreationMode];
-        [self setupDatePicker];
-        [self checkPublicPrivate];
-        [self setTrunkNameEmptyState];
-    }
+    [self setUpDatesAndTextViews];
+    [self setUpCurrentUsersLocation];
+    [self determineEditingVsCreationMode];
+    [self setupDatePicker];
+    [self checkPublicPrivate];
+    [self setTrunkNameEmptyState];
 }
 
 #pragma mark - Initial Setup
@@ -770,7 +766,6 @@
 -(void)parseTrip {
     
     //FIXME Should only parse if things have been changed
-    
     [self setTripName: self.tripNameTextView.text];
     self.trip.user = [PFUser currentUser].username;
     //FIXME Why do we have a NSDATE start on trip but not end?

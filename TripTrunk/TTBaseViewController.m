@@ -20,13 +20,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 //This is to remove the titles under the tab bar icons
     [self tabBarTitle];
-    
     [self checkUserInternetConnection];
     
-    
+    if (![PFUser currentUser]) { //if the user isn't logged in take them to the map and force login
+        [self.tabBarController setSelectedIndex:0];
+    }
 //This is to remove the word "Back" on the nav bar. We want there just to be an arrow @"<".
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""
