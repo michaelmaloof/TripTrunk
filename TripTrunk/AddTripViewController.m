@@ -288,14 +288,26 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     if (textView != self.tripNameTextView){
-    
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
+    } else {
+        NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
+        self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:40];
+        if ([self.tripNameTextView.text isEqualToString:trunkName]){
+            self.tripNameTextView.text = @"";
+        }
     }
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView{
     if (textView != self.tripNameTextView){
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
+    } else {
+        NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
+        if ([self.tripNameTextView.text isEqualToString:trunkName] || [self.tripNameTextView.text isEqualToString:@""]){
+            self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:14];
+            self.tripNameTextView.text = trunkName;
+
+        }
     }
 }
 
@@ -316,6 +328,7 @@
     if (textView == self.endTripTextView) {
         self.datePicker.tag = 1;
         if (self.trip.endDate == nil){
+            [self.endTripTextView setTextAlignment:NSTextAlignmentCenter];
             [self.formatter stringFromDate:[NSDate date]];
             NSString *endDate = [self.formatter stringFromDate:self.datePicker.date];
             self.endTripTextView.text = [NSString stringWithFormat:@"\n%@",endDate];
@@ -326,6 +339,7 @@
     else if (textView == self.startTripTextView){
         self.datePicker.tag = 0;
         if (self.trip.startDate == nil){
+            [self.startTripTextView setTextAlignment:NSTextAlignmentCenter];
             [self.formatter stringFromDate:[NSDate date]];
             NSString *startDate = [self.formatter stringFromDate:self.datePicker.date];
             self.startTripTextView.text = [NSString stringWithFormat:@"\n%@",startDate];
@@ -489,11 +503,9 @@
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a start and end date.",@"Please give your trunk a start and end date.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         self.navigationItem.rightBarButtonItem.enabled = YES;
-
     }else {
         //FIXME dont do this every time they click next. only if they changed location text fields
         self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
-        [self tabBarTitle];
         //take the location the user typed in, make sure its a real location and meets the correct requirements
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
         NSString *address = self.locationTextView.text;
