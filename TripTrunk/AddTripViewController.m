@@ -321,13 +321,11 @@
 
 -(void)textViewDidChange :(UITextView *)textView{
     if ([textView.text length] > 1){
-        
         NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
         if ([code isEqualToString:@" "]){
             [textView setKeyboardType:UIKeyboardTypeDefault];
         }
     }
-    
     if (textView == self.tripNameTextView){
         NSString *name = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         if (name.length < 20 && self.view.frame.size.width > 320){

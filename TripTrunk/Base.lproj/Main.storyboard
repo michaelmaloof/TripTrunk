@@ -2078,17 +2078,17 @@
                             <constraint firstItem="53v-2W-Pnv" firstAttribute="top" secondItem="P7A-D9-UVc" secondAttribute="bottom" constant="1" id="E9h-F6-PYJ"/>
                             <constraint firstItem="DHN-Iy-6C3" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="95" id="FVI-1D-Olv"/>
                             <constraint firstItem="DHN-Iy-6C3" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="60" id="IbZ-9k-5RJ">
-                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="50"/>
                             </constraint>
                             <constraint firstItem="DHN-Iy-6C3" firstAttribute="top" secondItem="iV0-Fu-xk9" secondAttribute="bottom" constant="48" id="JAT-nn-gXO"/>
                             <constraint firstItem="1AQ-Jc-jpb" firstAttribute="leading" secondItem="iV0-Fu-xk9" secondAttribute="trailing" constant="15" id="K1d-d8-j0U"/>
                             <constraint firstItem="1AQ-Jc-jpb" firstAttribute="centerY" secondItem="vPs-xM-pWz" secondAttribute="centerY" id="KZV-eU-eql">
-                                <variation key="heightClass=regular-widthClass=compact" constant="100"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="70"/>
                             </constraint>
                             <constraint firstItem="iV0-Fu-xk9" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="30" id="LYO-lv-obZ"/>
                             <constraint firstItem="RzC-Q5-kqk" firstAttribute="top" secondItem="DrO-BB-Aur" secondAttribute="bottom" constant="18" id="M5A-rP-ixd"/>
                             <constraint firstItem="Vow-rq-vVI" firstAttribute="top" secondItem="7qF-bR-mRZ" secondAttribute="bottom" constant="40" id="O0A-dY-kN1">
-                                <variation key="heightClass=regular-widthClass=compact" constant="20"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="60"/>
                             </constraint>
                             <constraint firstItem="iV0-Fu-xk9" firstAttribute="top" secondItem="nLI-Np-KIm" secondAttribute="bottom" constant="1" id="OUA-8g-AW6"/>
                             <constraint firstItem="53v-2W-Pnv" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="30" id="QEC-Rj-mdK"/>
@@ -2134,14 +2134,14 @@
                             <constraint firstItem="P7A-D9-UVc" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="pYw-Bg-gqT"/>
                             <constraint firstAttribute="trailingMargin" secondItem="53v-2W-Pnv" secondAttribute="trailing" constant="30" id="psf-dT-Nj0"/>
                             <constraint firstItem="Wse-wM-OZQ" firstAttribute="top" secondItem="1AQ-Jc-jpb" secondAttribute="bottom" constant="70" id="py7-JN-UmK">
-                                <variation key="heightClass=regular-widthClass=compact" constant="15"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                             </constraint>
                             <constraint firstItem="DrO-BB-Aur" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="104" id="qpH-Dd-YgK"/>
                             <constraint firstItem="DrO-BB-Aur" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="30" id="r8l-0Q-96V"/>
                             <constraint firstItem="1AQ-Jc-jpb" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="rko-rc-q7u"/>
                             <constraint firstItem="RzC-Q5-kqk" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="s5E-4s-S3o"/>
                             <constraint firstItem="7qF-bR-mRZ" firstAttribute="leading" secondItem="vPs-xM-pWz" secondAttribute="leadingMargin" constant="60" id="slR-PO-U8M">
-                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="50"/>
                             </constraint>
                             <constraint firstItem="DrO-BB-Aur" firstAttribute="top" secondItem="6Gh-Vd-zMy" secondAttribute="bottom" constant="118" id="snI-8b-84V">
                                 <variation key="heightClass=regular-widthClass=compact" constant="100"/>
@@ -2313,6 +2313,7 @@
                                 <exclude reference="lNs-yA-SNI"/>
                                 <include reference="u0Z-be-LlK"/>
                                 <include reference="vtV-SZ-u5y"/>
+                                <exclude reference="6cV-rR-mq5"/>
                                 <exclude reference="FVI-1D-Olv"/>
                                 <include reference="IbZ-9k-5RJ"/>
                                 <exclude reference="JAT-nn-gXO"/>
