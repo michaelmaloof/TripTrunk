@@ -342,7 +342,7 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    return textView.text.length + (text.length - range.length) <= 25;
+    return textView.text.length + (text.length - range.length) <= 33;
 }
 
 //we adjusts the designs of the textfield based on which one the user is typing in
