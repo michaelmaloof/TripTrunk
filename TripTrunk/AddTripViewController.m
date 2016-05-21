@@ -330,9 +330,11 @@
     
     if (textView == self.tripNameTextView){
         NSString *name = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        if (name.length < 20){
+        if (name.length < 20 && self.view.frame.size.width > 320k){
             self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n%@",name];
-        } else{
+        } else if (name.length < 13){
+            self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n%@",name];
+        }else{
             self.tripNameTextView.text = [NSString stringWithFormat:@"\n%@",name];
         }
     }
