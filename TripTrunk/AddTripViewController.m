@@ -126,6 +126,7 @@
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
     self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:14];
     self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n\n%@",trunkName];
+    [self.tripNameTextView setTextAlignment:NSTextAlignmentCenter];
 }
 
 /**
@@ -299,8 +300,9 @@
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
         self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:30];
-        if ([self.tripNameTextView.text containsString:trunkName]){
-            self.tripNameTextView.text = @"";
+        NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        if ([nameCheck isEqualToString:trunkName]){
+            self.tripNameTextView.text = @"\n\n\n\n\n\n\n";
         }
     }
 }
@@ -310,7 +312,8 @@
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-        if ([self.tripNameTextView.text containsString:trunkName] || [self.tripNameTextView.text isEqualToString:@""]){
+        NSString *space = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        if ([space isEqualToString:@""] || [space isEqualToString:trunkName]){
             [self setTrunkNameEmptyState];
         }
     }
@@ -322,6 +325,15 @@
         NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
         if ([code isEqualToString:@" "]){
             [textView setKeyboardType:UIKeyboardTypeDefault];
+        }
+    }
+    
+    if (textView == self.tripNameTextView){
+        NSString *name = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        if (name.length < 20){
+            self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n%@",name];
+        } else{
+            self.tripNameTextView.text = [NSString stringWithFormat:@"\n%@",name];
         }
     }
 }
@@ -496,7 +508,8 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     NSString *city = NSLocalizedString(@"City", @"City");
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-    if ([self.tripNameTextView.text isEqualToString:@""] || [self.tripNameTextView.text containsString:trunkName]){
+    NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    if ([self.tripNameTextView.text isEqualToString:@""] || [nameCheck containsString:trunkName]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         self.navigationItem.rightBarButtonItem.enabled = YES;
