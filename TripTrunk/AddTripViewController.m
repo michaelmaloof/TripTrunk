@@ -68,6 +68,7 @@
         [self determineEditingVsCreationMode];
         [self setupDatePicker];
         [self checkPublicPrivate];
+        [self setTrunkNameEmptyState];
     }
 }
 
@@ -119,6 +120,12 @@
     self.privateTrunkDescription.hidden = YES;
     self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
     self.cancelBar.enabled = YES;
+}
+
+-(void)setTrunkNameEmptyState{
+    NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
+    self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:14];
+    self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n\n%@",trunkName];
 }
 
 /**
@@ -291,8 +298,8 @@
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-        self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:40];
-        if ([self.tripNameTextView.text isEqualToString:trunkName]){
+        self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:30];
+        if ([self.tripNameTextView.text containsString:trunkName]){
             self.tripNameTextView.text = @"";
         }
     }
@@ -303,10 +310,8 @@
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 60, self.view.frame.size.width, self.view.frame.size.height);
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-        if ([self.tripNameTextView.text isEqualToString:trunkName] || [self.tripNameTextView.text isEqualToString:@""]){
-            self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:14];
-            self.tripNameTextView.text = trunkName;
-
+        if ([self.tripNameTextView.text containsString:trunkName] || [self.tripNameTextView.text isEqualToString:@""]){
+            [self setTrunkNameEmptyState];
         }
     }
 }
@@ -491,7 +496,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     NSString *city = NSLocalizedString(@"City", @"City");
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-    if ([self.tripNameTextView.text isEqualToString:@""] || [self.tripNameTextView.text isEqualToString:trunkName]){
+    if ([self.tripNameTextView.text isEqualToString:@""] || [self.tripNameTextView.text containsString:trunkName]){
         [self notEnoughInfo:NSLocalizedString(@"Please name your trunk.",@"Please name your trunk.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         self.navigationItem.rightBarButtonItem.enabled = YES;
