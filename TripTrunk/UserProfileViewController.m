@@ -192,8 +192,11 @@
 }
 
 -(void)displayUsername{
+    //set the navBar title to the @username
     self.title  = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
+    //prevent username from becoming tabbar title
     [self tabBarTitle];
+    //combine first and last name to full name to display. If they don't have a first and last name, show "name" (the old way we tracked user's name)
     NSString *name;
     if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
         name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
@@ -202,13 +205,17 @@
     } else {
         name = self.user[@"name"];
     }
-    NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
-    NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
-    textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
-    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-    [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
-    self.nameLabel.attributedText = attributedString;
+    
+    //add the privacy lock next to the user's name if that user is private
+    if ([[self.user valueForKey:@"private"] boolValue] == 1){
+        NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
+        self.nameLabel.attributedText = attributedString;
+    }
 }
 
 -(void)setEditButton{
