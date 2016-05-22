@@ -126,10 +126,8 @@
     [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
             self.user = (PFUser*)object;
-        
             [self displayUsername];
-            
-            [self.hometownLabel setText:self.user[@"hometown"]];
+            [self displayHometown];
             [self.profilePicImageView setClipsToBounds:YES];
             [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
         
@@ -205,7 +203,6 @@
     } else {
         name = self.user[@"name"];
     }
-    
     //add the privacy lock next to the user's name if that user is private
     if ([[self.user valueForKey:@"private"] boolValue] == 1){
         NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
@@ -216,6 +213,16 @@
         [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
         self.nameLabel.attributedText = attributedString;
     }
+}
+
+-(void)displayHometown{
+    NSString *hometownPlusSpace = [NSString stringWithFormat:@"  %@",self.user[@"hometown"]];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:hometownPlusSpace];
+    NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+    textAttachment.image = [UIImage imageNamed:@"location"];
+    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+    [attributedString replaceCharactersInRange:NSMakeRange(0, 1) withAttributedString:attrStringWithImage];
+    self.hometownLabel.attributedText = attributedString;
 }
 
 -(void)setEditButton{
