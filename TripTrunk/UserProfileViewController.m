@@ -25,6 +25,7 @@
 #import "PhotoViewController.h"
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *trunkCountButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIButton *listButton;
@@ -46,6 +47,7 @@
 @property int numberOfImagesPerRow;
 @property BOOL isFirstLoad;
 @property NSMutableArray *photosSeen;
+@property (weak, nonatomic) IBOutlet UILabel *trunkCountLabel;
 @end
 
 @implementation UserProfileViewController
@@ -78,9 +80,9 @@
     self.followButton.hidden = YES;
     
     self.myPhotos = [[NSMutableArray alloc] init];
-    
+    self.trunkCountButton.hidden = YES;
     //round the profile image
-    [self.profilePicImageView.layer  setCornerRadius:30.0f];
+    [self.profilePicImageView.layer  setCornerRadius:50.0];
     [self.profilePicImageView.layer  setMasksToBounds:YES];
 
 
@@ -190,8 +192,8 @@
 }
 
 -(void)displayUsername{
-    //set the navBar title to the @username
-    self.title  = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
+    //set the navBar title to the username
+    self.title  = [NSString stringWithFormat:@"%@",self.user[@"username"]];
     //prevent username from becoming tabbar title
     [self tabBarTitle];
     //combine first and last name to full name to display. If they don't have a first and last name, show "name" (the old way we tracked user's name)
@@ -212,6 +214,8 @@
         NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
         [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
         self.nameLabel.attributedText = attributedString;
+    } else {
+        self.nameLabel.text = name;
     }
 }
 
@@ -232,7 +236,6 @@
     [editButton setImage:[UIImage imageNamed:@"settings"] forState:UIControlStateNormal];
     UIBarButtonItem *editBarButton = [[UIBarButtonItem alloc] initWithCustomView:editButton];
     self.navigationItem.rightBarButtonItem = editBarButton;
-
 }
 
 -(void)loadUserImages{
@@ -308,6 +311,8 @@
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
     self.mapButton.userInteractionEnabled = NO;
+    self.trunkCountButton.userInteractionEnabled = NO;
+    self.trunkCountButton.hidden = YES;
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
@@ -315,7 +320,7 @@
         self.followersButton.enabled = YES;
         self.followingButton.enabled = YES;
         self.mapButton.userInteractionEnabled = YES;
-        
+        self.trunkCountButton.userInteractionEnabled = YES;
     }
     else {
         // Get the followStatus from the cache so it may be updated already
@@ -332,11 +337,13 @@
                         self.followersButton.enabled = NO;
                         self.followingButton.enabled = NO;
                         self.mapButton.userInteractionEnabled = NO;
+                        self.trunkCountButton.userInteractionEnabled = NO;
                     } else {
                         self.isFollowing = NO;
                         self.followersButton.enabled = YES;
                         self.followingButton.enabled = YES;
                         self.mapButton.userInteractionEnabled = YES;
+                        self.trunkCountButton.userInteractionEnabled = YES;
                     }
                     
                     self.followButton.tag = 1;
@@ -354,7 +361,7 @@
                     self.followersButton.enabled = YES;
                     self.followingButton.enabled = YES;
                     self.mapButton.userInteractionEnabled = YES;
-                    
+                    self.trunkCountButton.userInteractionEnabled = YES;
                     if (self.isFirstLoad == NO){
                         [self loadUserImages];
                         self.isFirstLoad = YES;
@@ -386,11 +393,13 @@
                                 self.followersButton.enabled = YES;
                                 self.followingButton.enabled = YES;
                                 self.mapButton.userInteractionEnabled = YES;
+                                self.trunkCountButton.userInteractionEnabled = YES;
                             } else {
                                 self.isFollowing = NO;
                                 self.followersButton.enabled = YES;
                                 self.followingButton.enabled = YES;
                                 self.mapButton.userInteractionEnabled = YES;
+                                self.trunkCountButton.userInteractionEnabled = YES;
                             }
                             [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal];
                             self.followButton.tag = 1;
@@ -405,6 +414,7 @@
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
+                            self.trunkCountButton.userInteractionEnabled = YES;
                             self.followButton.tag = 1;
                             [self setButtonColor];
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
@@ -428,11 +438,13 @@
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
+                            self.trunkCountButton.userInteractionEnabled = YES;
                         } else {
                             self.isFollowing = NO;
                             self.followersButton.enabled = YES;
                             self.followingButton.enabled = YES;
                             self.mapButton.userInteractionEnabled = YES;
+                            self.trunkCountButton.userInteractionEnabled = YES;
                         }
                         
                         self.followButton.tag = 0;
@@ -501,12 +513,12 @@
             self.trunkCount= count;
             
             if (count == 0){
-                [self.mapButton setTitle:@"" forState:UIControlStateNormal];
+                [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
                 self.listButton.hidden = YES;
             }else {
-                [self.mapButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-//                self.listButton.hidden = NO; // we dont use this button so keep hidden for now
+                [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
             }
+            self.trunkCountButton.hidden = NO;
         });
     }];
 }
@@ -548,9 +560,7 @@
 
     
 }
-- (IBAction)logOutButtonPressed:(id)sender {
-    [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
-}
+
 
 - (IBAction)followButtonPressed:(id)sender {
     
@@ -638,7 +648,15 @@
     }
 }
 
+- (IBAction)trunkCountPressed:(id)sender {
+    [self handleTrunkTap];
+}
+
 - (IBAction)mapButtonPressed:(id)sender {
+    [self handleTrunkTap];
+}
+
+-(void)handleTrunkTap{
     if (self.trunkCount >0){
         if ([[self.user valueForKey:@"private"] boolValue] == 0)
         {
@@ -671,6 +689,7 @@
         alert.tag = 11;
         [alert show];
     }
+
 }
 
 - (void)editButtonPressed:(id)sender {
@@ -698,7 +717,7 @@
     [actionSheet showInView:self.view];
     
 }
-
+//FIXME What is this
 -(void)shouldSaveUserAndClose:(PFUser *)user {
     // Ensure it's the current user so we don't accidentally let people change other people's info. 
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
