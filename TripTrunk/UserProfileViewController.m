@@ -29,7 +29,6 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIButton *listButton;
-@property (weak, nonatomic) IBOutlet UIButton *hideThisButtonAlways;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
@@ -73,123 +72,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.trunkCountButton.hidden = YES;
-    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
-    self.followButton.tag = 0;
-    [self setButtonColor];
-    
-    //hide the follow button until we know if the current user follows them or not
-    self.followButton.hidden = YES;
-    
+    [self setInitialDesign];
     self.myPhotos = [[NSMutableArray alloc] init];
-    //round the profile image
-    [self.profilePicImageView.layer  setCornerRadius:50.0];
-    [self.profilePicImageView.layer  setMasksToBounds:YES];
-
-
-    
-    self.hideThisButtonAlways.hidden = YES;
-    
-    self.logoutButton.hidden = YES;
-    self.listButton.hidden = YES;
-    
-    self.numberOfImagesPerRow = 3;
-    
-    //FIXME MOVE THIS LOGIC ALL TO A UTILITY
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        self.photosSeen = [[NSMutableArray alloc]init];
-                        self.photosSeen = view.viewedPhotos;
-                    }
-                }
-            }
-        }
-    }
-    
-
-    self.privateCount = 0;
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-
-    // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
-    if (!_user) {
-        _user = [PFUser currentUser];
-    }
-    
-    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
-    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if(!error){
-            self.user = (PFUser*)object;
-            [self displayUsername];
-            [self displayHometown];
-            [self.profilePicImageView setClipsToBounds:YES];
-            [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
-        
-            if (self.user[@"bio"]) {
-                [self.bioTextView setText:self.user[@"bio"]];
-            }else {
-            [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
-            }
-
-            [self.logoutButton setHidden:YES];
-
-            // If it's the current user, set up their profile a bit differently.
-            if ([[self.user objectId] isEqual: [[PFUser currentUser] objectId]]) {
-                [self.followButton setHidden:YES];
-                [self setEditButton];
-                UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
-                picTap.numberOfTapsRequired = 1;
-                self.profilePicImageView.userInteractionEnabled = YES;
-                [self.profilePicImageView addGestureRecognizer:picTap];
-
-            }
-            // It's not the current user profile. So let's give them an "options" button that lets the block a user
-            else {
-                // Set More button
-                UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"]
-                                                                           style:UIBarButtonItemStylePlain
-                                                                          target:self
-                                                                          action:@selector(moreButtonPressed:)];
-                self.navigationItem.rightBarButtonItem = moreButton;
-
-            }
-
-            //Check whether user account is private
-            self.privateAccountImageView.hidden = YES;
-            
-            if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]){
-                [self loadUserImages];
-                
-                if ([[self.user valueForKey:@"private"] boolValue]){
-                    self.privateAccountImageView.hidden = NO;
-                } else {
-                    self.privateAccountImageView.hidden = YES;
-                }
-            }
-            
-            else if ([[self.user valueForKey:@"private"] boolValue]){
-                self.privateAccountImageView.hidden = NO;
-            } else {
-                self.privateAccountImageView.hidden = YES;
-                [self loadUserImages];
-            }
-            
-            
-        }else{
-            NSLog(@"Error: %@",error);
-        }
-        
-    }];
-    
+    [self handlePhotosSeen];
+    [self loadUser];
 }
 
 -(void)displayUsername{
@@ -217,6 +103,121 @@
         self.nameLabel.attributedText = attributedString;
     } else {
         self.nameLabel.text = name;
+    }
+}
+
+-(void)setInitialDesign{
+    self.trunkCountButton.hidden = YES;
+    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
+    self.followButton.tag = 0;
+    [self setButtonColor];
+    //round the profile image
+    [self.profilePicImageView.layer  setCornerRadius:50.0];
+    [self.profilePicImageView.layer  setMasksToBounds:YES];
+    //hide the follow button until we know if the current user follows them or not
+    self.followButton.hidden = YES;
+    self.logoutButton.hidden = YES;
+    self.listButton.hidden = YES;
+    self.numberOfImagesPerRow = 3;
+    
+    self.privateCount = 0;
+    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+-(void)handlePhotosSeen{
+    //FIXME MOVE THIS LOGIC ALL TO A UTILITY
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        self.photosSeen = [[NSMutableArray alloc]init];
+                        self.photosSeen = view.viewedPhotos;
+                    }
+                }
+            }
+        }
+    }
+}
+
+-(void)loadUser{
+//FIXME : This should always have a non nil user
+    // Make sure we don't have a nil user -- if that happens it's probably because we're going to the profile tab right after logging in.
+    if (!_user) {
+        _user = [PFUser currentUser];
+    }
+    
+    // If the user hasn't been fully loaded (aka init with ID), fetch the user before moving on.
+    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if(!error){
+            self.user = (PFUser*)object;
+            [self displayUserContent];
+        }else{
+            NSLog(@"Error: %@",error);
+        }
+    }];
+}
+
+-(void)displayUserContent{
+    [self displayUsername];
+    [self displayHometown];
+    [self.profilePicImageView setClipsToBounds:YES];
+    [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
+    if (self.user[@"bio"]) {
+        [self.bioTextView setText:self.user[@"bio"]];
+    }else {
+        [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
+    }
+    [self.logoutButton setHidden:YES];
+    [self checkIfIsCurrentUser];
+    [self checkIfIsPrivate];
+}
+
+-(void)checkIfIsCurrentUser{
+    // If it's the current user, set up their profile a bit differently.
+    if ([[self.user objectId] isEqual: [[PFUser currentUser] objectId]]) {
+        [self.followButton setHidden:YES];
+        [self setEditButton];
+        UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+        picTap.numberOfTapsRequired = 1;
+        self.profilePicImageView.userInteractionEnabled = YES;
+        [self.profilePicImageView addGestureRecognizer:picTap];
+    }
+    // It's not the current user profile. So let's give them an "options" button that lets the block a user
+    else {
+        // Set More button
+        UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"moreIcon"]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(moreButtonPressed:)];
+        self.navigationItem.rightBarButtonItem = moreButton;
+    }
+}
+
+-(void)checkIfIsPrivate{
+    //Check whether user account is private
+    self.privateAccountImageView.hidden = YES;
+    if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]){
+        [self loadUserImages];
+        
+        if ([[self.user valueForKey:@"private"] boolValue]){
+            self.privateAccountImageView.hidden = NO;
+        } else {
+            self.privateAccountImageView.hidden = YES;
+        }
+    }
+    else if ([[self.user valueForKey:@"private"] boolValue]){
+        self.privateAccountImageView.hidden = NO;
+    } else {
+        self.privateAccountImageView.hidden = YES;
+        [self loadUserImages];
     }
 }
 
@@ -271,7 +272,6 @@
         } else {
             [ParseErrorHandlingController handleError:error];
         }
-        
     }];
 
 }
