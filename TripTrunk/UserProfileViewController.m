@@ -155,15 +155,7 @@
             // If it's the current user, set up their profile a bit differently.
             if ([[self.user objectId] isEqual: [[PFUser currentUser] objectId]]) {
                 [self.followButton setHidden:YES];
-    //          [self.logoutButton setHidden:NO];
-
-                // Set Edit button
-                self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings",@"Settings")
-                                                                                      style:UIBarButtonItemStylePlain
-                                                                                     target:self
-                                                                                     action:@selector(editButtonPressed:)];
-            
-            
+                [self setEditButton];
                 UITapGestureRecognizer *picTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
                 picTap.numberOfTapsRequired = 1;
                 self.profilePicImageView.userInteractionEnabled = YES;
@@ -208,6 +200,16 @@
         
     }];
     
+}
+
+-(void)setEditButton{
+    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [editButton setFrame:CGRectMake(0.0f, 0.0f, 25.0f, 25.0f)];
+    [editButton addTarget:self action:@selector(editButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [editButton setImage:[UIImage imageNamed:@"settings"] forState:UIControlStateNormal];
+    UIBarButtonItem *editBarButton = [[UIBarButtonItem alloc] initWithCustomView:editButton];
+    self.navigationItem.rightBarButtonItem = editBarButton;
+
 }
 
 -(void)loadUserImages{

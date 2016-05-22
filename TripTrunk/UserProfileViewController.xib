@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -102,9 +102,8 @@
                                             <exclude reference="Q62-hH-ZHq"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <variation key="heightClass=regular-widthClass=compact">
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <rect key="frame" x="171" y="18" width="34" height="24"/>
                                         <mask key="constraints">
                                             <exclude reference="3zG-w1-GN9"/>
                                             <exclude reference="DjZ-UL-2Jo"/>
@@ -143,8 +142,7 @@
                                             <exclude reference="zgs-uJ-znx"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                        <rect key="frame" x="227" y="18" width="45" height="45"/>
+                                    <variation key="heightClass=regular-widthClass=compact">
                                         <mask key="constraints">
                                             <exclude reference="Jav-we-qsO"/>
                                             <include reference="Qpl-nv-vda"/>
@@ -343,9 +341,6 @@
                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                     <nil key="highlightedColor"/>
-                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                        <rect key="frame" x="165" y="42" width="47" height="21"/>
-                                    </variation>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" indicatorStyle="white" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vbt-ru-KW2" customClass="TTUserProfileCollectionView">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
