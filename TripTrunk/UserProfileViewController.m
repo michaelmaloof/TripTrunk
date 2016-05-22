@@ -55,7 +55,6 @@
     self = [super initWithNibName:@"UserProfileViewController" bundle:nil];
     if (self) {
         _user = user;
-
     }
     return self;
 }
@@ -70,19 +69,20 @@
     return self;
 }
 
--(void)viewDidAppear:(BOOL)animated{
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.followButton.tag = 0;
     [self setButtonColor];
+    
+    //hide the follow button until we know if the current user follows them or not
     self.followButton.hidden = YES;
     
     self.myPhotos = [[NSMutableArray alloc] init];
     
-    [self.profilePicImageView.layer setBorderWidth:3.0f];
-    [self.profilePicImageView.layer setBorderColor: [[TTColor tripTrunkBlue] CGColor]];
+    //round the profile image
+    [self.profilePicImageView.layer  setCornerRadius:30.0f];
+    [self.profilePicImageView.layer  setMasksToBounds:YES];
+
 
     
     self.hideThisButtonAlways.hidden = YES;
