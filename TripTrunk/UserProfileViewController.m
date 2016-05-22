@@ -73,6 +73,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.trunkCountButton.hidden = YES;
+    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
     self.followButton.tag = 0;
     [self setButtonColor];
     
@@ -80,7 +82,6 @@
     self.followButton.hidden = YES;
     
     self.myPhotos = [[NSMutableArray alloc] init];
-    self.trunkCountButton.hidden = YES;
     //round the profile image
     [self.profilePicImageView.layer  setCornerRadius:50.0];
     [self.profilePicImageView.layer  setMasksToBounds:YES];
@@ -307,12 +308,13 @@
 
 
 - (void)viewWillAppear:(BOOL)animated {
+    self.trunkCountButton.hidden = YES;
+    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
     [self.followButton setHidden:YES];
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
     self.mapButton.userInteractionEnabled = NO;
     self.trunkCountButton.userInteractionEnabled = NO;
-    self.trunkCountButton.hidden = YES;
     
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
@@ -513,12 +515,16 @@
             self.trunkCount= count;
             
             if (count == 0){
+                self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
                 self.listButton.hidden = YES;
+                self.trunkCountButton.hidden = NO;
+
             }else {
+                self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+                self.trunkCountButton.hidden = NO;
             }
-            self.trunkCountButton.hidden = NO;
         });
     }];
 }
