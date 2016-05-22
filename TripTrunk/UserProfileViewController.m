@@ -127,19 +127,8 @@
         if(!error){
             self.user = (PFUser*)object;
         
-            self.title  = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
-            [self tabBarTitle];
-        
-            NSString *name;
-            if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
-                name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
-            } else if (self.user[@"firstName"] != nil &&  self.user[@"firstName"] == nil){
-                name = [NSString stringWithFormat:@"%@ %@",self.user[@"firstName"],self.user[@"lastName"]];
-            } else {
-                name = self.user[@"name"];
-            }
-        
-            [self.nameLabel setText:name];
+            [self displayUsername];
+            
             [self.hometownLabel setText:self.user[@"hometown"]];
             [self.profilePicImageView setClipsToBounds:YES];
             [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
@@ -200,6 +189,26 @@
         
     }];
     
+}
+
+-(void)displayUsername{
+    self.title  = [NSString stringWithFormat:@"@%@",self.user[@"username"]];
+    [self tabBarTitle];
+    NSString *name;
+    if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
+        name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
+    } else if (self.user[@"firstName"] != nil &&  self.user[@"firstName"] == nil){
+        name = [NSString stringWithFormat:@"%@ %@",self.user[@"firstName"],self.user[@"lastName"]];
+    } else {
+        name = self.user[@"name"];
+    }
+    NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
+    NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+    textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
+    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+    [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
+    self.nameLabel.attributedText = attributedString;
 }
 
 -(void)setEditButton{

@@ -184,7 +184,7 @@
                                         <action selector="followButtonPressed:" destination="-1" eventType="touchUpInside" id="cIW-Qg-UuR"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TripTrunk" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T27-K3-6wj">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TripTrunk" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T27-K3-6wj">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                     <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
@@ -218,7 +218,7 @@
                                         </mask>
                                     </variation>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Earth" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-Zi-cae">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Earth" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-Zi-cae">
                                     <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="17" id="AgD-3A-9Ia"/>
@@ -226,8 +226,7 @@
                                         <constraint firstAttribute="height" constant="17" id="wSB-wl-xCl"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
-                                    <color key="textColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="highlightedColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
                                     <variation key="default">
                                         <mask key="constraints">
                                             <exclude reference="AgD-3A-9Ia"/>
@@ -368,7 +367,8 @@
                                             <exclude reference="xBB-6U-HLg"/>
                                         </mask>
                                     </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
+                                    <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
+                                        <rect key="frame" x="313" y="35" width="35" height="35"/>
                                         <mask key="constraints">
                                             <include reference="jnM-nR-jD8"/>
                                             <include reference="xBB-6U-HLg"/>
@@ -450,7 +450,7 @@
                                 </constraint>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="top" secondItem="FVi-Q8-ebI" secondAttribute="bottom" constant="8" id="sx0-wi-fmg"/>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="width" secondItem="cSp-5v-4If" secondAttribute="width" id="tHj-AS-hwS">
-                                    <variation key="heightClass=regular-widthClass=compact" constant="-50"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                 </constraint>
                                 <constraint firstItem="FVi-Q8-ebI" firstAttribute="top" secondItem="cSp-5v-4If" secondAttribute="top" constant="10" id="tId-kp-22B">
                                     <variation key="heightClass=regular-widthClass=compact" constant="5"/>
@@ -588,8 +588,8 @@
                                     <include reference="HGE-m0-LBT"/>
                                     <include reference="PQK-5v-jln"/>
                                     <include reference="eZ0-XJ-0G9"/>
-                                    <include reference="8qz-HQ-0i8"/>
-                                    <include reference="lyL-KY-x5Y"/>
+                                    <exclude reference="8qz-HQ-0i8"/>
+                                    <exclude reference="lyL-KY-x5Y"/>
                                     <include reference="28m-yg-uLp"/>
                                     <exclude reference="H28-85-o48"/>
                                     <exclude reference="ngR-46-z5U"/>
