@@ -395,7 +395,6 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Hn-fr-0Yg">
                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                    <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="7VT-TH-b6O"/>
                                         <constraint firstAttribute="width" constant="90" id="AML-Fh-dL6">
@@ -405,8 +404,9 @@
                                             <variation key="heightClass=regular-widthClass=compact" constant="20"/>
                                         </constraint>
                                     </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <state key="normal" title="Loading">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <variation key="default">
                                         <mask key="constraints">
