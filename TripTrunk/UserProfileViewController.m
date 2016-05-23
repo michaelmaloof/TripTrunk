@@ -464,13 +464,13 @@
 -(void)setButtonColor{
     
     if (self.followButton.tag == 1){
-        [self.followButton setTitleColor:[TTColor tripTrunkCoral] forState:UIControlStateNormal];
-        self.followButton.backgroundColor = [TTColor tripTrunkWhite];
+        [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [TTColor tripTrunkCoral];
         [[self.followButton layer] setBorderColor:[TTColor tripTrunkCoral].CGColor];
         [[self.followButton layer] setBorderWidth:2.0f];
     } else {
-        [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
-        self.followButton.backgroundColor = [TTColor tripTrunkCoral];
+        [self.followButton setTitleColor:[TTColor tripTrunkCoral] forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [TTColor tripTrunkWhite];
         [[self.followButton layer] setBorderColor:[TTColor tripTrunkCoral].CGColor];
         [[self.followButton layer] setBorderWidth:2.0f];
 
