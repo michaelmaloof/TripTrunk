@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -14,30 +14,21 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
-                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="nm6-qI-Iog" secondAttribute="height" multiplier="7:5" id="a29-2Q-lvC"/>
                         </constraints>
-                        <state key="normal" title="Follow">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                        <state key="selected" title="Following"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="a29-2Q-lvC"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="282" y="10.5" width="22" height="22"/>
                             <mask key="constraints">
                                 <include reference="a29-2Q-lvC"/>
                             </mask>
@@ -68,15 +59,31 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
+                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="zPO-bb-qRg" firstAttribute="leading" secondItem="5Rf-mU-r4e" secondAttribute="trailing" constant="14" id="4ly-8f-IHk"/>
-                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="6hg-eS-qAF"/>
-                    <constraint firstItem="zPO-bb-qRg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="7k8-dG-Tpl"/>
+                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="6hg-eS-qAF">
+                        <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                    </constraint>
+                    <constraint firstItem="zPO-bb-qRg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="7k8-dG-Tpl">
+                        <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                    </constraint>
                     <constraint firstItem="XkG-SG-iF1" firstAttribute="leading" secondItem="5Rf-mU-r4e" secondAttribute="trailing" constant="14" id="OOD-33-erR"/>
-                    <constraint firstItem="XkG-SG-iF1" firstAttribute="top" secondItem="zPO-bb-qRg" secondAttribute="bottom" constant="8" id="Oq9-fU-fFj"/>
-                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="RTU-ZH-N9G"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="5Rf-mU-r4e" secondAttribute="bottom" constant="-9" id="XR3-b9-LGl"/>
+                    <constraint firstItem="XkG-SG-iF1" firstAttribute="top" secondItem="zPO-bb-qRg" secondAttribute="bottom" constant="8" id="Oq9-fU-fFj">
+                        <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                    </constraint>
+                    <constraint firstItem="5Rf-mU-r4e" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="RTU-ZH-N9G">
+                        <variation key="heightClass=regular-widthClass=compact" constant="-4"/>
+                    </constraint>
+                    <constraint firstAttribute="bottomMargin" secondItem="5Rf-mU-r4e" secondAttribute="bottom" constant="-9" id="XR3-b9-LGl">
+                        <variation key="heightClass=regular-widthClass=compact" constant="-4"/>
+                    </constraint>
                     <constraint firstItem="nm6-qI-Iog" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="c4J-Pd-TFM"/>
                     <constraint firstAttribute="trailingMargin" secondItem="nm6-qI-Iog" secondAttribute="trailing" constant="-1" id="c6M-an-RIT"/>
                     <constraint firstAttribute="bottomMargin" secondItem="nm6-qI-Iog" secondAttribute="bottom" constant="-1" id="kdk-au-pdd"/>
@@ -85,10 +92,10 @@
                 </constraints>
                 <variation key="default">
                     <mask key="subviews">
-                        <exclude reference="zPO-bb-qRg"/>
                         <exclude reference="nm6-qI-Iog"/>
                         <exclude reference="5Rf-mU-r4e"/>
                         <exclude reference="XkG-SG-iF1"/>
+                        <exclude reference="zPO-bb-qRg"/>
                     </mask>
                     <mask key="constraints">
                         <exclude reference="OOD-33-erR"/>
@@ -107,10 +114,10 @@
                 </variation>
                 <variation key="heightClass=regular-widthClass=compact">
                     <mask key="subviews">
-                        <include reference="zPO-bb-qRg"/>
                         <include reference="nm6-qI-Iog"/>
                         <include reference="5Rf-mU-r4e"/>
                         <include reference="XkG-SG-iF1"/>
+                        <include reference="zPO-bb-qRg"/>
                     </mask>
                     <mask key="constraints">
                         <include reference="OOD-33-erR"/>

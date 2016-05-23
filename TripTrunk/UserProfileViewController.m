@@ -473,9 +473,7 @@
         self.followButton.backgroundColor = [TTColor tripTrunkWhite];
         [[self.followButton layer] setBorderColor:[TTColor tripTrunkRed].CGColor];
         [[self.followButton layer] setBorderWidth:2.0f];
-
     }
-    
 }
 
 - (void)refreshFollowCounts {

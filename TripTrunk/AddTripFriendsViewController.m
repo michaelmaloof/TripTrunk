@@ -396,7 +396,6 @@
     else {
         // Follow
         [cellView.followButton setSelected:YES];
-        
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (error) {
                 NSLog(@"Error: %@", error);
@@ -407,7 +406,6 @@
                                                                delegate:self
                                                       cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                                       otherButtonTitles:nil, nil];
-                
                 [cellView.followButton setSelected:NO];
                 [alert show];
             }
@@ -570,15 +568,9 @@
                 [self.searchResults addObjectsFromArray:objects];
                 [self.tableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
-
             }
-            
         }];
-        
-        
-        
     }
-    
 }
 
 /**
@@ -602,13 +594,10 @@
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
     UIEdgeInsets contentInsets = self.tableView.contentInset;
     contentInsets.bottom = keyboardSize.height;
-    
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
-    
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
@@ -651,13 +640,10 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-
-
     AddTripPhotosViewController *addTripPhotosViewController = segue.destinationViewController;
     addTripPhotosViewController.trip = self.trip;
     addTripPhotosViewController.trunkMembers = self.membersToAdd;
     addTripPhotosViewController.isTripCreation = YES;
-    
 }
 
 - (void)dealloc {

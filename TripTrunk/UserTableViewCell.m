@@ -21,7 +21,12 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.profilePicImageView setClipsToBounds:YES];
+    
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
+//    [self.followButton.layer setCornerRadius:29.0];
+//    [self.followButton.layer setMasksToBounds:YES];
+//    [self.followButton.layer setBorderWidth:2.0];
+//    self.followButton.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkBlue]);
     
 }
 
@@ -33,12 +38,8 @@
     else {
         self.backgroundColor = [TTColor tripTrunkWhite];
     }
-    
-    
     [super setSelected:selected animated:animated];
-
 }
-
 
 - (void)setUser:(PFUser *)user {
     _user = user;
@@ -48,13 +49,10 @@
     } else {
         name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
     }
-    
     [self.nameLabel setText:name];
     [self.usernameLabel setText:[NSString stringWithFormat:@"@%@", user.username]];
     
 }
-
-
 
 - (IBAction)followButtonPressed:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didPressFollowButton:)]) {

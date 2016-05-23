@@ -47,17 +47,14 @@
 -(void)viewDidLoad {
     
     self.today = [NSDate date];
-    
     self.parseLocations = [[NSMutableArray alloc]init];
     self.meParseLocations = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
     self.haventSeens = [[NSMutableArray alloc]init];
-    
     if (self.isList == YES) {
         self.title = self.user.username;
     } else {
         self.title = self.city;
-
     }
     UIImage *flame = [UIImage imageNamed:@"flame"];
     CGRect rect = CGRectMake(0,0,15,20);
@@ -67,19 +64,14 @@
     UIGraphicsEndImageContext();
     NSData *imageData = UIImagePNGRepresentation(picture1);
     self.flame = [UIImage imageWithData:imageData];
-    
     self.isMine = NO;
     self.objectIDs = [[NSMutableArray alloc]init];
     self.meObjectIDs = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
-
-    
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-        
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-    
     // Initialize the refresh control.
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
@@ -87,28 +79,21 @@
              forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
     refreshControl.tintColor = [TTColor tripTrunkBlue];
-
     [refreshControl endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
-
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
-    
     if (self.isList == YES) {
         self.title = self.user.username;
     } else {
         self.title = self.city;
-        
     }
-    
     self.visitedTrunks = [[NSMutableArray alloc]init];
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
@@ -122,30 +107,31 @@
             }
         }
     }
-    
     if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-       //fixme: change image
         self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
         [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
         self.trunkListToggle.tag = 0;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadTrunkListBasedOnProfile:NO];
-        
     } else if (self.isList == YES){
         self.trunkListToggle.tag = 0;
         [self loadTrunkListBasedOnProfile:NO];
     }
+    
+//We no longer support this feature
+//    else if (self.user == nil) {
+//        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
+//        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+//        self.filter.tag = 0;
+//        self.navigationItem.rightBarButtonItem.enabled = NO;
+//        [self queryParseMethodEveryone:NO];
+//    } else {
+//        self.navigationItem.rightBarButtonItem.enabled = NO;
+//        [self loadUserTrunks:NO];
+//    }
+    
+    [self queryParseMethodEveryone:NO];
 
-    else if (self.user == nil) {
-        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-        self.filter.tag = 0;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self queryParseMethodEveryone:NO];
-    } else {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self loadUserTrunks:NO];
-    }
     
     UIBarButtonItem *newBackButton =
     [[UIBarButtonItem alloc] initWithTitle:@""

@@ -19,36 +19,23 @@
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UISearchController *searchController;
-
 @property NSString *searchString;
-
 @property PFUser *user;
 @property BOOL loadedOnce;
-
 @property (nonatomic, strong) NSMutableArray *searchResults;
-
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (strong, nonatomic) NSMutableArray *following; // users this user is already following
 @property (strong, nonatomic) NSMutableArray *pending; // users this user has requested to follow
-
 @property (strong, nonatomic) NSMutableArray *promoted;
-
 @property int searchCount;
-
 @property BOOL removeResults;
-
 @property BOOL friendsMaxed;
-
 @property BOOL isLoadingFollowing;
 @property BOOL isLoadingPending;
 @property BOOL isLoadingFacebook;
 @property BOOL isLoadingSearch;
-
 @property int privateUserCellIndex;
-
 @property BOOL facebookRefreshed;
-
-
 
 @end
 
@@ -56,7 +43,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"🐘 Find Friends 🐘";
+    self.title = @"Find Friends";
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
     self.tabBarController.tabBar.translucent = false;
     _friends = [[NSMutableArray alloc] init];
@@ -72,11 +59,10 @@
     [self.searchController.searchBar sizeToFit];
     [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                                                  [TTColor tripTrunkBlue],
+                                                                    [TTColor tripTrunkBlue],
                                                                                                   NSForegroundColorAttributeName,
                                                                                                   nil]
                                                                                         forState:UIControlStateNormal];
-    
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
     // Setup Empty Datasets
@@ -88,7 +74,6 @@
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
@@ -103,10 +88,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"PromotedUser"];
     [query includeKey:@"user"];
     [query orderByAscending:@"priority"];
-    
     _promoted = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] promotedUsers]];
-
-    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
@@ -123,7 +105,6 @@
         {
             NSLog(@"Error: %@",error);
             [ParseErrorHandlingController handleError:error];
-
         }
     }];
 }
@@ -145,9 +126,6 @@
     [friendsQuery whereKeyExists:@"completedRegistration"]; // Make sure we don't get half-registered users with the weird random usernames
     friendsQuery.limit = 200;
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-
-
-    
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
@@ -316,6 +294,14 @@
 
 }
 
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    view.tintColor = [TTColor tripTrunkRed];
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[TTColor tripTrunkWhite]];
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
 {
@@ -464,13 +450,10 @@
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
     UIEdgeInsets contentInsets = self.tableView.contentInset;
     contentInsets.bottom = keyboardSize.height;
-
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
-
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
@@ -505,7 +488,6 @@
 }
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active)
     {
@@ -544,8 +526,6 @@
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     __weak UserTableViewCell *weakCell = cell;
     [weakCell.followButton setHidden:YES];
-
-
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchString isEqualToString:@""] && self.searchResults.count > 0) {
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
@@ -553,19 +533,14 @@
     else {
         if (indexPath.section == 0) {
             possibleFriend = [[_promoted objectAtIndex:indexPath.row] valueForKey:@"user"];
-           
         }
         else if (indexPath.section == 1) {
             possibleFriend = [_friends objectAtIndex:indexPath.row];
         } 
     }
-    
     [weakCell setDelegate:self];
-    
     [weakCell setUser:possibleFriend];
-    
     weakCell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
-    
     if (self.following.count >0 ) {
         weakCell.followButton.enabled = YES;
         [weakCell.followButton setSelected:YES];
@@ -574,7 +549,6 @@
             [weakCell.followButton setSelected:YES];
             [weakCell.followButton setTitle:@"Pending" forState:UIControlStateSelected];
             [weakCell.followButton setHidden:NO];
-
         } else if ([self.following containsObject:possibleFriend.objectId]){
             [weakCell.followButton setSelected:YES];
             [weakCell.followButton setTitle:@"Following" forState:UIControlStateSelected];
@@ -585,11 +559,9 @@
             [weakCell.followButton setSelected:NO];
             cell.followButton.hidden = NO;
         }
-        
     } else {
     
         cell.followButton.hidden = NO;
-
 //    // If we have a cached follow status of YES then just set the follow button. Otherwise, query to see if we're following or not.
 //    NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:possibleFriend];
 //    if (followStatus.intValue > 0 && ![self.user.objectId isEqualToString:possibleFriend.objectId]) {
@@ -639,7 +611,6 @@
 //            cell.followButton.hidden = YES;
 //        }
 //    }
-        
     }
     
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
@@ -655,14 +626,10 @@
                                                  [weakCell setNeedsLayout];
                                                  
                                              } failure:nil];
-    
-    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
+    [weakCell.profilePicImageView.layer setCornerRadius:28.0f];
     [weakCell.profilePicImageView.layer setMasksToBounds:YES];
     [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
     weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-    
-    
-    
     return weakCell;
     
 }
@@ -673,7 +640,6 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PFUser *possibleFriend;
-    
     if (self.searchController.active) {
         if (self.searchResults.count > 0 && ![self.searchController.searchBar.text isEqualToString:@""])
         {
@@ -694,12 +660,9 @@
     
     if (possibleFriend) {
         UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:possibleFriend];
-        
         [self.navigationController pushViewController:vc animated:YES];
     }
-
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-
 }
 
 #pragma mark - UserTableViewCellDelegate
