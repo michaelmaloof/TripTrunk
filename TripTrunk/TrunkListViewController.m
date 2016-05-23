@@ -1218,6 +1218,7 @@
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
+    cell.seenLogo.image = nil;
     
     if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
@@ -1230,13 +1231,6 @@
     if (trip.isPrivate == YES){
     } else {
     }
-    
-    if ([self.haventSeens containsObject:trip]){
-        cell.seenLogo.hidden = NO;
-    } else {
-        cell.seenLogo.hidden = YES;
-    }
-    
 
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
@@ -1247,21 +1241,21 @@
     
     NSString *countString;
     if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
-        countString = @"No Photos";
+        countString = @"";
     }
     else if (cell.trip.publicTripDetail.photoCount == 1) {
-        countString = @"1 Photo";
+        countString = @"(1 Photo)";
     }
     else {
         NSString *photos = NSLocalizedString(@"Photos",@"Photos");
-        countString = [NSString stringWithFormat:@"%i %@", cell.trip.publicTripDetail.photoCount, photos];
+        countString = [NSString stringWithFormat:@"(%i %@)", cell.trip.publicTripDetail.photoCount, photos];
     }
     
 //        [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
     if (self.isList == NO){
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.creator.username, countString];
+        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", cell.trip.creator.username, countString];
     } else {
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)", cell.trip.city, countString];
+        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", cell.trip.city, countString];
     }
 //        }];
     
@@ -1270,10 +1264,22 @@
     
     if (tripInterval < 86400 && trip.publicTripDetail.mostRecentPhoto != NULL) {
         cell.titleLabel.textColor = [TTColor tripTrunkRed];
+        if ([self.haventSeens containsObject:trip]){
+            cell.seenLogo.image = [UIImage imageNamed:@"paw_red_list"];
+            cell.seenLogo.hidden = NO;
+        } else {
+            cell.seenLogo.hidden = YES;
+        }
     }
     else
     {
         cell.titleLabel.textColor = [TTColor tripTrunkBlue];
+        if ([self.haventSeens containsObject:trip]){
+            cell.seenLogo.image = [UIImage imageNamed:@"paw_blue_list"];
+            cell.seenLogo.hidden = NO;
+        } else {
+            cell.seenLogo.hidden = YES;
+        }
     }
     
     PFUser *possibleFriend = cell.trip.creator;
