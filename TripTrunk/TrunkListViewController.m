@@ -1228,15 +1228,26 @@
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
     }
     
-    if (trip.isPrivate == YES){
-    } else {
-    }
-
     cell.trip = trip;
-    cell.titleLabel.text = trip.name;
-    if (cell.trip.publicTripDetail.totalLikes <10){
-    } else if (cell.trip.publicTripDetail.totalLikes < 50){
+    
+    if (trip.isPrivate == YES){
+        NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",cell.trip.name];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
+        cell.titleLabel.attributedText = attributedString;
+
+    } else {
+        cell.titleLabel.text = trip.name;
+
+    }
+    
+    if (cell.trip.publicTripDetail.totalLikes < 50){
+        
     } else{
+        
     }
     
     NSString *countString;
