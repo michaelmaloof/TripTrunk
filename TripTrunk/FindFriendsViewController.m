@@ -525,6 +525,7 @@
     PFUser *possibleFriend;
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     __weak UserTableViewCell *weakCell = cell;
+    [weakCell.followButton.titleLabel setFont:[TTFont tripTrunkFont12]];
     [weakCell.followButton setHidden:YES];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchString isEqualToString:@""] && self.searchResults.count > 0) {
