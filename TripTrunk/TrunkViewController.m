@@ -74,7 +74,7 @@
     self.descriptionTextView = [[UITextView alloc]init];
     self.descriptionTextView.hidden = YES;
     //FIXME: Move this to TTFont
-    [self.descriptionTextView setFont:[UIFont fontWithName:@"Bradley Hand" size:20]];
+    [self.descriptionTextView setFont:[TTFont tripTrunkFont20]];
     self.descriptionTextView.backgroundColor = [TTColor tripTrunkOffWhite];
     self.descriptionTextView.textColor = [TTColor tripTrunkBlue];
     self.descriptionTextView.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + 75, self.view.frame.size.width - 20, self.view.frame.size.height -150);

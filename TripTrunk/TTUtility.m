@@ -677,7 +677,7 @@ CLCloudinary *cloudinary;
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
     if (![type isEqualToString:@"comment"]) {
         str = [[NSMutableAttributedString alloc] initWithString:contentString
-                                                     attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                     attributes:@{NSFontAttributeName : [TTFont tripTrunkFont14],
                                                                   NSParagraphStyleAttributeName: paraStyle,
                                                                   NSKernAttributeName : [NSNull null]
                                                                   }];
@@ -688,7 +688,7 @@ CLCloudinary *cloudinary;
     
     
     NSAttributedString *timeStr = [[NSAttributedString alloc] initWithString:time
-                                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
+                                                                  attributes:@{NSFontAttributeName : [TTFont tripTrunkFont10],
                                                                                NSParagraphStyleAttributeName: paraStyle,
                                                                                NSKernAttributeName : [NSNull null],
                                                                                (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkGray].CGColor
@@ -716,7 +716,7 @@ CLCloudinary *cloudinary;
     NSMutableAttributedString *str = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:contentString];
     
     NSAttributedString *timestampStr = [[NSAttributedString alloc] initWithString:time
-                                                                  attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11],
+                                                                  attributes:@{NSFontAttributeName : [TTFont tripTrunkFont10],
                                                                                NSParagraphStyleAttributeName: paraStyle,
                                                                                NSKernAttributeName : [NSNull null],
                                                                                (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkGray].CGColor

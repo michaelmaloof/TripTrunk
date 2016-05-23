@@ -49,7 +49,7 @@ UIView *topView;
         _commentField.backgroundColor = [TTColor tripTrunkWhite];
         _commentField.borderStyle = UITextBorderStyleRoundedRect;
         _commentField.textColor = [TTColor tripTrunkBlack];
-        _commentField.font = [UIFont systemFontOfSize:14.0];
+        _commentField.font = [TTFont tripTrunkFont14];
         _commentField.placeholder = NSLocalizedString(@"Add a comment...",@"Add a comment...");
         _commentField.autocorrectionType = UITextAutocorrectionTypeYes;
         _commentField.keyboardType = UIKeyboardTypeDefault;

@@ -120,7 +120,7 @@
 
 -(void)setTrunkNameEmptyState{
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-    self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:14];
+    self.tripNameTextView.font = [TTFont tripTrunkFont14];
     self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n\n%@",trunkName];
     [self.tripNameTextView setTextAlignment:NSTextAlignmentCenter];
 }
@@ -155,8 +155,8 @@
     [self.endTripTextView setTextAlignment:NSTextAlignmentLeft];
     self.startTripTextView.text = @"Select \nStart Date";
     self.endTripTextView.text = @"Select \nEnd Date";
-    [self.startTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
-    [self.endTripTextView setFont:[UIFont fontWithName:@"System" size:14]];
+    [self.startTripTextView setFont:[TTFont tripTrunkFont14]];
+    [self.endTripTextView setFont:[TTFont tripTrunkFont14]];
 }
 
 /**
@@ -195,7 +195,7 @@
     //Set Title of Start Date Picker
     UILabel *startLabel = [[UILabel alloc] init];
     [startLabel setText:NSLocalizedString(@"Start Date",@"Start Date")];
-    [startLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [startLabel setFont:[TTFont tripTrunkFont16]];
     [startLabel setTextColor:[TTColor tripTrunkBlue]];
     [startLabel sizeToFit];
     UIBarButtonItem *labelbutton = [[UIBarButtonItem alloc] initWithCustomView:startLabel];
@@ -211,7 +211,7 @@
     //Set Title of End Date Picker
     UILabel *endLabel = [[UILabel alloc] init];
     [endLabel setText:NSLocalizedString(@"End Date", @"End Date")];
-    [endLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [endLabel setFont:[TTFont tripTrunkFont16]];
     [endLabel setTextColor:[TTColor tripTrunkBlue]];
     [endLabel sizeToFit];
     UIBarButtonItem *endLabelButton = [[UIBarButtonItem alloc] initWithCustomView:endLabel];
@@ -295,7 +295,7 @@
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-        self.tripNameTextView.font = [UIFont fontWithName:@"arial" size:30];
+        self.tripNameTextView.font = [TTFont tripTrunkFont28];
         NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         if ([nameCheck isEqualToString:trunkName]){
             self.tripNameTextView.text = @"\n\n\n\n\n\n\n";

@@ -47,11 +47,11 @@
     UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
-                                     NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                     NSFontAttributeName : [TTFont tripTrunkFontBold14]
                                      };
     NSDictionary *activeLinkAttributes = @{
                                            (id)kCTForegroundColorAttributeName : (id)[TTColor tripTrunkDarkGray].CGColor,
-                                           NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                           NSFontAttributeName : [TTFont tripTrunkFontBold14]
                                            };
     
     self.contentLabel.linkAttributes = linkAttributes;
@@ -102,7 +102,7 @@
         paraStyle.lineBreakMode = NSLineBreakByWordWrapping;
         NSAttributedString *approval = [[NSMutableAttributedString alloc] initWithString:@"\nApprove | Reject"
                                         
-                                                                              attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14],
+                                                                              attributes:@{NSFontAttributeName : [TTFont tripTrunkFont14],
                                                                                                                                 NSParagraphStyleAttributeName: paraStyle,
                                                                                                                                 NSKernAttributeName : [NSNull null]
                                                                                                                                 }];

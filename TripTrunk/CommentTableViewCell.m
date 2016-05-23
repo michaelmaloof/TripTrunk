@@ -33,17 +33,18 @@
 //    [self.contentLabel setLineSpacing:5.0];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
+    [self.contentLabel setFont:[TTFont tripTrunkFont14]];
         
     
     // Set up Link Attributes (bold and colored)
     UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];
     NSDictionary *linkAttributes = @{
                                      (id)kCTForegroundColorAttributeName : (id)ttBlueColor.CGColor,
-                                     NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                     NSFontAttributeName : [TTFont tripTrunkFontBold14]
                                      };
     NSDictionary *activeLinkAttributes = @{
                                            (id)kCTForegroundColorAttributeName : (id)[UIColor darkGrayColor].CGColor,
-                                           NSFontAttributeName : [UIFont boldSystemFontOfSize:14]
+                                           NSFontAttributeName : [TTFont tripTrunkFontBold14]
                                            };
     
     self.usernameLabel.delegate = self;

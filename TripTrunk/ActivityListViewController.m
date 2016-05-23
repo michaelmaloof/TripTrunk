@@ -788,7 +788,7 @@ enum TTActivityViewType : NSUInteger {
         text = NSLocalizedString(@"No Likers",@"No Likers");
     }
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -806,7 +806,7 @@ enum TTActivityViewType : NSUInteger {
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
     paragraph.alignment = NSTextAlignmentCenter;
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
@@ -818,7 +818,7 @@ enum TTActivityViewType : NSUInteger {
     
     //TODO: commented out code creates a button
     
-        NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+        NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
                                      NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
         return [[NSAttributedString alloc] initWithString:@"Reload" attributes:attributes];

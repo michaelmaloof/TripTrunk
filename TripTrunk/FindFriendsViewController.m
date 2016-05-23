@@ -755,7 +755,7 @@
 {
     NSString *text = @"No Users Found";
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -776,7 +776,7 @@
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
     paragraph.alignment = NSTextAlignmentCenter;
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
@@ -788,7 +788,7 @@
 
         //TODO: Add a facebook invite button - commented code creates the button
     
-//    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+//    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
 //                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
 //    
 //    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];

@@ -8,6 +8,7 @@
 
 #import "TTNoInternetView.h"
 #import "TTColor.h"
+#import "TTFont.h"
 
 @interface TTNoInternetView ()
 @property (strong, nonatomic)UIProgressView *progressView;
@@ -50,7 +51,7 @@
 
 - (void)setupUI {
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    [_titleLabel setFont:[UIFont systemFontOfSize:15]];
+    [_titleLabel setFont:[TTFont tripTrunkFont14]];
     [_titleLabel setTextColor:[TTColor tripTrunkWhite]];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [_titleLabel setText:@"No Internet Connection"];

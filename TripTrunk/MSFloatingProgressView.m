@@ -8,6 +8,7 @@
 
 #import "MSFloatingProgressView.h"
 #import "TTColor.h"
+#import "TTFont.h"
 
 @interface MSFloatingProgressView ()
 @property (strong, nonatomic)UIProgressView *progressView;
@@ -73,7 +74,7 @@
 //    [self addSubview:closeButton];
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 20)];
-    [_titleLabel setFont:[UIFont systemFontOfSize:9]];
+    [_titleLabel setFont:[TTFont tripTrunkFont8]];
     [_titleLabel setTextColor:[TTColor tripTrunkBlack]];
     [self addSubview:_titleLabel];
     [self updateLabel:_completedTaskCount + 1 of:_taskCount];

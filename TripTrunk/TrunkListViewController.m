@@ -1351,7 +1351,7 @@
         
     }
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -1377,7 +1377,7 @@
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
     paragraph.alignment = NSTextAlignmentCenter;
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
@@ -1386,7 +1386,7 @@
 
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
 {
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     if (self.wasError == NO){
         

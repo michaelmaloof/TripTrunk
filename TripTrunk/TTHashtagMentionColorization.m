@@ -24,7 +24,7 @@
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:text];
     NSError *error = nil;
     //create the attribute to change mentions and hastags blue
-    [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFont] range:NSMakeRange(0, text.length)];
+    [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkFont14] range:NSMakeRange(0, text.length)];
     if(black)
         [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkBlack] range:NSMakeRange(0, text.length)];
     else [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkWhite] range:NSMakeRange(0, text.length)];
@@ -46,7 +46,7 @@
     //Loop through all the regular expression matches and wrap them in the attributed properties
     for(NSTextCheckingResult * matchAt in matchesAt){
         NSRange wordRangeAt = [matchAt rangeAtIndex:0];
-        [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkCommentFontBold] range:wordRangeAt];
+        [string addAttribute:NSFontAttributeName value:[TTFont tripTrunkFontBold14] range:wordRangeAt];
         [string addAttribute:NSForegroundColorAttributeName value:[TTColor tripTrunkBlueLinkColor] range:wordRangeAt];
     }
     

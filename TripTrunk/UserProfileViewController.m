@@ -714,7 +714,7 @@
     
     [nav.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
-                                                           [UIFont fontWithName:@"American Typewritter" size:40.0], NSFontAttributeName, nil]];
+                                                           [TTFont tripTrunkFont38], NSFontAttributeName, nil]];
     [self presentViewController:nav animated:YES completion:nil];
 
 }

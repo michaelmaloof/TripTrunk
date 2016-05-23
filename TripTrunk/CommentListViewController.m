@@ -81,7 +81,7 @@
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 //                                                                                           target:self
 //                                                                                           action:@selector(closeView)];
-    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
+    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkBlue]];
 
 }
 
@@ -460,7 +460,7 @@
 {
     NSString *text = NSLocalizedString(@"No Comments",@"No Comments");
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
@@ -474,7 +474,7 @@
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
     paragraph.alignment = NSTextAlignmentCenter;
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
     
@@ -486,7 +486,7 @@
     
     //TODO: commented out code creates a button
     
-    //    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:17.0],
+    //    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
     //                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
     //
     //    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
