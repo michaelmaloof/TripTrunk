@@ -197,84 +197,8 @@
         NSString *password = _passwordTextField.text;
         NSString *hometown = _hometownTextField.text;
         
-        if (username.length == 0 || email.length == 0 || password.length == 0 || hometown.length == 0 || firstName.length == 0 || lastName.length == 0) {
-
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                            message:NSLocalizedString(@"Please fill out all fields",@"Please fill out all fields")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
-            
+        if(![self validateUsername:username])
             return NO;
-        }
-        
-        if (username.length < 3 || username.length > 20 ){
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                            message:NSLocalizedString(@"Username must be between 2-20 characters",@"Username must be between 2-20 characters")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
-            
-            return NO;
-        }
-        
-        if ([username containsString:@" "]){
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                            message:NSLocalizedString(@"Username can't have any spaces.",@"Username can't have any spaces.")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
-            
-            return NO;
-
-        }
-
-        
-        if (![username containsString:@"."] && ![username containsString:@"_"] && ![username containsString:@"-"]){
-            
-            NSString* newStr = [username stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-            
-            if ([newStr length] < [username length])
-            {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                                message:NSLocalizedString(@"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n", @"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n")
-                                                    delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                      otherButtonTitles:nil, nil];
-                [alert show];
-                
-                return NO;
-
-            }
-            
-        } else {
-            NSString *newUser = username;
-            NSString *unders = [newUser stringByReplacingOccurrencesOfString:@"_" withString:@""];
-            NSString *dash = [unders stringByReplacingOccurrencesOfString:@"-" withString:@""];
-            NSString *newUsername = [dash stringByReplacingOccurrencesOfString:@"." withString:@""];
-            
-            
-            NSString* newStr = [newUsername stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-            
-            if ([newStr length] < [newUsername length])
-            {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                                message:NSLocalizedString(@"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n", @"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n")
-                                                               delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                      otherButtonTitles:nil, nil];
-                [alert show];
-                
-                return NO;
-            }
-
-            
-        }
         
         // Show a progress hud
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -358,6 +282,169 @@
     else {
         return NO;
     }
+}
+
+-(BOOL)validateUsername:(NSString*)username{
+    
+//    if(![self validateAllFieldsHaveValues:username])
+//        return NO;
+    
+    if(![self validateUsernameLength:username])
+        return NO;
+    
+    if(![self validateUsernameHasNoSpaces:username])
+        return NO;
+    
+    if (![username containsString:@"."] && ![username containsString:@"_"] && ![username containsString:@"-"]){
+        
+        if(![self validateUsernameDoesNotContainIllegalChars:username])
+            return NO;
+        
+    } else {
+        NSString *unders = [username stringByReplacingOccurrencesOfString:@"_" withString:@""];
+        NSString *dash = [unders stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        NSString *newUsername = [dash stringByReplacingOccurrencesOfString:@"." withString:@""];
+        
+        if(![self validateUsernameDoesNotContainIllegalChars:newUsername])
+            return NO;
+    }
+    
+    if(![self validateUsernameDoesNotContainSuccessiveChars:username]) //periods and dashes only
+        return NO;
+    
+    if(![self validateUsernameHasMaximumOfTwoChars:username]) //periods and dashes only
+        return NO;
+    
+    if(![self validateUsernameDoesNotBeginWithIllegalChars:username])
+        return NO;
+    
+    return YES;
+}
+
+-(BOOL)validateAllFieldsHaveValues:(NSString*)username{
+    
+    if (username.length == 0 ||
+        self.emailTextField.text.length == 0 || self.passwordTextField.text.length == 0 ||
+        self.hometownTextField.text.length == 0 || self.firstNameTextField.text.length == 0 ||
+        self.fullnameTextField.text.length == 0) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Please fill out all fields",@"Please fill out all fields")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameLength:(NSString*)username{
+    if (username.length < 3 || username.length > 20 ){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username must be between 2-20 characters",@"Username must be between 2-20 characters")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameHasNoSpaces:(NSString*)username{
+    
+    if ([username containsString:@" "]){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username can't have any spaces.",@"Username can't have any spaces.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return NO;
+        
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameDoesNotContainIllegalChars:(NSString*)username{
+    
+    NSString* newStr = [username stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+    
+    if ([newStr length] < [username length])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n", @"Username can only contain the following characters:\n \n Letters\n Numbers\n _\n .\n -\n")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return NO;
+        
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameDoesNotContainSuccessiveChars:(NSString*)username{
+    
+    if([username containsString:@".."] || [username containsString:@"--"]){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username cannot contain repeated periods or dashes.", @"Username cannot contain repeated periods or dashes.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return NO;
+        
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameHasMaximumOfTwoChars:(NSString*)username{
+    
+    NSInteger dashCount = [[username componentsSeparatedByString:@"-"] count]-1;
+    NSInteger periodCount = [[username componentsSeparatedByString:@"."] count]-1;
+    
+    if(dashCount > 2 || periodCount> 2){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username cannot contain more than 2 periods or dashes.", @"Username cannot contain more than 2 periods or dashes.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateUsernameDoesNotBeginWithIllegalChars:(NSString*)username{
+    
+    NSString *firstChar = [username substringToIndex:1];
+    if([firstChar isEqualToString:@"."] || [firstChar isEqualToString:@"-"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Username cannot begin with periods or dashes.", @"Username cannot begin with periods or dashes.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - Keyboard delegate methods
