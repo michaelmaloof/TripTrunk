@@ -61,12 +61,6 @@
     }
     
     self.isMine = NO;
-    
-    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nightSkyline_background"]];
-    [tempImageView setFrame:self.tableView.frame];
-    
-    self.tableView.backgroundView = tempImageView;
-    
     self.objectIDs = [[NSMutableArray alloc]init];
     self.meObjectIDs = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
@@ -159,6 +153,10 @@
     
     self.parseLocations;
     
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 70.0;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
@@ -1219,7 +1217,6 @@
     
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
-    cell.lockImage.hidden = YES;
     cell.seenLogo.hidden = YES;
     
     if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
@@ -1231,9 +1228,7 @@
     }
     
     if (trip.isPrivate == YES){
-        cell.lockImage.hidden = NO;
     } else {
-        cell.lockImage.hidden = YES;
     }
     
     if ([self.haventSeens containsObject:trip]){
@@ -1245,13 +1240,9 @@
 
     cell.trip = trip;
     cell.titleLabel.text = trip.name;
-    cell.emoji.adjustsFontSizeToFitWidth = YES;
     if (cell.trip.publicTripDetail.totalLikes <10){
-        cell.emoji.text = @"";
     } else if (cell.trip.publicTripDetail.totalLikes < 50){
-        cell.emoji.text = @"🔥";
     } else{
-        cell.emoji.text = @"⚡️";
     }
     
     NSString *countString;
@@ -1278,11 +1269,11 @@
     
     
     if (tripInterval < 86400 && trip.publicTripDetail.mostRecentPhoto != NULL) {
-        cell.backgroundColor = [TTColor tripTrunkRed];
+        cell.titleLabel.textColor = [TTColor tripTrunkRed];
     }
     else
     {
-        cell.backgroundColor = [TTColor tripTrunkLightBlue];
+        cell.titleLabel.textColor = [TTColor tripTrunkBlue];
     }
     
     PFUser *possibleFriend = cell.trip.creator;

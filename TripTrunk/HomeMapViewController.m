@@ -1254,7 +1254,7 @@
  
     self.navigationItem.leftBarButtonItem = nil;
     UIImage *image = [UIImage imageNamed:@"newspaper"];
-    CGRect buttonFrame = CGRectMake(0, 0, 40, 40);
+    CGRect buttonFrame = CGRectMake(0, 0, 27, 25);
     
     UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
     [bttn addTarget:self action:@selector(switchToTimeline) forControlEvents:UIControlEventTouchUpInside];
