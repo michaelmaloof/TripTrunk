@@ -22,7 +22,7 @@
     CGRect rect = CGRectMake(0, 64, [[UIScreen mainScreen] bounds].size.width, 30);
     self = [super initWithFrame:rect];
     if (self) {
-        [self setBackgroundColor:[TTColor tripTrunkCoral]];
+        [self setBackgroundColor:[TTColor tripTrunkRed]];
         [self setupUI];
     }
     return self;
@@ -31,7 +31,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundColor:[TTColor tripTrunkCoral]];
+        [self setBackgroundColor:[TTColor tripTrunkRed]];
         [self setupUI];
     }
     return self;
