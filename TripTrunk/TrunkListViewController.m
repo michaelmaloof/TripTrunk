@@ -36,7 +36,7 @@
 @property BOOL didLoad;
 @property NSMutableArray *visitedTrunks;
 @property NSMutableArray *mutualTrunks;
-
+@property UIImage *flame;
 @property BOOL wasError;
 
 
@@ -59,6 +59,14 @@
         self.title = self.city;
 
     }
+    UIImage *flame = [UIImage imageNamed:@"flame"];
+    CGRect rect = CGRectMake(0,0,15,20);
+    UIGraphicsBeginImageContext( rect.size );
+    [flame drawInRect:rect];
+    UIImage *picture1 = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData *imageData = UIImagePNGRepresentation(picture1);
+    self.flame = [UIImage imageWithData:imageData];
     
     self.isMine = NO;
     self.objectIDs = [[NSMutableArray alloc]init];
@@ -1214,7 +1222,6 @@
 }
 
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
@@ -1227,9 +1234,7 @@
     } else {
         trip = [self.meParseLocations objectAtIndex:indexPath.row];
     }
-    
     cell.trip = trip;
-    
     if (trip.isPrivate == YES){
         NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",cell.trip.name];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
@@ -1238,16 +1243,8 @@
         NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
         [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
         cell.titleLabel.attributedText = attributedString;
-
     } else {
         cell.titleLabel.text = trip.name;
-
-    }
-    
-    if (cell.trip.publicTripDetail.totalLikes < 50){
-        
-    } else{
-        
     }
     
     NSString *countString;
@@ -1262,17 +1259,28 @@
         countString = [NSString stringWithFormat:@"(%i %@)", cell.trip.publicTripDetail.photoCount, photos];
     }
     
-//        [cell.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    NSString *subtitle;
     if (self.isList == NO){
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", cell.trip.creator.username, countString];
+        subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.creator.username, countString];
     } else {
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", cell.trip.city, countString];
+        subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.city, countString];
     }
-//        }];
-    
+    if (cell.trip.publicTripDetail.totalLikes > 49){
+        
+        
+        CGFloat offsetY = -7.0;
+        NSString *subtitlePlusSpace = [NSString stringWithFormat:@"%@  ",subtitle];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:subtitlePlusSpace];
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        textAttachment.image = self.flame;
+         textAttachment.bounds = CGRectMake(0, offsetY, textAttachment.image.size.width, textAttachment.image.size.height);
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [attributedString replaceCharactersInRange:NSMakeRange(subtitlePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
+        cell.subtitleLabel.attributedText = attributedString;
+    } else{
+        cell.subtitleLabel.text = subtitle;
+    }
     NSTimeInterval tripInterval = [self.today timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-    
-    
     if (tripInterval < 86400 && trip.publicTripDetail.mostRecentPhoto != NULL) {
         cell.titleLabel.textColor = [TTColor tripTrunkRed];
         if ([self.haventSeens containsObject:trip]){
@@ -1292,9 +1300,7 @@
             cell.seenLogo.hidden = YES;
         }
     }
-    
     PFUser *possibleFriend = cell.trip.creator;
-    //    [possibleFriend fetchIfNeeded:nil];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
