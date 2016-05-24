@@ -7,8 +7,8 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="Montserrat-Regular.ttf">
-            <string>Montserrat-Regular</string>
+        <mutableArray key="Montserrat-SemiBold.otf">
+            <string>Montserrat-SemiBold</string>
         </mutableArray>
     </customFonts>
     <objects>
@@ -42,11 +42,11 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cOv-5Z-z4R" customClass="TTTAttributedLabel">
                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="16"/>
+                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="56" y="10" width="55" height="20"/>
+                            <rect key="frame" x="56" y="10" width="256" height="19"/>
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1aK-6z-s6P" customClass="TTTAttributedLabel">
@@ -55,7 +55,7 @@
                             <fragment content="Label">
                                 <attributes>
                                     <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <font key="NSFont" size="14" name="Herculanum"/>
+                                    <font key="NSFont" size="14" name="HelveticaNeue"/>
                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                 </attributes>
                             </fragment>
@@ -63,7 +63,7 @@
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
-                            <rect key="frame" x="56" y="30" width="256" height="17"/>
+                            <rect key="frame" x="56" y="29" width="256" height="17"/>
                         </variation>
                     </label>
                 </subviews>

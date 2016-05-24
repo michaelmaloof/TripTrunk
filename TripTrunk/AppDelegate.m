@@ -53,7 +53,7 @@
     [[UINavigationBar appearance] setTintColor: [TTColor tripTrunkBlue]];
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
-                                                           [TTFont tripTrunkFont38], NSFontAttributeName, nil]];
+                                                           [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
     
     [[UITabBar appearance] setTintColor:[TTColor tripTrunkBlue]];
 
@@ -86,6 +86,14 @@
         [self launchWithoutQuickAction:launchOptions];
         
     }
+    
+//    //Font name console output. Fonts can be tricky. You need to know the exact name to reference them.
+//    for (NSString* family in [UIFont familyNames]){
+//        NSLog(@"%@", family);
+//        for (NSString* name in [UIFont fontNamesForFamilyName: family]){
+//            NSLog(@"  %@", name);
+//        }
+//    }
 
     return YES;
 }

@@ -8,11 +8,12 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="Montserrat-Bold.ttf">
-            <string>Montserrat-Bold</string>
+        <mutableArray key="Montserrat-Light.otf">
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
         </mutableArray>
-        <mutableArray key="Montserrat-Regular.ttf">
-            <string>Montserrat-Regular</string>
+        <mutableArray key="Montserrat-SemiBold.otf">
+            <string>Montserrat-SemiBold</string>
         </mutableArray>
     </customFonts>
     <objects>
@@ -30,6 +31,7 @@
                         <constraints>
                             <constraint firstAttribute="width" secondItem="nm6-qI-Iog" secondAttribute="height" multiplier="7:5" id="a29-2Q-lvC"/>
                         </constraints>
+                        <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="14"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="a29-2Q-lvC"/>
@@ -62,20 +64,20 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XkG-SG-iF1">
                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="57" y="34" width="209" height="18"/>
+                            <rect key="frame" x="57" y="32" width="209" height="17"/>
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="16"/>
+                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="57" y="13" width="209" height="21"/>
+                            <rect key="frame" x="57" y="13" width="209" height="19"/>
                         </variation>
                     </label>
                 </subviews>

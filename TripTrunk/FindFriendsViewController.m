@@ -59,7 +59,7 @@
     [self.searchController.searchBar sizeToFit];
     [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [TTColor tripTrunkBlue],
+                                                                    [TTColor tripTrunkWhite],
                                                                                                   NSForegroundColorAttributeName,
                                                                                                   nil]
                                                                                         forState:UIControlStateNormal];
@@ -78,6 +78,8 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -756,7 +758,7 @@
 {
     NSString *text = @"No Users Found";
     
-    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];

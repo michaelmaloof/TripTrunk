@@ -6,12 +6,14 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="Montserrat-Regular.ttf">
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
+        <mutableArray key="Montserrat-Light.otf">
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+        </mutableArray>
+        <mutableArray key="Montserrat-Regular.otf">
             <string>Montserrat-Regular</string>
             <string>Montserrat-Regular</string>
             <string>Montserrat-Regular</string>
@@ -68,7 +70,7 @@
                                         <constraint firstAttribute="height" constant="35" id="qvE-MO-VNw"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="wwy-7j-Kd2"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                     <state key="normal" title="xxx">
                                         <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
@@ -84,7 +86,7 @@
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
-                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="15"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                         <mask key="constraints">
                                             <exclude reference="QUN-ld-yyb"/>
                                             <include reference="VJj-3m-a75"/>
@@ -111,7 +113,7 @@
                                         </constraint>
                                         <constraint firstAttribute="width" constant="30" id="wz1-Hh-8vJ"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="15"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                     <state key="normal" title="xxx">
                                         <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
@@ -126,7 +128,7 @@
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
-                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="15"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                         <mask key="constraints">
                                             <exclude reference="3zG-w1-GN9"/>
                                             <exclude reference="DjZ-UL-2Jo"/>
@@ -181,7 +183,7 @@
                                         <constraint firstAttribute="width" constant="101" id="mGR-l4-F8f"/>
                                         <constraint firstAttribute="height" constant="17" id="wSB-wl-xCl"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="14"/>
                                     <nil key="highlightedColor"/>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -208,7 +210,7 @@
                                             <variation key="heightClass=regular-widthClass=compact" constant="27"/>
                                         </constraint>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="9"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -286,7 +288,7 @@
                                         <constraint firstAttribute="width" constant="47" id="6cs-4X-o8K"/>
                                         <constraint firstAttribute="height" constant="21" id="PE1-1h-1fU"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="8"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                                     <nil key="highlightedColor"/>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -303,7 +305,7 @@
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Followers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsS-P6-OvY">
                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="8"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" indicatorStyle="white" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vbt-ru-KW2" customClass="TTUserProfileCollectionView">
@@ -326,7 +328,7 @@
                                         <constraint firstAttribute="width" constant="33" id="GwU-Ek-MeH"/>
                                         <constraint firstAttribute="height" constant="21" id="a88-kY-8ba"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="8"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                     <variation key="default">
@@ -388,7 +390,7 @@
                                         <constraint firstAttribute="width" constant="30" id="D3f-PA-gVe"/>
                                         <constraint firstAttribute="height" constant="20" id="vdQ-hO-qSZ"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="15"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                     <state key="normal" title="xxx">
                                         <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>

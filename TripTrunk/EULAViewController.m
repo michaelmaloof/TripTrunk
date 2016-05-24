@@ -26,7 +26,7 @@
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(agreeToEULA)];
-    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
+    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkBlue]];
     self.title = @"Terms of Service";
     
     

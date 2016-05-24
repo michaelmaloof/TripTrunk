@@ -5,11 +5,13 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <customFonts key="customFonts">
-        <mutableArray key="Montserrat-Regular.ttf">
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
-            <string>Montserrat-Regular</string>
+        <mutableArray key="Montserrat-Light.otf">
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+            <string>Montserrat-Light</string>
+        </mutableArray>
+        <mutableArray key="Montserrat-SemiBold.otf">
+            <string>Montserrat-SemiBold</string>
         </mutableArray>
     </customFonts>
     <objects>
@@ -32,7 +34,7 @@
                         <constraint firstAttribute="width" constant="370" id="Rvs-nB-II6"/>
                         <constraint firstAttribute="height" constant="30" id="Vhb-sU-MR5"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="9"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                     <textInputTraits key="textInputTraits"/>
                     <variation key="default">
                         <mask key="constraints">
@@ -49,7 +51,7 @@
                         <constraint firstAttribute="width" constant="49" id="T8c-dn-mf1"/>
                         <constraint firstAttribute="width" constant="49" id="sFp-F2-UJ2"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="16"/>
+                    <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
                     <state key="normal" title="Submit"/>
                     <variation key="default">
                         <mask key="constraints">
@@ -68,7 +70,7 @@
                         <constraint firstAttribute="height" constant="65" id="kga-y9-WrS"/>
                         <constraint firstAttribute="width" constant="560" id="kqs-gt-P6h"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="12"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="12"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     <variation key="default">
                         <mask key="constraints">
@@ -83,7 +85,7 @@
                         <constraint firstAttribute="height" constant="150" id="EBT-7b-1q6"/>
                         <constraint firstAttribute="height" constant="150" id="XcF-yn-6oA"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="12"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="12"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     <variation key="default">
                         <mask key="constraints">
