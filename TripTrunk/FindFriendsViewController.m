@@ -509,6 +509,7 @@
     }
     return nil;
 }
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Search Controller and the regular table view have different data sources
