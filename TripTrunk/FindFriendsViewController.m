@@ -45,12 +45,26 @@
     [super viewDidLoad];
     self.title = @"Find Friends";
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
-    self.tabBarController.tabBar.translucent = false;
     _friends = [[NSMutableArray alloc] init];
     _following = [[NSMutableArray alloc] init];
     _pending = [[NSMutableArray alloc] init];
     self.loadedOnce = NO;
     [self loadPromotedUsers];
+    [self setUpTableViewandSearch];
+    [self navBarandTabBarDesign];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self loadFollowing];
+}
+
+-(void)navBarandTabBarDesign{
+    self.tabBarController.tabBar.translucent = false;
+    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[TTColor tripTrunkWhite],                 NSForegroundColorAttributeName,nil] forState:UIControlStateNormal];
+    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
+}
+
+-(void)setUpTableViewandSearch{
     self.searchResults = [[NSMutableArray alloc] init];
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = self;
@@ -58,17 +72,11 @@
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
     [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [TTColor tripTrunkWhite],
-                                                                                                  NSForegroundColorAttributeName,
-                                                                                                  nil]
-                                                                                        forState:UIControlStateNormal];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
     // Add keyboard notifications so that the keyboard won't cover the table when searching
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -78,12 +86,6 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
-    
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [self loadFollowing];
 }
 
 - (void)loadPromotedUsers {
@@ -99,7 +101,6 @@
             [[TTCache sharedCache] setPromotedUsers:_promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-//                [self.tableView reloadData];
                 [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
             });
         }
@@ -495,10 +496,14 @@
     {
         switch (section) {
             case 0:
-                return @"Featured Travelers";
+                if (self.promoted.count > 0){
+                    return @"Featured Travelers";
+                }
                 break;
             case 1:
-                return @"Facebook Friends on TripTrunk";
+                if (self.friends.count > 0){
+                    return @"Facebook Friends on TripTrunk";
+                }
                 break;
         }
     }
