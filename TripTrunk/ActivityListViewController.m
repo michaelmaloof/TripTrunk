@@ -559,7 +559,7 @@ enum TTActivityViewType : NSUInteger {
     
     if (_viewType == TTActivityViewLikes) {
         UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
-    //    [cell setDelegate:self];
+        cell.profilePicImageView.image = nil;
         
         // We assume fromUser contains the full PFUser object
         PFUser *user;
@@ -575,6 +575,7 @@ enum TTActivityViewType : NSUInteger {
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
         __weak UserTableViewCell *weakCell = cell;
+        weakCell.profilePicImageView.image = nil;
         
         [cell.profilePicImageView setImageWithURLRequest:request
                                         placeholderImage:nil
@@ -596,6 +597,8 @@ enum TTActivityViewType : NSUInteger {
     }
     else if (_viewType == TTActivityViewAllActivities) {
         ActivityTableViewCell *activityCell = [self.tableView dequeueReusableCellWithIdentifier:ACTIVITY_CELL forIndexPath:indexPath];
+        activityCell.profilePicImageView.image = nil;
+        activityCell.photoImageView.image = nil;
         [activityCell setDelegate:self];
         NSDictionary *activity;
         
@@ -630,6 +633,8 @@ enum TTActivityViewType : NSUInteger {
         // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
         NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
         __weak ActivityTableViewCell *weakCell = activityCell;
+        weakCell.profilePicImageView.image = nil;
+        weakCell.photoImageView.image = nil;
         
         [activityCell.profilePicImageView setImageWithURLRequest:request
                                         placeholderImage:nil

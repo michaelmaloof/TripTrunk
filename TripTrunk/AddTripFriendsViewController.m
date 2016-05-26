@@ -278,6 +278,7 @@
         possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    cell.profilePicImageView.image = nil;
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
@@ -286,7 +287,7 @@
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
-    
+    weakCell.profilePicImageView.image = nil;
     [weakCell.profilePicImageView.layer setCornerRadius:29.0f];
     [weakCell.profilePicImageView.layer setMasksToBounds:YES];
     [weakCell.profilePicImageView.layer setBorderWidth:10.0f];

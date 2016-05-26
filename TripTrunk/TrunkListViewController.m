@@ -1212,6 +1212,7 @@
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
     cell.seenLogo.image = nil;
+    cell.profileImage.image = nil;
     
     if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
         trip = [self.parseLocations objectAtIndex:indexPath.row];
@@ -1291,7 +1292,8 @@
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak TrunkTableViewCell *weakCell = cell;
-    
+    weakCell.profileImage.image = nil;
+
     [cell.profileImage setImageWithURLRequest:request
                              placeholderImage:nil
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {

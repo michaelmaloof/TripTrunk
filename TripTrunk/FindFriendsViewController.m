@@ -532,7 +532,9 @@
 {
     PFUser *possibleFriend;
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+    cell.profilePicImageView.image = nil;
     __weak UserTableViewCell *weakCell = cell;
+    weakCell.profilePicImageView.image = nil;
     [weakCell.followButton.titleLabel setFont:[TTFont tripTrunkFont12]];
     [weakCell.followButton setHidden:YES];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
