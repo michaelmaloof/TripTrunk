@@ -263,14 +263,7 @@
     
     [self.view addSubview:self.descriptionTextView];
     
-    
-    
-    if (self.trip.isPrivate) {
-        self.lock.hidden = NO;
-    }
-    else {
-        self.lock.hidden = YES;
-    }
+    [self displayTrunkTitle];
     
     self.stateCountryLabel.adjustsFontSizeToFitWidth = YES;
     if ([self.trip.country isEqualToString:@"United States"]){
@@ -285,6 +278,37 @@
         self.endDate.text = self.trip.endDate;
     }
     
+}
+
+-(void)displayTrunkTitle{
+    if (self.trip.isPrivate) {
+        [self displayPrivateTrunkTitle];
+    }
+    else {
+        self.title = self.trip.name;
+        
+    }
+}
+
+-(void)displayPrivateTrunkTitle{
+    CGFloat offsetY = -5.0;
+    NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",self.trip.name];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
+    NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+    textAttachment.image = [UIImage imageNamed:@"lock"];
+    textAttachment.bounds = CGRectMake(0, offsetY, textAttachment.image.size.width*.8, textAttachment.image.size.height*.8);
+    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+    [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                           [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
+    UILabel *lblTitle = [[UILabel alloc] init];
+    lblTitle.attributedText = attributedString;
+    lblTitle.backgroundColor = [TTColor tripTrunkWhite];
+    lblTitle.textColor = [TTColor tripTrunkBlue];
+    lblTitle.font = [TTFont tripTrunkFontBold38];
+    [lblTitle sizeToFit];
+    self.navigationItem.titleView = lblTitle;
 }
 
 -(void)titleTapped{
@@ -666,7 +690,6 @@
         NSInteger index = indexPath.item;
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
         __weak UserCellCollectionViewCell *weakCell = cell;
-        
         [cell.layer setCornerRadius:25.0f];
         [cell.layer setMasksToBounds:YES];
         [cell.layer setBorderWidth:2.0f];
