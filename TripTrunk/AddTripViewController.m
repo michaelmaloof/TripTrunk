@@ -100,7 +100,9 @@
     self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
     self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
     self.startTripTextView.text = self.trip.startDate;
+    self.startTripTextView.textAlignment = NSTextAlignmentCenter;
     self.endTripTextView.text = self.trip.endDate;
+    self.endTripTextView.textAlignment = NSTextAlignmentCenter;
     self.city = self.trip.city;
     self.state = self.trip.state;
     self.country = self.trip.country;
@@ -354,6 +356,7 @@
             NSString *endDate = [self.formatter stringFromDate:self.datePicker.date];
             self.endTripTextView.text = [NSString stringWithFormat:@"\n%@",endDate];
             self.trip.endDate = [self.formatter stringFromDate:[NSDate date]];
+            self.endTripTextView.textAlignment = NSTextAlignmentCenter;
         }
         return YES;
     }
@@ -365,6 +368,8 @@
             NSString *startDate = [self.formatter stringFromDate:self.datePicker.date];
             self.startTripTextView.text = [NSString stringWithFormat:@"\n%@",startDate];
             self.trip.startDate = [self.formatter stringFromDate:[NSDate date]];
+            self.startTripTextView.textAlignment = NSTextAlignmentCenter;
+
         }
         return YES;
     }
@@ -476,12 +481,14 @@
         NSString *startDate = [self.formatter stringFromDate:self.datePicker.date];
         self.startTripTextView.text = [NSString stringWithFormat:@"\n%@",startDate];
         self.trip.startDate = [self.formatter stringFromDate:self.datePicker.date];
+        self.startTripTextView.textAlignment = NSTextAlignmentCenter;
     }
     else if (self.datePicker.tag == 1) {
         [self.formatter stringFromDate:self.datePicker.date];
         NSString *endDate = [self.formatter stringFromDate:self.datePicker.date];
         self.endTripTextView.text = [NSString stringWithFormat:@"\n%@",endDate];
         self.trip.endDate = [self.formatter stringFromDate:self.datePicker.date];
+        self.endTripTextView.textAlignment = NSTextAlignmentCenter;
     }
 }
 
