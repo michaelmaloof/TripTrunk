@@ -65,7 +65,7 @@
 
 -(void)question{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Can't Find The City You Want?",@"Can't Find The City You Want?")
-                                                    message:NSLocalizedString(@"Email our CEO at austinbarnard@triptrunkapp.com and he will personally add it for you.",@"Email our CEO at austinbarnard@triptrunkapp.com and he will personally add it for you.")
+                                                    message:NSLocalizedString(@"For now please select the nearest city to the one you're looking for. We will notifiy users as new cities are added to the list.",@"For now please select the nearest city to the one you're looking for. We will notifiy users as new cities are added to the list.")
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                           otherButtonTitles:nil, nil];
