@@ -142,6 +142,8 @@
     } else {
         self.addCaption.hidden = YES;
     }
+    self.bottomButtonWrapper.hidden = YES;
+    self.topButtonWrapper.hidden = YES;
     [self hidePhotoContent:YES];
     self.timeStamp.text = @"";
     self.caption.selectable = NO;
@@ -161,7 +163,6 @@
         if (tabbarcontroller.selectedIndex == 3) {
             self.shouldShowTrunkNameButton = YES;
         }
-//        [self.trunkNameButton setHidden:YES];
         if (self.fromNotification == YES || self.fromTimeline){
             self.shouldShowTrunkNameButton = YES;
         }
@@ -398,7 +399,6 @@
     if (self.shouldShowTrunkNameButton) {
         [self.photo.trip fetchIfNeeded];
         [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
-//        [self.trunkNameButton setHidden:NO];
     }
 }
 
@@ -442,7 +442,6 @@
                         [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
                             self.trip = self.photo.trip;
                             [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
-//                            [self.trunkNameButton setHidden:NO];
                         }];
                     }
                     
@@ -1688,7 +1687,6 @@
 
 -(void)hidePhotoContent:(BOOL)isHidden{
     if (isHidden == YES){
-        //FIXME when comments is fixed we will need to hide that too
         self.likeCountButton.hidden = YES;
         self.likeButton.hidden = YES;
         self.caption.hidden = YES;
@@ -1698,7 +1696,6 @@
         self.likeButton.hidden = NO;
         self.caption.hidden = NO;
         self.captionLabel.hidden = NO;
-
     }
 }
 
