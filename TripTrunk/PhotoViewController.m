@@ -142,8 +142,7 @@
     } else {
         self.addCaption.hidden = YES;
     }
-    self.bottomButtonWrapper.hidden = YES;
-    self.topButtonWrapper.hidden = YES;
+    [self hidePhotoContent:YES];
     self.timeStamp.text = @"";
     self.caption.selectable = NO;
     self.caption.editable = NO;
@@ -162,7 +161,7 @@
         if (tabbarcontroller.selectedIndex == 3) {
             self.shouldShowTrunkNameButton = YES;
         }
-        [self.trunkNameButton setHidden:YES];
+//        [self.trunkNameButton setHidden:YES];
         if (self.fromNotification == YES || self.fromTimeline){
             self.shouldShowTrunkNameButton = YES;
         }
@@ -399,7 +398,7 @@
     if (self.shouldShowTrunkNameButton) {
         [self.photo.trip fetchIfNeeded];
         [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
-        [self.trunkNameButton setHidden:NO];
+//        [self.trunkNameButton setHidden:NO];
     }
 }
 
@@ -421,8 +420,7 @@
     
     if (isCurrentPhoto == NO){
         self.isLikedByCurrentUser = NO;
-        self.bottomButtonWrapper.hidden = YES;
-        self.topButtonWrapper.hidden = YES;
+        [self hidePhotoContent:YES];
     } else {
         if (self.likeButton.selected == YES){
             self.isLikedByCurrentUser = YES;
@@ -444,7 +442,7 @@
                         [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
                             self.trip = self.photo.trip;
                             [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
-                            [self.trunkNameButton setHidden:NO];
+//                            [self.trunkNameButton setHidden:NO];
                         }];
                     }
                     
@@ -545,9 +543,8 @@
             NSLog(@"Error loading photo Activities: %@", error);
             [ParseErrorHandlingController handleError:error];
         }
-        
-        self.bottomButtonWrapper.hidden = NO;
-        self.topButtonWrapper.hidden = NO;
+        [self hidePhotoContent:NO];
+
     }];
 }
 
@@ -556,7 +553,6 @@
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     if (self.isZoomed == NO && self.isEditingCaption == NO){
-
         // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
         if (!self.photos || self.photos.count == 0) {
             return;
@@ -577,20 +573,14 @@
                 self.addCaption.hidden = YES;
                 
             }
-            
             //update the label and likes now in case the user has already seen these and its cached
 //            [self updateCommentsLabel];
 //            [self updateLikesLabel];
-    
             //FIXME SHould this be done in the refresh?
             [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-            
-            
             [self markPhotoAsViewed];
-            
             //load the new photo the user swiped too
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
-            
             self.imageZoomed = NO;
         }
     }
@@ -1696,6 +1686,21 @@
     [alertView show];
 }
 
+-(void)hidePhotoContent:(BOOL)isHidden{
+    if (isHidden == YES){
+        //FIXME when comments is fixed we will need to hide that too
+        self.likeCountButton.hidden = YES;
+        self.likeButton.hidden = YES;
+        self.caption.hidden = YES;
+        self.captionLabel.hidden = YES;
+    } else {
+        self.likeCountButton.hidden = NO;
+        self.likeButton.hidden = NO;
+        self.caption.hidden = NO;
+        self.captionLabel.hidden = NO;
+
+    }
+}
 
 
 
