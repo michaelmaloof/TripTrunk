@@ -97,6 +97,7 @@
     self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
     //if they're editing the trunk we fill in the text fields with the correct info
     self.tripNameTextView.text = self.trip.name;
+    self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
     self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
     self.startTripTextView.text = self.trip.startDate;
     self.endTripTextView.text = self.trip.endDate;
@@ -121,8 +122,8 @@
 -(void)setTrunkNameEmptyState{
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
     self.tripNameTextView.font = [TTFont tripTrunkFont14];
-    self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n\n%@",trunkName];
-    [self.tripNameTextView setTextAlignment:NSTextAlignmentCenter];
+    self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n%@",trunkName];
+    self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
 }
 
 /**
@@ -299,6 +300,7 @@
         NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         if ([nameCheck isEqualToString:trunkName]){
             self.tripNameTextView.text = @"\n\n\n\n\n\n\n";
+            self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
         }
     }
 }
@@ -331,6 +333,7 @@
         }else{
             self.tripNameTextView.text = [NSString stringWithFormat:@"\n%@",name];
         }
+        self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
     }
 }
 
@@ -649,7 +652,7 @@
  */
 - (void)resetForm {
     // Initialize the view with no data
-    self.tripNameTextView.text = @"";
+    [self setTrunkNameEmptyState];
     self.locationTextView.text = @"";
     [self setOriginalDateTextViews];
     if (!_isEditing) {
