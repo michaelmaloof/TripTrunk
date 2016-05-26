@@ -915,6 +915,7 @@
     [collectionView registerNib:nib forCellWithReuseIdentifier:@"myImagesCell"];
     
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
+    cell.backgroundColor = [TTColor tripTrunkBlue];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
     
     NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
@@ -942,7 +943,7 @@
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:photo.imageUrl];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
+    UIImage *placeholderImage = [UIImage imageNamed:@""];
     __weak TTUserProfileViewCell *weakCell = cell;
     [weakCell.image setContentMode:UIViewContentModeScaleAspectFill];
     weakCell.image.clipsToBounds = YES;

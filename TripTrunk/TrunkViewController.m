@@ -618,6 +618,7 @@
         cell.photo.translatesAutoresizingMaskIntoConstraints = NO;
         cell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         cell.tripPhoto = [self.photos objectAtIndex:indexPath.item];
+        cell.backgroundColor = [TTColor tripTrunkBlue];
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
         NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
         if (lastPhotoInterval < 0)
@@ -634,7 +635,7 @@
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-            UIImage *placeholderImage = [UIImage imageNamed:@"Load"];
+            UIImage *placeholderImage = [UIImage imageNamed:@""];
             __weak TrunkCollectionViewCell *weakCell = cell;
             [weakCell.photo setContentMode:UIViewContentModeScaleAspectFill];
             weakCell.photo.clipsToBounds = YES;
