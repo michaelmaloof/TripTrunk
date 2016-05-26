@@ -309,7 +309,7 @@
     weakCell.delegate = self;
     
     [commentCell.profilePicImageView setImageWithURLRequest:request
-                                            placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                            placeholderImage:nil
                                                      success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                          
                                                          [weakCell.profilePicImageView setImage:image];

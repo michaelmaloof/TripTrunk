@@ -1293,7 +1293,7 @@
     __weak TrunkTableViewCell *weakCell = cell;
     
     [cell.profileImage setImageWithURLRequest:request
-                             placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                             placeholderImage:nil
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                           
                                           [weakCell.profileImage setImage:image];

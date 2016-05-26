@@ -45,15 +45,13 @@
     cell.userFullName.text = userToAdd[@"name"];
     cell.username.text = [NSString stringWithFormat:@"@%@ ",userToAdd.username];
     cell.userPhoto.contentMode = UIViewContentModeScaleAspectFill;
-    
+    cell.userPhoto.backgroundColor = [TTColor tripTrunkBlue];
     if(self.photos[userToAdd[@"profilePicUrl"]]){
         UIImage *image = self.photos[userToAdd[@"profilePicUrl"]];
         cell.userPhoto.image = image;
     }else{
         if(userToAdd[@"profilePicUrl"]){
             [self setProfilePic:userToAdd[@"profilePicUrl"] indexPath:indexPath];
-        }else{
-            cell.userPhoto.image = [UIImage imageNamed:@"defaultProfile"];
         }
     }
     

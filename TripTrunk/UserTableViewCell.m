@@ -23,10 +23,7 @@
     [self.profilePicImageView setClipsToBounds:YES];
     
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
-//    [self.followButton.layer setCornerRadius:29.0];
-//    [self.followButton.layer setMasksToBounds:YES];
-//    [self.followButton.layer setBorderWidth:2.0];
-//    self.followButton.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkBlue]);
+    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
     
 }
 

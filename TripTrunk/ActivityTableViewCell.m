@@ -38,7 +38,7 @@
     [self.contentLabel setLineSpacing:5.0];
     
     self.contentLabel.delegate = self;
-
+    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
 

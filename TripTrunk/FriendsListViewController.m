@@ -189,7 +189,7 @@
     weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                    placeholderImage:nil
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];

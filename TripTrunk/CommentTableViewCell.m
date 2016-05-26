@@ -30,6 +30,7 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     [self.profilePicImageView setClipsToBounds:YES];
+    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
 //    [self.contentLabel setLineSpacing:5.0];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];

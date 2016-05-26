@@ -339,7 +339,7 @@
     float eWidth = elipsisImage.size.width;
     float eHeight = elipsisImage.size.height;
     
-    [cell.userprofile setImageWithURLRequest:request placeholderImage:[UIImage imageNamed:@"defaultProfile"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+    [cell.userprofile setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.userprofile setImage:image];
         [cell setNeedsLayout];
     } failure:nil];

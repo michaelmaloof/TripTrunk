@@ -670,6 +670,7 @@
         [cell.layer setCornerRadius:25.0f];
         [cell.layer setMasksToBounds:YES];
         [cell.layer setBorderWidth:2.0f];
+        cell.profileImage.backgroundColor = [TTColor tripTrunkBlue];
         cell.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
         
         if (indexPath.item == 0){
@@ -700,7 +701,7 @@
             NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
             
             [cell.profileImage setImageWithURLRequest:request
-                                            placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                            placeholderImage:nil
                                                      success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                          
                                                          [weakCell.profileImage setImage:image];

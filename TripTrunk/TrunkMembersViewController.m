@@ -185,7 +185,7 @@
     __weak UserTableViewCell *weakCell = cell;
     
     [cell.profilePicImageView setImageWithURLRequest:request
-                                    placeholderImage:[UIImage imageNamed:@"defaultProfile"]
+                                    placeholderImage:nil
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
