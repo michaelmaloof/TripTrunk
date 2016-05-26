@@ -613,7 +613,6 @@
              
              self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
              [self tabBarTitle];
-             
              return;
          }];
         
@@ -789,6 +788,7 @@
     {
         [self notEnoughInfo:NSLocalizedString(@"Your start date must happen on or before the end date",@"Your start date must happen on or before the end date")];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         return;
     }
     
