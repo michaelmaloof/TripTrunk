@@ -200,35 +200,6 @@
                                         </mask>
                                     </variation>
                                 </label>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" editable="NO" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing Tpecu, sed do eiusmod tempor incididunt ut " textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GgT-HY-Vrp" userLabel="Bio Text View">
-                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="67" id="ZR1-Ag-Zr2"/>
-                                        <constraint firstAttribute="height" constant="20" id="aep-4t-YoM"/>
-                                        <constraint firstAttribute="width" constant="315" id="rIq-NL-rxa"/>
-                                        <constraint firstAttribute="height" constant="30.5" id="zsp-yt-9Rj">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="27"/>
-                                        </constraint>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="ZR1-Ag-Zr2"/>
-                                            <exclude reference="aep-4t-YoM"/>
-                                            <exclude reference="rIq-NL-rxa"/>
-                                            <exclude reference="zsp-yt-9Rj"/>
-                                        </mask>
-                                    </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
-                                        <mask key="constraints">
-                                            <exclude reference="ZR1-Ag-Zr2"/>
-                                            <include reference="aep-4t-YoM"/>
-                                            <exclude reference="rIq-NL-rxa"/>
-                                            <exclude reference="zsp-yt-9Rj"/>
-                                        </mask>
-                                    </variation>
-                                </textView>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="FVi-Q8-ebI">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                     <color key="backgroundColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -444,6 +415,37 @@
                                         <action selector="followButtonPressed:" destination="-1" eventType="touchUpInside" id="cIW-Qg-UuR"/>
                                     </connections>
                                 </button>
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" editable="NO" text="Bio" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GgT-HY-Vrp" userLabel="Bio Text View">
+                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="67" id="ZR1-Ag-Zr2"/>
+                                        <constraint firstAttribute="height" constant="20" id="aep-4t-YoM">
+                                            <variation key="heightClass=regular-widthClass=compact" constant="24"/>
+                                        </constraint>
+                                        <constraint firstAttribute="width" constant="315" id="rIq-NL-rxa"/>
+                                        <constraint firstAttribute="height" constant="30.5" id="zsp-yt-9Rj">
+                                            <variation key="heightClass=regular-widthClass=compact" constant="27"/>
+                                        </constraint>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="ZR1-Ag-Zr2"/>
+                                            <exclude reference="aep-4t-YoM"/>
+                                            <exclude reference="rIq-NL-rxa"/>
+                                            <exclude reference="zsp-yt-9Rj"/>
+                                        </mask>
+                                    </variation>
+                                    <variation key="heightClass=regular-widthClass=compact">
+                                        <mask key="constraints">
+                                            <exclude reference="ZR1-Ag-Zr2"/>
+                                            <include reference="aep-4t-YoM"/>
+                                            <exclude reference="rIq-NL-rxa"/>
+                                            <exclude reference="zsp-yt-9Rj"/>
+                                        </mask>
+                                    </variation>
+                                </textView>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="FVi-Q8-ebI" firstAttribute="leading" secondItem="cSp-5v-4If" secondAttribute="leading" constant="10" id="28m-yg-uLp">
@@ -554,7 +556,9 @@
                                 <constraint firstItem="9Hn-fr-0Yg" firstAttribute="leading" secondItem="cSp-5v-4If" secondAttribute="leading" constant="5" id="juG-Fb-rL2"/>
                                 <constraint firstItem="k8T-73-v3H" firstAttribute="leading" secondItem="b45-k6-SSZ" secondAttribute="trailing" constant="25" id="kuH-ES-vRn"/>
                                 <constraint firstItem="k8T-73-v3H" firstAttribute="centerY" secondItem="G68-Y4-O01" secondAttribute="centerY" id="lJA-rd-P4a"/>
-                                <constraint firstItem="GgT-HY-Vrp" firstAttribute="top" secondItem="8kk-Zi-cae" secondAttribute="bottom" constant="5" id="lpn-SO-Vgh"/>
+                                <constraint firstItem="GgT-HY-Vrp" firstAttribute="top" secondItem="8kk-Zi-cae" secondAttribute="bottom" constant="5" id="lpn-SO-Vgh">
+                                    <variation key="heightClass=regular-widthClass=compact" constant="-7"/>
+                                </constraint>
                                 <constraint firstItem="jcd-ax-seW" firstAttribute="leading" secondItem="G68-Y4-O01" secondAttribute="trailing" constant="40" id="lxl-bf-hff">
                                     <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                                 </constraint>
@@ -589,7 +593,6 @@
                                     <exclude reference="k8T-73-v3H"/>
                                     <exclude reference="T27-K3-6wj"/>
                                     <exclude reference="8kk-Zi-cae"/>
-                                    <exclude reference="GgT-HY-Vrp"/>
                                     <exclude reference="FVi-Q8-ebI"/>
                                     <exclude reference="b45-k6-SSZ"/>
                                     <exclude reference="nsS-P6-OvY"/>
@@ -598,6 +601,7 @@
                                     <exclude reference="aRl-Kc-Hyq"/>
                                     <exclude reference="jcd-ax-seW"/>
                                     <exclude reference="9Hn-fr-0Yg"/>
+                                    <exclude reference="GgT-HY-Vrp"/>
                                 </mask>
                                 <mask key="constraints">
                                     <exclude reference="x5M-Pu-4A5"/>
@@ -692,7 +696,6 @@
                                     <include reference="k8T-73-v3H"/>
                                     <include reference="T27-K3-6wj"/>
                                     <include reference="8kk-Zi-cae"/>
-                                    <include reference="GgT-HY-Vrp"/>
                                     <include reference="FVi-Q8-ebI"/>
                                     <include reference="b45-k6-SSZ"/>
                                     <include reference="nsS-P6-OvY"/>
@@ -701,6 +704,7 @@
                                     <include reference="aRl-Kc-Hyq"/>
                                     <include reference="jcd-ax-seW"/>
                                     <include reference="9Hn-fr-0Yg"/>
+                                    <include reference="GgT-HY-Vrp"/>
                                 </mask>
                                 <mask key="constraints">
                                     <include reference="x5M-Pu-4A5"/>

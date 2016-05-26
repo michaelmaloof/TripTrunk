@@ -78,7 +78,6 @@
     [self loadUser];
 }
 
-
 - (void)viewWillAppear:(BOOL)animated {
     self.trunkCountButton.hidden = YES;
     [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
@@ -180,8 +179,6 @@
                             [self setButtonColor];
                             [self.followButton setHidden:NO];
                             [self.followButton setEnabled:YES];
-                            
-                            
                         }
                         else if (followingStatus.intValue == 1){
                             self.isFollowing = YES;
@@ -220,13 +217,10 @@
                             self.mapButton.userInteractionEnabled = YES;
                             self.trunkCountButton.userInteractionEnabled = YES;
                         }
-                        
                         self.followButton.tag = 0;
                         [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
                         [self setButtonColor];
                         [self.followButton setHidden:NO];
-                        
-                        
                     });
                 }
             }
@@ -234,10 +228,7 @@
                 NSLog(@"Error: %@",error);
             }
         }];
-        
-        
     }
-    
     [self refreshFollowCounts];
 }
 
@@ -347,6 +338,7 @@
     }else {
         [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
+    self.bioTextView.textAlignment = NSTextAlignmentCenter;
     [self.logoutButton setHidden:YES];
     [self checkIfIsCurrentUser];
     [self checkIfIsPrivate];
@@ -1004,7 +996,5 @@
     }
     }
 }
-
-
 
 @end
