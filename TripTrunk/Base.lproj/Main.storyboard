@@ -1589,7 +1589,7 @@
                                                 <variation key="heightClass=regular-widthClass=compact" constant="-4"/>
                                             </constraint>
                                             <constraint firstItem="o2X-FD-baW" firstAttribute="top" secondItem="eQQ-ju-bPp" secondAttribute="bottom" constant="2" id="RER-ru-jOq">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="6"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="3"/>
                                             </constraint>
                                             <constraint firstAttribute="trailing" secondItem="eQQ-ju-bPp" secondAttribute="trailing" constant="2" id="Rqa-wp-NKH"/>
                                             <constraint firstAttribute="trailing" secondItem="YXB-LB-7B6" secondAttribute="trailing" constant="16" id="TCN-Cy-le2"/>
@@ -1615,7 +1615,7 @@
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="6" id="sIb-NO-491"/>
                                             <constraint firstItem="zUW-ht-yVP" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="yEX-gC-Rag"/>
                                             <constraint firstItem="o2X-FD-baW" firstAttribute="top" secondItem="HaB-lo-gzV" secondAttribute="bottom" constant="2" id="ymP-GQ-eDM">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="6"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="3"/>
                                             </constraint>
                                             <constraint firstAttribute="trailing" secondItem="HaB-lo-gzV" secondAttribute="trailing" constant="5" id="yuv-0o-vO3">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="10"/>
@@ -2737,7 +2737,7 @@
                                             </constraint>
                                             <constraint firstItem="Lec-yX-hFH" firstAttribute="centerY" secondItem="hR0-63-pl9" secondAttribute="centerY" id="4XE-7w-zcm"/>
                                             <constraint firstAttribute="height" constant="70" id="5bJ-Sp-NUJ">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="84"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="65"/>
                                             </constraint>
                                             <constraint firstItem="QI0-yB-QB7" firstAttribute="leading" secondItem="CmI-e7-SWG" secondAttribute="trailing" constant="6" id="8Ic-hL-SHt"/>
                                             <constraint firstItem="CmI-e7-SWG" firstAttribute="leading" secondItem="hR0-63-pl9" secondAttribute="leading" constant="5" id="FX9-CE-9s1"/>
@@ -5272,7 +5272,7 @@
         <image name="calendar" width="76" height="75"/>
         <image name="checkCircle" width="100" height="100"/>
         <image name="deletePhoto" width="100" height="100"/>
-        <image name="editPencil" width="100" height="100"/>
+        <image name="editPencil" width="44" height="49"/>
         <image name="ellipsis" width="32" height="32"/>
         <image name="heart" width="54" height="46"/>
         <image name="heartLikes" width="52" height="46"/>

@@ -285,8 +285,7 @@
         [self displayPrivateTrunkTitle];
     }
     else {
-        self.title = self.trip.name;
-        
+        [self displayPublicTrunk];
     }
 }
 
@@ -304,6 +303,19 @@
                                                            [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
     UILabel *lblTitle = [[UILabel alloc] init];
     lblTitle.attributedText = attributedString;
+    lblTitle.backgroundColor = [TTColor tripTrunkWhite];
+    lblTitle.textColor = [TTColor tripTrunkBlue];
+    lblTitle.font = [TTFont tripTrunkFontBold38];
+    [lblTitle sizeToFit];
+    self.navigationItem.titleView = lblTitle;
+}
+
+-(void)displayPublicTrunk{
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                           [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
+    UILabel *lblTitle = [[UILabel alloc] init];
+    lblTitle.text = self.trip.name;
     lblTitle.backgroundColor = [TTColor tripTrunkWhite];
     lblTitle.textColor = [TTColor tripTrunkBlue];
     lblTitle.font = [TTFont tripTrunkFontBold38];
