@@ -51,17 +51,10 @@
     self.loadedOnce = NO;
     [self loadPromotedUsers];
     [self setUpTableViewandSearch];
-    [self navBarandTabBarDesign];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [self loadFollowing];
-}
-
--(void)navBarandTabBarDesign{
-    self.tabBarController.tabBar.translucent = false;
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[TTColor tripTrunkWhite],                 NSForegroundColorAttributeName,nil] forState:UIControlStateNormal];
-    [self.navigationController.navigationBar setTintColor:[TTColor tripTrunkWhite]];
 }
 
 -(void)setUpTableViewandSearch{
@@ -636,12 +629,8 @@
                                                  [weakCell.profilePicImageView setImage:image];
                                                  [weakCell setNeedsLayout];
                                                  
-                                             } failure:nil];
-    [weakCell.profilePicImageView.layer setCornerRadius:28.0f];
-    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-    return weakCell;
+                                            } failure:nil];
+       return weakCell;
     
 }
 

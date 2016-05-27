@@ -58,8 +58,6 @@ enum TTActivityViewType : NSUInteger {
         _activitySearchComplete = NO;
         self.title = NSLocalizedString(@"Likers",@"Likers");
         _viewType = TTActivityViewLikes;
-
-
     }
     return self;
 }
@@ -78,32 +76,20 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.trips = [[NSMutableArray alloc]init];
-    
-    self.navigationController.navigationBar.tintColor = [TTColor tripTrunkBlue];
-    
-    
-    
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-    
     self.tabBarController.tabBar.translucent = false;
-    
-    
-    
     // Setup tableview delegate/datasource
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-    
     [self loadTrips];
 }
 
 - (void)loadView {
-    
     // Initialize the view & tableview
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [self.view setBackgroundColor:[TTColor tripTrunkWhite]];
@@ -111,18 +97,8 @@ enum TTActivityViewType : NSUInteger {
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
     [self.view addSubview:self.tableView];
-
     [self setupTableViewConstraints];
-    
-
-    if (_viewType != TTActivityViewAllActivities) {
-        // Set Done button for all but the All Activity view
-//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-//                                                                                               target:self
-//                                                                                               action:@selector(closeView)];
-    }
-    // Else, it's the All Activities list
-    else {
+    if (_viewType == TTActivityViewAllActivities) {
         self.friends= [[NSMutableArray alloc]init];
         self.followingActivities = [[NSMutableArray alloc]init];
         self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
@@ -132,11 +108,11 @@ enum TTActivityViewType : NSUInteger {
         // Initialize the refresh control.
         self.refreshController = [[UIRefreshControl alloc] init];
         [self.refreshController addTarget:self
-                           action:@selector(refresh:)
-                 forControlEvents:UIControlEventValueChanged];
+                                   action:@selector(refresh:)
+                         forControlEvents:UIControlEventValueChanged];
         [self.tableView addSubview: self.refreshController];
-
-         self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
+        
+        self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
         [ self.refreshController endRefreshing];
     }
 }
@@ -585,14 +561,7 @@ enum TTActivityViewType : NSUInteger {
                                                      [weakCell setNeedsLayout];
                                                      
                                                  } failure:nil];
-        
-        //FIXME: There is a UIImageView now that handles this. Refactor
-        [weakCell.profilePicImageView.layer setCornerRadius:30.0f];
-        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-        
-        return weakCell;
+               return weakCell;
         
     }
     else if (_viewType == TTActivityViewAllActivities) {
@@ -644,14 +613,6 @@ enum TTActivityViewType : NSUInteger {
                                                      [weakCell setNeedsLayout];
                                                      
                                                  } failure:nil];
-        
-        //FIXME: There is a UIImageView now that handles this. Refactor
-        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
-        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-
-        
         if ([activity valueForKey:@"photo"]) {
             
             NSURL *photoUrl = [NSURL URLWithString:[[TTUtility sharedInstance] thumbnailImageUrl:[[activity valueForKey:@"photo"] valueForKey:@"imageUrl"]]];
@@ -663,25 +624,10 @@ enum TTActivityViewType : NSUInteger {
                                                                  
                                                                  [weakCell.photoImageView setImage:image];
                                                                  [weakCell setNeedsLayout];
-                                                                 
                                                              } failure:nil];
         }
-        
-        //FIXME: There is a UIImageView now that handles this. Refactor
-        [weakCell.profilePicImageView.layer setCornerRadius:20.0f];
-        [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-        [weakCell.profilePicImageView.layer setBorderWidth:2.0f];
-        weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-        
-        //currently its a square but just change the radius to make it a circle
-        [activityCell.photoImageView.layer setCornerRadius:1.0f];
-        [activityCell.photoImageView.layer setMasksToBounds:YES];
-        [activityCell.photoImageView.layer setBorderWidth:2.0f];
-        activityCell.photoImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-        
         return weakCell;
     }
-    
     return [UITableViewCell new];
 }
 

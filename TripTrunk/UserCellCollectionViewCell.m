@@ -7,7 +7,15 @@
 //
 
 #import "UserCellCollectionViewCell.h"
+#import "TTColor.h"
 
 @implementation UserCellCollectionViewCell
 
+-(void)awakeFromNib{
+    [self.layer setCornerRadius:25.0f];
+    [self.layer setMasksToBounds:YES];
+    [self.layer setBorderWidth:2.0f];
+    self.profileImage.backgroundColor = [TTColor tripTrunkBlue];
+    self.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
+}
 @end

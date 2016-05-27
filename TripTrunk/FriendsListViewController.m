@@ -182,12 +182,6 @@
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
     __weak UserTableViewCell *weakCell = cell;
-    
-    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
-    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
-    
     [cell.profilePicImageView setImageWithURLRequest:request
                                     placeholderImage:nil
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {

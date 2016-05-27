@@ -32,17 +32,12 @@
 - (void)awakeFromNib {
     // Initialization code
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-
-    [self.profilePicImageView setClipsToBounds:YES];
+    [self roundProfileImageView];
     [self.photoImageView setClipsToBounds:YES];
     [self.contentLabel setLineSpacing:5.0];
-    
     self.contentLabel.delegate = self;
-    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.contentLabel setNumberOfLines:0];
-
-    
     // Set up Link Attributes (bold and colored)
     UIColor *ttBlueColor = [TTColor tripTrunkBlueLinkColor];
     NSDictionary *linkAttributes = @{
@@ -56,16 +51,11 @@
     
     self.contentLabel.linkAttributes = linkAttributes;
     self.contentLabel.activeLinkAttributes = activeLinkAttributes;
-    
     UITapGestureRecognizer *photoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoImageViewTapped:)];
     photoTap.numberOfTapsRequired = 1;
     self.photoImageView.userInteractionEnabled = YES;
     [self.photoImageView addGestureRecognizer:photoTap];
-    
-    UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
-    profileTap.numberOfTapsRequired = 1;
-    self.profilePicImageView.userInteractionEnabled = YES;
-    [self.profilePicImageView addGestureRecognizer:profileTap];
+    [self roundProfileImageView];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -75,7 +65,6 @@
 }
 
 - (void)setActivity:(NSDictionary *)activity {
-
     _activity = activity;
     _user = activity[@"fromUser"];
     self.toUser = activity[@"toUser"];
@@ -86,10 +75,7 @@
     else {
         [self.photoImageView setHidden:NO];
     }
-    
-    
     [self updateContentLabel];
-
 }
 
 - (void)updateContentLabel {
@@ -108,21 +94,14 @@
                                                                                                                                 }];
         [mut appendAttributedString:approval];
     }
-    
-    
     [self.contentLabel setAttributedText:mut];
-    
     // Set up a link for the usernames
     NSRange range = [self.contentLabel.text rangeOfString:_user.username];
     [self.contentLabel addLinkToURL:[NSURL URLWithString:USER_ACTIVITY_URL] withRange:range]; // Embedding a custom link in a substring
-
     if (self.toUser){
-    
-    NSRange toRange = [self.contentLabel.text rangeOfString:self.toUser.username];
-    [self.contentLabel addLinkToURL:[NSURL URLWithString:TOUSER_ACTIVITY_URL] withRange:toRange]; // Embedding a custom link in a substring
-        
+        NSRange toRange = [self.contentLabel.text rangeOfString:self.toUser.username];
+        [self.contentLabel addLinkToURL:[NSURL URLWithString:TOUSER_ACTIVITY_URL] withRange:toRange]; // Embedding a custom link in a substring
     }
-    
     if([self.contentLabel.text containsString:@"@"]){
         NSArray *usernamesArray = [TTHashtagMentionColorization extractUsernamesFromComment:self.contentLabel.text];
         for(NSString *name in usernamesArray){
@@ -131,7 +110,6 @@
             [self.contentLabel addLinkToURL:[NSURL URLWithString:link] withRange:userRange];
         }
     }
-    
     // If it'as an addToTrip or addedPhoto activity, set the Trip Name as a URL
     if ( ( [_activity[@"type"] isEqualToString:@"addToTrip"] || [_activity[@"type"] isEqualToString:@"addedPhoto"])
         && _activity[@"trip"] && [_activity[@"trip"] valueForKey:@"name"])
@@ -141,7 +119,6 @@
         [self.contentLabel addLinkToURL:[NSURL URLWithString:TRIP_ACTIVITY_URL] withRange:tripRange]; // Embedding a custom link in a substring
     }
     else if ([_activity[@"type"] isEqualToString:@"pending_follow"]) {
-        
         // Set up a link for the Approve and Reject actions
         NSRange approveRange = [self.contentLabel.text rangeOfString:@"Approve"];
         [self.contentLabel addLinkToURL:[NSURL URLWithString:kPENDING_FOLLOW_ACCEPT_URL] withRange:approveRange];
@@ -149,7 +126,6 @@
         NSRange rejectRange = [self.contentLabel.text rangeOfString:@"Reject"];
         [self.contentLabel addLinkToURL:[NSURL URLWithString:kPENDING_FOLLOW_REJECT_URL] withRange:rejectRange];
     }
-
 }
 
 - (void)photoImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
@@ -159,10 +135,21 @@
     }
 }
 
+-(void)roundProfileImageView{
+    [self.profilePicImageView setClipsToBounds:YES];
+    [self.profilePicImageView.layer setCornerRadius:20.0f];
+    [self.profilePicImageView.layer setMasksToBounds:YES];
+    [self.profilePicImageView.layer setBorderWidth:2.0f];
+    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
+    self.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
+    UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(profileImageViewTapped:)];
+    profileTap.numberOfTapsRequired = 1;
+    self.profilePicImageView.userInteractionEnabled = YES;
+    [self.profilePicImageView addGestureRecognizer:profileTap];
+}
+
 - (void)profileImageViewTapped:(UIGestureRecognizer *)gestureRecognizer {
-    
     //We use the same delegate method here as for pressing the username, since both go to the same place.
-    
     // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
     if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
         [self.delegate activityCell:self didPressUsernameForUser:_user];
@@ -171,11 +158,9 @@
 
 #pragma mark - TTTAttributedLabelDelegate methods
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
-    
     if ([[url scheme] hasPrefix:@"activity"]) {
         if ([[url host] hasPrefix:@"user"]) {
             /* load user profile screen */
-            
             // If our delegate is set, pass along the TTTAttributeLabel Delegate method to the Cells delegate method.
             if (self.delegate && [self.delegate respondsToSelector:@selector(activityCell:didPressUsernameForUser:)]) {
                 [self.delegate activityCell:self didPressUsernameForUser:_user];
@@ -195,7 +180,6 @@
                 [self.delegate activityCell:self didPressUsernameForUser:self.toUser];
             }
         }
-        
         else if([[url host] hasPrefix:@"trip"]) {
             /* load user profile screen */
             Trip *trip = (Trip *)_activity[@"trip"];

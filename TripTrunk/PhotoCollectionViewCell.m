@@ -7,9 +7,13 @@
 //
 
 #import "PhotoCollectionViewCell.h"
+#import "TTColor.h"
 
 @implementation PhotoCollectionViewCell
 
+-(void)awakeFromNib{
+    self.backgroundColor = [TTColor tripTrunkWhite];
+}
 
 
 @end

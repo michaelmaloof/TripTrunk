@@ -702,8 +702,6 @@
     EditProfileViewController *vc = [[EditProfileViewController alloc] initWithUser:_user];
     vc.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    [nav.navigationBar setBarTintColor:[TTColor tripTrunkWhite]];
-    
     [nav.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
                                                            [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];

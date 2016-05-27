@@ -192,11 +192,6 @@
                                                  [weakCell setNeedsLayout];
                                                  
                                              } failure:nil];
-    
-    [weakCell.profilePicImageView.layer setCornerRadius:32.0f];
-    [weakCell.profilePicImageView.layer setMasksToBounds:YES];
-    [weakCell.profilePicImageView.layer setBorderWidth:10.0f];
-    weakCell.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
     return weakCell;
     
 }

@@ -29,8 +29,6 @@
 #define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
 #define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
 
-
-
 @interface AppDelegate ()
 
 @end
@@ -40,67 +38,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSString *appName = @"DEV";
-    if([kPARSE_APP_ID isEqualToString:@"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"])
-        appName = @"PROD";
-    
-    NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
-    NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
-    
-    [[UINavigationBar appearance] setBackgroundColor:[TTColor tripTrunkWhite]];
-    [[UINavigationBar appearance] setBarTintColor:[TTColor tripTrunkWhite]];
-    
-    [[UINavigationBar appearance] setTintColor: [TTColor tripTrunkBlue]];
-    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
-                                                           [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
-    
-    [[UITabBar appearance] setTintColor:[TTColor tripTrunkBlue]];
-
-
-    
-    // Check API availiability
-    // UIApplicationShortcutItem is available in iOS 9 or later.
-    if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
-        
-        
-        // If a shortcut was launched, display its information and take the appropriate action
-        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKeyedSubscript:UIApplicationLaunchOptionsShortcutItemKey];
-        
-        if(shortcutItem)
-        {
-            // When the app launch at first time, this block can not called.
-            [self handleShortCutItem:shortcutItem launch:launchOptions];
-            
-        }else{
-            // normal app launch process without quick action
-            
-            [self launchWithoutQuickAction:launchOptions];
-            
-        }
-        
-    }else{
-        
-        // Less than iOS9 or later
-        
-        [self launchWithoutQuickAction:launchOptions];
-        
-    }
-    
-//    //Font name console output. Fonts can be tricky. You need to know the exact name to reference them.
-//    for (NSString* family in [UIFont familyNames]){
-//        NSLog(@"%@", family);
-//        for (NSString* name in [UIFont fontNamesForFamilyName: family]){
-//            NSLog(@"  %@", name);
-//        }
-//    }
-
+    [self handleDatabaseAndConsoleLog];
+    [self setNavbarAndTabbarColors];
+    [self checkForShortCutItems:launchOptions];
+//    [self handleFontOutput];
     return YES;
 }
 
 -(void)launchWithoutQuickAction:(NSDictionary*)launchOptions{
     [ParseCrashReporting enable];
-    
     [Parse setApplicationId:kPARSE_APP_ID
                   clientKey:kPARSE_CLIENT_KEY];
     [PFUser enableRevocableSessionInBackground];
@@ -117,44 +63,24 @@
     [self setupSearchTabBar];
     [self setupActivityTabBar];
     [self setupProfileTabBar];
-    
 }
 
-
-
 - (void)applicationWillResignActive:(UIApplication *)application {
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    
     PFUser *user = [PFUser currentUser];
     [user setValue:[NSDate date] forKeyPath:@"lastUsed"];
-
     [user saveInBackground];
-    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [FBSDKAppEvents activateApp];
-
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
-        
         currentInstallation.badge = 0;
         [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"Red Badge Cleared");
@@ -169,7 +95,6 @@
         NSDictionary *params = @{
                                  @"date" : user[@"lastUsed"]
                                  };
-        
         [PFCloud callFunctionInBackground:@"queryForActivityNotifications" withParameters:params block:^(NSString *response, NSError *error) {
             if (!error) {
                 [self setActivityBadgeIcon:[response intValue]];
@@ -182,10 +107,6 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    
     PFUser *user = [PFUser currentUser];
     user[@"lastUsed"] = [NSDate date];
     [user saveInBackground];
@@ -198,30 +119,24 @@
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
                                                 sourceApplication:sourceApplication
-                                                       annotation:annotation];
+                                                    annotation:annotation];
 }
 
 - (void)logout {
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
     // clear cache
     [[TTCache sharedCache] clear];
-    
     // Unsubscribe from push notifications by removing the user association from the current installation.
     [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
     [[PFInstallation currentInstallation] saveInBackground];
-    
     [PFQuery clearAllCachedResults];
-    
     [PFUser logOut];
-    
-    
     // This pushes the user back to the map view, on the map tab, which should then show the loginview
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
     [homeNavController dismissViewControllerAnimated:YES completion:nil];
     [homeNavController popToRootViewControllerAnimated:YES];
     [tabbarcontroller setSelectedIndex:0];
-    
 }
 
 #pragma mark - Tab Bar
@@ -529,6 +444,55 @@
         }];
 
     }
+}
+
+-(void)setNavbarAndTabbarColors{
+    [[UINavigationBar appearance] setBackgroundColor:[TTColor tripTrunkWhite]];
+    [[UINavigationBar appearance] setBarTintColor:[TTColor tripTrunkWhite]];
+    [[UINavigationBar appearance] setTintColor: [TTColor tripTrunkBlue]];
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                           [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
+    
+    [[UITabBar appearance] setTintColor:[TTColor tripTrunkBlue]];
+}
+
+-(void)handleDatabaseAndConsoleLog{
+    NSString *appName = @"DEV";
+    if([kPARSE_APP_ID isEqualToString:@"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"])
+        appName = @"PROD";
+    NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
+    NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
+}
+
+-(void)checkForShortCutItems:(NSDictionary*)launchOptions{
+    // UIApplicationShortcutItem is available in iOS 9 or later.
+    if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
+        // If a shortcut was launched, display its information and take the appropriate action
+        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKeyedSubscript:UIApplicationLaunchOptionsShortcutItemKey];
+        if(shortcutItem)
+        {
+            // When the app launch at first time, this block can not called.
+            [self handleShortCutItem:shortcutItem launch:launchOptions];
+            
+        }else{
+            // normal app launch process without quick action
+            [self launchWithoutQuickAction:launchOptions];
+        }
+    }else{
+        // Less than iOS9 or later
+        [self launchWithoutQuickAction:launchOptions];
+    }
+}
+
+-(void)handleFontOutput{
+    //    //Font name console output. Fonts can be tricky. You need to know the exact name to reference them.
+    //    for (NSString* family in [UIFont familyNames]){
+    //        NSLog(@"%@", family);
+    //        for (NSString* name in [UIFont fontNamesForFamilyName: family]){
+    //            NSLog(@"  %@", name);
+    //        }
+    //    }
 }
 
 

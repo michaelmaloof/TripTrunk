@@ -442,9 +442,6 @@
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
     Photo *photo = [self.photos objectAtIndex:indexPath.row];
     cell.tripImageView.caption = photo.caption;
-    cell.backgroundColor = [TTColor tripTrunkWhite];
-    
-    
     [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
                                                targetSize:CGSizeMake(200, 200)
                                               contentMode:PHImageContentModeAspectFill

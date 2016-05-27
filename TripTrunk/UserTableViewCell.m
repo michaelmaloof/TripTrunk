@@ -20,10 +20,8 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    [self.profilePicImageView setClipsToBounds:YES];
-    
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
-    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
+    [self setProfileImageDisplay];
     
 }
 
@@ -55,6 +53,15 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didPressFollowButton:)]) {
         [self.delegate cell:self didPressFollowButton:_user];
     }
+}
+
+-(void)setProfileImageDisplay{
+    [self.profilePicImageView setClipsToBounds:YES];
+    self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
+    [self.profilePicImageView.layer setCornerRadius:30.0f];
+    [self.profilePicImageView.layer setMasksToBounds:YES];
+    [self.profilePicImageView.layer setBorderWidth:2.0f];
+    self.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
 }
 
 @end
