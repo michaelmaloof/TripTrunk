@@ -31,10 +31,13 @@
     
     if (selected) {
         self.backgroundColor = [TTColor tripTrunkRedThirdAlpha];
+        self.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     else {
         self.backgroundColor = [TTColor tripTrunkWhite];
+        self.accessoryType = UITableViewCellAccessoryNone;
     }
+    
     [super setSelected:selected animated:animated];
 }
 
