@@ -1997,7 +1997,7 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Select Start Date" textAlignment="right" translatesAutoresizingMaskIntoConstraints="NO" id="nLI-Np-KIm">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="right" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" text="Select Start Date" textAlignment="right" translatesAutoresizingMaskIntoConstraints="NO" id="nLI-Np-KIm">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2076,7 +2076,7 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Select End Date" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-nL-Rvr">
+                            <textView clipsSubviews="YES" contentMode="left" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" text="Select End Date" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-nL-Rvr">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2271,8 +2271,8 @@
                             <constraint firstItem="B0c-bY-vG9" firstAttribute="centerY" secondItem="DHN-Iy-6C3" secondAttribute="centerY" id="eZ5-rX-BX8">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-5"/>
                             </constraint>
-                            <constraint firstItem="euX-sE-76i" firstAttribute="leading" secondItem="1AQ-Jc-jpb" secondAttribute="leading" id="gfl-DK-xnJ">
-                                <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                            <constraint firstItem="euX-sE-76i" firstAttribute="leading" secondItem="1AQ-Jc-jpb" secondAttribute="trailing" id="gfl-DK-xnJ">
+                                <variation key="heightClass=regular-widthClass=compact" constant="15"/>
                             </constraint>
                             <constraint firstAttribute="trailingMargin" secondItem="DrO-BB-Aur" secondAttribute="trailing" constant="30" id="hnQ-CN-rfH"/>
                             <constraint firstItem="53v-2W-Pnv" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="j4b-94-XCX"/>

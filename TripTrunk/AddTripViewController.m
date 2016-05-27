@@ -67,6 +67,8 @@
     [self setupDatePicker];
     [self checkPublicPrivate];
     [self setTrunkNameEmptyState];
+    [self.startTripTextView setTextContainerInset:UIEdgeInsetsMake(8, 0, 0, 0)];
+    [self.endTripTextView setTextContainerInset:UIEdgeInsetsMake(8, -1, 0, 0)];
 }
 
 #pragma mark - Initial Setup
