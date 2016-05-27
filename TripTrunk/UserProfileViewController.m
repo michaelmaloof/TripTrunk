@@ -28,17 +28,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *trunkCountButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIButton *listButton;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
-@property (weak, nonatomic) IBOutlet UIImageView *privateAccountImageView;
 @property BOOL isFollowing;
 @property int privateCount;
 @property int trunkCount;
-@property (strong, nonatomic) IBOutlet UIView *bottomMargainView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
@@ -103,7 +100,6 @@
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
             dispatch_async(dispatch_get_main_queue(), ^{
-                
                 if (followStatus.intValue == 2) { //Pending
                     if ([[self.user valueForKey:@"private"] boolValue] == 1){
                         self.isFollowing = NO;
@@ -118,7 +114,6 @@
                         self.mapButton.userInteractionEnabled = YES;
                         self.trunkCountButton.userInteractionEnabled = YES;
                     }
-                    
                     self.followButton.tag = 1;
                     [self setButtonColor];
                     
@@ -239,6 +234,10 @@
     //prevent username from becoming tabbar title
     [self tabBarTitle];
     //combine first and last name to full name to display. If they don't have a first and last name, show "name" (the old way we tracked user's name)
+    [self setNameBasedOnPrivacy];
+}
+
+-(void)setNameBasedOnPrivacy{
     NSString *name;
     if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
         name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
@@ -273,7 +272,6 @@
     //hide the follow button until we know if the current user follows them or not
     self.followButton.hidden = YES;
     self.logoutButton.hidden = YES;
-    self.listButton.hidden = YES;
     self.numberOfImagesPerRow = 3;
     
     self.privateCount = 0;
@@ -367,22 +365,15 @@
 
 -(void)checkIfIsPrivate{
     //Check whether user account is private
-    self.privateAccountImageView.hidden = YES;
     if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]){
         [self loadUserImages];
-        
-        if ([[self.user valueForKey:@"private"] boolValue]){
-            self.privateAccountImageView.hidden = NO;
-        } else {
-            self.privateAccountImageView.hidden = YES;
-        }
     }
     else if ([[self.user valueForKey:@"private"] boolValue]){
-        self.privateAccountImageView.hidden = NO;
+        //FIXME: these images will be loaded once we determine if the user follows the private user. Ideally this is done here or determined before this line is run.
     } else {
-        self.privateAccountImageView.hidden = YES;
         [self loadUserImages];
     }
+    [self setNameBasedOnPrivacy];
 }
 
 -(void)displayHometown{
@@ -454,7 +445,6 @@
 
 
 -(void)setButtonColor{
-    
     if (self.followButton.tag == 1){
         [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
         self.followButton.backgroundColor = [TTColor tripTrunkRed];
@@ -516,7 +506,6 @@
             if (count == 0){
                 self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
-                self.listButton.hidden = YES;
                 self.trunkCountButton.hidden = NO;
 
             }else {
@@ -542,8 +531,6 @@
     } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId]) {
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:NO];
         [self.navigationController pushViewController:vc animated:YES];
-    } else {
-        [self increaseLockSize];
     }
 }
 
@@ -558,12 +545,7 @@
         FriendsListViewController *vc = [[FriendsListViewController alloc] initWithUser:_user andFollowingStatus:YES];
         [self.navigationController pushViewController:vc animated:YES];
 
-    } else {
-        [self increaseLockSize];
     }
-    
-
-    
 }
 
 
@@ -646,13 +628,6 @@
     
 }
 
--(void)increaseLockSize{
-    if (self.privateCount < 3){
-        self.privateAccountImageView.frame = CGRectMake(self.privateAccountImageView.frame.origin.x - 5, self.privateAccountImageView.frame.origin.y - 5, self.privateAccountImageView.frame.size.width + 5, self.privateAccountImageView.frame.size.width + 5);
-        self.privateCount = self.privateCount + 1;
-    }
-}
-
 - (IBAction)trunkCountPressed:(id)sender {
     [self handleTrunkTap];
 }
@@ -681,8 +656,6 @@
             HomeMapViewController *vc = (HomeMapViewController *)[storyboard instantiateViewControllerWithIdentifier:@"HomeMapView"];
             vc.user = self.user;
             [self.navigationController pushViewController:vc animated:YES];
-        } else {
-            [self increaseLockSize];
         }
     } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && self.trunkCount == 0){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
@@ -741,11 +714,9 @@
 }
 
 -(void)privacyChanged:(PFUser *)user{
-    if ([[user valueForKey:@"private"] boolValue])
-    {
-        self.privateAccountImageView.hidden = NO;
-    } else {
-        self.privateAccountImageView.hidden = YES;
+    if ([self.user.objectId isEqualToString:user.objectId]){
+        [self.user setValue:[user valueForKey:@"private"] forKey:@"private"];
+        [self setNameBasedOnPrivacy];
     }
 }
 
@@ -874,8 +845,6 @@
             vc.user = self.user;
             vc.isList = YES;
             [self.navigationController pushViewController:vc animated:YES];
-        } else {
-            [self increaseLockSize];
         }
     } else if ([self.user.objectId isEqualToString:[PFUser currentUser].objectId] && self.trunkCount == 0){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You Haven't Created Any Trunks",@"You Haven't Created Any Trunks")
