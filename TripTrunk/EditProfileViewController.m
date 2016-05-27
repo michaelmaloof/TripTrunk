@@ -18,6 +18,7 @@
 
 @interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
 @property (weak, nonatomic) IBOutlet UISwitch *roseToggle;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
@@ -50,6 +51,7 @@
     [super viewDidLoad];
     
     self.title = @"Edit Profile";
+    [self displayVersionAndBuildNumber];
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
@@ -403,6 +405,13 @@
          }
      }];
     
+}
+
+-(void)displayVersionAndBuildNumber{
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *appVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    NSString *buildNumber = [infoDict objectForKey:@"CFBundleVersion"];
+    self.versionLabel.text = [NSString stringWithFormat:@"%@(%@)",appVersion,buildNumber];
 }
 
 - (IBAction)toggleRose:(id)sender {
