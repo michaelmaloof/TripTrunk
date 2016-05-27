@@ -753,11 +753,14 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Users Found";
-    
+    NSString *text;
+    if (self.loadedOnce == YES){
+        text = @"No Users Found";
+    } else {
+        text = @"Looking For Users";
+    }
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
-    
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
 
@@ -783,27 +786,10 @@
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
 
-- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
-{
-
-        //TODO: Add a facebook invite button - commented code creates the button
-    
-//    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
-//                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
-//    
-//    return [[NSAttributedString alloc] initWithString:@"Create Trunk" attributes:attributes];
-    return nil;
-}
-
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
     return [TTColor tripTrunkWhite];
 }
-
-//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
-//{
-//    return [UIImage imageNamed:@"ticketIcon"];
-//}
 
 - (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
 {
@@ -814,7 +800,6 @@
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    
     // Search Controller and the regular table view have different data sources
     if ((self.searchController.active && self.searchResults.count == 0) || (!self.searchController.active && _friends.count == 0 && _promoted.count == 0)) {
         // A little trick for removing the cell separators
@@ -835,20 +820,12 @@
     return NO;
 }
 
-- (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
-{
-    //TODO: Implement this
-    
-}
-
 
 - (void)dealloc
 {
     self.tableView.emptyDataSetSource = nil;
     self.tableView.emptyDataSetDelegate = nil;
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

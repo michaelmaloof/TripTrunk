@@ -58,7 +58,7 @@
 -(void)setProfileImageDisplay{
     [self.profilePicImageView setClipsToBounds:YES];
     self.profilePicImageView.backgroundColor = [TTColor tripTrunkBlue];
-    [self.profilePicImageView.layer setCornerRadius:30.0f];
+    [self.profilePicImageView.layer setCornerRadius:28.0f];
     [self.profilePicImageView.layer setMasksToBounds:YES];
     [self.profilePicImageView.layer setBorderWidth:2.0f];
     self.profilePicImageView.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkWhite]);
