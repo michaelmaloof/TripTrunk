@@ -88,14 +88,10 @@
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
     _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
-    
-    [self.tableView setEditing:YES animated:YES];
-    [self.tableView setAllowsMultipleSelectionDuringEditing:YES];
-    [self.tableView setAllowsSelectionDuringEditing:YES];
-    
-    
-    [self initSearchController];
 
+    self.tableView.multipleTouchEnabled = YES;
+    self.tableView.allowsMultipleSelection = YES;
+    [self initSearchController];
     
     // Get the users for the list
     [self loadFollowing];
@@ -165,10 +161,6 @@
         }
     }];
     
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewCellEditingStyleNone;
 }
 
 - (void)loadFollowers
@@ -315,12 +307,12 @@
     else if (self.membersToAdd.count < 50){
         if (self.isNext == YES && self.isSearching == NO){
             [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-            
         } else if (self.isSearching == YES){
             [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
         } else {
             [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         }
+
                 
     } else {
         
