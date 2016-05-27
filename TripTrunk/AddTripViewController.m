@@ -51,6 +51,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *publicTrunkDescription;
 @property (weak, nonatomic) IBOutlet UILabel *privateTrunkLabel; //@"Private"
 @property (weak, nonatomic) IBOutlet UILabel *privateTrunkDescription;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *trunkNameHeightConstraint;
 
 @end
 
@@ -124,7 +125,7 @@
 -(void)setTrunkNameEmptyState{
     NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
     self.tripNameTextView.font = [TTFont tripTrunkFont14];
-    self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n\n\n\n\n%@",trunkName];
+    self.tripNameTextView.text = [NSString stringWithFormat:@"%@",trunkName];
     self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
 }
 
@@ -301,7 +302,7 @@
         self.tripNameTextView.font = [TTFont tripTrunkFont28];
         NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         if ([nameCheck isEqualToString:trunkName]){
-            self.tripNameTextView.text = @"\n\n\n\n\n\n\n";
+            self.tripNameTextView.text = @"";
             self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
         }
     }
@@ -327,20 +328,44 @@
         }
     }
     if (textView == self.tripNameTextView){
-        NSString *name = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        if (name.length < 20 && self.view.frame.size.width > 320){
-            self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n%@",name];
-        } else if (name.length < 13){
-            self.tripNameTextView.text = [NSString stringWithFormat:@"\n\n%@",name];
-        }else{
-            self.tripNameTextView.text = [NSString stringWithFormat:@"\n%@",name];
+        id<UITextInputTokenizer> tokenizer = textView.tokenizer;
+        UITextPosition *pos = textView.endOfDocument;
+        NSInteger lines = 0;
+        
+        while (true){
+            UITextPosition *lineEnd = [tokenizer positionFromPosition:pos toBoundary:UITextGranularityLine inDirection:UITextStorageDirectionBackward];
+            
+            if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame){
+                pos = [tokenizer positionFromPosition:lineEnd toBoundary:UITextGranularityCharacter inDirection:UITextStorageDirectionBackward];
+                
+                if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame) break;
+                
+                continue;
+            }
+            
+            lines++; pos = lineEnd;
         }
-        self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
+        
+        if(lines < 5){
+            self.trunkNameHeightConstraint.constant = lines*42;
+            textView.contentInset = UIEdgeInsetsMake(lines*lines*1.5,0,lines*lines*-1.5,0);
+        }else{
+            lines--;
+            NSString *str = textView.text;
+            NSString *truncatedString = [str substringToIndex:[str length]-1];
+            textView.text = truncatedString;
+        }
+        textView.textAlignment = NSTextAlignmentCenter;
     }
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if(textView.frame.size.height==168 && [text isEqualToString:@"\n"])
+        return NO;
+    
+    if(textView.frame.size.height>168)
+        return NO;
+    
     return textView.text.length + (text.length - range.length) <= 33;
 }
 
