@@ -23,6 +23,9 @@
 #import "UserProfileViewController.h"
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate,UIActionSheetDelegate>
 
@@ -954,6 +957,41 @@
 
 - (IBAction)addPhotoWasTapped:(id)sender {
     [self performSegueWithIdentifier:@"addPhotos" sender:self];
+}
+
+
+#pragma mark - Facebook Photo Upload
+-(void)initFacebookUpload:(NSArray*)facebookPhotos{
+    if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
+        [self uploadPhotosToFacebook:facebookPhotos];
+    } else {
+        [PFFacebookUtils logInInBackgroundWithPublishPermissions:@[@"publish_actions"] block:^(PFUser * _Nullable user, NSError * _Nullable error) {
+            if (!error) {
+                if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
+                    [self uploadPhotosToFacebook:facebookPhotos];
+                }else{
+                    NSLog(@"User did not give permission to post");
+                }
+            } else {
+                // An error occurred. See: https://developers.facebook.com/docs/ios/errors
+                NSLog(@"Error : Requesting \"publish_actions\" permission failed with error : %@", error);
+            }
+        }];
+    }
+}
+
+-(void)uploadPhotosToFacebook:(NSArray*)facebookPhotos{
+    for(NSDictionary *photo in facebookPhotos){
+        NSDictionary *params = @{@"url": photo[@"url"],
+                                 @"caption":photo[@"caption"]};
+
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/photos" parameters:params HTTPMethod:@"POST"];
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+            if(error)
+                NSLog(@"Error uploading to facebook: %@",error);
+            else NSLog(@"Facebook upload result: %@",result);
+        }];
+    }
 }
 @end
 

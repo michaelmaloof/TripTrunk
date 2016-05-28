@@ -168,7 +168,7 @@ CLCloudinary *cloudinary;
 }
 
 
--(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSError *error))completionBlock
+-(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSString* url, NSError *error))completionBlock
 {
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
@@ -256,12 +256,14 @@ CLCloudinary *cloudinary;
                       if (photo.caption && ![photo.caption isEqualToString:@""]) {
                           [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                               if(error){
-                                  completionBlock(NO, nil, nil);
+                                  completionBlock(NO, nil, nil, nil);
                                   NSLog(@"Error: %@",error);
                               }else{
-                                  completionBlock(YES, commentObject, nil);
+                                  completionBlock(YES, commentObject, url, nil);
                               }
                           }];
+                      }else{
+                          completionBlock(YES, nil, url, nil);
                       }
                       
                       

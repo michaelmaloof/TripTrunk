@@ -21,6 +21,9 @@
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "TTCache.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "TrunkViewController.h"
 
 @interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate,UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
 @property NSMutableArray *photos;
@@ -40,6 +43,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *borderLabel;
 @property NSMutableArray *currentSelectionPhotos;
 @property float amount;
+@property (strong, nonatomic) IBOutlet UIButton *facebookPublishButton;
+@property BOOL publishToFacebook;
+@property (strong, nonatomic) NSMutableArray *facebookPhotos;
 
 //############################################# MENTIONS ##################################################
 //@property (weak, nonatomic) IBOutlet UITextView *caption;
@@ -69,6 +75,7 @@
     self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
+    self.facebookPhotos = [[NSMutableArray alloc] init];
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -87,6 +94,8 @@
     
     
     self.caption.delegate = self;
+    if(self.trip.isPrivate)
+        self.facebookPublishButton.hidden = YES;
     
     //############################################# MENTIONS ##################################################
     [self buildMentionUsersCache];
@@ -301,9 +310,20 @@
         [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
                                                     resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                                                         // Calls the method to actually upload the image and save the Photo to parse
-                                                        [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData block:^(BOOL succeeded, PFObject *commentObject, NSError *error) {
+                                                        [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData block:^(BOOL succeeded, PFObject *commentObject, NSString* url, NSError *error) {
                                                             if(!error){
-                                                                [self updateMentionsInDatabase:commentObject];
+                                                                NSDictionary *photoDetails = @{@"url":url,
+                                                                                               @"caption":commentObject[@"content"]};
+                                                                [self.facebookPhotos addObject:photoDetails];
+                                                                if(commentObject)
+                                                                    [self updateMentionsInDatabase:commentObject];
+                                                                
+                                                                
+                                                                if((self.photos.count == self.facebookPhotos.count) && self.publishToFacebook){
+                                                                    TrunkViewController *trunk = [[TrunkViewController alloc] init];
+                                                                    [trunk initFacebookUpload:self.facebookPhotos];
+                                                                }
+                                                                
                                                             }
                                                             else{
                                                                 NSLog(@"Error: %@",error);
@@ -316,6 +336,8 @@
     if (uploadingFailCount > 0) {
         [self updateTripDetailForUploadingError:uploadingFailCount];
     }
+    
+    
     
     /* THIS IS A HACK
      * Because of issues grouping photosAdded notifications (Matt added 5 photos, instead of Matt added a photo, 5 times)
@@ -389,6 +411,24 @@
 }
 
 
+//-(void)uploadPhotosToFacebook{
+//    //FIXME: Don't forget to handle the privacy issue
+//    NSDictionary *params = @{
+//                             @"url": self.facebookPhotos[0],
+//                             };
+//    /* make the API call */
+//    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+//                                  initWithGraphPath:@"/me/photos"
+//                                  parameters:params
+//                                  HTTPMethod:@"POST"];
+//    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
+//                                          id result,
+//                                          NSError *error) {
+//        if(error)
+//            NSLog(@"Error uploading to facebook: %@",error);
+//        else NSLog(@"Facebook upload result: %@",result);
+//    }];
+//}
 
 #pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -629,6 +669,15 @@
     [self.navigationItem setHidesBackButton:NO animated:YES];
 
     [self.tripCollectionView reloadData];
+    
+}
+
+- (IBAction)toggleFacebookPublishButtonTapped:(id)sender {
+    self.publishToFacebook = !self.publishToFacebook;
+    
+    if(self.publishToFacebook)
+        self.facebookPublishButton.selected = YES;
+    else self.facebookPublishButton.selected = NO;
     
 }
 
