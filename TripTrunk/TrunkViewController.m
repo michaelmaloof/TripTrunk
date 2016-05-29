@@ -951,6 +951,7 @@
 
 
 #pragma mark - Facebook Photo Upload
+
 -(void)initFacebookUpload:(NSArray*)facebookPhotos{
     if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
         [self uploadPhotosToFacebook:facebookPhotos];

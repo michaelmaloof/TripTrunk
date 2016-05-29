@@ -771,7 +771,7 @@
     if (self.searchController.active) {
         text = @"Are you sure a user exists with this name?";
     }
-    else {
+    else if (self.loadedOnce == YES){
         text = @"Invite some Facebook friends to TripTrunk!";
     }
     

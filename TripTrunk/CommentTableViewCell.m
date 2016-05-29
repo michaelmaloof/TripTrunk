@@ -72,8 +72,6 @@
     
     _activity = activity;
     _user = activity[@"fromUser"];
-
-    
     [self updateLabels];
     
 }
@@ -81,7 +79,6 @@
 - (void)updateLabels {
     NSAttributedString *attString = [[TTUtility sharedInstance] attributedStringForCommentActivity:_activity];
     [self.contentLabel setAttributedText:attString];
-    
     self.usernameLabel.text = _user.username;
     // Set up a link for the username
     NSRange range = [self.usernameLabel.text rangeOfString:_user.username];

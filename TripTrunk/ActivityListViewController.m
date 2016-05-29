@@ -923,7 +923,6 @@ enum TTActivityViewType : NSUInteger {
                         if (toUser != nil && fromUser != nil){
                             [self.followingActivities addObject:obj];
                         }
-                        
                     }
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{

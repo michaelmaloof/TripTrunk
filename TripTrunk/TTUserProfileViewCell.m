@@ -7,7 +7,12 @@
 //
 
 #import "TTUserProfileViewCell.h"
+#import "TTColor.h"
 
 @implementation TTUserProfileViewCell
+
+-(void)awakeFromNib{
+    self.backgroundColor = [TTColor tripTrunkBlue];
+}
 
 @end

@@ -19,7 +19,6 @@
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
-
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;
 @property NSDate *today;
@@ -28,7 +27,6 @@
 @property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
-
 @property NSMutableArray *haventSeens;
 @property int objectsCountTotal;
 @property int objectsCountMe;
@@ -38,24 +36,42 @@
 @property NSMutableArray *mutualTrunks;
 @property UIImage *flame;
 @property BOOL wasError;
-
-
-
+@property BOOL attemptedToLoad;
 @end
+
 @implementation TrunkListViewController
 
+#pragma mark - Setup
+
 -(void)viewDidLoad {
-    
-    self.today = [NSDate date];
-    self.parseLocations = [[NSMutableArray alloc]init];
-    self.meParseLocations = [[NSMutableArray alloc]init];
-    self.mutualTrunks = [[NSMutableArray alloc]init];
-    self.haventSeens = [[NSMutableArray alloc]init];
+    [self displayTitle];
+    [self displayFlameImage];
+    [self prepareForLoadingTrips];
+    [self setupTableViewAndRefresh];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    //because we hide the tab bar on the PhotoViewController we make sure its still not hidden here
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self displayTitle];
+    self.visitedTrunks = [[NSMutableArray alloc]init];
+    [self handleVisitedTrunks];
+    [self beginLoadingTrunks];
+    [self removeTextFromBackButton];
+}
+
+-(void)displayTitle{
     if (self.isList == YES) {
         self.title = self.user.username;
     } else {
         self.title = self.city;
     }
+}
+
+-(void)displayFlameImage{
     UIImage *flame = [UIImage imageNamed:@"flame"];
     CGRect rect = CGRectMake(0,0,15,20);
     UIGraphicsBeginImageContext( rect.size );
@@ -64,10 +80,46 @@
     UIGraphicsEndImageContext();
     NSData *imageData = UIImagePNGRepresentation(picture1);
     self.flame = [UIImage imageWithData:imageData];
-    self.isMine = NO;
+
+}
+
+-(void)removeTextFromBackButton{
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStylePlain
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+}
+
+-(void)prepareForLoadingTrips{
+    self.today = [NSDate date];
+    self.parseLocations = [[NSMutableArray alloc]init];
+    self.meParseLocations = [[NSMutableArray alloc]init];
+    self.mutualTrunks = [[NSMutableArray alloc]init];
+    self.haventSeens = [[NSMutableArray alloc]init];
     self.objectIDs = [[NSMutableArray alloc]init];
     self.meObjectIDs = [[NSMutableArray alloc]init];
     self.mutualTrunks = [[NSMutableArray alloc]init];
+    self.isMine = NO;
+}
+
+-(void)handleVisitedTrunks{
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    self.visitedTrunks = view.viewedTrunks;
+                }
+            }
+        }
+    }
+}
+
+-(void)setupTableViewAndRefresh{
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
@@ -83,75 +135,15 @@
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = NO;
-}
+#pragma mark - TableView
 
--(void)viewDidAppear:(BOOL)animated{
-    //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
-    if (self.isList == YES) {
-        self.title = self.user.username;
-    } else {
-        self.title = self.city;
-    }
-    self.visitedTrunks = [[NSMutableArray alloc]init];
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    self.visitedTrunks = view.viewedTrunks;
-                }
-            }
-        }
-    }
-    if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-        self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
-        self.trunkListToggle.tag = 0;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self loadTrunkListBasedOnProfile:NO];
-    } else if (self.isList == YES){
-        self.trunkListToggle.tag = 0;
-        [self loadTrunkListBasedOnProfile:NO];
-    }
-    
-//We no longer support this feature
-//    else if (self.user == nil) {
-//        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
-//        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-//        self.filter.tag = 0;
-//        self.navigationItem.rightBarButtonItem.enabled = NO;
-//        [self queryParseMethodEveryone:NO];
-//    } else {
-//        self.navigationItem.rightBarButtonItem.enabled = NO;
-//        [self loadUserTrunks:NO];
-//    }
-    
-    [self queryParseMethodEveryone:NO];
-
-    
-    UIBarButtonItem *newBackButton =
-    [[UIBarButtonItem alloc] initWithTitle:@""
-                                     style:UIBarButtonItemStylePlain
-                                    target:nil
-                                    action:nil];
-    [[self navigationItem] setBackBarButtonItem:newBackButton];
-    
-}
-
-
--(void)sortTrunkByRecentPhoto{
-    
-    self.parseLocations;
-    
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70.0;
 }
+
+#pragma mark - Scrolling
+
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
@@ -163,10 +155,6 @@
     float y = (offset.y + bounds.size.height - inset.bottom)*.9;
     float h = size.height;
     float reload_distance = 10;
-    
-    NSLog(@"%f",y);
-    NSLog(@"%f",h + reload_distance);
-    
     if(y > h + reload_distance) {
         if (self.isMine == YES && self.isList == NO){
             self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -183,6 +171,23 @@
     }
 }
 
+#pragma mark - Loading Trunks
+
+-(void)beginLoadingTrunks{
+    //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
+    if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+        self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
+        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
+        self.trunkListToggle.tag = 0;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [self loadTrunkListBasedOnProfile:NO];
+    } else if (self.isList == YES){
+        self.trunkListToggle.tag = 0;
+        [self loadTrunkListBasedOnProfile:NO];
+    }
+    [self queryParseMethodEveryone:NO];
+}
+
 /**
  *  Load user's trunks from parse.
  *
@@ -191,11 +196,8 @@
 -(void)loadUserTrunks:(BOOL)isRefresh
 {
     if (self.meParseLocations.count == 0 || self.meParseLocations.class == nil || isRefresh == YES) {
-        
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-        
         //Build an array to send up to CC
         NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
         //we only have a single user but we still need to add it to an array and send up the params
@@ -205,10 +207,8 @@
         }else{
             [friendsObjectIds addObject:self.user.objectId];
         }
-        
         int limit;
         int skip;
-        
         if (isRefresh == NO){
             limit = 100;
             skip = self.objectsCountMe;
@@ -219,7 +219,6 @@
             skip = 0;
             self.objectsCountMe = 0;
         }
-        
         NSDictionary *params = @{
                                  @"objectIds" : friendsObjectIds,
                                  @"limit" : [NSString stringWithFormat:@"%d",limit],
@@ -227,7 +226,9 @@
                                  @"latitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.latitude],
                                  @"longitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.longitude]
                                  };
+        self.attemptedToLoad = NO;
         [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+            self.attemptedToLoad = YES;
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
@@ -238,20 +239,16 @@
             else
             {
                 self.wasError = NO;
-                
                 if (isRefresh == YES){
                     self.meParseLocations = [[NSMutableArray alloc]init];
                     self.meObjectIDs = [[NSMutableArray alloc]init];;
                 }
-                
                 [[TTUtility sharedInstance] internetConnectionFound];
                 self.didLoad = YES;
                 self.objectsCountMe = (int)response.count + self.objectsCountMe;
                 for (PFObject *activity in response)
                 {
-                    
                     Trip *trip = activity[@"trip"];
-                    
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
@@ -263,25 +260,19 @@
                         [self.meObjectIDs addObject:trip.objectId];
                     }
                 }
-                
                 for (Trip *trip in self.meParseLocations)
                 {
-                    
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                    
                     BOOL contains = NO;
-                    
                     for (Trip* trunk in self.visitedTrunks){
                         if ([trunk.objectId isEqualToString:trip.objectId]){
                             contains = YES;
                         }
                     }
-                    
                     if (self.visitedTrunks.count == 0){
                         contains = NO;
                     }
-                    
                     if (lastTripInterval < 0 && contains == NO)
                     {
                         [self.haventSeens addObject:trip];
@@ -289,112 +280,9 @@
                         [self.haventSeens addObject:trip];
                     }
                 }
-                
             }
-            //                self.filter.tag = 1;
             [self reloadTable];
         }];
-//        
-//        
-//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//        if (!self.user){
-//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//            
-//        }else{
-//            [query whereKey:@"toUser" equalTo:self.user];
-//        }
-//        [query whereKey:@"type" equalTo:@"addToTrip"];
-//        [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
-//        [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
-//        [query includeKey:@"trip"];
-//        [query whereKeyExists:@"trip"];
-//        [query includeKey:@"trip.creator"];
-//        [query includeKey:@"trip.publicTripDetail"];
-//        [query orderByDescending:@"createdAt"]; //TODO does this actually work?
-//        
-//        if (isRefresh == NO){
-//            query.limit = 100;
-//            query.skip = self.objectsCountMe;
-//        } else {
-//            if (self.objectsCountMe == 0){
-//                query.limit = 100;
-//            } else {
-//                query.limit = self.objectsCountMe;
-//            }
-//            query.skip = 0;
-//            self.objectsCountMe = 0;
-//        }
-//        
-//        
-//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            if(error)
-//            {
-//                [ParseErrorHandlingController handleError:error];
-//                self.navigationItem.rightBarButtonItem.enabled = YES;
-//                self.wasError = YES;
-//                [self reloadTable];
-//                NSLog(@"Error: %@",error);
-//            }
-//            else
-//            {
-//                self.wasError = NO;
-//
-//                if (isRefresh == YES){
-//                    self.meParseLocations = [[NSMutableArray alloc]init];
-//                    self.meObjectIDs = [[NSMutableArray alloc]init];;
-//                }
-//                
-//                [[TTUtility sharedInstance] internetConnectionFound];
-//                self.didLoad = YES;
-//                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
-//                for (PFObject *activity in objects)
-//                {
-//                    
-//                    Trip *trip = activity[@"trip"];
-//
-//                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
-//                    {
-//                        [self.meParseLocations addObject:trip];
-//                        [self.meObjectIDs addObject:trip.objectId];
-//                        
-//                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
-//                    {
-//                        [self.meParseLocations addObject:trip];
-//                        [self.meObjectIDs addObject:trip.objectId];
-//                    }
-//                }
-//                
-//                for (Trip *trip in self.meParseLocations)
-//                {
-//                    
-//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-//
-//                    BOOL contains = NO;
-//                    
-//                    for (Trip* trunk in self.visitedTrunks){
-//                        if ([trunk.objectId isEqualToString:trip.objectId]){
-//                            contains = YES;
-//                        }
-//                    }
-//                    
-//                    if (self.visitedTrunks.count == 0){
-//                        contains = NO;
-//                    }
-//                    
-//                    if (lastTripInterval < 0 && contains == NO)
-//                    {
-//                        [self.haventSeens addObject:trip];
-//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-//                        [self.haventSeens addObject:trip];
-//                    }
-//                }
-//                
-//            }
-//            //                self.filter.tag = 1;
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//            [self reloadTable];
-//        }];
     } else
     {
         [self reloadTable];
@@ -404,24 +292,18 @@
 -(void)loadTrunkListBasedOnProfile:(BOOL)isRefresh{
     
     if (self.meParseLocations.count == 0 || isRefresh == YES) {
-        
         self.navigationItem.rightBarButtonItem.enabled = NO;
-
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-        
         //Build an array to send up to CC
         NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
         //we only have a single user but we still need to add it to an array and send up the params
         if (!self.user){
             [friendsObjectIds addObject:[PFUser currentUser].objectId];
-            
         }else{
             [friendsObjectIds addObject:self.user.objectId];
         }
-        
         int limit;
         int skip;
-        
         if (isRefresh == NO){
             limit = 50;
             skip = self.objectsCountMe;
@@ -432,72 +314,59 @@
             skip = 0;
             self.objectsCountMe = 0;
         }
-        
         NSDictionary *params = @{
                                  @"objectIds" : friendsObjectIds,
                                  @"limit" : [NSString stringWithFormat:@"%d",limit],
                                  @"skip" : [NSString stringWithFormat:@"%d",skip]
                                  };
+        self.attemptedToLoad = NO;
         [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
-            
+            self.attemptedToLoad = YES;
             if(error)
             {
                 self.wasError = YES;
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
                 [self reloadTable];
-                
             }
             else if (!error)
             {
                 self.wasError = NO;
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
-            
             {
-                
                 if (isRefresh == YES){
                     self.meObjectIDs = [[NSMutableArray alloc]init];;
                     self.meParseLocations = [[NSMutableArray alloc]init];
                 }
-                
                 self.didLoad = YES;
                 self.objectsCountMe = (int)response.count + self.objectsCountMe;
                 for (PFObject *activity in response)
                 {
-                    
                     Trip *trip = activity[@"trip"];
-                    
                     if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                     {
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
-                        
                     } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
                     {
                         [self.meParseLocations addObject:trip];
                         [self.meObjectIDs addObject:trip.objectId];
                     }
                 }
-                
                 for (Trip *trip in self.meParseLocations)
                 {
-                    
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                    
                     BOOL contains = NO;
-                    
                     for (Trip* trunk in self.visitedTrunks){
                         if ([trunk.objectId isEqualToString:trip.objectId]){
                             contains = YES;
                         }
                     }
-                    
                     if (self.visitedTrunks.count == 0){
                         contains = NO;
                     }
-                    
                     if (lastTripInterval < 0 && contains == NO)
                     {
                         [self.haventSeens addObject:trip];
@@ -505,147 +374,31 @@
                         [self.haventSeens addObject:trip];
                     }
                 }
-                
             }
-            //            self.trunkListToggle.tag = 0;
             [self reloadTable];
-            
         }];
-        
-        
-//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//        if (!self.user){
-//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//            
-//        }else{
-//            [query whereKey:@"toUser" equalTo:self.user];
-//        }
-//        [query whereKey:@"type" equalTo:@"addToTrip"];  
-//        [query includeKey:@"trip"];
-//        [query includeKey:@"trip.creator"];
-//        [query whereKeyExists:@"trip"];
-//        [query includeKey:@"trip.publicTripDetail"];
-////        [query orderByDescending:@"createdAt"];
-//        
-//        if (isRefresh == NO){
-//            query.limit = 50;
-//            query.skip = self.objectsCountMe;
-//        } else {
-//            if (self.objectsCountMe == 0){
-//                query.limit = 50;
-//            } else {
-//                query.limit = self.objectsCountMe;
-//
-//            }
-//            query.skip = 0;
-//            self.objectsCountMe = 0;
-//        }
-//        
-//        
-//        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            
-//            if(error)
-//            {
-//                self.wasError = YES;
-//                NSLog(@"Error: %@",error);
-//                [ParseErrorHandlingController handleError:error];
-//                self.navigationItem.rightBarButtonItem.enabled = YES;
-//
-//                [self reloadTable];
-//
-//            }
-//            else if (!error)
-//            {
-//                self.wasError = NO;
-//                [[TTUtility sharedInstance] internetConnectionFound];
-//            }
-//            
-//            {
-//                
-//                if (isRefresh == YES){
-//                    self.meObjectIDs = [[NSMutableArray alloc]init];;
-//                    self.meParseLocations = [[NSMutableArray alloc]init];
-//                }
-//                
-//                self.didLoad = YES;
-//                self.objectsCountMe = (int)objects.count + self.objectsCountMe;
-//                for (PFObject *activity in objects)
-//                {
-//                    
-//                    Trip *trip = activity[@"trip"];
-//
-//                    if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
-//                    {
-//                        [self.meParseLocations addObject:trip];
-//                        [self.meObjectIDs addObject:trip.objectId];
-//                        
-//                    } else if (trip.name != nil && ![self.meObjectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId])
-//                    {
-//                        [self.meParseLocations addObject:trip];
-//                        [self.meObjectIDs addObject:trip.objectId];
-//                    }
-//                }
-//                
-//                for (Trip *trip in self.meParseLocations)
-//                {
-//                    
-//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-//                    
-//                    BOOL contains = NO;
-//                    
-//                    for (Trip* trunk in self.visitedTrunks){
-//                        if ([trunk.objectId isEqualToString:trip.objectId]){
-//                            contains = YES;
-//                        }
-//                    }
-//                    
-//                    if (self.visitedTrunks.count == 0){
-//                        contains = NO;
-//                    }
-//                    
-//                    if (lastTripInterval < 0 && contains == NO)
-//                    {
-//                        [self.haventSeens addObject:trip];
-//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-//                        [self.haventSeens addObject:trip];
-//                    }
-//                }
-//                
-//            }
-////            self.trunkListToggle.tag = 0;
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//            [self reloadTable];
-//
-//        }];
     } else
     {
         [self reloadTable];
-        
     }
 }
 
 -(void)loadMutualTrunkList:(BOOL)isRefresh{
-    
-    //fixme this should be a service call
-    
     self.navigationItem.rightBarButtonItem.enabled = NO;
-
-    
     if (self.mutualTrunks.count == 0 || isRefresh == YES) {
         NSDate *lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-
         NSString *user;
         if (!self.user)
             user = [PFUser currentUser].objectId;
         else user = self.user.objectId;
-        
         NSDictionary *params = @{
                                  @"user1" : user,
                                  @"user2" : [PFUser currentUser].objectId,
                                  @"limit" : @"1000"
                                  };
+        self.attemptedToLoad = NO;
         [PFCloud callFunctionInBackground:@"queryForMutualTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+            self.attemptedToLoad = YES;
             if(error)
             {
                 self.wasError = YES;
@@ -662,25 +415,19 @@
                 for (PFObject *activity in response){
                     [self.mutualTrunks addObject:activity[@"trip"]];
                 }
-                
                 for (Trip *trip in self.mutualTrunks)
                 {
-                    
                     NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                     NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                    
                     BOOL contains = NO;
-                    
                     for (Trip* trunk in self.visitedTrunks){
                         if ([trunk.objectId isEqualToString:trip.objectId]){
                             contains = YES;
                         }
                     }
-                    
                     if (self.visitedTrunks.count == 0){
                         contains = NO;
                     }
-                    
                     if (lastTripInterval < 0 && contains == NO)
                     {
                         [self.haventSeens addObject:trip];
@@ -690,111 +437,16 @@
                 }
                 
             }
-            //            self.trunkListToggle.tag = 0;
             [self reloadTable];
-
         }];
-        
-        
-//        PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//        if (!self.user){
-//            [query whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//            
-//        }else{
-//            [query whereKey:@"toUser" equalTo:self.user];
-//        }
-//        [query whereKey:@"type" equalTo:@"addToTrip"];
-//        
-//        
-//        PFQuery *queryMine = [PFQuery queryWithClassName:@"Activity"];
-//        [queryMine whereKey:@"toUser" equalTo:[PFUser currentUser]];
-//        [queryMine whereKey:@"type" equalTo:@"addToTrip"];
-//
-//        PFQuery *subQuery = [PFQuery orQueryWithSubqueries:@[queryMine, query]];
-//
-//        
-//        subQuery.limit = 1000;
-//        
-//        [subQuery includeKey:@"trip"];
-//        [subQuery includeKey:@"trip.creator"];
-//        [subQuery whereKeyExists:@"trip"];
-//        [subQuery includeKey:@"trip.publicTripDetail"];
-//
-//        
-//        [subQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            if(error)
-//            {
-//                self.wasError = YES;
-//                [ParseErrorHandlingController handleError:error];
-//                self.navigationItem.rightBarButtonItem.enabled = YES;
-//
-//                [self reloadTable];
-//                NSLog(@"Error: %@",error);
-//            }
-//            {
-//                if (!error){
-//                    self.wasError = NO;
-//                    [[TTUtility sharedInstance] internetConnectionFound];
-//                }
-//                self.didLoad = YES;
-//                for (PFObject *activity in objects)
-//                {
-//                    Trip *trip = activity[@"trip"];
-//
-//                    for (PFObject *check in objects){
-//                    
-//                        Trip *tripCheck = check[@"trip"];
-//                        
-//                        if (trip.name != nil && ![self.mutualObjectIDs containsObject:trip.objectId] && ![self.mutualObjectIDs containsObject:tripCheck.objectId] && [trip.objectId isEqualToString:tripCheck.objectId] && ![activity.objectId isEqualToString:check.objectId] && trip.publicTripDetail != nil){
-//                            
-//                            if (![self.mutualObjectIDs containsObject:tripCheck.objectId] &&![self.mutualObjectIDs containsObject:trip.objectId] ){
-//                                [self.mutualTrunks addObject:tripCheck];
-//                                [self.mutualObjectIDs addObject:tripCheck.objectId];
-//                            }
-//                        }
-//                    
-//                    
-//                    }
-//
-//                }
-//                
-//                for (Trip *trip in self.mutualTrunks)
-//                {
-//                    
-//                    NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-//                    NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-//                    
-//                    BOOL contains = NO;
-//                    
-//                    for (Trip* trunk in self.visitedTrunks){
-//                        if ([trunk.objectId isEqualToString:trip.objectId]){
-//                            contains = YES;
-//                        }
-//                    }
-//                    
-//                    if (self.visitedTrunks.count == 0){
-//                        contains = NO;
-//                    }
-//                    
-//                    if (lastTripInterval < 0 && contains == NO)
-//                    {
-//                        [self.haventSeens addObject:trip];
-//                    } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-//                        [self.haventSeens addObject:trip];
-//                    }
-//                }
-//                
-//            }
-//            //            self.trunkListToggle.tag = 0;
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//            [self reloadTable];
-//        }];
-    } else
+        } else
     {
         [self reloadTable];
         
     }
 }
+
+#pragma mark - Nav Bar Toggle
 
 
 /**
@@ -803,7 +455,6 @@
  *
  */
 -(void)rightBarItemWasTapped {
-    
     self.navigationItem.rightBarButtonItem.enabled = NO;
     if (self.filter.tag == 0 && self.isList == NO) {
         [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
@@ -829,6 +480,8 @@
 
     }
 }
+
+#pragma mark - Refresh
 
 /**
  *  Refresh the list of trunks
@@ -860,36 +513,34 @@
 
 #pragma mark - Parse Queries
 
-
-
 - (void)queryParseMethodEveryone:(BOOL)isRefresh{ //add the list of users that the user follows to then get their trunks
 
     if (self.parseLocations.count == 0 || isRefresh == YES)
     {
-
         self.friends = [[NSMutableArray alloc] init];
         
         // Add self to the friends array so that we query for our own trunks
         [self.friends addObject:[PFUser currentUser]];
-        
+        self.attemptedToLoad = NO;
         [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+            self.attemptedToLoad = YES;
             if (!error) {
                 [self.friends addObjectsFromArray:users];
                 [self queryForTrunks:isRefresh];
                 
+            } else {
+                self.wasError = YES;
+                [ParseErrorHandlingController handleError:error];
+                [self reloadTable];
+                NSLog(@"Error: %@",error);
             }
         }];
-        
     } else
     {
         [self reloadTable];
-    
     }
 
 }
-
-
-
 
 - (void)queryForTrunks:(BOOL)isRefresh{
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -901,10 +552,8 @@
         // add just the objectIds to the array, no PFObjects can be sent as a param
         [friendsObjectIds addObject:friendObjectId.objectId];
     }
-    
     int limit;
     int skip;
-    
     if (isRefresh == NO){
         limit = 100;
         skip = self.objectsCountMe;
@@ -915,7 +564,6 @@
         skip = 0;
         self.objectsCountMe = 0;
     }
-    
     NSDictionary *params = @{
                              @"objectIds" : friendsObjectIds,
                              @"limit" : [NSString stringWithFormat:@"%d",limit],
@@ -923,17 +571,17 @@
                              @"latitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.latitude],
                              @"longitude" : [NSNumber numberWithDouble:(double)self.location.coordinate.longitude]
                              };
+    self.attemptedToLoad = NO;
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
+        self.attemptedToLoad = YES;
         if(error)
         {
             self.wasError = YES;
             [ParseErrorHandlingController handleError:error];
             NSLog(@"Error: %@",error);
             [self reloadTable];
-            
         }
         {
-            
             if (!error){
                 self.wasError = NO;
                 [[TTUtility sharedInstance] internetConnectionFound];
@@ -992,113 +640,7 @@
         self.filter.tag = 0;
         [self reloadTable];
     }];
-    
-//    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
-//    [query whereKey:@"toUser" containedIn:self.friends];
-//    [query whereKey:@"type" equalTo:@"addToTrip"]; //FIXME, THESE SHOULD BE ENUMS
-//    [query whereKey:@"latitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.latitude]];
-//    [query whereKey:@"longitude" equalTo:[NSNumber numberWithDouble:(double)self.location.coordinate.longitude]];
-//    //    [query whereKey:@"content" equalTo:self.city];
-//    [query includeKey:@"trip"];
-//    [query includeKey:@"trip.creator"];
-//    [query whereKeyExists:@"trip"];
-//    [query includeKey:@"trip.publicTripDetail"];
-//    [query orderByDescending:@"createdAt"];
-//    
-//    if (isRefresh == NO){
-//        query.limit = 100;
-//        query.skip = self.objectsCountTotal;
-//    } else {
-//        
-//        if (self.objectsCountTotal == 0){
-//            query.limit = 100;
-//        } else {
-//            query.limit = self.objectsCountTotal;
-//        }
-//        query.skip = 0;
-//        self.objectsCountTotal = 0;
-//    }
-//    
-//    
-//    
-//    
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if(error)
-//        {
-//            self.wasError = YES;
-//            [ParseErrorHandlingController handleError:error];
-//            NSLog(@"Error: %@",error);
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//            [self reloadTable];
-//            
-//        }
-//        {
-//            
-//            if (!error){
-//                self.wasError = NO;
-//                [[TTUtility sharedInstance] internetConnectionFound];
-//            }
-//            
-//            if (isRefresh == YES){
-//                self.parseLocations = [[NSMutableArray alloc]init];
-//                self.objectIDs = [[NSMutableArray alloc]init];;
-//            }
-//            
-//            self.didLoad = YES;
-//            self.objectsCountTotal = (int)objects.count + self.objectsCountTotal;
-//            for (PFObject *activity in objects)
-//            {
-//                
-//                Trip *trip = activity[@"trip"];
-//                
-//                if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
-//                {
-//                    [self.parseLocations addObject:trip];
-//                    [self.objectIDs addObject:trip.objectId];
-//                    
-//                } else if ( trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-//                    [self.parseLocations addObject:trip];
-//                    [self.objectIDs addObject:trip.objectId];
-//                }
-//            }
-//            
-//            for (Trip *trip in self.parseLocations)
-//            {
-//                
-//                NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
-//                NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-//                
-//                BOOL contains = NO;
-//                
-//                for (Trip* trunk in self.visitedTrunks){
-//                    if ([trunk.objectId isEqualToString:trip.objectId]){
-//                        contains = YES;
-//                    }
-//                }
-//                
-//                if (self.visitedTrunks.count == 0){
-//                    contains = NO;
-//                }
-//                
-//                if (lastTripInterval < 0 && contains == NO)
-//                {
-//                    [self.haventSeens addObject:trip];
-//                } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-//                    [self.haventSeens addObject:trip];
-//                }
-//            }
-//            
-//        }
-//        self.filter.tag = 0;
-//        self.navigationItem.rightBarButtonItem.enabled = YES;
-//        [self reloadTable];
-//        
-//        
-//    }];
 }
-
-
-
 
 #pragma mark - Navigation
 
@@ -1337,52 +879,26 @@
     
 }
 
-
 #pragma mark - DZNEmptyDataSetSource
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
     NSString *text = [[NSString alloc]init];
-    
-    if (self.wasError == NO){
-        
+    if (self.wasError == NO && self.attemptedToLoad == NO){
+        text = NSLocalizedString(@"Looking for Trunks",@"Looking for Trunks");
+    }
+    else if (self.wasError == NO && self.meParseLocations.count < 1 && self.attemptedToLoad == YES) { //looking for your trips returned 0
+        text = NSLocalizedString(@"You Haven't Been Here :/",@"You Haven't Been Here :/");
+    } else if (self.wasError == NO && self.parseLocations.count < 1 && self.attemptedToLoad == YES){ //looking for all trips returned 0
         text = NSLocalizedString(@"No One Has Been Here :/",@"No One Has Been Here :/");
-        
-    } else {
+    } else if (self.wasError == NO && self.mutualTrunks.count < 1 && self.attemptedToLoad == YES){ //looking for mutual trips returned 0
+        text = NSLocalizedString(@"You have no common trunks :/",@"You have no common trunks :/");
+    }
+    else if (self.wasError == YES){ //error finding trips
         text = NSLocalizedString(@"Error Loading Trunks. Please Try Again :/",@"Error Loading Trunks. Please Try Again :/");
-        
     }
-    
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
-                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-    
-    
-}
-
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
-{
-    
-    NSString *text = [[NSString alloc]init];
-    
-    if (self.wasError == NO){
-        
-        
-        text =NSLocalizedString(@"Have you visited this city? Create a trunk now!",@"Have you visited this city? Create a trunk now!");
-        
-    } else {
-        text = @"";
-    }
-    
-    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
-    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
-    paragraph.alignment = NSTextAlignmentCenter;
-    
-    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
-                                 NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
-                                 NSParagraphStyleAttributeName: paragraph};
-    
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
 
@@ -1390,12 +906,10 @@
 {
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold16],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
-    if (self.wasError == NO){
-        
-        return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Create Trunk",@"Create Trunk") attributes:attributes];
-        
-    } else {
+    if (self.attemptedToLoad == YES && self.wasError == YES){
         return [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Reload",@"Reload") attributes:attributes];
+    } else {
+          return [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     }
 }
 
@@ -1413,18 +927,9 @@
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView //fixme: change the message to "you share no trunks"
 {
-    // Only display the empty dataset view if there's no user trunks AND it's on the user-only toggle
-    // They won't even see a city if there are NO trunks in it, and it's not possible to have a user's trunk but nothing in the All Trunks list.
-    // Either they can't get to this page, or something is in the All Trunks list, so the user's list is the only possible empty list.
-    if (self.user == nil && self.filter.tag == 1 && self.meParseLocations.count == 0 &&self.didLoad == YES){
-        // A little trick for removing the cell separators
+    //if were on the user's profile and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
+    if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES && self.wasError == NO){
         self.tableView.tableFooterView = [UIView new];
-        return YES;
-        
-        //if were on the user's profile and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
-    } else if (self.user && self.meParseLocations.count == 0 && self.didLoad == YES && self.wasError == NO){
-        self.tableView.tableFooterView = [UIView new];
-        
         NSMutableArray *locationArray = [[NSMutableArray alloc]init];
         for (UINavigationController *controller in self.tabBarController.viewControllers)
         {
@@ -1432,7 +937,6 @@
             {
                 if ([view isKindOfClass:[HomeMapViewController class]])
                 {
-                    
                     [locationArray addObject:view];
                     if ([view.user.objectId isEqualToString:self.user.objectId] )
                     {
@@ -1442,10 +946,7 @@
                 }
             }
         }
-        
-        return YES;
     }
-    
     //if were on the home map  and their are on trunks on a city it doesnt make sense that there are 0 trunks so we delete the trunk from the map.
     else  if (self.user == nil && self.parseLocations.count == 0 && self.didLoad == YES && self.wasError == NO){
         // A little trick for removing the cell separators
@@ -1458,7 +959,6 @@
             {
                 if ([view isKindOfClass:[HomeMapViewController class]])
                 {
-                    
                     [locationArray addObject:view];
                     if (view.user == nil || [view.user.objectId isEqualToString:[PFUser currentUser].objectId] )
                     {
@@ -1468,23 +968,10 @@
                 }
             }
         }
-        
-        return YES;
     }
-    
-    else if (self.wasError == YES){
-        // A little trick for removing the cell separators
-        self.tableView.tableFooterView = [UIView new];
-        return YES;
-    }
-    
-    if (self.isList == YES && self.trunkListToggle.tag == 1 && self.mutualTrunks.count ==0){
-        self.tableView.tableFooterView = [UIView new];
-
-        return YES;
-    }
-    
-    return NO;
+    // A little trick for removing the cell separators
+    self.tableView.tableFooterView = [UIView new];
+    return YES;
 }
 
 - (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
@@ -1499,14 +986,8 @@
 
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
 {
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        if (self.wasError == NO){
-            
-            [self.tabBarController setSelectedIndex:2];
-            
-        } else {
+        if (self.attemptedToLoad == YES && self.wasError == YES){
             if (self.user && self.isList == NO){
                 [self loadUserTrunks:YES];
             }
@@ -1520,10 +1001,7 @@
                 [self loadMutualTrunkList:YES];
             }
         }
-        
     });
-    
-    
 }
 
 -(void)photoWasAdded:(id)sender{
