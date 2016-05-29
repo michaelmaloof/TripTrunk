@@ -286,21 +286,19 @@
     
     // We assume fromUser contains the full PFUser object
         user = [[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"];
-        
         commentCell.profilePicImageView.alpha = 1;
         commentCell.contentLabel.alpha = 1;
         commentCell.usernameLabel.alpha = 1;
-        
-        
     } else {
         user = [PFUser currentUser];
         int indexTempPath = (int)(indexPath.row - self.activities.count);
+        commentCell.contentLabel.font = [TTFont tripTrunkFont14];
         commentCell.contentLabel.text = self.tempComments[indexTempPath];
+        commentCell.usernameLabel.font = [TTFont tripTrunkFontBold14];
         commentCell.usernameLabel.text = [PFUser currentUser].username;
         commentCell.profilePicImageView.alpha = .3;
         commentCell.contentLabel.alpha = .3;
         commentCell.usernameLabel.alpha = .3;
-
     }
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:user[@"profilePicUrl"]]];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
