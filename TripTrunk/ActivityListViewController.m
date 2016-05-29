@@ -31,7 +31,6 @@ enum TTActivityViewType : NSUInteger {
 
 @property (strong, nonatomic) NSMutableArray *activities;
 @property (strong, nonatomic) NSMutableArray *followingActivities;
-
 @property NSUInteger viewType;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
@@ -43,11 +42,11 @@ enum TTActivityViewType : NSUInteger {
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property UIRefreshControl *refreshController;
-
-
 @end
 
 @implementation ActivityListViewController
+
+#pragma mark - Setup
 
 - (id)initWithLikes:(NSArray *)likes;
 {
@@ -77,121 +76,21 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.trips = [[NSMutableArray alloc]init];
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-    self.tabBarController.tabBar.translucent = false;
-    // Setup tableview delegate/datasource
-    [self.tableView setDelegate:self];
-    [self.tableView setDataSource:self];
-    // Setup Empty Datasets
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.emptyDataSetSource = self;
     [self loadTrips];
 }
 
 - (void)loadView {
-    // Initialize the view & tableview
+    // Initialize the view, tableview, and refresh controller
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [self.view setBackgroundColor:[TTColor tripTrunkWhite]];
-    self.tableView = [[UITableView alloc] init];
-    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
-    [self.view addSubview:self.tableView];
-    [self setupTableViewConstraints];
+    [self setUpTableView];
     if (_viewType == TTActivityViewAllActivities) {
         self.friends= [[NSMutableArray alloc]init];
         self.followingActivities = [[NSMutableArray alloc]init];
-        self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
-        self.filter.tag = 0;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        // Initialize the refresh control.
-        self.refreshController = [[UIRefreshControl alloc] init];
-        [self.refreshController addTarget:self
-                                   action:@selector(refresh:)
-                         forControlEvents:UIControlEventValueChanged];
-        [self.tableView addSubview: self.refreshController];
-        
-        self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
-        [ self.refreshController endRefreshing];
+        [self setUpFilter];
+        [self setUpRefreshController];
     }
 }
-
--(void)loadTrips{
-    
-     self.trips = [[NSMutableArray alloc]init];
-    
-    PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
-    [trips whereKeyExists:@"trip"];
-    [trips whereKeyExists:@"fromUser"];
-    [trips whereKeyExists:@"toUser"];
-    [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
-    [trips whereKey:@"type" equalTo:@"addToTrip"];
-    [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
-    [trips includeKey:@"trip"];
-    [trips setLimit:1000];
-    [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
-     {
-         if (!error)
-         {
-            [[TTUtility sharedInstance] internetConnectionFound];
-
-             
-             for (PFObject *activity in objects)
-             {
-                 Trip *trip = activity[@"trip"];
-                 if (trip.name != nil && trip.publicTripDetail != nil)
-                 {
-                     [self.trips addObject:trip];
-                 }
-             }
-             if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
-                 // Query for activities for user
-                 if (self.isLoading == NO){
-                     self.isLoading = YES;
-                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
-                         
-                         if (error){
-                             NSLog(@"error %@",error);
-                         } else {
-                             
-                             for (PFObject *obj in activities){
-                                 PFUser *toUser = obj[@"toUser"];
-                                 PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
-                                 if (obj[@"trip"] && toUser != nil && fromUser != nil){
-                                     [self.activities addObject:obj];
-                                 } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
-                                     
-                                     if (toUser != nil && fromUser != nil){
-                                         [self.activities addObject:obj];
-                                     }
-                                     
-                                 }
-                             }
-                             //                        _activities = [NSMutableArray arrayWithArray:activities];
-                             dispatch_async(dispatch_get_main_queue(), ^{
-                                 self.activitySearchComplete = YES;
-                                 self.isLoading = NO;
-                                 self.navigationItem.rightBarButtonItem.enabled = YES;
-                                 [self.tableView reloadData];
-                             });
-                         }
-                     }];
-                 }
-                 
-             }
-             
-         } else {
-             self.navigationItem.rightBarButtonItem.enabled = YES;
-             self.isLoading = NO;
-             [ParseErrorHandlingController handleError:error];
-             NSLog(@"error %@", error);
-         }
-         
-     }];
-    
-}
-
 
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
@@ -202,7 +101,6 @@ enum TTActivityViewType : NSUInteger {
     if (internalBadge > 0 && self.filter.tag == 0){
         [self refresh: self.refreshController];
     }
-    
     [self.tableView reloadData];
 }
 
@@ -211,7 +109,7 @@ enum TTActivityViewType : NSUInteger {
     if (_viewType == TTActivityViewAllActivities){
         
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
-    
+        
         UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
         [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
@@ -220,9 +118,37 @@ enum TTActivityViewType : NSUInteger {
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)setUpTableView{
+    self.tableView = [[UITableView alloc] init];
+    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
+    [self.view addSubview:self.tableView];
+    [self setupTableViewConstraints];
+    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
+    // Setup tableview delegate/datasource
+    [self.tableView setDelegate:self];
+    [self.tableView setDataSource:self];
+    // Setup Empty Datasets
+    self.tableView.emptyDataSetDelegate = self;
+    self.tableView.emptyDataSetSource = self;
+}
+
+-(void)setUpRefreshController{
+    self.refreshController = [[UIRefreshControl alloc] init];
+    [self.refreshController addTarget:self
+                               action:@selector(refresh:)
+                     forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview: self.refreshController];
+    self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
+    [ self.refreshController endRefreshing];
+}
+
+-(void)setUpFilter{
+    self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
+    [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
+    self.filter.tag = 0;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
 /**
@@ -290,12 +216,90 @@ enum TTActivityViewType : NSUInteger {
     [self.navigationController setTabBarItem:searchItem];
 }
 
+#pragma mark - Load Trips
+
+-(void)loadTrips{
+    
+    self.trips = [[NSMutableArray alloc]init];
+    PFQuery *trips = [PFQuery queryWithClassName:@"Activity"];
+    [trips whereKeyExists:@"trip"];
+    [trips whereKeyExists:@"fromUser"];
+    [trips whereKeyExists:@"toUser"];
+    [trips whereKey:@"toUser" equalTo:[PFUser currentUser]];
+    [trips whereKey:@"type" equalTo:@"addToTrip"];
+    [trips setCachePolicy:kPFCachePolicyCacheThenNetwork];
+    [trips includeKey:@"trip"];
+    [trips setLimit:1000];
+    [trips findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error)
+     {
+         if (!error)
+         {
+             [[TTUtility sharedInstance] internetConnectionFound];
+             
+             
+             for (PFObject *activity in objects)
+             {
+                 Trip *trip = activity[@"trip"];
+                 if (trip.name != nil && trip.publicTripDetail != nil)
+                 {
+                     [self.trips addObject:trip];
+                 }
+             }
+             if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+                 // Query for activities for user
+                 if (self.isLoading == NO){
+                     self.isLoading = YES;
+                     [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                         
+                         if (error){
+                             NSLog(@"error %@",error);
+                             self.activitySearchComplete = YES;
+                         } else {
+                             
+                             for (PFObject *obj in activities){
+                                 PFUser *toUser = obj[@"toUser"];
+                                 PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                                 if (obj[@"trip"] && toUser != nil && fromUser != nil){
+                                     [self.activities addObject:obj];
+                                 } else if ([obj[@"type"] isEqualToString:@"follow"] || [obj[@"type"] isEqualToString:@"pending_follow"]){
+                                     
+                                     if (toUser != nil && fromUser != nil){
+                                         [self.activities addObject:obj];
+                                     }
+                                     
+                                 }
+                             }
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 self.activitySearchComplete = YES;
+                                 self.isLoading = NO;
+                                 self.navigationItem.rightBarButtonItem.enabled = YES;
+                                 [self.tableView reloadData];
+                             });
+                         }
+                     }];
+                 }
+                 
+             }
+             
+         } else {
+             self.navigationItem.rightBarButtonItem.enabled = YES;
+             self.isLoading = NO;
+             [ParseErrorHandlingController handleError:error];
+             NSLog(@"error %@", error);
+         }
+         
+     }];
+    
+}
+
+#pragma mark - Refresh
+
+
 - (void)refresh:(UIRefreshControl *)refreshControl
 {
     
     if(refreshControl)
         [self clearTabbarIconBadge];
-    
     if (self.isLikes == NO)
     {
         // Query for activities for user
@@ -305,7 +309,6 @@ enum TTActivityViewType : NSUInteger {
             self.isLoading = YES;
             if (self.filter.tag == 0)
             {
-                
                 [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error)
                 {
                     int index = 0;
@@ -345,7 +348,6 @@ enum TTActivityViewType : NSUInteger {
                         self.isLoading = NO;
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         [self.tableView reloadData];
-                        
                     });
                     
                     if (error)
@@ -356,8 +358,6 @@ enum TTActivityViewType : NSUInteger {
                 }];
             } else if (self.filter.tag ==1) {
                 [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:self.followingActivities isRefresh:YES query:^(NSArray *activities, NSError *error) {
-                 
-                    
                     int index = 0;
                     for (PFObject *obj in activities)
                     {
@@ -376,7 +376,6 @@ enum TTActivityViewType : NSUInteger {
                         }
                     }
 
-                    
                      //        _activities = [NSMutableArray arrayWithArray:activities];
                      dispatch_async(dispatch_get_main_queue(), ^
                                     {
@@ -399,7 +398,6 @@ enum TTActivityViewType : NSUInteger {
                                         [self.tableView reloadData];
                                         
                                     });
-                     
                      if (error)
                      {
                          self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -411,6 +409,8 @@ enum TTActivityViewType : NSUInteger {
         }
     }
 }
+
+#pragma mark - Scrolling
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
@@ -490,7 +490,6 @@ enum TTActivityViewType : NSUInteger {
         }
     }
 }
-
 
 
 #pragma mark - Table view data source
@@ -734,25 +733,24 @@ enum TTActivityViewType : NSUInteger {
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
     NSString *text = NSLocalizedString(@"No Activity",@"No Activity");
-    
     if (_viewType == TTActivityViewLikes) {
         text = NSLocalizedString(@"No Likers",@"No Likers");
     }
-    
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
-                                 NSForegroundColorAttributeName: [TTColor tripTrunkWhite]};
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+                                 NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
+    if (self.activitySearchComplete == YES){
+        return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    } else {
+        return [[NSAttributedString alloc] initWithString:@"Looking For Some Action" attributes:attributes];
+    }
 }
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
     NSString *text = NSLocalizedString(@"Keep using TripTrunk!", @"Keep using TripTrunk!");
-
     if (_viewType == TTActivityViewLikes) {
         text = NSLocalizedString(@"You could be the first to like this photo",@"You could be the first to like this photo");
     }
-    
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
     paragraph.alignment = NSTextAlignmentCenter;
@@ -760,32 +758,29 @@ enum TTActivityViewType : NSUInteger {
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont14],
                                  NSForegroundColorAttributeName: [TTColor tripTrunkLightGray],
                                  NSParagraphStyleAttributeName: paragraph};
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    if (self.activitySearchComplete == YES){
+        return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    } else {
+        return [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    }
 }
 
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
 {
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
+                                    NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
     
-    //TODO: commented out code creates a button
-    
-        NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFontBold18],
-                                     NSForegroundColorAttributeName: [TTColor tripTrunkBlack]};
-    
+    if (self.activitySearchComplete == YES){
         return [[NSAttributedString alloc] initWithString:@"Reload" attributes:attributes];
-    
-//    return nil;
+    } else {
+        return [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    }
 }
 
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
 {
     return [TTColor tripTrunkWhite];
 }
-
-//- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
-//{
-//    return [UIImage imageNamed:@"ticketIcon"];
-//}
 
 - (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
 {
@@ -796,22 +791,9 @@ enum TTActivityViewType : NSUInteger {
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    if (self.filter.tag == 0){
-    // Search Controller and the regular table view have different data sources
-    if (self.activities.count == 0 && self.activitySearchComplete) {
-        // A little trick for removing the cell separators
-        self.tableView.tableFooterView = [UIView new];
-        return YES;
-    }
-    } else {
-        if (self.followingActivities.count == 0 && self.activitySearchComplete) {
-            // A little trick for removing the cell separators
-            self.tableView.tableFooterView = [UIView new];
-            return YES;
-        }
-    }
-    
-    return NO;
+    // A little trick for removing the cell separators
+    self.tableView.tableFooterView = [UIView new];
+    return YES;
 }
 
 - (BOOL)emptyDataSetShouldAllowTouch:(UIScrollView *)scrollView
@@ -826,15 +808,15 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)emptyDataSetDidTapButton:(UIScrollView *)scrollView
 {
-    if (self.filter.tag == 0){
-        [self loadTrips];
-    }else {
-        [self loadFriends];
+    if (self.activitySearchComplete == YES){
+        if (self.filter.tag == 0){
+            [self loadTrips];
+        }else {
+            [self loadFriends];
+        }
     }
-    
 }
 
-#pragma mark -
 - (void)dealloc
 {
     self.tableView.emptyDataSetSource = nil;
@@ -921,7 +903,6 @@ enum TTActivityViewType : NSUInteger {
         // Query for activities for user
         if (self.isLoading == NO){
             self.isLoading = YES;
-
             [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                 for (PFObject *obj in activities){
                     PFUser *toUser = obj[@"toUser"];

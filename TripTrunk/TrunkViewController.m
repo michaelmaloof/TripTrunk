@@ -449,7 +449,7 @@
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
-            self.photos = [NSArray arrayWithArray:objects];            
+            self.photos = [NSArray arrayWithArray:objects];
             //update photo count when it is not right 
             if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
                 self.trip.publicTripDetail.photoCount = (int)self.photos.count;
