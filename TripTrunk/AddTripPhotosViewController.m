@@ -62,7 +62,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.constraintLabel.hidden = YES;
-    
+    [self roundUploadButton];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
 
 //if self.trip is valid then we are editing a trip, not creating a new one
@@ -102,7 +102,10 @@
     //############################################# MENTIONS ##################################################
 }
 
-
+-(void)roundUploadButton{
+    [self.submitTrunk.layer setCornerRadius:10.0];
+    [self.submitTrunk.layer setMasksToBounds:YES];
+}
 
 
 #pragma mark - Button Actions
@@ -176,7 +179,7 @@
     [self uploadAllPhotos];
 }
 
-- (IBAction)selectPhotosButtonPressed:(id)sender {
+- (void)selectPhotosButtonPressed{
     
     // request authorization status
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
@@ -450,14 +453,12 @@
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
-    
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - self.amount, self.view.frame.size.width, self.view.frame.size.height);
     
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
-    
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + self.amount, self.view.frame.size.width, self.view.frame.size.height);
 }
 
@@ -473,68 +474,66 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.photos.count;
+    return self.photos.count + 1;
 }
-
 
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-    Photo *photo = [self.photos objectAtIndex:indexPath.row];
-    cell.tripImageView.caption = photo.caption;
-    [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
-                                               targetSize:CGSizeMake(200, 200)
-                                              contentMode:PHImageContentModeAspectFill
-                                                  options:nil
-                                            resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                                                
-                                                // Set the image.
-                                                // TODO: Use a weak cell reference
-                                                cell.tripImageView.image = result;
-
-                                                
-                                            }];
-    
-//we change the design if the photo has a caption or not
-    if(photo.caption){
-        cell.captionImageView.image = [UIImage imageNamed:@"checkCircle"];
+        if (indexPath.row == 0){ //add photo
+        cell.tripImageView.image = [UIImage imageNamed:@"add"];
+        cell.captionImageView.hidden = YES;
+        [cell.layer setCornerRadius:15.0];
+        [cell.layer setMasksToBounds:YES];
+    } else{ //photos selected
+        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+        [cell.layer setCornerRadius:0.0];
+        [cell.layer setMasksToBounds:YES];
+        cell.tripImageView.caption = photo.caption;
+        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+                                                   targetSize:CGSizeMake(200, 200)
+                                                  contentMode:PHImageContentModeAspectFill
+                                                      options:nil
+                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                                                    // Set the image.
+                                                    // TODO: Use a weak cell reference
+                                                    cell.tripImageView.image = result;
+                                                }];
+        //we change the design if the photo has a caption or not
+        if(photo.caption){
+            cell.captionImageView.hidden = NO;
+        } else {
+            cell.captionImageView.hidden = YES;
+        }
+        [cell layoutIfNeeded];
     }
-    
-    else{
-         cell.captionImageView.image = [UIImage imageNamed:@"Plus Circle"];
-    }
-    [cell layoutIfNeeded];
-    
     return cell;
-    
 }
 
-
-
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    self.path = indexPath.row;
-    Photo *photo = [self.photos objectAtIndex:indexPath.row];
-    
-    if (photo.caption) {
-        self.caption.text = photo.caption;
-        [self.addCaption setTitle:NSLocalizedString(@"Update",@"Update") forState:UIControlStateNormal];
-        self.remove.hidden = NO;
+    if (indexPath.row == 0){ // add photos
+        [self selectPhotosButtonPressed];
+    } else { //selected photos
+        self.path = indexPath.row-1;
+        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+        if (photo.caption) {
+            self.caption.text = photo.caption;
+            [self.addCaption setTitle:NSLocalizedString(@"Update",@"Update") forState:UIControlStateNormal];
+            self.remove.hidden = NO;
+        }
+        //we unhide all these so that the user can write and edit captions
+        self.addCaption.hidden = NO;
+        self.caption.hidden = NO;
+        self.borderLabel.hidden = NO;
+        self.cancelCaption.hidden = NO;
+        self.selectPhotosButton.hidden = YES;
+        self.submitTrunk.hidden = YES;
+        self.delete.hidden = NO;
+        self.selectedPhoto.hidden = NO;
+        self.tripCollectionView.hidden = YES;
+        self.selectedPhoto.image = photo.image;
+        [self.navigationItem setHidesBackButton:YES animated:YES];
     }
-//we unhide all these so that the user can write and edit captions
-    self.addCaption.hidden = NO;
-    self.caption.hidden = NO;
-    self.borderLabel.hidden = NO;
-
-    self.cancelCaption.hidden = NO;
-    self.selectPhotosButton.hidden = YES;
-    self.submitTrunk.hidden = YES;
-    self.delete.hidden = NO;
-    self.selectedPhoto.hidden = NO;
-    self.tripCollectionView.hidden = YES;
-    self.selectedPhoto.image = photo.image;
-    
-    [self.navigationItem setHidesBackButton:YES animated:YES];
-
 }
 
 
