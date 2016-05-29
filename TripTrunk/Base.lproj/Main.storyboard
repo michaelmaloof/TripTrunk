@@ -1546,7 +1546,9 @@
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="30" id="Mtv-Le-eU3"/>
-                                                    <constraint firstAttribute="height" constant="35" id="fsm-Ah-kNx"/>
+                                                    <constraint firstAttribute="height" constant="35" id="fsm-Ah-kNx">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="25"/>
+                                                    </constraint>
                                                     <constraint firstAttribute="height" constant="30" id="vPP-Lq-kq1"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -1577,7 +1579,7 @@
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="centerY" secondItem="eQQ-ju-bPp" secondAttribute="centerY" id="9O8-D0-LDE"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="bottom" secondItem="eQQ-ju-bPp" secondAttribute="bottom" id="9OF-JT-Ma0"/>
                                             <constraint firstItem="eQQ-ju-bPp" firstAttribute="leading" secondItem="vzv-E3-SnJ" secondAttribute="trailing" constant="15" id="BYI-qC-yOG">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                                             </constraint>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="bottom" secondItem="eQQ-ju-bPp" secondAttribute="bottom" id="CCv-cQ-fsH"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="leading" secondItem="eQQ-ju-bPp" secondAttribute="leading" id="DFS-f2-GnT"/>
@@ -1591,7 +1593,7 @@
                                             <constraint firstAttribute="trailing" secondItem="YXB-LB-7B6" secondAttribute="trailing" constant="16" id="TCN-Cy-le2"/>
                                             <constraint firstAttribute="trailing" secondItem="nRB-Dp-eMo" secondAttribute="trailing" constant="16" id="Uww-aQ-rZu"/>
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="VmG-Kx-Z2Z">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="15"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                                             </constraint>
                                             <constraint firstAttribute="trailing" secondItem="HaB-lo-gzV" secondAttribute="trailing" constant="10" id="VrZ-eZ-cvn"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="10" id="YwP-4M-aA1"/>
