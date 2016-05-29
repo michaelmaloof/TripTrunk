@@ -235,8 +235,6 @@ enum TTActivityViewType : NSUInteger {
          if (!error)
          {
              [[TTUtility sharedInstance] internetConnectionFound];
-             
-             
              for (PFObject *activity in objects)
              {
                  Trip *trip = activity[@"trip"];
@@ -252,10 +250,13 @@ enum TTActivityViewType : NSUInteger {
                      [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                          
                          if (error){
-                             NSLog(@"error %@",error);
+                             self.navigationItem.rightBarButtonItem.enabled = YES;
+                             self.isLoading = NO;
+                             [ParseErrorHandlingController handleError:error];
                              self.activitySearchComplete = YES;
+                             [self.tableView reloadData];
+                             NSLog(@"error %@", error);
                          } else {
-                             
                              for (PFObject *obj in activities){
                                  PFUser *toUser = obj[@"toUser"];
                                  PFUser *fromUser = obj[@"fromUser"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
@@ -285,11 +286,11 @@ enum TTActivityViewType : NSUInteger {
              self.navigationItem.rightBarButtonItem.enabled = YES;
              self.isLoading = NO;
              [ParseErrorHandlingController handleError:error];
+             self.activitySearchComplete = YES;
              NSLog(@"error %@", error);
+             [self.tableView reloadData];
          }
-         
      }];
-    
 }
 
 #pragma mark - Refresh
@@ -892,7 +893,12 @@ enum TTActivityViewType : NSUInteger {
             });
             
         }else {
-            NSLog(@"Error loading following: %@",error);
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+            self.isLoading = NO;
+            [ParseErrorHandlingController handleError:error];
+            self.activitySearchComplete = YES;
+            NSLog(@"error %@", error);
+            [self.tableView reloadData];
         }
     }];
 }
