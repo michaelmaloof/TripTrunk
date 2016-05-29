@@ -35,20 +35,16 @@
 @property (weak, nonatomic) IBOutlet UIImageView *totalLikeHeart;
 @property (weak, nonatomic) IBOutlet UILabel *totalLikeButton;
 @property NSArray *photos;
-@property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
 @property NSMutableArray *members;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDate;
 @property (weak, nonatomic) IBOutlet UILabel *endDate;
-@property (weak, nonatomic) IBOutlet UIButton *memberButton;
 @property (weak, nonatomic) IBOutlet UILabel *stateCountryLabel;
 @property NSIndexPath *path;
 @property PFImageView *imageview;
 @property int photosOriginal;
 @property BOOL isMember;
-@property (weak, nonatomic) IBOutlet UIButton *lock;
-@property (weak, nonatomic) IBOutlet UIButton *cloud;
 @property (weak, nonatomic) IBOutlet UICollectionView *memberCollectionView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *memberCollectionWidth;
 @property BOOL firstLoadDone;
@@ -66,10 +62,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.constraintLabel.hidden = YES;
     self.totalLikeButton.hidden = YES;
     self.totalLikeHeart.hidden = YES;
-    self.cloud.hidden = YES;
     self.memberCollectionView.hidden = YES;
     self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.collectionView.backgroundColor = [TTColor tripTrunkClear];
@@ -455,11 +449,7 @@
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
-            self.photos = [NSArray arrayWithArray:objects];
-            if (self.photos.count > 0){
-                self.cloud.hidden = NO;
-            }
-            
+            self.photos = [NSArray arrayWithArray:objects];            
             //update photo count when it is not right 
             if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
                 self.trip.publicTripDetail.photoCount = (int)self.photos.count;
