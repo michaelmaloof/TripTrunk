@@ -14,9 +14,7 @@
 #import "AppDelegate.h"
 #import "TTReportBugViewController.h"
 
-
-
-@interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
+@interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate, UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
@@ -24,7 +22,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
 @property (strong, nonatomic) IBOutlet UITextField *nameTextView;
 @property (weak, nonatomic) IBOutlet UITextField *firstName;
-
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) PFUser *user;
@@ -33,6 +30,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *editBio;
 @property (weak, nonatomic) IBOutlet UISwitch *privateAccountSwitch;
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
+@property (strong, nonatomic) IBOutlet UITextField *emailAddress;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *bioTextViewHeightConstraint;
 
 @end
 
@@ -42,7 +41,7 @@
 {
     self = [super initWithNibName:@"EditProfileViewController" bundle:nil]; // nil is ok if the nib is included in the main bundle
     if (self && user) {
-        _user = user;
+        self.user = user;
     }
     return self;
 }
@@ -50,43 +49,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"Edit Profile";
+    self.title = NSLocalizedString(@"Settings",@"Settings");
     [self displayVersionAndBuildNumber];
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]] == YES)
-    {
+    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]])
         self.facebookButton.hidden = YES;
-    } else {
-        self.facebookButton.hidden = NO;
-
-    }
+    else self.facebookButton.hidden = NO;
     
-    
-    _hometownTextField.delegate = self;
-    self.hometownTextField.text = [_user valueForKey:@"hometown"];
-    self.bioTextView.text = [_user valueForKey:@"bio"];
-    self.nameTextView.text = _user[@"lastName"];
-    self.firstName.text = _user[@"firstName"];
+    self.hometownTextField.delegate = self;
+    self.hometownTextField.text = [self.user valueForKey:@"hometown"];
+    self.bioTextView.text = [self.user valueForKey:@"bio"];
+    self.nameTextView.text = self.user[@"lastName"];
+    self.firstName.text = self.user[@"firstName"];
+    self.emailAddress.text = self.user[@"email"];
 
-    if (_user[@"private"] && [_user[@"private"] boolValue] == YES) {
+    if (self.user[@"private"] && [self.user[@"private"] boolValue])
         self.privateAccountSwitch.on = YES;
-    }
     
-    if ([_user[@"hideCompassRose"] boolValue] == NO) {
+    if (![self.user[@"hideCompassRose"] boolValue])
         self.roseToggle.on = YES;
-    } else {
-        self.roseToggle.on = NO;
-
-    }
+    else self.roseToggle.on = NO;
     
-    // Set Edit button
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelButtonPressed:)];
+    [self.bioTextView setTextContainerInset:UIEdgeInsetsMake(0, 0, -15, 0)];
+    [self adjustBioTextViewHeight:self.bioTextView];
+    
+    // Set Edit button    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"X"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:self
+                                                                            action:@selector(cancelButtonPressed:)];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(didTapDone:)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,25 +104,25 @@
     
     if (self.privateAccountSwitch.isOn) {
         // ACCOUNT WAS TURNED TO PRIVATE
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
-                                                        message:@"A private account hides your pictures from anyone who doesn't follow you. Users must request to follow you"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Are You Sure?",@"Are You Sure?")
+                                                        message:NSLocalizedString(@"A private account hides your pictures from anyone who doesn't follow you. Users must request to follow you",@"A private account hides your pictures from anyone who doesn't follow you. Users must request to follow you")
                                                        delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Continue", nil];
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                              otherButtonTitles:NSLocalizedString(@"Continue",@"Continue"), nil];
         [alert show];
     }
     else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
-                                                        message:@"All of your pictures will become visible to anyone on the app, not just your followers"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Are You Sure?",@"Are You Sure?")
+                                                        message:NSLocalizedString(@"All of your pictures will become visible to anyone on the app, not just your followers",@"All of your pictures will become visible to anyone on the app, not just your followers")
                                                        delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Continue", nil];
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+                                              otherButtonTitles:NSLocalizedString(@"Continue",@"Continue"), nil];
         [alert show];
     }
     
 }
 
-- (IBAction)saveButtonPressed:(id)sender {
+- (void)didTapDone:(id)sender {
 //    [self.saveButton setEnabled:NO];
     
     if ([self.firstName.text isEqualToString:@""] || [self.nameTextView.text isEqualToString:@""]){
@@ -132,29 +132,23 @@
         alertView.backgroundColor = [TTColor tripTrunkLightBlue];
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
-    }
-    
-    else {
-        
+    }else {
         NSString *hometown = self.hometownTextField.text;
         NSString *bio = self.bioTextView.text;
         NSString *firstName = self.firstName.text;
         NSString *lastName = self.nameTextView.text;
         NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         
-        [_user setValue:hometown forKey:@"hometown"];
-        [_user setValue:bio forKey:@"bio"];
-        [_user setValue:firstName forKey:@"firstName"];
-        [_user setValue:lastName forKey:@"lastName"];
-        [_user setValue:fullName forKey:@"name"];
+        [self.user setValue:hometown forKey:@"hometown"];
+        [self.user setValue:bio forKey:@"bio"];
+        [self.user setValue:firstName forKey:@"firstName"];
+        [self.user setValue:lastName forKey:@"lastName"];
+        [self.user setValue:fullName forKey:@"name"];
+        [self.user setValue:self.emailAddress.text forKey:@"email"];
         
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)]) {
-            [self.delegate shouldSaveUserAndClose:_user];
-        }
-        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)])
+            [self.delegate shouldSaveUserAndClose:self.user];
     }
-    
 }
 
 - (IBAction)termsOfServiceButtonPressed:(id)sender {
@@ -171,9 +165,7 @@
     if (buttonIndex == 0) {
         // Reset the switch they just changed
         self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
-    }
-    else if (buttonIndex == 1) {
-        
+    }else if (buttonIndex == 1) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
         self.title = NSLocalizedString(@"Updating, Please Wait", @"Updating, Please Wait");
         
@@ -195,8 +187,7 @@
 
                 }
             }];
-        }
-        else {
+        }else {
             // Become Public
             [PFCloud callFunctionInBackground:@"becomePublic" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
                 if (error) {
@@ -223,34 +214,27 @@
 
 // The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }
 
 // close the keyboard when the return button is pressed
-
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
-    
     return YES;
-    
 }
 
 -(void)textFieldDidChange :(UITextField *)theTextField{
     if ([theTextField.text length] > 1){
-
-    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
-    if ([code isEqualToString:@" "]){
-        [theTextField setKeyboardType:UIKeyboardTypeDefault];
-    }
+        NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+        if ([code isEqualToString:@" "])
+            [theTextField setKeyboardType:UIKeyboardTypeDefault];
     }
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if ([textField isEqual:self.hometownTextField]) {
         [textField resignFirstResponder];
-        
         CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
         searchView.delegate = self;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchView];
@@ -268,23 +252,17 @@
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
     // If it's a US city/state, we don't need to display the country, we'll assume United States.
-    
     [self.hometownTextField setText:[location stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
 }
 
-- (IBAction)addFacebook:(id)sender
-{
+- (IBAction)addFacebook:(id)sender{
     //List of permissions we want from the user's facebook to link tp the parse user. We don't need the email since we won't be changing their current email to their facebook email.
     NSArray *permissionsArray = @[@"public_profile", @"user_friends"];
     
     //Make sure the user isnt already linked with facebook
-    if ([PFFacebookUtils isLinkedWithUser:[PFUser currentUser]] == NO)
-    {
-        [PFFacebookUtils linkUserInBackground:[PFUser currentUser] withReadPermissions:permissionsArray block:^(BOOL succeeded, NSError * _Nullable error)
-         {
-             
-             if (error)
-             {
+    if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]){
+        [PFFacebookUtils linkUserInBackground:[PFUser currentUser] withReadPermissions:permissionsArray block:^(BOOL succeeded, NSError * _Nullable error){
+             if (error){
                  //ERROR HANDLE: User Was Unable to link with facebook please try again or contact austin
                  UIAlertView *alertView = [[UIAlertView alloc] init];
                  alertView.delegate = self;
@@ -294,13 +272,11 @@
                  [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
                  [alertView show];
                  
-             } else //succesfully connected the parse user to their facebook account
-             {
+             }else{ //succesfully connected the parse user to their facebook account
+             
                  //we need to logout the user and log them back in for the fbid in parse to update. Its annoying and we should see if we can fix it.
-                 [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error)
-                  {
-                      if (error)
-                      {
+                 [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error){
+                      if (error){
                         //ERROR HANDLE: tell the user we linked the acccount succefully but you need to log back in with the login with facebook option for the link to go into effect
                           [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
                               UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -328,11 +304,8 @@
     NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
     // Login PFUser using Facebook
-    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error)
-     {
-         
-         if (error)
-         {
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error){
+         if (error){
         //ERROR HANDLE: tell the user we linked the acccount but we need them to relogin, then take them to the login screen
              NSString *errorString = [error userInfo][@"error"];
              NSLog(@"%@",errorString);
@@ -347,14 +320,10 @@
                  
                  [self.tabBarController setSelectedIndex:0];
              }];
-
-             
              return;
-             
          }
          
-         if (!user)
-         {
+         if (!user){
              [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
                  UIAlertView *alertView = [[UIAlertView alloc] init];
                  alertView.delegate = self;
@@ -366,25 +335,21 @@
                  [self.tabBarController setSelectedIndex:0];
              }];
 
-         } else
-         {
+         } else{
              
-             if ([user objectForKey:@"fbid"] == nil)
-             {
+             if ([user objectForKey:@"fbid"] == nil){
                  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
                  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                     if (!error)
-                     {
+                     if (!error){
                          // result is a dictionary with the user's Facebook data
                          NSDictionary *userData = (NSDictionary *)result;
                          PFUser *user = [PFUser currentUser];
                          NSString *fbid = [userData objectForKey:@"id"];
-                         if (fbid)
-                         {
+                         if (fbid){
                              [user setObject:fbid forKey:@"fbid"];
                              [user saveInBackground];
                          }
-                     } else {
+                     }else{
                         //ERROR HANDLE: tell the user we linked the acccount but we need them to relogin, then take them to the login screen
                          
                          [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
@@ -397,7 +362,6 @@
                              
                              [self.tabBarController setSelectedIndex:0];
                          }];
-
                      }
                  }];
                  
@@ -420,9 +384,7 @@
         //disable compass rose
         [[PFUser currentUser] setValue:@NO forKeyPath:@"hideCompassRose"];
         [[PFUser currentUser] saveInBackground];
-    }
-    
-    else {
+    }else{
         //enable compass rose
         [[PFUser currentUser] setValue:@YES forKeyPath:@"hideCompassRose"];
         [[PFUser currentUser] saveInBackground];
@@ -431,7 +393,6 @@
 }
 - (IBAction)logoutWasTapped:(id)sender {
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
-
 }
 
 - (IBAction)reportBug:(id)sender {
@@ -441,14 +402,71 @@
     [self presentViewController:homeNavController animated:YES completion:nil];
 }
 
--(void)textViewDidChange:(UITextView *)textView{
-    if ([textView.text length] > 1){
+#pragma mark - UITextViewDelegate Methods
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    return textView.text.length + (text.length - range.length) <= 140;
+}
 
-    NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
-    if ([code isEqualToString:@" "]){
-        [textView setKeyboardType:UIKeyboardTypeDefault];
+-(void)textViewDidChange :(UITextView *)textView{
+    if ([textView.text length] > 1){
+        NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
+        if ([code isEqualToString:@" "]){
+            [textView setKeyboardType:UIKeyboardTypeDefault];
+        }
     }
+
+    NSUInteger lines = [self getNumberOfLines:textView];
+    
+    if(lines < 5){
+        if(lines == 1)
+            self.bioTextViewHeightConstraint.constant = lines*20;
+        else self.bioTextViewHeightConstraint.constant = lines*18;
+        [textView setTextContainerInset:UIEdgeInsetsMake(0, 0, -15, 0)];
+    }else{
+        lines--;
+        NSString *str = textView.text;
+        NSString *truncatedString = [str substringToIndex:[str length]-1];
+        textView.text = truncatedString;
     }
+    textView.textAlignment = NSTextAlignmentCenter;
+    
+}
+
+-(void)adjustBioTextViewHeight:(UITextView*)textView{
+    
+    NSUInteger lines = [self getNumberOfLines:textView];
+
+    if(lines == 1)
+        self.bioTextViewHeightConstraint.constant = lines*20;
+    if(lines>1 && lines<5)
+        self.bioTextViewHeightConstraint.constant = lines*18;
+    if(lines >= 5)
+        self.bioTextViewHeightConstraint.constant = 72;
+    
+    [textView setTextContainerInset:UIEdgeInsetsMake(0, 0, -15, 0)]; 
+    textView.textAlignment = NSTextAlignmentCenter;
+}
+
+-(NSUInteger)getNumberOfLines:(UITextView*)textView{
+    id<UITextInputTokenizer> tokenizer = textView.tokenizer;
+    UITextPosition *pos = textView.endOfDocument;
+    NSInteger lines = 0;
+    
+    while (true){
+        UITextPosition *lineEnd = [tokenizer positionFromPosition:pos toBoundary:UITextGranularityLine inDirection:UITextStorageDirectionBackward];
+        
+        if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame){
+            pos = [tokenizer positionFromPosition:lineEnd toBoundary:UITextGranularityCharacter inDirection:UITextStorageDirectionBackward];
+            
+            if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame) break;
+            
+            continue;
+        }
+        
+        lines++; pos = lineEnd;
+    }
+    
+    return lines;
 }
 
 @end
