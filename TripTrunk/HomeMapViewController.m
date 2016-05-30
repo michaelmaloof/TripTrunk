@@ -75,39 +75,23 @@
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     [self designNavBar];
-    
     self.zoomOut.hidden = YES;
-
-    
     //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
     //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
     self.hotDots = [[NSMutableArray alloc]init];
-    
     //the trunks we pull down from parse
     self.parseLocations = [[NSMutableArray alloc]init];
-    
     //list of trunks the user hasn't seen since last being in the app
     self.haventSeens = [[NSMutableArray alloc]init];
-    
     [self setUpArrays];
-    
-
-    
     self.compasButton.hidden = YES;
-    
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
     self.isLoading = NO;
-    
     //we load 50 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
     self.limit = 50;
-    
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     self.visitedTrunks = [[NSMutableArray alloc]init];
-    
-    //Require users to agree to the terms and conditions
-    [self ensureEULA];
-    
     //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
     self.needsUpdates = nil;
     self.needsUpdates = [[NSMutableArray alloc]init];
@@ -339,23 +323,6 @@
     
     self.tabBarController.tabBar.translucent = false;
 
-}
-
-/**
- *  Make the user agree to the terms and conditions
- *
- *
- */
-- (void)ensureEULA {
-    BOOL didAgree = [[[NSUserDefaults standardUserDefaults] valueForKey:@"agreedToEULA"] boolValue];
-    
-    // If they've already agreed, AWESOME!
-    // if not, we need to force them into our terms. Or else...
-    if (!didAgree) {
-        EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
-        UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
-        [self presentViewController:homeNavController animated:YES completion:nil];
-    }
 }
 
 /**
