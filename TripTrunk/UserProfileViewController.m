@@ -83,7 +83,6 @@
     self.followingButton.enabled = NO;
     self.mapButton.userInteractionEnabled = NO;
     self.trunkCountButton.userInteractionEnabled = NO;
-    
     // Don't show the follow button if it's the current user's profile
     if ([[_user objectId] isEqual: [[PFUser currentUser] objectId]]) {
         [self.followButton setHidden:YES];
@@ -95,8 +94,6 @@
     else {
         // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
-        //        }
-        
         if (followStatus.intValue > 0) {
             // We have the following status, so update the Selected status and enable the button
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -116,7 +113,6 @@
                     }
                     self.followButton.tag = 1;
                     [self setButtonColor];
-                    
                     [self.followButton setTitle:NSLocalizedString(@"Pending",@"Pending") forState:UIControlStateNormal];
                     [self.followButton setHidden:NO];
                 }
@@ -146,11 +142,9 @@
                 [self setButtonColor];
             });
         }
-        
         // Now update the followStatus from Parse to ensure it actually is updated
         [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error) {
             if (!error) {
-                
                 if (followingStatus.intValue > 0)
                 {
                     // We have the following status, so update the Selected status and enable the button
@@ -197,8 +191,6 @@
                     // Not following this user, enable the button and set the selected status
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.followButton setEnabled:YES];
-                        
-                        
                         if ([[self.user valueForKey:@"private"] boolValue] == 1){
                             self.isFollowing = NO;
                             self.followersButton.enabled = YES;
@@ -403,16 +395,19 @@
     [findPhotosUser includeKey:@"trip"];
     [findPhotosUser includeKey:@"user"];
     [findPhotosUser setLimit:1000];
-    
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
-            self.myPhotos = [NSMutableArray arrayWithArray:objects];
+            self.myPhotos = [[NSMutableArray alloc]init];
+            for (Photo *photo in objects){
+                if (photo.trip.isPrivate == NO){
+                    [self.myPhotos addObject:photo];
+                }
+            }
             //update photo count when it is not right
             [self.collectionView reloadData];
- 
             CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
             NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
             NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
