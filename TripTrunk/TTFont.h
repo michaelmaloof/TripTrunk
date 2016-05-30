@@ -23,4 +23,5 @@
 + (UIFont *)tripTrunkFont28;
 + (UIFont *)tripTrunkFont38;
 + (UIFont *)tripTrunkFontBold38;
++ (UIFont *)tripTrunkFontHuge;
 @end
