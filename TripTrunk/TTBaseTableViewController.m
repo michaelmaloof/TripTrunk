@@ -29,6 +29,13 @@
                                     target:nil
                                     action:nil];
     [[self navigationItem] setBackBarButtonItem:newBackButton];
+    
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                    [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                                    [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
+    [self.navigationItem.leftBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                   [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                                   [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
 
 }
 
