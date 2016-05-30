@@ -11,6 +11,7 @@
 
 @interface TTForgotPasswordViewController () <UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UIButton *resetButton;
 
 @end
 
@@ -18,15 +19,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.emailTextField.font = [TTFont tripTrunkFont14];
+    [self roundResetButton];
 }
 
 - (IBAction)resetPassword:(id)sender {
+    [self reset];
+}
+
+-(void)reset{
     if (![self.emailTextField.text containsString:@"@"]){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please Enter Valid Email",@"Please Enter Valid Email")
                                                         message:NSLocalizedString(@"",@"")
@@ -54,6 +55,22 @@
 }
 - (IBAction)remembered:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)roundResetButton{
+    [self.resetButton.layer setCornerRadius:15.0f];
+    [self.resetButton.layer setMasksToBounds:YES];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)txtField
+{
+    [txtField resignFirstResponder];
+    [self resetButton];
+    return NO;
 }
 
 @end

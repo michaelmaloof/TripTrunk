@@ -87,6 +87,11 @@
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(didTapDone:)];
+    
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                    [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                                    [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
+    
 }
 
 - (void)didReceiveMemoryWarning {
