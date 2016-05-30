@@ -353,7 +353,6 @@
 		C9EC0F611B2A68F8004FFDC3 /* MSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextField.m; sourceTree = "<group>"; };
 		C9F0D6691B73D15900957F59 /* TTCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCache.h; sourceTree = "<group>"; };
 		C9F0D66A1B73D15900957F59 /* TTCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCache.m; sourceTree = "<group>"; };
-		C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo134.png; path = Images.xcassets/photo134.imageset/photo134.png; sourceTree = "<group>"; };
 		C9F6B4F61B5575E8003BD4D5 /* UIColor+HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColors.h"; sourceTree = "<group>"; };
 		C9F6B4F71B5575E8003BD4D5 /* UIColor+HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColors.m"; sourceTree = "<group>"; };
 		C9F9177A1B4ECFDC00AE8953 /* MSFloatingProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSFloatingProgressView.h; sourceTree = "<group>"; };
@@ -629,7 +628,6 @@
 				276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */,
 				276718C91CF4D1030064F784 /* Montserrat-Light.otf */,
 				276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */,
-				C9F4C44D1B46EA6D00EFF6B3 /* photo134.png */,
 				224F3F901AE1D35E003A1DEB /* Info.plist */,
 				224F3F911AE1D35E003A1DEB /* main.m */,
 			);
