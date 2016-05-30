@@ -22,6 +22,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (strong, nonatomic) IBOutlet UITextField *hometownTextField;
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
+@property (weak, nonatomic) IBOutlet UIButton *createAccountButton;
 
 @property (strong, nonatomic) PFUser *user;
 @property (nonatomic)BOOL isFBUser;
@@ -31,14 +32,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self setPlaceholderText];
+    [self roundCreateButton];
     _firstNameTextField.delegate = self;
     _fullnameTextField.delegate = self;
     _emailTextField.delegate = self;
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
     _hometownTextField.delegate = self;
-    
     _user = [PFUser currentUser];
     _isFBUser = NO;
 
@@ -53,6 +54,33 @@
         [alert show];
 
           }
+}
+
+-(void)setPlaceholderText{
+    
+    NSAttributedString *firstName = [[NSAttributedString alloc] initWithString:@"first name" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.firstNameTextField.attributedPlaceholder = firstName;
+    
+    NSAttributedString *fullName = [[NSAttributedString alloc] initWithString:@"full name" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.fullnameTextField.attributedPlaceholder = fullName;
+    
+    NSAttributedString *email = [[NSAttributedString alloc] initWithString:@"email" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.emailTextField.attributedPlaceholder = email;
+    
+    NSAttributedString *username = [[NSAttributedString alloc] initWithString:@"username" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.usernameTextField.attributedPlaceholder = username;
+    
+    NSAttributedString *password = [[NSAttributedString alloc] initWithString:@"password" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.passwordTextField.attributedPlaceholder = password;
+    
+    NSAttributedString *hometown = [[NSAttributedString alloc] initWithString:@"current city" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.hometownTextField.attributedPlaceholder = hometown;
+    
+}
+
+-(void)roundCreateButton{
+    [self.createAccountButton.layer setCornerRadius:15.0f];
+    [self.createAccountButton.layer setMasksToBounds:YES];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

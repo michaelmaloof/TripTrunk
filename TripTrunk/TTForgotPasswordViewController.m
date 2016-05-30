@@ -58,7 +58,7 @@
 }
 
 -(void)roundResetButton{
-    [self.resetButton.layer setCornerRadius:15.0f];
+    [self.resetButton.layer setCornerRadius:20.0f];
     [self.resetButton.layer setMasksToBounds:YES];
 }
 
