@@ -684,8 +684,8 @@
 - (void)resetForm {
     // Initialize the view with no data
     [self setTrunkNameEmptyState];
-    self.locationTextView.text = @"";
     [self setOriginalDateTextViews];
+    self.locationTextView.text = @"City";
     if (!_isEditing) {
         self.trip = [[Trip alloc] init];
     }
