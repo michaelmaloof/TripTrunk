@@ -79,7 +79,7 @@
 }
 
 -(void)roundCreateButton{
-    [self.createAccountButton.layer setCornerRadius:15.0f];
+    [self.createAccountButton.layer setCornerRadius:20.0f];
     [self.createAccountButton.layer setMasksToBounds:YES];
 }
 

@@ -19,6 +19,7 @@
 @property (strong, nonatomic) IBOutlet MSTextField *usernameTextField;
 @property (strong, nonatomic) IBOutlet MSTextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *facebook;
 
 @end
 
@@ -26,16 +27,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    [self roundButtons];
+    [self setPlaceholderText];
     _usernameTextField.delegate = self;
     _passwordTextField.delegate = self;
-    
     [_usernameTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     [_passwordTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-
-    
     [self handleLoginDisplay];
+}
 
+-(void)setPlaceholderText{
+    
+    NSAttributedString *username = [[NSAttributedString alloc] initWithString:@"username" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.usernameTextField.attributedPlaceholder = username;
+    
+    NSAttributedString *password = [[NSAttributedString alloc] initWithString:@"password" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    self.passwordTextField.attributedPlaceholder = password;
+
+}
+
+-(void)roundButtons{
+    [self.loginButton.layer setCornerRadius:20.0f];
+    [self.loginButton.layer setMasksToBounds:YES];
+    [self.facebook.layer setCornerRadius:20.0f];
+    [self.facebook.layer setMasksToBounds:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -179,7 +194,7 @@
 -(void)handleLoginDisplay{
     if ([self.usernameTextField.text isEqualToString:@""] || [self.passwordTextField.text isEqualToString:@""]){
         self.loginButton.enabled = NO;
-        self.loginButton.alpha = .5;
+        self.loginButton.alpha = .3;
     } else {
         self.loginButton.enabled = YES;
         self.loginButton.alpha = 1;
