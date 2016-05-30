@@ -68,6 +68,9 @@
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(saveFriendsAndClose)];
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                        [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
+                                                                        [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
                 UIBarButtonItem *newBackButton =
         [[UIBarButtonItem alloc] initWithTitle:@""
                                          style:UIBarButtonItemStylePlain

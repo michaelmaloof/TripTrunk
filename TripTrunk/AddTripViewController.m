@@ -632,17 +632,13 @@
                      self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                      [self tabBarTitle];
                      self.navigationItem.rightBarButtonItem.enabled = YES;
-                     
                  }
              }
-             
              self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
              [self tabBarTitle];
              return;
          }];
-        
     }
-    
 }
 
 - (IBAction)onDeleteWasTapped:(id)sender {
