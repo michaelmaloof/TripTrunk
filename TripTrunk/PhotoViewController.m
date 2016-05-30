@@ -415,7 +415,6 @@
                                success:nil failure:nil];
 }
 
-
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
     
     if (isCurrentPhoto == NO){

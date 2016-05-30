@@ -405,7 +405,7 @@
         }
     }
     
-    NSArray *subPhotoArray = [self.subPhotos objectForKey:photo.objectId];
+    NSMutableArray *subPhotoArray = [self.subPhotos objectForKey:photo.objectId];
     for(int i=0;i<subPhotoArray.count;i++){
         Photo *smallPhoto = subPhotoArray[i];
         NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:smallPhoto.imageUrl];
@@ -418,6 +418,8 @@
                 [button.imageView setImageWithURLRequest:requestNew placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                     [button setImage:image forState:UIControlStateNormal];
                     button.hidden = NO;
+                    smallPhoto.image = image;
+                    [subPhotoArray replaceObjectAtIndex:i withObject:smallPhoto];
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                     NSLog(@"Error loading subPhotoButtonimage: %@",error);
                 }];
@@ -428,6 +430,8 @@
         }else{
             break;
         }
+        
+        [self.subPhotos setObject:subPhotoArray forKey:photo.objectId];
         
         if(i==subPhotoArray.count-1){
             //subPhotoArray.count+1 because we have to account for the mainPhoto
@@ -492,6 +496,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
         Photo *photo = array[[[sender valueForKey:@"subPhotoIndex"] intValue]-1];
+        photo.image = sender.imageView.image;
         photoViewController.photo = (Photo *)photo;
         photoViewController.arrayInt = [[sender valueForKey:@"subPhotoIndex"] intValue];
         photoViewController.fromTimeline = YES;
