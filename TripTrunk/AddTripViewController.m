@@ -299,7 +299,7 @@
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -60, self.view.frame.size.width, self.view.frame.size.height);
     } else {
         NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
-        self.tripNameTextView.font = [TTFont tripTrunkFont28];
+        self.tripNameTextView.font = [TTFont tripTrunkFontHuge];
         NSString *nameCheck = [self.tripNameTextView.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         if ([nameCheck isEqualToString:trunkName]){
             self.tripNameTextView.text = @"";
@@ -346,9 +346,9 @@
             lines++; pos = lineEnd;
         }
         
-        if(lines < 5){
-            self.trunkNameHeightConstraint.constant = lines*42;
-            textView.contentInset = UIEdgeInsetsMake(lines*lines*1.5,0,lines*lines*-1.5,0);
+        if(lines < 4){
+            self.trunkNameHeightConstraint.constant = lines*57;
+            textView.contentInset = UIEdgeInsetsMake(lines*lines*2.5,0,lines*lines*-2.5,0);
         }else{
             lines--;
             NSString *str = textView.text;
@@ -360,10 +360,10 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    if(textView.frame.size.height==168 && [text isEqualToString:@"\n"])
+    if(textView.frame.size.height==171 && [text isEqualToString:@"\n"])
         return NO;
     
-    if(textView.frame.size.height>168)
+    if(textView.frame.size.height>171)
         return NO;
     
     return textView.text.length + (text.length - range.length) <= 33;
