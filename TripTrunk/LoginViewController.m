@@ -94,9 +94,7 @@
 
 
 - (IBAction)onLoginTapped:(id)sender {
-
     [self _loginWithFacebook];
-
 }
 
 - (IBAction)signupWithEmailPressed:(id)sender {
@@ -205,6 +203,10 @@
     [self handleLoginDisplay];
 }
 
+- (IBAction)signUpWithFacebookWasTapped:(id)sender {
+    [self _loginWithFacebook];
+
+}
 
 
 
