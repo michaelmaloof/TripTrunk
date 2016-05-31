@@ -1010,21 +1010,23 @@
 
 - (IBAction)trunkNameButtonPressed:(id)sender {
     
-    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
-    [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-        trunkViewController.trip = self.photo.trip;
-        
-        UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-        UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
-        if (tabbarcontroller.selectedIndex == 3) {
-            [activityNavController pushViewController:trunkViewController animated:YES];
-        }else {
-            [self.navigationController pushViewController:trunkViewController animated:YES];
+    if (![self.trunkNameButton.titleLabel.text isEqualToString:@""] || self.trunkNameButton.titleLabel.text == nil ){ //make sure were not in the trunk alredy
+        //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
+        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+            trunkViewController.trip = self.photo.trip;
             
-        }
-    }];
+            UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+            if (tabbarcontroller.selectedIndex == 3) {
+                [activityNavController pushViewController:trunkViewController animated:YES];
+            }else {
+                [self.navigationController pushViewController:trunkViewController animated:YES];
+                
+            }
+        }];
+    }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
