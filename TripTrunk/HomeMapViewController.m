@@ -30,7 +30,6 @@
 @property NSMutableArray *hotDots;
 @property NSString *pinCityName;
 @property NSString *pinStateName;
-@property (weak, nonatomic) IBOutlet UIButton *zoomOut;
 @property int dropped;
 @property int notDropped;
 @property NSDate *today;
@@ -44,15 +43,11 @@
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
 @property BOOL isLoading;
 @property int limit;
-@property (weak, nonatomic) IBOutlet UIImageView *compassRose;
 @property BOOL hasLoadedOnce;
 @property NSDate *lastOpenedApp;
 @property BOOL dontRefresh;
 @property BOOL isFirstUserLoad;
 @property BOOL buttonsMaded;
-@property (weak, nonatomic) IBOutlet UIButton *compasButton;
-@property (weak, nonatomic) IBOutlet UIButton *lugggagebutton;
-
 @property MKPointAnnotation* annotationPinToZoomOn;
 @property BOOL isMainMap;
 @property NSMutableArray *visitedTrunks;
@@ -64,44 +59,40 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.lugggagebutton.hidden = YES;
-    
-    self.exists = NO;
-    //compass rose shows users what the symbols on the map means. Red means a photo has been added in the last 24 hours, blue means a photo hasn't been added in the last 24 hours, and the TT Logo means the user hasn't seen this trunk yet or that it has photos the user hasn't seen in the trunk yet. We hide it on viewDidLoad and then on viewDidAppear check to see if the user should be shown it.
-    self.compassRose.hidden = YES;
-    self.isFirstUserLoad = YES;
-    self.buttonsMaded = NO;
-    self.viewedTrunks = [[NSMutableArray alloc]init];
-    self.viewedPhotos = [[NSMutableArray alloc]init];
-    self.visitedTrunks =  [[NSMutableArray alloc]init];
+    [self setArraysBoolsandDates];
     [self designNavBar];
-    self.zoomOut.hidden = YES;
-    //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
-    //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
-    self.hotDots = [[NSMutableArray alloc]init];
-    //the trunks we pull down from parse
-    self.parseLocations = [[NSMutableArray alloc]init];
-    //list of trunks the user hasn't seen since last being in the app
-    self.haventSeens = [[NSMutableArray alloc]init];
-    [self setUpArrays];
-    self.compasButton.hidden = YES;
-    //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
-    self.isLoading = NO;
-    //we load 50 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
-    self.limit = 50;
-    //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
-    self.annotationsToDelete = [[NSMutableArray alloc]init];
+    [self setMainMap];
+    [self setMapTitle];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [self setMapTitle];
     self.visitedTrunks = [[NSMutableArray alloc]init];
-    //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
-    self.needsUpdates = nil;
-    self.needsUpdates = [[NSMutableArray alloc]init];
-    
-    //We need this to do the logic in determing if a user has seen a trunk and if a trunk should be red or blue.
-    self.today = [NSDate date];
-    
-    //we need the date the user last oppened the app to put the logo on certain trunks
-    self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
-    
+    [self setVisitedTrunks];
+    [self implementUserIntoMap];
+}
+
+/**
+ *  Sets Nav Bar Title on HomeMapViewController
+ *
+ *
+ */
+-(void)setMapTitle{
+    if (self.user == nil){
+        [self setTitleImage];
+    } else {
+        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
+        NSString *s = NSLocalizedString(@"'s",@"'s");
+        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+    }
+}
+
+/**
+ *  Sets the map to be visited Trunk Logic Later on. This needs to be implemented better later on
+ *
+ *
+ */
+-(void)setMainMap{
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)
@@ -116,38 +107,50 @@
             }
         }
     }
-    
-    if (self.user == nil){
-        [self setTitleImage];
-    } else {
-        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-        NSString *s = NSLocalizedString(@"'s",@"'s");
-        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
-    }
-    
-    if (self.user){
-        self.lugggagebutton.hidden = NO;
-        self.lugggagebutton.layer.cornerRadius = 22;
-        self.lugggagebutton.layer.masksToBounds = YES;
-    }
-
-    
-//    if (self.hasLoadedOnce == NO && self.) i was doing stuff here fixme
-
 }
 
--(void)viewDidAppear:(BOOL)animated {
-    
-    if (self.user == nil){
-        [self setTitleImage];
-    } else {
-        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-        NSString *s = NSLocalizedString(@"'s",@"'s");
-        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
-    }
-
-    
+/**
+ *  Sets up the arrays, bools, and dates used in this viewcontroller
+ *
+ *
+ */
+-(void)setArraysBoolsandDates{
+    self.exists = NO;
+    self.isFirstUserLoad = YES;
+    self.buttonsMaded = NO;
+    self.viewedTrunks = [[NSMutableArray alloc]init];
+    self.viewedPhotos = [[NSMutableArray alloc]init];
+    self.visitedTrunks =  [[NSMutableArray alloc]init];
+    //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
+    //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
+    self.hotDots = [[NSMutableArray alloc]init];
+    //the trunks we pull down from parse
+    self.parseLocations = [[NSMutableArray alloc]init];
+    //list of trunks the user hasn't seen since last being in the app
+    self.haventSeens = [[NSMutableArray alloc]init];
+    [self setUpArrays];
+    //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
+    self.isLoading = NO;
+    //we load 50 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
+    self.limit = 50;
+    //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
+    self.annotationsToDelete = [[NSMutableArray alloc]init];
     self.visitedTrunks = [[NSMutableArray alloc]init];
+    //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
+    self.needsUpdates = nil;
+    self.needsUpdates = [[NSMutableArray alloc]init];
+    //We need this to do the logic in determing if a user has seen a trunk and if a trunk should be red or blue.
+    self.today = [NSDate date];
+    //we need the date the user last oppened the app to put the logo on certain trunks
+    self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
+}
+
+/**
+ *  Sets up which trunks have been visited by the user
+ *
+ *
+ */
+-(void)setVisitedTrunks{
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
         for (HomeMapViewController *view in controller.viewControllers)
@@ -160,37 +163,38 @@
             }
         }
     }
-    
+}
+
+/**
+ *  Check if the user has seen the tutorial
+ *
+ *
+ */
+-(void)checkTutorial{
+    //If user has not completed tutorial, show tutorial
+    self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
+    if (self.tutorialComplete == NO)
+    {
+        [self showTutorial];
+    }
+}
+
+/**
+ *  Begins loading the map for either the Home Map or a User's Map
+ *
+ *
+ */
+-(void)implementUserIntoMap{
     //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
-        //If user has not completed tutorial, show tutorial
-        self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
-        if (self.tutorialComplete == NO)
-        {
-            [self showTutorial];
-        } else {
-            //if they have already seen the tutorial we dont show them the compass rose unless they ask to see it.
-            self.compassRose.hidden = YES;
-            BOOL hideCompass = [[[PFUser currentUser] valueForKey:@"hideCompassRose"] boolValue];
-            if (hideCompass == YES){
-                self.compasButton.hidden = YES;
-                self.compassRose.hidden = YES;
-            } else  if (!self.user){
-                self.compasButton.hidden = YES;
-            } else if (self.user){
-                self.compasButton.hidden = YES;
-            }
-            
-        }
-        
+//        [self checkTutorial]; //We no longer show a tutorial
+//If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
         if (self.user == nil) {
-            
-            //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
             //We're on the home taeb so register the user's notifications
             if (self.tutorialComplete == YES){
-                
                 [self registerNotifications];
+                //the first time we go to this screen, we zoom in on the users most recent trip.
                 if (self.dontRefresh == NO){
                     [self beginLoadingTrunks];
                 } else {
@@ -200,7 +204,6 @@
                     self.dontRefresh = NO;
                 }
             }
-            
         } else {
             //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
             if (self.dontRefresh == NO){
@@ -212,21 +215,21 @@
     }
 }
 
+/**
+ *  Zoom in on a map pin
+ *
+ *
+ */
 -(void)zoomInOnNewPin{
     CLLocationCoordinate2D center = self.annotationPinToZoomOn.coordinate;
-    
     MKCoordinateSpan span;
     span.longitudeDelta = 3.5;
     span.latitudeDelta = 3.5;
-    
     MKCoordinateRegion region;
     region.center = center;
     region.span = span;
-    self.zoomOut.hidden = YES;
-    
     [self.mapView setRegion:region animated:YES];
     [self.mapView selectAnnotation:self.annotationPinToZoomOn animated:NO];
-    
     self.annotationPinToZoomOn = nil;
 }
 
@@ -240,29 +243,13 @@
     self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     //the user doesnt have a query in progress to load the trunks already, so go ahead and load the trunks
     if (self.isLoading == NO){
-        
-        //disable the refresh button until we finish loading the trunks
-//        if (self.buttonsMaded == NO){
-//            self.navigationItem.rightBarButtonItems = nil;
-//        } else
-//        {
-//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-//                leftButton.enabled = NO;
-//            }
-//
-//        }
-        
         //save the current pins on the map so we can delete them once we place the new ones
         self.annotationsToDelete = self.mapView.annotations;
-        
         [self setUpArrays];
-        
         if (self.user == nil) {
             //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
-            
             self.isLoading = YES;
             [self queryParseMethodEveryone];
-
             //We're on the home tab so register the user's notifications
             
         } else {
@@ -281,12 +268,9 @@
 -(void)setUpArrays{
 //we locate each trunk thats placed o nthe map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
     self.tripsToCheck = [[NSMutableArray alloc]init];
-    
-    
 //the trunks we pull down from parse
     self.parseLocations = [[NSMutableArray alloc]init];
   
-
 }
 
 /**
@@ -295,15 +279,12 @@
  *
  */
 - (void)setTitleImage {
-    
     UIImageView* logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tripTrunkTitle"]];
     logoView.frame = CGRectMake(logoView.frame.origin.x, logoView.frame.origin.y,logoView.frame.size.width,self.navigationController.navigationBar.frame.size.height*.6);
     logoView.contentMode = UIViewContentModeScaleAspectFit;
-    
     UIView* titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, logoView.frame.size.width, logoView.frame.size.height)];
     logoView.frame = titleView.bounds;
     [titleView addSubview:logoView];
-    
     self.navigationItem.titleView = titleView;
 }
 
@@ -313,16 +294,13 @@
  *
  */
 -(void)designNavBar{
-    
-    //if self.user is not nil then you are looking at a user's profile. Therefore the map will have their name in the title. If self.user is nil then we show the TripTrunk title since you are on the home or newsfeed map.
+//if self.user is not nil then you are looking at a user's profile. Therefore the map will have their name in the title. If self.user is nil then we show the TripTrunk title since you are on the home or newsfeed map.
     if (self.user == nil) {
         [self setTitleImage];
     } else {
         self.title = [NSString stringWithFormat:@"%@'s Trunks", self.user.username];
     }
-    
     self.tabBarController.tabBar.translucent = false;
-
 }
 
 /**
@@ -433,15 +411,6 @@
             //we finished loading so switch the bool and renable the refresh icon
             self.isLoading = NO;
             
-//            if (self.buttonsMaded == NO){
-//                [self createButtons];
-//            } else {
-//                for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-//                    leftButton.enabled = YES;
-//                }
-//            }
-            
-            
             //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
             if(error)
             {
@@ -528,17 +497,6 @@
                              };
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
         self.isLoading = NO;
-        
-        
-//        if (self.buttonsMaded == NO){
-//            [self createButtons];
-//        }
-        
-//        else {
-//            for(UIBarButtonItem *leftButton in self.navigationItem.rightBarButtonItems){
-//                leftButton.enabled = YES;
-//            }
-//        }
         
         if(error)
         {
@@ -776,8 +734,6 @@
     MKCoordinateRegion region;
     region.center = center;
     region.span = span;
-    self.zoomOut.hidden = YES;
-    
     view.layer.zPosition = 1;
     
     [self.mapView setRegion:region animated:YES];
@@ -954,8 +910,6 @@
     //Show Tutorial View Controller to User
     TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
     [self.navigationController presentViewController:tutorialVC	 animated:YES completion:nil];
-    self.compassRose.hidden = NO;
-    
 }
 
 // This is needed for the login to work properly
@@ -1140,9 +1094,6 @@
     [self beginLoadingTrunks];
 }
 
-- (IBAction)compassTaped:(id)sender {
-        self.compassRose.hidden = !self.compassRose.hidden;
-}
 
 -(void)dontRefreshMap{
     self.dontRefresh = YES;
@@ -1196,26 +1147,7 @@
     
 }
 
--(void)createButtons{
-    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(beginLoadingTrunks)];
-    
-    UIImage *image = [UIImage imageNamed:@"moree"];
-    CGRect buttonFrame = CGRectMake(0, 0, image.size.width/1.8, image.size.height/1.8);
-    
-    UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
-    [bttn addTarget:self action:@selector(addMoreTrunks) forControlEvents:UIControlEventTouchUpInside];
-    [bttn setImage:image forState:UIControlStateNormal];
 
-    UIBarButtonItem *buttonTwo= [[UIBarButtonItem alloc] initWithCustomView:bttn];
-    
-    NSArray *buttons = @[button, buttonTwo];
-    //For now, we dont want these buttons
-//    self.navigationItem.rightBarButtonItems = buttons;
-
-    self.buttonsMaded = YES;
-    
-    
-}
 //Now creates right
 -(void)createLeftButtons{
  
