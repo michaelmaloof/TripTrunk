@@ -41,7 +41,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
-@property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
 @property CGFloat height;
@@ -50,6 +49,7 @@
 @property CGFloat originX;
 @property BOOL isEditingCaption;
 @property TTTTimeIntervalFormatter *timeFormatter;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
 
 @property BOOL isZoomed;
 //############################################# MENTIONS ##################################################
@@ -62,7 +62,6 @@
 //############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
 @property (weak, nonatomic) IBOutlet UIButton *addCaption;
-@property (weak, nonatomic) IBOutlet UIButton *deleteCaption;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 @property (weak, nonatomic) IBOutlet UIButton *privateButton;
@@ -104,6 +103,7 @@
 #pragma On Appear
 
 -(void)viewWillAppear:(BOOL)animated {
+    self.saveButton.hidden = YES;
     self.navigationController.navigationBarHidden = YES;
     self.tabBarController.tabBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
@@ -144,7 +144,6 @@
 #pragma Original Photo UI on ViewDidLoad
 -(void)setOriginalUIForPhoto{
     self.privateButton.hidden = YES;
-    self.deleteCaption.hidden = YES;
     // Set initial UI
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
         self.addCaption.hidden = NO;
@@ -430,10 +429,6 @@
     [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (!error){
             self.trip = self.photo.trip;
-            if ([self.photo.caption isEqualToString:@""] && self.photo.caption == nil){
-                self.deleteCaption.hidden = YES;
-            }
-
             [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 if (!error){
                     
@@ -714,40 +709,116 @@
 }
 
 - (IBAction)editCaptionTapped:(id)sender {
-    
-    //edit caption
-    if (self.addCaption.tag == 0){
         //store the mentioned users from the current comment
-        if (self.caption.text.length > 0)
+    if (self.caption.text.length > 0){
             self.previousComment = self.caption.text;
+    }
         self.caption.hidden = NO;
         self.captionLabel.hidden = YES;
         self.caption.editable = YES;
         [self.caption becomeFirstResponder];
-    //add caption
-    } else {
-        
-        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
-        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
-        
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.isEditingCaption = YES;
+    self.scrollView.scrollEnabled = NO;
+    self.likeButton.hidden = YES;
+    self.likeCountButton.hidden = YES;
+    self.comments.hidden = YES;
+    [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
+    self.addCaption.tag = 1;
+    if ([self.photo.caption isEqualToString:@""] || self.photo.caption == nil){
+        if (textView.text == nil || [textView.text isEqualToString:@""]){
+            self.saveButton.hidden = YES;
+        } else{
+            self.saveButton.hidden = NO;
+
+        }
+    } else{
+        self.saveButton.hidden = NO;
+    }
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    self.saveButton.hidden = YES;
+    self.isEditingCaption = NO;
+    self.scrollView.scrollEnabled = YES;
+    [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
+    self.likeButton.hidden = NO;
+    self.likeCountButton.hidden = NO;
+    self.comments.hidden = NO;
+    self.caption.hidden = YES;
+    self.caption.text = self.photo.caption;
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
+    self.addCaption.tag = 0;
+    self.caption.editable = NO;
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardSize.height + self.bottomButtonWrapper.frame.size.height - self.caption.frame.size.height - 15, self.view.frame.size.width, self.view.frame.size.height);
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardSize.height - self.bottomButtonWrapper.frame.size.height + self.caption.frame.size.height + 15, self.view.frame.size.width, self.view.frame.size.height);
+}
+
+- (void)deletePhotoCaption { //FIXME: this is a little slopy from an error handling point of view
+    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        self.photo.caption = @"";
+        if (!error){
+            [[TTUtility sharedInstance] internetConnectionFound];
+            NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
+            for (PFObject *obj in self.commentActivities){
+                if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
+                    [commentToDelete addObject:obj];
+                    [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if (!error){
+                            NSLog(@"Caption deleted");
+                            self.caption.text = @"";
+                            NSAttributedString * emptyString= [[NSAttributedString alloc] initWithString:@""];
+                            self.captionLabel.attributedText = emptyString;
+                            [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
+                            [self.caption endEditing:YES];
+                            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
+                        } else {
+                            NSLog(@"Error deleting caption");
+                        }
+                        [self updateCommentsLabel];
+                    }];
+                    break;
+                }
+            }
+            
+        }else{
+            [ParseErrorHandlingController handleError:error];
+        }
+    }];
+}
+
+
+//Combine save and delete FIXME
+- (IBAction)saveButtonWasTapped:(id)sender {
+    //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+    //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+    //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+    if (![self.captionLabel.text isEqualToString:@""] && self.captionLabel.text != nil){
         //begin process of adding a caption to the current photo
         self.addCaption.enabled = NO;
         self.photo.caption = [self separateMentions:self.caption.text];
         self.caption.hidden = YES;
         self.captionLabel.hidden = NO;
-        
         [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
         [self updateCommentsLabel];
-
-        
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            
             self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
             if (!error)
             {
                 [[TTUtility sharedInstance] internetConnectionFound];
-                
                 //if there are no comments on the photo
                 if (self.commentActivities.count == 0)
                 {
@@ -779,15 +850,6 @@
                             save = YES;
                             [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
                             [obj setObject:self.photo.caption forKey:@"content"];
-//                            [obj saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
-//                                if(!error){
-//                                    NSLog(@"Caption saved as comment");
-//                                    [self updateCommentsLabel];
-//                                    [self updateMentionsInDatabase:obj];
-//                                }else{
-//                                    NSLog(@"Error saving caption");
-//                                }
-//                            }];
                             [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                                 if(!error){
                                     NSLog(@"Caption saved as comment");
@@ -797,12 +859,9 @@
                                     NSLog(@"Error saving caption");
                                 }
                             }];
-                            
                         }
                     }
-                    
                     if (!save) {
-                        
                         [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
                          {
                              if(!error){
@@ -818,94 +877,16 @@
                          }];
                         
                     }else{
-                        //shouldn't we handle this conditon?
+                        //FIXME: shouldn't we handle this conditon?
                     }
                 }
             }
-            
             [self.caption endEditing:YES];
             self.addCaption.enabled = YES;
         }];
+    } else {
+        [self deletePhotoCaption];
     }
-}
-
--(void)textViewDidBeginEditing:(UITextView *)textView
-{
-//    self.caption.editable = YES;
-    self.isEditingCaption = YES;
-    self.scrollView.scrollEnabled = NO;
-    self.likeButton.hidden = YES;
-    self.likeCountButton.hidden = YES;
-    self.comments.hidden = YES;
-    [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
-   if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
-       self.deleteCaption.hidden = NO;
-   }
-    self.addCaption.tag = 1;
-}
-
--(void)textViewDidEndEditing:(UITextView *)textView{
-    self.isEditingCaption = NO;
-    self.scrollView.scrollEnabled = YES;
-    [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    self.likeButton.hidden = NO;
-    self.likeCountButton.hidden = NO;
-    self.comments.hidden = NO;
-    self.deleteCaption.hidden = YES;
-    self.caption.hidden = YES;
-    self.caption.text = self.photo.caption;
-    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
-    self.addCaption.tag = 0;
-    self.caption.editable = NO;
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardSize.height + self.bottomButtonWrapper.frame.size.height - self.caption.frame.size.height - 15, self.view.frame.size.width, self.view.frame.size.height);
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardSize.height - self.bottomButtonWrapper.frame.size.height + self.caption.frame.size.height + 15, self.view.frame.size.width, self.view.frame.size.height);
-}
-
-- (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
-    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-        self.photo.caption = @"";
-        self.deleteCaption.hidden = YES;
-        if (!error){
-            [[TTUtility sharedInstance] internetConnectionFound];
-            NSMutableArray *commentToDelete = [[NSMutableArray alloc]init];
-            for (PFObject *obj in self.commentActivities){
-                if ((BOOL)[obj objectForKey:@"isCaption"] == YES){
-                    [commentToDelete addObject:obj];
-                    [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                        if (!error){
-                            NSLog(@"Caption deleted");
-                            self.caption.text = @"";
-                            NSAttributedString * emptyString= [[NSAttributedString alloc] initWithString:@""];
-                            self.captionLabel.attributedText = emptyString;
-                            [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
-                            [self.caption endEditing:YES];
-                            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
-                        } else {
-                            NSLog(@"Error deleting caption");
-                        }
-                        [self updateCommentsLabel];
-                    }];
-                    break;
-                }
-            }
-            
-        }else{
-            [ParseErrorHandlingController handleError:error];
-        }
-        
-    }];
-    
-    
 }
 
 //FIXME: Should we do saveEventually for likes or does it need to be real time responsive like this?
@@ -1190,14 +1171,6 @@
             [alert show];
         }
         else if (buttonIndex == 2 ){
-//            UIAlertView *alertView = [[UIAlertView alloc] init];
-//            alertView.delegate = self;
-//            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
-//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-//            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
-//            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
-//            alertView.tag = 1;
-//            [alertView show];
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
 
         }
@@ -1215,15 +1188,6 @@
             [alert show];
         }
         else if (buttonIndex == 1) {
-//            NSLog(@"Download Photo");
-//            UIAlertView *alertView = [[UIAlertView alloc] init];
-//            alertView.delegate = self;
-//            alertView.title = NSLocalizedString(@"Save photo to phone?",@"Save photo to phone?");
-//            alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-//            [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
-//            [alertView addButtonWithTitle:NSLocalizedString(@"Download",@"Download")];
-//            alertView.tag = 1;
-//            [alertView show];
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
 
             
@@ -1341,6 +1305,17 @@
 
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
+    
+    if ([self.photo.caption isEqualToString:@""] || self.photo.caption == nil){
+        if (textView.text == nil || [textView.text isEqualToString:@""]){
+            self.saveButton.hidden = YES;
+        } else{
+            self.saveButton.hidden = NO;
+        }
+    } else{
+        self.saveButton.hidden = NO;
+    }
+    
     if ([textView.text length] > 1){
 
         NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
