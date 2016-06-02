@@ -500,7 +500,7 @@
                 }
             }
             
-            self.caption.text = self.photo.caption;
+            self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
             self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
             
 //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
@@ -710,7 +710,7 @@
 
 - (IBAction)editCaptionTapped:(id)sender {
         //store the mentioned users from the current comment
-    if (self.caption.text.length > 0){
+    if (self.caption.attributedText.length > 0){
             self.previousComment = self.caption.text;
     }
         self.caption.hidden = NO;
@@ -748,7 +748,7 @@
     self.likeButton.hidden = NO;
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
-    self.caption.text = self.photo.caption;
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
     self.addCaption.tag = 0;
     self.caption.editable = NO;
@@ -778,7 +778,7 @@
                     [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                         if (!error){
                             NSLog(@"Caption deleted");
-                            self.caption.text = @"";
+                            self.caption.attributedText = [[NSAttributedString alloc] initWithString:@""];
                             NSAttributedString * emptyString= [[NSAttributedString alloc] initWithString:@""];
                             self.captionLabel.attributedText = emptyString;
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
@@ -963,7 +963,7 @@
     
     [self updateCommentsLabel]; //FIXME Why is this here?
     self.caption.hidden = YES;  //FIXME Why is this here?
-    self.caption.text = self.photo.caption;  //FIXME Why is this here?
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];  //FIXME Why is this here?
 
     
