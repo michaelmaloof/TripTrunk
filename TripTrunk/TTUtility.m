@@ -171,7 +171,6 @@ CLCloudinary *cloudinary;
 -(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSString* url, NSError *error))completionBlock
 {
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
-    
     // Initialize the progressView if it isn't initialized already
     if (!progressView) {
         progressView = [[MSFloatingProgressView alloc] init];
@@ -181,8 +180,6 @@ CLCloudinary *cloudinary;
     else {
         [progressView incrementTaskCount];
     }
-    
-    
     // prepare for a background task
     __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         //TODO: Locally cache photos here
@@ -191,9 +188,6 @@ CLCloudinary *cloudinary;
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
-    
-    
-
     [uploader upload:imageData
              options:@{@"type":@"upload"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
@@ -201,24 +195,17 @@ CLCloudinary *cloudinary;
               NSString* publicId = [successResult valueForKey:@"public_id"];
               NSLog(@"Block upload success. Public ID=%@, Full result=%@", publicId, successResult);
               NSString* url = [successResult valueForKey:@"url"];
-
               photo.imageUrl = url;
-              
               PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
-              
               // Friends of the user get Read Access
               NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
               [photoACL setReadAccess:YES forRoleWithName:roleName];
               // Also add ReadAccess for the TRUNK MEMBER role so any members of the trunk get read access
               NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
               [photoACL setReadAccess:YES forRoleWithName:trunkRole];
-              
               // Only the user and trunk creator gets Write Access
               [photoACL setWriteAccess:YES forUser:photo.user];
               [photoACL setWriteAccess:YES forUser:photo.trip.creator];
-
-              
-              
               // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
               if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
                   [photoACL setPublicReadAccess:NO];
@@ -226,32 +213,15 @@ CLCloudinary *cloudinary;
               else {
                   [photoACL setPublicReadAccess:YES];
               }
-              
               // Set the ACL.
               photo.ACL = photoACL;
-              
               [photo saveEventually:^(BOOL succeeded, NSError *error) {
-                  
                   if(error) {
-                      
-                      //FIXME: add photo to core data and then let the user reattempt the parse save.
-
                       NSLog(@"error saving photo to parse: %@", error);
-                      
-//                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error saving Photo"
-//                                                                      message:@"Please try again"
-//                                                                     delegate:self
-//                                                            cancelButtonTitle:@"Okay"
-//                                                            otherButtonTitles:nil, nil];
-                      
-                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [alert show];
-                    });
                   }
                   else {
                       // Add photo to the cache
                       [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-                      
                       // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
                       if (photo.caption && ![photo.caption isEqualToString:@""]) {
                           [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
@@ -265,38 +235,20 @@ CLCloudinary *cloudinary;
                       }else{
                           completionBlock(YES, nil, url, nil);
                       }
-                      
-                      
                       // post the notification so that the TrunkViewController can know to reload the data
                       [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-                      
-
                       [[UIApplication sharedApplication] endBackgroundTask:bgTask];
                       bgTask = UIBackgroundTaskInvalid;
                   }
               }];
-              
           } else {
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
-//              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Saving Photos"
-//                                                              message:@"Please try again"
-//                                                             delegate:self
-//                                                    cancelButtonTitle:@"Okay"
-//                                                    otherButtonTitles:nil, nil];
               [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-              //FIXME: add photo to core data and then let the user reattempt the cloudinary upload
-
               bgTask = UIBackgroundTaskInvalid;
-              dispatch_async(dispatch_get_main_queue(), ^{
-//                  [alert show];
-              });
           }
-          
       } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
-
-          
       }];
-    
+
 }
 
 - (void)downloadPhoto:(Photo *)photo;

@@ -748,7 +748,6 @@
     self.likeButton.hidden = NO;
     self.likeCountButton.hidden = NO;
     self.comments.hidden = NO;
-    self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
     self.addCaption.tag = 0;
@@ -806,11 +805,12 @@
     //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
     //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
     //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
-    if (![self.captionLabel.text isEqualToString:@""] && self.captionLabel.text != nil){
+    
+    if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
         //begin process of adding a caption to the current photo
         self.addCaption.enabled = NO;
         self.photo.caption = [self separateMentions:self.caption.text];
-        self.caption.hidden = YES;
+        self.caption.hidden = NO;
         self.captionLabel.hidden = NO;
         [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
         [self updateCommentsLabel];
@@ -822,7 +822,6 @@
                 //if there are no comments on the photo
                 if (self.commentActivities.count == 0)
                 {
-                    [self.caption endEditing:YES];
                     [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                         if(!error)
                         {
@@ -885,7 +884,9 @@
             self.addCaption.enabled = YES;
         }];
     } else {
-        [self deletePhotoCaption];
+        if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
+            [self deletePhotoCaption];
+        }
     }
 }
 

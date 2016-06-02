@@ -2770,8 +2770,7 @@
                                                 <exclude reference="KIF-vv-WtV"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="12" y="40" width="317" height="21"/>
+                                        <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="KIF-vv-WtV"/>
                                             </mask>
@@ -2925,6 +2924,7 @@
                                     </constraint>
                                     <constraint firstAttribute="trailing" secondItem="Px1-AS-Jn7" secondAttribute="trailing" constant="12" id="40w-Uv-Dth"/>
                                     <constraint firstAttribute="trailing" secondItem="Rxd-3L-nVv" secondAttribute="trailing" constant="12" id="4c3-FT-Ene"/>
+                                    <constraint firstItem="VAb-3S-Guy" firstAttribute="top" secondItem="Rxd-3L-nVv" secondAttribute="bottom" constant="7" id="6SK-7U-esN"/>
                                     <constraint firstItem="VAb-3S-Guy" firstAttribute="centerY" secondItem="Azv-Ms-g16" secondAttribute="centerY" id="BF9-ok-hso"/>
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="centerX" secondItem="pMh-vC-nPM" secondAttribute="centerX" id="DIq-I8-i0N"/>
                                     <constraint firstItem="Rxd-3L-nVv" firstAttribute="leading" secondItem="pMh-vC-nPM" secondAttribute="leading" constant="12" id="ELn-yO-8SY"/>
@@ -2987,6 +2987,7 @@
                                         <exclude reference="FNV-Zw-urT"/>
                                         <exclude reference="R7w-nb-iYO"/>
                                         <exclude reference="chH-UQ-xzs"/>
+                                        <exclude reference="6SK-7U-esN"/>
                                         <exclude reference="BF9-ok-hso"/>
                                         <exclude reference="YPY-rk-3BU"/>
                                         <exclude reference="1ok-yv-Lhw"/>
@@ -3027,6 +3028,7 @@
                                         <include reference="FNV-Zw-urT"/>
                                         <exclude reference="R7w-nb-iYO"/>
                                         <include reference="chH-UQ-xzs"/>
+                                        <include reference="6SK-7U-esN"/>
                                         <include reference="BF9-ok-hso"/>
                                         <include reference="YPY-rk-3BU"/>
                                         <exclude reference="1ok-yv-Lhw"/>
