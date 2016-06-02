@@ -59,6 +59,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tutorialComplete = YES; //FIXME: Remove self.tutorialCompleteFromViewController
     [self setArraysBoolsandDates];
     [self designNavBar];
     [self setMainMap];
@@ -165,19 +166,6 @@
     }
 }
 
-/**
- *  Check if the user has seen the tutorial
- *
- *
- */
--(void)checkTutorial{
-    //If user has not completed tutorial, show tutorial
-    self.tutorialComplete = [[[PFUser currentUser] valueForKey:@"tutorialViewed"] boolValue];
-    if (self.tutorialComplete == NO)
-    {
-        [self showTutorial];
-    }
-}
 
 /**
  *  Begins loading the map for either the Home Map or a User's Map
@@ -188,7 +176,6 @@
     //Make sure the user is logged in. If not we make them login.
     if([self checkUserRegistration])
     {
-//        [self checkTutorial]; //We no longer show a tutorial
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
         if (self.user == nil) {
             //We're on the home taeb so register the user's notifications
