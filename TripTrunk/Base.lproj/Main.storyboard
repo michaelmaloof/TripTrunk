@@ -57,7 +57,6 @@
             <string>Montserrat-SemiBold</string>
             <string>Montserrat-SemiBold</string>
             <string>Montserrat-SemiBold</string>
-            <string>Montserrat-SemiBold</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -2822,16 +2821,6 @@
                                             <action selector="likeButtonPressed:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="VOa-wn-2TT"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
-                                        <rect key="frame" x="255" y="513" width="75" height="30"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
-                                        <state key="normal" title="Comments">
-                                            <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7K-31-DpK">
                                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                         <constraints>
@@ -2878,9 +2867,8 @@
                                                 <exclude reference="eOp-K6-On3"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                        <variation key="heightClass=regular-widthClass=compact">
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <rect key="frame" x="12" y="10" width="317" height="52"/>
                                             <mask key="constraints">
                                                 <exclude reference="8Bx-Ly-jJH"/>
                                                 <exclude reference="DT5-oI-7DT"/>
@@ -2906,8 +2894,7 @@
                                                 <exclude reference="1uq-xV-Klt"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="333" y="10" width="50" height="52"/>
+                                        <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="1uq-xV-Klt"/>
                                             </mask>
@@ -2916,9 +2903,22 @@
                                             <action selector="saveButtonWasTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="vPX-Em-bX0"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
+                                        <rect key="frame" x="255" y="513" width="75" height="30"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
+                                        <state key="normal" image="comment_photo">
+                                            <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <variation key="heightClass=regular-widthClass=compact"/>
+                                        <connections>
+                                            <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="CkI-rl-klH" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="5" id="0Z7-3h-eKS"/>
                                     <constraint firstItem="Qe2-XC-VCF" firstAttribute="top" secondItem="Px1-AS-Jn7" secondAttribute="bottom" constant="12" id="1ok-yv-Lhw"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="width" secondItem="Azv-Ms-g16" secondAttribute="width" id="3C9-24-ttH"/>
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="top" secondItem="pMh-vC-nPM" secondAttribute="top" constant="7" id="3Rk-p7-Qei">
                                         <variation key="heightClass=regular-widthClass=compact" constant="20"/>
                                     </constraint>
@@ -2940,6 +2940,7 @@
                                         <variation key="heightClass=regular-widthClass=compact" constant="110"/>
                                     </constraint>
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="leading" secondItem="pMh-vC-nPM" secondAttribute="leading" constant="12" id="WqT-5r-cZJ"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="height" secondItem="Azv-Ms-g16" secondAttribute="height" id="XJZ-oC-ljU"/>
                                     <constraint firstItem="VAb-3S-Guy" firstAttribute="leading" secondItem="Azv-Ms-g16" secondAttribute="trailing" constant="2" id="YPY-rk-3BU">
                                         <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                     </constraint>
@@ -2949,6 +2950,7 @@
                                     <constraint firstItem="CkI-rl-klH" firstAttribute="height" secondItem="Px1-AS-Jn7" secondAttribute="height" id="cmH-eu-rfE"/>
                                     <constraint firstAttribute="bottom" secondItem="b7K-31-DpK" secondAttribute="bottom" constant="8" id="d3T-k0-W13"/>
                                     <constraint firstItem="Qe2-XC-VCF" firstAttribute="centerY" secondItem="VAb-3S-Guy" secondAttribute="centerY" id="gfd-IM-ZiE"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="centerY" secondItem="Azv-Ms-g16" secondAttribute="centerY" id="iOP-SP-HyI"/>
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="top" secondItem="pMh-vC-nPM" secondAttribute="top" constant="10" id="kst-AG-RcS"/>
                                     <constraint firstItem="CkI-rl-klH" firstAttribute="leading" secondItem="Px1-AS-Jn7" secondAttribute="trailing" id="l0Z-ox-2bz">
                                         <variation key="heightClass=regular-widthClass=compact" constant="4"/>
@@ -2956,6 +2958,7 @@
                                     <constraint firstItem="Px1-AS-Jn7" firstAttribute="centerX" secondItem="pMh-vC-nPM" secondAttribute="centerX" id="lH9-VU-SpP"/>
                                     <constraint firstAttribute="trailing" secondItem="b7K-31-DpK" secondAttribute="trailing" constant="12" id="orQ-Qn-b65"/>
                                     <constraint firstItem="CkI-rl-klH" firstAttribute="top" secondItem="pMh-vC-nPM" secondAttribute="top" constant="10" id="uEa-aj-eYN"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="leading" secondItem="Azv-Ms-g16" secondAttribute="trailing" constant="5" id="y7J-lh-B2I"/>
                                     <constraint firstItem="CkI-rl-klH" firstAttribute="leading" secondItem="Rxd-3L-nVv" secondAttribute="trailing" constant="8" id="zbi-NW-vYd">
                                         <variation key="heightClass=regular-widthClass=compact" constant="4"/>
                                     </constraint>
@@ -2968,10 +2971,10 @@
                                         <exclude reference="Rxd-3L-nVv"/>
                                         <exclude reference="VAb-3S-Guy"/>
                                         <exclude reference="Azv-Ms-g16"/>
-                                        <exclude reference="Qe2-XC-VCF"/>
                                         <exclude reference="b7K-31-DpK"/>
                                         <exclude reference="Px1-AS-Jn7"/>
                                         <exclude reference="CkI-rl-klH"/>
+                                        <exclude reference="Qe2-XC-VCF"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="UeT-Z1-nnK"/>
@@ -2991,8 +2994,13 @@
                                         <exclude reference="BF9-ok-hso"/>
                                         <exclude reference="YPY-rk-3BU"/>
                                         <exclude reference="1ok-yv-Lhw"/>
+                                        <exclude reference="3C9-24-ttH"/>
+                                        <exclude reference="XJZ-oC-ljU"/>
                                         <exclude reference="gfd-IM-ZiE"/>
+                                        <exclude reference="iOP-SP-HyI"/>
+                                        <exclude reference="y7J-lh-B2I"/>
                                         <exclude reference="zju-mI-IHE"/>
+                                        <exclude reference="0Z7-3h-eKS"/>
                                         <exclude reference="Iys-XS-FBg"/>
                                         <exclude reference="cmH-eu-rfE"/>
                                         <exclude reference="l0Z-ox-2bz"/>
@@ -3009,10 +3017,10 @@
                                         <include reference="Rxd-3L-nVv"/>
                                         <include reference="VAb-3S-Guy"/>
                                         <include reference="Azv-Ms-g16"/>
-                                        <include reference="Qe2-XC-VCF"/>
                                         <include reference="b7K-31-DpK"/>
                                         <include reference="Px1-AS-Jn7"/>
                                         <include reference="CkI-rl-klH"/>
+                                        <include reference="Qe2-XC-VCF"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="UeT-Z1-nnK"/>
@@ -3032,8 +3040,13 @@
                                         <include reference="BF9-ok-hso"/>
                                         <include reference="YPY-rk-3BU"/>
                                         <exclude reference="1ok-yv-Lhw"/>
-                                        <include reference="gfd-IM-ZiE"/>
-                                        <include reference="zju-mI-IHE"/>
+                                        <include reference="3C9-24-ttH"/>
+                                        <include reference="XJZ-oC-ljU"/>
+                                        <exclude reference="gfd-IM-ZiE"/>
+                                        <include reference="iOP-SP-HyI"/>
+                                        <exclude reference="y7J-lh-B2I"/>
+                                        <exclude reference="zju-mI-IHE"/>
+                                        <include reference="0Z7-3h-eKS"/>
                                         <include reference="Iys-XS-FBg"/>
                                         <include reference="cmH-eu-rfE"/>
                                         <include reference="l0Z-ox-2bz"/>
@@ -5180,6 +5193,7 @@
         <image name="addTrunk_tabIcon" width="56" height="50"/>
         <image name="add_trunk" width="56" height="50"/>
         <image name="calendar" width="76" height="75"/>
+        <image name="comment_photo" width="54" height="54"/>
         <image name="deletePhoto" width="100" height="100"/>
         <image name="editPencil" width="44" height="49"/>
         <image name="ellipsis" width="32" height="32"/>

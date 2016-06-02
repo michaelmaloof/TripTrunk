@@ -988,13 +988,13 @@
         comments = NSLocalizedString(@"Comments",@"Comments");
     }
     
-    if (commentCount.integerValue == 0){
-        [self.comments setTitle:comments forState:UIControlStateNormal];
-    } else {
-        //FIXME TEMP commented out. Cache doesnt work correctly when you add comments and remove them on commentListViewController
-//        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
-        [self.comments setTitle:comments forState:UIControlStateNormal];
-    }
+//    if (commentCount.integerValue == 0){
+//        [self.comments setTitle:comments forState:UIControlStateNormal];
+//    } else {
+//        //FIXME TEMP commented out. Cache doesnt work correctly when you add comments and remove them on commentListViewController
+////        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
+//        [self.comments setTitle:comments forState:UIControlStateNormal];
+//    }
 }
 
 - (IBAction)trunkNameButtonPressed:(id)sender {
