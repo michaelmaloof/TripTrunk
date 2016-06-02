@@ -79,6 +79,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.caption.hidden = YES;
     [self setOriginalUIForPhoto]; //sets UI for photo exlcuding Trunk things
     [self setOriginalUIForTrunk]; //sets UI for trunk photi is in
     self.commentActivities = [[NSMutableArray alloc] init];
@@ -390,7 +391,6 @@
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
         self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
         self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
-        self.captionLabel.hidden = self.bottomButtonWrapper.hidden;
     } completion:nil];
 }
 
@@ -709,6 +709,7 @@
 }
 
 - (IBAction)editCaptionTapped:(id)sender {
+    self.caption.hidden = NO;
         //store the mentioned users from the current comment
     if (self.caption.attributedText.length > 0){
             self.previousComment = self.caption.text;
@@ -742,6 +743,8 @@
 
 -(void)textViewDidEndEditing:(UITextView *)textView{
     self.saveButton.hidden = YES;
+    self.caption.hidden = YES;
+    self.captionLabel.hidden = NO;
     self.isEditingCaption = NO;
     self.scrollView.scrollEnabled = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
@@ -758,12 +761,16 @@
 {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardSize.height + self.bottomButtonWrapper.frame.size.height - self.caption.frame.size.height - 15, self.view.frame.size.width, self.view.frame.size.height);
+    self.caption.hidden = NO;
+    self.captionLabel.hidden = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardSize.height - self.bottomButtonWrapper.frame.size.height + self.caption.frame.size.height + 15, self.view.frame.size.width, self.view.frame.size.height);
+    self.caption.hidden = YES;
+    self.captionLabel.hidden = NO;
 }
 
 - (void)deletePhotoCaption { //FIXME: this is a little slopy from an error handling point of view
@@ -800,6 +807,7 @@
 }
 
 
+
 //Combine save and delete FIXME
 - (IBAction)saveButtonWasTapped:(id)sender {
     //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
@@ -810,8 +818,6 @@
         //begin process of adding a caption to the current photo
         self.addCaption.enabled = NO;
         self.photo.caption = [self separateMentions:self.caption.text];
-        self.caption.hidden = NO;
-        self.captionLabel.hidden = NO;
         [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
         [self updateCommentsLabel];
         [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
