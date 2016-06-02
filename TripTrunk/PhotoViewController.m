@@ -709,7 +709,6 @@
 }
 
 - (IBAction)editCaptionTapped:(id)sender {
-    self.caption.hidden = NO;
         //store the mentioned users from the current comment
     if (self.caption.attributedText.length > 0){
             self.previousComment = self.caption.text;
@@ -1679,7 +1678,6 @@
     } else {
         self.likeCountButton.hidden = NO;
         self.likeButton.hidden = NO;
-        self.caption.hidden = NO;
         self.captionLabel.hidden = NO;
     }
 }
