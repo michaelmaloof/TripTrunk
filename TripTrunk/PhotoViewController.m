@@ -90,6 +90,15 @@
     [self setScrollViewUI];
     //load the first photo (which is the one the user clicked to get here)
     [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
+    // Add keyboard notifications so that the keyboard won't cover the table when searching
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
 
 #pragma On Appear
@@ -318,15 +327,6 @@
     [self centerScrollViewContents];
     self.topButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
     self.bottomButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
-    
-    // Set up gradients for top and bottom button wrappers
-    //    CAGradientLayer *gradient = [self greyGradientForTop:YES];
-    //    gradient.frame = self.topButtonWrapper.bounds;
-    //    CAGradientLayer *bottomGradient = [self greyGradientForTop:NO];
-    //    bottomGradient.frame = self.bottomButtonWrapper.bounds;
-    //    [self.topButtonWrapper.layer insertSublayer:gradient atIndex:0];
-    //    [self.bottomButtonWrapper.layer insertSublayer:bottomGradient atIndex:0];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -838,13 +838,10 @@
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"addCaption"] forState:UIControlStateNormal];
-    
    if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
        self.deleteCaption.hidden = NO;
    }
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 1;
-
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView{
@@ -858,9 +855,20 @@
     self.caption.hidden = YES;
     self.caption.text = self.photo.caption;
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:NO text:self.photo.caption];
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 270, self.view.frame.size.width, self.view.frame.size.height);
     self.addCaption.tag = 0;
     self.caption.editable = NO;
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardSize.height + self.bottomButtonWrapper.frame.size.height - self.caption.frame.size.height - 15, self.view.frame.size.width, self.view.frame.size.height);
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardSize.height - self.bottomButtonWrapper.frame.size.height + self.caption.frame.size.height + 15, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (IBAction)deleteCaptionTapped:(id)sender { //FIXME: this is a little slopy from an error handling point of view
@@ -1004,12 +1012,10 @@
         //FIXME TEMP commented out. Cache doesnt work correctly when you add comments and remove them on commentListViewController
 //        [self.comments setTitle:[NSString stringWithFormat:@"%@ %@", commentCount,comments] forState:UIControlStateNormal];
         [self.comments setTitle:comments forState:UIControlStateNormal];
-
     }
 }
 
 - (IBAction)trunkNameButtonPressed:(id)sender {
-    
     if (![self.trunkNameButton.titleLabel.text isEqualToString:@""] || self.trunkNameButton.titleLabel.text == nil ){ //make sure were not in the trunk alredy
         //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
         [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -1023,7 +1029,6 @@
                 [activityNavController pushViewController:trunkViewController animated:YES];
             }else {
                 [self.navigationController pushViewController:trunkViewController animated:YES];
-                
             }
         }];
     }
@@ -1034,11 +1039,8 @@
     if (buttonIndex == 1) {
         // Delete
         if (alertView.tag == 0) {
-            
             //TODO: What if they're deleting the only photo in the trunk?
-            
             //fixme, this should me done after the photo has been confirmed and deleted
-            
             [self.photo.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 
                 if (!error) {
