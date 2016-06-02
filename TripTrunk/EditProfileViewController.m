@@ -173,7 +173,7 @@
     }else if (buttonIndex == 1) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
         self.title = NSLocalizedString(@"Updating, Please Wait", @"Updating, Please Wait");
-        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         if (self.privateAccountSwitch.isOn) {
             // Become Private
             [PFCloud callFunctionInBackground:@"becomePrivate" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
@@ -181,6 +181,7 @@
                     NSLog(@"Error becoming private: %@", error);
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                 }
                 else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -188,6 +189,7 @@
                         [self.delegate privacyChanged:[PFUser currentUser]];
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                     });
 
                 }
@@ -199,6 +201,7 @@
                     NSLog(@"Error becoming public: %@", error);
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                 }
                 else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -206,6 +209,7 @@
                         [self.delegate privacyChanged:[PFUser currentUser]];
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                     });
                 }
             }];
