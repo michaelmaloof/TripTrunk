@@ -15,6 +15,7 @@
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
 #import "TTCache.h"
+#import "TTEditTripFriendsViewController.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -299,7 +300,7 @@
 {
     NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.tripMembers];
     [members addObject:self.tripCreator];
-    AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+    TTEditTripFriendsViewController *vc = [[TTEditTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }

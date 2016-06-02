@@ -1,12 +1,12 @@
 //
-//  AddTripFriendsViewController.m
+//  TTEditTripFriendsViewController.m
 //  TripTrunk
 //
-//  Created by Matt Schoch on 5/29/15.
-//  Copyright (c) 2015 Michael Maloof. All rights reserved.
+//  Created by Michael Cannell on 6/2/16.
+//  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#import "AddTripFriendsViewController.h"
+#import "TTEditTripFriendsViewController.h"
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
@@ -17,7 +17,7 @@
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface AddTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+@interface TTEditTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -37,7 +37,7 @@
 
 @end
 
-@implementation AddTripFriendsViewController
+@implementation TTEditTripFriendsViewController
 
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 {
@@ -62,7 +62,7 @@
     
     self.title = NSLocalizedString(@"Add Members",@"Add Members");
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+    [self.followingTableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
@@ -73,7 +73,7 @@
         [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                         [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
                                                                         [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
-                UIBarButtonItem *newBackButton =
+        UIBarButtonItem *newBackButton =
         [[UIBarButtonItem alloc] initWithTitle:@""
                                          style:UIBarButtonItemStylePlain
                                         target:nil
@@ -83,8 +83,8 @@
     else
     {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-  
-    
+        
+        
     }
     
     _thisUser = [PFUser currentUser];
@@ -93,9 +93,9 @@
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
     _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
-
-    self.tableView.multipleTouchEnabled = YES;
-    self.tableView.allowsMultipleSelection = YES;
+    
+    self.followingTableView.multipleTouchEnabled = YES;
+    self.followingTableView.allowsMultipleSelection = YES;
     [self initSearchController];
     
     // Get the users for the list
@@ -132,9 +132,9 @@
     
     [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
     
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.followingTableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
-
+    
 }
 
 
@@ -155,10 +155,10 @@
             }
             
             [[_friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
-
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
+                [self.followingTableView reloadData];
             });
         }
         else {
@@ -174,7 +174,7 @@
         if (!error) {
             
             NSMutableArray *friendsToAdd = [[NSMutableArray alloc]init];
-
+            
             for (PFUser *user in users){
                 if (![self.friendsObjectIds containsObject:user.objectId]){
                     [self.friendsObjectIds addObject:user.objectId];
@@ -183,11 +183,11 @@
             }
             
             [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
-
-
+            
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
+                [self.followingTableView reloadData];
             });
         }
         else {
@@ -209,7 +209,7 @@
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active)
     {
-    
+        
         switch (section) {
             case 0:
                 return NSLocalizedString(@"Following",@"Following");
@@ -253,10 +253,10 @@
     } else if (self.isNext == YES){
         if (self.didTapCreated == YES){
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
+            
         }else if (self.isTripCreation){
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
+            
         } else {
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
         }
@@ -264,7 +264,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     PFUser *possibleFriend;
     NSString *searchString = [self.searchController.searchBar.text lowercaseString];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
@@ -274,7 +274,7 @@
     else {
         possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
-    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     cell.profilePicImageView.image = nil;
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
@@ -294,7 +294,7 @@
                                              } failure:nil];
     
     return weakCell;
-
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -305,7 +305,7 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                               otherButtonTitles:nil, nil];
-       [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [alert show];
     }
     
@@ -317,8 +317,8 @@
         } else {
             [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         }
-
-                
+        
+        
     } else {
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Someone is Popular",@"Someone is Popular")
@@ -442,7 +442,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.title = @"TripTrunk";
     
-//    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+    //    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
     
     if (self.isTripCreation) {
         // It's the creation flow, so add the creator as a "member" to the trip
@@ -456,11 +456,11 @@
         // Adding friends to an existing trip, so pop back
         [self.delegate memberWasAdded:self];
         [self.navigationController popViewControllerAnimated:YES];
-
-
+        
+        
         
         return; // make sure it doesn't execute further.
-
+        
     }
     else if (self.membersToAdd.count > 0)
     {
@@ -471,19 +471,19 @@
             NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
             
             // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
-//            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+            //            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
             [self.delegate memberWasAddedTemporary:user];
             [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params block:
-            ^(id  _Nullable object, NSError * _Nullable error) {
-                if (self.delegate) {
-                    
-                    if (!error){
-                        [self.delegate memberWasAdded:self];
-                    } else {
-                        [self.delegate memberFailedToLoad:user];
-                    }
-                }
-            }];
+             ^(id  _Nullable object, NSError * _Nullable error) {
+                 if (self.delegate) {
+                     
+                     if (!error){
+                         [self.delegate memberWasAdded:self];
+                     } else {
+                         [self.delegate memberFailedToLoad:user];
+                     }
+                 }
+             }];
             
             
             // Update the Trip's ACL if it's a private trip.
@@ -500,9 +500,9 @@
     
     // Re-enable bar button and let the delegate know that things were updated.
     self.navigationItem.rightBarButtonItem.enabled = YES;
-//    if (self.delegate) {
-//        [self.delegate memberWasAdded:self];
-//    }
+    //    if (self.delegate) {
+    //        [self.delegate memberWasAdded:self];
+    //    }
     
     // Perform the Navigation to the next/previous screen.
     // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.
@@ -514,10 +514,10 @@
     else {
         // Nex trip creation flow, so push forward
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
+        
         [self performSegueWithIdentifier:@"photos" sender:self];
         self.didTapCreated = YES;
-
+        
     }
     
 }
@@ -558,7 +558,7 @@
                 [ParseErrorHandlingController handleError:error];
             } else {
                 [self.searchResults addObjectsFromArray:objects];
-                [self.tableView reloadData];
+                [self.followingTableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
         }];
@@ -568,46 +568,46 @@
 /**
  *  Delegate method executed when the "Done" button is pressed
  */
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {    
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     self.isSearching = NO;
-
+    
     if (self.isNext == YES) {
         [self saveFriendsAndClose];
-//        [self.tableView reloadData];
+        //        [self.tableView reloadData];
     } else {
         self.isNext = YES;
-//        [self loadFollowing];
-//        [self loadFollowers];
-        [self.tableView reloadData];
-
+        //        [self loadFollowing];
+        //        [self loadFollowers];
+        [self.followingTableView reloadData];
+        
     }
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
     contentInsets.bottom = keyboardSize.height;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
+    self.followingTableView.contentInset = contentInsets;
+    self.followingTableView.scrollIndicatorInsets = contentInsets;
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
+    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
     contentInsets.bottom = 0;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-    [self.tableView setNeedsLayout];
+    self.followingTableView.contentInset = contentInsets;
+    self.followingTableView.scrollIndicatorInsets = contentInsets;
+    [self.followingTableView setNeedsLayout];
 }
 
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-//    NSString *searchString = searchController.searchBar.text;
-//    if (![searchString isEqualToString:@""]){
-//        [self filterResults:searchString];
-//    }
+    //    NSString *searchString = searchController.searchBar.text;
+    //    if (![searchString isEqualToString:@""]){
+    //        [self filterResults:searchString];
+    //    }
 }
 
 
@@ -616,13 +616,13 @@
     if (![searchBar.text isEqualToString:@""]){
         self.isSearching = YES;
         NSString *searchLower = [searchBar.text lowercaseString];
-            [self filterResults:searchLower];
+        [self filterResults:searchLower];
     }
 }
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     self.isNext = NO;
-//    self.isSearching = YES;
+    //    self.isSearching = YES;
     [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
 }
 

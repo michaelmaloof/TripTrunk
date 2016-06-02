@@ -75,6 +75,7 @@
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
+		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
 		66ABD90AD9444AC11462D4FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 900CAF97ED54CF7422AA80B6 /* libPods.a */; };
@@ -265,6 +266,8 @@
 		27C715BA1CEBA75600A67C5D /* Cloudinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
 		27C715BB1CEBA75600A67C5D /* CLTransformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
+		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
+		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
 		4C80831A1BDABCDD00DB1AC0 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
@@ -453,6 +456,8 @@
 				223547F91AE5A763001FE916 /* AddTripPhotosViewController.m */,
 				C9FAB79E1B18D7C200282EA3 /* AddTripFriendsViewController.h */,
 				C9FAB79F1B18D7C200282EA3 /* AddTripFriendsViewController.m */,
+				27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */,
+				27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */,
 				220408D71AEC5475009DB060 /* TrunkListViewController.h */,
 				220408D81AEC5475009DB060 /* TrunkListViewController.m */,
 				220408E21AED58C0009DB060 /* TrunkViewController.h */,
@@ -1009,6 +1014,7 @@
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
 				27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */,
 				27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */,
+				27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
