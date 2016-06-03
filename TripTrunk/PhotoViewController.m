@@ -171,13 +171,14 @@
 
 -(void)prepareAddCaptionForNewPhoto{
     self.topButtonWrapper.hidden = YES;
+    [self setCaptionAndNavBar];
     self.likeButton.hidden = YES;
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
     self.addCaption.hidden = YES;
     [self loadImageForPhoto:self.photo];
     [self setNotificationCenter];
-    [self editCaptionTapped:self];
+//    [self editCaptionTapped:self];
 }
 
 -(void)prepareForViewPhotoFromTrunk{
