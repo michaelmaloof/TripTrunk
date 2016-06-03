@@ -3151,6 +3151,7 @@
                         <outlet property="imageView" destination="ozt-n1-1q6" id="q8g-bw-hQo"/>
                         <outlet property="likeButton" destination="Azv-Ms-g16" id="MQw-ce-Y2u"/>
                         <outlet property="likeCountButton" destination="VAb-3S-Guy" id="MNv-X7-3F8"/>
+                        <outlet property="moreButton" destination="BL7-tA-HXj" id="zPq-o7-jyC"/>
                         <outlet property="photoTakenBy" destination="Lec-yX-hFH" id="Rvn-Zb-2Ap"/>
                         <outlet property="privateButton" destination="QI0-yB-QB7" id="2W3-5b-6ph"/>
                         <outlet property="saveButton" destination="CkI-rl-klH" id="5fn-iq-3Wx"/>

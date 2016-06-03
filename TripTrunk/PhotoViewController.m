@@ -57,6 +57,7 @@
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
 @property (strong, nonatomic) NSMutableArray *softMentions;
 //############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
@@ -169,7 +170,11 @@
 }
 
 -(void)prepareAddCaptionForNewPhoto{
-    self.topButtonWrapper.hidden = YES;
+    self.trunkNameButton.hidden = YES;
+    self.photoTakenBy.hidden = YES;
+    self.privateButton.hidden = YES;
+    self.moreButton.hidden = YES;
+    self.timeStamp.hidden = YES;
     [self setCaptionAndNavBar];
     self.likeButton.hidden = YES;
     self.likeCountButton.hidden = YES;
