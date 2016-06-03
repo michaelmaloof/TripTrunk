@@ -12,10 +12,12 @@
 #import "TTBaseViewController.h"
 
 @protocol PhotoDelegate
+@optional
 -(void)photoWasLiked:(BOOL)isFromError;
 -(void)photoWasDisliked:(BOOL)isFromError;
 -(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
 -(void)photoWasViewed:(Photo*)photo;
+-(void)captionWasAdded:(NSString*)caption;
 @end
 
 @interface PhotoViewController : TTBaseViewController
@@ -29,6 +31,7 @@
 @property BOOL fromNotification;
 @property BOOL fromTimeline;
 @property BOOL fromProfile;
+@property BOOL fromAddPhotosViewController;
 
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
 

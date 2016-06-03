@@ -50,7 +50,6 @@
 @property BOOL isEditingCaption;
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-
 @property BOOL isZoomed;
 //############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
@@ -79,43 +78,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.caption.hidden = YES;
-    [self setOriginalUIForPhoto]; //sets UI for photo exlcuding Trunk things
-    [self setOriginalUIForTrunk]; //sets UI for trunk photi is in
-    self.commentActivities = [[NSMutableArray alloc] init];
-    self.likeActivities = [[NSMutableArray alloc] init];
-    [self addGestureRecognizers]; //adds gestures for the photo (swipe, etc)
-    [self loadImageForPhoto:self.photo]; // Load initial data for the photo/UIImage
-    [self setNotificationCenter];
-    [self setScrollViewUI];
-    //load the first photo (which is the one the user clicked to get here)
-    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
-    // Add keyboard notifications so that the keyboard won't cover the table when searching
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+    if (self.fromAddPhotosViewController == NO){
+        [self prepareForViewPhotoFromTrunk];
+    } else {
+        [self prepareAddCaptionForNewPhoto];
+    }
 }
 
 #pragma On Appear
 
 -(void)viewWillAppear:(BOOL)animated {
+    if (self.fromAddPhotosViewController == NO){
+        [self setCaptionAndNavBar];
+        [self updateCommentsLabel];
+        [self updateLikesLabel];
+        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+        [self markPhotoAsViewed];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    NSRange cursorPosition = [self.caption selectedRange];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+}
+
+-(void)setCaptionAndNavBar{
     self.saveButton.hidden = YES;
     self.navigationController.navigationBarHidden = YES;
     self.tabBarController.tabBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-    //set button titles with numbers
-    [self updateCommentsLabel];
-    [self updateLikesLabel];
-    //set button selelction
-    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-    [self markPhotoAsViewed];
 }
 
 -(void)markPhotoAsViewed{
@@ -137,13 +130,9 @@
     }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    NSRange cursorPosition = [self.caption selectedRange];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-}
-
 #pragma Original Photo UI on ViewDidLoad
 -(void)setOriginalUIForPhoto{
+    self.caption.hidden = YES;
     self.privateButton.hidden = YES;
     // Set initial UI
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
@@ -180,6 +169,29 @@
     }
 }
 
+-(void)prepareAddCaptionForNewPhoto{
+    self.topButtonWrapper.hidden = YES;
+    self.likeButton.hidden = YES;
+    self.likeCountButton.hidden = YES;
+    self.comments.hidden = YES;
+    self.addCaption.hidden = YES;
+    [self loadImageForPhoto:self.photo];
+    [self setNotificationCenter];
+    [self editCaptionTapped:self];
+}
+
+-(void)prepareForViewPhotoFromTrunk{
+    [self setOriginalUIForPhoto];
+    [self setOriginalUIForTrunk];
+    self.commentActivities = [[NSMutableArray alloc] init];
+    self.likeActivities = [[NSMutableArray alloc] init];
+    [self addGestureRecognizers];
+    [self loadImageForPhoto:self.photo];
+    [self setNotificationCenter];
+    [self setScrollViewUI];
+    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
+}
+
 -(void)setScrollViewUI{
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
@@ -188,7 +200,6 @@
     self.scrollView.maximumZoomScale = 6.0;
     self.scrollView.zoomScale = 1.0;
     [self.scrollView setContentMode:UIViewContentModeScaleAspectFit];
-    
     self.originY = self.scrollView.frame.origin.y;
     self.originX = self.scrollView.frame.origin.x;
     self.width = self.scrollView.frame.size.width;
@@ -201,6 +212,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshPhotoActivities)
                                                  name:@"commentUpdatedOnPhoto"
+                                               object:nil];
+    // Add keyboard notifications so that the keyboard won't cover the table when searching
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
                                                object:nil];
 }
 
@@ -404,14 +424,28 @@
 #pragma mark - Photo Data
 
 - (void)loadImageForPhoto: (Photo *)photo {
-    NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    UIImage *placeholderImage = photo.image;
-    [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    
-    [self.imageView setImageWithURLRequest:request
-                      placeholderImage:placeholderImage
-                               success:nil failure:nil];
+    if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
+        NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+        UIImage *placeholderImage = photo.image;
+        [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.imageView setImageWithURLRequest:request
+                              placeholderImage:placeholderImage
+                                       success:nil failure:nil];
+    } else if (photo.imageAsset){ //not imagURL, its an imageAsset from AddTripPhotosViewController
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        CGFloat floatWidth = screenRect.size.width;
+        CGFloat floatHeight = screenRect.size.height;
+//        //TODO: change width/height scaling for iPhone 6+ since it's a 3x phone.
+        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+                                                   targetSize:CGSizeMake(floatWidth*2, floatHeight*2)
+                                                  contentMode:PHImageContentModeAspectFit
+                                                      options:nil
+                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                                                    // Set the image.
+                                                    self.imageView.image = result;
+                                                }];
+    }
 }
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {

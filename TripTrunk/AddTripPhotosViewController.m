@@ -24,25 +24,17 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "TrunkViewController.h"
+#import "PhotoViewController.h"
 
-@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate,UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate>
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate,UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate>
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
-@property (weak, nonatomic) IBOutlet UITextView *caption;
-@property (weak, nonatomic) IBOutlet UIButton *addCaption;
-@property (weak, nonatomic) IBOutlet UIButton *cancelCaption;
-@property (weak, nonatomic) IBOutlet UIButton *selectPhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
-@property (weak, nonatomic) IBOutlet UIButton *remove;
-@property (weak, nonatomic) IBOutlet UIButton *delete;
-@property (weak, nonatomic) IBOutlet UIImageView *selectedPhoto;
-@property (weak, nonatomic) IBOutlet UIImageView *backGroundImage;
 @property NSInteger path;
 @property BOOL alreadyTrip;
-@property (weak, nonatomic) IBOutlet UILabel *constraintLabel;
-@property (weak, nonatomic) IBOutlet UILabel *borderLabel;
 @property NSMutableArray *currentSelectionPhotos;
 @property float amount;
+//Facebook
 @property (strong, nonatomic) IBOutlet UIButton *facebookPublishButton;
 @property BOOL publishToFacebook;
 @property (strong, nonatomic) NSMutableArray *facebookPhotos;
@@ -61,16 +53,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.constraintLabel.hidden = YES;
     [self roundUploadButton];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
-
 //if self.trip is valid then we are editing a trip, not creating a new one
     if (self.trip){
         self.alreadyTrip = YES;
     } else {
         self.alreadyTrip = NO;
-        
     }
     self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
     self.tripCollectionView.delegate = self;
@@ -79,24 +68,8 @@
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-//we hide all these things and only show them if the user has selected a photo to write a caption for
-    self.caption.text = @"";
-    self.caption.hidden = YES;
-    self.borderLabel.hidden = YES;
-
-    self.borderLabel.hidden = YES;
-    self.cancelCaption.hidden = YES;
-    self.addCaption.hidden = YES;
-    self.remove.hidden = YES;
-    self.delete.hidden = YES;
-    self.selectedPhoto.hidden = YES;
-    
-    
-    self.caption.delegate = self;
     if(self.trip.isPrivate)
         self.facebookPublishButton.hidden = YES;
-    
     //############################################# MENTIONS ##################################################
     [self buildMentionUsersCache];
     //############################################# MENTIONS ##################################################
@@ -111,7 +84,6 @@
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    self.selectPhotosButton.hidden = YES;
     self.submitTrunk.hidden = YES;
     
     if (self.photos.count > 0){
@@ -213,7 +185,6 @@
         [self.photos addObject:photo];
     }
     [self.tripCollectionView reloadData];
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 
 }
@@ -424,7 +395,7 @@
     NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
     if ([text length] == 1 && resultRange.location != NSNotFound) {
         [textView resignFirstResponder];
-        [self onAddCaptionTapped:self];
+//        [self onAddCaptionTapped:self]; FIXME
         return NO;
     }
     
@@ -493,104 +464,41 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){ // add photos
         [self selectPhotosButtonPressed];
-    } else { //selected photos
+    } else { //add captio to selected photos
         self.path = indexPath.row-1;
-        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
-        if (photo.caption) {
-            self.caption.text = photo.caption;
-            [self.addCaption setTitle:NSLocalizedString(@"Update",@"Update") forState:UIControlStateNormal];
-            self.remove.hidden = NO;
-        }
-        //we unhide all these so that the user can write and edit captions
-        self.addCaption.hidden = NO;
-        self.caption.hidden = NO;
-        self.borderLabel.hidden = NO;
-        self.cancelCaption.hidden = NO;
-        self.selectPhotosButton.hidden = YES;
-        self.submitTrunk.hidden = YES;
-        self.delete.hidden = NO;
-        self.selectedPhoto.hidden = NO;
-        self.tripCollectionView.hidden = YES;
-        self.selectedPhoto.image = photo.image;
-        [self.navigationItem setHidesBackButton:YES animated:YES];
+        [self performSegueWithIdentifier:@"addPhotoCaption" sender:self];
     }
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"addPhotoCaption"]) {
+        PhotoViewController *vc = segue.destinationViewController;
+        vc.delegate = self;
+        vc.photo = [self.photos objectAtIndex:self.path];
+        vc.trip = self.trip;
+        vc.arrayInt = (int)self.path;
+        vc.photos = self.photos;
+        vc.fromAddPhotosViewController = YES;
+//      vc.trunkMembers = self.members; FIXME need to pass members we selected from view before
+    }
+}
 
 #pragma mark - Editing/Adding Caption to Photo
 
 /**
- *  Add a caption to the photo
+ *  Adds the caption
  *
  *
  */
-- (IBAction)onAddCaptionTapped:(id)sender
-{
-    [self.view endEditing:YES];
-    if (![self.caption.text isEqual: @""])
-    {
-
+-(void)captionWasAdded:(NSString *)caption{
+    if (caption != nil || ![caption isEqualToString:@""]){
         Photo *photo = [self.photos objectAtIndex:self.path];
-        photo.caption = [self separateMentions:self.caption.text];//self.caption.text;
+        photo.caption = [self separateMentions:caption];
         [self.photos replaceObjectAtIndex:self.path withObject:photo];
-       
-        self.caption.text = nil;
-        
-        [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
-   
-
-        self.selectedPhoto.hidden = YES;
-        self.tripCollectionView.hidden = NO;
-        self.delete.hidden = YES;
-        self.selectPhotosButton.hidden = NO;
-        self.submitTrunk.hidden = NO;
-        self.cancelCaption.hidden = YES;
-        self.remove.hidden = YES;
-        self.caption.hidden = YES;
-        self.borderLabel.hidden = YES;
-
-        self.addCaption.hidden = YES;
         [self.tripCollectionView reloadData];
-        
-        [self.navigationItem setHidesBackButton:NO animated:YES];
-
+    } else {
+        [self removedSelectedPhotoCaption];
     }
-    
-    else
-    {
-        UIAlertView *alertView = [[UIAlertView alloc] init];
-        alertView.delegate = self;
-        alertView.title = NSLocalizedString(@"No caption is typed",@"No caption is typed");
-        alertView.backgroundColor = [TTColor tripTrunkLightBlue];
-        [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
-        [alertView show];
-    }
-    
-}
-
-/**
- *  Cancel the changes made to the caption
- *
- *
- */
-- (IBAction)onCancelCaptionTapped:(id)sender {
-    [self.view endEditing:YES];
-    
-    self.selectedPhoto.hidden = YES;
-    self.tripCollectionView.hidden = NO;
-    self.selectPhotosButton.hidden = NO;
-    self.submitTrunk.hidden = NO;
-    self.cancelCaption.hidden = YES;
-    self.caption.hidden = YES;
-    self.borderLabel.hidden = YES;
-
-    self.addCaption.hidden = YES;
-    [self.addCaption setTitle:NSLocalizedString(@"Add",@"Add") forState:UIControlStateNormal];
-    self.caption.text = @"";
-    self.remove.hidden = YES;
-    self.delete.hidden = YES;
-    [self.navigationItem setHidesBackButton:NO animated:YES];
-
 }
 
 /**
@@ -598,30 +506,11 @@
  *
  *
  */
-- (IBAction)onRemoveTapped:(id)sender {
-    
-    [self.view endEditing:YES];
-    
-    self.selectedPhoto.hidden = YES;
-    self.tripCollectionView.hidden = NO;
-    self.selectPhotosButton.hidden = NO;
-    self.submitTrunk.hidden = NO;
-    self.cancelCaption.hidden = YES;
-    self.caption.hidden = YES;
-    self.borderLabel.hidden = YES;
-
-    self.addCaption.hidden = YES;
+-(void)removedSelectedPhotoCaption{
     Photo *photo = [self.photos objectAtIndex:self.path];
     photo.caption = nil;
-    self.caption.text = nil;
     [self.photos replaceObjectAtIndex:self.path withObject:photo];
-    self.remove.hidden = YES;
-    self.delete.hidden = YES;
-    [self.navigationItem setHidesBackButton:NO animated:YES];
-
     [self.tripCollectionView reloadData];
-
-
 }
 
 /**
@@ -629,26 +518,9 @@
  *
  *
  */
-- (IBAction)onDeleteTapped:(id)sender {
-    [self.view endEditing:YES];
-    
-    self.tripCollectionView.hidden = NO;
-    self.selectedPhoto.hidden = YES;
+- (void)deleteSelectedPhoto{ //FIXME need to implment
     [self.photos removeObjectAtIndex:self.path];
-    self.delete.hidden = YES;
-    self.selectPhotosButton.hidden = NO;
-    self.submitTrunk.hidden = NO;
-    self.cancelCaption.hidden = YES;
-    self.caption.hidden = YES;
-    self.borderLabel.hidden = YES;
-
-    self.addCaption.hidden = YES;
-    self.remove.hidden = YES;
-    self.caption.text = nil;
-    [self.navigationItem setHidesBackButton:NO animated:YES];
-
     [self.tripCollectionView reloadData];
-    
 }
 
 - (IBAction)toggleFacebookPublishButtonTapped:(id)sender {
@@ -660,9 +532,6 @@
     
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    
-}
 
 //############################################# MENTIONS ##################################################
 -(void)updateMentionsInDatabase:(PFObject*)object{
@@ -701,8 +570,8 @@
             //force the popover to display like an iPad popover otherwise it will be full screen
             self.popover  = self.autocompletePopover.popoverPresentationController;
             self.popover.delegate = self;
-            self.popover.sourceView = self.caption;
-            self.popover.sourceRect = [self.caption bounds];
+//            self.popover.sourceView = self.caption;
+//            self.popover.sourceRect = [self.caption bounds];
             self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
             
             if([[TTCache sharedCache] mentionUsers] && [[TTCache sharedCache] mentionUsers].count > 0){
@@ -768,8 +637,8 @@
         self.autocompletePopover = nil;
     }
     
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
+//    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
 }
 
 //Only true if user has typed an @ and a letter and if the popover is not showing
@@ -803,24 +672,24 @@
 //replace the currently typed word with the the username
 -(void)insertUsernameAsMention:(NSString*)username{
     //Get the currently typed word
-    NSRange cursorPosition = [self.caption selectedRange];
-    NSString* substring = [self.caption.text substringToIndex:cursorPosition.location];
-    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
-    //get a mutable copy of the current caption
-    NSMutableString *caption = [NSMutableString stringWithString:self.caption.text];
-    //create the replacement range of the typed mention
-    NSRange mentionRange = NSMakeRange(cursorPosition.location-[lastWord length], [lastWord length]);
-    //replace that typed @mention with the user name of the user they want to mention
-    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
-    
-    //display the new caption
-    self.caption.text = mentionString;
-    //dismiss the popover
-    [self removeAutocompletePopoverFromSuperview];
-    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
-    self.autocompletePopover.delegate = nil;
+//    NSRange cursorPosition = [self.caption selectedRange];
+//    NSString* substring = [self.caption.text substringToIndex:cursorPosition.location];
+//    NSString* lastWord = [[substring componentsSeparatedByString:@" "] lastObject];
+//    //get a mutable copy of the current caption
+//    NSMutableString *caption = [NSMutableString stringWithString:self.caption.text];
+//    //create the replacement range of the typed mention
+//    NSRange mentionRange = NSMakeRange(cursorPosition.location-[lastWord length], [lastWord length]);
+//    //replace that typed @mention with the user name of the user they want to mention
+//    NSString *mentionString = [caption stringByReplacingCharactersInRange:mentionRange withString:[NSString stringWithFormat:@"%@ ",username]];
+//    
+//    //display the new caption
+//    self.caption.text = mentionString;
+//    //dismiss the popover
+//    [self removeAutocompletePopoverFromSuperview];
+//    //reset the font colors and make sure the cursor is right after the mention. +1 to add a space
+//    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
+//    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location-[lastWord length]+[username length]+1, 0)];
+//    self.autocompletePopover.delegate = nil;
 }
 
 //Adjust the height of the popover to fit the number of usernames in the tableview
