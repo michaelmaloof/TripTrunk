@@ -64,7 +64,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 @property (weak, nonatomic) IBOutlet UIButton *privateButton;
-
 // Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
@@ -177,8 +176,8 @@
     self.comments.hidden = YES;
     self.addCaption.hidden = YES;
     [self loadImageForPhoto:self.photo];
-    [self setNotificationCenter];
-//    [self editCaptionTapped:self];
+    [self editCaptionTapped:self];
+//    [self setNotificationCenter];
 }
 
 -(void)prepareForViewPhotoFromTrunk{
@@ -768,7 +767,6 @@
             self.saveButton.hidden = YES;
         } else{
             self.saveButton.hidden = NO;
-
         }
     } else{
         self.saveButton.hidden = NO;
