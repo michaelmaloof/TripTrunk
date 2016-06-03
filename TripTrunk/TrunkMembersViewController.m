@@ -300,7 +300,11 @@
 {
     NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.tripMembers];
     [members addObject:self.tripCreator];
-    TTEditTripFriendsViewController *vc = [[TTEditTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    TTEditTripFriendsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"TTEditTripFriendsViewController"];
+//    vc = [[TTEditTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+    vc.trip = self.trip;
+    vc.existingMembers = members;
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }

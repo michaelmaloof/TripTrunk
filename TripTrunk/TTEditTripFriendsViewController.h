@@ -24,5 +24,5 @@
 @property id<AddMemberDelegate> delegate;
 @property (strong, nonatomic) Trip *trip;
 @property (nonatomic)BOOL isTripCreation;
-
+@property (strong, nonatomic) NSMutableArray *existingMembers;
 @end

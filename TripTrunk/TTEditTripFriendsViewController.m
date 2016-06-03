@@ -14,10 +14,11 @@
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "TTUtility.h"
+#import "TTTrunkMemberViewCell.h"
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface TTEditTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+@interface TTEditTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -25,7 +26,7 @@
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
 // Array of PFUser objects that are already part of the trip
-@property (strong, nonatomic) NSMutableArray *existingMembers;
+//@property (strong, nonatomic) NSMutableArray *existingMembers;
 @property BOOL isNext;
 @property NSMutableArray *membersToAdd;
 @property BOOL isSearching;
@@ -132,7 +133,7 @@
     
     [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
     
-    self.followingTableView.tableHeaderView = self.searchController.searchBar;
+//    self.followingTableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
     
 }
@@ -168,11 +169,9 @@
     
 }
 
-- (void)loadFollowers
-{
+- (void)loadFollowers{
     [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            
             NSMutableArray *friendsToAdd = [[NSMutableArray alloc]init];
             
             for (PFUser *user in users){
@@ -183,8 +182,6 @@
             }
             
             [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
-            
-            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.followingTableView reloadData];
@@ -228,6 +225,7 @@
     view.tintColor = [TTColor tripTrunkRed];
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setTextColor:[TTColor tripTrunkWhite]];
+    [header.textLabel setFont:[TTFont tripTrunkFontBold16]];
 }
 
 
@@ -418,6 +416,34 @@
     }
     return exists;
 }
+
+#pragma mark - UICollectionViewDelegate
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return self.existingMembers.count;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    __weak TTTrunkMemberViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.userName.text = nil;
+    cell.profilePhoto.image = nil;
+    
+    PFUser *member = self.existingMembers[indexPath.row];
+    cell.userName.text = member[@"name"];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:member[@"profilePicUrl"]]];
+        [cell.profilePhoto setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            [cell.profilePhoto setImage:image];
+            [cell setNeedsLayout];
+        } failure:nil];
+    
+    return cell;
+}
+
+
+#pragma mark -
 
 - (NSDictionary *)addToTripFunctionParamsForUser:(PFUser *)user onTrip:(Trip *)trip {
     // Create the params dictionary of all the info we need in the Cloud Function
