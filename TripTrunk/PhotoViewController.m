@@ -175,14 +175,19 @@
     self.privateButton.hidden = YES;
     self.moreButton.hidden = YES;
     self.timeStamp.hidden = YES;
-    [self setCaptionAndNavBar];
     self.likeButton.hidden = YES;
     self.likeCountButton.hidden = YES;
     self.comments.hidden = YES;
-    self.addCaption.hidden = YES;
+    self.caption.selectable = NO;
+    self.caption.editable = NO;
+    self.caption.delegate = self;
+//    self.addCaption.hidden = YES;
+    [self setCaptionAndNavBar];
+    [self setNotificationCenter];
     [self loadImageForPhoto:self.photo];
-    [self editCaptionTapped:self];
-//    [self setNotificationCenter];
+    [self editCaptionPhotoGestures];
+//    [self editCaptionTapped:self];
+
 }
 
 -(void)prepareForViewPhotoFromTrunk{
@@ -193,7 +198,6 @@
     [self addGestureRecognizers];
     [self loadImageForPhoto:self.photo];
     [self setNotificationCenter];
-    [self setScrollViewUI];
     [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
 }
 
@@ -379,6 +383,15 @@
     }
     self.imageView.frame = contentsFrame;
 }
+
+-(void)editCaptionPhotoGestures{
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeDown:)];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeDown];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.imageView addGestureRecognizer:tapGesture];
+}
+
 
 - (void)addGestureRecognizers {
     // Add swipe gestures
@@ -687,6 +700,8 @@
     if (self.isEditingCaption == YES)
     {
         [self.caption endEditing:YES];
+    } else if (self.fromAddPhotosViewController == YES){
+        [self.caption endEditing:YES];
     }
 }
 
@@ -785,9 +800,11 @@
     self.isEditingCaption = NO;
     self.scrollView.scrollEnabled = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    self.likeButton.hidden = NO;
-    self.likeCountButton.hidden = NO;
-    self.comments.hidden = NO;
+    if (self.fromAddPhotosViewController == NO){
+        self.likeButton.hidden = NO;
+        self.likeCountButton.hidden = NO;
+        self.comments.hidden = NO;
+    }
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.addCaption.tag = 0;
