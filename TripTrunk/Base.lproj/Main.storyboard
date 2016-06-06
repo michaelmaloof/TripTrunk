@@ -1480,17 +1480,23 @@
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="top" secondItem="eQQ-ju-bPp" secondAttribute="top" id="DI1-5r-aCs"/>
                                             <constraint firstAttribute="trailing" secondItem="zUW-ht-yVP" secondAttribute="trailing" constant="16" id="GsW-Xe-eVB"/>
                                             <constraint firstItem="nRB-Dp-eMo" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="GyB-WV-no3"/>
-                                            <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="HaB-lo-gzV" secondAttribute="bottom" constant="22.5" id="I8G-mr-aVQ"/>
+                                            <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="HaB-lo-gzV" secondAttribute="bottom" constant="22.5" id="I8G-mr-aVQ">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
+                                            </constraint>
                                             <constraint firstAttribute="bottom" secondItem="o2X-FD-baW" secondAttribute="bottom" id="JTe-Xh-2mX"/>
                                             <constraint firstItem="YXB-LB-7B6" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="K0V-Go-5wU"/>
                                             <constraint firstAttribute="height" constant="682" id="MMh-fd-C1l"/>
-                                            <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="eQQ-ju-bPp" secondAttribute="bottom" constant="22.5" id="O7C-E3-gzT"/>
+                                            <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="eQQ-ju-bPp" secondAttribute="bottom" constant="22.5" id="O7C-E3-gzT">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
+                                            </constraint>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="centerY" secondItem="eQQ-ju-bPp" secondAttribute="centerY" id="P51-Q9-ubK"/>
                                             <constraint firstAttribute="trailing" secondItem="YXB-LB-7B6" secondAttribute="trailing" constant="16" id="TCN-Cy-le2"/>
                                             <constraint firstAttribute="trailing" secondItem="nRB-Dp-eMo" secondAttribute="trailing" constant="16" id="Uww-aQ-rZu"/>
-                                            <constraint firstAttribute="trailing" secondItem="vzv-E3-SnJ" secondAttribute="trailing" id="VEQ-Pj-Sh7"/>
+                                            <constraint firstAttribute="trailing" secondItem="vzv-E3-SnJ" secondAttribute="trailing" id="VEQ-Pj-Sh7">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="6"/>
+                                            </constraint>
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="leading" secondItem="GJ8-pj-bOJ" secondAttribute="leading" constant="16" id="VmG-Kx-Z2Z">
-                                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                                <variation key="heightClass=regular-widthClass=compact" constant="6"/>
                                             </constraint>
                                             <constraint firstAttribute="trailing" secondItem="HaB-lo-gzV" secondAttribute="trailing" constant="10" id="VrZ-eZ-cvn"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="10" id="YwP-4M-aA1"/>
