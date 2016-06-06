@@ -185,7 +185,6 @@
     self.captionLabel.hidden = NO;
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-//    self.addCaption.hidden = YES;
     [self setCaptionAndNavBar];
     [self setNotificationCenter];
     [self loadImageForPhoto:self.photo];
