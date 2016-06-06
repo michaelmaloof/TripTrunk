@@ -181,6 +181,9 @@
     self.caption.selectable = NO;
     self.caption.editable = NO;
     self.caption.delegate = self;
+    self.caption.hidden = YES;
+    self.captionLabel.hidden = NO;
+    self.captionLabel.text = self.photo.caption;
 //    self.addCaption.hidden = YES;
     [self setCaptionAndNavBar];
     [self setNotificationCenter];
@@ -864,89 +867,95 @@
 
 //Combine save and delete FIXME
 - (IBAction)saveButtonWasTapped:(id)sender {
-    //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
-    //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-    //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
     
-    if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
-        //begin process of adding a caption to the current photo
-        self.addCaption.enabled = NO;
-        self.photo.caption = [self separateMentions:self.caption.text];
-        [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
-        [self updateCommentsLabel];
-        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-            if (!error)
-            {
-                [[TTUtility sharedInstance] internetConnectionFound];
-                //if there are no comments on the photo
-                if (self.commentActivities.count == 0)
+    if (self.fromAddPhotosViewController == NO){
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
+        if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
+            //begin process of adding a caption to the current photo
+            self.addCaption.enabled = NO;
+            self.photo.caption = [self separateMentions:self.caption.text];
+            [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
+            [self updateCommentsLabel];
+            [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+                if (!error)
                 {
-                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        if(!error)
-                        {
-                            NSLog(@"Caption saved as comment");
-                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
-                            [self updateMentionsInDatabase:commentObject];
-                            [self.caption endEditing:YES];
-                        }else
-                        {
-                            NSLog(@"Error saving caption");
-                            [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
-                            [self updateCommentsLabel];
-                            [self.caption endEditing:YES];
+                    [[TTUtility sharedInstance] internetConnectionFound];
+                    //if there are no comments on the photo
+                    if (self.commentActivities.count == 0)
+                    {
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                            if(!error)
+                            {
+                                NSLog(@"Caption saved as comment");
+                                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                                [self updateMentionsInDatabase:commentObject];
+                                [self.caption endEditing:YES];
+                            }else
+                            {
+                                NSLog(@"Error saving caption");
+                                [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
+                                [self updateCommentsLabel];
+                                [self.caption endEditing:YES];
+                            }
+                        }];
+                    }
+                    //if there are already comments on the photo
+                    else
+                    {
+                        [ParseErrorHandlingController handleError:error];
+                        //if there already is a caption we edit it and save it
+                        __block BOOL save = NO;
+                        for (PFObject *obj in self.commentActivities){
+                            if ([[obj objectForKey:@"isCaption"] boolValue] && !save){
+                                save = YES;
+                                [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
+                                [obj setObject:self.photo.caption forKey:@"content"];
+                                [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                    if(!error){
+                                        NSLog(@"Caption saved as comment");
+                                        [self updateCommentsLabel];
+                                        [self updateMentionsInDatabase:obj];
+                                    }else{
+                                        NSLog(@"Error saving caption");
+                                    }
+                                }];
+                            }
                         }
-                    }];
-                }
-                //if there are already comments on the photo
-                else
-                {
-                    [ParseErrorHandlingController handleError:error];
-                    //if there already is a caption we edit it and save it
-                    __block BOOL save = NO;
-                    for (PFObject *obj in self.commentActivities){
-                        if ([[obj objectForKey:@"isCaption"] boolValue] && !save){
-                            save = YES;
-                            [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
-                            [obj setObject:self.photo.caption forKey:@"content"];
-                            [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                                if(!error){
-                                    NSLog(@"Caption saved as comment");
-                                    [self updateCommentsLabel];
-                                    [self updateMentionsInDatabase:obj];
-                                }else{
-                                    NSLog(@"Error saving caption");
-                                }
-                            }];
+                        if (!save) {
+                            [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
+                             {
+                                 if(!error){
+                                     NSLog(@"Caption saved as comment");
+                                     [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                                     [self.caption endEditing:YES];
+                                     [self updateMentionsInDatabase:commentObject];
+                                 }else{
+                                     NSLog(@"Error saving caption");
+                                     [self updateCommentsLabel];
+                                     [self.caption endEditing:YES];
+                                 }
+                             }];
+                            
+                        }else{
+                            //FIXME: shouldn't we handle this conditon?
                         }
                     }
-                    if (!save) {
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
-                         {
-                             if(!error){
-                                 NSLog(@"Caption saved as comment");
-                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
-                                 [self.caption endEditing:YES];
-                                 [self updateMentionsInDatabase:commentObject];
-                             }else{
-                                 NSLog(@"Error saving caption");
-                                 [self updateCommentsLabel];
-                                 [self.caption endEditing:YES];
-                             }
-                         }];
-                        
-                    }else{
-                        //FIXME: shouldn't we handle this conditon?
-                    }
                 }
+                [self.caption endEditing:YES];
+                self.addCaption.enabled = YES;
+            }];
+        } else {
+            if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
+                [self deletePhotoCaption];
             }
-            [self.caption endEditing:YES];
-            self.addCaption.enabled = YES;
-        }];
-    } else {
-        if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
-            [self deletePhotoCaption];
         }
+    } else {
+        [self.delegate captionWasAdded:self.caption.text];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
