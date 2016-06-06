@@ -12,7 +12,7 @@
 #import "Trip.h"
 #import "TTBaseViewController.h"
 
-@protocol AddMemberDelegate
+@protocol EditMemberDelegate
 -(void)memberWasAdded:(id)sender;
 -(void)memberWasAddedTemporary:(PFUser*)profile;
 -(void)memberFailedToLoad:(PFUser*)sender;
@@ -21,7 +21,7 @@
 @interface TTEditTripFriendsViewController : TTBaseViewController
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
-@property id<AddMemberDelegate> delegate;
+@property id<EditMemberDelegate> delegate;
 @property (strong, nonatomic) Trip *trip;
 @property (nonatomic)BOOL isTripCreation;
 @property (strong, nonatomic) NSMutableArray *existingMembers;

@@ -19,7 +19,7 @@
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface TrunkMembersViewController () <UserTableViewCellDelegate, AddMemberDelegate>
+@interface TrunkMembersViewController () <UserTableViewCellDelegate, AddMemberDelegate, EditMemberDelegate>
 
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *tripCreator;

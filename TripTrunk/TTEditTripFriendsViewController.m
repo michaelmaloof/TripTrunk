@@ -34,6 +34,10 @@
 @property BOOL didTapCreated;
 @property (strong, nonatomic) IBOutlet UITableView *followingTableView;
 @property (strong, nonatomic) IBOutlet UICollectionView *membersCollectionView;
+@property (strong, nonatomic) IBOutlet UIView *mainView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *searchBarHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *viewHeightConstraint;
 
 
 @end
@@ -104,16 +108,16 @@
     [self loadFollowers];
     
     // Add keyboard notifications so that the keyboard won't cover the table when searching
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillShow:)
+//                                                 name:UIKeyboardWillShowNotification
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillHide:)
+//                                                 name:UIKeyboardWillHideNotification
+//                                               object:nil];
+//    
     self.isNext = YES;
 }
 
@@ -124,18 +128,19 @@
 
 - (void)initSearchController {
     self.searchResults = [NSMutableArray array];
-    
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
-    
+    self.searchController.searchBar.showsCancelButton = NO;
     [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
-    
+    self.searchController.searchBar.tintColor = [TTColor tripTrunkWhite];
+    self.searchController.searchBar.frame = CGRectMake(0, 0, [[UIScreen mainScreen]applicationFrame].size.width, 44);
+    self.searchController.hidesNavigationBarDuringPresentation = NO;
+    [self.mainView addSubview:self.searchController.searchBar];
 //    self.followingTableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
-    
 }
 
 
@@ -182,6 +187,10 @@
             }
             
             [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
+            
+            self.scrollViewHeightConstraint.constant = 215+([[_friends objectAtIndex:0] count]*66);
+            self.viewHeightConstraint.constant = self.scrollViewHeightConstraint.constant;
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.followingTableView reloadData];
@@ -216,6 +225,8 @@
             default:
                 break;
         }
+    }else{
+        return NSLocalizedString(@"Search Results",@"Search Results");
     }
     return nil;
 }
@@ -249,15 +260,7 @@
     if (self.isEditing){
         [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
     } else if (self.isNext == YES){
-        if (self.didTapCreated == YES){
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-            
-        }else if (self.isTripCreation){
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-            
-        } else {
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-        }
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
     }
 }
 
@@ -586,6 +589,9 @@
                 [self.searchResults addObjectsFromArray:objects];
                 [self.followingTableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
+                
+                self.scrollViewHeightConstraint.constant = 215+(self.searchResults.count*66);
+                self.viewHeightConstraint.constant = self.scrollViewHeightConstraint.constant;
             }
         }];
     }
@@ -595,6 +601,7 @@
  *  Delegate method executed when the "Done" button is pressed
  */
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+
     self.isSearching = NO;
     
     if (self.isNext == YES) {
@@ -607,25 +614,27 @@
         [self.followingTableView reloadData];
         
     }
+    
+//    self.searchBarHeightConstraint.constant = 44;
 }
 
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
-    contentInsets.bottom = keyboardSize.height;
-    self.followingTableView.contentInset = contentInsets;
-    self.followingTableView.scrollIndicatorInsets = contentInsets;
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
-    contentInsets.bottom = 0;
-    self.followingTableView.contentInset = contentInsets;
-    self.followingTableView.scrollIndicatorInsets = contentInsets;
-    [self.followingTableView setNeedsLayout];
-}
+//- (void)keyboardWillShow:(NSNotification *)notification
+//{
+//    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
+//    contentInsets.bottom = keyboardSize.height;
+//    self.followingTableView.contentInset = contentInsets;
+//    self.followingTableView.scrollIndicatorInsets = contentInsets;
+//}
+//
+//- (void)keyboardWillHide:(NSNotification *)notification
+//{
+//    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
+//    contentInsets.bottom = 0;
+//    self.followingTableView.contentInset = contentInsets;
+//    self.followingTableView.scrollIndicatorInsets = contentInsets;
+//    [self.followingTableView setNeedsLayout];
+//}
 
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
@@ -649,7 +658,8 @@
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     self.isNext = NO;
     //    self.isSearching = YES;
-    [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
+//    self.searchController.searchBar.showsCancelButton = YES;
+//    self.searchBarHeightConstraint.constant = -21;
 }
 
 
