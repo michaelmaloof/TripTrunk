@@ -50,7 +50,6 @@
 @property BOOL isEditingCaption;
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-
 @property BOOL isZoomed;
 //############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
@@ -58,6 +57,7 @@
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
 @property (strong, nonatomic) NSMutableArray *softMentions;
 //############################################# MENTIONS ##################################################
 @property BOOL imageZoomed;
@@ -65,7 +65,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomWrapperHeightCnt;
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 @property (weak, nonatomic) IBOutlet UIButton *privateButton;
-
 // Data Properties
 @property NSMutableArray *commentActivities;
 @property NSMutableArray *likeActivities;
@@ -79,43 +78,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.caption.hidden = YES;
-    [self setOriginalUIForPhoto]; //sets UI for photo exlcuding Trunk things
-    [self setOriginalUIForTrunk]; //sets UI for trunk photi is in
-    self.commentActivities = [[NSMutableArray alloc] init];
-    self.likeActivities = [[NSMutableArray alloc] init];
-    [self addGestureRecognizers]; //adds gestures for the photo (swipe, etc)
-    [self loadImageForPhoto:self.photo]; // Load initial data for the photo/UIImage
-    [self setNotificationCenter];
-    [self setScrollViewUI];
-    //load the first photo (which is the one the user clicked to get here)
-    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
-    // Add keyboard notifications so that the keyboard won't cover the table when searching
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+    if (self.fromAddPhotosViewController == NO){
+        [self prepareForViewPhotoFromTrunk];
+    } else {
+        [self prepareAddCaptionForNewPhoto];
+    }
 }
 
 #pragma On Appear
 
 -(void)viewWillAppear:(BOOL)animated {
+    if (self.fromAddPhotosViewController == NO){
+        [self setCaptionAndNavBar];
+        [self updateCommentsLabel];
+        [self updateLikesLabel];
+        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+        [self markPhotoAsViewed];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    NSRange cursorPosition = [self.caption selectedRange];
+    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+}
+
+-(void)setCaptionAndNavBar{
     self.saveButton.hidden = YES;
     self.navigationController.navigationBarHidden = YES;
     self.tabBarController.tabBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-    //set button titles with numbers
-    [self updateCommentsLabel];
-    [self updateLikesLabel];
-    //set button selelction
-    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-    [self markPhotoAsViewed];
 }
 
 -(void)markPhotoAsViewed{
@@ -137,13 +130,9 @@
     }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    NSRange cursorPosition = [self.caption selectedRange];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-}
-
 #pragma Original Photo UI on ViewDidLoad
 -(void)setOriginalUIForPhoto{
+    self.caption.hidden = YES;
     self.privateButton.hidden = YES;
     // Set initial UI
     if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
@@ -180,6 +169,41 @@
     }
 }
 
+-(void)prepareAddCaptionForNewPhoto{
+    self.trunkNameButton.hidden = YES;
+    self.photoTakenBy.hidden = YES;
+    self.privateButton.hidden = YES;
+    self.moreButton.hidden = YES;
+    self.timeStamp.hidden = YES;
+    self.likeButton.hidden = YES;
+    self.likeCountButton.hidden = YES;
+    self.comments.hidden = YES;
+    self.caption.selectable = NO;
+    self.caption.editable = NO;
+    self.caption.delegate = self;
+    self.caption.hidden = YES;
+    self.captionLabel.hidden = NO;
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+    [self setCaptionAndNavBar];
+    [self setNotificationCenter];
+    [self loadImageForPhoto:self.photo];
+    [self editCaptionPhotoGestures];
+//    [self editCaptionTapped:self];
+
+}
+
+-(void)prepareForViewPhotoFromTrunk{
+    [self setOriginalUIForPhoto];
+    [self setOriginalUIForTrunk];
+    self.commentActivities = [[NSMutableArray alloc] init];
+    self.likeActivities = [[NSMutableArray alloc] init];
+    [self addGestureRecognizers];
+    [self loadImageForPhoto:self.photo];
+    [self setNotificationCenter];
+    [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
+}
+
 -(void)setScrollViewUI{
     self.scrollView.delegate = self;
     [self.scrollView setClipsToBounds:YES];
@@ -188,7 +212,6 @@
     self.scrollView.maximumZoomScale = 6.0;
     self.scrollView.zoomScale = 1.0;
     [self.scrollView setContentMode:UIViewContentModeScaleAspectFit];
-    
     self.originY = self.scrollView.frame.origin.y;
     self.originX = self.scrollView.frame.origin.x;
     self.width = self.scrollView.frame.size.width;
@@ -201,6 +224,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshPhotoActivities)
                                                  name:@"commentUpdatedOnPhoto"
+                                               object:nil];
+    // Add keyboard notifications so that the keyboard won't cover the table when searching
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
                                                object:nil];
 }
 
@@ -355,6 +387,15 @@
     self.imageView.frame = contentsFrame;
 }
 
+-(void)editCaptionPhotoGestures{
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeDown:)];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeDown];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.imageView addGestureRecognizer:tapGesture];
+}
+
+
 - (void)addGestureRecognizers {
     // Add swipe gestures
     UISwipeGestureRecognizer *swipeleft = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
@@ -404,14 +445,28 @@
 #pragma mark - Photo Data
 
 - (void)loadImageForPhoto: (Photo *)photo {
-    NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    UIImage *placeholderImage = photo.image;
-    [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    
-    [self.imageView setImageWithURLRequest:request
-                      placeholderImage:placeholderImage
-                               success:nil failure:nil];
+    if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
+        NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+        UIImage *placeholderImage = photo.image;
+        [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.imageView setImageWithURLRequest:request
+                              placeholderImage:placeholderImage
+                                       success:nil failure:nil];
+    } else if (photo.imageAsset){ //not imagURL, its an imageAsset from AddTripPhotosViewController
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        CGFloat floatWidth = screenRect.size.width;
+        CGFloat floatHeight = screenRect.size.height;
+//        //TODO: change width/height scaling for iPhone 6+ since it's a 3x phone.
+        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+                                                   targetSize:CGSizeMake(floatWidth*2, floatHeight*2)
+                                                  contentMode:PHImageContentModeAspectFit
+                                                      options:nil
+                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                                                    // Set the image.
+                                                    self.imageView.image = result;
+                                                }];
+    }
 }
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
@@ -648,6 +703,8 @@
     if (self.isEditingCaption == YES)
     {
         [self.caption endEditing:YES];
+    } else if (self.fromAddPhotosViewController == YES){
+        [self.caption endEditing:YES];
     }
 }
 
@@ -733,7 +790,6 @@
             self.saveButton.hidden = YES;
         } else{
             self.saveButton.hidden = NO;
-
         }
     } else{
         self.saveButton.hidden = NO;
@@ -747,9 +803,11 @@
     self.isEditingCaption = NO;
     self.scrollView.scrollEnabled = YES;
     [self.addCaption setImage:[UIImage imageNamed:@"editPencil"] forState:UIControlStateNormal];
-    self.likeButton.hidden = NO;
-    self.likeCountButton.hidden = NO;
-    self.comments.hidden = NO;
+    if (self.fromAddPhotosViewController == NO){
+        self.likeButton.hidden = NO;
+        self.likeCountButton.hidden = NO;
+        self.comments.hidden = NO;
+    }
     self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     self.addCaption.tag = 0;
@@ -809,89 +867,95 @@
 
 //Combine save and delete FIXME
 - (IBAction)saveButtonWasTapped:(id)sender {
-    //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
-    //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
-    //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
     
-    if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
-        //begin process of adding a caption to the current photo
-        self.addCaption.enabled = NO;
-        self.photo.caption = [self separateMentions:self.caption.text];
-        [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
-        [self updateCommentsLabel];
-        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
-            if (!error)
-            {
-                [[TTUtility sharedInstance] internetConnectionFound];
-                //if there are no comments on the photo
-                if (self.commentActivities.count == 0)
+    if (self.fromAddPhotosViewController == NO){
+        //FIXME: This needs to be looked at. Without know what all the bools and arrays do, it's hard to comment why but
+        //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
+        //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
+        
+        if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
+            //begin process of adding a caption to the current photo
+            self.addCaption.enabled = NO;
+            self.photo.caption = [self separateMentions:self.caption.text];
+            [[TTCache sharedCache] incrementCommentCountForPhoto:self.photo];
+            [self updateCommentsLabel];
+            [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                self.autocompletePopover = [[self storyboard] instantiateViewControllerWithIdentifier:@"TTSuggestionTableViewController"];
+                if (!error)
                 {
-                    [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                        if(!error)
-                        {
-                            NSLog(@"Caption saved as comment");
-                            [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
-                            [self updateMentionsInDatabase:commentObject];
-                            [self.caption endEditing:YES];
-                        }else
-                        {
-                            NSLog(@"Error saving caption");
-                            [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
-                            [self updateCommentsLabel];
-                            [self.caption endEditing:YES];
+                    [[TTUtility sharedInstance] internetConnectionFound];
+                    //if there are no comments on the photo
+                    if (self.commentActivities.count == 0)
+                    {
+                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                            if(!error)
+                            {
+                                NSLog(@"Caption saved as comment");
+                                [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                                [self updateMentionsInDatabase:commentObject];
+                                [self.caption endEditing:YES];
+                            }else
+                            {
+                                NSLog(@"Error saving caption");
+                                [[TTCache sharedCache] decrementCommentCountForPhoto:self.photo];
+                                [self updateCommentsLabel];
+                                [self.caption endEditing:YES];
+                            }
+                        }];
+                    }
+                    //if there are already comments on the photo
+                    else
+                    {
+                        [ParseErrorHandlingController handleError:error];
+                        //if there already is a caption we edit it and save it
+                        __block BOOL save = NO;
+                        for (PFObject *obj in self.commentActivities){
+                            if ([[obj objectForKey:@"isCaption"] boolValue] && !save){
+                                save = YES;
+                                [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
+                                [obj setObject:self.photo.caption forKey:@"content"];
+                                [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                    if(!error){
+                                        NSLog(@"Caption saved as comment");
+                                        [self updateCommentsLabel];
+                                        [self updateMentionsInDatabase:obj];
+                                    }else{
+                                        NSLog(@"Error saving caption");
+                                    }
+                                }];
+                            }
                         }
-                    }];
-                }
-                //if there are already comments on the photo
-                else
-                {
-                    [ParseErrorHandlingController handleError:error];
-                    //if there already is a caption we edit it and save it
-                    __block BOOL save = NO;
-                    for (PFObject *obj in self.commentActivities){
-                        if ([[obj objectForKey:@"isCaption"] boolValue] && !save){
-                            save = YES;
-                            [obj setObject:[NSNumber numberWithBool:YES] forKey:@"isCaption"];
-                            [obj setObject:self.photo.caption forKey:@"content"];
-                            [obj saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                                if(!error){
-                                    NSLog(@"Caption saved as comment");
-                                    [self updateCommentsLabel];
-                                    [self updateMentionsInDatabase:obj];
-                                }else{
-                                    NSLog(@"Error saving caption");
-                                }
-                            }];
+                        if (!save) {
+                            [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
+                             {
+                                 if(!error){
+                                     NSLog(@"Caption saved as comment");
+                                     [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
+                                     [self.caption endEditing:YES];
+                                     [self updateMentionsInDatabase:commentObject];
+                                 }else{
+                                     NSLog(@"Error saving caption");
+                                     [self updateCommentsLabel];
+                                     [self.caption endEditing:YES];
+                                 }
+                             }];
+                            
+                        }else{
+                            //FIXME: shouldn't we handle this conditon?
                         }
                     }
-                    if (!save) {
-                        [SocialUtility addComment:self.photo.caption forPhoto:self.photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error)
-                         {
-                             if(!error){
-                                 NSLog(@"Caption saved as comment");
-                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
-                                 [self.caption endEditing:YES];
-                                 [self updateMentionsInDatabase:commentObject];
-                             }else{
-                                 NSLog(@"Error saving caption");
-                                 [self updateCommentsLabel];
-                                 [self.caption endEditing:YES];
-                             }
-                         }];
-                        
-                    }else{
-                        //FIXME: shouldn't we handle this conditon?
-                    }
                 }
+                [self.caption endEditing:YES];
+                self.addCaption.enabled = YES;
+            }];
+        } else {
+            if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
+                [self deletePhotoCaption];
             }
-            [self.caption endEditing:YES];
-            self.addCaption.enabled = YES;
-        }];
-    } else {
-        if (![self.photo.caption isEqualToString:@""] && self.photo.caption != nil){
-            [self deletePhotoCaption];
         }
+    } else {
+        [self.delegate captionWasAdded:self.caption.text];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
