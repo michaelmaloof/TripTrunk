@@ -183,7 +183,8 @@
     self.caption.delegate = self;
     self.caption.hidden = YES;
     self.captionLabel.hidden = NO;
-    self.captionLabel.text = self.photo.caption;
+    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
 //    self.addCaption.hidden = YES;
     [self setCaptionAndNavBar];
     [self setNotificationCenter];
