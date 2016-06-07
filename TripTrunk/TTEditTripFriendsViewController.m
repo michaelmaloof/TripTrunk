@@ -439,6 +439,8 @@
             [cell.profilePhoto setImage:image];
             [cell setNeedsLayout];
         } failure:nil];
+    
+    [cell layoutIfNeeded];
     return cell;
 }
 
