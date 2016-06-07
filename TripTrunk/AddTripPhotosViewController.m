@@ -266,11 +266,16 @@
                                                         // Calls the method to actually upload the image and save the Photo to parse
                                                         [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData block:^(BOOL succeeded, PFObject *commentObject, NSString* url, NSError *error) {
                                                             if(!error){
-                                                                NSDictionary *photoDetails = @{@"url":url,
-                                                                                               @"caption":commentObject[@"content"]};
-                                                                [self.facebookPhotos addObject:photoDetails];
-                                                                if(commentObject)
+                                                                NSString *photoComment = @"";
+                                                                if(commentObject){
                                                                     [self updateMentionsInDatabase:commentObject];
+                                                                    photoComment = commentObject[@"content"];
+                                                                }
+                                                                
+                                                                NSDictionary *photoDetails = @{@"url":url,
+                                                                                               @"caption":photoComment};
+                                                                [self.facebookPhotos addObject:photoDetails];
+                                                                
                                                                 
                                                                 
                                                                 if((self.photos.count == self.facebookPhotos.count) && self.publishToFacebook){
