@@ -108,6 +108,9 @@
 //                                               object:nil];
 //    
     self.isNext = YES;
+    
+    if(self.existingMembers.count < 5)
+        self.membersCollectionView.scrollEnabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -444,17 +447,27 @@
     return cell;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *) collectionView
-                        layout:(UICollectionViewLayout *) collectionViewLayout
-        insetForSectionAtIndex:(NSInteger) section {
-    
-    return UIEdgeInsetsMake(0, 1, 0, 1); // top, left, bottom, right
-}
+//- (UIEdgeInsets)collectionView:(UICollectionView *) collectionView
+//                        layout:(UICollectionViewLayout *) collectionViewLayout
+//        insetForSectionAtIndex:(NSInteger) section {
+//    
+//    return UIEdgeInsetsMake(0, 1, 0, 1); // top, left, bottom, right
+//}
 
 - (CGFloat)collectionView:(UICollectionView *) collectionView
                    layout:(UICollectionViewLayout *) collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
     return 1.0;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    // Add inset to the collection view if there are not enough cells to fill the width.
+    CGFloat cellSpacing = ((UICollectionViewFlowLayout *) collectionViewLayout).minimumLineSpacing;
+    CGFloat cellWidth = ((UICollectionViewFlowLayout *) collectionViewLayout).itemSize.width;
+    NSInteger cellCount = [collectionView numberOfItemsInSection:section];
+    CGFloat inset = (collectionView.bounds.size.width - (cellCount * (cellWidth + cellSpacing))) * 0.5;
+    inset = MAX(inset, 0.0);
+    return UIEdgeInsetsMake(0.0, inset, 0.0, 1.0);
 }
 
 

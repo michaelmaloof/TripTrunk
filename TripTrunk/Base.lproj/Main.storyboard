@@ -2609,7 +2609,8 @@
                                                         <exclude reference="ji3-Vu-bOe"/>
                                                     </mask>
                                                 </variation>
-                                                <variation key="heightClass=regular-widthClass=compact">
+                                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                    <rect key="frame" x="346" y="35" width="20" height="20"/>
                                                     <mask key="constraints">
                                                         <include reference="ji3-Vu-bOe"/>
                                                     </mask>
@@ -3987,7 +3988,7 @@
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="21" id="LNV-V6-Odz"/>
                                                                     </constraints>
-                                                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="10"/>
+                                                                    <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="9"/>
                                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                     <variation key="default">
@@ -3995,7 +3996,8 @@
                                                                             <exclude reference="LNV-V6-Odz"/>
                                                                         </mask>
                                                                     </variation>
-                                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                                        <rect key="frame" x="10" y="68" width="60" height="12"/>
                                                                         <mask key="constraints">
                                                                             <exclude reference="LNV-V6-Odz"/>
                                                                         </mask>
