@@ -62,7 +62,7 @@
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
     self.friendsObjectIds = [[NSMutableArray alloc]init];
-    self.title = NSLocalizedString(@"Add Members",@"Add Members");
+    self.title = NSLocalizedString(@"Edit Members",@"Edit Members");
     [self.followingTableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
