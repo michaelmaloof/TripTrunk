@@ -3384,7 +3384,7 @@
                                     <constraint firstAttribute="height" constant="70" id="ZhN-Qr-4bd"/>
                                     <constraint firstAttribute="width" constant="70" id="bGB-aZ-Zac"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="42"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="32"/>
                                 <inset key="titleEdgeInsets" minX="0.0" minY="-7" maxX="-4" maxY="0.0"/>
                                 <state key="normal" title="upload">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3396,7 +3396,8 @@
                                         <exclude reference="ZhN-Qr-4bd"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="30" y="681" width="283" height="60"/>
                                     <mask key="constraints">
                                         <exclude reference="3ys-zi-51n"/>
                                         <include reference="8rj-nI-WaL"/>
@@ -3507,14 +3508,14 @@
                                     <outlet property="delegate" destination="npq-fR-GHM" id="3oD-pa-rg9"/>
                                 </connections>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Az-uP-1Nh">
+                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Az-uP-1Nh">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="43" id="wbo-Qg-78x"/>
-                                    <constraint firstAttribute="height" constant="30" id="zTH-vx-rRa"/>
+                                    <constraint firstAttribute="width" constant="60" id="wbo-Qg-78x"/>
+                                    <constraint firstAttribute="height" constant="60" id="zTH-vx-rRa"/>
                                 </constraints>
-                                <state key="normal" title="NO"/>
-                                <state key="selected" title="YES"/>
+                                <state key="normal" image="FacebookPost_off"/>
+                                <state key="selected" image="FacebookPost_on"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="wbo-Qg-78x"/>
@@ -3534,6 +3535,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="6Az-uP-1Nh" secondAttribute="trailing" constant="20" id="1bW-Dm-jXo"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="top" secondItem="6Az-uP-1Nh" secondAttribute="bottom" constant="3" id="7px-Fm-vaB"/>
                             <constraint firstItem="6Az-uP-1Nh" firstAttribute="leading" secondItem="Cif-Kq-aC8" secondAttribute="trailing" constant="-13" id="9CJ-d5-IDD"/>
                             <constraint firstItem="HJk-qO-N2Z" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="5" id="BsE-Wp-rv7"/>
@@ -3545,6 +3547,7 @@
                             <constraint firstItem="6aa-kD-QM2" firstAttribute="top" secondItem="Cif-Kq-aC8" secondAttribute="bottom" constant="10" id="Ko6-XT-I09"/>
                             <constraint firstAttribute="centerX" secondItem="Cif-Kq-aC8" secondAttribute="centerX" id="Mbq-jg-HId"/>
                             <constraint firstItem="Cif-Kq-aC8" firstAttribute="leading" secondItem="nt3-Bg-jIk" secondAttribute="leadingMargin" constant="10" id="Myh-HA-5Lg"/>
+                            <constraint firstItem="6Az-uP-1Nh" firstAttribute="leading" secondItem="Cif-Kq-aC8" secondAttribute="trailing" constant="8" id="Nkj-qp-jzK"/>
                             <constraint firstAttribute="centerX" secondItem="HJk-qO-N2Z" secondAttribute="centerX" id="OdJ-Yc-SU0"/>
                             <constraint firstItem="6aa-kD-QM2" firstAttribute="top" secondItem="Cif-Kq-aC8" secondAttribute="bottom" constant="6" id="OrT-Ue-YBQ"/>
                             <constraint firstItem="PrH-qe-6U7" firstAttribute="centerX" secondItem="nt3-Bg-jIk" secondAttribute="centerX" id="RC9-8L-GmB"/>
@@ -3563,6 +3566,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="12"/>
                             </constraint>
                             <constraint firstItem="HJk-qO-N2Z" firstAttribute="top" secondItem="8Fc-E2-Tuo" secondAttribute="bottom" constant="30" id="rqk-LT-PVc"/>
+                            <constraint firstItem="6Az-uP-1Nh" firstAttribute="top" secondItem="HJk-qO-N2Z" secondAttribute="bottom" constant="10" id="spo-aT-teN"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -3589,8 +3593,11 @@
                                 <exclude reference="kBu-cx-F7F"/>
                                 <exclude reference="ktP-be-mO5"/>
                                 <exclude reference="mAC-ut-tPI"/>
-                                <exclude reference="9CJ-d5-IDD"/>
                                 <exclude reference="Ko6-XT-I09"/>
+                                <exclude reference="1bW-Dm-jXo"/>
+                                <exclude reference="9CJ-d5-IDD"/>
+                                <exclude reference="Nkj-qp-jzK"/>
+                                <exclude reference="spo-aT-teN"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -3605,15 +3612,18 @@
                                 <exclude reference="rqk-LT-PVc"/>
                                 <include reference="RC9-8L-GmB"/>
                                 <include reference="pHZ-ii-UTV"/>
-                                <include reference="7px-Fm-vaB"/>
+                                <exclude reference="7px-Fm-vaB"/>
                                 <include reference="Myh-HA-5Lg"/>
                                 <exclude reference="cD9-hH-rth"/>
                                 <exclude reference="eed-dV-WJi"/>
-                                <include reference="iLC-o2-qSk"/>
+                                <exclude reference="iLC-o2-qSk"/>
                                 <include reference="mAC-ut-tPI"/>
-                                <include reference="9CJ-d5-IDD"/>
                                 <include reference="Ko6-XT-I09"/>
                                 <exclude reference="OrT-Ue-YBQ"/>
+                                <include reference="1bW-Dm-jXo"/>
+                                <exclude reference="9CJ-d5-IDD"/>
+                                <include reference="Nkj-qp-jzK"/>
+                                <include reference="spo-aT-teN"/>
                             </mask>
                         </variation>
                     </view>
@@ -5639,6 +5649,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="FacebookPost_off" width="60" height="60"/>
+        <image name="FacebookPost_on" width="60" height="60"/>
         <image name="Load" width="152" height="132"/>
         <image name="addTrunk_tabIcon" width="56" height="50"/>
         <image name="add_trunk" width="56" height="50"/>
