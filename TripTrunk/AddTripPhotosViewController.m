@@ -68,8 +68,11 @@
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-    if(self.trip.isPrivate)
-        self.facebookPublishButton.hidden = YES;
+    PFUser *currentUser = [PFUser currentUser];
+    if(self.trip.isPrivate || !currentUser[@"fbid"]){
+        self.facebookPublishButton.enabled = NO;
+        self.facebookPublishButton.selected = YES;
+    }
     //############################################# MENTIONS ##################################################
     [self buildMentionUsersCache];
     //############################################# MENTIONS ##################################################
