@@ -94,19 +94,8 @@
     [self initSearchController];
     // Get the users for the list
     [self loadFollowing];
-    [self loadFollowers];
-    
-    // Add keyboard notifications so that the keyboard won't cover the table when searching
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(keyboardWillShow:)
-//                                                 name:UIKeyboardWillShowNotification
-//                                               object:nil];
-//    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(keyboardWillHide:)
-//                                                 name:UIKeyboardWillHideNotification
-//                                               object:nil];
-//    
+//    [self loadFollowers];
+  
     self.isNext = YES;
     
     if(self.existingMembers.count < 5)
@@ -137,8 +126,7 @@
 
 
 
-- (void)loadFollowing
-{
+- (void)loadFollowing{
     
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
@@ -154,10 +142,12 @@
             
             [[_friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
             
-            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.followingTableView reloadData];
-            });
+//            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.followingTableView reloadData];
+//            });
+            
+            [self loadFollowers];
         }
         else {
             NSLog(@"Error: %@",error);
@@ -447,13 +437,6 @@
     return cell;
 }
 
-//- (UIEdgeInsets)collectionView:(UICollectionView *) collectionView
-//                        layout:(UICollectionViewLayout *) collectionViewLayout
-//        insetForSectionAtIndex:(NSInteger) section {
-//    
-//    return UIEdgeInsetsMake(0, 1, 0, 1); // top, left, bottom, right
-//}
-
 - (CGFloat)collectionView:(UICollectionView *) collectionView
                    layout:(UICollectionViewLayout *) collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
@@ -622,52 +605,9 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
     }
 }
 
-/**
- *  Delegate method executed when the "Done" button is pressed
- */
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-
-    self.isSearching = NO;
-    
-    if (self.isNext == YES) {
-        [self saveFriendsAndClose];
-        //        [self.tableView reloadData];
-    } else {
-        self.isNext = YES;
-        //        [self loadFollowing];
-        //        [self loadFollowers];
-        [self.followingTableView reloadData];
-        
-    }
-    
-//    self.searchBarHeightConstraint.constant = 44;
-}
-
-//- (void)keyboardWillShow:(NSNotification *)notification
-//{
-//    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
-//    contentInsets.bottom = keyboardSize.height;
-//    self.followingTableView.contentInset = contentInsets;
-//    self.followingTableView.scrollIndicatorInsets = contentInsets;
-//}
-//
-//- (void)keyboardWillHide:(NSNotification *)notification
-//{
-//    UIEdgeInsets contentInsets = self.followingTableView.contentInset;
-//    contentInsets.bottom = 0;
-//    self.followingTableView.contentInset = contentInsets;
-//    self.followingTableView.scrollIndicatorInsets = contentInsets;
-//    [self.followingTableView setNeedsLayout];
-//}
-
 #pragma mark - UISearchResultsUpdating
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
-{
-    //    NSString *searchString = searchController.searchBar.text;
-    //    if (![searchString isEqualToString:@""]){
-    //        [self filterResults:searchString];
-    //    }
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController{
+
 }
 
 
@@ -682,9 +622,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     self.isNext = NO;
-    //    self.isSearching = YES;
-//    self.searchController.searchBar.showsCancelButton = YES;
-//    self.searchBarHeightConstraint.constant = -21;
 }
 
 
