@@ -10,13 +10,16 @@
 
 @implementation TTUserProfileImage
 
--(id)initWithCoder:(NSCoder *)aDecoder{
-    if(self == [super initWithCoder:aDecoder]){
-        self.layer.cornerRadius = 19;
-        self.layer.masksToBounds = YES;
-        self.layer.borderWidth = 0;
-    }
-    
-    return self;
+- (void)awakeFromNib {
+    [super awakeFromNib];
+}
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    int imageWidth = self.frame.size.width;
+    self.layer.cornerRadius = imageWidth/2;
+    self.layer.masksToBounds = YES;
+    self.layer.borderWidth = 0;
+
 }
 @end

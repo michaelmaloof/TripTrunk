@@ -15,10 +15,11 @@
 #import "UserProfileViewController.h"
 #import "TTUtility.h"
 #import "TTCache.h"
+#import "TTEditTripFriendsViewController.h"
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface TrunkMembersViewController () <UserTableViewCellDelegate, AddMemberDelegate>
+@interface TrunkMembersViewController () <UserTableViewCellDelegate, AddMemberDelegate, EditMemberDelegate>
 
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *tripCreator;
@@ -299,7 +300,11 @@
 {
     NSMutableArray *members = [[NSMutableArray alloc] initWithArray:self.tripMembers];
     [members addObject:self.tripCreator];
-    AddTripFriendsViewController *vc = [[AddTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    TTEditTripFriendsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"TTEditTripFriendsViewController"];
+//    vc = [[TTEditTripFriendsViewController alloc] initWithTrip:self.trip andExistingMembers:members];
+    vc.trip = self.trip;
+    vc.existingMembers = members;
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }

@@ -1,12 +1,12 @@
 //
-//  AddTripFriendsViewController.m
+//  TTEditTripFriendsViewController.m
 //  TripTrunk
 //
-//  Created by Matt Schoch on 5/29/15.
-//  Copyright (c) 2015 Michael Maloof. All rights reserved.
+//  Created by Michael Cannell on 6/2/16.
+//  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#import "AddTripFriendsViewController.h"
+#import "TTEditTripFriendsViewController.h"
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
@@ -14,10 +14,11 @@
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "TTUtility.h"
+#import "TTTrunkMemberViewCell.h"
 
 #define USER_CELL @"user_table_view_cell"
 
-@interface AddTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+@interface TTEditTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -25,7 +26,7 @@
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
 // Array of PFUser objects that are already part of the trip
-@property (strong, nonatomic) NSMutableArray *existingMembers;
+//@property (strong, nonatomic) NSMutableArray *existingMembers;
 @property BOOL isNext;
 @property NSMutableArray *membersToAdd;
 @property BOOL isSearching;
@@ -33,11 +34,15 @@
 @property BOOL didTapCreated;
 @property (strong, nonatomic) IBOutlet UITableView *followingTableView;
 @property (strong, nonatomic) IBOutlet UICollectionView *membersCollectionView;
+@property (strong, nonatomic) IBOutlet UIView *mainView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *searchBarHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *viewHeightConstraint;
 
 
 @end
 
-@implementation AddTripFriendsViewController
+@implementation TTEditTripFriendsViewController
 
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 {
@@ -52,18 +57,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.membersToAdd = [[NSMutableArray alloc]init];
     if (!self.existingMembers) {
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
-    
     self.friendsObjectIds = [[NSMutableArray alloc]init];
-    
     self.title = NSLocalizedString(@"Add Members",@"Add Members");
-    
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    
+    [self.followingTableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk")
@@ -73,7 +73,7 @@
         [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                         [TTColor tripTrunkBlue], NSForegroundColorAttributeName,
                                                                         [TTFont tripTrunkFontBold14], NSFontAttributeName, nil] forState:UIControlStateNormal];
-                UIBarButtonItem *newBackButton =
+        UIBarButtonItem *newBackButton =
         [[UIBarButtonItem alloc] initWithTitle:@""
                                          style:UIBarButtonItemStylePlain
                                         target:nil
@@ -83,37 +83,23 @@
     else
     {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-  
-    
     }
-    
     _thisUser = [PFUser currentUser];
-    
     // Create nested arrays to populate the table view
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
     _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
-
-    self.tableView.multipleTouchEnabled = YES;
-    self.tableView.allowsMultipleSelection = YES;
+    self.followingTableView.multipleTouchEnabled = YES;
+    self.followingTableView.allowsMultipleSelection = YES;
     [self initSearchController];
-    
     // Get the users for the list
     [self loadFollowing];
-    [self loadFollowers];
-    
-    // Add keyboard notifications so that the keyboard won't cover the table when searching
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
+//    [self loadFollowers];
+  
     self.isNext = YES;
+    
+    if(self.existingMembers.count < 5)
+        self.membersCollectionView.scrollEnabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -123,24 +109,24 @@
 
 - (void)initSearchController {
     self.searchResults = [NSMutableArray array];
-    
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
-    
+    self.searchController.searchBar.showsCancelButton = NO;
     [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
-    
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.searchController.searchBar.tintColor = [TTColor tripTrunkWhite];
+    self.searchController.searchBar.frame = CGRectMake(0, 0, [[UIScreen mainScreen]applicationFrame].size.width, 44);
+    self.searchController.hidesNavigationBarDuringPresentation = NO;
+    [self.mainView addSubview:self.searchController.searchBar];
+//    self.followingTableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
-
 }
 
 
 
-- (void)loadFollowing
-{
+- (void)loadFollowing{
     
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
@@ -155,11 +141,13 @@
             }
             
             [[_friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
-
-            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
+            
+//            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.followingTableView reloadData];
+//            });
+            
+            [self loadFollowers];
         }
         else {
             NSLog(@"Error: %@",error);
@@ -168,13 +156,11 @@
     
 }
 
-- (void)loadFollowers
-{
+- (void)loadFollowers{
     [SocialUtility followers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
-            
             NSMutableArray *friendsToAdd = [[NSMutableArray alloc]init];
-
+            
             for (PFUser *user in users){
                 if (![self.friendsObjectIds containsObject:user.objectId]){
                     [self.friendsObjectIds addObject:user.objectId];
@@ -183,11 +169,13 @@
             }
             
             [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
-
-
+            
+            self.scrollViewHeightConstraint.constant = 215+([[_friends objectAtIndex:0] count]*66);
+            self.viewHeightConstraint.constant = self.scrollViewHeightConstraint.constant;
+            
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
+                [self.followingTableView reloadData];
             });
         }
         else {
@@ -209,7 +197,7 @@
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active)
     {
-    
+        
         switch (section) {
             case 0:
                 return NSLocalizedString(@"Following",@"Following");
@@ -219,6 +207,8 @@
             default:
                 break;
         }
+    }else{
+        return NSLocalizedString(@"Search Results",@"Search Results");
     }
     return nil;
 }
@@ -228,6 +218,7 @@
     view.tintColor = [TTColor tripTrunkRed];
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setTextColor:[TTColor tripTrunkWhite]];
+    [header.textLabel setFont:[TTFont tripTrunkFontBold16]];
 }
 
 
@@ -251,20 +242,12 @@
     if (self.isEditing){
         [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
     } else if (self.isNext == YES){
-        if (self.didTapCreated == YES){
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
-        }else if (self.isTripCreation){
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
-        } else {
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-        }
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     PFUser *possibleFriend;
     NSString *searchString = [self.searchController.searchBar.text lowercaseString];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
@@ -274,7 +257,7 @@
     else {
         possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
-    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     cell.profilePicImageView.image = nil;
     [cell.followButton setHidden:YES]; // Hide the follow button - this screen isn't about following people.
     [cell setUser:possibleFriend];
@@ -294,7 +277,7 @@
                                              } failure:nil];
     
     return weakCell;
-
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -305,7 +288,7 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
                                               otherButtonTitles:nil, nil];
-       [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         [alert show];
     }
     
@@ -317,8 +300,8 @@
         } else {
             [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         }
-
-                
+        
+        
     } else {
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Someone is Popular",@"Someone is Popular")
@@ -419,6 +402,60 @@
     return exists;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(80, 80);
+}
+
+#pragma mark - UICollectionViewDelegate
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return self.existingMembers.count;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    __weak TTTrunkMemberViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.userName.text = nil;
+    cell.profilePhoto.image = nil;
+    //***** things Michae Maloof Added >>>
+    cell.profilePhoto.frame = CGRectMake(cell.profilePhoto.frame.origin.x, cell.profilePhoto.frame.origin.y, cell.frame.size.width - 20, cell.frame.size.height - 20);
+    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 80, 80);
+    [cell.profilePhoto setContentMode:UIViewContentModeScaleAspectFill];
+    //**** things Michae Maloof Added ^^
+    PFUser *member = self.existingMembers[indexPath.row];
+    cell.userName.text = member[@"name"];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:member[@"profilePicUrl"]]];
+        [cell.profilePhoto setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            [cell.profilePhoto setImage:image];
+            [cell setNeedsLayout];
+        } failure:nil];
+    
+    [cell layoutIfNeeded];
+    return cell;
+}
+
+- (CGFloat)collectionView:(UICollectionView *) collectionView
+                   layout:(UICollectionViewLayout *) collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
+    return 1.0;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    // Add inset to the collection view if there are not enough cells to fill the width.
+    CGFloat cellSpacing = ((UICollectionViewFlowLayout *) collectionViewLayout).minimumLineSpacing;
+    CGFloat cellWidth = ((UICollectionViewFlowLayout *) collectionViewLayout).itemSize.width;
+    NSInteger cellCount = [collectionView numberOfItemsInSection:section];
+    CGFloat inset = (collectionView.bounds.size.width - (cellCount * (cellWidth + cellSpacing))) * 0.5;
+    inset = MAX(inset, 0.0);
+    return UIEdgeInsetsMake(0.0, inset, 0.0, 1.0);
+}
+
+
+#pragma mark -
+
 - (NSDictionary *)addToTripFunctionParamsForUser:(PFUser *)user onTrip:(Trip *)trip {
     // Create the params dictionary of all the info we need in the Cloud Function
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -442,7 +479,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.title = @"TripTrunk";
     
-//    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+    //    NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
     
     if (self.isTripCreation) {
         // It's the creation flow, so add the creator as a "member" to the trip
@@ -456,11 +493,11 @@
         // Adding friends to an existing trip, so pop back
         [self.delegate memberWasAdded:self];
         [self.navigationController popViewControllerAnimated:YES];
-
-
+        
+        
         
         return; // make sure it doesn't execute further.
-
+        
     }
     else if (self.membersToAdd.count > 0)
     {
@@ -471,19 +508,19 @@
             NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
             
             // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
-//            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+            //            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
             [self.delegate memberWasAddedTemporary:user];
             [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params block:
-            ^(id  _Nullable object, NSError * _Nullable error) {
-                if (self.delegate) {
-                    
-                    if (!error){
-                        [self.delegate memberWasAdded:self];
-                    } else {
-                        [self.delegate memberFailedToLoad:user];
-                    }
-                }
-            }];
+             ^(id  _Nullable object, NSError * _Nullable error) {
+                 if (self.delegate) {
+                     
+                     if (!error){
+                         [self.delegate memberWasAdded:self];
+                     } else {
+                         [self.delegate memberFailedToLoad:user];
+                     }
+                 }
+             }];
             
             
             // Update the Trip's ACL if it's a private trip.
@@ -500,9 +537,9 @@
     
     // Re-enable bar button and let the delegate know that things were updated.
     self.navigationItem.rightBarButtonItem.enabled = YES;
-//    if (self.delegate) {
-//        [self.delegate memberWasAdded:self];
-//    }
+    //    if (self.delegate) {
+    //        [self.delegate memberWasAdded:self];
+    //    }
     
     // Perform the Navigation to the next/previous screen.
     // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.
@@ -514,10 +551,10 @@
     else {
         // Nex trip creation flow, so push forward
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-
+        
         [self performSegueWithIdentifier:@"photos" sender:self];
         self.didTapCreated = YES;
-
+        
     }
     
 }
@@ -558,56 +595,19 @@
                 [ParseErrorHandlingController handleError:error];
             } else {
                 [self.searchResults addObjectsFromArray:objects];
-                [self.tableView reloadData];
+                [self.followingTableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
+                
+                self.scrollViewHeightConstraint.constant = 215+(self.searchResults.count*66);
+                self.viewHeightConstraint.constant = self.scrollViewHeightConstraint.constant;
             }
         }];
     }
 }
 
-/**
- *  Delegate method executed when the "Done" button is pressed
- */
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {    
-    self.isSearching = NO;
-
-    if (self.isNext == YES) {
-        [self saveFriendsAndClose];
-//        [self.tableView reloadData];
-    } else {
-        self.isNext = YES;
-//        [self loadFollowing];
-//        [self loadFollowers];
-        [self.tableView reloadData];
-
-    }
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
-    contentInsets.bottom = keyboardSize.height;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    UIEdgeInsets contentInsets = self.tableView.contentInset;
-    contentInsets.bottom = 0;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-    [self.tableView setNeedsLayout];
-}
-
 #pragma mark - UISearchResultsUpdating
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
-{
-//    NSString *searchString = searchController.searchBar.text;
-//    if (![searchString isEqualToString:@""]){
-//        [self filterResults:searchString];
-//    }
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController{
+
 }
 
 
@@ -616,14 +616,12 @@
     if (![searchBar.text isEqualToString:@""]){
         self.isSearching = YES;
         NSString *searchLower = [searchBar.text lowercaseString];
-            [self filterResults:searchLower];
+        [self filterResults:searchLower];
     }
 }
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     self.isNext = NO;
-//    self.isSearching = YES;
-    [self.navigationController.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Done",@"Done")];
 }
 
 
