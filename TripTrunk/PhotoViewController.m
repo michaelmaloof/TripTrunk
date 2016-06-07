@@ -196,6 +196,7 @@
 -(void)prepareForViewPhotoFromTrunk{
     [self setOriginalUIForPhoto];
     [self setOriginalUIForTrunk];
+    [self setScrollViewUI];
     self.commentActivities = [[NSMutableArray alloc] init];
     self.likeActivities = [[NSMutableArray alloc] init];
     [self addGestureRecognizers];
