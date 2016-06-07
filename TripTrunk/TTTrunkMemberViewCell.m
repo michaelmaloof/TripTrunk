@@ -11,5 +11,9 @@
 
 @implementation TTTrunkMemberViewCell
 
+-(void)awakeFromNib{
+    [super awakeFromNib];
+    self.userName.adjustsFontSizeToFitWidth = YES;
+}
 
 @end

@@ -57,18 +57,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.membersToAdd = [[NSMutableArray alloc]init];
     if (!self.existingMembers) {
         self.existingMembers = [[NSMutableArray alloc] init]; // init so no crash
     }
-    
     self.friendsObjectIds = [[NSMutableArray alloc]init];
-    
     self.title = NSLocalizedString(@"Add Members",@"Add Members");
-    
     [self.followingTableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    
     // During trip creation flow we want a Next button, otherwise it's a Done button
     if (self.isTripCreation) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Create Trunk",@"Create Trunk")
@@ -88,21 +83,15 @@
     else
     {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-        
-        
     }
-    
     _thisUser = [PFUser currentUser];
-    
     // Create nested arrays to populate the table view
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
     _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
-    
     self.followingTableView.multipleTouchEnabled = YES;
     self.followingTableView.allowsMultipleSelection = YES;
     [self initSearchController];
-    
     // Get the users for the list
     [self loadFollowing];
     [self loadFollowers];
@@ -420,6 +409,11 @@
     return exists;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(80, 80);
+}
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.existingMembers.count;
@@ -433,7 +427,11 @@
     __weak TTTrunkMemberViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.userName.text = nil;
     cell.profilePhoto.image = nil;
-    
+    //***** things Michae Maloof Added >>>
+    cell.profilePhoto.frame = CGRectMake(cell.profilePhoto.frame.origin.x, cell.profilePhoto.frame.origin.y, cell.frame.size.width - 20, cell.frame.size.height - 20);
+    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 80, 80);
+    [cell.profilePhoto setContentMode:UIViewContentModeScaleAspectFill];
+    //**** things Michae Maloof Added ^^
     PFUser *member = self.existingMembers[indexPath.row];
     cell.userName.text = member[@"name"];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:member[@"profilePicUrl"]]];
@@ -441,8 +439,20 @@
             [cell.profilePhoto setImage:image];
             [cell setNeedsLayout];
         } failure:nil];
-    
     return cell;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *) collectionView
+                        layout:(UICollectionViewLayout *) collectionViewLayout
+        insetForSectionAtIndex:(NSInteger) section {
+    
+    return UIEdgeInsetsMake(0, 1, 0, 1); // top, left, bottom, right
+}
+
+- (CGFloat)collectionView:(UICollectionView *) collectionView
+                   layout:(UICollectionViewLayout *) collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
+    return 1.0;
 }
 
 

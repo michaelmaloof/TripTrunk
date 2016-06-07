@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTUserProfileImage.h"
 
 @interface TTTrunkMemberViewCell : UICollectionViewCell
-@property (strong, nonatomic) IBOutlet UIImageView *profilePhoto;
 @property (strong, nonatomic) IBOutlet UILabel *userName;
+@property (weak, nonatomic) IBOutlet TTUserProfileImage *profilePhoto;
+
+
+
 @end
