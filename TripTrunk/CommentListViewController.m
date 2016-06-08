@@ -98,6 +98,8 @@
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
     
+    [self.commentInputView.commentField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    
     self.tempComments = [[NSMutableArray alloc]init];
     
     [self loadComments];
@@ -871,7 +873,7 @@
 -(void)textFieldDidChange :(UITextField *)theTextField{
     if ([theTextField.text length] > 1){
         
-        NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+        NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 1];
         if ([code isEqualToString:@" "]){
             [theTextField setKeyboardType:UIKeyboardTypeDefault];
         }

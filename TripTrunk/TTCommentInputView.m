@@ -95,7 +95,7 @@ UIView *topView;
 -(void)textFieldDidChange :(UITextField *)theTextField{
     if ([theTextField.text length] > 1){
 
-    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 2];
+    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 1];
     if ([code isEqualToString:@" "]){
         [theTextField setKeyboardType:UIKeyboardTypeDefault];
     }
