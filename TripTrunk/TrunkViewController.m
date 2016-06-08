@@ -82,6 +82,7 @@
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
     [self refreshTripDataViews];
+    [self.trip.creator fetchIfNeeded];
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (self.trip.publicTripDetail.totalLikes > 0) {
             self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
