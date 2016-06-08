@@ -185,11 +185,12 @@
                 }
                 else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [[PFUser currentUser] fetch];
+                        [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                         [self.delegate privacyChanged:[PFUser currentUser]];
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                        }];
                     });
 
                 }
@@ -205,11 +206,12 @@
                 }
                 else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [[PFUser currentUser] fetch];
+                         [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                         [self.delegate privacyChanged:[PFUser currentUser]];
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
                         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                         }];
                     });
                 }
             }];
