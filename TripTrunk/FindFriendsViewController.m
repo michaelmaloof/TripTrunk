@@ -94,7 +94,9 @@
             [[TTCache sharedCache] setPromotedUsers:_promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+                if (self.user[@"fbid"]){
+                    [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+                }
             });
         }
         else
@@ -112,7 +114,9 @@
     if (fbids.count == 0) {
         self.isLoadingFacebook = NO;
         if (self.facebookRefreshed == NO){
-            [self refreshFacebookFriends];
+            if (self.user[@"fbid"]){
+                [self refreshFacebookFriends];
+            }
         }
         return;
     }
@@ -137,7 +141,9 @@
                 self.isLoadingFacebook = NO;
                 [self.tableView reloadData];
                 if (self.facebookRefreshed == NO){
-                    [self refreshFacebookFriends];
+                    if (self.user[@"fbid"]){
+                        [self refreshFacebookFriends];
+                    }
                 }
             });
         }
@@ -268,7 +274,9 @@
                 [[TTCache sharedCache] setFacebookFriends:friendList];
                 
                 if (friendList.count != 0) {
-                    [self getFriendsFromFbids:friendList];
+                    if (self.user[@"fbid"]){
+                        [self getFriendsFromFbids:friendList];
+                    }
                 }
             }
         }];
@@ -317,7 +325,9 @@
             [self filterResults:self.searchString isScroll:YES];
         }
     } else if (y > h + reload_distance && self.friendsMaxed == NO){
-        [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
+        if (self.user[@"fbid"]){
+            [self searchFacebookFriends:[[TTCache sharedCache] facebookFriends]];
+        }
     }
 }
 
