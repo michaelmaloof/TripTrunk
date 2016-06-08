@@ -402,7 +402,7 @@
             // Objects is an array of Parse Photo objects
             self.myPhotos = [[NSMutableArray alloc]init];
             for (Photo *photo in objects){
-                if (photo.trip.isPrivate == NO){
+                if (photo.trip.isPrivate == NO && photo.trip != nil){
                     [self.myPhotos addObject:photo];
                 }
             }
