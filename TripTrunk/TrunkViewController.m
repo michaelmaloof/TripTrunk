@@ -63,6 +63,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.totalLikeButton.hidden = YES;
+    self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
     self.totalLikeHeart.hidden = YES;
     self.memberCollectionView.hidden = YES;
     self.navigationController.navigationItem.rightBarButtonItem = nil;
@@ -79,7 +80,6 @@
     self.descriptionTextView.selectable = NO;
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
-    self.totalLikeButton.adjustsFontSizeToFitWidth = YES;
     [self refreshTripDataViews];
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (self.trip.publicTripDetail.totalLikes > 0) {
