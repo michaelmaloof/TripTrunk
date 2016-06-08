@@ -55,6 +55,7 @@
 @property int numberOfImagesPerRow;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIButton *addPhotoButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @end
 
@@ -341,11 +342,12 @@
 #pragma mark - Queries
 
 -(void)checkIfIsMember{
-    
+    self.addPhotoButton.hidden = YES;
     // If the user is the creator, then they see the Edit button, not a Leave button.
     if ([[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId])
     {
         self.isMember = YES;
+        self.addPhotoButton.hidden = NO;
     }
     
     if (self.firstLoadDone == NO){
@@ -401,6 +403,7 @@
         if ([ttUser.objectId isEqualToString:[PFUser currentUser].objectId])
         {
             self.isMember = YES;
+            self.addPhotoButton.hidden = NO;
         }
         
     }

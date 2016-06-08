@@ -1710,6 +1710,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="xSk-Pn-g4X"/>
                     <connections>
+                        <outlet property="addPhotoButton" destination="vzv-E3-SnJ" id="hVw-5J-IPS"/>
                         <outlet property="collectionView" destination="o2X-FD-baW" id="Jet-Bo-c2M"/>
                         <outlet property="contentViewHeightConstraint" destination="MMh-fd-C1l" id="zhX-pA-pSJ"/>
                         <outlet property="endDate" destination="nRB-Dp-eMo" id="6nv-xe-LX5"/>
