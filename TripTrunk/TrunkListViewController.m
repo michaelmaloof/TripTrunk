@@ -768,7 +768,7 @@
         NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",cell.trip.name];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
-        textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
+        textAttachment.image = [UIImage imageNamed:@"lock_small_gray"];
         NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
         [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
         cell.titleLabel.attributedText = attributedString;
