@@ -19,6 +19,8 @@
 @property (strong, nonatomic) Photo *photo;
 @property (strong, nonatomic)UIButton *submitButton;
 
+-(void)changeKeyboardType;
+
 
 - (void)setupConstraintsWithView:(UIView *)view;
 @end

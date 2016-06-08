@@ -875,7 +875,7 @@
         
         NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 1];
         if ([code isEqualToString:@" "]){
-            [theTextField setKeyboardType:UIKeyboardTypeDefault];
+            [self.commentInputView changeKeyboardType];
         }
     }
 }

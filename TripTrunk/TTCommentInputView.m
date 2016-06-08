@@ -80,8 +80,6 @@ UIView *topView;
         UIWindow *window = [[UIApplication sharedApplication] keyWindow];
         topView = window.rootViewController.tabBarController.view;
         
-        [self.commentField addTarget:self action:@selector(textViewDidChange:) forControlEvents:UIControlEventEditingChanged];
-        
     }
     return self;
 }
@@ -92,20 +90,16 @@ UIView *topView;
     
 }
 
--(void)textFieldDidChange :(UITextField *)theTextField{
-    if ([theTextField.text length] > 1){
-
-    NSString *code = [theTextField.text substringFromIndex: [theTextField.text length] - 1];
-    if ([code isEqualToString:@" "]){
-        [theTextField setKeyboardType:UIKeyboardTypeDefault];
-    }
-    }
-}
-
-
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
     [self.delegate didBeginTyping];
+    [textField setKeyboardType:UIKeyboardTypeDefault];
+
+}
+
+-(void)changeKeyboardType{
+    [self.commentField setKeyboardType:UIKeyboardTypeDefault];
+
 }
 
 
