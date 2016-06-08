@@ -1440,7 +1440,7 @@
                                                         <variation key="heightClass=regular-widthClass=compact" constant="25"/>
                                                     </constraint>
                                                     <constraint firstAttribute="width" constant="30" id="k3F-sC-SF3">
-                                                        <variation key="heightClass=regular-widthClass=compact" constant="25"/>
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="19"/>
                                                     </constraint>
                                                     <constraint firstAttribute="height" constant="25" id="u7R-mj-vCc">
                                                         <variation key="heightClass=regular-widthClass=compact" constant="20"/>
@@ -1515,7 +1515,9 @@
                                             <constraint firstItem="Vaa-OY-0Ij" firstAttribute="centerX" secondItem="GJ8-pj-bOJ" secondAttribute="centerX" id="f47-ZW-9R4"/>
                                             <constraint firstItem="eQQ-ju-bPp" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="10" id="fY5-70-VME"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="width" secondItem="eQQ-ju-bPp" secondAttribute="width" id="lLd-vg-udV"/>
-                                            <constraint firstItem="eQQ-ju-bPp" firstAttribute="centerY" secondItem="HaB-lo-gzV" secondAttribute="centerY" id="mtN-E9-beX"/>
+                                            <constraint firstItem="eQQ-ju-bPp" firstAttribute="centerY" secondItem="HaB-lo-gzV" secondAttribute="centerY" id="mtN-E9-beX">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="-3"/>
+                                            </constraint>
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="6" id="sIb-NO-491"/>
                                             <constraint firstItem="HaB-lo-gzV" firstAttribute="top" secondItem="eQQ-ju-bPp" secondAttribute="top" id="tVt-JM-ONt"/>
                                             <constraint firstItem="vzv-E3-SnJ" firstAttribute="top" secondItem="nRB-Dp-eMo" secondAttribute="bottom" constant="7.5" id="tl9-f7-Vv9"/>
