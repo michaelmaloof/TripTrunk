@@ -63,6 +63,8 @@
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
+    self.searchController.searchBar.tintColor = [TTColor tripTrunkWhite];
+    [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done")forKey:@"_cancelButtonText"];
     [self.searchController.searchBar sizeToFit];
     [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     self.tableView.tableHeaderView = self.searchController.searchBar;
@@ -538,7 +540,6 @@
     cell.profilePicImageView.image = nil;
     [cell.followButton.titleLabel setFont:[TTFont tripTrunkFont12]];
     [cell.followButton setHidden:YES];
-//    [cell.followButton setHighlighted:NO];
     [cell.followButton setSelected:NO];
     // The search controller uses it's own table view, so we need this to make sure it renders the cell properly.
     if (self.searchController.active && ![self.searchString isEqualToString:@""] && self.searchResults.count > 0) {

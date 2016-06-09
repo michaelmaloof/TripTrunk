@@ -115,8 +115,8 @@
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar sizeToFit];
     self.searchController.searchBar.showsCancelButton = NO;
-    [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done" )forKey:@"_cancelButtonText"];
     self.searchController.searchBar.tintColor = [TTColor tripTrunkWhite];
+    [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done")forKey:@"_cancelButtonText"];
     self.searchController.searchBar.frame = CGRectMake(0, 0, [[UIScreen mainScreen]applicationFrame].size.width, 44);
     self.searchController.hidesNavigationBarDuringPresentation = NO;
     [self.mainView addSubview:self.searchController.searchBar];
