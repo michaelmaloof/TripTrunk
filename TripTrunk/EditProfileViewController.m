@@ -32,7 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
 @property (strong, nonatomic) IBOutlet UITextField *emailAddress;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bioTextViewHeightConstraint;
-
+@property (strong, nonatomic) NSString *previousText;
 @end
 
 @implementation EditProfileViewController
@@ -415,6 +415,16 @@
 
 #pragma mark - UITextViewDelegate Methods
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if([text isEqualToString:@"\n"] && [self.previousText isEqualToString:@"\n"])
+        return NO;
+    self.previousText = text;
+    
+    if(textView.frame.size.height==72 && [text isEqualToString:@"\n"])
+        return NO;
+    
+    if(textView.frame.size.height>72)
+        return NO;
+    
     return textView.text.length + (text.length - range.length) <= 140;
 }
 
