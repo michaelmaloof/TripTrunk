@@ -32,7 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *facebookButton;
 @property (strong, nonatomic) IBOutlet UITextField *emailAddress;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bioTextViewHeightConstraint;
-@property (strong, nonatomic) NSString *previousText;
+@property (nonatomic) BOOL changePrivacySettings;
 @end
 
 @implementation EditProfileViewController
@@ -138,22 +138,84 @@
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }else {
-        NSString *hometown = self.hometownTextField.text;
-        NSString *bio = self.bioTextView.text;
-        NSString *firstName = self.firstName.text;
-        NSString *lastName = self.nameTextView.text;
-        NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        [self.hometownTextField resignFirstResponder];
+        [self.bioTextView resignFirstResponder];
+        [self.firstName resignFirstResponder];
+        [self.nameTextView resignFirstResponder];
+        [self.emailAddress resignFirstResponder];
         
-        [self.user setValue:hometown forKey:@"hometown"];
-        [self.user setValue:bio forKey:@"bio"];
-        [self.user setValue:firstName forKey:@"firstName"];
-        [self.user setValue:lastName forKey:@"lastName"];
-        [self.user setValue:fullName forKey:@"name"];
-        [self.user setValue:self.emailAddress.text forKey:@"email"];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)])
-            [self.delegate shouldSaveUserAndClose:self.user];
+        if(self.changePrivacySettings)
+            [self changeUserPrivacy];
+        else [self changeUserDetails];
     }
+}
+
+-(void)changeUserPrivacy{
+    self.title = NSLocalizedString(@"Updating, Please Wait", @"Updating, Please Wait");
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    if (self.privateAccountSwitch.isOn) {
+        // Become Private
+        [PFCloud callFunctionInBackground:@"becomePrivate" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error becoming private: %@", error);
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+                self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            }
+            else {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        [self.delegate privacyChanged:[PFUser currentUser]];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self changeUserDetails];
+                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                    }];
+                });
+                
+            }
+        }];
+    }else {
+        // Become Public
+        [PFCloud callFunctionInBackground:@"becomePublic" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error becoming public: %@", error);
+                self.navigationItem.rightBarButtonItem.enabled = YES;
+                self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            }
+            else {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        [self.delegate privacyChanged:[PFUser currentUser]];
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self changeUserDetails];
+                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
+                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                    }];
+                });
+            }
+        }];
+        
+    }
+}
+
+-(void)changeUserDetails{
+    NSString *hometown = self.hometownTextField.text;
+    NSString *bio = self.bioTextView.text;
+    NSString *firstName = self.firstName.text;
+    NSString *lastName = self.nameTextView.text;
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    
+    [self.user setValue:hometown forKey:@"hometown"];
+    [self.user setValue:bio forKey:@"bio"];
+    [self.user setValue:firstName forKey:@"firstName"];
+    [self.user setValue:lastName forKey:@"lastName"];
+    [self.user setValue:fullName forKey:@"name"];
+    [self.user setValue:self.emailAddress.text forKey:@"email"];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)])
+        [self.delegate shouldSaveUserAndClose:self.user];
 }
 
 - (IBAction)termsOfServiceButtonPressed:(id)sender {
@@ -171,52 +233,7 @@
         // Reset the switch they just changed
         self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
     }else if (buttonIndex == 1) {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        self.title = NSLocalizedString(@"Updating, Please Wait", @"Updating, Please Wait");
-        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        if (self.privateAccountSwitch.isOn) {
-            // Become Private
-            [PFCloud callFunctionInBackground:@"becomePrivate" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"Error becoming private: %@", error);
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
-                    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                }
-                else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                        [self.delegate privacyChanged:[PFUser currentUser]];
-                        self.navigationItem.rightBarButtonItem.enabled = YES;
-                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
-                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                        }];
-                    });
-
-                }
-            }];
-        }else {
-            // Become Public
-            [PFCloud callFunctionInBackground:@"becomePublic" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"Error becoming public: %@", error);
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
-                    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                }
-                else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                         [[PFUser currentUser] fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                        [self.delegate privacyChanged:[PFUser currentUser]];
-                        self.navigationItem.rightBarButtonItem.enabled = YES;
-                        self.title = NSLocalizedString(@"Edit Profile", @"Edit Profile");
-                        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                         }];
-                    });
-                }
-            }];
-            
-        }
+        self.changePrivacySettings = YES;
     }
 }
 
@@ -415,16 +432,6 @@
 
 #pragma mark - UITextViewDelegate Methods
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    if([text isEqualToString:@"\n"] && [self.previousText isEqualToString:@"\n"])
-        return NO;
-    self.previousText = text;
-    
-    if(textView.frame.size.height==72 && [text isEqualToString:@"\n"])
-        return NO;
-    
-    if(textView.frame.size.height>72)
-        return NO;
-    
     return textView.text.length + (text.length - range.length) <= 140;
 }
 

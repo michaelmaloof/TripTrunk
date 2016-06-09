@@ -243,10 +243,12 @@
         NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
-        textAttachment.image = [UIImage imageNamed:@"lock_small gray"];
+        textAttachment.image = [UIImage imageNamed:@"lock_small_gray"];
         NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
         [attributedString replaceCharactersInRange:NSMakeRange(namePlusSpace.length-1, 1) withAttributedString:attrStringWithImage];
-        self.nameLabel.attributedText = attributedString;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.nameLabel.attributedText = attributedString;
+        });
     } else {
         self.nameLabel.text = name;
     }
