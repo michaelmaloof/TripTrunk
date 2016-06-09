@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "all_mine_mine.png",
+      "filename" : "all_shared_shared.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "all_mine_mine@2x.png",
+      "filename" : "all_shared_shared@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "all_mine_mine@3x.png",
+      "filename" : "all_shared_shared@3x.png",
       "scale" : "3x"
     }
   ],
