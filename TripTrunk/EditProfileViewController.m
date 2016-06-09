@@ -33,6 +33,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *emailAddress;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bioTextViewHeightConstraint;
 @property (nonatomic) BOOL changePrivacySettings;
+@property (strong, nonatomic) NSString *previousText;
 @end
 
 @implementation EditProfileViewController
