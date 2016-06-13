@@ -52,7 +52,7 @@
     
 }
 
-- (IBAction)followButtonPressed:(id)sender {
+- (IBAction)followButtonPressed:(UIButton*)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didPressFollowButton:)]) {
         [self.delegate cell:self didPressFollowButton:_user];
     }
