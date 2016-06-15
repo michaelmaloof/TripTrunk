@@ -256,7 +256,7 @@
     // Get a variable cell height to make sure we can fit long comments
     
     NSAttributedString *cellText = [[NSAttributedString alloc]init];
-    NSLog(@"index path = %ld", (long)indexPath.row);
+//    NSLog(@"index path = %ld", (long)indexPath.row);
     if ((int)indexPath.row < (int)self.activities.count){
     
         cellText = [[TTUtility sharedInstance] attributedStringForCommentActivity:[_activities objectAtIndex:indexPath.row]];
