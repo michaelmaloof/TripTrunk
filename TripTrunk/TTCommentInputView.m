@@ -80,6 +80,8 @@ UIView *topView;
         UIWindow *window = [[UIApplication sharedApplication] keyWindow];
         topView = window.rootViewController.tabBarController.view;
         
+        [self.commentField addTarget:self action:@selector(textViewDidChange:) forControlEvents:UIControlEventEditingChanged];
+        
     }
     return self;
 }
