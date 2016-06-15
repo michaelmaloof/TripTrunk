@@ -220,7 +220,9 @@
     if ([cellView.followButton isSelected]) {
         // Unfollow
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
-        [SocialUtility unfollowUser:user];
+        [SocialUtility unfollowUser:user block:^(BOOL succeeded, NSError *error) {
+            //
+        }];
     }
     else {
         // Follow

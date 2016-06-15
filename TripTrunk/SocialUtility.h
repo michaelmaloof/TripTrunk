@@ -50,7 +50,7 @@
  *
  *  @param user the user to unfollow
  */
-+ (void)unfollowUser:(PFUser *)user;
++ (void)unfollowUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 /**
  *  Accepts or Rejects a pending Follow request

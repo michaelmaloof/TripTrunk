@@ -104,9 +104,8 @@
     }];
 }
 
-
-+ (void)unfollowUser:(PFUser *)user
-{
+//FIXME: This should have a completion block
++ (void)unfollowUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock{
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
     [query whereKey:@"toUser" equalTo:user];
@@ -126,8 +125,13 @@
             for (PFObject *followActivity in followActivities) {
                 [followActivity deleteEventually];
             }
+            
+            if (completionBlock) {
+                completionBlock(YES, error);
+            }
         }else if (error){
             [ParseErrorHandlingController handleError:error];
+            completionBlock(NO, error);
         }
     }];
 }

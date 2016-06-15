@@ -21,7 +21,6 @@
 @property (strong, nonatomic) UISearchController *searchController;
 @property NSString *searchString;
 @property PFUser *user;
-@property (strong,nonatomic) UserTableViewCell *friendCell;
 @property BOOL loadedOnce;
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSMutableArray *friends;
@@ -37,7 +36,8 @@
 @property BOOL isLoadingSearch;
 @property int privateUserCellIndex;
 @property BOOL facebookRefreshed;
-
+@property NSInteger buttonIndex;
+@property NSInteger clickedButtonIndex;
 @end
 
 @implementation FindFriendsViewController
@@ -554,7 +554,8 @@
     [cell setDelegate:self];
     [cell setUser:possibleFriend];
     cell.tag = indexPath.row; // set the tag so that we make sure we don't set the follow status on the wrong cell
-    cell.followButton.tag = indexPath.row;
+    cell.followButton.tag = self.buttonIndex;
+    self.buttonIndex++;
     if (self.following.count > 0) {
         [cell.followButton setEnabled:YES];
         [cell.followButton setSelected:YES];
@@ -635,7 +636,7 @@
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
             alertView.tag = 11;
-            self.friendCell = cellView;
+            self.clickedButtonIndex = cellView.followButton.tag;
             NSString *youSure = NSLocalizedString(@"Are you sure you want to unfollow",@"Are you sure you want to unfollow");
             alertView.title = [NSString stringWithFormat:@"%@ %@?",youSure, user.username];
             alertView.message = NSLocalizedString(@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member.",@"Their account is private so you will no longer be able to see any photos they've posted. You will still have access to photos they've posted in trunks that you are a member of.");
@@ -654,7 +655,9 @@
             [cellView.followButton setSelected:NO];
                [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
             [self.following removeObject:user.objectId];
-            [SocialUtility unfollowUser:user];
+            [SocialUtility unfollowUser:user block:^(BOOL succeeded, NSError *error) {
+                //
+            }];
         }
     }
     else {
@@ -789,12 +792,17 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if (alertView.tag == 11 && buttonIndex == 1){
-        [SocialUtility unfollowUser:self.user];
-        [self.pending removeObject:self.user];
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.friendCell];
-        NSArray* indexArray = [NSArray arrayWithObjects:indexPath, nil];
-        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView reloadData];
+        UIButton *button = (UIButton *)[self.view viewWithTag:self.clickedButtonIndex];
+        [button setTitle:@"Pending" forState:UIControlStateSelected];
+        [SocialUtility unfollowUser:self.user block:^(BOOL succeeded, NSError *error) {
+            [self.pending removeObject:self.user];
+            
+            [button setSelected:NO];
+            [button setTitle:@"Follow" forState:UIControlStateNormal];
+            [button setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
+            [button setHidden:NO];
+        }];
+        
         
     } else {
         self.user = nil;
