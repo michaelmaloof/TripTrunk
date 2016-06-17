@@ -447,7 +447,7 @@
     if (self.isTripCreation) {
         // It's the creation flow, so add the creator as a "member" to the trip
         NSDictionary *params = [self addToTripFunctionParamsForUser:[PFUser currentUser] onTrip:self.trip];
-        [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
+        [PFCloud callFunctionInBackground:@"addToTripSprint13" withParameters:params];
     }
     
     // TODO: If this test is true, and it's the Search Controller, then it'll go back instead of just hiding the search controller.
@@ -470,10 +470,8 @@
             // Create the params dictionary of all the info we need in the Cloud Function
             NSDictionary *params = [self addToTripFunctionParamsForUser:user onTrip:self.trip];
             
-            // Call the cloud function. We have no result block, so errors will NOT be reported back to the app...uh oh?
-//            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params];
             [self.delegate memberWasAddedTemporary:user];
-            [PFCloud callFunctionInBackground:@"addToTrip" withParameters:params block:
+            [PFCloud callFunctionInBackground:@"addToTripSprint13" withParameters:params block:
             ^(id  _Nullable object, NSError * _Nullable error) {
                 if (self.delegate) {
                     
