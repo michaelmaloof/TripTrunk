@@ -31,4 +31,5 @@
 + (UIColor *)tripTrunkClear;
 + (UIColor *)tripTrunkGreen;
 //+ (UIColor *)tripTrunkCoral;
++ (UIColor *)tripTrunkWhiteTransparent;
 @end

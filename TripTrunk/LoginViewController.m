@@ -104,6 +104,10 @@
 
 - (void)_loginWithFacebook
 {
+    //Added to prevent facebook 304 error. This will clear the current user that wasn't logged out correctly
+    FBSDKLoginManager *logMeOut = [[FBSDKLoginManager alloc] init];
+    [logMeOut logOut];
+
     // Set permissions required from the facebook user account
     NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
@@ -115,6 +119,7 @@
         {
             NSString *errorString = [error userInfo][@"error"];
             NSLog(@"%@",errorString);
+            NSLog(@"%@",error);
             return;
         }
         

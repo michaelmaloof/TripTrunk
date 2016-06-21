@@ -61,7 +61,7 @@
     NSAttributedString *firstName = [[NSAttributedString alloc] initWithString:@"first name" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
     self.firstNameTextField.attributedPlaceholder = firstName;
     
-    NSAttributedString *fullName = [[NSAttributedString alloc] initWithString:@"full name" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
+    NSAttributedString *fullName = [[NSAttributedString alloc] initWithString:@"last name" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
     self.fullnameTextField.attributedPlaceholder = fullName;
     
     NSAttributedString *email = [[NSAttributedString alloc] initWithString:@"email" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];

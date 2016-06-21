@@ -37,6 +37,9 @@
 @property (weak, nonatomic) IBOutlet PFImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIView *topButtonWrapper;
 @property (weak, nonatomic) IBOutlet UIView *bottomButtonWrapper;
+@property (strong, nonatomic) IBOutlet UIView *captionWrapper;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomButtonWrapperHeightConstraint;
+@property (strong, nonatomic) IBOutlet UIView *photoToolbarWrapper;
 @property (weak, nonatomic) IBOutlet UIButton *comments;
 @property (strong, nonatomic) IBOutlet UIButton *likeCountButton;
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
@@ -141,7 +144,9 @@
         self.addCaption.hidden = YES;
     }
     self.bottomButtonWrapper.hidden = YES;
+    self.captionWrapper.hidden = YES;
     self.topButtonWrapper.hidden = YES;
+    self.photoToolbarWrapper.hidden = YES;
     [self hidePhotoContent:YES];
     self.timeStamp.text = @"";
     self.caption.selectable = NO;
@@ -303,6 +308,8 @@
         [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
             self.topButtonWrapper.hidden = YES;
             self.bottomButtonWrapper.hidden = YES;
+            self.captionWrapper.hidden = YES;
+            self.photoToolbarWrapper.hidden = YES;
         } completion:nil];
         _scrollView.scrollEnabled = YES;
     }
@@ -319,6 +326,9 @@
         [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
             self.topButtonWrapper.hidden = NO;
             self.bottomButtonWrapper.hidden = NO;
+            if(![self.captionLabel.text isEqualToString:@""])
+                self.captionWrapper.hidden = NO;
+            self.photoToolbarWrapper.hidden = NO;
         } completion:nil];
     }
 }
@@ -358,8 +368,10 @@
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
     [self centerScrollViewContents];
-    self.topButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
-    self.bottomButtonWrapper.backgroundColor = [TTColor tripTrunkWhite];
+    self.topButtonWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
+    self.bottomButtonWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
+    self.captionWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
+    self.photoToolbarWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -432,7 +444,14 @@
 - (void)toggleButtonVisibility {
     [UIView transitionWithView:self.view duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void){
         self.topButtonWrapper.hidden = !self.topButtonWrapper.hidden;
-        self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+        self.captionWrapper.hidden = self.topButtonWrapper.hidden;
+        self.photoToolbarWrapper.hidden = self.topButtonWrapper.hidden;
+    
+//        self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+        
+        if([self.captionLabel.text isEqualToString:@""])
+            self.captionWrapper.hidden = YES;
+            
     } completion:nil];
 }
 
@@ -815,18 +834,29 @@
     self.caption.editable = NO;
 }
 
-- (void)keyboardWillShow:(NSNotification *)notification
-{
+- (void)keyboardWillShow:(NSNotification *)notification{
+    self.bottomButtonWrapper.hidden = NO;
+
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardSize.height + self.bottomButtonWrapper.frame.size.height - self.caption.frame.size.height - 15, self.view.frame.size.width, self.view.frame.size.height);
+    int captionOffset = 0; int quicktype = 0;
+    if(keyboardSize.height < 250)
+        quicktype = 63;
+    if(self.view.frame.origin.y >= 0)
+        captionOffset = self.bottomButtonWrapper.frame.origin.y-self.bottomButtonWrapper.frame.size.height-keyboardSize.height-self.photoToolbarWrapper.frame.size.height-quicktype;
+    self.view.frame = CGRectMake(self.view.frame.origin.x,
+                                 self.view.frame.origin.y-captionOffset,
+                                 self.view.frame.size.width,
+                                 self.view.frame.size.height);
     self.caption.hidden = NO;
     self.captionLabel.hidden = YES;
 }
 
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardSize.height - self.bottomButtonWrapper.frame.size.height + self.caption.frame.size.height + 15, self.view.frame.size.width, self.view.frame.size.height);
+- (void)keyboardWillHide:(NSNotification *)notification{
+    self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+    self.view.frame = CGRectMake(self.view.frame.origin.x,
+                                 0,
+                                 self.view.frame.size.width,
+                                 self.view.frame.size.height);
     self.caption.hidden = YES;
     self.captionLabel.hidden = NO;
 }
@@ -848,6 +878,7 @@
                             self.captionLabel.attributedText = emptyString;
                             [self.commentActivities removeObject:[commentToDelete objectAtIndex:0]];
                             [self.caption endEditing:YES];
+                            self.captionWrapper.hidden = YES;
                             [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
                         } else {
                             NSLog(@"Error deleting caption");
@@ -895,6 +926,9 @@
                                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                 [self updateMentionsInDatabase:commentObject];
                                 [self.caption endEditing:YES];
+                                if([self.caption.text isEqualToString:@""])
+                                    self.captionWrapper.hidden = YES;
+                                else self.captionWrapper.hidden = self.topButtonWrapper.hidden;
                             }else
                             {
                                 NSLog(@"Error saving caption");
@@ -920,6 +954,9 @@
                                         NSLog(@"Caption saved as comment");
                                         [self updateCommentsLabel];
                                         [self updateMentionsInDatabase:obj];
+                                        if([self.caption.text isEqualToString:@""])
+                                            self.captionWrapper.hidden = YES;
+                                        else self.captionWrapper.hidden = self.topButtonWrapper.hidden;
                                     }else{
                                         NSLog(@"Error saving caption");
                                     }
@@ -934,6 +971,9 @@
                                      [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                                      [self.caption endEditing:YES];
                                      [self updateMentionsInDatabase:commentObject];
+                                     if([self.caption.text isEqualToString:@""])
+                                         self.captionWrapper.hidden = YES;
+                                     else self.captionWrapper.hidden = self.topButtonWrapper.hidden;
                                  }else{
                                      NSLog(@"Error saving caption");
                                      [self updateCommentsLabel];
