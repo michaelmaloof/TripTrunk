@@ -22,6 +22,7 @@
 @interface FriendsListViewController () <UserTableViewCellDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableArray *currentUserFriends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
 @property NSMutableArray *friendObjectIds;
@@ -66,6 +67,13 @@
         [self loadFollowers];
         self.title = @"Followers";
     }
+    self.currentUserFriends = [[NSMutableArray alloc]init];
+    NSMutableArray *temp = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
+    for (PFUser *user in temp){
+        [self.currentUserFriends addObject:user.objectId];
+    }
+
+    
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
@@ -154,7 +162,6 @@
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    [cell.followButton setSelected:_isFollowing];
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -166,6 +173,18 @@
                                                  [weakCell.profilePicImageView setImage:image];
                                                  [weakCell setNeedsLayout];
                                              } failure:nil];
+    weakCell.followButton.hidden = NO;
+    if ([self.currentUserFriends containsObject:possibleFriend.objectId]){
+        [cell.followButton setSelected:_isFollowing];
+        [cell.followButton setTitle:@"Following" forState:UIControlStateNormal];
+        weakCell.followButton.titleLabel.textColor = [UIColor whiteColor];
+        weakCell.followButton.backgroundColor = [TTColor tripTrunkBlue];
+    } else {
+        [cell.followButton setSelected:NO]; // change the button for immediate user feedback
+        [cell.followButton setTitle:@"Follow" forState:UIControlStateNormal];
+        weakCell.followButton.backgroundColor = [UIColor whiteColor];
+        weakCell.followButton.titleLabel.textColor = [TTColor tripTrunkBlue];
+    }
     return weakCell;
 }
 
@@ -192,19 +211,26 @@
 
 - (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user;
 {
-    
-    if ([cellView.followButton isSelected]) {
+    if ([cellView.followButton isSelected] == YES) {
         // Unfollow
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
+        [cellView.followButton setTitle:@"Follow" forState:UIControlStateNormal];
+        cellView.followButton.backgroundColor = [UIColor whiteColor];
+        cellView.followButton.titleLabel.textColor = [TTColor tripTrunkBlue];
+        [self.currentUserFriends removeObject:user.objectId];
         [SocialUtility unfollowUser:user];
     }
     else {
         // Follow
         [cellView.followButton setSelected:YES];
-        
+        [cellView.followButton setTitle:@"Following" forState:UIControlStateNormal];
+        cellView.followButton.backgroundColor = [TTColor tripTrunkBlue];
+        cellView.followButton.titleLabel.textColor = [UIColor whiteColor];
+        [self.currentUserFriends addObject:user.objectId];
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (error) {
                 NSLog(@"Error: %@", error);
+                [self.currentUserFriends removeObject:user.objectId];
             }
             if (!succeeded) {
                 NSLog(@"Follow NOT success");
@@ -213,7 +239,6 @@
                                                                delegate:self
                                                       cancelButtonTitle:@"Okay"
                                                       otherButtonTitles:nil, nil];
-                
                 [cellView.followButton setSelected:NO];
                 [alert show];
             }
