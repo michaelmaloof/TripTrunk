@@ -24,9 +24,7 @@
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
-
 @property NSMutableArray *friendObjectIds;
-
 
 @end
 
@@ -44,22 +42,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.friendObjectIds = [[NSMutableArray alloc]init];
-    
     // Register Cell Classes
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
     self.tableView.sectionHeaderHeight = 0;
-    
-    //fixme, chaching needs fixed it flashes everytime
-    
+    //fixme, caching flashes random users sometimes when you view multiple following lists in one app sitting
     if (_isFollowing) {
         if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
             _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
         } else {
             _friends = [[NSMutableArray alloc]init];
-//            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] following]];
-
         }
         [self loadFollowing];
         self.title = @"Following";
@@ -67,30 +59,24 @@
     else
     {
         if ([self.thisUser.objectId isEqual:[PFUser currentUser].objectId]){
-            _friends = [[NSMutableArray alloc]init];
             _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
         }else {
             _friends = [[NSMutableArray alloc]init];
-            //            _friends = [[NSMutableArray alloc] initWithArray:[[TTCache sharedCache] followers]];
         }
         [self loadFollowers];
         self.title = @"Followers";
     }
-    
     // Setup Empty Datasets
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
-    
 }
 
 - (void)loadFollowing
 {
-    
     [SocialUtility followingUsers:_thisUser block:^(NSArray *users, NSError *error) {
         if (!error) {
             _friends = nil;
             _friends = [[NSMutableArray alloc] init];
-            
             for (PFUser *user in users){
                 if (![self.friendObjectIds containsObject:user.objectId]){
                     [self.friendObjectIds addObject:user.objectId];
@@ -106,7 +92,6 @@
             NSLog(@"Error: %@",error);
         }
     }];
-
 }
 
 - (void)loadFollowers
@@ -115,14 +100,12 @@
         if (!error) {
             _friends = nil;
             _friends = [[NSMutableArray alloc] init];
-            
             for (PFUser *user in users){
                 if (![self.friendObjectIds containsObject:user.objectId]){
                     [self.friendObjectIds addObject:user.objectId];
                     [self.friends addObject:user];
                 }
             }
-
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -155,16 +138,13 @@
     if (_isFollowing) {
         return @"Following";
     }
-    else
-    {
+    else {
         return @"Followers";
     }
-    
     return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
     return _friends.count;
 }
 
@@ -174,10 +154,7 @@
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-        
     [cell.followButton setSelected:_isFollowing];
-    
-    
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
@@ -188,7 +165,6 @@
                                                  
                                                  [weakCell.profilePicImageView setImage:image];
                                                  [weakCell setNeedsLayout];
-                                                 
                                              } failure:nil];
     return weakCell;
 }

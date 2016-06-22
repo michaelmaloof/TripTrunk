@@ -22,11 +22,9 @@
     // Initialization code
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
     [self setProfileImageDisplay];
-    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    
     if (selected) {
         self.backgroundColor = [TTColor tripTrunkRedThirdAlpha];
         self.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -35,7 +33,6 @@
         self.backgroundColor = [TTColor tripTrunkWhite];
         self.accessoryType = UITableViewCellAccessoryNone;
     }
-    
     [super setSelected:selected animated:animated];
 }
 
