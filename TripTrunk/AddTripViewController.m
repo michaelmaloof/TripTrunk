@@ -67,6 +67,7 @@
     [self setupDatePicker];
     [self checkPublicPrivate];
     [self setTrunkNameEmptyState];
+    [self addGestures];
 }
 
 #pragma mark - Initial Setup
@@ -120,6 +121,29 @@
     self.privateTrunkDescription.hidden = YES;
     self.cancelBar.title = NSLocalizedString(@"Cancel",@"Cancel");
     self.cancelBar.enabled = YES;
+}
+
+-(void)addGestures{
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setPublic)];
+    [recognizer setNumberOfTapsRequired:1];
+    self.publicTrunkDescription.userInteractionEnabled = YES;
+    [self.publicTrunkDescription addGestureRecognizer:recognizer];
+    
+    UITapGestureRecognizer *recognizerTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setPublic)];
+    [recognizer setNumberOfTapsRequired:1];
+    self.publicTrunkLabel.userInteractionEnabled = YES;
+    [self.publicTrunkLabel addGestureRecognizer:recognizerTwo];
+    
+    UITapGestureRecognizer *recognizerThree = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setPrivate)];
+    [recognizer setNumberOfTapsRequired:1];
+    self.privateTrunkLabel.userInteractionEnabled = YES;
+    [self.privateTrunkLabel addGestureRecognizer:recognizerThree];
+    
+    UITapGestureRecognizer *recognizerFour = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setPrivate)];
+    [recognizer setNumberOfTapsRequired:1];
+    self.privateTrunkDescription.userInteractionEnabled = YES;
+    [self.privateTrunkDescription addGestureRecognizer:recognizerFour];
+
 }
 
 -(void)setTrunkNameEmptyState{
@@ -656,19 +680,27 @@
 }
 
 - (IBAction)publicTapped:(id)sender {
-    if (self.public.tag == 0)
-    {
-        self.isPrivate = NO;
-        [self makeTrunkPublic];
-    }
+    [self setPublic];
 }
 
 
 - (IBAction)privateTapped:(id)sender {
+    [self setPrivate];
+}
+
+-(void)setPrivate{
     if (self.private.tag == 0)
     {
         [self makeTrunkPrivate];
         self.isPrivate = YES;
+    }
+}
+
+-(void)setPublic{
+    if (self.public.tag == 0)
+    {
+        self.isPrivate = NO;
+        [self makeTrunkPublic];
     }
 }
 
@@ -936,5 +968,6 @@
     // Remove any observers
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 @end

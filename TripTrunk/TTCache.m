@@ -74,8 +74,6 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
         }
     }
     [self.following removeObject:userToDelete];
-
-    
 }
 
 - (void)setAttributesForPhoto:(Photo *)photo likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {

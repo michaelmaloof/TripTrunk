@@ -3649,7 +3649,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qc3-8Y-lbt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2497.5" y="-1027.5"/>
+            <point key="canvasLocation" x="2995.5" y="-1024.5"/>
         </scene>
         <!--Image Picker View Controller-->
         <scene sceneID="IQ6-KL-uEQ">
@@ -5668,7 +5668,7 @@
         <image name="FacebookPost_off" width="60" height="60"/>
         <image name="FacebookPost_on" width="60" height="60"/>
         <image name="Load" width="152" height="132"/>
-        <image name="addTrunk_tabIcon" width="56" height="50"/>
+        <image name="addTrunk_tabIcon" width="25" height="25"/>
         <image name="add_trunk" width="56" height="50"/>
         <image name="calendar" width="76" height="75"/>
         <image name="comment_photo" width="54" height="54"/>
@@ -5681,7 +5681,7 @@
         <image name="lock" width="50" height="50"/>
         <image name="lockedGray" width="50" height="50"/>
         <image name="logo_large" width="34" height="33"/>
-        <image name="map" width="48" height="49"/>
+        <image name="map" width="25" height="25"/>
         <image name="moreIcon" width="20" height="5"/>
         <image name="moreTrunk" width="150" height="150"/>
         <image name="paw_blue_list" width="40" height="40"/>
@@ -5689,9 +5689,9 @@
         <image name="unlocked" width="50" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8D2-7c-Dcs"/>
-        <segue reference="bhX-wL-LGH"/>
-        <segue reference="JSU-Dg-jAI"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="JSU-Dg-jAI"/>
+        <segue reference="meg-3f-try"/>
+        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
