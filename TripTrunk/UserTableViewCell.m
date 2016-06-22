@@ -8,7 +8,7 @@
 
 #import "UserTableViewCell.h"
 #import "TTColor.h"
-
+#import "TTCache.h"
 @interface UserTableViewCell ()
 
 @property (nonatomic, weak) PFUser *user;

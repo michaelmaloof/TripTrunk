@@ -122,7 +122,7 @@
             
             // Cache the following status as NOT FOLLOWING
             [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithBool:NO] user:user];
-            
+            [[TTCache sharedCache] removeFollowedUser:user];
             for (PFObject *followActivity in followActivities) {
                 [followActivity deleteEventually];
             }

@@ -64,7 +64,18 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     [self.cache removeAllObjects];
     NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+}
 
+-(void)removeFollowedUser:(PFUser*)user{
+    PFUser *userToDelete = [[PFUser alloc]init];
+    for (PFUser *userTemp in self.following){
+        if ([userTemp.objectId isEqualToString:user.objectId]){
+            userToDelete = userTemp;
+        }
+    }
+    [self.following removeObject:userToDelete];
+
+    
 }
 
 - (void)setAttributesForPhoto:(Photo *)photo likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {

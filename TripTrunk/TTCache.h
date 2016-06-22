@@ -74,6 +74,13 @@
 - (void)setPromotedUsers:(NSArray *)users;
 
 /**
+ *  Remove cached user after unfollowing them
+ *
+ *  @param users user to remove
+ */
+-(void)removeFollowedUser:(PFUser*)user;
+
+/**
  *  Get the cached promoted user list
  *
  *  @return Array of PFUser objects
@@ -106,7 +113,7 @@
  *
  *  @return Array of PFUser objects
  */
-- (NSArray *)following;
+- (NSMutableArray *)following;
 
 /**
  *  Set the cache for the user's followers list
