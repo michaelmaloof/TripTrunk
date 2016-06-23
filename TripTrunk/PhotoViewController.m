@@ -599,49 +599,26 @@
 
 #pragma mark - Gestures
 
-- (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
-{
+- (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer{
     if (self.isZoomed == NO && self.isEditingCaption == NO){
         // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
-        if (!self.photos || self.photos.count == 0) {
+        if (!self.photos || self.photos.count == 0)
             return;
-        }
         
-        if (self.arrayInt > 0)
-        {
+        if (self.arrayInt > 0){
             self.arrayInt = self.arrayInt - 1;
             self.photo = [self.photos objectAtIndex:self.arrayInt];
-            [self loadImageForPhoto:self.photo];
-            //        self.title = self.photo.userName;
-              [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
-            self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
-
-            if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-                self.addCaption.hidden = NO;
-            } else {
-                self.addCaption.hidden = YES;
-                
-            }
-            //update the label and likes now in case the user has already seen these and its cached
-//            [self updateCommentsLabel];
-//            [self updateLikesLabel];
-            //FIXME SHould this be done in the refresh?
-            [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-            [self markPhotoAsViewed];
-            //load the new photo the user swiped too
-            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
-            self.imageZoomed = NO;
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }
 }
 
-- (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
-{
+- (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer{
     if (!self.isZoomed && !self.isEditingCaption){
 
-        if (!self.photos || self.photos.count == 0) {
+        if (!self.photos || self.photos.count == 0)
             return;
-        }
+        
         
         if (self.fromTimeline && self.arrayInt == self.photos.count - 1){
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -654,31 +631,20 @@
      
         } else {
             
-        if (self.arrayInt != self.photos.count - 1)
-        {
-            self.arrayInt++;
-            self.photo = [self.photos objectAtIndex:self.arrayInt];
-            if ([self.photo.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-                self.addCaption.hidden = NO;
-            } else {
-                self.addCaption.hidden = YES;
+            if (self.arrayInt != self.photos.count - 1){
+                self.arrayInt++;
+                self.photo = [self.photos objectAtIndex:self.arrayInt];
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+                photoViewController.photo = (Photo *)self.photo;
+                photoViewController.trip = (Trip*)self.photo.trip;
+                photoViewController.photos = self.photos;
+                photoViewController.arrayInt = self.arrayInt;
+                self.arrayInt--;
+                
+                [self.navigationController showViewController:photoViewController sender:self];
             }
-            [self loadImageForPhoto:self.photo];
-            self.title = self.photo.userName;
-               [self.photoTakenBy setTitle:self.photo.userName forState:UIControlStateNormal];
-            self.timeStamp.text = [self stringForTimeStamp:self.photo.createdAt];
-
-            //FIXME SHould this be done in the refresh?
-            [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-            
-            [self markPhotoAsViewed];
-
-            //load photo on swipe left
-            [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
-            
-            self.imageZoomed = NO;
         }
-    }
     }
 }
 
