@@ -265,7 +265,6 @@
     [self.profilePicImageView.layer  setMasksToBounds:YES];
     //hide the follow button until we know if the current user follows them or not
     self.followButton.hidden = YES;
-    self.logoutButton.hidden = YES;
     self.numberOfImagesPerRow = 3;
     
     self.privateCount = 0;
@@ -331,7 +330,6 @@
         [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
     self.bioTextView.textAlignment = NSTextAlignmentCenter;
-    [self.logoutButton setHidden:YES];
     [self checkIfIsCurrentUser];
     [self checkIfIsPrivate];
 }
