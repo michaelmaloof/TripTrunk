@@ -2228,7 +2228,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="-5"/>
                             </constraint>
                             <constraint firstItem="euX-sE-76i" firstAttribute="leading" secondItem="1AQ-Jc-jpb" secondAttribute="leading" id="gfl-DK-xnJ">
-                                <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="45"/>
                             </constraint>
                             <constraint firstAttribute="trailingMargin" secondItem="DrO-BB-Aur" secondAttribute="trailing" constant="30" id="hnQ-CN-rfH"/>
                             <constraint firstItem="53v-2W-Pnv" firstAttribute="centerX" secondItem="vPs-xM-pWz" secondAttribute="centerX" id="j4b-94-XCX"/>
@@ -5689,9 +5689,9 @@
         <image name="unlocked" width="50" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hXf-dS-IMJ"/>
+        <segue reference="5P2-gM-OYf"/>
+        <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
         <segue reference="meg-3f-try"/>
-        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>
