@@ -43,7 +43,10 @@
 @property int numberOfImagesPerRow;
 @property BOOL isFirstLoad;
 @property NSMutableArray *photosSeen;
+@property (weak, nonatomic) IBOutlet UIButton *photosLabel;
+@property (weak, nonatomic) IBOutlet UIButton *trunkListButton;
 @property (weak, nonatomic) IBOutlet UILabel *trunkCountLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *triangle;
 @end
 
 @implementation UserProfileViewController
@@ -502,11 +505,17 @@
                 self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
                 self.trunkCountButton.hidden = NO;
+                self.photosLabel.hidden = YES;
+                self.trunkListButton.hidden = YES;
+                self.triangle.hidden = YES;
 
             }else {
                 self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
                 self.trunkCountButton.hidden = NO;
+                self.photosLabel.hidden = NO;
+                self.trunkListButton.hidden = NO;
+                self.triangle.hidden = NO;
             }
         });
     }];

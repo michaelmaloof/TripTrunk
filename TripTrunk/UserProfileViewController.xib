@@ -36,11 +36,14 @@
                 <outlet property="hometownLabel" destination="8kk-Zi-cae" id="IBC-gV-Sh9"/>
                 <outlet property="mapButton" destination="aRl-Kc-Hyq" id="99N-rH-R35"/>
                 <outlet property="nameLabel" destination="T27-K3-6wj" id="T1K-RA-cYz"/>
+                <outlet property="photosLabel" destination="W8y-v2-jgj" id="j18-Xk-TIj"/>
                 <outlet property="profilePicImageView" destination="FVi-Q8-ebI" id="sH6-ih-88Q"/>
                 <outlet property="scrollView" destination="TsW-sg-QxN" id="hn2-KW-6a4"/>
                 <outlet property="scrollViewHeightConstraint" destination="2J7-Pb-ZVl" id="Jew-F1-7fa"/>
+                <outlet property="triangle" destination="juN-MI-b2N" id="ILR-IZ-RJa"/>
                 <outlet property="trunkCountButton" destination="jcd-ax-seW" id="8dl-6Z-MPy"/>
                 <outlet property="trunkCountLabel" destination="SsJ-Pn-CpC" id="GjH-4i-hE2"/>
+                <outlet property="trunkListButton" destination="iND-d0-dH7" id="9G1-wB-F7c"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Uqn-Go-iJm"/>
             </connections>
         </placeholder>
