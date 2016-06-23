@@ -279,7 +279,7 @@
 -(void)roundFollowButton{
     [self.followButton.layer setCornerRadius:10.0];
     [self.followButton.layer setMasksToBounds:YES];
-    [self.followButton.layer setBorderWidth:2.0f];
+    [self.followButton.layer setBorderWidth:1.0f];
     self.followButton.layer.borderColor = (__bridge CGColorRef _Nullable)([TTColor tripTrunkRed]);
 }
 
@@ -446,12 +446,12 @@
         [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
         self.followButton.backgroundColor = [TTColor tripTrunkRed];
         [[self.followButton layer] setBorderColor:[TTColor tripTrunkRed].CGColor];
-        [[self.followButton layer] setBorderWidth:2.0f];
+        [[self.followButton layer] setBorderWidth:1.0f];
     } else {
         [self.followButton setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
         self.followButton.backgroundColor = [TTColor tripTrunkWhite];
         [[self.followButton layer] setBorderColor:[TTColor tripTrunkRed].CGColor];
-        [[self.followButton layer] setBorderWidth:2.0f];
+        [[self.followButton layer] setBorderWidth:1.0f];
     }
 }
 
