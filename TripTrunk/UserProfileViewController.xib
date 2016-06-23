@@ -506,7 +506,9 @@
                                         <constraint firstAttribute="height" constant="15" id="8Xe-Oq-BmA">
                                             <variation key="heightClass=regular-widthClass=compact" constant="12"/>
                                         </constraint>
-                                        <constraint firstAttribute="width" constant="15" id="MTE-gg-FCt"/>
+                                        <constraint firstAttribute="width" constant="15" id="MTE-gg-FCt">
+                                            <variation key="heightClass=regular-widthClass=compact" constant="20"/>
+                                        </constraint>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
