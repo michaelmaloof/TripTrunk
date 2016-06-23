@@ -933,7 +933,7 @@
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.view.frame.size.width/self.numberOfImagesPerRow, self.view.frame.size.width/self.numberOfImagesPerRow);
+    return CGSizeMake((self.view.frame.size.width/self.numberOfImagesPerRow)-1, (self.view.frame.size.width/self.numberOfImagesPerRow)-1);
 
 }
 

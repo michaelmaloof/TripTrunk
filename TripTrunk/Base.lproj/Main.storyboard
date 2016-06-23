@@ -2963,8 +2963,7 @@
                                                 <exclude reference="ji3-Vu-bOe"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="346" y="35" width="20" height="20"/>
+                                        <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="ji3-Vu-bOe"/>
                                             </mask>
@@ -4856,9 +4855,6 @@
                                 <state key="normal" title="Nevermind, I remembered! Log in.">
                                     <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="108" y="754" width="183" height="26"/>
-                                </variation>
                                 <connections>
                                     <action selector="remembered:" destination="OVN-gM-tLi" eventType="touchUpInside" id="u7l-HG-8zR"/>
                                 </connections>
@@ -5689,9 +5685,9 @@
         <image name="unlocked" width="50" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5P2-gM-OYf"/>
+        <segue reference="8D2-7c-Dcs"/>
         <segue reference="bhX-wL-LGH"/>
         <segue reference="JSU-Dg-jAI"/>
-        <segue reference="meg-3f-try"/>
+        <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>
