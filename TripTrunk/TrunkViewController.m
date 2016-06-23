@@ -746,7 +746,7 @@
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView == self.collectionView){
-        return CGSizeMake(self.view.frame.size.width/3, self.view.frame.size.width/3);
+        return CGSizeMake((self.view.frame.size.width/3)-1, (self.view.frame.size.width/3)-1);
     } else {
         return CGSizeMake(50, 50);
     }
