@@ -524,7 +524,7 @@
                                     <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                                 </constraint>
                                 <constraint firstItem="jcd-ax-seW" firstAttribute="top" secondItem="GgT-HY-Vrp" secondAttribute="bottom" constant="22" id="2nb-Vu-bv5">
-                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                                 </constraint>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="top" secondItem="FVi-Q8-ebI" secondAttribute="bottom" constant="8" id="2xQ-xg-zR9"/>
                                 <constraint firstItem="iND-d0-dH7" firstAttribute="leading" secondItem="9Hn-fr-0Yg" secondAttribute="trailing" constant="40" id="3qF-ob-bcd">
@@ -538,7 +538,7 @@
                                 <constraint firstAttribute="centerX" secondItem="T27-K3-6wj" secondAttribute="centerX" id="86k-K2-H4q"/>
                                 <constraint firstAttribute="trailing" secondItem="GgT-HY-Vrp" secondAttribute="trailing" constant="30" id="8os-Oo-bvH"/>
                                 <constraint firstItem="8kk-Zi-cae" firstAttribute="top" secondItem="T27-K3-6wj" secondAttribute="bottom" constant="5" id="9Nk-3m-Afd">
-                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                                 </constraint>
                                 <constraint firstItem="vbt-ru-KW2" firstAttribute="top" secondItem="juN-MI-b2N" secondAttribute="bottom" id="BGi-cg-O2B"/>
                                 <constraint firstItem="8kk-Zi-cae" firstAttribute="width" secondItem="cSp-5v-4If" secondAttribute="width" id="DR1-Yc-wM2">
@@ -637,7 +637,7 @@
                                 <constraint firstItem="SsJ-Pn-CpC" firstAttribute="width" secondItem="jcd-ax-seW" secondAttribute="width" id="heb-4E-o0o"/>
                                 <constraint firstItem="9Hn-fr-0Yg" firstAttribute="top" secondItem="cSp-5v-4If" secondAttribute="top" constant="26" id="iB9-Bc-EeS"/>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="top" secondItem="FVi-Q8-ebI" secondAttribute="bottom" constant="15" id="iZn-Uh-rsL">
-                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="5"/>
                                 </constraint>
                                 <constraint firstAttribute="trailing" secondItem="9Hn-fr-0Yg" secondAttribute="trailing" constant="8" id="ige-ea-dJu"/>
                                 <constraint firstItem="T27-K3-6wj" firstAttribute="centerX" secondItem="cSp-5v-4If" secondAttribute="centerX" id="jmv-Dc-0Aa"/>
@@ -645,7 +645,7 @@
                                 <constraint firstItem="k8T-73-v3H" firstAttribute="leading" secondItem="b45-k6-SSZ" secondAttribute="trailing" constant="25" id="kuH-ES-vRn"/>
                                 <constraint firstItem="k8T-73-v3H" firstAttribute="centerY" secondItem="G68-Y4-O01" secondAttribute="centerY" id="lJA-rd-P4a"/>
                                 <constraint firstItem="GgT-HY-Vrp" firstAttribute="top" secondItem="8kk-Zi-cae" secondAttribute="bottom" constant="5" id="lpn-SO-Vgh">
-                                    <variation key="heightClass=regular-widthClass=compact" constant="-7"/>
+                                    <variation key="heightClass=regular-widthClass=compact" constant="3"/>
                                 </constraint>
                                 <constraint firstItem="jcd-ax-seW" firstAttribute="leading" secondItem="G68-Y4-O01" secondAttribute="trailing" constant="40" id="lxl-bf-hff">
                                     <variation key="heightClass=regular-widthClass=compact" constant="40"/>
