@@ -219,7 +219,9 @@
         cellView.followButton.backgroundColor = [UIColor whiteColor];
         cellView.followButton.titleLabel.textColor = [TTColor tripTrunkBlue];
         [self.currentUserFriends removeObject:user.objectId];
-        [SocialUtility unfollowUser:user];
+        [SocialUtility unfollowUser:user block:^(BOOL succeeded, NSError *error) {
+            
+        }];
     }
     else {
         // Follow
