@@ -473,7 +473,7 @@
                 self.city = @"Sao Paulo";
                 self.state =@"Sao Paulo";
                 self.country = @"Brazil";
-            }else if  ([location isEqualToString:@"Taipei, TP, Taiwan"]){
+            }else if ([location isEqualToString:@"Taipei, TP, Taiwan"]){
                 self.city = @"Taipei";
                 self.state =@"Taipei City";
                 self.country = @"Taiwan";
@@ -481,7 +481,8 @@
                 self.city = @"Freeport";
                 self.state =@"Bahamas";
                 self.country = @"Bahamas";
-            }else if ([location isEqualToString:@"Manila, MM, Philippines"]){
+//            }else if ([location isEqualToString:@"Manila, MM, Philippines"]){
+            }else if ([location containsString:@"Manila, MM, Philippines"]){ //if you do isEqual it wont work
                 self.city = @"Manila";
                 self.state =@"MM";
                 self.country = @"Philippines";
