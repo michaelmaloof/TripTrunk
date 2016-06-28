@@ -47,12 +47,18 @@
                         <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="57.5" y="29.5" width="85.5" height="16.5"/>
+                        </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                         <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="57.5" y="13" width="85.5" height="16.5"/>
+                        </variation>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
@@ -64,6 +70,10 @@
                             <constraint firstAttribute="width" constant="70" id="t5u-nM-4le"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="14"/>
+                        <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <state key="normal">
+                            <color key="titleColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="6Xq-bI-064"/>
@@ -71,7 +81,8 @@
                                 <exclude reference="t5u-nM-4le"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
+                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                            <rect key="frame" x="242" y="12" width="70" height="20"/>
                             <mask key="constraints">
                                 <include reference="6Xq-bI-064"/>
                                 <exclude reference="a29-2Q-lvC"/>
@@ -119,14 +130,11 @@
                         <exclude reference="nm6-qI-Iog"/>
                     </mask>
                     <mask key="constraints">
-                        <exclude reference="6hg-eS-qAF"/>
-                        <exclude reference="RTU-ZH-N9G"/>
-                        <exclude reference="XR3-b9-LGl"/>
-                        <exclude reference="4ly-8f-IHk"/>
-                        <exclude reference="7k8-dG-Tpl"/>
                         <exclude reference="OOD-33-erR"/>
                         <exclude reference="Oq9-fU-fFj"/>
                         <exclude reference="l0K-Y5-xJ0"/>
+                        <exclude reference="4ly-8f-IHk"/>
+                        <exclude reference="7k8-dG-Tpl"/>
                         <exclude reference="6cb-Hb-MEZ"/>
                         <exclude reference="NdA-wh-D5L"/>
                         <exclude reference="c0H-ry-AYN"/>
@@ -135,6 +143,9 @@
                         <exclude reference="kdk-au-pdd"/>
                         <exclude reference="n4L-ml-bSC"/>
                         <exclude reference="tlu-gF-KPS"/>
+                        <exclude reference="6hg-eS-qAF"/>
+                        <exclude reference="RTU-ZH-N9G"/>
+                        <exclude reference="XR3-b9-LGl"/>
                     </mask>
                 </variation>
                 <variation key="heightClass=regular-widthClass=compact">
@@ -145,14 +156,11 @@
                         <include reference="nm6-qI-Iog"/>
                     </mask>
                     <mask key="constraints">
-                        <include reference="6hg-eS-qAF"/>
-                        <include reference="RTU-ZH-N9G"/>
-                        <include reference="XR3-b9-LGl"/>
-                        <include reference="4ly-8f-IHk"/>
-                        <include reference="7k8-dG-Tpl"/>
                         <include reference="OOD-33-erR"/>
                         <include reference="Oq9-fU-fFj"/>
                         <include reference="l0K-Y5-xJ0"/>
+                        <include reference="4ly-8f-IHk"/>
+                        <include reference="7k8-dG-Tpl"/>
                         <exclude reference="6cb-Hb-MEZ"/>
                         <exclude reference="NdA-wh-D5L"/>
                         <include reference="c0H-ry-AYN"/>
@@ -161,6 +169,9 @@
                         <exclude reference="kdk-au-pdd"/>
                         <exclude reference="n4L-ml-bSC"/>
                         <include reference="tlu-gF-KPS"/>
+                        <include reference="6hg-eS-qAF"/>
+                        <include reference="RTU-ZH-N9G"/>
+                        <include reference="XR3-b9-LGl"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>

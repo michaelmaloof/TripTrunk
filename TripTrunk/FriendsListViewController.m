@@ -175,37 +175,31 @@
                                                  [weakCell setNeedsLayout];
                                              } failure:nil];
     weakCell.followButton.hidden = NO;
+
     if ([self.currentUserFriends containsObject:possibleFriend.objectId]){
         [cell.followButton setSelected:_isFollowing];
         [cell.followButton setTitle:@"Following" forState:UIControlStateNormal];
-        weakCell.followButton.titleLabel.textColor = [UIColor whiteColor];
         weakCell.followButton.backgroundColor = [TTColor tripTrunkBlue];
+        [weakCell.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
         [cell.followButton setSelected:NO]; // change the button for immediate user feedback
         [cell.followButton setTitle:@"Follow" forState:UIControlStateNormal];
         weakCell.followButton.backgroundColor = [UIColor whiteColor];
-        weakCell.followButton.titleLabel.textColor = [TTColor tripTrunkBlue];
+        [weakCell.followButton setTitleColor:[TTColor tripTrunkBlue] forState:UIControlStateNormal];
     }
     return weakCell;
 }
-
 
 #pragma mark - Table view delegate
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
     PFUser *user = [_friends objectAtIndex:indexPath.row];
-    
     if (user) {
         UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
-        
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-
 }
 
 #pragma mark - UserTableViewCellDelegate

@@ -20,7 +20,6 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.userImageView setClipsToBounds:YES];
-
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
 }
 
