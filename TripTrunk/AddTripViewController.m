@@ -481,6 +481,10 @@
                 self.city = @"Freeport";
                 self.state =@"Bahamas";
                 self.country = @"Bahamas";
+            }else if ([location isEqualToString:@"Manila, MM, Philippines"]){
+                self.city = @"Manila";
+                self.state =@"MM";
+                self.country = @"Philippines";
             }else if (locationDetails != nil){
                 self.city = locationDetails[@"geobytescity"];
                 self.state = locationDetails[@"geobytesregion"];
