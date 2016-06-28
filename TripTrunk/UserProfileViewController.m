@@ -564,7 +564,9 @@
         // Unfollow
         
         if (isPrivate == NO){
-            [SocialUtility unfollowUser:_user];
+            [SocialUtility unfollowUser:_user block:^(BOOL succeeded, NSError *error) {
+                //
+            }];
             [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
             self.followButton.tag = 0;
             [self setButtonColor];
@@ -749,7 +751,9 @@
         self.followButton.tag = 0;
         [self setButtonColor];
         [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
-        [SocialUtility unfollowUser:_user];
+        [SocialUtility unfollowUser:_user block:^(BOOL succeeded, NSError *error) {
+            //
+        }];
         self.followButton.enabled = YES;
 
     }
