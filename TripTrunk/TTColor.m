@@ -58,6 +58,10 @@
     return [UIColor colorWithRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1];
 }
 
++ (UIColor *)tripTrunkWhiteTransparent {
+    return [UIColor colorWithRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:0.95];
+}
+
 + (UIColor *)tripTrunkLightBlue {
     return [UIColor colorWithRed:(131.0/255.0) green:(226.0/255.0) blue:(255.0/255.0) alpha:1];
 }
