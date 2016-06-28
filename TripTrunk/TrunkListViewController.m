@@ -586,19 +586,15 @@
                 self.wasError = NO;
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
-            
             if (isRefresh == YES){
                 self.parseLocations = [[NSMutableArray alloc]init];
                 self.objectIDs = [[NSMutableArray alloc]init];;
             }
-            
             self.didLoad = YES;
             self.objectsCountTotal = (int)response.count + self.objectsCountTotal;
             for (PFObject *activity in response)
             {
-                
                 Trip *trip = activity[@"trip"];
-                
                 if (trip.name != nil && ![self.objectIDs containsObject:trip.objectId] && trip.publicTripDetail != nil)
                 {
                     [self.parseLocations addObject:trip];
@@ -609,33 +605,25 @@
                     [self.objectIDs addObject:trip.objectId];
                 }
             }
-            
             for (Trip *trip in self.parseLocations)
             {
-                
                 NSTimeInterval lastTripInterval = [lastOpenedApp timeIntervalSinceDate:trip.createdAt];
                 NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
-                
                 BOOL contains = NO;
-                
                 for (Trip* trunk in self.visitedTrunks){
                     if ([trunk.objectId isEqualToString:trip.objectId]){
                         contains = YES;
                     }
                 }
-                
                 if (self.visitedTrunks.count == 0){
                     contains = NO;
                 }
-                
-                if (lastTripInterval < 0 && contains == NO)
-                {
+                if (lastTripInterval < 0 && contains == NO){
                     [self.haventSeens addObject:trip];
                 } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
                     [self.haventSeens addObject:trip];
                 }
             }
-            
         }
         self.filter.tag = 0;
         [self reloadTable];
@@ -694,6 +682,9 @@
     } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
         copiedTrunks = self.mutualTrunks;
     } else {
+        if (self.meParseLocations.count == 0){
+            self.meParseLocations = self.parseLocations;
+        }
         copiedTrunks = self.meParseLocations;
     }
     
