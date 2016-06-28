@@ -798,6 +798,11 @@
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
+    if([textView.text isEqualToString:@""]){
+        textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here")];
+        textView.textColor = [TTColor tripTrunkLightGray];
+        textView.selectedRange = NSMakeRange(0, 0);
+    }
     self.isEditingCaption = YES;
     self.scrollView.scrollEnabled = NO;
     self.likeButton.hidden = YES;
@@ -1411,14 +1416,24 @@
 //    NSRange cursorPosition = [textView selectedRange];
 //    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
 //    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    NSString *placeholderText = NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here");
+    if ([textView.text isEqualToString:placeholderText])
+        textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:@""];
+    
     return YES;
 }
 
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
+    NSString *placeholderText = NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here");
+    if([textView.text isEqualToString:@""]){
+        textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:placeholderText];
+        textView.textColor = [TTColor tripTrunkLightGray];
+        textView.selectedRange = NSMakeRange(0, 0);
+    }
     
     if ([self.photo.caption isEqualToString:@""] || self.photo.caption == nil){
-        if (textView.text == nil || [textView.text isEqualToString:@""]){
+        if (textView.text == nil || [textView.text isEqualToString:@""]|| [textView.text isEqualToString:placeholderText]){
             self.saveButton.hidden = YES;
         } else{
             self.saveButton.hidden = NO;
@@ -1514,8 +1529,10 @@
         self.autocompletePopover = nil;
     }
     
-    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
-    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    if(![self.caption.text isEqualToString:placeholderText]){
+        self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
+        [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    }
 }
 
 //Only true if user has typed an @ and a letter and if the popover is not showing
