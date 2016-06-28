@@ -128,6 +128,31 @@
     
 }
 
+-(BOOL)validateEmailAddressIsValidFormat:(NSString*)emailAddress showAlert:(BOOL)showAlert{
+    NSString *expression = @"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$";
+    NSError *error = NULL;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSTextCheckingResult *match = [regex firstMatchInString:emailAddress options:0 range:NSMakeRange(0, [emailAddress length])];
+    
+    if(!match){
+        //Create 'email address invalid' alert view
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Invalid Email Address",@"Invalid Email Address")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        
+        //Show alert view
+        if(showAlert)
+            [alert show];
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (void)didTapDone:(id)sender {
 //    [self.saveButton setEnabled:NO];
     
@@ -139,15 +164,18 @@
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }else {
-        [self.hometownTextField resignFirstResponder];
-        [self.bioTextView resignFirstResponder];
-        [self.firstName resignFirstResponder];
-        [self.nameTextView resignFirstResponder];
-        [self.emailAddress resignFirstResponder];
         
-        if(self.changePrivacySettings)
-            [self changeUserPrivacy];
-        else [self changeUserDetails];
+        if([self validateEmailAddressIsValidFormat:self.emailAddress.text showAlert:YES]){
+            [self.hometownTextField resignFirstResponder];
+            [self.bioTextView resignFirstResponder];
+            [self.firstName resignFirstResponder];
+            [self.nameTextView resignFirstResponder];
+            [self.emailAddress resignFirstResponder];
+            
+            if(self.changePrivacySettings)
+                [self changeUserPrivacy];
+            else [self changeUserDetails];
+        }
     }
 }
 
@@ -231,8 +259,8 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        // Reset the switch they just changed
-        self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
+        if([self validateEmailAddressIsValidFormat:self.emailAddress.text showAlert:NO])
+            self.privateAccountSwitch.on = !self.privateAccountSwitch.on;
     }else if (buttonIndex == 1) {
         self.changePrivacySettings = YES;
     }
@@ -496,6 +524,11 @@
     }
     
     return lines;
+}
+
+#pragma mark - TTUserProfileDelegate
+-(void)emailAddressIsInvalid{
+    self.emailAddress.text = @"";
 }
 
 @end

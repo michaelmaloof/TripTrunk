@@ -302,6 +302,20 @@
             //Show alert view
             [alert show];
             return NO;
+        }else if (error.code == 125){
+            //Log error
+            NSLog(@"Error: %@",error);
+            
+            //Create 'email address invalid' alert view
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Invalid Email Address",@"Invalid Email Address")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                  otherButtonTitles:nil, nil];
+            
+            //Show alert view
+            [alert show];
+            return NO;
         }
 
         return YES;
@@ -344,6 +358,9 @@
         return NO;
     
     if(![self validateUsernameDoesNotBeginWithIllegalChars:username])
+        return NO;
+    
+    if(![self validateEmailAddressIsValidFormat:self.emailTextField.text])
         return NO;
     
     return YES;
@@ -468,6 +485,30 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                               otherButtonTitles:nil, nil];
+        [alert show];
+        return NO;
+    }
+    
+    return YES;
+}
+
+-(BOOL)validateEmailAddressIsValidFormat:(NSString*)emailAddress{
+    NSString *expression = @"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$";
+    NSError *error = NULL;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSTextCheckingResult *match = [regex firstMatchInString:emailAddress options:0 range:NSMakeRange(0, [emailAddress length])];
+    
+    if(!match){
+        //Create 'email address invalid' alert view
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                        message:NSLocalizedString(@"Invalid Email Address",@"Invalid Email Address")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                              otherButtonTitles:nil, nil];
+        
+        //Show alert view
         [alert show];
         return NO;
     }

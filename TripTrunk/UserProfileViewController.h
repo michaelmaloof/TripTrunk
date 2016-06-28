@@ -10,7 +10,6 @@
 #import <Parse/Parse.h>
 #import "TTBaseViewController.h"
 
-
 @interface UserProfileViewController : TTBaseViewController
 
 /**
@@ -36,6 +35,5 @@
 @property (strong, nonatomic) IBOutlet UIButton *followingButton;
 @property (strong, nonatomic) IBOutlet UIButton *followButton;
 @property (strong, nonatomic) PFUser *user;
-
 
 @end

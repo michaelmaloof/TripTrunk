@@ -703,16 +703,34 @@
 -(void)shouldSaveUserAndClose:(PFUser *)user {
     // Ensure it's the current user so we don't accidentally let people change other people's info. 
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
-        [_user saveInBackground];
-        self.bioTextView.text = user[@"bio"];
-        self.hometownLabel.text = user[@"hometown"];
-        NSString *name;
-        if (user[@"firstName"] == nil || user[@"lastName"] == nil){
-            name = [NSString stringWithFormat:@"%@",user[@"name"]];
-        } else {
-            name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
-        }
-        self.nameLabel.text = name;
+        [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if(!error){
+                self.bioTextView.text = user[@"bio"];
+                self.hometownLabel.text = user[@"hometown"];
+                NSString *name;
+                if (user[@"firstName"] == nil || user[@"lastName"] == nil){
+                    name = [NSString stringWithFormat:@"%@",user[@"name"]];
+                } else {
+                    name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
+                }
+                self.nameLabel.text = name;
+            }else{
+                if(error.code == 203){
+                    //Create 'email address invalid' alert view
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                    message:NSLocalizedString(@"This email address is already in use.", @"This email address is already in use.")
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                          otherButtonTitles:nil, nil];
+                    
+                    //Show alert view
+                    alert.tag = 0;
+                    [alert show];
+                    self.user[@"email"] = NSLocalizedString(@"<Error: please update>",@"<Error: please update>");
+                }
+            }
+        }];
+        
         
     }
     
@@ -744,6 +762,10 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if(alertView.tag == 0)
+        [self editButtonPressed:self];
+    
+    
     if (buttonIndex == 1 && alertView.tag == 1) {
         // BLOCK USER
         [SocialUtility blockUser:_user];
