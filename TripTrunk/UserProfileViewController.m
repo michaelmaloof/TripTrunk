@@ -229,20 +229,23 @@
     //prevent username from becoming tabbar title
     [self tabBarTitle];
     //combine first and last name to full name to display. If they don't have a first and last name, show "name" (the old way we tracked user's name)
-    [self setNameBasedOnPrivacy];
+    [self setNameBasedOnPrivacy:nil];
 }
 
--(void)setNameBasedOnPrivacy{
+-(void)setNameBasedOnPrivacy:(PFUser*)user{
+    if (user == nil){
+        user = self.user;
+    }
     NSString *name;
-    if (self.user[@"lastName"] == nil && self.user[@"firstName"] != nil){
-        name = [NSString stringWithFormat:@"%@",self.user[@"firstName"]];
-    } else if (self.user[@"firstName"] != nil &&  self.user[@"firstName"] == nil){
-        name = [NSString stringWithFormat:@"%@ %@",self.user[@"firstName"],self.user[@"lastName"]];
+    if (user[@"lastName"] == nil && user[@"firstName"] != nil){
+        name = [NSString stringWithFormat:@"%@", user[@"firstName"]];
+    } else if (user[@"firstName"] != nil &&  user[@"firstName"] == nil){
+        name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
     } else {
-        name = self.user[@"name"];
+        name = user[@"name"];
     }
     //add the privacy lock next to the user's name if that user is private
-    if ([[self.user valueForKey:@"private"] boolValue] == 1){
+    if ([[user valueForKey:@"private"] boolValue] == 1){
         NSString *namePlusSpace = [NSString stringWithFormat:@"%@  ",name];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:namePlusSpace];
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
@@ -368,7 +371,7 @@
     } else {
         [self loadUserImages];
     }
-    [self setNameBasedOnPrivacy];
+    [self setNameBasedOnPrivacy:nil];
 }
 
 -(void)displayHometown{
@@ -707,13 +710,7 @@
             if(!error){
                 self.bioTextView.text = user[@"bio"];
                 self.hometownLabel.text = user[@"hometown"];
-                NSString *name;
-                if (user[@"firstName"] == nil || user[@"lastName"] == nil){
-                    name = [NSString stringWithFormat:@"%@",user[@"name"]];
-                } else {
-                    name = [NSString stringWithFormat:@"%@ %@",user[@"firstName"],user[@"lastName"]];
-                }
-                self.nameLabel.text = name;
+                [self setNameBasedOnPrivacy:user];
             }else{
                 if(error.code == 203){
                     //Create 'email address invalid' alert view
@@ -740,7 +737,7 @@
 -(void)privacyChanged:(PFUser *)user{
     if ([self.user.objectId isEqualToString:user.objectId]){
         [self.user setValue:[user valueForKey:@"private"] forKey:@"private"];
-        [self setNameBasedOnPrivacy];
+        [self setNameBasedOnPrivacy:user];
     }
 }
 

@@ -164,7 +164,6 @@
         [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
         [alertView show];
     }else {
-        
         if([self validateEmailAddressIsValidFormat:self.emailAddress.text showAlert:YES]){
             [self.hometownTextField resignFirstResponder];
             [self.bioTextView resignFirstResponder];
@@ -172,9 +171,12 @@
             [self.nameTextView resignFirstResponder];
             [self.emailAddress resignFirstResponder];
             
-            if(self.changePrivacySettings)
+            if(self.changePrivacySettings == YES){
                 [self changeUserPrivacy];
-            else [self changeUserDetails];
+            }
+            else {
+                [self changeUserDetails];
+            }
         }
     }
 }
