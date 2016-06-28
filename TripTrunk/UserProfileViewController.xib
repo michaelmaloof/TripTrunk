@@ -152,7 +152,7 @@
                                     <color key="tintColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="35.5" id="00l-uv-Lyq">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="20"/>
+                                            <variation key="heightClass=regular-widthClass=compact" constant="27"/>
                                         </constraint>
                                         <constraint firstAttribute="height" constant="26" id="Z5r-gk-8ee"/>
                                         <constraint firstAttribute="width" constant="226" id="m3l-oi-RqO"/>
