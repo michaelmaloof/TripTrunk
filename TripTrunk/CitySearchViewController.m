@@ -31,14 +31,7 @@
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar sizeToFit];
-    
-    // Make the search Cancel button TTBlue
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                                                  [TTColor tripTrunkBlue],
-                                                                                                  NSForegroundColorAttributeName,
-                                                                                                  nil]
-                                                                                        forState:UIControlStateNormal];
+    [self.searchController.searchBar sizeToFit];    
 
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
@@ -49,6 +42,12 @@
                                                                                            action:@selector(closeView)];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"?" style:UIBarButtonItemStylePlain target:self action:@selector(question)];
+    
+    //Button attributes
+    NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [self.navigationItem.leftBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
     
     // Add keyboard notifications so that the keyboard won't cover the table when searching
     [[NSNotificationCenter defaultCenter] addObserver:self

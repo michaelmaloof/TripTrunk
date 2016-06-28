@@ -165,6 +165,11 @@
             // tint color
             navBar.tintColor = [TTColor tripTrunkBlue];
             
+            //Button attributes
+            UIBarItem *buttons = [UIBarButtonItem appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
+            NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
+            [buttons setTitleTextAttributes:attributes forState:UIControlStateNormal];
+            
             // init picker
             CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
             
