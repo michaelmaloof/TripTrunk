@@ -307,6 +307,7 @@
     view.tintColor = [TTColor tripTrunkRed];
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setTextColor:[TTColor tripTrunkWhite]];
+    [header.textLabel setFont:[TTFont tripTrunkFont16]];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
@@ -515,6 +516,8 @@
     }
     return nil;
 }
+
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
