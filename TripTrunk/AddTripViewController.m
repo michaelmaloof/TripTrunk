@@ -57,7 +57,6 @@
 
 @implementation AddTripViewController
 
-
 - (void)viewDidLoad {
     //FIXME sometimes segue takes too long to occur or doesnt happen at all. maybe shouldnt check here?
     [super viewDidLoad];
@@ -66,7 +65,6 @@
     [self determineEditingVsCreationMode];
     [self setupDatePicker];
     [self checkPublicPrivate];
-    [self setTrunkNameEmptyState];
     [self addGestures];
 }
 
@@ -86,6 +84,7 @@
     //if self.trip is  nil then it means the user is creating a new trunk and not simply editing one
     else {
         [self setUpTrunkCreation];
+        [self setTrunkNameEmptyState];
     }
 }
 
@@ -767,58 +766,41 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    if (alertView.tag == 0)
-    {
-        if (buttonIndex == 1)
-        {
+    if (alertView.tag == 0){
+        if (buttonIndex == 1){
             //FIXME this needs to return if it was a success or not
             [SocialUtility deleteTrip:self.trip];
-            
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
-            for (UINavigationController *controller in self.tabBarController.viewControllers)
-            {
-                for (UIViewController *view in controller.viewControllers)
-                {
-                    if ([view isKindOfClass:[HomeMapViewController class]])
-                    {
+            for (UINavigationController *controller in self.tabBarController.viewControllers){
+                for (UIViewController *view in controller.viewControllers){
+                    if ([view isKindOfClass:[HomeMapViewController class]]){
                         [locationArray addObject:view];
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
                         [(HomeMapViewController*)view dontRefreshMap];
                         [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
-                    } else if ([view isKindOfClass:[ActivityListViewController class]])
-                        {
+                    } else if ([view isKindOfClass:[ActivityListViewController class]]){
                             [(ActivityListViewController*)view trunkWasDeleted:self.trip];
-        
                         }
+                    }
                 }
-            }
-            
             NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
                     [locationArray2 addObject:vc];
                 }
             }
-
-            
-            if (locationArray2.count > 0)
-            {
-                
+            if (locationArray2.count > 0){
                 [self.navigationController popToViewController:[locationArray2 lastObject] animated:YES];
             }
                 //TODO: needs to be the whole tab bar not just the nav controller
-                
                 NSMutableArray *listArray = [[NSMutableArray alloc]init];
                 for (UIViewController *vc in self.navigationController.viewControllers){
-                    if ([vc isKindOfClass:[TrunkListViewController class]])
-                    {
+                    if ([vc isKindOfClass:[TrunkListViewController class]]){
                         [(TrunkListViewController*)vc deleteItemOnTrunkList:self.trip];
                         [listArray addObject:vc];
                         //TODO Delete not working on list
                     }
                 }
-                
                 [self.navigationController popToViewController:[listArray lastObject] animated:YES];
             }
     }
@@ -831,25 +813,21 @@
  *
  */
 -(void)parseTrip {
-    
     //FIXME Should only parse if things have been changed
     [self setTripName: self.tripNameTextView.text];
     self.trip.user = [PFUser currentUser].username;
     //FIXME Why do we have a NSDATE start on trip but not end?
     self.trip.start = [self.formatter dateFromString:self.trip.startDate];
     self.trip.creator = [PFUser currentUser];
-    
     // Ensure start date is after end date
     NSTimeInterval startTimeInterval = [[self.formatter dateFromString:self.trip.startDate] timeIntervalSince1970];
     NSTimeInterval endTimeInterval = [[self.formatter dateFromString:self.trip.endDate] timeIntervalSince1970];
-    if(startTimeInterval > endTimeInterval)
-    {
+    if(startTimeInterval > endTimeInterval){
         [self notEnoughInfo:NSLocalizedString(@"Your start date must happen on or before the end date",@"Your start date must happen on or before the end date")];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         self.navigationItem.rightBarButtonItem.enabled = YES;
         return;
     }
-    
 //if the most recent photo is nil then we set the date to a long time ago. This way we know the dot on the trunk is blue. I didnt want to leave a nil value in parse.
     if (self.trip.publicTripDetail.mostRecentPhoto == nil){
         NSString *date = @"01/01/1200";
@@ -857,38 +835,29 @@
         [format setDateFormat:@"yyyy-MM-dd"];
         self.trip.publicTripDetail.mostRecentPhoto = [format dateFromString:date];
     }
-    
     // If we're editing an existing trip AND we changed the city, we need to update any Activities for this trip to include the new city name.
     if (_isEditing && _needsCityUpdate) {
         [SocialUtility updateActivityContent:self.trip.city forTrip:self.trip];
     }
-    
     // If we're editing an existing trip AND we changed the name, we need to update any Photos for this trip to include the new name.
     if (_isEditing && (_needsNameUpdate || _needsCityUpdate)) {
         [SocialUtility updatePhotosForTrip:self.trip];
     }
-    
     PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    
     [[PFUser currentUser] fetch]; // Fetch the currentu
-
     //    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
- 
     if (self.trip.isPrivate != 1){
         self.trip.isPrivate = self.isPrivate;
     }
-    
     if (self.trip.isPrivate == NO) {
         [tripACL setPublicReadAccess:YES];
     }
-    
     // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
     // TODO: only update ACL if private status changed during editing.
     if (self.trip.isPrivate == YES) {
         [tripACL setPublicReadAccess:NO];
         [tripACL setReadAccess:YES forUser:self.trip.creator];
         [tripACL setWriteAccess:YES forUser:self.trip.creator];
-        
         // If this is editing a trip, we need to all existing members to the Read ACL.
         if (_isEditing) {
             // TODO: Add all Trunk Members to READ ACL.
