@@ -591,7 +591,11 @@
         //take the location the user typed in, make sure its a real location and meets the correct requirements
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
         NSString *address = self.locationTextView.text;
-        
+        //hack because MM isnt a valid address for apple.
+        if ([address isEqualToString:@"Manila, MM, Philippines"]){
+            address = @"Manila, Philippines";
+        }
+
         [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
          {
              if (placemarks == nil && error)
