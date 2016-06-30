@@ -298,20 +298,16 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)refresh:(UIRefreshControl *)refreshControl
 {
-    
-    if(refreshControl)
+    if(refreshControl){
         [self clearTabbarIconBadge];
-    if (self.isLikes == NO)
-    {
+    }
+    if (self.isLikes == NO){
         // Query for activities for user
-        if (self.isLoading == NO)
-        {
+        if (self.isLoading == NO){
             self.navigationItem.rightBarButtonItem.enabled = NO;
             self.isLoading = YES;
-            if (self.filter.tag == 0)
-            {
-                [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error)
-                {
+            if (self.filter.tag == 0){
+                [SocialUtility queryForAllActivities:0 trips:self.trips activities:self.activities isRefresh:YES query:^(NSArray *activities, NSError *error){
                     int index = 0;
                     for (PFObject *obj in activities)
                     {
