@@ -150,6 +150,7 @@
     self.tripNameTextView.font = [TTFont tripTrunkFont14];
     self.tripNameTextView.text = [NSString stringWithFormat:@"%@",trunkName];
     self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
+    self.trunkNameHeightConstraint.constant = 30;
 }
 
 /**
