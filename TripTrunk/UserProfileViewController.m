@@ -945,8 +945,9 @@
 
     UINib *nib = [UINib nibWithNibName:@"TTUserProfileViewCell" bundle: nil];
     [collectionView registerNib:nib forCellWithReuseIdentifier:@"myImagesCell"];
-    
+
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
+    cell.image.image = nil;
     cell.backgroundColor = [TTColor tripTrunkBlue];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
     
