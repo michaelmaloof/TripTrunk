@@ -68,6 +68,16 @@
     [self addGestures];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+}
+
+-(void)viewDidLayoutSubviews{
+    NSString *trunkName = NSLocalizedString(@"Trunk Name", @"Trunk Name");
+    if(![self.tripNameTextView.text isEqualToString:trunkName])
+        [self updateTextViewSize:self.tripNameTextView];
+}
+
 #pragma mark - Initial Setup
 
 
@@ -97,6 +107,7 @@
     _isEditing = YES;
     self.title  = NSLocalizedString(@"Trunk Details",@"Trunk Details");
     //if they're editing the trunk we fill in the text fields with the correct info
+    self.tripNameTextView.font = [TTFont tripTrunkFontHuge];
     self.tripNameTextView.text = self.trip.name;
     self.tripNameTextView.textAlignment = NSTextAlignmentCenter;
     self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
@@ -344,7 +355,7 @@
     }
 }
 
--(void)textViewDidChange :(UITextView *)textView{
+-(void)textViewDidChange:(UITextView *)textView{
     if ([textView.text length] > 1){
         NSString *code = [textView.text substringFromIndex: [textView.text length] - 2];
         if ([code isEqualToString:@" "]){
@@ -352,35 +363,39 @@
         }
     }
     if (textView == self.tripNameTextView){
-        id<UITextInputTokenizer> tokenizer = textView.tokenizer;
-        UITextPosition *pos = textView.endOfDocument;
-        NSInteger lines = 0;
-        
-        while (true){
-            UITextPosition *lineEnd = [tokenizer positionFromPosition:pos toBoundary:UITextGranularityLine inDirection:UITextStorageDirectionBackward];
-            
-            if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame){
-                pos = [tokenizer positionFromPosition:lineEnd toBoundary:UITextGranularityCharacter inDirection:UITextStorageDirectionBackward];
-                
-                if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame) break;
-                
-                continue;
-            }
-            
-            lines++; pos = lineEnd;
-        }
-        
-        if(lines < 4){
-            self.trunkNameHeightConstraint.constant = lines*57;
-            textView.contentInset = UIEdgeInsetsMake(lines*lines*2.5,0,lines*lines*-2.5,0);
-        }else{
-            lines--;
-            NSString *str = textView.text;
-            NSString *truncatedString = [str substringToIndex:[str length]-1];
-            textView.text = truncatedString;
-        }
-        textView.textAlignment = NSTextAlignmentCenter;
+        [self updateTextViewSize:textView];
     }
+}
+
+-(void)updateTextViewSize:(UITextView *)textView{
+    id<UITextInputTokenizer> tokenizer = textView.tokenizer;
+    UITextPosition *pos = textView.endOfDocument;
+    NSInteger lines = 0;
+    
+    while (true){
+        UITextPosition *lineEnd = [tokenizer positionFromPosition:pos toBoundary:UITextGranularityLine inDirection:UITextStorageDirectionBackward];
+        
+        if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame){
+            pos = [tokenizer positionFromPosition:lineEnd toBoundary:UITextGranularityCharacter inDirection:UITextStorageDirectionBackward];
+            
+            if([textView comparePosition:pos toPosition:lineEnd] == NSOrderedSame) break;
+            
+            continue;
+        }
+        
+        lines++; pos = lineEnd;
+    }
+    
+    if(lines < 4){
+        self.trunkNameHeightConstraint.constant = lines*57;
+        textView.contentInset = UIEdgeInsetsMake(lines*lines*2.5,0,lines*lines*-2.5,0);
+    }else{
+        lines--;
+        NSString *str = textView.text;
+        NSString *truncatedString = [str substringToIndex:[str length]-1];
+        textView.text = truncatedString;
+    }
+    textView.textAlignment = NSTextAlignmentCenter;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
