@@ -640,11 +640,8 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView == self.collectionView)
-    {
-        
+    if (collectionView == self.collectionView){
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-        
         cell.logo.hidden = YES;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         cell.photo.clipsToBounds = YES;
@@ -656,15 +653,12 @@
         NSTimeInterval lastPhotoInterval = [lastOpenedApp timeIntervalSinceDate:cell.tripPhoto.createdAt];
         if (lastPhotoInterval < 0)
         {
-            if (![self.photosSeen containsObject:cell.tripPhoto.objectId])
-            {
+            if (![self.photosSeen containsObject:cell.tripPhoto.objectId]){
                 cell.logo.hidden = NO;
-            } else
-            {
+            } else{
                 cell.logo.hidden = YES;
             }
         }
-        
             // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
             NSString *urlString = [[TTUtility sharedInstance] thumbnailImageUrl:cell.tripPhoto.imageUrl];
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -675,34 +669,25 @@
             weakCell.photo.translatesAutoresizingMaskIntoConstraints = NO;
             weakCell.photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             NSInteger index = indexPath.item;
-            
             [cell.photo setImageWithURLRequest:request
                               placeholderImage:placeholderImage
                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                           
                                            // Set the image to the Photo object in the array
                                            [(Photo *)[self.photos objectAtIndex:index] setImage:image];
                                            weakCell.photo.image = image;
                                            [weakCell layoutIfNeeded];
-                                           
                                        } failure:nil];
             return weakCell;
-        
-        return cell;
-        
+            return cell;
     } else {
         UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
-        
         cell.profileImage.image = nil;
-        
-        
         NSInteger index = indexPath.item;
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
         __weak UserCellCollectionViewCell *weakCell = cell;
         if (indexPath.item == 0){
             cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"members"];
-            
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
             if (self.isMember == NO){
@@ -756,7 +741,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.collectionView){
-
         self.path = indexPath;
         [self performSegueWithIdentifier:@"photo" sender:self];
     } else {

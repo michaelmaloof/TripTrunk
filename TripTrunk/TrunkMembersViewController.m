@@ -40,14 +40,12 @@
     if (self) {
         _trip = trip;
         _tripCreator = trip.creator;
-
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     //this array will be used to store members that are in the process of being uploaded to the trunk
     self.loadingMembers = [[NSMutableArray alloc]init];
     [self setTitleAndNavBarItems];
@@ -142,9 +140,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-
     UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    cell.tag = 1;
     [cell setDelegate:self];
     NSURL *picUrl;
     
