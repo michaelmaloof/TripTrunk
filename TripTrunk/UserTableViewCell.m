@@ -25,15 +25,17 @@
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    if (selected) {
-        self.backgroundColor = [TTColor tripTrunkRedThirdAlpha];
-        self.accessoryType = UITableViewCellAccessoryCheckmark;
+    if (self.tag != 1){
+        if (selected) {
+            self.backgroundColor = [TTColor tripTrunkRedThirdAlpha];
+            self.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+        else {
+            self.backgroundColor = [TTColor tripTrunkWhite];
+            self.accessoryType = UITableViewCellAccessoryNone;
+        }
+        [super setSelected:selected animated:animated];
     }
-    else {
-        self.backgroundColor = [TTColor tripTrunkWhite];
-        self.accessoryType = UITableViewCellAccessoryNone;
-    }
-    [super setSelected:selected animated:animated];
 }
 
 - (void)setUser:(PFUser *)user {
