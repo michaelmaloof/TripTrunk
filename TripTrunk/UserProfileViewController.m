@@ -41,7 +41,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
 @property (strong, nonatomic) NSMutableArray *myPhotos;
 @property int numberOfImagesPerRow;
-@property BOOL isFirstLoad;
+@property BOOL hasDoneFirstLoad;
 @property NSMutableArray *photosSeen;
 @property (weak, nonatomic) IBOutlet UIButton *photosLabel;
 @property (weak, nonatomic) IBOutlet UIButton *trunkListButton;
@@ -75,7 +75,6 @@
     [self setInitialDesign];
     self.myPhotos = [[NSMutableArray alloc] init];
     [self handlePhotosSeen];
-    [self loadUser];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,8 +92,14 @@
         self.followingButton.enabled = YES;
         self.mapButton.userInteractionEnabled = YES;
         self.trunkCountButton.userInteractionEnabled = YES;
+        if (self.hasDoneFirstLoad == YES){
+            [self refreshUserPhotos];
+        } else {
+            [self loadUser];
+        }
     }
     else {
+        [self loadUser];
         // Get the followStatus from the cache so it may be updated already
         NSNumber *followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
         if (followStatus.intValue > 0) {
@@ -129,9 +134,8 @@
                     self.followingButton.enabled = YES;
                     self.mapButton.userInteractionEnabled = YES;
                     self.trunkCountButton.userInteractionEnabled = YES;
-                    if (self.isFirstLoad == NO){
+                    if (self.hasDoneFirstLoad == NO){
                         [self loadUserImages];
-                        self.isFirstLoad = YES;
                     }
                 }
             });
@@ -183,9 +187,8 @@
                             [self.followButton setTitle:NSLocalizedString(@"Following",@"Following") forState:UIControlStateNormal];
                             [self.followButton setHidden:NO];
                             [self.followButton setEnabled:YES];
-                            if (self.isFirstLoad == NO){
+                            if (self.hasDoneFirstLoad == NO){
                                 [self loadUserImages];
-                                self.isFirstLoad = YES;
                             }
                         }
                     });
@@ -394,6 +397,7 @@
 }
 
 -(void)loadUserImages{
+    self.hasDoneFirstLoad = YES;
     PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
     [findPhotosUser whereKey:@"user" equalTo:self.user];
     [findPhotosUser orderByDescending:@"createdAt"];
@@ -429,6 +433,48 @@
             [ParseErrorHandlingController handleError:error];
         }
     }];
+
+}
+
+-(void)refreshUserPhotos{
+    Photo *photo = self.myPhotos.firstObject;
+    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
+    [findPhotosUser whereKey:@"user" equalTo:self.user];
+    [findPhotosUser orderByDescending:@"createdAt"];
+    [findPhotosUser includeKey:@"trip.creator"];
+    [findPhotosUser includeKey:@"trip"];
+    [findPhotosUser includeKey:@"user"];
+    [findPhotosUser whereKey:@"createdAt" greaterThan:photo.createdAt];
+    [findPhotosUser setLimit:1000];
+    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error)
+        {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            // Objects is an array of Parse Photo objects
+            for (Photo *photo in objects){
+                if (photo.trip.isPrivate == NO && photo.trip != nil){
+                    [self.myPhotos insertObject:photo atIndex:0];
+                }
+            }
+            
+            //update photo count when it is not right
+            [self.collectionView reloadData];
+            CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
+            NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
+            NSInteger numOfRows = self.myPhotos.count/self.numberOfImagesPerRow;
+            if(self.myPhotos.count % self.numberOfImagesPerRow != 0)
+                numOfRows++;
+            NSInteger heightOfScroll = imageHeight*numOfRows+collectionViewPosition.y;
+            
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
+            self.scrollViewHeightConstraint.constant = heightOfScroll;
+            self.contentViewHeightConstraint.constant = heightOfScroll;
+            
+        } else {
+            [ParseErrorHandlingController handleError:error];
+        }
+    }];
+
 
 }
 
@@ -899,8 +945,9 @@
 
     UINib *nib = [UINib nibWithNibName:@"TTUserProfileViewCell" bundle: nil];
     [collectionView registerNib:nib forCellWithReuseIdentifier:@"myImagesCell"];
-    
+
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
+    cell.image.image = nil;
     cell.backgroundColor = [TTColor tripTrunkBlue];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
     

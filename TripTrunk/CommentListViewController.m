@@ -270,7 +270,7 @@
     CGSize labelSize = [cellText boundingRectWithSize:constraintSize
                                               options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
                                               context:nil].size;
-    return labelSize.height + 40;
+    return labelSize.height + 45;
     
 }
 
