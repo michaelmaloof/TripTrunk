@@ -133,6 +133,7 @@ list of trunks the user hasn't seen since last being in the app
  the list/newsfeed viewcontroller you can toggle to from the map
  */
 @property TTNewsFeedViewController *newsVC; //FIXME this should be handlded differenlty
+
 @end
 
 @implementation HomeMapViewController
@@ -140,32 +141,29 @@ list of trunks the user hasn't seen since last being in the app
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setArraysBoolsandDates];
-    [self designNavBar];
-    [self setMapTitle];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    [self setMapTitle];
     self.visitedTrunks = [[NSMutableArray alloc]init]; //FIXME this should be a class method handling this
     [self setVisitedTrunks]; //FIXME this should be a class method handling this
+    [self designNavBar];
     [self implementUserIntoMap];
 }
 
 /**
- *  Sets Nav Bar Title on HomeMapViewController
+ *  Create the navBar with proper design
  *
  *
  */
--(void)setMapTitle{
-    if (self.user == nil){
+-(void)designNavBar{
+    //if self.user is not nil then you are looking at a user's profile. Therefore the map will have their name in the title. If self.user is nil then we show the TripTrunk title since you are on the home or newsfeed map.
+    if (self.user == nil) {
         [self setTitleImage];
     } else {
-        NSString *trunks = NSLocalizedString(@"Trunks",@"Trunks");
-        NSString *s = NSLocalizedString(@"'s",@"'s");
-        self.title = [NSString stringWithFormat:@"%@%@ %@", self.user.username, s,trunks];
+        self.title = [NSString stringWithFormat:@"%@'s Trunks", self.user.username];
     }
+    self.tabBarController.tabBar.translucent = false;
 }
-
 
 /**
  *  Sets up the arrays, bools, and dates used in this viewcontroller
@@ -177,7 +175,7 @@ list of trunks the user hasn't seen since last being in the app
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
-    //containts map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
+    //contains map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
     //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
     self.hotDots = [[NSMutableArray alloc]init];
     //the trunks we pull down from parse
@@ -207,12 +205,9 @@ list of trunks the user hasn't seen since last being in the app
  *
  */
 -(void)setVisitedTrunks{
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
+    for (UINavigationController *controller in self.tabBarController.viewControllers){
+        for (HomeMapViewController *view in controller.viewControllers){
+            if ([view isKindOfClass:[HomeMapViewController class]]){
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                     self.visitedTrunks = view.viewedTrunks;
                 }
@@ -221,21 +216,19 @@ list of trunks the user hasn't seen since last being in the app
     }
 }
 
-
 /**
  *  Begins loading the map for either the Home Map or a User's Map
  *
  *
  */
 -(void)implementUserIntoMap{
-    //Make sure the user is logged in. If not we make them login.
-    if([self checkUserRegistration])
-    {
+    //Make sure the user is logged in. If not we make them login. //FIXME This should be done in every viewcontroller through a parent class method
+    if([self checkUserRegistration]){
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
         if (self.user == nil) {
             //We're on the home taeb so register the user's notifications
-                [self registerNotifications];
-                //the first time we go to this screen, we zoom in on the users most recent trip.
+                [self registerNotifications]; //fixme should be done in some time of parent class method
+                //if were suppose to refresh the trips, then begin downlaoding trips from database
                 if (self.dontRefresh == NO){
                     [self beginLoadingTrunks];
                 } else {
@@ -329,21 +322,6 @@ list of trunks the user hasn't seen since last being in the app
 }
 
 /**
- *  Create the navBar with proper design
- *
- *
- */
--(void)designNavBar{
-//if self.user is not nil then you are looking at a user's profile. Therefore the map will have their name in the title. If self.user is nil then we show the TripTrunk title since you are on the home or newsfeed map.
-    if (self.user == nil) {
-        [self setTitleImage];
-    } else {
-        self.title = [NSString stringWithFormat:@"%@'s Trunks", self.user.username];
-    }
-    self.tabBarController.tabBar.translucent = false;
-}
-
-/**
  *  Determine the user status
  *
  *  @return YES if user is logged in and we should continue. NO if we are displaying a different view to do/finish login
@@ -371,13 +349,10 @@ list of trunks the user hasn't seen since last being in the app
  *
  */
 - (void)registerNotifications {
-    
     UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-    
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    
 }
 
 //Currently the only alert view that is shown is if you open the homescreen and have no friends. We encourage you to follow people so you won't be such a loser.
