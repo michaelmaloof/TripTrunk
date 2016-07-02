@@ -20,38 +20,125 @@
 #import "TTNewsFeedViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-//HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
-
+/**
+ HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
+ */
 @interface HomeMapViewController () <MKMapViewDelegate,NewsDelegate>
+
+/**
+ The map from Apple that has the trips displayed over it
+ */
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+
+/**
+ The trip objects we are given back from the database. They will either be the trips of one user (for their profile) or the trips of all the curren't user's friends
+ */
 @property NSMutableArray *parseLocations;
+
+/**
+ Stores each trunk thats placed on the map. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
+ */
 @property NSMutableArray *tripsToCheck;
+
+/**
+ Stores cities with hot trips, meaning they need to be red and a photo has been added their the last 24 hours
+ */
 @property NSMutableArray *hotDots;
-@property NSString *pinCityName;
-@property NSString *pinStateName;
+
+/**
+ City name of the map pin (dot) selected
+ */
+@property NSString *pinCityName; //FIXME this shouldnt be needed
+
+/**
+ State name of the map pin (dot) selected
+ */
+@property NSString *pinStateName; //FIXME this shouldnt be needed
+
+/**
+ How many trips have been dropped on the map
+ */
 @property int dropped;
+
+/**
+ How many trips have been skipped, not dropping them on the map, due to a pin already being on the map in that city
+ */
 @property int notDropped;
+
+/**
+ Today's Date
+ */
 @property NSDate *today;
-@property MKAnnotationView *photoPin;
+
+/**
+ contains the users that the current user is following.
+ */
 @property NSMutableArray *friends;
-@property Trip *tripToCheck;
-@property BOOL tutorialComplete;
-@property NSMutableArray *needsUpdates;
-@property NSMutableArray *haventSeens;
-@property CLLocation *location;
+
+/**
+ if the user has completed the tutorial
+ */
+@property BOOL tutorialComplete; //FIXME should be in a utility class or in the user data
+
+/**
+We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat. Only trunks made before version 2 of the app will have this issue.
+ */
+@property NSMutableArray *outdatedTrunks;
+
+/**
+list of trunks the user hasn't seen since last being in the app
+ */
+@property NSMutableArray *haventSeens; //fixme should be in utility class
+
+/**
+ location of the pin that has been selected
+ */
+@property CLLocation *location; //FIXME the way we get this value is hacky, we should take the trips long and lat and pass it here instead of getting the annotations long and lat
+
+/**
+ Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
+ */
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
+
+/**
+ we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
+ */
 @property BOOL isLoading;
+
+/**
+ the limit of how many trips we load from the database
+ */
 @property int limit;
-@property BOOL hasLoadedOnce;
+
+/**
+ The date the user last oppened the app to put the logo on certain trunks
+*/
 @property NSDate *lastOpenedApp;
+
+/**
+ Don't refresh the map. See method "dontRefresh" in HomeViewController for more info
+ */
 @property BOOL dontRefresh;
-@property BOOL isFirstUserLoad;
-@property BOOL buttonsMaded;
+
+/**
+ is this the first time the current user has viewed this user profile during this session? We use this BOOL to prevent from zooming in on the most recent trunk every single time this view appears. For example, I click Mike's profile. It zooms me in on his most recent trip in Captiva. If I click a trip in Las Vegas from Mikes map in then click back this BOOL prevents the map from once again zooming in on Captiva.
+ */
+@property BOOL isFirstTimeViewingProfile;
+
+/**
+ the annotation the user selected and that needs to be zoomed in on
+ */
 @property MKPointAnnotation* annotationPinToZoomOn;
-@property BOOL isMainMap;
-@property NSMutableArray *visitedTrunks;
-@property TTNewsFeedViewController *newsVC;
-@property BOOL exists;
+
+/**
+ trunks the user has visited. Not to be confused with viewedTrunks.
+ */
+@property NSMutableArray *visitedTrunks; //FIXME this should be a class method handling this and less confusing
+
+/**
+ the list/newsfeed viewcontroller you can toggle to from the map
+ */
+@property TTNewsFeedViewController *newsVC; //FIXME this should be handlded differenlty
 @end
 
 @implementation HomeMapViewController
@@ -61,7 +148,6 @@
     self.tutorialComplete = YES; //FIXME: Remove self.tutorialCompleteFromViewController
     [self setArraysBoolsandDates];
     [self designNavBar];
-    [self setMainMap];
     [self setMapTitle];
 }
 
@@ -87,27 +173,6 @@
     }
 }
 
-/**
- *  Sets the map to be visited Trunk Logic Later on. This needs to be implemented better later on
- *
- *
- */
--(void)setMainMap{
-    for (UINavigationController *controller in self.tabBarController.viewControllers)
-    {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    if (self == (HomeMapViewController*)controller.viewControllers[0]){
-                        self.isMainMap = YES;
-                    }
-                }
-            }
-        }
-    }
-}
 
 /**
  *  Sets up the arrays, bools, and dates used in this viewcontroller
@@ -115,9 +180,7 @@
  *
  */
 -(void)setArraysBoolsandDates{
-    self.exists = NO;
-    self.isFirstUserLoad = YES;
-    self.buttonsMaded = NO;
+    self.isFirstTimeViewingProfile = YES;
     self.viewedTrunks = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
@@ -131,14 +194,14 @@
     [self setUpArrays];
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
     self.isLoading = NO;
-    //we load 50 trunks from parse at a time unless the user selects to add more by clicking the "more trunks" button"
+    //we load 50 trunks from the database
     self.limit = 50;
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     self.visitedTrunks = [[NSMutableArray alloc]init];
     //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
-    self.needsUpdates = nil;
-    self.needsUpdates = [[NSMutableArray alloc]init];
+    self.outdatedTrunks = nil;
+    self.outdatedTrunks = [[NSMutableArray alloc]init];
     //We need this to do the logic in determing if a user has seen a trunk and if a trunk should be red or blue.
     self.today = [NSDate date];
     //we need the date the user last oppened the app to put the logo on certain trunks
@@ -252,7 +315,7 @@
  *
  */
 -(void)setUpArrays{
-//we locate each trunk thats placed o nthe map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
+//we locate each trunk thats placed on the map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
     self.tripsToCheck = [[NSMutableArray alloc]init];
 //the trunks we pull down from parse
     self.parseLocations = [[NSMutableArray alloc]init];
@@ -342,7 +405,7 @@
  */
 -(void)queryParseMethodEveryone
 {
-    //self.friends will contrain the users that the current user is following.
+    //self.friends will contain the users that the current user is following.
     self.friends = [[NSMutableArray alloc]init];
     //add the current user to self.friends since we want the current user's trunks too
     [self.friends addObject:[PFUser currentUser]];
@@ -579,8 +642,8 @@
         if(![self.tripsToCheck containsObject:address] || color == 1)
         {
             //if this is a user profile we zoom to show the most recent trunk on the map
-            if (self.user && trip == [self.parseLocations objectAtIndex:0] && self.isFirstUserLoad == YES) {
-                self.isFirstUserLoad = NO;
+            if (self.user && trip == [self.parseLocations objectAtIndex:0] && self.isFirstTimeViewingProfile == YES) {
+                self.isFirstTimeViewingProfile = NO;
                 [self addTripToMap:trip dot:color isMostRecent:YES needToDelete:NO];
             } else{
                 [self addTripToMap:trip dot:color isMostRecent:NO needToDelete:NO];
@@ -705,7 +768,7 @@
     }
     
     if (isNeeded == YES){
-        [self.needsUpdates addObject:trip];
+        [self.outdatedTrunks addObject:trip];
     }
 }
 
@@ -803,40 +866,12 @@
 //FIXME: Lets use the array of parselocations here
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    // TODO: Get the state in a more elloquent way. This is hacky.
-    //    view.enabled = NO;
-    //    view.selected = YES;
-    
-    //    CLGeocoder *cod = [[CLGeocoder alloc] init];
     self.location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
     
     self.pinCityName = view.annotation.title;
     [self performSegueWithIdentifier:@"Trunk" sender:self];
     self.pinCityName = nil;
     self.pinStateName = nil;
-    self.photoPin = view;
-    
-    
-    //    [cod reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-    //
-    //        if (!error){
-    //            CLPlacemark *placemark = [placemarks firstObject];
-    //            self.pinCityName = view.annotation.title;
-    //            self.pinStateName = placemark.administrativeArea;
-    //            [self performSegueWithIdentifier:@"Trunk" sender:self];
-    //            self.pinCityName = nil;
-    //            self.pinStateName = nil;
-    //            self.photoPin = view;
-    //            view.enabled = YES;
-    //            view.selected = NO;
-    //
-    //
-    //        } else {
-    //            view.enabled = YES;
-    //            view.selected = NO;
-    //
-    //        }
-    //    }];
 }
 
 
@@ -857,7 +892,7 @@
     
     self.navigationItem.leftBarButtonItem = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (Trip *trip in self.needsUpdates) {
+        for (Trip *trip in self.outdatedTrunks) {
             NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
             NSNumber *lon = [NSNumber numberWithDouble: trip.longitude];
             [PFCloud callFunctionInBackground:@"updateTrunkLocation"
@@ -1075,12 +1110,6 @@
     }
 }
 
-- (void)addMoreTrunks{
-    self.limit += 50;
-    [self beginLoadingTrunks];
-}
-
-
 -(void)dontRefreshMap{
     self.dontRefresh = YES;
 }
@@ -1161,7 +1190,6 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         TTNewsFeedViewController *news = (TTNewsFeedViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTNews"];
         news.delegate = self;
-        self.exists = YES;
         [self.navigationController pushViewController:news animated:NO];
     }
      else {

@@ -11,12 +11,25 @@
 #import "TTBaseViewController.h"
 #import "Trip.h"
 
-//HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
-
+/**
+ HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
+ */
 @interface HomeMapViewController : TTBaseViewController
+
+/**
+ The user who is having their trips shown on this map. If nil, its the "Home" map that shows all the current user's friend' trips.
+ */
 @property PFUser *user;
-@property NSMutableArray *viewedTrunks; //trunks the user has seen during this session of the app
-@property NSMutableArray *viewedPhotos; //photos the user has seen during this session of the app
+
+/**
+ trunks the user has seen during this session of the app
+ */
+@property NSMutableArray *viewedTrunks;//FIXME SHOULD BE IN A UTILITY CLASS
+
+/**
+ photos the user has seen during this session of the app
+ */
+@property NSMutableArray *viewedPhotos; //FIXME SHOULD BE IN A UTILITY CLASS
 
 /**
  *   Updates the trunk color on the map
