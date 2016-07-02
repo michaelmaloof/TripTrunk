@@ -113,7 +113,6 @@
 - (void)getFriendsFromFbids:(NSArray *)fbids {
     if (self.isLoadingFacebook == NO){
         self.isLoadingFacebook = YES;
-
     if (fbids.count == 0) {
         self.isLoadingFacebook = NO;
         if (self.facebookRefreshed == NO){
@@ -123,6 +122,10 @@
         }
         return;
     }
+    BOOL hasFBFriends = NO;
+        if (fbids.count > 0){
+            hasFBFriends = YES;
+        }
     // Get the TripTrunk user objects with the list of cached fbid's
     PFQuery *friendsQuery = [PFUser query];
     [friendsQuery whereKey:@"fbid" containedIn:fbids];
@@ -130,14 +133,12 @@
     friendsQuery.limit = 200;
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(error)
-        {
+        if(error){
             NSLog(@"Error: %@",error);
             [ParseErrorHandlingController handleError:error];
             self.isLoadingFacebook = NO;
         }
-        else
-        {
+        else {
             _friends = [NSMutableArray arrayWithArray:objects];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -145,14 +146,15 @@
                 [self.tableView reloadData];
                 if (self.facebookRefreshed == NO){
                     if ([PFUser currentUser][@"fbid"]){
-                        [self refreshFacebookFriends];
+                        if (hasFBFriends == NO){
+                            [self refreshFacebookFriends]; //first
+                        }
                     }
                 }
             });
         }
     }];
     }
-
 }
 
 -(void)searchFacebookFriends:(NSArray *)fbids {
@@ -249,33 +251,27 @@
 }
 
 - (void)refreshFacebookFriends {
-    
     if (self.isLoadingFacebook == NO){
         self.isLoadingFacebook = YES;
     if ([FBSDKAccessToken currentAccessToken]) {
-        
         // Get the user's Facebook Friends who are already on TripTrunk
         // Facebook doesn't allow us to get the whole friends list, only friends on the app.
         NSMutableString *facebookRequest = [NSMutableString new];
         [facebookRequest appendString:@"/me/friends"];
         [facebookRequest appendString:@"?limit=1000"];
-        
+        self.facebookRefreshed = YES;
         [[[FBSDKGraphRequest alloc] initWithGraphPath:facebookRequest parameters:@{@"fields": @"id"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             if (!error) {
-                
                 self.facebookRefreshed = YES;
                 // result will contain an array with user's friends in the "data" key
                 self.isLoadingFacebook = NO;
-
                 // Loop through the friends list and create a new array of just their fbid's
                 NSMutableArray *friendList = [[NSMutableArray alloc] init];
                 for (NSDictionary *friend in [result objectForKey:@"data"]) {
                     [friendList addObject:friend[@"id"]];
                 }
-                
                 // Cache the facebook ID's
                 [[TTCache sharedCache] setFacebookFriends:friendList];
-                
                 if (friendList.count != 0) {
                     if ([PFUser currentUser][@"fbid"]){
                         [self getFriendsFromFbids:friendList];
