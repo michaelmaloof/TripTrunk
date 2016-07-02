@@ -20,8 +20,7 @@
 #import "TTNewsFeedViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-
-#define METERS_PER_MILE 1609.344
+//HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
 
 @interface HomeMapViewController () <MKMapViewDelegate,NewsDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -68,8 +67,8 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [self setMapTitle];
-    self.visitedTrunks = [[NSMutableArray alloc]init];
-    [self setVisitedTrunks];
+    self.visitedTrunks = [[NSMutableArray alloc]init]; //FIXME this should be a class method handling this
+    [self setVisitedTrunks]; //FIXME this should be a class method handling this
     [self implementUserIntoMap];
 }
 

@@ -157,7 +157,7 @@
     }
 }
 
--(void)searchFacebookFriends:(NSArray *)fbids {
+-(void)searchFacebookFriends:(NSArray *)fbids { //FIXME, what is the point of caching the facebook ids?
     // Get the TripTrunk user objects with the list of cached fbid's
     
     if (self.isLoadingSearch == NO && self.isLoadingFacebook == NO){
@@ -169,8 +169,6 @@
     friendsQuery.limit = 200;
     friendsQuery.skip = self.friends.count;
     [friendsQuery whereKey:@"objectId" notContainedIn:self.friends];
-
-    
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
