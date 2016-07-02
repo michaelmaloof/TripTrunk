@@ -16,7 +16,6 @@
 #import "AddTripPhotosViewController.h"
 #import "ParseErrorHandlingController.h"
 #import "EULAViewController.h"
-#import "TutorialViewController.h"
 #import "TTNewsFeedViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -74,11 +73,6 @@
  contains the users that the current user is following.
  */
 @property NSMutableArray *friends;
-
-/**
- if the user has completed the tutorial
- */
-@property BOOL tutorialComplete; //FIXME should be in a utility class or in the user data
 
 /**
 We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat. Only trunks made before version 2 of the app will have this issue.
@@ -145,7 +139,6 @@ list of trunks the user hasn't seen since last being in the app
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.tutorialComplete = YES; //FIXME: Remove self.tutorialCompleteFromViewController
     [self setArraysBoolsandDates];
     [self designNavBar];
     [self setMapTitle];
@@ -241,7 +234,6 @@ list of trunks the user hasn't seen since last being in the app
 //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
         if (self.user == nil) {
             //We're on the home taeb so register the user's notifications
-            if (self.tutorialComplete == YES){
                 [self registerNotifications];
                 //the first time we go to this screen, we zoom in on the users most recent trip.
                 if (self.dontRefresh == NO){
@@ -251,7 +243,6 @@ list of trunks the user hasn't seen since last being in the app
                         [self zoomInOnNewPin];
                     }
                     self.dontRefresh = NO;
-                }
             }
         } else {
             //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
@@ -420,7 +411,7 @@ list of trunks the user hasn't seen since last being in the app
             //use parse to download the trunks of the current user and the users they are following
             [self queryForTrunks];
             
-            if (users.count == 0 && self.tutorialComplete == YES) {
+            if (users.count == 0) {
                 //They're following no one, tell them to make some friends
                 [self displayFollowUserAlertIfNeeded];
             }
@@ -924,14 +915,6 @@ list of trunks the user hasn't seen since last being in the app
     }
 }
 
-
-#pragma mark - Tutorial Management
--(void)showTutorial
-{
-    //Show Tutorial View Controller to User
-    TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
-    [self.navigationController presentViewController:tutorialVC	 animated:YES completion:nil];
-}
 
 // This is needed for the login to work properly
 // DO NOT DELETE
