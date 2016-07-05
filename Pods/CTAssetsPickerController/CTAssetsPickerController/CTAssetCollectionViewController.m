@@ -407,7 +407,6 @@
     [cell bind:collection count:count];
     [self requestThumbnailsForCell:cell assetCollection:collection];
     
-    
     return cell;
 }
 

@@ -1,13 +1,85 @@
 PODS:
+  - AWSAutoScaling (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSCloudWatch (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSCognito (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSCognitoIdentityProvider (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSCore (2.4.1)
+  - AWSDynamoDB (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSEC2 (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSElasticLoadBalancing (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSIoT (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSKinesis (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSLambda (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSMachineLearning (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSMobileAnalytics (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSS3 (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSSES (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSSimpleDB (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSSNS (2.4.1):
+    - AWSCore (= 2.4.1)
+  - AWSSQS (2.4.1):
+    - AWSCore (= 2.4.1)
   - CTAssetsPickerController (3.1.1):
     - PureLayout (~> 3.0.0)
   - PureLayout (3.0.1)
 
 DEPENDENCIES:
+  - AWSAutoScaling
+  - AWSCloudWatch
+  - AWSCognito
+  - AWSCognitoIdentityProvider
+  - AWSDynamoDB
+  - AWSEC2
+  - AWSElasticLoadBalancing
+  - AWSIoT
+  - AWSKinesis
+  - AWSLambda
+  - AWSMachineLearning
+  - AWSMobileAnalytics
+  - AWSS3
+  - AWSSES
+  - AWSSimpleDB
+  - AWSSNS
+  - AWSSQS
   - CTAssetsPickerController (~> 3.1.0)
 
 SPEC CHECKSUMS:
+  AWSAutoScaling: 3b87242dfe7a2a2ab32f19841303c20269ac517f
+  AWSCloudWatch: bcca936523245b67502bca290b73cc43b3a2b399
+  AWSCognito: a57173a82505161bd1a9c8cfe393cea9b5b1f6bb
+  AWSCognitoIdentityProvider: 94ba6554991dd65e214678361f1d691fe7adb528
+  AWSCore: 9bfd632f04aaf12053e639d2a9120372844beb0d
+  AWSDynamoDB: 1e9b01602df37e9d5ef014eff9d7b16663add6bb
+  AWSEC2: a9d996e3d04f0042a20548e01a9ee84e497f977f
+  AWSElasticLoadBalancing: 2f6248ed06cc48c5f90d8bce72fea6206f7fcd5d
+  AWSIoT: c8d4c72ab2d817ec5b771c318cde77ef3b26d639
+  AWSKinesis: 720f54403be256082f37fdc2c661169c70d90824
+  AWSLambda: c6c99296e282c3fa78af41facff9b3bd4e1648d7
+  AWSMachineLearning: b5a57123c045116a360a84dc55840658b991da39
+  AWSMobileAnalytics: 7fb109f4011d40c5fe797f962007a9d50c812a1d
+  AWSS3: d7a3a694ffc4010e90b14755b5b9dbf70989c117
+  AWSSES: af07426ead2aafea11354ec3cdc53adc6ad2fe8b
+  AWSSimpleDB: 69c8e60cb2e8e6df83d9fad2b1cf64fe55cca9e4
+  AWSSNS: 69bd0886bd48f175a9bcfef0f78d47370a4cabad
+  AWSSQS: 735fb161c3046cef4c0c3ec1372538946fefcc34
   CTAssetsPickerController: 6fba9134a230656ffe34ac0effb0060a1ead65cb
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 4b1b766af884192ee944d07123c173c7d860abb6
+
+COCOAPODS: 1.0.1
