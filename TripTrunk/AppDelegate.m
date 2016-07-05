@@ -20,14 +20,19 @@
 #import "ActivityListViewController.h"
 #import "TTCache.h"
 #import "Cloudinary.h"
+#import <AWSCore/AWSCore.h>
+#import <AWSSNS/AWSSNS.h>
+#import "AWSMobileClient.h"
 
 //TripTrunk-DEV
-//#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
-//#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+#define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
+#define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+#define kPARSE_SERVER_KEY @"http://parseserver.z3wj9s84tk.us-east-1.elasticbeanstalk.com/parse/"
 
 //TripTrunk-PROD
-#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+//#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
+//#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
+//#define kPARSE_SERVER_KEY @""
 
 @interface AppDelegate ()
 
@@ -49,6 +54,7 @@
     [ParseCrashReporting enable];
     [Parse setApplicationId:kPARSE_APP_ID
                   clientKey:kPARSE_CLIENT_KEY];
+    
     [PFUser enableRevocableSessionInBackground];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     [PFImageView class];

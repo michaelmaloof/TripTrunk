@@ -35,6 +35,47 @@
 	<string>TripTrunk</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>AWS</key>
+	<dict>
+		<key>PushManager</key>
+		<dict>
+			<key>Default</key>
+			<dict>
+				<key>SNSConfiguredTopics</key>
+				<array>
+					<string>arn:aws:sns:us-east-1:958928567633:triptrunkdev_alldevices_MOBILEHUB_1812265947</string>
+					<string></string>
+				</array>
+				<key>Region</key>
+				<string>USEast1</string>
+				<key>SNSPlatformApplicationARN</key>
+				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkdev_MOBILEHUB_1812265947</string>
+			</dict>
+		</dict>
+		<key>IdentityManager</key>
+		<dict>
+			<key>Default</key>
+			<dict/>
+		</dict>
+		<key>CredentialsProvider</key>
+		<dict>
+			<key>CognitoIdentity</key>
+			<dict>
+				<key>Default</key>
+				<dict>
+					<key>PoolId</key>
+					<string>us-east-1:99306f62-d922-4134-b138-36274723c314</string>
+					<key>Region</key>
+					<string>USEast1</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>MobileHub</key>
+		<dict>
+			<key>ProjectClientId</key>
+			<string>MobileHub 760da888-54d4-4a96-b3c6-c16cfd30ccd2 aws-my-sample-app-ios-objc-v0.7</string>
+		</dict>
+	</dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
