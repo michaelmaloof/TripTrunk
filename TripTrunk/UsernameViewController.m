@@ -86,7 +86,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 1){
         [self handleFacebookUser];
-    } else {
+    } else if (alertView.tag != 11) {
             if (_user) {
                 [self.user deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                     if (error){
@@ -96,9 +96,6 @@
                         [self dismissViewControllerAnimated:YES completion:nil];
                 }];
                  }];
-            } else {
-//                [self dismissViewControllerAnimated:YES completion:nil];
-
             }
     }
 }
@@ -277,6 +274,7 @@
                                                            delegate:self
                                                   cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                   otherButtonTitles:nil, nil];
+            alert.tag = 11;
 
             //Clear user property
 //            self.user = nil;
@@ -328,8 +326,8 @@
 
 -(BOOL)validateUsername:(NSString*)username{
     
-//    if(![self validateAllFieldsHaveValues:username])
-//        return NO;
+    if(![self validateAllFieldsHaveValues:username])
+        return NO;
     
     if(![self validateUsernameLength:username])
         return NO;
