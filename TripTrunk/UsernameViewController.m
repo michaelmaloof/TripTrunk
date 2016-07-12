@@ -490,6 +490,7 @@
     return YES;
 }
 
+//FIXME this doesnt actually validate if its a real email
 -(BOOL)validateEmailAddressIsValidFormat:(NSString*)emailAddress{
     NSString *expression = @"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$";
     NSError *error = NULL;

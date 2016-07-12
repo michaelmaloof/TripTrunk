@@ -34,7 +34,7 @@
  */
 @property (weak, nonatomic) IBOutlet UIImageView *totalLikeHeart;
 @property (weak, nonatomic) IBOutlet UILabel *totalLikeButton;
-@property NSArray *photos;
+@property NSMutableArray *photos;
 @property NSMutableArray *members;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //@property (weak, nonatomic) IBOutlet UILabel *photoLabel;
@@ -97,7 +97,7 @@
         }
         
     }];
-    self.photos = [[NSArray alloc] init];
+    self.photos = [[NSMutableArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
     self.numberOfImagesPerRow = 3;
     // Load initial data
@@ -106,7 +106,7 @@
     // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
     // Notification is also used if a photo is deleted.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(queryParseMethod)
+                                             selector:@selector(queryNewlyAddedPhoto)
                                                  name:@"parsePhotosUpdatedNotification"
                                                object:nil];
     
@@ -123,9 +123,7 @@
                         if (![view.viewedTrunks containsObject:self.trip])
                         {
                             [view.viewedTrunks addObject:self.trip];
-                            
                         }
-                        
                         self.photosSeen = [[NSMutableArray alloc]init];
                         self.photosSeen = view.viewedPhotos;
                     }
@@ -240,11 +238,7 @@
 - (void)refreshTripDataViews {
     // Putting all this here so that if the trip is Edited then the UI will refresh
     self.title  = self.trip.name;
-    
-    
-    
     if (![self.trip.descriptionStory isEqualToString:@""] ||  self.trip.descriptionStory != nil){
-        
         UIButton *navButton =  [UIButton buttonWithType:UIButtonTypeCustom];
         navButton.frame = CGRectMake(0, 0, 100, 40);
         [navButton setTitle:self.title forState:UIControlStateNormal];
@@ -253,17 +247,10 @@
                       action:@selector(titleTapped)
             forControlEvents:UIControlEventTouchUpInside];
         self.navigationItem.titleView = navButton;
-        
-        
-        
     }
-    
     self.descriptionTextView.text = self.trip.descriptionStory;
-    
     [self.view addSubview:self.descriptionTextView];
-    
     [self displayTrunkTitle];
-    
     self.stateCountryLabel.adjustsFontSizeToFitWidth = YES;
     if ([self.trip.country isEqualToString:@"United States"]){
         self.stateCountryLabel.text = [NSString stringWithFormat:@"%@, %@ %@",self.trip.city, self.trip.state, self.trip.country];
@@ -453,16 +440,13 @@
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             // Objects is an array of Parse Photo objects
-            self.photos = [NSArray arrayWithArray:objects];
+            self.photos = [NSMutableArray arrayWithArray:objects];
             //update photo count when it is not right 
             if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
                 self.trip.publicTripDetail.photoCount = (int)self.photos.count;
                 [self.trip saveInBackground];
             }
-        
             [self.collectionView reloadData];
-
-            
             CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
             NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
             NSInteger numOfRows = self.photos.count/self.numberOfImagesPerRow;
@@ -473,38 +457,47 @@
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
             self.scrollViewHeightConstraint.constant = heightOfScroll;
             self.contentViewHeightConstraint.constant = heightOfScroll;
-            
-            
-            
-            //FIXME JUNIL IS THIS NEEDED
-
-//            if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-            
-                //FIXME JUNIL IS THIS NEEDED
-//                [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-//            
-//                if (self.trip.publicTripDetail.mostRecentPhoto == nil){
-//                    self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
-//                }
-//                
-//            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
-//                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
-//                [self.trip saveInBackground];
-//            }
-//                }];
-//
-//            }
-//
-//            
-//        }else
-//        {
-//            NSLog(@"Error: %@",error);
-//            [ParseErrorHandlingController handleError:error];
         }
-//
-//
     }];
 
+}
+
+-(void)queryNewlyAddedPhoto{
+    PFQuery *findPhoto = [PFQuery queryWithClassName:@"Photo"];
+    [findPhoto whereKey:@"trip" equalTo:self.trip];
+    [findPhoto orderByDescending:@"createdAt"];
+    [findPhoto includeKey:@"trip.creator"];
+    [findPhoto includeKey:@"trip"];
+    [findPhoto includeKey:@"user"];
+    [findPhoto setLimit:1];
+    [findPhoto findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error)
+        {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            Photo *photo = [self.photos objectAtIndex:0];
+            Photo *newPhoto = [objects objectAtIndex:0];
+            
+            if (![photo.objectId isEqualToString:newPhoto.objectId]){
+                [self.photos insertObject:newPhoto atIndex:0];
+            }
+            
+            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
+                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
+                [self.trip saveInBackground];
+            }
+            [self.collectionView reloadData];
+            CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
+            NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
+            NSInteger numOfRows = self.photos.count/self.numberOfImagesPerRow;
+            if(self.photos.count % self.numberOfImagesPerRow != 0)
+                numOfRows++;
+            NSInteger heightOfScroll = imageHeight*numOfRows+collectionViewPosition.y;
+            
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
+            self.scrollViewHeightConstraint.constant = heightOfScroll;
+            self.contentViewHeightConstraint.constant = heightOfScroll;
+        }
+    }];
 }
 
 #pragma mark - Button Actions 
@@ -643,6 +636,7 @@
     if (collectionView == self.collectionView){
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
         cell.logo.hidden = YES;
+        cell.photo.image = nil;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
         cell.photo.clipsToBounds = YES;
         cell.photo.translatesAutoresizingMaskIntoConstraints = NO;
