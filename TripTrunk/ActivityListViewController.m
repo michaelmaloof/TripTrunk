@@ -145,10 +145,18 @@ enum TTActivityViewType : NSUInteger {
 }
 
 -(void)setUpFilter{
-    self.filter = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_2"] style:(UIBarButtonItemStylePlain) target:self action:@selector(toggleWasTapped)];
-    [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
     self.filter.tag = 0;
+    UIImage *image = [UIImage imageNamed:@"all_mine_2"];
+    CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+    UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+    [bttn setImage:image forState:UIControlStateNormal];
+    [bttn setImage:image forState:UIControlStateHighlighted];
+    [bttn setImage:image forState:UIControlStateSelected];
+    [bttn addTarget:self action:@selector(toggleWasTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.filter= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+    [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
     self.navigationItem.rightBarButtonItem.enabled = NO;
+
 }
 
 /**
@@ -858,7 +866,16 @@ enum TTActivityViewType : NSUInteger {
 -(void)toggleWasTapped{
     self.navigationItem.rightBarButtonItem.enabled = NO;
     if (self.filter.tag == 0) {
-        [self.filter setImage:[UIImage imageNamed:@"all_mine_1"]];
+        self.filter = nil;
+        UIImage *image = [UIImage imageNamed:@"all_mine_1"];
+        CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+        UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+        [bttn setImage:image forState:UIControlStateNormal];
+        [bttn setImage:image forState:UIControlStateHighlighted];
+        [bttn setImage:image forState:UIControlStateSelected];
+        [bttn addTarget:self action:@selector(toggleWasTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.filter= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         self.filter.tag = 1;
         if (self.friends.count > 0){
             self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -867,10 +884,14 @@ enum TTActivityViewType : NSUInteger {
             [self loadFriends];
         }
     } else  {
-        [self.filter setImage:[UIImage imageNamed:@"all_mine_2"]];
-        self.filter.tag = 0;
-        //load the user's activities
-        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.filter = nil;
+        UIImage *image = [UIImage imageNamed:@"all_mine_2"];
+        CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+        UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+        [bttn setImage:image forState:UIControlStateNormal];
+        [bttn addTarget:self action:@selector(toggleWasTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.filter= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+        [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         [self.tableView reloadData];
     }
 
