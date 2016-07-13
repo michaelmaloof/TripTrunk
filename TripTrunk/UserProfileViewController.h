@@ -30,6 +30,9 @@
  */
 - (id)initWithUserId:(NSString *)userId;
 
+-(void)photoWasDeletedFromPhotoViewController:(Photo*)deletedPhoto;
+
+
 
 @property (strong, nonatomic) IBOutlet UIButton *followersButton;
 @property (strong, nonatomic) IBOutlet UIButton *followingButton;

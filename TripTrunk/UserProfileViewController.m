@@ -1038,4 +1038,18 @@
     }
 }
 
+-(void)photoWasDeletedFromPhotoViewController:(Photo *)deletedPhoto{
+    NSUInteger index = -1;
+    for (Photo *photo in self.myPhotos){
+        if ([photo.objectId isEqualToString:deletedPhoto.objectId]){
+            index = [self.myPhotos indexOfObject:photo];
+        }
+    }
+    int compare = (int)index;
+    if (compare > -1){
+        [self.myPhotos removeObjectAtIndex:index];
+        [self.collectionView reloadData];
+    }
+}
+
 @end
