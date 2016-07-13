@@ -821,7 +821,11 @@
                         //TODO Delete not working on list
                     }
                 }
+            if (listArray.count > 0){
                 [self.navigationController popToViewController:[listArray lastObject] animated:YES];
+            } else {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
             }
     }
 }
