@@ -877,6 +877,7 @@ enum TTActivityViewType : NSUInteger {
         self.filter= [[UIBarButtonItem alloc] initWithCustomView:bttn];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
         self.filter.tag = 1;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         if (self.friends.count > 0){
             self.navigationItem.rightBarButtonItem.enabled = YES;
             [self.tableView reloadData];
@@ -889,6 +890,8 @@ enum TTActivityViewType : NSUInteger {
         CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
         UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
         [bttn setImage:image forState:UIControlStateNormal];
+        [bttn setImage:image forState:UIControlStateHighlighted];
+        [bttn setImage:image forState:UIControlStateSelected];
         [bttn addTarget:self action:@selector(toggleWasTapped) forControlEvents:UIControlEventTouchUpInside];
         self.filter= [[UIBarButtonItem alloc] initWithCustomView:bttn];
         [[self navigationItem] setRightBarButtonItem:self.filter animated:NO];
