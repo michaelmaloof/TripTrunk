@@ -281,7 +281,6 @@
     else {
         NSLog(@"No Facebook Access Token");
         self.isLoadingFacebook = NO;
-
     }
     }
 
