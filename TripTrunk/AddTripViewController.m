@@ -791,6 +791,8 @@
         if (buttonIndex == 1){
             //FIXME this needs to return if it was a success or not
             [SocialUtility deleteTrip:self.trip];
+            dispatch_async(dispatch_get_main_queue(), ^{
+
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UINavigationController *controller in self.tabBarController.viewControllers){
                 for (UIViewController *view in controller.viewControllers){
@@ -806,6 +808,8 @@
                     }
                 }
             }
+            });
+
             NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
