@@ -42,12 +42,8 @@ enum TTActivityViewType : NSUInteger {
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property UIRefreshControl *refreshController;
-@property UIView *refreshLoadingView;
-@property UIView *refreshColorView;
-@property UIImageView *compass_background;
-@property UIImageView *compass_spinner;
-@property BOOL isRefreshIconsOverlap;
-@property BOOL isRefreshAnimating;
+@property int color;
+@property NSTimer *colorTimer;
 @end
 
 @implementation ActivityListViewController
@@ -101,7 +97,8 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-    
+    self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:.3 target:self
+                                                     selector:@selector(rotateColors) userInfo:nil repeats:YES];
     NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue];
     
     if (internalBadge > 0 && self.filter.tag == 0){
@@ -111,7 +108,8 @@ enum TTActivityViewType : NSUInteger {
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-    
+    [self.colorTimer invalidate];
+    self.colorTimer = nil;
     if (_viewType == TTActivityViewAllActivities){
         
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
@@ -145,36 +143,12 @@ enum TTActivityViewType : NSUInteger {
     [self.refreshController addTarget:self
                                action:@selector(refresh:)
                      forControlEvents:UIControlEventValueChanged];
-    self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
- 
-    // Setup the loading view, which will hold the moving graphics
-    self.refreshLoadingView = [[UIView alloc] initWithFrame:self.refreshController.bounds];
-    self.refreshLoadingView.backgroundColor = [UIColor clearColor];
-    // Setup the color view, which will display the rainbowed background
-    self.refreshColorView = [[UIView alloc] initWithFrame:self.refreshController.bounds];
-    self.refreshColorView.backgroundColor = [UIColor clearColor];
-    self.refreshColorView.alpha = 0.30;
-    // Create the graphic image views
-    self.compass_background = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"compass_background.png"]];
-    self.compass_spinner = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"compass_spinner.png"]];
-    // Add the graphics to the loading view
-    [self.refreshLoadingView addSubview:self.compass_background];
-    [self.refreshLoadingView addSubview:self.compass_spinner];
-    // Clip so the graphics don't stick out
-    self.refreshLoadingView.clipsToBounds = YES;
-    // Hide the original spinner icon
-    // Add the loading and colors views to our refresh control
-    [self.refreshController addSubview:self.refreshColorView];
-    [self.refreshController addSubview:self.refreshLoadingView];
-    // Initalize flags
-    self.isRefreshIconsOverlap = NO;
-    self.isRefreshAnimating = NO;
-    // When activated, invoke our refresh function
     [self.tableView addSubview: self.refreshController];
-
-//    [self.refreshController endRefreshing];
-
+    self.refreshController.tintColor = [UIColor whiteColor];
+    
+    [ self.refreshController endRefreshing];
 }
+
 
 
 -(void)setUpFilter{
@@ -334,6 +308,25 @@ enum TTActivityViewType : NSUInteger {
      }];
 }
 
+-(void)rotateColors{
+
+    if (self.color == 0){
+        self.refreshController.backgroundColor = [TTColor tripTrunkGray];
+    } else if (self.color == 1){
+        self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
+    } else if (self.color == 2){
+        self.refreshController.backgroundColor = [TTColor tripTrunkRed];
+    } else if (self.color == 3){
+        self.refreshController.backgroundColor = [TTColor tripTrunkYellow];
+    }
+    
+    self.color += 1;
+    
+    if (self.color == 4){
+        self.color = 0;
+    }
+}
+
 #pragma mark - Refresh
 
 
@@ -368,42 +361,32 @@ enum TTActivityViewType : NSUInteger {
                     }
                     //        _activities = [NSMutableArray arrayWithArray:activities];
                     dispatch_async(dispatch_get_main_queue(), ^
-                                   {
-                                       // End the refreshing & update the timestamp
-                                       if (refreshControl)
-                                       {
-                                           NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                                           [formatter setDateFormat:@"MMM d, h:mm a"];
-                                           NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-                                           NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                                           NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
-                                                                                                       forKey:NSForegroundColorAttributeName];
-                                           NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-                                           refreshControl.attributedTitle = attributedTitle;
-                                           
-                                           [refreshControl endRefreshing];
-                                       }
-                                       self.isLoading = NO;
-                                       self.navigationItem.rightBarButtonItem.enabled = YES;
-                                       [self.tableView reloadData];
-                                   });
+                    {
+                        // End the refreshing & update the timestamp
+                        if (refreshControl)
+                        {
+                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                            [formatter setDateFormat:@"MMM d, h:mm a"];
+                            NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                            NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                            title = @"";
+                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
+                                                                                        forKey:NSForegroundColorAttributeName];
+                            NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                            refreshControl.attributedTitle = attributedTitle;
+                            
+                            [refreshControl endRefreshing];
+                        }
+                        self.isLoading = NO;
+                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                        [self.tableView reloadData];
+                    });
                     
                     if (error)
                     {
                         self.navigationItem.rightBarButtonItem.enabled = YES;
                         self.isLoading = NO;
                     }
-                    
-                    // -- DO SOMETHING AWESOME (... or just wait 3 seconds) --
-                    // This is where you'll make requests to an API, reload data, or process information
-                    double delayInSeconds = 3.0;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        NSLog(@"DONE");
-                        // When done requesting/reloading/processing invoke endRefreshing, to close the control
-                        [self.refreshController endRefreshing];
-                    });
-                    
                 }];
             } else if (self.filter.tag ==1) {
                 [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:self.followingActivities isRefresh:YES query:^(NSArray *activities, NSError *error) {
@@ -424,45 +407,36 @@ enum TTActivityViewType : NSUInteger {
                             
                         }
                     }
-                    
-                    //        _activities = [NSMutableArray arrayWithArray:activities];
-                    dispatch_async(dispatch_get_main_queue(), ^
-                                   {
-                                       // End the refreshing & update the timestamp
-                                       if (refreshControl)
-                                       {
-                                           NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                                           [formatter setDateFormat:@"MMM d, h:mm a"];
-                                           NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
-                                           NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
-                                           NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
-                                                                                                       forKey:NSForegroundColorAttributeName];
-                                           NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-                                           refreshControl.attributedTitle = attributedTitle;
-                                           
-                                           [refreshControl endRefreshing];
-                                       }
-                                       self.isLoading = NO;
-                                       self.navigationItem.rightBarButtonItem.enabled = YES;
-                                       [self.tableView reloadData];
-                                       
-                                   });
-                    if (error)
-                    {
-                        self.navigationItem.rightBarButtonItem.enabled = YES;
-                        self.isLoading = NO;
-                    }
 
-                    double delayInSeconds = 3.0;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        NSLog(@"DONE");
-                        
-                        // When done requesting/reloading/processing invoke endRefreshing, to close the control
-                        [self.refreshController endRefreshing];
-                    });
-                }];
-                
+                     //        _activities = [NSMutableArray arrayWithArray:activities];
+                     dispatch_async(dispatch_get_main_queue(), ^
+                                    {
+                                        // End the refreshing & update the timestamp
+                                        if (refreshControl)
+                                        {
+                                            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                                            [formatter setDateFormat:@"MMM d, h:mm a"];
+                                            NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
+                                            NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
+                                                                                                        forKey:NSForegroundColorAttributeName];
+                                            NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+                                            refreshControl.attributedTitle = attributedTitle;
+                                            
+                                            [refreshControl endRefreshing];
+                                        }
+                                        self.isLoading = NO;
+                                        self.navigationItem.rightBarButtonItem.enabled = YES;
+                                        [self.tableView reloadData];
+                                        
+                                    });
+                     if (error)
+                     {
+                         self.navigationItem.rightBarButtonItem.enabled = YES;
+                         self.isLoading = NO;
+                     }
+                 }];
+
             }
         }
     }
@@ -1011,6 +985,3 @@ enum TTActivityViewType : NSUInteger {
 
 
 @end
-
-
-
