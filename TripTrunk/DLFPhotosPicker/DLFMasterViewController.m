@@ -10,6 +10,7 @@
 #import "DLFDetailViewController.h"
 #import "DLFAssetsLayout.h"
 #import <Photos/Photos.h>
+#import "TTFont.h"
 
 @interface DLFMasterViewController () <PHPhotoLibraryChangeObserver>
 
@@ -40,14 +41,16 @@ static NSString * const CollectionSegue = @"showCollection";
         [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(localizedTitle)) ascending:YES]]];
         PHFetchResult *topLevelUserCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:options];
         self.collectionsFetchResults = @[topLevelUserCollections, smartAlbums];
-        self.collectionsLocalizedTitles = @[NSLocalizedString(@"Albums", @""), NSLocalizedString(@"Smart Albums", @"")];
+        self.collectionsLocalizedTitles = @[NSLocalizedString(@"Albums", @"Albums"), NSLocalizedString(@"Smart Albums", @"Smart Albums")];
         [self excludeEmptyCollections];
+        
+        self.title = NSLocalizedString(@" ", @" ");
         
         [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
         
-        self.title = NSLocalizedString(@"Albums", nil);
-        
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStyleDone target:self action:@selector(didTapCancelButton:)];
+        NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
+        [cancelButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
         [self.navigationItem setLeftBarButtonItem:cancelButton];
         
         [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:AllPhotosReuseIdentifier];
@@ -56,6 +59,11 @@ static NSString * const CollectionSegue = @"showCollection";
         [self.tableView setDelegate:self];
     }
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.title = NSLocalizedString(@"Albums", @"Albums");
 }
 
 - (void)dealloc

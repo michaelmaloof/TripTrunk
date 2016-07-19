@@ -11,6 +11,7 @@
 #import "DLFAssetsLayout.h"
 #import "DLFPhotosLibrary.h"
 #import "DLFConstants.h"
+#import "TTFont.h"
 
 typedef NS_ENUM(NSInteger, TouchPointInCell) {
     TouchPointInCellTopLeft,
@@ -108,13 +109,14 @@ static NSString * const CellReuseIdentifier = @"photoCell";
 - (void)viewDidLoad {
     self.imageManager = [PHImageManager defaultManager];
     self.imagesCache = [[NSCache alloc] init];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[TTFont tripTrunkFont12]}];
     
     [self.collectionView registerClass:[DLFPhotoCell class] forCellWithReuseIdentifier:CellReuseIdentifier];
     [self.collectionView setBackgroundColor:[UIColor whiteColor]];
     
     if (!self.assetsFetchResults) {
         self.title = NSLocalizedString(@"Photos", @"Photos");
-        
+    
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
@@ -148,9 +150,8 @@ static NSString * const CellReuseIdentifier = @"photoCell";
     
     if (multipleSelections) {
         UIBarButtonItem *nextButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", nil) style:UIBarButtonItemStyleDone target:self action:@selector(didTapNextButton:)];
-//        UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-//        [infoButton addTarget:self action:@selector(didTapHintButton:) forControlEvents:UIControlEventTouchUpInside];
-//        UIBarButtonItem *hintButton = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+        NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
+        [nextButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
         UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
         spaceItem.width = 20;
         [self.navigationItem setRightBarButtonItems:@[nextButton, spaceItem]];
@@ -169,9 +170,7 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         [self photoLibraryDidChange:change];
     }
     
-    [self.selectionManager addSelectionViewToView:self.view];
-    [self.selectionManager.selectedPhotosView.clearSelectionButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
-    [self.selectionManager.selectedPhotosView.clearSelectionButton addTarget:self action:@selector(didTapClearButton:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -195,14 +194,14 @@ static NSString * const CellReuseIdentifier = @"photoCell";
 - (void)didTapHintButton:(id)sender {
     NSString *message = NSLocalizedString(@"Slide to left or right to quickly select multiple photos. Give it a try!", nil);
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Slide to Select", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", @"Close") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
     }];
     [alert addAction:action];
     
     NSString *message2 = NSLocalizedString(@"Tap and hold a photo to zoom in", nil);
     UIAlertController *alert2 = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Long Tap Gesture", nil) message:message2 preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action2 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Next", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *action2 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Next", @"Next") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self presentViewController:alert animated:YES completion:nil];
     }];
     [alert2 addAction:action2];
