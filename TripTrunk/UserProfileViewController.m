@@ -330,7 +330,7 @@
 
 -(void)displayUserContent{
     [self displayUsername];
-    [self displayHometown];
+    [self displayHometown:self.user];
     [self.profilePicImageView setClipsToBounds:YES];
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     if (self.user[@"bio"]) {
@@ -377,8 +377,8 @@
     [self setNameBasedOnPrivacy:nil];
 }
 
--(void)displayHometown{
-    NSString *hometownPlusSpace = [NSString stringWithFormat:@"  %@",self.user[@"hometown"]];
+-(void)displayHometown:(PFUser*)user{
+    NSString *hometownPlusSpace = [NSString stringWithFormat:@"  %@",user[@"hometown"]];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:hometownPlusSpace];
     NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
     textAttachment.image = [UIImage imageNamed:@"location"];
@@ -755,7 +755,7 @@
         [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if(!error){
                 self.bioTextView.text = user[@"bio"];
-                self.hometownLabel.text = user[@"hometown"];
+                [self displayHometown:user];
                 [self setNameBasedOnPrivacy:user];
             }else{
                 if(error.code == 203){
@@ -765,7 +765,6 @@
                                                                    delegate:self
                                                           cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
                                                           otherButtonTitles:nil, nil];
-                    
                     //Show alert view
                     alert.tag = 0;
                     [alert show];
@@ -773,10 +772,8 @@
                 }
             }
         }];
-        
-        
     }
-    
+
     [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
