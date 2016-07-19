@@ -1038,6 +1038,23 @@
     }
 }
 
+-(void)trunkWasDeletedFromAddTripViewController:(Trip *)trip{
+    NSMutableArray *objs = [[NSMutableArray alloc]init];
+    for (Photo *photo in self.myPhotos){
+        Trip *photoTrip = photo.trip;
+        if ([photoTrip.objectId isEqualToString:trip.objectId])
+        {
+            [objs addObject:photo];
+        }
+    }
+    
+    for (Photo *obj in objs){
+        [self.myPhotos removeObject:obj];
+    }
+    
+    [self.collectionView reloadData];
+}
+
 -(void)photoWasDeletedFromPhotoViewController:(Photo *)deletedPhoto{
     NSUInteger index = -1;
     for (Photo *photo in self.myPhotos){

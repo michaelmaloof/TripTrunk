@@ -32,6 +32,7 @@
 
 -(void)photoWasDeletedFromPhotoViewController:(Photo*)deletedPhoto;
 
+-(void)trunkWasDeletedFromAddTripViewController:(Trip*)trip;
 
 
 @property (strong, nonatomic) IBOutlet UIButton *followersButton;

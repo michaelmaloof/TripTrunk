@@ -18,6 +18,7 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "ActivityListViewController.h"
+#import "UserProfileViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -799,10 +800,12 @@
                         [(HomeMapViewController*)view dontRefreshMap];
                         [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
                     } else if ([view isKindOfClass:[ActivityListViewController class]]){
-                            [(ActivityListViewController*)view trunkWasDeleted:self.trip];
-                        }
+                        [(ActivityListViewController*)view trunkWasDeleted:self.trip];
+                    } else if ([view isKindOfClass:[UserProfileViewController class]]){
+                        [(UserProfileViewController*)view trunkWasDeletedFromAddTripViewController:self.trip];
                     }
                 }
+            }
             NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
