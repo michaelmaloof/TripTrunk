@@ -1261,7 +1261,6 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/libCloudinary.a",
-					"$(TARGET_BUILD_DIR)/PureLayout/libPureLayout.a",
 					"$(TARGET_BUILD_DIR)/libPods-TripTrunk.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
@@ -1299,7 +1298,6 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/libCloudinary.a",
-					"$(TARGET_BUILD_DIR)/PureLayout/libPureLayout.a",
 					"$(TARGET_BUILD_DIR)/libPods-TripTrunk.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
