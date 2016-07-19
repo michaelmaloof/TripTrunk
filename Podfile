@@ -1,7 +1,6 @@
 platform :ios, '8.0'
 
 target :'TripTrunk' do
-    pod 'CTAssetsPickerController',  '~> 3.1.0'
     pod 'AWSAutoScaling'
     pod 'AWSCloudWatch'
     pod 'AWSCognito'

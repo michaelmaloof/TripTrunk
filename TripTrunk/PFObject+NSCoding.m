@@ -89,8 +89,9 @@
 		[self decodeProperties:nonParseProperties withCoder:aDecoder];
     }
 	
+    //FIXME: updating Parse 1.12 causes an error here
 	//Mark PFObject as not dirty
-	[self->operationSetQueue removeAllObjects];
+//	[self->operationSetQueue removeAllObjects];
 	
 	//Mark PFObject with same hasBeenFetched value as before encoding
 	[self setValue:@(isDataAvailable) forKey:kPFObjectIsDataAvailableKey];

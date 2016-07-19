@@ -15,7 +15,6 @@
 #import "AddTripViewController.h"
 #import <Photos/Photos.h>
 #import "HomeMapViewController.h"
-#import <CTAssetsPickerController/CTAssetsPickerController.h>
 #import "PublicTripDetail.h"
 #import "TrunkListViewController.h"
 #import "TTSuggestionTableViewController.h"
@@ -25,8 +24,12 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "TrunkViewController.h"
 #import "PhotoViewController.h"
+#import "DLFPhotosPickerViewController.h"
+#import "DLFPhotoCell.h"
 
-@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, CTAssetsPickerControllerDelegate,UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate>
+#define OVERLAY_VIEW_TAG 121212121
+
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate,DLFPhotosPickerViewControllerDelegate>
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
@@ -157,45 +160,94 @@
 - (void)selectPhotosButtonPressed{
     
     // request authorization status
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Navigation Bar apperance
-            UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
-            
-            // tint color
-            navBar.tintColor = [TTColor tripTrunkBlue];
-            
-            //Button attributes
-            UIBarItem *buttons = [UIBarButtonItem appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
-            NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
-            [buttons setTitleTextAttributes:attributes forState:UIControlStateNormal];
-            
-            // init picker
-            CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-            
-            // set delegate
-            picker.delegate = self;
-            
-            // present picker
-            [self presentViewController:picker animated:YES completion:nil];
-        });
+//    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            // Navigation Bar apperance
+//            UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
+//            
+//            // tint color
+//            navBar.tintColor = [TTColor tripTrunkBlue];
+//            
+//            //Button attributes
+//            UIBarItem *buttons = [UIBarButtonItem appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
+//            NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
+//            [buttons setTitleTextAttributes:attributes forState:UIControlStateNormal];
+//            
+//            // init picker
+//            CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+//            
+//            // set delegate
+//            picker.delegate = self;
+//            
+//            // present picker
+//            [self presentViewController:picker animated:YES completion:nil];
+//        });
+//    }];
+    
+    DLFPhotosPickerViewController *photosPicker = [[DLFPhotosPickerViewController alloc] init];
+    [photosPicker setPhotosPickerDelegate:self];
+    [photosPicker setMultipleSelections:YES];
+    [self presentViewController:photosPicker animated:YES completion:nil];
+    
+}
+
+#pragma mark - DLFPhotosPickerViewDelegate
+//- (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhoto:(PHAsset *)photo {
+//    [photosPicker dismissViewControllerAnimated:YES completion:^{
+//        [self.tripCollectionView reloadData];
+//    }];
+//}
+
+- (void)photosPickerDidCancel:(DLFPhotosPickerViewController *)photosPicker {
+    [photosPicker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhotos:(NSArray *)photos {
+    NSLog(@"selected %d photos", (int)photos.count);
+        for (PHAsset *asset in photos){
+            Photo *photo = [[Photo alloc] init];
+            photo.imageAsset = asset;
+            [self.photos addObject:photo];
+        }
+    [photosPicker dismissViewControllerAnimated:YES completion:^{
+        [self.tripCollectionView reloadData];
     }];
     
 }
 
+- (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController configureCell:(DLFPhotoCell *)cell indexPath:(NSIndexPath *)indexPath asset:(PHAsset *)asset {
+    UIView *overlayView = [cell.contentView viewWithTag:OVERLAY_VIEW_TAG];
+    if (indexPath.item%2 == 0) {
+        if (!overlayView) {
+            overlayView = [[UIView alloc] initWithFrame:cell.contentView.bounds];
+            [overlayView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [overlayView setTag:OVERLAY_VIEW_TAG];
+            [overlayView setBackgroundColor:[UIColor colorWithRed:0.000 green:0.000 blue:0.000 alpha:0.000]];
+            [cell.contentView addSubview:overlayView];
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:overlayView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:overlayView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:overlayView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:overlayView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:cell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+        }
+        [overlayView setHidden:NO];
+    } else {
+        [overlayView setHidden:YES];
+    }
+}
+
 #pragma mark - CTAssetsPickerController Delegate Methods
 
--(void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
-
-    for (PHAsset *asset in assets){
-        Photo *photo = [[Photo alloc] init];
-        photo.imageAsset = asset;
-        [self.photos addObject:photo];
-    }
-    [self.tripCollectionView reloadData];
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-}
+//-(void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+//
+//    for (PHAsset *asset in assets){
+//        Photo *photo = [[Photo alloc] init];
+//        photo.imageAsset = asset;
+//        [self.photos addObject:photo];
+//    }
+//    [self.tripCollectionView reloadData];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//
+//}
 
 #pragma mark - Saving Photos
 
