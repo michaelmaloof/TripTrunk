@@ -7,6 +7,7 @@
 //
 
 #import "DLFPhotosSelectionManager.h"
+#import "TTFont.h"
 
 #define SELECTED_PHOTOS_VIEW_HEIGHT 84
 
@@ -129,7 +130,7 @@
     if (self) {
         self.clearSelectionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [self.clearSelectionButton setTitle:NSLocalizedString(@"Clear", nil) forState:UIControlStateNormal];
-        [self.clearSelectionButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [self.clearSelectionButton.titleLabel setFont:[TTFont tripTrunkFont14]];
         [self.clearSelectionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.clearSelectionButton setBackgroundColor:[UIColor clearColor]];
         [self.clearSelectionButton sizeToFit];
@@ -217,6 +218,7 @@
 }
 
 - (void)setNumberOfPhotosText {
+    self.numberOfPhotosLabel.font = [TTFont tripTrunkFont10];
     self.numberOfPhotosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%1$d %2$@ selected", nil), (int)self.items.count, (self.items.count==1)?NSLocalizedString(@"photo", nil):NSLocalizedString(@"photos", nil)];
 }
 
