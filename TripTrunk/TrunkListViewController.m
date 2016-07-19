@@ -37,6 +37,9 @@
 @property UIImage *flame;
 @property BOOL wasError;
 @property BOOL attemptedToLoad;
+@property UIRefreshControl *refreshController;
+@property int color;
+@property NSTimer *colorTimer;
 @end
 
 @implementation TrunkListViewController
@@ -58,6 +61,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     [self displayTitle];
     self.visitedTrunks = [[NSMutableArray alloc]init];
+    self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
+                                                     selector:@selector(rotateColors) userInfo:nil repeats:YES];
     [self handleVisitedTrunks];
     [self beginLoadingTrunks];
     [self removeTextFromBackButton];
@@ -125,13 +130,13 @@
     self.tableView.emptyDataSetDelegate = self;
     self.tableView.emptyDataSetSource = self;
     // Initialize the refresh control.
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self
+    self.refreshController = [[UIRefreshControl alloc] init];
+    [self.refreshController addTarget:self
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:refreshControl];
-    refreshControl.tintColor = [TTColor tripTrunkBlue];
-    [refreshControl endRefreshing];
+    [self.tableView addSubview:self.refreshController];
+    self.refreshController.tintColor = [TTColor whiteColor];
+    [self.refreshController endRefreshing];
     self.tableView.backgroundView.layer.zPosition -= 1; // Needed to make sure the refresh control shows over the background image
 }
 
@@ -140,6 +145,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70.0;
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [self.colorTimer invalidate];
+    self.colorTimer = nil;
 }
 
 #pragma mark - Scrolling
@@ -194,6 +204,22 @@
         [self loadTrunkListBasedOnProfile:NO];
     }
     [self queryParseMethodEveryone:NO];
+}
+
+-(void)rotateColors{
+    if (self.color == 0){
+        self.refreshController.backgroundColor = [TTColor tripTrunkGray];
+    } else if (self.color == 1){
+        self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
+    } else if (self.color == 2){
+        self.refreshController.backgroundColor = [TTColor tripTrunkRed];
+    } else if (self.color == 3){
+        self.refreshController.backgroundColor = [TTColor tripTrunkYellow];
+    }
+    self.color += 1;
+    if (self.color == 4){
+        self.color = 0;
+    }
 }
 
 /**

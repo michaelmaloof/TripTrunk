@@ -114,7 +114,6 @@ enum TTActivityViewType : NSUInteger {
     if (_viewType == TTActivityViewAllActivities){
         
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
-        
         UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
         [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
@@ -146,7 +145,6 @@ enum TTActivityViewType : NSUInteger {
                      forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview: self.refreshController];
     self.refreshController.tintColor = [UIColor whiteColor];
-    
     [ self.refreshController endRefreshing];
 }
 
