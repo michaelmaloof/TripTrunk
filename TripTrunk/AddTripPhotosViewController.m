@@ -335,14 +335,10 @@
                                                                 NSDictionary *photoDetails = @{@"url":url,
                                                                                                @"caption":photoComment};
                                                                 [self.facebookPhotos addObject:photoDetails];
-                                                                
-                                                                
-                                                                
                                                                 if((self.photos.count == self.facebookPhotos.count) && self.publishToFacebook){
                                                                     TrunkViewController *trunk = [[TrunkViewController alloc] init];
                                                                     [trunk initFacebookUpload:self.facebookPhotos];
                                                                 }
-                                                                
                                                             }
                                                             else{
                                                                 NSLog(@"Error: %@",error);

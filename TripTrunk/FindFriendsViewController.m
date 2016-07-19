@@ -64,7 +64,7 @@
     self.searchController.searchResultsUpdater = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchBar.delegate = self;
-    self.searchController.searchBar.tintColor = [TTColor tripTrunkWhite];
+    self.searchController.searchBar.tintColor = [TTColor tripTrunkBlue];
     [[self.searchController searchBar] setValue:NSLocalizedString(@"Done",@"Done")forKey:@"_cancelButtonText"];
     [self.searchController.searchBar sizeToFit];
     [self.searchController.searchBar setAutocapitalizationType:UITextAutocapitalizationTypeNone];
@@ -281,7 +281,6 @@
     else {
         NSLog(@"No Facebook Access Token");
         self.isLoadingFacebook = NO;
-
     }
     }
 

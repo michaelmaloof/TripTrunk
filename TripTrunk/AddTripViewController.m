@@ -18,6 +18,7 @@
 #import "HomeMapViewController.h"
 #import "TrunkListViewController.h"
 #import "ActivityListViewController.h"
+#import "UserProfileViewController.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -790,6 +791,8 @@
         if (buttonIndex == 1){
             //FIXME this needs to return if it was a success or not
             [SocialUtility deleteTrip:self.trip];
+            dispatch_async(dispatch_get_main_queue(), ^{
+
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UINavigationController *controller in self.tabBarController.viewControllers){
                 for (UIViewController *view in controller.viewControllers){
@@ -799,10 +802,14 @@
                         [(HomeMapViewController*)view dontRefreshMap];
                         [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
                     } else if ([view isKindOfClass:[ActivityListViewController class]]){
-                            [(ActivityListViewController*)view trunkWasDeleted:self.trip];
-                        }
+                        [(ActivityListViewController*)view trunkWasDeleted:self.trip];
+                    } else if ([view isKindOfClass:[UserProfileViewController class]]){
+                        [(UserProfileViewController*)view trunkWasDeletedFromAddTripViewController:self.trip];
                     }
                 }
+            }
+            });
+
             NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
             for (UIViewController *vc in self.navigationController.viewControllers){
                 if ([vc isKindOfClass:[HomeMapViewController class]]){
@@ -821,7 +828,11 @@
                         //TODO Delete not working on list
                     }
                 }
+            if (listArray.count > 0){
                 [self.navigationController popToViewController:[listArray lastObject] animated:YES];
+            } else {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
             }
     }
 }

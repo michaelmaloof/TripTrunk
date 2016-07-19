@@ -1137,7 +1137,6 @@ list of trunks the user hasn't seen since last being in the app
     UIBarButtonItem *buttonOne= [[UIBarButtonItem alloc] initWithCustomView:bttn];
 
     self.navigationItem.rightBarButtonItem = buttonOne;
-    
 
 }
 

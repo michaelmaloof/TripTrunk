@@ -175,6 +175,12 @@
                                                  [weakCell setNeedsLayout];
                                              } failure:nil];
     weakCell.followButton.hidden = NO;
+    
+    if ([possibleFriend.objectId isEqualToString:[PFUser currentUser].objectId]){
+        cell.followButton.hidden = YES;
+    } else {
+        cell.followButton.hidden = NO;
+    }
 
     if ([self.currentUserFriends containsObject:possibleFriend.objectId]){
         [cell.followButton setSelected:_isFollowing];

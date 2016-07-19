@@ -1174,55 +1174,23 @@
                             [self presentViewController:errorAlert animated:YES completion:nil];
                         }
                         else{
-                            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
-                            
-                            
-                            NSDate *today = [NSDate date];
-                            NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
-                            
-                            BOOL color = 0;
-                            if (tripInterval < 86400)
-                            {
-                                color = 1;
-                            } else{
-                                color = 0;
-                            }
-                            
-                            for (UINavigationController *controller in self.tabBarController.viewControllers)
-                            {
-                                for (UIViewController *view in controller.viewControllers)
-                                {
-                                    if ([view isKindOfClass:[HomeMapViewController class]]){
-                                        if (self.photos.count < 1){
-                                            [(HomeMapViewController*)view dontRefreshMap];
-                                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
-                                        } else  //instead, find interval and update is HOT
-                                        {
-                                            [(HomeMapViewController*)view dontRefreshMap];
-                                            [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
-                                        }
-                                    } else if ([view isKindOfClass:[ActivityListViewController class]])
-                                    {
-                                        [(ActivityListViewController*)view photoWasDeleted:self.photo];
-                                        
-                                    }
-                                }
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
+                                NSDate *today = [NSDate date];
+                                NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
                                 
-                                for (TrunkListViewController *view in controller.viewControllers)
-                                {
-                                    if ([view isKindOfClass:[TrunkListViewController class]]){
-                                        [view reloadTrunkList:self.photo.trip seen:NO addPhoto:NO photoRemoved:YES];
-                                    }
+                                BOOL color = 0;
+                                if (tripInterval < 86400){
+                                    color = 1;
+                                } else{
+                                    color = 0;
                                 }
-                                
-                            }
-                            
-                            [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                                // dismiss the view
-                            }];
-                            
-                            [self.navigationController popViewControllerAnimated:YES];
-                            
+                                [self deletePhotoFromHomeMap:color];
+                                [self.photo.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                    // dismiss the view
+                                }];
+                                [self.navigationController popViewControllerAnimated:YES];
+                            });
                         }
                     }];
                 }
@@ -1245,6 +1213,45 @@
         }
     }
 }
+
+-(void)deletePhotoFromHomeMap:(BOOL)color{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (UINavigationController *controller in self.tabBarController.viewControllers)
+        {
+            for (UIViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[HomeMapViewController class]]){
+                    if (self.photos.count < 1){
+                        [(HomeMapViewController*)view dontRefreshMap];
+                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
+                    } else  //instead, find interval and update is HOT
+                    {
+                        [(HomeMapViewController*)view dontRefreshMap];
+                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                    }
+                } else if ([view isKindOfClass:[ActivityListViewController class]])
+                {
+                    [(ActivityListViewController*)view photoWasDeleted:self.photo];
+                    
+                }
+            }
+            
+            for (TrunkListViewController *view in controller.viewControllers)
+            {
+                if ([view isKindOfClass:[TrunkListViewController class]]){
+                    [view reloadTrunkList:self.photo.trip seen:NO addPhoto:NO photoRemoved:YES];
+                }
+            }
+            for (UserProfileViewController *view in controller.viewControllers){
+                if ([view isKindOfClass:[UserProfileViewController class]]){
+                    [view photoWasDeletedFromPhotoViewController:self.photo];
+                }
+                
+            }
+        }
+    });
+}
+
 - (IBAction)closeButtonPressed:(id)sender {
 //    [self dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
