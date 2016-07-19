@@ -97,7 +97,8 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-    self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:.3 target:self
+    self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
+    self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
                                                      selector:@selector(rotateColors) userInfo:nil repeats:YES];
     NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue];
     
