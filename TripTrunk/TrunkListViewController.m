@@ -176,9 +176,17 @@
 -(void)beginLoadingTrunks{
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
     if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
-        self.trunkListToggle = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"all_mine_1"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarItemWasTapped)];
-        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        UIImage *image = [UIImage imageNamed:@"all_shared_1"];
+        CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+        UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+        [bttn setImage:image forState:UIControlStateNormal];
+        [bttn setImage:image forState:UIControlStateHighlighted];
+        [bttn setImage:image forState:UIControlStateSelected];
+        [bttn addTarget:self action:@selector(rightBarItemWasTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.trunkListToggle= [[UIBarButtonItem alloc] initWithCustomView:bttn];
         self.trunkListToggle.tag = 0;
+        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self loadTrunkListBasedOnProfile:NO];
     } else if (self.isList == YES){
@@ -467,13 +475,31 @@
         self.isMine = NO;
         [self queryParseMethodEveryone:NO];
     } else if (self.isList == YES && self.trunkListToggle.tag == 0){ //switch to mutual
-        [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_2"]];
+        UIImage *image = [UIImage imageNamed:@"all_shared_2"];
+        CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+        UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+        [bttn setImage:image forState:UIControlStateNormal];
+        [bttn setImage:image forState:UIControlStateHighlighted];
+        [bttn setImage:image forState:UIControlStateSelected];
+        [bttn addTarget:self action:@selector(rightBarItemWasTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.trunkListToggle= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
+        
         self.trunkListToggle.tag = 1;
         self.isMine = YES;
         [self loadMutualTrunkList:NO];
 // fixme: method to load mutual
     } else if (self.isList == YES && self.trunkListToggle.tag == 1){ //switch to all list
-        [self.trunkListToggle setImage:[UIImage imageNamed:@"all_mine_1"]];
+        UIImage *image = [UIImage imageNamed:@"all_shared_1"];
+        CGRect buttonFrame = CGRectMake(0, 0, 80, 20);
+        UIButton *bttn = [[UIButton alloc] initWithFrame:buttonFrame];
+        [bttn setImage:image forState:UIControlStateNormal];
+        [bttn setImage:image forState:UIControlStateHighlighted];
+        [bttn setImage:image forState:UIControlStateSelected];
+        [bttn addTarget:self action:@selector(rightBarItemWasTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.trunkListToggle= [[UIBarButtonItem alloc] initWithCustomView:bttn];
+        [[self navigationItem] setRightBarButtonItem:self.trunkListToggle animated:NO];
+        
         self.trunkListToggle.tag = 0;
         self.isMine = NO;
         [self loadTrunkListBasedOnProfile:NO];
