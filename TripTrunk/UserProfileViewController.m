@@ -213,7 +213,9 @@
                         self.followButton.tag = 0;
                         [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
                         [self setButtonColor];
-                        [self.followButton setHidden:NO];
+                        if (![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                            [self.followButton setHidden:NO];
+                        }
                     });
                 }
             }
