@@ -650,6 +650,17 @@
             //load the new photo the user swiped too
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             self.imageZoomed = NO;
+            
+            PFImageView *newImageView = [[PFImageView alloc]init];
+            newImageView = self.imageView;
+            
+            [UIView transitionWithView:self.imageView
+                              duration:0.5
+                               options:UIViewAnimationOptionTransitionFlipFromLeft
+                            animations:^{
+                                self.imageView = newImageView;
+                            }
+                            completion:nil];
         }
     }
 }
@@ -696,6 +707,17 @@
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
+            
+            PFImageView *newImageView = [[PFImageView alloc]init];
+            newImageView = self.imageView;
+            
+            [UIView transitionWithView:self.imageView
+                              duration:0.5
+                               options:UIViewAnimationOptionTransitionFlipFromRight
+                            animations:^{
+                               self.imageView = newImageView;
+                            }
+                            completion:nil];
         }
     }
     }
