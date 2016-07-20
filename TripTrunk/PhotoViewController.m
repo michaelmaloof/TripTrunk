@@ -1791,28 +1791,22 @@
 }
 
 - (IBAction)photoTakenByTapped:(id)sender {
-    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
-    
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    UserProfileViewController *trunkViewController = (UserProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    [self.photo.user fetchIfNeeded];
-    UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
-    trunkViewController.user = self.photo.user;
-    
-    //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-    //        NSLog(@"Photo View DIsmissed");
-    
-    UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
-    if (tabbarcontroller.selectedIndex == 3) {
-        [activityNavController pushViewController:trunkViewController animated:YES];
-    } else {
-        [self.navigationController pushViewController:trunkViewController animated:YES];
-
-    }
-    
-    //    }];
+    [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
+            trunkViewController.user = self.photo.user;
+            UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+            if (tabbarcontroller.selectedIndex == 3) {
+                [activityNavController pushViewController:trunkViewController animated:YES];
+            } else {
+                [self.navigationController pushViewController:trunkViewController animated:YES];
+                
+            }
+        });
+    }];
 }
+
 - (IBAction)privatebuttonTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
