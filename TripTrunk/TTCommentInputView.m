@@ -61,7 +61,7 @@ UIView *topView;
         [_submitButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_submitButton setTitle:NSLocalizedString(@"Send",@"Send") forState:UIControlStateNormal];
         [_submitButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
-        [_submitButton setBackgroundColor:[TTColor tripTrunkGreen]];
+        [_submitButton setBackgroundColor:[TTColor tripTrunkBlue]];
         _submitButton.layer.cornerRadius = 4.0;
         [_submitButton addTarget:self
                           action:@selector(submitButtonPressed)
