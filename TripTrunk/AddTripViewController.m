@@ -799,8 +799,8 @@
                     if ([view isKindOfClass:[HomeMapViewController class]]){
                         [locationArray addObject:view];
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateCityPinOnMap:location trip:self.trip];
                     } else if ([view isKindOfClass:[ActivityListViewController class]]){
                         [(ActivityListViewController*)view trunkWasDeleted:self.trip];
                     } else if ([view isKindOfClass:[UserProfileViewController class]]){

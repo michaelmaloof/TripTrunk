@@ -1244,12 +1244,12 @@
             {
                 if ([view isKindOfClass:[HomeMapViewController class]]){
                     if (self.photos.count < 1){
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateTripColorOnMap:self.photo.trip isHot:NO member:YES];
                     } else  //instead, find interval and update is HOT
                     {
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateTripColorOnMap:self.photo.trip isHot:color member:YES];
                     }
                 } else if ([view isKindOfClass:[ActivityListViewController class]])
                 {

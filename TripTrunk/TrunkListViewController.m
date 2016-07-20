@@ -117,7 +117,7 @@
             if ([view isKindOfClass:[HomeMapViewController class]])
             {
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    self.visitedTrunks = view.viewedTrunks;
+                    self.visitedTrunks = view.viewedTrips;
                 }
             }
         }
@@ -983,8 +983,8 @@
                     [locationArray addObject:view];
                     if ([view.user.objectId isEqualToString:self.user.objectId] )
                     {
-                        [view dontRefreshMap];
-                        [view deleteTrunk:self.location trip:nil];
+                        [view dontRefreshMapOnViewDidAppear];
+                        [view removeCityFromMap:self.location trip:nil];
                     }
                 }
             }
@@ -1005,8 +1005,8 @@
                     [locationArray addObject:view];
                     if (view.user == nil || [view.user.objectId isEqualToString:[PFUser currentUser].objectId] )
                     {
-                        [view dontRefreshMap];
-                        [view deleteTrunk:self.location trip:nil];
+                        [view dontRefreshMapOnViewDidAppear];
+                        [view removeCityFromMap:self.location trip:nil];
                     }
                 }
             }

@@ -120,9 +120,9 @@
             {
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        if (![view.viewedTrunks containsObject:self.trip])
+                        if (![view.viewedTrips containsObject:self.trip])
                         {
-                            [view.viewedTrunks addObject:self.trip];
+                            [view.viewedTrips addObject:self.trip];
                         }
                         self.photosSeen = [[NSMutableArray alloc]init];
                         self.photosSeen = view.viewedPhotos;
@@ -138,7 +138,7 @@
         {
             if ([view isKindOfClass:[HomeMapViewController class]])
             {
-                [view addTripToViewArray:self.trip];
+                [view userHasViewedTrip:self.trip];
             }
         }
     }
