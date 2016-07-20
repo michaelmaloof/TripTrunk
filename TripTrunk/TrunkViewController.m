@@ -82,21 +82,28 @@
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
     [self refreshTripDataViews];
-    [self.trip.creator fetchIfNeeded];
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (self.trip.publicTripDetail.totalLikes > 0) {
-            self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
-            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
-            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-            self.totalLikeButton.hidden = NO;
-            self.totalLikeHeart.hidden = NO;
-        }
-        else{
-            self.totalLikeButton.hidden = YES;
-            self.totalLikeHeart.hidden = YES;
-        }
-        
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if (self.trip.publicTripDetail.totalLikes > 0) {
+                        self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
+                        self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
+                        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+                        self.totalLikeButton.hidden = NO;
+                        self.totalLikeHeart.hidden = NO;
+                    }
+                    else{
+                        self.totalLikeButton.hidden = YES;
+                        self.totalLikeHeart.hidden = YES;
+                    }
+                });
+            }];
+            
+        }];
+    });
+
     self.photos = [[NSMutableArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
     self.numberOfImagesPerRow = 3;
