@@ -2645,7 +2645,8 @@
                                                 <exclude reference="ji3-Vu-bOe"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="346" y="35" width="20" height="20"/>
                                             <mask key="constraints">
                                                 <include reference="ji3-Vu-bOe"/>
                                             </mask>
@@ -2841,6 +2842,9 @@
                                         <state key="normal" title="Comments">
                                             <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="158" y="12" width="59" height="26"/>
+                                        </variation>
                                         <connections>
                                             <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS-A"/>
                                         </connections>
@@ -2934,11 +2938,6 @@
                                         <exclude reference="QZ5-So-WsV"/>
                                         <exclude reference="HFR-fd-72E"/>
                                         <exclude reference="TIa-Lp-293"/>
-                                        <exclude reference="8lx-Q8-oWx"/>
-                                        <exclude reference="MhC-wg-mUo"/>
-                                        <exclude reference="Q3j-aN-vjc"/>
-                                        <exclude reference="VEw-RR-GHw"/>
-                                        <exclude reference="vAF-Ea-HOk"/>
                                         <exclude reference="KAP-g7-PbK"/>
                                         <exclude reference="aAW-sp-p9g"/>
                                         <exclude reference="nDO-qi-WnY"/>
@@ -2949,6 +2948,11 @@
                                         <exclude reference="WgW-Of-QfZ"/>
                                         <exclude reference="lvK-3i-bx3"/>
                                         <exclude reference="o9z-I4-6ng"/>
+                                        <exclude reference="Q3j-aN-vjc"/>
+                                        <exclude reference="VEw-RR-GHw"/>
+                                        <exclude reference="vAF-Ea-HOk"/>
+                                        <exclude reference="8lx-Q8-oWx"/>
+                                        <exclude reference="MhC-wg-mUo"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
@@ -2963,11 +2967,6 @@
                                         <include reference="QZ5-So-WsV"/>
                                         <include reference="HFR-fd-72E"/>
                                         <include reference="TIa-Lp-293"/>
-                                        <include reference="8lx-Q8-oWx"/>
-                                        <include reference="MhC-wg-mUo"/>
-                                        <include reference="Q3j-aN-vjc"/>
-                                        <exclude reference="VEw-RR-GHw"/>
-                                        <include reference="vAF-Ea-HOk"/>
                                         <exclude reference="KAP-g7-PbK"/>
                                         <exclude reference="aAW-sp-p9g"/>
                                         <include reference="nDO-qi-WnY"/>
@@ -2978,6 +2977,11 @@
                                         <include reference="WgW-Of-QfZ"/>
                                         <include reference="lvK-3i-bx3"/>
                                         <include reference="o9z-I4-6ng"/>
+                                        <include reference="Q3j-aN-vjc"/>
+                                        <exclude reference="VEw-RR-GHw"/>
+                                        <include reference="vAF-Ea-HOk"/>
+                                        <include reference="8lx-Q8-oWx"/>
+                                        <include reference="MhC-wg-mUo"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -3166,7 +3170,7 @@
                                 </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="g0k-n4-hcD" secondAttribute="centerY" id="1qM-to-aaD"/>
                             <constraint firstAttribute="trailing" secondItem="pMh-vC-nPM" secondAttribute="trailing" constant="-4" id="2Eg-oo-laM"/>
