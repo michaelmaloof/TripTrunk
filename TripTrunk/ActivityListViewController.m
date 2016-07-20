@@ -417,6 +417,7 @@ enum TTActivityViewType : NSUInteger {
                                             [formatter setDateFormat:@"MMM d, h:mm a"];
                                             NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                                             NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                            title = @"";
                                             NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                                         forKey:NSForegroundColorAttributeName];
                                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
