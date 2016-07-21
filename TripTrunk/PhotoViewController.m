@@ -473,6 +473,8 @@
         [self.imageView setImageWithURLRequest:request
                               placeholderImage:placeholderImage
                                        success:nil failure:nil];
+        
+        
     } else if (photo.imageAsset){ //not imagURL, its an imageAsset from AddTripPhotosViewController
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat floatWidth = screenRect.size.width;
@@ -490,7 +492,6 @@
 }
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
-    
     if (isCurrentPhoto == NO){
         self.isLikedByCurrentUser = NO;
         [self hidePhotoContent:YES];
@@ -501,119 +502,125 @@
             self.isLikedByCurrentUser = NO;
         }
     }
-    [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (!error){
-            self.trip = self.photo.trip;
-            [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+    //FIXME this is causing the delay in going from when you select a photo to viewing it
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 if (!error){
-                    
-                    if (self.shouldShowTrunkNameButton) {
-                        [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
-                            self.trip = self.photo.trip;
-                            [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
-                        }];
-                    }
-                    
-                    if ([self.photo.user[@"private"] boolValue] == YES && self.photo.trip.isPrivate == NO) {
-                        self.privateButton.hidden = NO;
-                    } else {
-                        self.privateButton.hidden = YES;
-                    }
-                    
-                    if (error){
-                        NSLog(@"error %@", error);
-                        [ParseErrorHandlingController handleError:error];
-                    }
+                    self.trip = self.photo.trip;
+                    [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        if (!error){
+                            
+                            if (self.shouldShowTrunkNameButton) {
+                                [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error){
+                                    self.trip = self.photo.trip;
+                                    [self.trunkNameButton setTitle:self.photo.trip.name forState:UIControlStateNormal];
+                                }];
+                            }
+                            
+                            if ([self.photo.user[@"private"] boolValue] == YES && self.photo.trip.isPrivate == NO) {
+                                self.privateButton.hidden = NO;
+                            } else {
+                                self.privateButton.hidden = YES;
+                            }
+                            
+                            if (error){
+                                NSLog(@"error %@", error);
+                                [ParseErrorHandlingController handleError:error];
+                            }
+                        }
+                    }];
                 }
-            }];
-        }
-        else {
-            NSLog(@"Error loading trip: %@", error);
-            [ParseErrorHandlingController handleError:error];
-        }
-        [self initializeMentions];
-    }];
-
-    self.caption.hidden = YES;
-    
-// Get Activities for Photo
-//    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
-    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
-    query.limit = 1000; //fixme this limit wont work for popular photos
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            
-            self.likeActivities = [[NSMutableArray alloc] init];
-            self.commentActivities = [[NSMutableArray alloc] init];
-            
-            [[TTUtility sharedInstance] internetConnectionFound];
-            for (PFObject *activity in objects) {
-                // Separate the Activities into Likes and Comments
-                if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
-                    PFUser *user = activity[@"fromUser"];
-                    //need to double check the local file to see if its been liked or not by user
-                    if (![user.objectId isEqualToString:[PFUser currentUser].objectId]){
-                        [self.likeActivities addObject: activity];
-                    } else {
-                        //only add the like if the user has liked it
-                        if ([[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo] == YES && isCurrentPhoto == YES){
+                else {
+                    NSLog(@"Error loading trip: %@", error);
+                    [ParseErrorHandlingController handleError:error];
+                }
+                [self initializeMentions];
+            });
+        }];
+        
+        self.caption.hidden = YES;
+        
+        // Get Activities for Photo
+        //    PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+        PFQuery *query = [SocialUtility queryForActivitiesOnPhoto:self.photo cachePolicy:kPFCachePolicyNetworkOnly];
+        query.limit = 1000; //fixme this limit wont work for popular photos
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                
+                self.likeActivities = [[NSMutableArray alloc] init];
+                self.commentActivities = [[NSMutableArray alloc] init];
+                
+                [[TTUtility sharedInstance] internetConnectionFound];
+                for (PFObject *activity in objects) {
+                    // Separate the Activities into Likes and Comments
+                    if ([[activity objectForKey:@"type"] isEqualToString:@"like"] && [activity objectForKey:@"fromUser"]) {
+                        PFUser *user = activity[@"fromUser"];
+                        //need to double check the local file to see if its been liked or not by user
+                        if (![user.objectId isEqualToString:[PFUser currentUser].objectId]){
                             [self.likeActivities addObject: activity];
-                        } else if (isCurrentPhoto == NO){
-                            [self.likeActivities addObject: activity];
+                        } else {
+                            //only add the like if the user has liked it
+                            if ([[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo] == YES && isCurrentPhoto == YES){
+                                [self.likeActivities addObject: activity];
+                            } else if (isCurrentPhoto == NO){
+                                [self.likeActivities addObject: activity];
+                            }
+                        }
+                    }
+                    else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
+                        [self.commentActivities addObject:activity];
+                        //need to double check the local file to see if its been commented or not by user
+                    }
+                    
+                    if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                        if ([[activity objectForKey:@"type"] isEqualToString:@"like"]) {
+                            self.isLikedByCurrentUser = YES;
                         }
                     }
                 }
-                else if ([[activity objectForKey:@"type"] isEqualToString:@"comment"] && [activity objectForKey:@"fromUser"]) {
-                    [self.commentActivities addObject:activity];
-                    //need to double check the local file to see if its been commented or not by user
-                }
                 
-                if ([[[activity objectForKey:@"fromUser"] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
-                    if ([[activity objectForKey:@"type"] isEqualToString:@"like"]) {
-                        self.isLikedByCurrentUser = YES;
+                self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+                self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
+                
+                //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
+                
+                //TODO: update cached photo attributes, i.e. likers, commenters, etc.
+                [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
+                
+                
+                // Update number of likes & comments
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self updateCommentsLabel];
+                    [self updateLikesLabel];
+                    self.likeButton.alpha = 1;
+                    self.likeButton.userInteractionEnabled = YES;
+                    
+                    
+                    if (updateNow == YES) {
+                        //direct update
+                        //FIXME Should only save photo if user as ACL Permission
+                        [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
+                        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        }];
                     }
-                }
+                    
+                    if (isCurrentPhoto == NO){
+                        [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
+                    }
+                    
+                });
+                
             }
+            else {
+                NSLog(@"Error loading photo Activities: %@", error);
+                [ParseErrorHandlingController handleError:error];
+            }
+            [self hidePhotoContent:NO];
             
-            self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-            self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
-            
-//            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
-            
-            //TODO: update cached photo attributes, i.e. likers, commenters, etc.
-            [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
-            
-            
-            // Update number of likes & comments
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self updateCommentsLabel];
-                [self updateLikesLabel];
-                self.likeButton.alpha = 1;
-                self.likeButton.userInteractionEnabled = YES;
-
-                
-                if (updateNow == YES) {
-                    //direct update
-                    //FIXME Should only save photo if user as ACL Permission
-                    [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-                    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    }];
-                }
-                
-                if (isCurrentPhoto == NO){
-                    [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
-                }
-                
-            });
-            
-        }
-        else {
-            NSLog(@"Error loading photo Activities: %@", error);
-            [ParseErrorHandlingController handleError:error];
-        }
-        [self hidePhotoContent:NO];
-
-    }];
+        }];
+        
+    });
 }
 
 #pragma mark - Gestures
