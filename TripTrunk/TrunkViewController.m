@@ -82,21 +82,28 @@
     self.descriptionTextView.scrollEnabled = YES;
     self.descriptionTextView.delegate = self;
     [self refreshTripDataViews];
-    [self.trip.creator fetchIfNeeded];
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (self.trip.publicTripDetail.totalLikes > 0) {
-            self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
-            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
-            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-            self.totalLikeButton.hidden = NO;
-            self.totalLikeHeart.hidden = NO;
-        }
-        else{
-            self.totalLikeButton.hidden = YES;
-            self.totalLikeHeart.hidden = YES;
-        }
-        
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if (self.trip.publicTripDetail.totalLikes > 0) {
+                        self.totalLikeButton.tintColor = [TTColor tripTrunkWhite];
+                        self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
+                        self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
+                        self.totalLikeButton.hidden = NO;
+                        self.totalLikeHeart.hidden = NO;
+                    }
+                    else{
+                        self.totalLikeButton.hidden = YES;
+                        self.totalLikeHeart.hidden = YES;
+                    }
+                });
+            }];
+            
+        }];
+    });
+
     self.photos = [[NSMutableArray alloc] init];
     self.members = [[NSMutableArray alloc] init];
     self.numberOfImagesPerRow = 3;
@@ -120,9 +127,9 @@
             {
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        if (![view.viewedTrunks containsObject:self.trip])
+                        if (![view.viewedTrips containsObject:self.trip])
                         {
-                            [view.viewedTrunks addObject:self.trip];
+                            [view.viewedTrips addObject:self.trip];
                         }
                         self.photosSeen = [[NSMutableArray alloc]init];
                         self.photosSeen = view.viewedPhotos;
@@ -138,7 +145,7 @@
         {
             if ([view isKindOfClass:[HomeMapViewController class]])
             {
-                [view addTripToViewArray:self.trip];
+                [view userHasViewedTrip:self.trip];
             }
         }
     }

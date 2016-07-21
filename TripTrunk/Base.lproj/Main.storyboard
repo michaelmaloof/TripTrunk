@@ -115,7 +115,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
@@ -2846,32 +2846,6 @@
                                             <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS-A"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
-                                        <rect key="frame" x="255" y="513" width="75" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="27" id="UiQ-kQ-PTh"/>
-                                            <constraint firstAttribute="width" constant="31" id="hId-1u-Oi2"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
-                                        <state key="normal" image="comment_photo">
-                                            <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="UiQ-kQ-PTh"/>
-                                                <exclude reference="hId-1u-Oi2"/>
-                                            </mask>
-                                        </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
-                                            <mask key="constraints">
-                                                <include reference="UiQ-kQ-PTh"/>
-                                                <include reference="hId-1u-Oi2"/>
-                                            </mask>
-                                        </variation>
-                                        <connections>
-                                            <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7K-31-DpK">
                                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                         <constraints>
@@ -2901,6 +2875,32 @@
                                             <action selector="editCaptionTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="pyC-Ao-Xhi"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF">
+                                        <rect key="frame" x="255" y="513" width="75" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="27" id="UiQ-kQ-PTh"/>
+                                            <constraint firstAttribute="width" constant="31" id="hId-1u-Oi2"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
+                                        <state key="normal" image="comment_photo">
+                                            <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="UiQ-kQ-PTh"/>
+                                                <exclude reference="hId-1u-Oi2"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="UiQ-kQ-PTh"/>
+                                                <include reference="hId-1u-Oi2"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -2914,7 +2914,11 @@
                                     <constraint firstItem="Azv-Ms-g16" firstAttribute="leading" secondItem="36W-q1-gHS" secondAttribute="leading" constant="8" id="TIa-Lp-293"/>
                                     <constraint firstItem="Qe2-XC-VCF" firstAttribute="leading" secondItem="Qe2-XC-VCF-A" secondAttribute="trailing" constant="8" id="TpX-dO-IOi"/>
                                     <constraint firstItem="Qe2-XC-VCF-A" firstAttribute="leading" secondItem="VAb-3S-Guy" secondAttribute="trailing" constant="8" id="VEw-RR-GHw"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="WgW-Of-QfZ"/>
                                     <constraint firstAttribute="trailing" secondItem="b7K-31-DpK" secondAttribute="trailing" constant="8" id="aAW-sp-p9g"/>
+                                    <constraint firstAttribute="trailing" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="8" id="lvK-3i-bx3"/>
+                                    <constraint firstItem="b7K-31-DpK" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="nDO-qi-WnY"/>
+                                    <constraint firstItem="Qe2-XC-VCF" firstAttribute="leading" secondItem="b7K-31-DpK" secondAttribute="trailing" constant="8" id="o9z-I4-6ng"/>
                                     <constraint firstItem="b7K-31-DpK" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="oTY-FG-8KM"/>
                                     <constraint firstItem="b7K-31-DpK" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="8" id="phP-bT-TwR"/>
                                     <constraint firstItem="Qe2-XC-VCF-A" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="vAF-Ea-HOk"/>
@@ -2924,8 +2928,8 @@
                                         <exclude reference="VAb-3S-Guy"/>
                                         <exclude reference="Azv-Ms-g16"/>
                                         <exclude reference="Qe2-XC-VCF-A"/>
-                                        <exclude reference="Qe2-XC-VCF"/>
                                         <exclude reference="b7K-31-DpK"/>
+                                        <exclude reference="Qe2-XC-VCF"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="QZ5-So-WsV"/>
@@ -2933,10 +2937,14 @@
                                         <exclude reference="TIa-Lp-293"/>
                                         <exclude reference="KAP-g7-PbK"/>
                                         <exclude reference="aAW-sp-p9g"/>
+                                        <exclude reference="nDO-qi-WnY"/>
                                         <exclude reference="oTY-FG-8KM"/>
                                         <exclude reference="phP-bT-TwR"/>
                                         <exclude reference="AFE-4R-fLV"/>
                                         <exclude reference="TpX-dO-IOi"/>
+                                        <exclude reference="WgW-Of-QfZ"/>
+                                        <exclude reference="lvK-3i-bx3"/>
+                                        <exclude reference="o9z-I4-6ng"/>
                                         <exclude reference="Q3j-aN-vjc"/>
                                         <exclude reference="VEw-RR-GHw"/>
                                         <exclude reference="vAF-Ea-HOk"/>
@@ -2949,19 +2957,23 @@
                                         <include reference="VAb-3S-Guy"/>
                                         <include reference="Azv-Ms-g16"/>
                                         <include reference="Qe2-XC-VCF-A"/>
-                                        <include reference="Qe2-XC-VCF"/>
                                         <include reference="b7K-31-DpK"/>
+                                        <include reference="Qe2-XC-VCF"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="QZ5-So-WsV"/>
                                         <include reference="HFR-fd-72E"/>
                                         <include reference="TIa-Lp-293"/>
                                         <exclude reference="KAP-g7-PbK"/>
-                                        <include reference="aAW-sp-p9g"/>
-                                        <include reference="oTY-FG-8KM"/>
-                                        <include reference="phP-bT-TwR"/>
-                                        <include reference="AFE-4R-fLV"/>
+                                        <exclude reference="aAW-sp-p9g"/>
+                                        <include reference="nDO-qi-WnY"/>
+                                        <exclude reference="oTY-FG-8KM"/>
+                                        <exclude reference="phP-bT-TwR"/>
+                                        <exclude reference="AFE-4R-fLV"/>
                                         <exclude reference="TpX-dO-IOi"/>
+                                        <include reference="WgW-Of-QfZ"/>
+                                        <include reference="lvK-3i-bx3"/>
+                                        <include reference="o9z-I4-6ng"/>
                                         <include reference="Q3j-aN-vjc"/>
                                         <exclude reference="VEw-RR-GHw"/>
                                         <include reference="vAF-Ea-HOk"/>
@@ -3155,7 +3167,7 @@
                                 </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="g0k-n4-hcD" secondAttribute="centerY" id="1qM-to-aaD"/>
                             <constraint firstAttribute="trailing" secondItem="pMh-vC-nPM" secondAttribute="trailing" constant="-4" id="2Eg-oo-laM"/>
@@ -3750,7 +3762,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rs-Y7-aUD">
@@ -4098,7 +4110,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="beX-gP-D0h">

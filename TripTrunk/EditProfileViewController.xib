@@ -424,7 +424,9 @@
                                 <constraint firstItem="bGf-6g-Aun" firstAttribute="leading" secondItem="crH-IH-0Eg" secondAttribute="leading" constant="150" id="MMe-4q-qZu"/>
                                 <constraint firstItem="hhY-5S-mbj" firstAttribute="top" secondItem="WLh-ZT-Yo4" secondAttribute="bottom" constant="49" id="NbE-u4-H5o"/>
                                 <constraint firstAttribute="trailing" secondItem="bGf-6g-Aun" secondAttribute="trailing" constant="150" id="Net-C1-AGA"/>
-                                <constraint firstItem="cAl-an-Ous" firstAttribute="top" secondItem="crH-IH-0Eg" secondAttribute="top" constant="95" id="Nlu-Cx-zOL"/>
+                                <constraint firstItem="cAl-an-Ous" firstAttribute="top" secondItem="crH-IH-0Eg" secondAttribute="top" constant="95" id="Nlu-Cx-zOL">
+                                    <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                                </constraint>
                                 <constraint firstAttribute="trailing" secondItem="cAl-an-Ous" secondAttribute="trailing" constant="44" id="PrM-KQ-HPq"/>
                                 <constraint firstItem="aVT-3d-0VV" firstAttribute="top" secondItem="WLh-ZT-Yo4" secondAttribute="bottom" constant="56" id="PyC-cm-9HL"/>
                                 <constraint firstAttribute="trailing" secondItem="vXb-hN-Dz4" secondAttribute="trailing" constant="44" id="TF7-6f-eGi"/>

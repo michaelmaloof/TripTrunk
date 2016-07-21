@@ -72,23 +72,23 @@
 }
 
 - (IBAction)loginWithUsernameButtonPressed:(id)sender {
-    NSError *error;
     NSString *username = [_usernameTextField.text lowercaseString];
-
-    [PFUser logInWithUsername:username
-                     password:_passwordTextField.text
-                        error:&error];
-    if (error) {
-        NSLog(@"Error: %@",error);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                        message:NSLocalizedString(@"Try again",@"Try again")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-    }
     
-    [self dismissViewControllerAnimated:YES completion:^{   
+    [PFUser logInWithUsernameInBackground:username password:_passwordTextField.text block:^(PFUser * _Nullable user, NSError * _Nullable error) {
+        
+        if (error) {
+            NSLog(@"Error: %@",error);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                            message:NSLocalizedString(@"Try again",@"Try again")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:nil];
+        });
+        
     }];
     
 }

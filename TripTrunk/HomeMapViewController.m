@@ -32,37 +32,37 @@
 /**
  The trip objects we are given back from the database. They will either be the trips of one user (for their profile) or the trips of all the curren't user's friends
  */
-@property NSMutableArray *parseLocations;
+@property NSMutableArray *trips;
 
 /**
- Stores each trunk thats placed on the map. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
+ Stores each trip thats placed on the map. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
  */
-@property NSMutableArray *tripsToCheck;
+@property NSMutableArray *tripsOnMap;
 
 /**
  Stores cities with hot trips, meaning they need to be red and a photo has been added their the last 24 hours
  */
-@property NSMutableArray *hotDots;
+@property NSMutableArray *hotTrips;
 
 /**
  City name of the map pin (dot) selected
  */
-@property NSString *pinCityName; //FIXME this shouldnt be needed
+@property NSString *cityNameFromMapPin; //FIXME this shouldnt be needed
 
 /**
  State name of the map pin (dot) selected
  */
-@property NSString *pinStateName; //FIXME this shouldnt be needed
+@property NSString *stateNameFromMapPin; //FIXME this shouldnt be needed
 
 /**
  How many trips have been dropped on the map
  */
-@property int dropped;
+@property int tripsPlacedOnMapCount; //FIXME This shouldn't be needed
 
 /**
  How many trips have been skipped, not dropping them on the map, due to a pin already being on the map in that city
  */
-@property int notDropped;
+@property int tripsNotPlacedOnMapCount;
 
 /**
  Today's Date
@@ -75,14 +75,14 @@
 @property NSMutableArray *friends;
 
 /**
-We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat. Only trunks made before version 2 of the app will have this issue.
+We use to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat. Only trunks made before version 2 of the app will have this issue.
  */
-@property NSMutableArray *outdatedTrunks;
+@property NSMutableArray *trunksToBeUpdated;
 
 /**
-list of trunks the user hasn't seen since last being in the app
+list of trips the user hasn't seen since last being in the app
  */
-@property NSMutableArray *haventSeens; //fixme should be in utility class
+@property NSMutableArray *unseenTrips; //fixme should be in utility class
 
 /**
  location of the pin that has been selected
@@ -95,14 +95,14 @@ list of trunks the user hasn't seen since last being in the app
 @property NSArray<id<MKAnnotation>> *annotationsToDelete;
 
 /**
- we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
+ we don't want the user querying multiple requests to refresh the map. This bool will prevent that.
  */
-@property BOOL isLoading;
+@property BOOL isQueryingTrips;
 
 /**
  the limit of how many trips we load from the database
  */
-@property int limit;
+@property int tripLimit;
 
 /**
  The date the user last oppened the app to put the logo on certain trunks
@@ -110,9 +110,9 @@ list of trunks the user hasn't seen since last being in the app
 @property NSDate *lastOpenedApp;
 
 /**
- Don't refresh the map. See method "dontRefresh" in HomeViewController for more info
+ Don't refresh the map. See method "dontRefreshMapOnViewDidAppear" in HomeViewController.h for more info
  */
-@property BOOL dontRefresh;
+@property BOOL preventMapRefresh;
 
 /**
  is this the first time the current user has viewed this user profile during this session? We use this BOOL to prevent from zooming in on the most recent trunk every single time this view appears. For example, I click Mike's profile. It zooms me in on his most recent trip in Captiva. If I click a trip in Las Vegas from Mikes map in then click back this BOOL prevents the map from once again zooming in on Captiva.
@@ -125,7 +125,7 @@ list of trunks the user hasn't seen since last being in the app
 @property MKPointAnnotation* annotationPinToZoomOn;
 
 /**
- trunks the user has visited. Not to be confused with viewedTrunks.
+ trunks the user has visited. Not to be confused with viewedTrips.
  */
 @property NSMutableArray *visitedTrunks; //FIXME this should be a class method handling this and less confusing
 
@@ -172,27 +172,27 @@ list of trunks the user hasn't seen since last being in the app
  */
 -(void)setArraysBoolsandDates{
     self.isFirstTimeViewingProfile = YES;
-    self.viewedTrunks = [[NSMutableArray alloc]init];
+    self.viewedTrips = [[NSMutableArray alloc]init];
     self.viewedPhotos = [[NSMutableArray alloc]init];
     self.visitedTrunks =  [[NSMutableArray alloc]init];
     //contains map annotations of trips that need a red dot as opposed blue blue. They're red  because a user has added photos to them in the last 24 hours
     //TODO: THIS SHOULD SAVE THE LOCATION AND NOT THE CITY NAME. Possbily applicable to other arrays
-    self.hotDots = [[NSMutableArray alloc]init];
+    self.hotTrips = [[NSMutableArray alloc]init];
     //the trunks we pull down from parse
-    self.parseLocations = [[NSMutableArray alloc]init];
+    self.trips = [[NSMutableArray alloc]init];
     //list of trunks the user hasn't seen since last being in the app
-    self.haventSeens = [[NSMutableArray alloc]init];
+    self.unseenTrips = [[NSMutableArray alloc]init];
     [self setUpArrays];
     //we don't want the user loading multiple requests to refresh the map. This bool will prevent that.
-    self.isLoading = NO;
+    self.isQueryingTrips = NO;
     //we load 50 trunks from the database
-    self.limit = 50;
+    self.tripLimit = 50;
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     self.visitedTrunks = [[NSMutableArray alloc]init];
     //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
-    self.outdatedTrunks = nil;
-    self.outdatedTrunks = [[NSMutableArray alloc]init];
+    self.trunksToBeUpdated = nil;
+    self.trunksToBeUpdated = [[NSMutableArray alloc]init];
     //We need this to do the logic in determing if a user has seen a trunk and if a trunk should be red or blue.
     self.today = [NSDate date];
     //we need the date the user last oppened the app to put the logo on certain trunks
@@ -209,7 +209,7 @@ list of trunks the user hasn't seen since last being in the app
         for (HomeMapViewController *view in controller.viewControllers){
             if ([view isKindOfClass:[HomeMapViewController class]]){
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    self.visitedTrunks = view.viewedTrunks;
+                    self.visitedTrunks = view.viewedTrips;
                 }
             }
         }
@@ -229,20 +229,20 @@ list of trunks the user hasn't seen since last being in the app
             //We're on the home taeb so register the user's notifications
                 [self registerNotifications]; //fixme should be done in some time of parent class method
                 //if were suppose to refresh the trips, then begin downlaoding trips from database
-                if (self.dontRefresh == NO){
+                if (self.preventMapRefresh == NO){
                     [self beginLoadingTrunks];
                 } else {
                     if (self.annotationPinToZoomOn){
                         [self zoomInOnNewPin];
                     }
-                    self.dontRefresh = NO;
+                    self.preventMapRefresh = NO;
             }
         } else {
             //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
-            if (self.dontRefresh == NO){
+            if (self.preventMapRefresh == NO){
                 [self beginLoadingTrunks];
             } else {
-                self.dontRefresh = NO;
+                self.preventMapRefresh = NO;
             }
         }
     }
@@ -275,19 +275,19 @@ list of trunks the user hasn't seen since last being in the app
     //we need the date the user last oppened the app to put the logo on certain trunks
     self.lastOpenedApp = [PFUser currentUser][@"lastUsed"];
     //the user doesnt have a query in progress to load the trunks already, so go ahead and load the trunks
-    if (self.isLoading == NO){
+    if (self.isQueryingTrips == NO){
         //save the current pins on the map so we can delete them once we place the new ones
         self.annotationsToDelete = self.mapView.annotations;
         [self setUpArrays];
         if (self.user == nil) {
             //If self.user is nil then the user is looking at their home/newsfeed map. We want "everyone's" trunks that they follow, including themselves, from parse.
-            self.isLoading = YES;
+            self.isQueryingTrips = YES;
             [self queryParseMethodEveryone];
             //We're on the home tab so register the user's notifications
             
         } else {
             //If self.user is not nil then we are looking at a specific user's map. We just want that specific user's trunks from parse
-            self.isLoading = YES;
+            self.isQueryingTrips = YES;
             [self queryParseMethodForUser:self.user];
         }
     }
@@ -300,9 +300,9 @@ list of trunks the user hasn't seen since last being in the app
  */
 -(void)setUpArrays{
 //we locate each trunk thats placed on the map here. If a trunk shares the same city as one in this array then we dont put the trunk here. This prevents us dropping multiple pins on the same city
-    self.tripsToCheck = [[NSMutableArray alloc]init];
+    self.tripsOnMap = [[NSMutableArray alloc]init];
 //the trunks we pull down from parse
-    self.parseLocations = [[NSMutableArray alloc]init];
+    self.trips = [[NSMutableArray alloc]init];
   
 }
 
@@ -419,12 +419,12 @@ list of trunks the user hasn't seen since last being in the app
     
     NSDictionary *params = @{
                              @"objectIds" : friendsObjectIds,
-                             @"limit" : [NSString stringWithFormat:@"%d",self.limit]
+                             @"limit" : [NSString stringWithFormat:@"%d",self.tripLimit]
                              };
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
         if (!error) {
             //we finished loading so switch the bool and renable the refresh icon
-            self.isLoading = NO;
+            self.isQueryingTrips = NO;
             
             //If there is an error put the navBar title back to normal so that it isn't still telling the user we are loading the trunks.
             if(error)
@@ -444,16 +444,16 @@ list of trunks the user hasn't seen since last being in the app
             else
             {
                 [[TTUtility sharedInstance] internetConnectionFound];
-                self.parseLocations = [[NSMutableArray alloc]init];
+                self.trips = [[NSMutableArray alloc]init];
                 for (PFObject *activity in response)
                 {
                     Trip *trip = activity[@"trip"];
                     if (trip.name != nil && trip.publicTripDetail != nil)
                     {
-                        [self.parseLocations addObject:trip];
+                        [self.trips addObject:trip];
                     }
                     else if (trip.name !=nil && [trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
-                        [self.parseLocations addObject:trip];
+                        [self.trips addObject:trip];
                         
                     }
                 }
@@ -465,7 +465,7 @@ list of trunks the user hasn't seen since last being in the app
 }
 
 -(void)sortIntoHotOrNot{
-    for (Trip *trip in self.parseLocations)
+    for (Trip *trip in self.trips)
     {
         NSTimeInterval lastTripInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.createdAt];
         NSTimeInterval lastPhotoInterval = [self.lastOpenedApp timeIntervalSinceDate:trip.publicTripDetail.mostRecentPhoto];
@@ -485,9 +485,9 @@ list of trunks the user hasn't seen since last being in the app
         
         if (lastTripInterval < 0 && contains == NO)
         {
-            [self.haventSeens addObject:location];
+            [self.unseenTrips addObject:location];
         } else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil && contains == NO){
-            [self.haventSeens addObject:location];
+            [self.unseenTrips addObject:location];
         }
     }
     [self placeTrips];
@@ -508,10 +508,10 @@ list of trunks the user hasn't seen since last being in the app
     
     NSDictionary *params = @{
                              @"objectIds" : friendsObjectIds,
-                             @"limit" : [NSString stringWithFormat:@"%d",self.limit]
+                             @"limit" : [NSString stringWithFormat:@"%d",self.tripLimit]
                              };
     [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
-        self.isLoading = NO;
+        self.isQueryingTrips = NO;
         
         if(error)
         {
@@ -532,13 +532,13 @@ list of trunks the user hasn't seen since last being in the app
         {
             [[TTUtility sharedInstance] internetConnectionFound];
             
-            self.parseLocations = [[NSMutableArray alloc]init];
+            self.trips = [[NSMutableArray alloc]init];
             for (PFObject *activity in response)
             {
                 Trip *trip = activity[@"trip"];
                 if (trip.name != nil && trip.publicTripDetail != nil)
                 {
-                    [self.parseLocations addObject:trip];
+                    [self.trips addObject:trip];
                 }
             }
             
@@ -587,8 +587,8 @@ list of trunks the user hasn't seen since last being in the app
  */
 -(void)placeTrips
 {
-    //self.parselocations contains the trips we just pulled down from parse
-    for (Trip *trip in self.parseLocations)
+    //self.trips contains the trips we just pulled down from parse
+    for (Trip *trip in self.trips)
     {
         NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
         
@@ -605,10 +605,10 @@ list of trunks the user hasn't seen since last being in the app
             color = 0;
         }
         //we make sure that we havent already placed a pin on a city. If the trunk is red (hot) then we place it anyways since we always want red pins showing
-        if(![self.tripsToCheck containsObject:address] || color == 1)
+        if(![self.tripsOnMap containsObject:address] || color == 1)
         {
             //if this is a user profile we zoom to show the most recent trunk on the map
-            if (self.user && trip == [self.parseLocations objectAtIndex:0] && self.isFirstTimeViewingProfile == YES) {
+            if (self.user && trip == [self.trips objectAtIndex:0] && self.isFirstTimeViewingProfile == YES) {
                 self.isFirstTimeViewingProfile = NO;
                 [self addTripToMap:trip dot:color isMostRecent:YES needToDelete:NO];
             } else{
@@ -616,7 +616,7 @@ list of trunks the user hasn't seen since last being in the app
             }
         } else {
             //we want a tally of the trunks we dropped and didn't drop on the map, this allows us to know when to zoom out the map
-            self.notDropped = self.notDropped +1;
+            self.tripsNotPlacedOnMapCount = self.tripsNotPlacedOnMapCount +1;
         }
     }
     
@@ -636,7 +636,7 @@ list of trunks the user hasn't seen since last being in the app
     //we do this to make sure we dont place two pins down for a city
     NSString *string = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     
-    [self.tripsToCheck addObject:string]; //needs to be location not string
+    [self.tripsOnMap addObject:string]; //needs to be location not string
     
     //make the title of the pin for when you touch it
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
@@ -700,12 +700,12 @@ list of trunks the user hasn't seen since last being in the app
         }
         
         if (annotation.title != nil){
-            [self.hotDots addObject:annotation.title];
+            [self.hotTrips addObject:annotation.title];
             [self.mapView addAnnotation:annotation];
         }
     }
     // if hot is no and we haven't already placed a hot trunk down on that city then we add the pin to the map
-    else if (hot == NO && ![self.hotDots containsObject:annotation.title]) {
+    else if (hot == NO && ![self.hotTrips containsObject:annotation.title]) {
         if (replace == YES){
             for (MKPointAnnotation *pnt in self.mapView.annotations){
                 if (pnt.coordinate.latitude == annotation.coordinate.latitude && pnt.coordinate.longitude == annotation.coordinate.longitude){
@@ -717,12 +717,12 @@ list of trunks the user hasn't seen since last being in the app
     }else {
     }
     
-    self.dropped = self.dropped + 1;
+    self.tripsPlacedOnMapCount = self.tripsPlacedOnMapCount + 1;
     
     //if we placed all the correct pins we're done
-    if (self.dropped + self.notDropped == self.parseLocations.count){
-        self.dropped = 0;
-        self.notDropped = 0;
+    if (self.tripsPlacedOnMapCount + self.tripsNotPlacedOnMapCount == self.trips.count){
+        self.tripsPlacedOnMapCount = 0;
+        self.tripsNotPlacedOnMapCount = 0;
         if (self.user == nil){
             [self setTitleImage];
             
@@ -734,7 +734,7 @@ list of trunks the user hasn't seen since last being in the app
     }
     
     if (isNeeded == YES){
-        [self.outdatedTrunks addObject:trip];
+        [self.trunksToBeUpdated addObject:trip];
     }
 }
 
@@ -762,7 +762,7 @@ list of trunks the user hasn't seen since last being in the app
     startAnnotation.canShowCallout = YES;
     
     BOOL hasSeen = YES;
-    for (CLLocation *loc in self.haventSeens){ //Save trip instead
+    for (CLLocation *loc in self.unseenTrips){ //Save trip instead
         if ((float)loc.coordinate.longitude == (float)annotation.coordinate.longitude && (float)loc.coordinate.latitude == (float)annotation.coordinate.latitude){
             hasSeen = NO;
         }
@@ -776,8 +776,8 @@ list of trunks the user hasn't seen since last being in the app
     
     
     
-    //if the trunk is in the hotDots (meaning its hot) then make it red
-    if ([self.hotDots containsObject:annotation.title]) {
+    //if the trunk is in the hotTrips (meaning its hot) then make it red
+    if ([self.hotTrips containsObject:annotation.title]) {
         if (hasSeen == NO){
             startAnnotation.image = [UIImage imageNamed:@"unseenRedCircle"];
         }else {
@@ -829,15 +829,15 @@ list of trunks the user hasn't seen since last being in the app
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
-//FIXME: Lets use the array of parselocations here
+//FIXME: Lets use the array of trips here
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     self.location = [[CLLocation alloc] initWithCoordinate:view.annotation.coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:self.today];
     
-    self.pinCityName = view.annotation.title;
+    self.cityNameFromMapPin = view.annotation.title;
     [self performSegueWithIdentifier:@"Trunk" sender:self];
-    self.pinCityName = nil;
-    self.pinStateName = nil;
+    self.cityNameFromMapPin = nil;
+    self.stateNameFromMapPin = nil;
 }
 
 
@@ -858,7 +858,7 @@ list of trunks the user hasn't seen since last being in the app
     
     self.navigationItem.leftBarButtonItem = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (Trip *trip in self.outdatedTrunks) {
+        for (Trip *trip in self.trunksToBeUpdated) {
             NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
             NSNumber *lon = [NSNumber numberWithDouble: trip.longitude];
             [PFCloud callFunctionInBackground:@"updateTrunkLocation"
@@ -882,11 +882,11 @@ list of trunks the user hasn't seen since last being in the app
     if ([segue.identifier isEqualToString:@"Trunk"])
     {
         TrunkListViewController *trunkView = segue.destinationViewController;
-        trunkView.city = self.pinCityName;
-        //        trunkView.state = self.pinStateName;
+        trunkView.city = self.cityNameFromMapPin;
+        //        trunkView.state = self.stateNameFromMapPin;
         trunkView.location = self.location;
         trunkView.user = self.user;
-        self.pinCityName = nil;
+        self.cityNameFromMapPin = nil;
     }
 }
 
@@ -896,36 +896,36 @@ list of trunks the user hasn't seen since last being in the app
 -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
 }
 
--(void)updateTrunkColor:(Trip *)trip isHot:(BOOL)isHot member:(BOOL)isMember
+-(void)updateTripColorOnMap:(Trip *)trip isHot:(BOOL)isHot member:(BOOL)isMember
 {
     BOOL isOnThisMap = NO;
     NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     int count = 0;
     //make sure self.parseLocation contains this trip to avoid adding it to incorrect maps
-    for (Trip *trunk in self.parseLocations)
+    for (Trip *trunk in self.trips)
     {
         if ([trunk.objectId isEqualToString:trip.objectId])
         {
             isOnThisMap = YES;
             
-            [self.hotDots removeObject:trip.city];
-            [self.tripsToCheck removeObject:address];
+            [self.hotTrips removeObject:trip.city];
+            [self.tripsOnMap removeObject:address];
             
             CLLocation *deleteLoc = [[CLLocation alloc]init];
-            for (CLLocation *loc in self.haventSeens)
+            for (CLLocation *loc in self.unseenTrips)
             {
                 if (trunk.lat == loc.coordinate.latitude && trunk.longitude == loc.coordinate.longitude)
                 {
                     deleteLoc = loc;
                 }
             }
-            [self.haventSeens removeObject:deleteLoc];
+            [self.unseenTrips removeObject:deleteLoc];
             
             if (isHot == YES){
                 [self addTripToMap:trip dot:YES isMostRecent:YES needToDelete:YES];
             } else {
                 
-                for (Trip *tripSaved in self.parseLocations)
+                for (Trip *tripSaved in self.trips)
                 {
                     if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat && ![tripSaved.objectId isEqualToString:trip.objectId])
                     {
@@ -952,12 +952,12 @@ list of trunks the user hasn't seen since last being in the app
                         //if the lastTripInterval is less than 0 is means the user hasn't seen the trunk because they haven't been in the app since it was made
                         if (lastTripInterval < 0)
                         {
-                            [self.haventSeens addObject:location];
+                            [self.unseenTrips addObject:location];
                         }
                         //if the lastPhotoInterval is less than 0 is means the user hasn't seen the new photo because they haven't been in the app since it was added
                         else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil)
                         {
-                            [self.haventSeens addObject:location];
+                            [self.unseenTrips addObject:location];
                         }
                         
                         [self addTripToMap:tripSaved dot:color isMostRecent:NO needToDelete:YES];
@@ -967,21 +967,21 @@ list of trunks the user hasn't seen since last being in the app
         }
     }
 
-        //this trip isn't in self.parseLocations, so we're adding a new trip to the map and not updating one.
+        //this trip isn't in self.trips, so we're adding a new trip to the map and not updating one.
         //TODO Currently this only applies to current users map and newsfeed. We should do it to any users also a member of this trunk
         if (isOnThisMap == NO && isMember == YES){
-            [self.parseLocations addObject:trip];
+            [self.trips addObject:trip];
             [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
         } else if (isOnThisMap == YES && count == 0){
             [self addTripToMap:trip dot:isHot isMostRecent:YES needToDelete:YES];
         }
     }
 
--(void)checkToDeleteCity:(CLLocation *)location trip:(Trip *)trip
+-(void)updateCityPinOnMap:(CLLocation *)location trip:(Trip *)trip
 {
     //check if this map has this trip
     
-    for (Trip *trunk in self.parseLocations){
+    for (Trip *trunk in self.trips){
         if ([trunk.objectId isEqualToString:trip.objectId]){
             
             for (MKPointAnnotation *pin in self.mapView.annotations)
@@ -994,20 +994,20 @@ list of trunks the user hasn't seen since last being in the app
             
             NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
             
-            [self.tripsToCheck removeObject:address];
-            [self.hotDots removeObject:trip.city];
+            [self.tripsOnMap removeObject:address];
+            [self.hotTrips removeObject:trip.city];
             
             CLLocation *deleteLoc = [[CLLocation alloc]init];
-            for (CLLocation *loc in self.haventSeens)
+            for (CLLocation *loc in self.unseenTrips)
             {
                 if (trip.lat == loc.coordinate.latitude && trip.longitude == location.coordinate.longitude)
                 {
                     deleteLoc = loc;
                 }
             }
-            [self.haventSeens removeObject:deleteLoc];
+            [self.unseenTrips removeObject:deleteLoc];
             
-            for (Trip *tripSaved in self.parseLocations)
+            for (Trip *tripSaved in self.trips)
             {
                 if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat && ![tripSaved.objectId isEqualToString:trip.objectId])
                 {
@@ -1034,12 +1034,12 @@ list of trunks the user hasn't seen since last being in the app
                     //if the lastTripInterval is less than 0 is means the user hasn't seen the trunk because they haven't been in the app since it was made
                     if (lastTripInterval < 0)
                     {
-                        [self.haventSeens addObject:location];
+                        [self.unseenTrips addObject:location];
                     }
                     //if the lastPhotoInterval is less than 0 is means the user hasn't seen the new photo because they haven't been in the app since it was added
                     else if (lastPhotoInterval < 0 && trip.publicTripDetail.mostRecentPhoto != nil)
                     {
-                        [self.haventSeens addObject:location];
+                        [self.unseenTrips addObject:location];
                     }
                     
                     [self addTripToMap:tripSaved dot:color isMostRecent:NO needToDelete:YES];
@@ -1048,12 +1048,12 @@ list of trunks the user hasn't seen since last being in the app
         }
     }
     
-    [self.parseLocations removeObject:trip];
+    [self.trips removeObject:trip];
     
 }
 
 
--(void)deleteTrunk:(CLLocation *)location trip:(Trip *)trip{
+-(void)removeCityFromMap:(CLLocation *)location trip:(Trip *)trip{
     
     for (MKPointAnnotation *pin in self.mapView.annotations)
     {
@@ -1068,36 +1068,36 @@ list of trunks the user hasn't seen since last being in the app
     }
 }
 
--(void)dontRefreshMap{
-    self.dontRefresh = YES;
+-(void)dontRefreshMapOnViewDidAppear{
+    self.preventMapRefresh = YES;
 }
 
--(void)addTripToViewArray:(Trip *)trip{
+-(void)userHasViewedTrip:(Trip *)trip{
     
     BOOL isOnThisMap = NO;
     NSString *address = [NSString stringWithFormat:@"%@ %@ %@", trip.city, trip.state, trip.country];
     int count = 0;
     //make sure self.parseLocation contains this trip to avoid adding it to incorrect maps
-    for (Trip *trunk in self.parseLocations)
+    for (Trip *trunk in self.trips)
     {
         if ([trunk.objectId isEqualToString:trip.objectId])
         {
             isOnThisMap = YES;
             
-            [self.hotDots removeObject:trip.city];
-            [self.tripsToCheck removeObject:address];
+            [self.hotTrips removeObject:trip.city];
+            [self.tripsOnMap removeObject:address];
             
             CLLocation *deleteLoc = [[CLLocation alloc]init];
-            for (CLLocation *loc in self.haventSeens)
+            for (CLLocation *loc in self.unseenTrips)
             {
                 if (trunk.lat == loc.coordinate.latitude && trunk.longitude == loc.coordinate.longitude)
                 {
                     deleteLoc = loc;
                 }
             }
-            [self.haventSeens removeObject:deleteLoc];
+            [self.unseenTrips removeObject:deleteLoc];
             
-            for (Trip *tripSaved in self.parseLocations)
+            for (Trip *tripSaved in self.trips)
             {
                 if (trip.longitude == tripSaved.longitude && trip.lat == tripSaved.lat)
                 {
@@ -1168,7 +1168,7 @@ list of trunks the user hasn't seen since last being in the app
     NSArray *tempArray2 = [[NSArray alloc] init];
     NSMutableArray *sortedTrunks = [[NSMutableArray alloc] init];
     
-    copiedTrunks = self.parseLocations;
+    copiedTrunks = self.trips;
     
     // sort by recent photos
     for (Trip *aTrip in copiedTrunks) {
@@ -1190,7 +1190,7 @@ list of trunks the user hasn't seen since last being in the app
         [sortedTrunks addObject:aTripDict[@"trip"]];
     }
     
-    self.parseLocations = sortedTrunks;
+    self.trips = sortedTrunks;
     
     [self sortIntoHotOrNot];
     

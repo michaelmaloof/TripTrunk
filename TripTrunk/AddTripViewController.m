@@ -799,8 +799,8 @@
                     if ([view isKindOfClass:[HomeMapViewController class]]){
                         [locationArray addObject:view];
                         CLLocation *location = [[CLLocation alloc]initWithLatitude:self.trip.lat longitude:self.trip.longitude];
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view checkToDeleteCity:location trip:self.trip];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateCityPinOnMap:location trip:self.trip];
                     } else if ([view isKindOfClass:[ActivityListViewController class]]){
                         [(ActivityListViewController*)view trunkWasDeleted:self.trip];
                     } else if ([view isKindOfClass:[UserProfileViewController class]]){
@@ -859,7 +859,7 @@
         self.navigationItem.rightBarButtonItem.enabled = YES;
         return;
     }
-//if the most recent photo is nil then we set the date to a long time ago. This way we know the dot on the trunk is blue. I didnt want to leave a nil value in parse.
+    //if the most recent photo is nil then we set the date to a long time ago. This way we know the dot on the trunk is blue. I didnt want to leave a nil value in parse.
     if (self.trip.publicTripDetail.mostRecentPhoto == nil){
         NSString *date = @"01/01/1200";
         NSDateFormatter *format = [[NSDateFormatter alloc]init];
@@ -868,14 +868,18 @@
     }
     // If we're editing an existing trip AND we changed the city, we need to update any Activities for this trip to include the new city name.
     if (_isEditing && _needsCityUpdate) {
-        [SocialUtility updateActivityContent:self.trip.city forTrip:self.trip];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SocialUtility updateActivityContent:self.trip.city forTrip:self.trip];
+        });
     }
     // If we're editing an existing trip AND we changed the name, we need to update any Photos for this trip to include the new name.
     if (_isEditing && (_needsNameUpdate || _needsCityUpdate)) {
-        [SocialUtility updatePhotosForTrip:self.trip];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SocialUtility updatePhotosForTrip:self.trip];
+        });
     }
     PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [[PFUser currentUser] fetch]; // Fetch the currentu
+//    [[PFUser currentUser] fetch]; //FIXME I commented this out why did we ever have it?
     //    // If the user is Private then it's not a Publicly Readable Trip. Only people in their FriendsOf role can see it.
     if (self.trip.isPrivate != 1){
         self.trip.isPrivate = self.isPrivate;
@@ -903,48 +907,49 @@
     
     self.trip.ACL = tripACL;
     
-
+    
     if(!self.trip.publicTripDetail){
         self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
     }
-
+    
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
-         
-         if(error) {
-             [ParseErrorHandlingController handleError:error];
-             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                                 message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
-                                                                delegate:self
-                                                       cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                                       otherButtonTitles:nil, nil];
-             alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
-             [alertView show];
+         dispatch_async(dispatch_get_main_queue(), ^{
              
-             
-         }
-         else
-         {
-             [[TTUtility sharedInstance] internetConnectionFound];
-             if (self.navigationItem.leftBarButtonItem.tag == 0)
+             if(error) {
+                 [ParseErrorHandlingController handleError:error];
+                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                     message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
+                                                                    delegate:self
+                                                           cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                           otherButtonTitles:nil, nil];
+                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 [alertView show];
+                 
+                 
+             }
+             else
              {
-                 [self performSegueWithIdentifier:@"addFriends" sender:self];
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-
+                 [[TTUtility sharedInstance] internetConnectionFound];
+                 if (self.navigationItem.leftBarButtonItem.tag == 0)
+                 {
+                     [self performSegueWithIdentifier:@"addFriends" sender:self];
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
+                     self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                     
+                 }
+                 
+                 else {
+                     [self.navigationController popViewControllerAnimated:YES];
+                     self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
+                     
+                 }
              }
-             
-             else {
-                 [self.navigationController popViewControllerAnimated:YES];
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
-
-             }
-         }
-         // TODO: Set title image
-         [self tabBarTitle];
-         
+             // TODO: Set title image
+             [self tabBarTitle];
+         });
      }];
     
 }

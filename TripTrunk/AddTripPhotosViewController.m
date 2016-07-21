@@ -118,8 +118,8 @@
                 } else {
                     mem = NO;
                 }
-                [view dontRefreshMap];
-                [view updateTrunkColor:self.trip isHot:hotness member:mem];
+                [view dontRefreshMapOnViewDidAppear];
+                [view updateTripColorOnMap:self.trip isHot:hotness member:mem];
             }
             
             for (TrunkListViewController *view in controller.viewControllers)
@@ -141,9 +141,9 @@
             {
                 if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        if (![view.viewedTrunks containsObject:self.trip])
+                        if (![view.viewedTrips containsObject:self.trip])
                         {
-                            [view.viewedTrunks addObject:self.trip];
+                            [view.viewedTrips addObject:self.trip];
                             
                         }
                     }

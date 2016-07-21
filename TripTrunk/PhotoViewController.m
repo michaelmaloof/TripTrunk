@@ -650,6 +650,17 @@
             //load the new photo the user swiped too
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             self.imageZoomed = NO;
+            
+            PFImageView *newImageView = [[PFImageView alloc]init];
+            newImageView = self.imageView;
+            
+            [UIView transitionWithView:self.imageView
+                              duration:0.5
+                               options:UIViewAnimationOptionTransitionFlipFromLeft
+                            animations:^{
+                                self.imageView = newImageView;
+                            }
+                            completion:nil];
         }
     }
 }
@@ -696,6 +707,17 @@
             [self refreshPhotoActivitiesWithUpdateNow:NO forPhotoStatus:NO];
             
             self.imageZoomed = NO;
+            
+            PFImageView *newImageView = [[PFImageView alloc]init];
+            newImageView = self.imageView;
+            
+            [UIView transitionWithView:self.imageView
+                              duration:0.5
+                               options:UIViewAnimationOptionTransitionFlipFromRight
+                            animations:^{
+                               self.imageView = newImageView;
+                            }
+                            completion:nil];
         }
     }
     }
@@ -1116,17 +1138,20 @@
     if (![self.trunkNameButton.titleLabel.text isEqualToString:@""] || self.trunkNameButton.titleLabel.text == nil ){ //make sure were not in the trunk alredy
         //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
         [self.photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-            trunkViewController.trip = self.photo.trip;
-            
-            UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-            UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
-            if (tabbarcontroller.selectedIndex == 3) {
-                [activityNavController pushViewController:trunkViewController animated:YES];
-            }else {
-                [self.navigationController pushViewController:trunkViewController animated:YES];
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+                trunkViewController.trip = self.photo.trip;
+                
+                UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+                UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+                if (tabbarcontroller.selectedIndex == 3) {
+                    [activityNavController pushViewController:trunkViewController animated:YES];
+                }else {
+                    [self.navigationController pushViewController:trunkViewController animated:YES];
+                }
+            });
         }];
     }
 }
@@ -1222,12 +1247,12 @@
             {
                 if ([view isKindOfClass:[HomeMapViewController class]]){
                     if (self.photos.count < 1){
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:NO member:YES];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateTripColorOnMap:self.photo.trip isHot:NO member:YES];
                     } else  //instead, find interval and update is HOT
                     {
-                        [(HomeMapViewController*)view dontRefreshMap];
-                        [(HomeMapViewController*)view updateTrunkColor:self.photo.trip isHot:color member:YES];
+                        [(HomeMapViewController*)view dontRefreshMapOnViewDidAppear];
+                        [(HomeMapViewController*)view updateTripColorOnMap:self.photo.trip isHot:color member:YES];
                     }
                 } else if ([view isKindOfClass:[ActivityListViewController class]])
                 {
@@ -1766,28 +1791,22 @@
 }
 
 - (IBAction)photoTakenByTapped:(id)sender {
-    //FIXME I MESSED UP THE FLOW HERE IM NOT SURE HOW WE WANT TO DO IT NOW WITH PUSHES
-    
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//    UserProfileViewController *trunkViewController = (UserProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    [self.photo.user fetchIfNeeded];
-    UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
-    trunkViewController.user = self.photo.user;
-    
-    //    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-    //        NSLog(@"Photo View DIsmissed");
-    
-    UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
-    if (tabbarcontroller.selectedIndex == 3) {
-        [activityNavController pushViewController:trunkViewController animated:YES];
-    } else {
-        [self.navigationController pushViewController:trunkViewController animated:YES];
-
-    }
-    
-    //    }];
+    [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
+            trunkViewController.user = self.photo.user;
+            UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+            if (tabbarcontroller.selectedIndex == 3) {
+                [activityNavController pushViewController:trunkViewController animated:YES];
+            } else {
+                [self.navigationController pushViewController:trunkViewController animated:YES];
+                
+            }
+        });
+    }];
 }
+
 - (IBAction)privatebuttonTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;

@@ -42,6 +42,8 @@ enum TTActivityViewType : NSUInteger {
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property UIRefreshControl *refreshController;
+@property int color;
+@property NSTimer *colorTimer;
 @end
 
 @implementation ActivityListViewController
@@ -95,7 +97,9 @@ enum TTActivityViewType : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
     self.tabBarController.tabBar.hidden = NO;
-    
+    self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
+    self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
+                                                     selector:@selector(rotateColors) userInfo:nil repeats:YES];
     NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue];
     
     if (internalBadge > 0 && self.filter.tag == 0){
@@ -105,11 +109,11 @@ enum TTActivityViewType : NSUInteger {
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-    
+    [self.colorTimer invalidate];
+    self.colorTimer = nil;
     if (_viewType == TTActivityViewAllActivities){
         
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
-        
         UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
         [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
@@ -140,9 +144,11 @@ enum TTActivityViewType : NSUInteger {
                                action:@selector(refresh:)
                      forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview: self.refreshController];
-    self.refreshController.tintColor = [TTColor tripTrunkBlueLinkColor];
+    self.refreshController.tintColor = [UIColor whiteColor];
     [ self.refreshController endRefreshing];
 }
+
+
 
 -(void)setUpFilter{
     self.filter.tag = 0;
@@ -301,6 +307,25 @@ enum TTActivityViewType : NSUInteger {
      }];
 }
 
+-(void)rotateColors{
+
+    if (self.color == 0){
+        self.refreshController.backgroundColor = [TTColor tripTrunkGray];
+    } else if (self.color == 1){
+        self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
+    } else if (self.color == 2){
+        self.refreshController.backgroundColor = [TTColor tripTrunkRed];
+    } else if (self.color == 3){
+        self.refreshController.backgroundColor = [TTColor tripTrunkYellow];
+    }
+    
+    self.color += 1;
+    
+    if (self.color == 4){
+        self.color = 0;
+    }
+}
+
 #pragma mark - Refresh
 
 
@@ -343,6 +368,7 @@ enum TTActivityViewType : NSUInteger {
                             [formatter setDateFormat:@"MMM d, h:mm a"];
                             NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                             NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                            title = @"";
                             NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                         forKey:NSForegroundColorAttributeName];
                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
@@ -391,6 +417,7 @@ enum TTActivityViewType : NSUInteger {
                                             [formatter setDateFormat:@"MMM d, h:mm a"];
                                             NSString *lastUpdate = NSLocalizedString(@"Last update",@"Last update");
                                             NSString *title = [NSString stringWithFormat:@"%@: %@", lastUpdate, [formatter stringFromDate:[NSDate date]]];
+                                            title = @"";
                                             NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[TTColor tripTrunkWhite]
                                                                                                         forKey:NSForegroundColorAttributeName];
                                             NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
