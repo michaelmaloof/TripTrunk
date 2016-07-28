@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
-//#import <ParseCrashReporting/ParseCrashReporting.h>
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -46,14 +45,11 @@
     [self handleDatabaseAndConsoleLog];
     [self setNavbarAndTabbarColors];
     [self checkForShortCutItems:launchOptions];
-//    [self handleFontOutput];
+    [self handleFontOutput];    
     return YES;
 }
 
 -(void)launchWithoutQuickAction:(NSDictionary*)launchOptions{
-//    [ParseCrashReporting enable];
-//    [Parse setApplicationId:kPARSE_APP_ID
-//                  clientKey:kPARSE_CLIENT_KEY];
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = kPARSE_APP_ID;
         configuration.clientKey = kPARSE_CLIENT_KEY;
@@ -340,11 +336,6 @@
     NSString *shortcutTrunk = @"Trunk";
     NSString *shortcutRecent = @"Recent";
 
-    
-//    [ParseCrashReporting enable];
-    
-//    [Parse setApplicationId:kPARSE_APP_ID
-//                  clientKey:kPARSE_CLIENT_KEY];
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = kPARSE_APP_ID;
         configuration.clientKey = kPARSE_CLIENT_KEY;
@@ -355,7 +346,6 @@
     [PFImageView class];
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
-    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
