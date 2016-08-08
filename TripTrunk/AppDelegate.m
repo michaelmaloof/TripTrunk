@@ -26,7 +26,8 @@
 //TripTrunk-DEV
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
 #define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
-#define kPARSE_SERVER_KEY @"http://triptrunk-app-dev.us-east-1.elasticbeanstalk.com/parse/"
+//#define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse/" //AWS server
+#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" //local server
 
 //TripTrunk-PROD
 //#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
