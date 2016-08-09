@@ -962,8 +962,12 @@
 
 -(void)uploadPhotosToFacebook:(NSArray*)facebookPhotos{
     for(NSDictionary *photo in facebookPhotos){
+        NSString *caption = photo[@"caption"];
+        if([caption isEqualToString:@"Type Photo Caption Here"])
+            caption = @"";
+        
         NSDictionary *params = @{@"url": photo[@"url"],
-                                 @"caption":photo[@"caption"]};
+                                 @"caption":caption};
 
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/photos" parameters:params HTTPMethod:@"POST"];
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
