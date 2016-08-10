@@ -170,6 +170,10 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         [self photoLibraryDidChange:change];
     }
     
+    [self.selectionManager addSelectionViewToView:self.view];
+    [self.selectionManager.selectedPhotosView.clearSelectionButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.selectionManager.selectedPhotosView.clearSelectionButton addTarget:self action:@selector(didTapClearButton:) forControlEvents:UIControlEventTouchUpInside];
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
