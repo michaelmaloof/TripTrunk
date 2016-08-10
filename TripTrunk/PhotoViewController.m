@@ -939,7 +939,7 @@
         //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
         //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
         
-        if (![self.caption.text isEqualToString:@""] && self.caption.text != nil){
+        if (![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo Caption Here"] && self.caption.text != nil){
             //begin process of adding a caption to the current photo
             self.addCaption.enabled = NO;
             self.photo.caption = [self separateMentions:self.caption.text];
@@ -1029,7 +1029,8 @@
             }
         }
     } else {
-        [self.delegate captionWasAdded:self.caption.text];
+        if(![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo Caption Here"])
+            [self.delegate captionWasAdded:self.caption.text];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
