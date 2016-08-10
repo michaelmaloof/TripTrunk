@@ -7,7 +7,6 @@
 //
 
 #import "FriendTableViewCell.h"
-#import "TTColor.h"
 
 @interface FriendTableViewCell ()
 

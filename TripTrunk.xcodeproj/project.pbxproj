@@ -51,6 +51,8 @@
 		2289D9861B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */; };
 		2289D9881B0AAE8100CEECF5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9871B0AAE8100CEECF5 /* Parse.framework */; };
 		2289D98A1B0AAE9200CEECF5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2289D9891B0AAE9200CEECF5 /* ParseUI.framework */; };
+		229BF4AD1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 229BF4AC1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m */; };
+		229BF4B01D5BDEDC006389F6 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 229BF4AF1D5BDEDC006389F6 /* TTBaseTableViewCell.m */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
@@ -222,6 +224,10 @@
 		2289D9851B0AAE7200CEECF5 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		2289D9871B0AAE8100CEECF5 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		2289D9891B0AAE9200CEECF5 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		229BF4AB1D5BDCD2006389F6 /* TTBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseCollectionViewCell.h; sourceTree = "<group>"; };
+		229BF4AC1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
+		229BF4AE1D5BDEDC006389F6 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
+		229BF4AF1D5BDEDC006389F6 /* TTBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseTableViewCell.m; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
 		22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNoInternetView.h; sourceTree = "<group>"; };
@@ -514,6 +520,10 @@
 		220408DF1AED55E7009DB060 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				229BF4AE1D5BDEDC006389F6 /* TTBaseTableViewCell.h */,
+				229BF4AF1D5BDEDC006389F6 /* TTBaseTableViewCell.m */,
+				229BF4AB1D5BDCD2006389F6 /* TTBaseCollectionViewCell.h */,
+				229BF4AC1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m */,
 				27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */,
 				27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */,
 				2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */,
@@ -1008,6 +1018,7 @@
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
+				229BF4B01D5BDEDC006389F6 /* TTBaseTableViewCell.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
@@ -1023,6 +1034,7 @@
 				27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */,
+				229BF4AD1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
 				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
 				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,

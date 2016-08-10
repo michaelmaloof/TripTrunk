@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "TTBaseTableViewCell.h"
 #import <Parse/Parse.h>
 
 @protocol UserTableViewCellDelegate;
 
-@interface UserTableViewCell : UITableViewCell
+@interface UserTableViewCell : TTBaseTableViewCell
 @property (nonatomic, weak) id<UserTableViewCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;

@@ -7,8 +7,6 @@
 //
 
 #import "TTTimeLineCollectionViewCell.h"
-#import <QuartzCore/QuartzCore.h>
-#import "TTColor.h"
 
 @implementation TTTimeLineCollectionViewCell
 - (void)awakeFromNib {

@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "Photo.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import "TTBaseCollectionViewCell.h"
 
-@interface TrunkCollectionViewCell : UICollectionViewCell
+@interface TrunkCollectionViewCell : TTBaseCollectionViewCell
 @property (weak, nonatomic) IBOutlet PFImageView *photo;
 @property Photo *tripPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *logo;

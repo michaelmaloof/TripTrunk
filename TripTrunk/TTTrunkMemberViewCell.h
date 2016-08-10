@@ -6,10 +6,9 @@
 //  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "TTUserProfileImage.h"
+#import "TTBaseCollectionViewCell.h"
 
-@interface TTTrunkMemberViewCell : UICollectionViewCell
+@interface TTTrunkMemberViewCell : TTBaseCollectionViewCell
 @property (strong, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet TTUserProfileImage *profilePhoto;
 

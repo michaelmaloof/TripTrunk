@@ -7,7 +7,6 @@
 //
 
 #import "TTUserProfileViewCell.h"
-#import "TTColor.h"
 
 @implementation TTUserProfileViewCell
 

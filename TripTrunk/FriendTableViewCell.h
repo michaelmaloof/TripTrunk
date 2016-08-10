@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseTableViewCell.h"
 
 @protocol FriendTableViewCellDelegate;
 
-@interface FriendTableViewCell : UITableViewCell
+@interface FriendTableViewCell : TTBaseTableViewCell
 
 @property (nonatomic, strong) id<FriendTableViewCellDelegate> delegate;
 
