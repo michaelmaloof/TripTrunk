@@ -499,7 +499,7 @@
     
     NSTextCheckingResult *match = [regex firstMatchInString:emailAddress options:0 range:NSMakeRange(0, [emailAddress length])];
     
-    if(!match){
+    if(!match || [emailAddress containsString:@".con"]){
         //Create 'email address invalid' alert view
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                         message:NSLocalizedString(@"Invalid Email Address",@"Invalid Email Address")
@@ -511,7 +511,6 @@
         [alert show];
         return NO;
     }
-    
     return YES;
 }
 
