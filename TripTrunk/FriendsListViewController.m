@@ -156,44 +156,40 @@
     return _friends.count;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     PFUser *possibleFriend = [_friends objectAtIndex:indexPath.row];
-    UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
+    __weak UserTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     [cell setUser:possibleFriend];
     [cell setDelegate:self];
-    cell.profilePicImageView.image = nil;
-    // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
+
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profileImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    __weak UserTableViewCell *weakCell = cell;
+
     [cell.profilePicImageView setImageWithURLRequest:request
                                     placeholderImage:nil
                                              success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                                                 
-                                                 [weakCell.profilePicImageView setImage:image];
-                                                 [weakCell setNeedsLayout];
+                                                 [cell.profilePicImageView setImage:image];
+                                                 [cell setNeedsLayout];
                                              } failure:nil];
-    weakCell.followButton.hidden = NO;
+    cell.followButton.hidden = NO;
     
-    if ([possibleFriend.objectId isEqualToString:[PFUser currentUser].objectId]){
+    if ([possibleFriend.objectId isEqualToString:[PFUser currentUser].objectId])
         cell.followButton.hidden = YES;
-    } else {
-        cell.followButton.hidden = NO;
-    }
-
+    else cell.followButton.hidden = NO;
+    
     if ([self.currentUserFriends containsObject:possibleFriend.objectId]){
-        [cell.followButton setSelected:_isFollowing];
+        [cell.followButton setSelected:YES];
         [cell.followButton setTitle:@"Following" forState:UIControlStateNormal];
-        weakCell.followButton.backgroundColor = [TTColor tripTrunkBlue];
-        [weakCell.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        cell.followButton.backgroundColor = [TTColor tripTrunkBlue];
+        [cell.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
         [cell.followButton setSelected:NO]; // change the button for immediate user feedback
         [cell.followButton setTitle:@"Follow" forState:UIControlStateNormal];
-        weakCell.followButton.backgroundColor = [UIColor whiteColor];
-        [weakCell.followButton setTitleColor:[TTColor tripTrunkBlue] forState:UIControlStateNormal];
+        cell.followButton.backgroundColor = [UIColor whiteColor];
+        [cell.followButton setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
     }
-    return weakCell;
+    return cell;
 }
 
 #pragma mark - Table view delegate
@@ -217,25 +213,23 @@
         [cellView.followButton setSelected:NO]; // change the button for immediate user feedback
         [cellView.followButton setTitle:@"Follow" forState:UIControlStateNormal];
         cellView.followButton.backgroundColor = [UIColor whiteColor];
-        cellView.followButton.titleLabel.textColor = [TTColor tripTrunkBlue];
-        [cellView.followButton setTitleColor:[TTColor tripTrunkBlue] forState:UIControlStateNormal];
+        cellView.followButton.titleLabel.textColor = [TTColor tripTrunkRed];
+        [cellView.followButton setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
         [self.currentUserFriends removeObject:user.objectId];
         [SocialUtility unfollowUser:user block:^(BOOL succeeded, NSError *error) {
         }];
     }
     else {
         // Follow
-        [cellView.followButton setSelected:YES];
-        [cellView.followButton setTitle:@"Following" forState:UIControlStateNormal];
-        cellView.followButton.backgroundColor = [TTColor tripTrunkBlue];
         cellView.followButton.titleLabel.textColor = [UIColor whiteColor];
+        [cellView.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
         [self.currentUserFriends addObject:user.objectId];
         [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
             if (error) {
+                cellView.followButton.titleLabel.textColor = [TTColor tripTrunkRed];
+                [cellView.followButton setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
                 NSLog(@"Error: %@", error);
                 [self.currentUserFriends removeObject:user.objectId];
-            }
-            if (!succeeded) {
                 NSLog(@"Follow NOT success");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
                                                                 message:@"Please try again"
@@ -244,9 +238,9 @@
                                                       otherButtonTitles:nil, nil];
                 [cellView.followButton setSelected:NO];
                 [alert show];
-            }
-            else
-            {
+            }else{
+                [cellView.followButton setTitle:@"Following" forState:UIControlStateNormal];
+                [cellView.followButton setSelected:YES];
             }
         }];
     }
