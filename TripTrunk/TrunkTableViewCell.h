@@ -6,10 +6,11 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "Trip.h"
+#import "TTBaseTableViewCell.h"
 
-@interface TrunkTableViewCell : UITableViewCell
+
+@interface TrunkTableViewCell : TTBaseTableViewCell
 @property Trip *trip;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;

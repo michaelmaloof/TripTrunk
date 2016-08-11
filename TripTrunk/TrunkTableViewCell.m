@@ -7,7 +7,6 @@
 //
 
 #import "TrunkTableViewCell.h"
-#import "TTColor.h"
 
 @implementation TrunkTableViewCell
 

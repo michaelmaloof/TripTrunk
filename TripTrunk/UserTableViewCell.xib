@@ -48,7 +48,7 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="57.5" y="29.5" width="85.5" height="16.5"/>
+                            <rect key="frame" x="57" y="29" width="85.5" height="16.5"/>
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstnam Last" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zPO-bb-qRg">
@@ -57,7 +57,7 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="57.5" y="13" width="85.5" height="16.5"/>
+                            <rect key="frame" x="57" y="13" width="85.5" height="16.5"/>
                         </variation>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nm6-qI-Iog">
@@ -81,8 +81,7 @@
                                 <exclude reference="t5u-nM-4le"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                            <rect key="frame" x="242" y="12" width="70" height="20"/>
+                        <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
                                 <include reference="6Xq-bI-064"/>
                                 <exclude reference="a29-2Q-lvC"/>

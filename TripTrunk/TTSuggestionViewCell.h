@@ -6,11 +6,9 @@
 //  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "TTUserProfileImage.h"
+#import "TTBaseTableViewCell.h"
 
-@interface TTSuggestionViewCell : UITableViewCell
-
+@interface TTSuggestionViewCell : TTBaseTableViewCell
 @property (strong, nonatomic) IBOutlet TTUserProfileImage *userPhoto;
 @property (strong, nonatomic) IBOutlet UILabel *userFullName;
 @property (strong, nonatomic) IBOutlet UILabel *username;

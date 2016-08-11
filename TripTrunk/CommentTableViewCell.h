@@ -6,14 +6,13 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "TTTAttributedLabel.h"
-#import "TTUserProfileImage.h"
+#import "TTBaseTableViewCell.h"
 
 @protocol CommentTableViewCellDelegate;
 
-@interface CommentTableViewCell : UITableViewCell
+@interface CommentTableViewCell : TTBaseTableViewCell
 
 @property (nonatomic, strong) id<CommentTableViewCellDelegate> delegate;
 

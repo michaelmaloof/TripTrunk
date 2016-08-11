@@ -6,10 +6,9 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "TripImageView.h"
+#import "TTBaseCollectionViewCell.h"
 
-@interface PhotoCollectionViewCell : UICollectionViewCell
+@interface PhotoCollectionViewCell : TTBaseCollectionViewCell
 @property (weak, nonatomic) IBOutlet TripImageView *tripImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *captionImageView;
 

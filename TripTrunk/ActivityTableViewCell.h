@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "TTBaseTableViewCell.h"
 #import <Parse/Parse.h>
 #import "Photo.h"
 #import "TTTAttributedLabel.h"
@@ -14,7 +14,7 @@
 
 @protocol ActivityTableViewCellDelegate;
 
-@interface ActivityTableViewCell : UITableViewCell
+@interface ActivityTableViewCell : TTBaseTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;

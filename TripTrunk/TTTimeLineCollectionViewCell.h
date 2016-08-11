@@ -6,9 +6,9 @@
 //  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "TTBaseCollectionViewCell.h"
 
-@interface TTTimeLineCollectionViewCell : UICollectionViewCell
+@interface TTTimeLineCollectionViewCell : TTBaseCollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *privateImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *userprofile;
 @property (weak, nonatomic) IBOutlet UIImageView *newsfeedPhoto;

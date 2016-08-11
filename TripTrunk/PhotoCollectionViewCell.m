@@ -7,7 +7,6 @@
 //
 
 #import "PhotoCollectionViewCell.h"
-#import "TTColor.h"
 
 @implementation PhotoCollectionViewCell
 

@@ -535,6 +535,10 @@
 		220408DF1AED55E7009DB060 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				229BF4AE1D5BDEDC006389F6 /* TTBaseTableViewCell.h */,
+				229BF4AF1D5BDEDC006389F6 /* TTBaseTableViewCell.m */,
+				229BF4AB1D5BDCD2006389F6 /* TTBaseCollectionViewCell.h */,
+				229BF4AC1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m */,
 				27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */,
 				27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */,
 				2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */,
@@ -1066,6 +1070,7 @@
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
+				229BF4B01D5BDEDC006389F6 /* TTBaseTableViewCell.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
@@ -1083,6 +1088,7 @@
 				27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */,
+				229BF4AD1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
 				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
 				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,
