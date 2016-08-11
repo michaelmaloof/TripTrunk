@@ -328,4 +328,34 @@
     [self.tableView reloadData];
 }
 
+-(void)membersAdded:(NSArray*)users{
+    [self.tripMembers addObjectsFromArray:users]; 
+    [self.loadingMembers removeAllObjects];
+    [self.tableView reloadData];
+}
+
+-(void)membersAddFailed:(NSArray*)users{
+    
+    NSString *userList;
+    
+    for(PFUser *user in users){
+        if(userList == NULL || [userList isEqualToString:@""])
+            userList = [NSString stringWithFormat:@"@%@",user.username];
+        else userList = [NSString stringWithFormat:@"%@\n@%@",userList,user.username];
+    }
+
+    NSString *title = NSLocalizedString(@"Error adding users to\n",@"Error adding users to\n");
+    NSString *finalTitle = [NSString stringWithFormat:@"%@ %@",title, self.trip.name];
+    NSString *message = NSLocalizedString(@"Users not added",@"Users not added");
+    NSString *finalMessage = [NSString stringWithFormat:@"%@:\n %@",message, userList];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:finalTitle
+                                                    message:finalMessage
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                          otherButtonTitles:nil, nil];
+    [alert show];
+    
+}
+
 @end

@@ -531,20 +531,26 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
         
         [PFCloud callFunctionInBackground:@"AddMembersToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            // Perform the Navigation to the next/previous screen.
-            // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.
             
-            if (!self.isTripCreation) {
-                // Adding friends to an existing trip, so pop back
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            else {
-                // Nex trip creation flow, so push forward
-                self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
-                
-                [self performSegueWithIdentifier:@"photos" sender:self];
-                self.didTapCreated = YES;
-                
+            if(!error){
+                if (!self.isTripCreation) {
+                    if (self.delegate)
+                        [self.delegate membersAdded:self.membersToAdd];
+                    
+                    // Adding friends to an existing trip, so pop back
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+                else {
+                    // Nex trip creation flow, so push forward
+                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Update",@"Update") style:UIBarButtonItemStylePlain target:self action:@selector(saveFriendsAndClose)];
+                    
+                    [self performSegueWithIdentifier:@"photos" sender:self];
+                    self.didTapCreated = YES;
+                    
+                }
+            }else{
+                if (self.delegate)
+                    [self.delegate membersAddFailed:self.membersToAdd];
             }
         }];
         
