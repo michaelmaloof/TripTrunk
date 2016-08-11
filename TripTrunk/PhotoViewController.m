@@ -583,13 +583,7 @@
                 self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
                 self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
                 
-                if (updateNow == YES) {
-                    //direct update
-                    //FIXME Should only save photo if user as ACL Permission
-                    [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-//                    [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-//                    }];
-                }
+                //            [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.isLikedByCurrentUser];
                 
                 //TODO: update cached photo attributes, i.e. likers, commenters, etc.
                 [[TTCache sharedCache] setAttributesForPhoto:self.photo likers:self.likeActivities commenters:self.commentActivities likedByCurrentUser:self.isLikedByCurrentUser];
