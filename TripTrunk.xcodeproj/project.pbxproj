@@ -71,6 +71,8 @@
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
 		2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */; };
+		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
+		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */; };
@@ -259,6 +261,10 @@
 		2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileViewCell.h; sourceTree = "<group>"; };
 		2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileViewCell.m; sourceTree = "<group>"; };
 		2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTUserProfileViewCell.xib; sourceTree = "<group>"; };
+		2795EF211D5CE73D003116F4 /* TTBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseCollectionViewCell.h; sourceTree = "<group>"; };
+		2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
+		2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
+		2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseTableViewCell.m; sourceTree = "<group>"; };
 		27A581421C888D910095ED94 /* TTPushNotificationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPushNotificationHandler.h; sourceTree = "<group>"; };
 		27A581431C888D910095ED94 /* TTPushNotificationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPushNotificationHandler.m; sourceTree = "<group>"; };
 		27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHashtagMentionColorization.h; sourceTree = "<group>"; };
@@ -535,10 +541,10 @@
 		220408DF1AED55E7009DB060 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				229BF4AE1D5BDEDC006389F6 /* TTBaseTableViewCell.h */,
-				229BF4AF1D5BDEDC006389F6 /* TTBaseTableViewCell.m */,
-				229BF4AB1D5BDCD2006389F6 /* TTBaseCollectionViewCell.h */,
-				229BF4AC1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m */,
+				2795EF211D5CE73D003116F4 /* TTBaseCollectionViewCell.h */,
+				2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */,
+				2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */,
+				2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */,
 				27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */,
 				27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */,
 				2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */,
@@ -1049,6 +1055,7 @@
 				2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
+				2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
@@ -1057,6 +1064,7 @@
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */,
+				2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
@@ -1070,7 +1078,6 @@
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
-				229BF4B01D5BDEDC006389F6 /* TTBaseTableViewCell.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
@@ -1088,7 +1095,6 @@
 				27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */,
-				229BF4AD1D5BDCD2006389F6 /* TTBaseCollectionViewCell.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
 				4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */,
 				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,
