@@ -341,8 +341,20 @@
         [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
     self.bioTextView.textAlignment = NSTextAlignmentCenter;
+    [self setBioTextViewHeight];
     [self checkIfIsCurrentUser];
     [self checkIfIsPrivate];
+}
+
+
+-(void)setBioTextViewHeight{
+    CGRect frame = self.bioTextView.frame;
+    frame.size.height = self.bioTextView.contentSize.height;
+    self.bioTextView.frame = frame;
+    [self.view addSubview: self.bioTextView];
+    
+//    [self.bioTextView sizeToFit];
+
 }
 
 -(void)checkIfIsCurrentUser{
