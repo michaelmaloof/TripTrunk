@@ -873,8 +873,11 @@
 
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     int captionOffset = 0; int quicktype = 0;
-    if(keyboardSize.height < 250)
+    if(keyboardSize.height < 250){
         quicktype = 63;
+    } else if (keyboardSize.height < 258) {
+        quicktype = -90;
+    }
     if(self.view.frame.origin.y >= 0)
         captionOffset = self.bottomButtonWrapper.frame.origin.y-self.bottomButtonWrapper.frame.size.height-keyboardSize.height-self.photoToolbarWrapper.frame.size.height-quicktype;
     self.view.frame = CGRectMake(self.view.frame.origin.x,
