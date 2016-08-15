@@ -26,14 +26,15 @@
 //TripTrunk-DEV
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
 #define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
-//#define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse"
-#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/"
+
+//#define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse" // This is the DEV URL
+//#define kPARSE_SERVER_KEY @"http://192.168.0.100:3000/parse/" // This is Matt's Local IP Address
+//#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" // This is your LOCALHOST URL
 
 //TripTrunk-PROD
 //#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
 //#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
-//#define kPARSE_SERVER_KEY @""
-//#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/"
+#define kPARSE_SERVER_KEY @"http://triptrunk-server-prod.us-east-1.elasticbeanstalk.com/parse" // This is the PRODUCTION URL
 
 @interface AppDelegate ()
 
