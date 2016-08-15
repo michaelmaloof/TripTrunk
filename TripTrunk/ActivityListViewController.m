@@ -102,7 +102,7 @@ enum TTActivityViewType : NSUInteger {
                                                      selector:@selector(rotateColors) userInfo:nil repeats:YES];
     NSUInteger internalBadge = [[[NSUserDefaults standardUserDefaults] valueForKey:@"internalBadge"] integerValue];
     
-    if (internalBadge > 0 && self.filter.tag == 0){
+    if (internalBadge > 0 && self.filter.tag == 0 && self.activities.count > 0){
         [self refresh: self.refreshController];
     }
     [self.tableView reloadData];
