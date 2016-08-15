@@ -48,7 +48,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="Drs-K0-sA7"/>
                         <constraint firstAttribute="height" constant="30" id="IMi-kn-WQz"/>
-                        <constraint firstAttribute="width" constant="49" id="T8c-dn-mf1"/>
+                        <constraint firstAttribute="width" constant="60" id="T8c-dn-mf1"/>
                         <constraint firstAttribute="width" constant="49" id="sFp-F2-UJ2"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="16"/>
@@ -93,6 +93,17 @@
                         </mask>
                     </variation>
                 </textView>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oVX-bM-xE5">
+                    <rect key="frame" x="276" y="485" width="48" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Gre-Pz-K1d"/>
+                        <constraint firstAttribute="width" constant="48" id="OyC-re-Ct0"/>
+                    </constraints>
+                    <state key="normal" title="Cancel"/>
+                    <connections>
+                        <action selector="cancelWasTapped:" destination="-1" eventType="touchUpInside" id="lDS-c3-Hgz"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="0.98039215690000003" green="0.68627450980000004" blue="0.18039215689999999" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -101,6 +112,7 @@
                 <constraint firstItem="w52-4P-72k" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8aN-8d-66C"/>
                 <constraint firstItem="LBA-ux-obt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="8aa-ZF-gHj"/>
                 <constraint firstItem="8Bv-1P-Cw9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="A7n-a2-RWp"/>
+                <constraint firstItem="oVX-bM-xE5" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="CxD-x0-JYw"/>
                 <constraint firstItem="w52-4P-72k" firstAttribute="width" secondItem="gfc-u7-hir" secondAttribute="width" id="E3n-Gn-Q1h"/>
                 <constraint firstItem="gfc-u7-hir" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FTQ-Q6-9Vq"/>
                 <constraint firstItem="gfc-u7-hir" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="150" id="Gtq-AA-U1Q"/>
@@ -109,6 +121,7 @@
                 <constraint firstItem="8Bv-1P-Cw9" firstAttribute="width" secondItem="w52-4P-72k" secondAttribute="width" constant="-40" id="L9q-yw-XUW"/>
                 <constraint firstItem="gfc-u7-hir" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="MpG-iQ-YCL"/>
                 <constraint firstItem="LBA-ux-obt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="RO9-W7-x0G"/>
+                <constraint firstItem="oVX-bM-xE5" firstAttribute="top" secondItem="LBA-ux-obt" secondAttribute="bottom" constant="10" id="SG0-Cs-o1i"/>
                 <constraint firstItem="gfc-u7-hir" firstAttribute="top" secondItem="w52-4P-72k" secondAttribute="bottom" constant="20" id="Xrq-s0-ED4"/>
                 <constraint firstItem="gfc-u7-hir" firstAttribute="width" secondItem="w52-4P-72k" secondAttribute="width" constant="-40" id="cOh-OM-LGY"/>
                 <constraint firstItem="8Bv-1P-Cw9" firstAttribute="top" secondItem="gfc-u7-hir" secondAttribute="bottom" constant="20" id="eS1-0y-5aA"/>
