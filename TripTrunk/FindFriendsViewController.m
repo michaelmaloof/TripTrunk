@@ -641,11 +641,6 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"Unfollow",@"Unfollow")];
             [alertView show];
             
-            //FIXME the aboive code is the behavior we want. We want the user to be warned about unfollowing a private user. For now, it is commented out but it needs to be uncommeted and then the bug with it fixed. The bug is that when you unfollow a private user the button doesnt change
-//            [cellView.followButton setSelected:NO];
-//            [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
-//            [self.following removeObject:user.objectId];
-//            [SocialUtility unfollowUser:user];
         } else {
             // change the button for immediate user feedback
             [cellView.followButton setSelected:NO];
