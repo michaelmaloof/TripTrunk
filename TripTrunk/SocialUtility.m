@@ -41,6 +41,13 @@
     if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
         return;
     }
+    
+    if ([self checkIfUserIsTemporarilyFollowed:user] == YES){
+        return;
+    }
+    
+    
+    [self temporarilyMarkUserAsIsFollowing:user];
     // If the user is private then we should be REQUESTING to follow, not following.
     if ([user[@"private"]boolValue] == YES) {
         [self requestToFollowUserInBackground:user block:^(BOOL succeeded, NSError *error) {
@@ -61,6 +68,9 @@
         followActivity.ACL = followACL;
         
         [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            
+            [self removeUserFromTemporaryFollowing:user];
+            
             if (error) {
                 NSLog(@"Error saving follow activity%@", error);
                 //FIXME Need to remove the user from follow list
@@ -1162,6 +1172,26 @@
         }
         
     }];
+}
+
++(void)temporarilyMarkUserAsIsFollowing:(PFUser*)user{
+    NSString *valueToSave = user.objectId;
+    [[NSUserDefaults standardUserDefaults] setObject:valueToSave forKey:user.objectId];
+}
+
++(void)removeUserFromTemporaryFollowing:(PFUser*)user{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:user.objectId];
+}
+
++(BOOL)checkIfUserIsTemporarilyFollowed:(PFUser*)user{
+    NSString *savedValue = [[NSUserDefaults standardUserDefaults]
+                            stringForKey:user.objectId];
+    
+    if (savedValue == user.objectId){
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end
