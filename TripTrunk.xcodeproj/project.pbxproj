@@ -1310,7 +1310,7 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/libCloudinary.a",
-					"$(TARGET_BUILD_DIR)/libPods-TripTrunk.a",
+					"$(BUILT_PRODUCTS_DIR)/libPods-TripTrunk.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
