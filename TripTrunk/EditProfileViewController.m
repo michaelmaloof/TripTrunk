@@ -473,7 +473,7 @@
             [textView setKeyboardType:UIKeyboardTypeDefault];
         }
     }
-
+    textView.text = [textView.text stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
     NSUInteger lines = [self getNumberOfLines:textView];
     
     if(lines < 5){
