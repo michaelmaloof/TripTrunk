@@ -297,12 +297,14 @@ enum TTActivityViewType : NSUInteger {
              }
              
          } else {
-             self.navigationItem.rightBarButtonItem.enabled = YES;
-             self.isLoading = NO;
-             [ParseErrorHandlingController handleError:error];
-             self.activitySearchComplete = YES;
-             NSLog(@"error %@", error);
-             [self.tableView reloadData];
+             if (error.code != 120){
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
+                 self.isLoading = NO;
+                 [ParseErrorHandlingController handleError:error];
+                 self.activitySearchComplete = YES;
+                 NSLog(@"error %@", error);
+                 [self.tableView reloadData];
+             }
          }
      }];
 }
@@ -957,6 +959,7 @@ enum TTActivityViewType : NSUInteger {
         if (self.isLoading == NO){
             self.isLoading = YES;
             [SocialUtility queryForFollowingActivities:0 friends:self.friends activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                
                 for (PFObject *obj in activities){
                     PFUser *toUser = obj[@"toUser"];
                     PFUser *fromUser = obj[@"fromUser"];

@@ -104,8 +104,10 @@
         }
         else
         {
-            NSLog(@"Error: %@",error);
-            [ParseErrorHandlingController handleError:error];
+            if (error.code != 120){
+                NSLog(@"Error: %@",error);
+                [ParseErrorHandlingController handleError:error];
+            }
         }
     }];
 }
@@ -134,9 +136,11 @@
     friendsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error){
-            NSLog(@"Error: %@",error);
-            [ParseErrorHandlingController handleError:error];
-            self.isLoadingFacebook = NO;
+            if (error.code != 120){
+                NSLog(@"Error: %@",error);
+                [ParseErrorHandlingController handleError:error];
+                self.isLoadingFacebook = NO;
+            }
         }
         else {
             _friends = [NSMutableArray arrayWithArray:objects];
@@ -172,10 +176,11 @@
     [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(error)
         {
-            NSLog(@"Error: %@",error);
-            [ParseErrorHandlingController handleError:error];
-            self.isLoadingSearch = NO;
-
+            if (error.code != 120){
+                NSLog(@"Error: %@",error);
+                [ParseErrorHandlingController handleError:error];
+                self.isLoadingSearch = NO;
+            }
         }
         else
         {
@@ -232,17 +237,19 @@
                     });
                 }
                 else {
-                    NSLog(@"Error loading pending: %@",error);
-                    self.isLoadingPending = NO;
-
+                    if (error.code != 120){
+                        NSLog(@"Error loading pending: %@",error);
+                        self.isLoadingPending = NO;
+                    }
                 }
             }];
-            
         }
         else {
-            NSLog(@"Error loading following: %@",error);
-            self.isLoadingPending = NO;
-            self.isLoadingFollowing= NO;
+            if (error.code != 120){
+                NSLog(@"Error loading following: %@",error);
+                self.isLoadingPending = NO;
+                self.isLoadingFollowing= NO;
+            }
         }
     }];
     
@@ -676,10 +683,12 @@
                                                       otherButtonTitles:nil, nil];
                 [alert show];
                 if (error) {
-                    NSLog(@"Error following user: %@", error);
-                      [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
-                    [self.following removeObject:user.objectId]; //we lose these
-                    [self.pending removeObject:user];
+                    if (error.code != 120){
+                        NSLog(@"Error following user: %@", error);
+                        [cellView.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
+                        [self.following removeObject:user.objectId]; //we lose these
+                        [self.pending removeObject:user];
+                    }
                 }
                 
             }

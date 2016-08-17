@@ -981,8 +981,11 @@
         if(error)
         {
             [ParseErrorHandlingController handleError:error];
-            NSLog(@"Error: %@",error);
+            if (error.code != 120){
+                NSLog(@"Error: %@",error);
+            }
             completionBlock(nil, error);
+
         }
         else if (!error)
         {
