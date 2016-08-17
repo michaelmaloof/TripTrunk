@@ -236,11 +236,13 @@
                         }
                     });
                 }
-                else {
+                else if (error){
                     if (error.code != 120){
                         NSLog(@"Error loading pending: %@",error);
                         self.isLoadingPending = NO;
                     }
+                } else {
+                    self.isLoadingPending = NO;
                 }
             }];
         }
