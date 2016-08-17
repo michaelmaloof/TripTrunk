@@ -266,7 +266,7 @@
         if (error.code == 202)
         {
             //Log error
-            NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
 
             //Create 'username in use' alert view
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
@@ -286,7 +286,7 @@
         else if (error.code == 203)
         {
             //Log error
-            NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
 
             //Create 'email address in use' alert view
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
@@ -302,7 +302,7 @@
             return NO;
         }else if (error.code == 125){
             //Log error
-            NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
             
             //Create 'email address invalid' alert view
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")

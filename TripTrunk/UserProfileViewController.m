@@ -221,7 +221,7 @@
                 }
             }
             else {
-                NSLog(@"Error: %@",error);
+                [ParseErrorHandlingController handleError:error];
             }
         }];
     }
@@ -326,7 +326,7 @@
             self.user = (PFUser*)object;
             [self displayUserContent];
         }else{
-            NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
         }
     }];
 }
@@ -674,7 +674,7 @@
 
             
             if (error) {
-                NSLog(@"Error: %@", error);
+                [ParseErrorHandlingController handleError:error];
                 self.followButton.tag = 0;
                 [self.followButton setTitle:NSLocalizedString(@"Follow",@"Follow") forState:UIControlStateNormal];
                 [self setButtonColor];

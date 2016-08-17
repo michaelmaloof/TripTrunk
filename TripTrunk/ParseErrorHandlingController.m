@@ -22,6 +22,10 @@
         [[TTUtility sharedInstance] noInternetConnection];
     }
     
+    if (error.code != 120){
+        NSLog(@"Error: %@", error);
+    }
+    
     switch (error.code) {
         case kPFErrorInvalidSessionToken: {
             [self _handleInvalidSessionTokenError];

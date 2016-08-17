@@ -90,7 +90,6 @@ CLCloudinary *cloudinary;
               [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                   
                   if(error) {
-                      NSLog(@"error saving user to parse: %@", error);
                       [ParseErrorHandlingController handleError:error];
                   }
                   else {
@@ -100,8 +99,6 @@ CLCloudinary *cloudinary;
               
           } else {
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
-              
-              
           }
           
       } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
@@ -217,7 +214,7 @@ CLCloudinary *cloudinary;
               photo.ACL = photoACL;
               [photo saveEventually:^(BOOL succeeded, NSError *error) {
                   if(error) {
-                      NSLog(@"error saving photo to parse: %@", error);
+                      [ParseErrorHandlingController handleError:error];
                   }
                   else {
                       // Add photo to the cache
@@ -227,7 +224,7 @@ CLCloudinary *cloudinary;
                           [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                               if(error){
                                   completionBlock(NO, nil, nil, nil);
-                                  NSLog(@"Error: %@",error);
+                                  [ParseErrorHandlingController handleError:error];
                               }else{
                                   completionBlock(YES, commentObject, url, nil);
                               }

@@ -422,7 +422,7 @@
             [SocialUtility addMention:object isCaption:[object[@"isCaption"] boolValue] withUser:user forPhoto:photo block:^(BOOL succeeded, NSError *error){
                 if(succeeded)
                     NSLog(@"Mention added to db for %@",user.username);
-                else NSLog(@"Error: %@", error);
+                else [ParseErrorHandlingController handleError:error];
             }];
         }
     }
@@ -530,7 +530,8 @@
             [SocialUtility deleteMention:object withUser:user block:^(BOOL succeeded, NSError *error){
                 if(succeeded)
                     NSLog(@"Mention removed to db for %@",user.username);
-                else NSLog(@"Error: %@", error);
+                else [ParseErrorHandlingController handleError:error];
+
             }];
         }
     }
@@ -600,7 +601,7 @@
         if(!error){
             status = [followingStatus boolValue];
         }else{
-            NSLog(@"Error: %@",error);
+            [ParseErrorHandlingController handleError:error];
         }
     }];
     return status;
