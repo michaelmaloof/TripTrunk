@@ -771,18 +771,22 @@
     [actionSheet showInView:self.view];
     
 }
-//FIXME What is this
+
+//called when the user clicks save on the view. Saves the user to the database and closes the view
 -(void)shouldSaveUserAndClose:(PFUser *)user {
     // Ensure it's the current user so we don't accidentally let people change other people's info. 
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
         [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if(!error){
-                NSString *string = user[@"bio"];
-                NSString *trimmedBio = [string stringByTrimmingCharactersInSet:
-                                           [NSCharacterSet whitespaceCharacterSet]];
-                self.bioTextView.text = trimmedBio;
-                [self displayHometown:user];
-                [self setNameBasedOnPrivacy:user];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *string = user[@"bio"];
+                    NSString *trimmedBio = [string stringByTrimmingCharactersInSet:
+                                            [NSCharacterSet whitespaceCharacterSet]];
+                    self.bioTextView.text = trimmedBio;
+                    [self displayHometown:user];
+                    [self setNameBasedOnPrivacy:user];
+                    [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
+                });
             }else{
                 if(error.code == 203){
                     //Create 'email address invalid' alert view
@@ -796,11 +800,20 @@
                     [alert show];
                     self.user[@"email"] = NSLocalizedString(@"<Error: please update>",@"<Error: please update>");
                 }
+                
+                else if (error.code != 120){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error Updating User Info",@"Error Updating User Info")
+                                                                    message:NSLocalizedString(@"Please try again later.", @"Please try again later.")
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                          otherButtonTitles:nil, nil];
+                    alert.tag = 0;
+                    [alert show];
+                }
+                
             }
         }];
     }
-
-    [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)privacyChanged:(PFUser *)user{
