@@ -750,8 +750,12 @@
             [objIds addObject:obj.objectId];
         }
         
-        [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
-        [subqueries whereKey:@"objectId" notContainedIn:objIds];
+        if (object){
+            [subqueries whereKey:@"createdAt" lessThanOrEqualTo:object.createdAt];
+        }
+        if (objIds){
+            [subqueries whereKey:@"objectId" notContainedIn:objIds];
+        }
         
     } else if (isRefresh ==YES && activities.count >0){
         
