@@ -467,7 +467,9 @@
     [findPhotosUser includeKey:@"trip.creator"];
     [findPhotosUser includeKey:@"trip"];
     [findPhotosUser includeKey:@"user"];
-    [findPhotosUser whereKey:@"createdAt" greaterThan:photo.createdAt];
+    if (photo){
+        [findPhotosUser whereKey:@"createdAt" greaterThan:photo.createdAt];
+    }
     [findPhotosUser setLimit:1000];
     [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error)
