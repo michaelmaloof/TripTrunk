@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2Gs-oZ-UjQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -2646,7 +2646,8 @@
                                                 <exclude reference="ji3-Vu-bOe"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="346" y="35" width="20" height="20"/>
                                             <mask key="constraints">
                                                 <include reference="ji3-Vu-bOe"/>
                                             </mask>
@@ -2842,6 +2843,9 @@
                                         <state key="normal" title="Comments">
                                             <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="158" y="12" width="59" height="26"/>
+                                        </variation>
                                         <connections>
                                             <action selector="onCommentsTapped:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="Xtl-kp-oeS-A"/>
                                         </connections>
@@ -2922,6 +2926,7 @@
                                     <constraint firstItem="b7K-31-DpK" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="oTY-FG-8KM"/>
                                     <constraint firstItem="b7K-31-DpK" firstAttribute="leading" secondItem="Qe2-XC-VCF" secondAttribute="trailing" constant="8" id="phP-bT-TwR"/>
                                     <constraint firstItem="Qe2-XC-VCF-A" firstAttribute="top" secondItem="36W-q1-gHS" secondAttribute="top" constant="12" id="vAF-Ea-HOk"/>
+                                    <constraint firstAttribute="trailing" secondItem="b7K-31-DpK" secondAttribute="trailing" constant="47" id="wM6-5p-ezL"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
@@ -2935,21 +2940,22 @@
                                         <exclude reference="QZ5-So-WsV"/>
                                         <exclude reference="HFR-fd-72E"/>
                                         <exclude reference="TIa-Lp-293"/>
+                                        <exclude reference="8lx-Q8-oWx"/>
+                                        <exclude reference="MhC-wg-mUo"/>
+                                        <exclude reference="Q3j-aN-vjc"/>
+                                        <exclude reference="VEw-RR-GHw"/>
+                                        <exclude reference="vAF-Ea-HOk"/>
                                         <exclude reference="KAP-g7-PbK"/>
                                         <exclude reference="aAW-sp-p9g"/>
                                         <exclude reference="nDO-qi-WnY"/>
                                         <exclude reference="oTY-FG-8KM"/>
                                         <exclude reference="phP-bT-TwR"/>
+                                        <exclude reference="wM6-5p-ezL"/>
                                         <exclude reference="AFE-4R-fLV"/>
                                         <exclude reference="TpX-dO-IOi"/>
                                         <exclude reference="WgW-Of-QfZ"/>
                                         <exclude reference="lvK-3i-bx3"/>
                                         <exclude reference="o9z-I4-6ng"/>
-                                        <exclude reference="Q3j-aN-vjc"/>
-                                        <exclude reference="VEw-RR-GHw"/>
-                                        <exclude reference="vAF-Ea-HOk"/>
-                                        <exclude reference="8lx-Q8-oWx"/>
-                                        <exclude reference="MhC-wg-mUo"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
@@ -2964,21 +2970,22 @@
                                         <include reference="QZ5-So-WsV"/>
                                         <include reference="HFR-fd-72E"/>
                                         <include reference="TIa-Lp-293"/>
+                                        <include reference="8lx-Q8-oWx"/>
+                                        <include reference="MhC-wg-mUo"/>
+                                        <include reference="Q3j-aN-vjc"/>
+                                        <exclude reference="VEw-RR-GHw"/>
+                                        <include reference="vAF-Ea-HOk"/>
                                         <exclude reference="KAP-g7-PbK"/>
                                         <exclude reference="aAW-sp-p9g"/>
                                         <include reference="nDO-qi-WnY"/>
                                         <exclude reference="oTY-FG-8KM"/>
                                         <exclude reference="phP-bT-TwR"/>
+                                        <include reference="wM6-5p-ezL"/>
                                         <exclude reference="AFE-4R-fLV"/>
                                         <exclude reference="TpX-dO-IOi"/>
                                         <include reference="WgW-Of-QfZ"/>
                                         <include reference="lvK-3i-bx3"/>
-                                        <include reference="o9z-I4-6ng"/>
-                                        <include reference="Q3j-aN-vjc"/>
-                                        <exclude reference="VEw-RR-GHw"/>
-                                        <include reference="vAF-Ea-HOk"/>
-                                        <include reference="8lx-Q8-oWx"/>
-                                        <include reference="MhC-wg-mUo"/>
+                                        <exclude reference="o9z-I4-6ng"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -3283,6 +3290,7 @@
                         <outlet property="bottomButtonWrapperHeightConstraint" destination="xaW-rz-rSM" id="m93-6f-fqJ"/>
                         <outlet property="bottomWrapperHeightCnt" destination="UeT-Z1-nnK" id="oUa-jg-YEP"/>
                         <outlet property="caption" destination="Px1-AS-Jn7" id="XXh-yv-482"/>
+                        <outlet property="captionButtonConstraint" destination="wM6-5p-ezL" id="ejn-Ku-Nse"/>
                         <outlet property="captionLabel" destination="Rxd-3L-nVv" id="f4d-d1-ElL"/>
                         <outlet property="captionWrapper" destination="aUx-2M-TRQ" id="dPf-lm-585"/>
                         <outlet property="closeButton" destination="CmI-e7-SWG" id="n0Q-OZ-KCt"/>
@@ -4941,6 +4949,9 @@
                                 <state key="normal" title="Nevermind, I remembered! Log in.">
                                     <color key="titleColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="109" y="754" width="183" height="26"/>
+                                </variation>
                                 <connections>
                                     <action selector="remembered:" destination="OVN-gM-tLi" eventType="touchUpInside" id="u7l-HG-8zR"/>
                                 </connections>

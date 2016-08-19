@@ -46,6 +46,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *closeButton;
 @property (weak, nonatomic) IBOutlet UIButton *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *captionButtonConstraint;
 @property CGFloat height;
 @property CGFloat originY;
 @property CGFloat width;
@@ -197,6 +198,9 @@
     [self loadImageForPhoto:self.photo];
     [self editCaptionPhotoGestures];
 //    [self editCaptionTapped:self];
+    self.bottomButtonWrapper.hidden = YES;
+    self.captionWrapper.hidden = YES;
+    self.captionButtonConstraint.constant = 8;
 
 }
 
