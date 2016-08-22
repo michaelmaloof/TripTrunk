@@ -593,45 +593,21 @@
 + (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
     
-    [photo.trip fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        
-        [photo.trip.creator fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            
-            [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                
-                // proceed to creating new like
-                PFObject *likeActivity = [PFObject objectWithClassName:@"Activity"];
-                [likeActivity setObject:@"like" forKey:@"type"];
-                [likeActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-                [likeActivity setObject:photo.user forKey:@"toUser"];
-                [likeActivity setObject:photo forKey:@"photo"];
-                [likeActivity setObject:photo.trip forKey:@"trip"];
-                
-                PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
-                [likeACL setPublicReadAccess:YES];
-                [likeACL setWriteAccess:YES forUser:photo.user];
-                [likeACL setWriteAccess:YES forUser:photo.trip.creator];
-                
-                likeActivity.ACL = likeACL;
-                
-                [likeActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
-                    if (error)
-                        [ParseErrorHandlingController handleError:error];
-                    else [[TTUtility sharedInstance] internetConnectionFound];
-                    
-                    if (completionBlock){
-                        //has to be done this way because saveEventually will continue to try over and over. We don't want to decrement the likerCount until it FAILS completely
-                        if(error){
-                            [ParseErrorHandlingController errorLikingPhoto:photo];
-                        }
-                        completionBlock(succeeded,error);
-                    }
-                    
-                }];
-            }];
-        }];
+    NSDictionary *params = @{
+                                @"photoId" : photo.objectId
+                             };
+    [PFCloud callFunctionInBackground:@"Activity.Like" withParameters:params block:^(PFObject *response, NSError *error) {
+        if (error) {
+            [ParseErrorHandlingController handleError:error];
+            completionBlock(false, error);
+        }
+        else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            completionBlock(true, nil);
+        }
+ 
     }];
-    
+
 }
 
 + (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
