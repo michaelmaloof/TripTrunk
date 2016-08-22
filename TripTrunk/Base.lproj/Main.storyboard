@@ -3562,8 +3562,21 @@
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="editPencil" translatesAutoresizingMaskIntoConstraints="NO" id="1oU-Km-cc8">
                                                     <rect key="frame" x="67" y="66" width="20" height="20"/>
-                                                    <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                                        <rect key="frame" x="78" y="77" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="Cit-46-Pvr"/>
+                                                        <constraint firstAttribute="height" constant="20" id="mYw-pp-w8R"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="Cit-46-Pvr"/>
+                                                            <exclude reference="mYw-pp-w8R"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="Cit-46-Pvr"/>
+                                                            <include reference="mYw-pp-w8R"/>
+                                                        </mask>
                                                     </variation>
                                                 </imageView>
                                             </subviews>
@@ -3573,6 +3586,8 @@
                                         <constraints>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leadingMargin" constant="-8" id="6p5-6g-pAE"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="JgM-K6-At2" secondAttribute="trailing" constant="-8" id="Dym-B5-Uc0"/>
+                                            <constraint firstAttribute="trailing" secondItem="1oU-Km-cc8" secondAttribute="trailing" constant="2" id="HxD-Pa-iNj"/>
+                                            <constraint firstAttribute="bottom" secondItem="1oU-Km-cc8" secondAttribute="bottom" constant="3" id="hJx-ad-Fn9"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="topMargin" constant="-8" id="uE8-7J-oum"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="JgM-K6-At2" secondAttribute="bottom" constant="-8" id="yLW-6n-3N6"/>
                                         </constraints>
@@ -3582,6 +3597,8 @@
                                                 <exclude reference="Dym-B5-Uc0"/>
                                                 <exclude reference="uE8-7J-oum"/>
                                                 <exclude reference="yLW-6n-3N6"/>
+                                                <exclude reference="HxD-Pa-iNj"/>
+                                                <exclude reference="hJx-ad-Fn9"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
@@ -3590,6 +3607,8 @@
                                                 <include reference="Dym-B5-Uc0"/>
                                                 <include reference="uE8-7J-oum"/>
                                                 <include reference="yLW-6n-3N6"/>
+                                                <include reference="HxD-Pa-iNj"/>
+                                                <include reference="hJx-ad-Fn9"/>
                                             </mask>
                                         </variation>
                                         <connections>
@@ -5782,9 +5801,9 @@
         <image name="unlocked" width="50" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8D2-7c-Dcs"/>
         <segue reference="bhX-wL-LGH"/>
-        <segue reference="JSU-Dg-jAI"/>
+        <segue reference="8D2-7c-Dcs"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="yXb-jN-ymd"/>
     </inferredMetricsTieBreakers>
 </document>
