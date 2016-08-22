@@ -28,8 +28,6 @@
 #define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
 #define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse" // This is the DEV URL
 
-#define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse" // This is the DEV URL
-//#define kPARSE_SERVER_KEY @"http://192.168.0.100:3000/parse/" // This is Matt's Local IP Address
 //#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" // This is your LOCALHOST URL
 //#define kPARSE_SERVER_KEY @"http://192.168.0.100:3000/parse/" // This is Matt's Local IP Address
 
