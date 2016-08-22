@@ -917,6 +917,9 @@
 //            self.totalLikeButton.hidden = NO;
 //            self.totalLikeHeart.hidden = NO;
 //        }
+    
+    [self.photos removeObject:photo];
+    [self.collectionView reloadData];
 }
 
 -(void)photoWasViewed:(Photo *)photo{
@@ -977,6 +980,8 @@
         }];
     }
 }
+
+
 @end
 
 

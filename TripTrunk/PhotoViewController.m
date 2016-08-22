@@ -93,6 +93,7 @@
 #pragma On Appear
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     if (self.fromAddPhotosViewController == NO){
         [self setCaptionAndNavBar];
         [self updateCommentsLabel];
