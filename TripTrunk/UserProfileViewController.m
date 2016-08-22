@@ -32,6 +32,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *hometownLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *profilePicImageView;
 @property (strong, nonatomic) IBOutlet UITextView *bioTextView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *bioTextViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet UIButton *mapButton;
 @property BOOL isFollowing;
 @property int privateCount;
@@ -336,7 +337,7 @@
     [self.profilePicImageView setClipsToBounds:YES];
     [self setProfilePic:[_user valueForKey:@"profilePicUrl"]];
     if (self.user[@"bio"]) {
-        [self.bioTextView setText:self.user[@"bio"]];
+        [self.bioTextView setText:[self trimmedBio]];
     }else {
         [self.bioTextView setText:NSLocalizedString(@"Traveling the world, one trunk at a time.",@"Traveling the world, one trunk at a time.")];
     }
@@ -346,14 +347,22 @@
     [self checkIfIsPrivate];
 }
 
+-(NSString*)trimmedBio{
+    NSString *string = self.user[@"bio"];
+    NSString *trimmedBio = [string stringByTrimmingCharactersInSet:
+                            [NSCharacterSet whitespaceCharacterSet]];
+    trimmedBio = [trimmedBio stringByReplacingOccurrencesOfString:@"\n\n" withString:@""];
+    
+    if([trimmedBio hasSuffix:@"\n"])
+        trimmedBio = [trimmedBio substringToIndex:[trimmedBio length]-1];
+    
+    return trimmedBio;
+}
+
 
 -(void)setBioTextViewHeight{
-    CGRect frame = self.bioTextView.frame;
-    frame.size.height = self.bioTextView.contentSize.height;
-    self.bioTextView.frame = frame;
-    [self.view addSubview: self.bioTextView];
-    
-//    [self.bioTextView sizeToFit];
+    CGSize sizeThatShouldFitTheContent = [self.bioTextView sizeThatFits:self.bioTextView.frame.size];
+    self.bioTextViewHeightConstraint.constant = sizeThatShouldFitTheContent.height;
 
 }
 
@@ -768,7 +777,10 @@
     if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
         [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if(!error){
-                self.bioTextView.text = user[@"bio"];
+                NSString *string = user[@"bio"];
+                NSString *trimmedBio = [string stringByTrimmingCharactersInSet:
+                                           [NSCharacterSet whitespaceCharacterSet]];
+                self.bioTextView.text = trimmedBio;
                 [self displayHometown:user];
                 [self setNameBasedOnPrivacy:user];
             }else{

@@ -2,61 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>TripTrunk</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>3.0.2</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb339286769601593</string>
-			</array>
-		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>20</string>
-	<key>FacebookAppID</key>
-	<string>339286769601593</string>
-	<key>FacebookDisplayName</key>
-	<string>TripTrunk</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>AWS</key>
 	<dict>
-		<key>PushManager</key>
-		<dict>
-			<key>Default</key>
-			<dict>
-				<key>SNSConfiguredTopics</key>
-				<array>
-					<string>arn:aws:sns:us-east-1:958928567633:triptrunkdev_alldevices_MOBILEHUB_1812265947</string>
-					<string></string>
-				</array>
-				<key>Region</key>
-				<string>USEast1</string>
-				<key>SNSPlatformApplicationARN</key>
-				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkdev_MOBILEHUB_1812265947</string>
-			</dict>
-		</dict>
-		<key>IdentityManager</key>
-		<dict>
-			<key>Default</key>
-			<dict/>
-		</dict>
 		<key>CredentialsProvider</key>
 		<dict>
 			<key>CognitoIdentity</key>
@@ -70,12 +17,65 @@
 				</dict>
 			</dict>
 		</dict>
+		<key>IdentityManager</key>
+		<dict>
+			<key>Default</key>
+			<dict/>
+		</dict>
 		<key>MobileHub</key>
 		<dict>
 			<key>ProjectClientId</key>
 			<string>MobileHub 760da888-54d4-4a96-b3c6-c16cfd30ccd2 aws-my-sample-app-ios-objc-v0.7</string>
 		</dict>
+		<key>PushManager</key>
+		<dict>
+			<key>Default</key>
+			<dict>
+				<key>Region</key>
+				<string>USEast1</string>
+				<key>SNSConfiguredTopics</key>
+				<array>
+					<string>arn:aws:sns:us-east-1:958928567633:triptrunkdev_alldevices_MOBILEHUB_1812265947</string>
+					<string></string>
+				</array>
+				<key>SNSPlatformApplicationARN</key>
+				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkdev_MOBILEHUB_1812265947</string>
+			</dict>
+		</dict>
 	</dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>TripTrunk</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb339286769601593</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>21</string>
+	<key>FacebookAppID</key>
+	<string>339286769601593</string>
+	<key>FacebookDisplayName</key>
+	<string>TripTrunk</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

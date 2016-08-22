@@ -75,6 +75,8 @@
 @property BOOL viewMoved;
 @property BOOL shouldShowTrunkNameButton;
 
+@property BOOL isFetchingTrip;
+
 @end
 
 @implementation PhotoViewController
@@ -799,10 +801,14 @@
         vc.trip = self.trip;
         [self.navigationController pushViewController:vc animated:YES];
     } else {
-        [self.photo.trip fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            vc.trip = self.photo.trip;
-            [self.navigationController pushViewController:vc animated:YES];
-        }];
+        if (self.isFetchingTrip == NO){
+            self.isFetchingTrip = YES;
+            [self.photo.trip fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                self.isFetchingTrip = NO;
+                vc.trip = self.photo.trip;
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+        }
     }
 
 }
