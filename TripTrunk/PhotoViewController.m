@@ -1812,20 +1812,22 @@
 }
 
 - (IBAction)photoTakenByTapped:(id)sender {
-    [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
-            trunkViewController.user = self.photo.user;
-            UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
-            UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
-            if (tabbarcontroller.selectedIndex == 3) {
-                [activityNavController pushViewController:trunkViewController animated:YES];
-            } else {
-                [self.navigationController pushViewController:trunkViewController animated:YES];
-                
-            }
-        });
-    }];
+    if (![(NSObject*)self.delegate respondsToSelector:@selector(photoWasDeletedFromPhotoViewController:)]) { //Any class but UserProfileViewController
+        [self.photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UserProfileViewController *trunkViewController = [[UserProfileViewController alloc] initWithUser:self.photo.user];
+                trunkViewController.user = self.photo.user;
+                UITabBarController *tabbarcontroller = (UITabBarController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+                UINavigationController *activityNavController = [[tabbarcontroller viewControllers] objectAtIndex:3];
+                if (tabbarcontroller.selectedIndex == 3) {
+                    [activityNavController pushViewController:trunkViewController animated:YES];
+                } else {
+                    [self.navigationController pushViewController:trunkViewController animated:YES];
+                    
+                }
+            });
+        }];
+    }
 }
 
 - (IBAction)privatebuttonTapped:(id)sender {
