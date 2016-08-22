@@ -601,8 +601,8 @@
                         //direct update
                         //FIXME Should only save photo if user as ACL Permission
                         [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-                        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                        }];
+//                        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+//                        }];
                     }
                     
                     if (isCurrentPhoto == NO){
