@@ -582,6 +582,9 @@
             [cell.followButton setHidden:NO];
         }
     } else {
+        [cell.followButton setSelected:NO];
+        [cell.followButton setTitle:@"Follow" forState:UIControlStateNormal];
+        [cell.followButton setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
         [cell.followButton setHidden:NO];
     }
     
