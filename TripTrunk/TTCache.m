@@ -243,10 +243,10 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     return;
     
     //TODO: Implement NSCoding so this will work
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:users];
+//    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:users];
 
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:key];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+//    [[NSUserDefaults standardUserDefaults] setObject:data forKey:key];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)promotedUsers {
@@ -263,17 +263,17 @@ NSString *const kTTTripAttributesMembers                    = @"tripMembers";
     
     // All this "works", but will crash because PFObject doesn't implement nscoding. If that is fixed then this will work fine, just delete the return above.
     
-    if ([self.cache objectForKey:key]) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:[self.cache objectForKey:key]];
-    }
-    
-    NSArray *users = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:key]];
-    
-    if (users) {
-        [self.cache setObject:users forKey:key];
-    }
-    
-    return users;
+//    if ([self.cache objectForKey:key]) {
+//        return [NSKeyedUnarchiver unarchiveObjectWithData:[self.cache objectForKey:key]];
+//    }
+//    
+//    NSArray *users = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:key]];
+//    
+//    if (users) {
+//        [self.cache setObject:users forKey:key];
+//    }
+//    
+//    return users;
 }
 
 - (void)setFacebookFriends:(NSArray *)friends {
