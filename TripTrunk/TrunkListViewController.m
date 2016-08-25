@@ -202,8 +202,9 @@
     } else if (self.isList == YES){
         self.trunkListToggle.tag = 0;
         [self loadTrunkListBasedOnProfile:NO];
+    }else{
+        [self queryParseMethodEveryone:NO];
     }
-    [self queryParseMethodEveryone:NO];
 }
 
 -(void)rotateColors{
