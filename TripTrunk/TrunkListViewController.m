@@ -434,6 +434,7 @@
         self.attemptedToLoad = NO;
         [PFCloud callFunctionInBackground:@"queryForMutualTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
             self.attemptedToLoad = YES;
+            self.mutualTrunks = [[NSMutableArray alloc] init];
             if(error)
             {
                 self.wasError = YES;
