@@ -42,7 +42,7 @@
                                  preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* okButton = [UIAlertAction
-                                actionWithTitle:NSLocalizedString(@"OK",@"OK")
+                                actionWithTitle:NSLocalizedString(@"Okay",@"Okay")
                                 style:UIAlertActionStyleDefault
                                 handler:^(UIAlertAction * action) {
                                     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
