@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import "TTUtility.h"
 #import "TTCache.h"
+#import "AppDelegate.h"
 
 @implementation ParseErrorHandlingController
 
@@ -35,17 +36,43 @@
 }
 
 + (void)_handleInvalidSessionTokenError {
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:NSLocalizedString(@"Invalid Session",@"Invalid Session")
+                                 message:NSLocalizedString(@"Session is no longer valid, please log in again.",@"Session is no longer valid, please log in again.")
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                                actionWithTitle:NSLocalizedString(@"OK",@"OK")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                    [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
+                                }];
+    
+    [alert addAction:okButton];
+    
+    UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    [vc presentViewController:alert animated:YES completion:nil];
+    
+    
+    
+    
+    
+    
+    
     //--------------------------------------
     // Option 1: Show a message asking the user to log out and log back in.
     //--------------------------------------
     // If the user needs to finish what they were doing, they have the opportunity to do so.
     //
-     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Session",@"Invalid Session")
-                                                         message:NSLocalizedString(@"Session is no longer valid, please log out and log in again.",@"Session is no longer valid, please log out and log in again.")
-                                                        delegate:self
-                                               cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
-                                               otherButtonTitles:nil];
-     [alertView show];
+//     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Session",@"Invalid Session")
+//                                                         message:NSLocalizedString(@"Session is no longer valid, please log out and log in again.",@"Session is no longer valid, please log out and log in again.")
+//                                                        delegate:self
+//                                               cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+//                                               otherButtonTitles:nil];
+//     [alertView show];
+    
+    
+    //[(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
     
     //--------------------------------------
     // Option #2: Show login screen so user can re-authenticate.
