@@ -603,15 +603,6 @@
                     self.likeButton.alpha = 1;
                     self.likeButton.userInteractionEnabled = YES;
                     
-                    
-                    if (updateNow == YES) {
-                        //direct update
-                        //FIXME Should only save photo if user as ACL Permission
-                        [self.photo setObject:[[TTCache sharedCache] likeCountForPhoto:self.photo] forKey:@"likes"];
-//                        [self.photo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-//                        }];
-                    }
-                    
                     if (isCurrentPhoto == NO){
                         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
                     }
@@ -1075,9 +1066,6 @@
                 [[TTCache sharedCache] decrementLikerCountForPhoto:self.photo];
                 [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
                 [self updateLikesLabel];
-                if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasDisliked:YES];
-                }
                 self.likeButton.alpha = 1;
                 self.likeButton.userInteractionEnabled = YES;
                 [ParseErrorHandlingController handleError:error];
@@ -1099,9 +1087,6 @@
             if (succeeded) {
                 [self updateLikesLabel];
                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
-                if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasDisliked:NO];
-                }
                 [[TTUtility sharedInstance] internetConnectionFound];
 
             }else {

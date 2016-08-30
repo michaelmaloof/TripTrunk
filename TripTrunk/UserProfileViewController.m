@@ -1051,10 +1051,6 @@
     
 }
 
--(void)photoWasDisliked:(BOOL)isFromError{
-
-}
-
 -(void)photoWasViewed:(Photo *)photo{
     [self.photosSeen addObject:photo.objectId];
     [self.collectionView reloadData];

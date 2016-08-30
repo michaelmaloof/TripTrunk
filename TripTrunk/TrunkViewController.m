@@ -881,42 +881,10 @@
     self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
     self.totalLikeButton.hidden = NO;
     self.totalLikeHeart.hidden = NO;
-
-    //direct update after calculation
-    //FIXME this should be done in the utility for liking a photo
-    [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (isFromError == NO && !error){
-            [self.trip.publicTripDetail setObject:@(likes) forKey:@"totalLikes"];
-            [self.trip.publicTripDetail saveInBackground];
-    }
-    }];
     
 }
-
--(void)photoWasDisliked:(BOOL)isFromError{
-    
-    
-
-    
-    
-}
-
 
 -(void)photoWasDeleted:(NSNumber*)likes photo:(Photo *)photo{
-//    if (self.trip.publicTripDetail.totalLikes > 0){
-//        self.trip.publicTripDetail.totalLikes -= likes.intValue;
-//        [self.trip.publicTripDetail saveInBackground];
-//        }
-//        if (self.trip.publicTripDetail.totalLikes < 1){
-//            self.totalLikeButton.hidden = YES;
-//            self.totalLikeHeart.hidden = YES;
-//        } else {
-//            [self.totalLikeButton setTintColor:[TTColor tripTrunkWhite]];
-//            self.totalLikeButton.textColor = [TTColor tripTrunkWhite];
-//            self.totalLikeButton.text = [NSString stringWithFormat:@"%d", self.trip.publicTripDetail.totalLikes];
-//            self.totalLikeButton.hidden = NO;
-//            self.totalLikeHeart.hidden = NO;
-//        }
     
     [self.photos removeObject:photo];
     [self.collectionView reloadData];

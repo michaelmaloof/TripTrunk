@@ -14,7 +14,6 @@
 @protocol PhotoDelegate
 @optional
 -(void)photoWasLiked:(BOOL)isFromError;
--(void)photoWasDisliked:(BOOL)isFromError;
 -(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
 -(void)photoWasViewed:(Photo*)photo;
 -(void)captionWasAdded:(NSString*)caption;
