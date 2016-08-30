@@ -23,18 +23,19 @@
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
 
-//TripTrunk-DEV
+//TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
 #define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
+
+//TripTrunk-DEV
 //#define kPARSE_SERVER_KEY @"http://triptrunk-server-dev.us-east-1.elasticbeanstalk.com/parse" // This is the DEV URL
 
+//TripTrunk-PROD
+#define kPARSE_SERVER_KEY @"http://triptrunk-server-prod.us-east-1.elasticbeanstalk.com/parse" // This is the PRODUCTION URL
+
+//TripTrunk Local
 //#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" // This is your LOCALHOST URL
 //#define kPARSE_SERVER_KEY @"http://192.168.0.100:3000/parse/" // This is Matt's Local IP Address
-
-//TripTrunk-PROD
-//#define kPARSE_APP_ID @"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"
-//#define kPARSE_CLIENT_KEY @"1VpyJmOuzm1qCnVApigB9CGR0B6Yz3cAxfICdGsY"
-#define kPARSE_SERVER_KEY @"http://triptrunk-server-prod.us-east-1.elasticbeanstalk.com/parse" // This is the PRODUCTION URL
 
 @interface AppDelegate ()
 
@@ -468,9 +469,10 @@
 
 -(void)handleDatabaseAndConsoleLog{
     NSString *appName = @"DEV";
-    if([kPARSE_APP_ID isEqualToString:@"oiRCeawMKf4HoGD4uCRIaOS1qWFh6lUW7oBuhJ5H"])
+    if([kPARSE_SERVER_KEY isEqualToString:@"http://triptrunk-server-prod.us-east-1.elasticbeanstalk.com/parse"])
         appName = @"PROD";
-    NSLog(@"%@ APP ID: %@...",appName,[kPARSE_APP_ID substringToIndex:5]);
+    else appName = @"DEV";
+    NSLog(@"%@ ENVIRONMENT",appName);
     NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
 }
 
