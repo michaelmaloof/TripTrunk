@@ -27,21 +27,6 @@
 			<key>ProjectClientId</key>
 			<string>MobileHub 760da888-54d4-4a96-b3c6-c16cfd30ccd2 aws-my-sample-app-ios-objc-v0.7</string>
 		</dict>
-		<key>PushManager</key>
-		<dict>
-			<key>Default</key>
-			<dict>
-				<key>Region</key>
-				<string>USEast1</string>
-				<key>SNSConfiguredTopics</key>
-				<array>
-					<string>arn:aws:sns:us-east-1:958928567633:triptrunkdev_alldevices_MOBILEHUB_1812265947</string>
-					<string></string>
-				</array>
-				<key>SNSPlatformApplicationARN</key>
-				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkdev_MOBILEHUB_1812265947</string>
-			</dict>
-		</dict>
 	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
