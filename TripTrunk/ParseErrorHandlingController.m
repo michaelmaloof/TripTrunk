@@ -16,6 +16,7 @@
 
 + (void)handleError:(NSError *)error {
     if (![error.domain isEqualToString:PFParseErrorDomain]) {
+        NSLog(@"ERROR: %@",error);
         return;
     }
     

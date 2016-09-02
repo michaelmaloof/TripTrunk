@@ -21,16 +21,16 @@
 @implementation AWSMobileClient
 
 - (instancetype)init {
-    AWSLogDebug(@"init");
+    //AWSLogDebug(@"init");
     self = [super init];
     _initialized = NO;
-    [AWSLogger defaultLogger].logLevel = AWSLogLevelInfo;
+    //[AWSLogger defaultLogger].logLevel = AWSLogLevelInfo;
     return self;
 }
 
 - (void)dealloc {
     // Should never get called
-    AWSLogError(@"Dealloc called on singleton AWSMobileClient.");
+    //AWSLogError(@"Dealloc called on singleton AWSMobileClient.");
 }
 
 #pragma mark Singleton Methods
@@ -49,7 +49,7 @@
 
 - (BOOL)didFinishLaunching:(UIApplication *)application
               withOptions:(NSDictionary *)launchOptions {
-    AWSLogDebug(@"didFinishLaunching:withOptions:");
+    //AWSLogDebug(@"didFinishLaunching:withOptions:");
 
     BOOL didFinishLaunching = [[AWSIdentityManager defaultIdentityManager] interceptApplication:application
                                                                   didFinishLaunchingWithOptions:launchOptions];
@@ -71,7 +71,7 @@
                withURL:(NSURL *)url
  withSourceApplication:(NSString *)sourceApplication
         withAnnotation:(id)annotation {
-    AWSLogDebug(@"withApplication:withURL:...");
+    //AWSLogDebug(@"withApplication:withURL:...");
 
     [[AWSIdentityManager defaultIdentityManager] interceptApplication:application
                                                               openURL:url
@@ -86,7 +86,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    AWSLogDebug(@"applicationDidBecomeActive");
+    //AWSLogDebug(@"applicationDidBecomeActive");
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
