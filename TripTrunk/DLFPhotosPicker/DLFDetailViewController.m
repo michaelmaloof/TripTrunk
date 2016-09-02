@@ -517,7 +517,8 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         }
     }
     DLFPhotoCell *cell = (DLFPhotoCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    if (cell) {
+    //temporary set to max 10
+    if (cell && [self.selectionManager count]<=10 && ![self.selectionManager stopHighlightingCell]) {
         [cell setHighlighted:selected];
     }
     

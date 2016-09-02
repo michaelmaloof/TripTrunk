@@ -25,6 +25,8 @@
 
 - (BOOL)containsAsset:(PHAsset *)asset;
 
+- (BOOL)stopHighlightingCell;  ///remove this crap
+
 - (int)count;
 
 - (void)removeAllAssets;

@@ -184,10 +184,20 @@
 //        });
 //    }];
     
+    //remove this if statement!!!! fix the uploader
+    if(self.photos.count<10){
     DLFPhotosPickerViewController *photosPicker = [[DLFPhotosPickerViewController alloc] init];
     [photosPicker setPhotosPickerDelegate:self];
     [photosPicker setMultipleSelections:YES];
     [self presentViewController:photosPicker animated:YES completion:nil];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!",@"Whoops!")
+                                                        message:NSLocalizedString(@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.",@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
     
 }
 
@@ -205,6 +215,15 @@
 - (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhotos:(NSArray *)photos {
     NSLog(@"selected %d photos", (int)photos.count);
         for (PHAsset *asset in photos){
+            if(self.photos.count >=10){ ///REMOVE THIS HACK
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!",@"Whoops!")
+                                                                message:NSLocalizedString(@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.",@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                      otherButtonTitles:nil, nil];
+                [alert show];
+                break;
+            }
             Photo *photo = [[Photo alloc] init];
             photo.imageAsset = asset;
             [self.photos addObject:photo];
