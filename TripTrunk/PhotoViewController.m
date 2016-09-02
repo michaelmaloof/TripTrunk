@@ -55,6 +55,7 @@
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property BOOL isZoomed;
+@property BOOL hideBottomWrapper;
 //############################################# MENTIONS ##################################################
 @property (weak, nonatomic) IBOutlet UITextView *caption;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
@@ -871,8 +872,10 @@
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification{
-    self.bottomButtonWrapper.hidden = NO;
+    if(!self.hideBottomWrapper)
+        self.bottomButtonWrapper.hidden = NO;
 
+    self.hideBottomWrapper = NO;
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     int captionOffset = 0; int quicktype = 0;
     if(keyboardSize.height < 250){
@@ -891,7 +894,7 @@
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification{
-    self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+    self.bottomButtonWrapper.hidden = YES;
     self.view.frame = CGRectMake(self.view.frame.origin.x,
                                  0,
                                  self.view.frame.size.width,
@@ -1324,6 +1327,7 @@
             alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
+            self.hideBottomWrapper = YES;
         }
         else if (buttonIndex == 2 ){
             [[TTUtility sharedInstance] downloadPhoto:self.photo];

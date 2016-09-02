@@ -164,6 +164,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
+    [self.memberCollectionView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
