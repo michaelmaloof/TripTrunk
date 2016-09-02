@@ -930,7 +930,7 @@
 {
     NSString *text = [[NSString alloc]init];
     if (self.wasError == NO && self.attemptedToLoad == NO){
-        text = NSLocalizedString(@"Looking for Trunks",@"Looking for Trunks");
+        text = NSLocalizedString(@"Finding Trunks",@"Finding Trunks");
     }
     else if (self.wasError == NO && self.meParseLocations.count < 1 && self.attemptedToLoad == YES) { //looking for your trips returned 0
         text = NSLocalizedString(@"You Haven't Been Here :/",@"You Haven't Been Here :/");
