@@ -163,7 +163,7 @@
 
 
 - (void)viewWillAppear:(BOOL)animated {
-//    self.tabBarController.tabBar.hidden = YES;
+    self.tabBarController.tabBar.hidden = YES;
 }
 - (void)viewDidAppear:(BOOL)animated {
     
