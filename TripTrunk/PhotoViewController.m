@@ -103,6 +103,10 @@
         [self.likeButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
         [self markPhotoAsViewed];
     }
+    else {
+        // Still hide the tab bar!
+        self.tabBarController.tabBar.hidden = YES;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -872,10 +876,8 @@
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification{
-    if(!self.hideBottomWrapper)
-        self.bottomButtonWrapper.hidden = NO;
+    self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
 
-    self.hideBottomWrapper = NO;
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     int captionOffset = 0; int quicktype = 0;
     if(keyboardSize.height < 250){
@@ -1327,7 +1329,6 @@
             alertTextField.placeholder = NSLocalizedString(@"Enter photo's violation.",@"Enter photo's violation.");
             alert.tag = 2;
             [alert show];
-            self.hideBottomWrapper = YES;
         }
         else if (buttonIndex == 2 ){
             [[TTUtility sharedInstance] downloadPhoto:self.photo];
