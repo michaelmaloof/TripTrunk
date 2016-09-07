@@ -795,7 +795,7 @@
 }
 
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
+    __weak TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
     cell.seenLogo.image = nil;
@@ -878,20 +878,18 @@
     // This ensures Async image loading & the weak cell reference makes sure the reused cells show the correct image
     NSURL *picUrl = [NSURL URLWithString:[[TTUtility sharedInstance] profilePreviewImageUrl:possibleFriend[@"profilePicUrl"]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:picUrl];
-    __weak TrunkTableViewCell *weakCell = cell;
-    weakCell.profileImage.image = nil;
+    cell.profileImage.image = nil;
 
     [cell.profileImage setImageWithURLRequest:request
                              placeholderImage:nil
                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                           
-                                          [weakCell.profileImage setImage:image];
-                                          [weakCell setNeedsLayout];
+                                          [cell.profileImage setImage:image];
+                                          [cell setNeedsLayout];
                                           
                                       } failure:nil];
     
     return cell;
-    return weakCell;
 }
 
 

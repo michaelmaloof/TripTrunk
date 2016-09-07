@@ -360,7 +360,8 @@ CLCloudinary *cloudinary;
         [photo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
          {
              if (!error) {
-                 [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                 //commented this out because in ios10 this was causing the first photo to be duplicated when a photo was deleted.
+                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
                  
                  // Delete any activities that directly references this photo
                  // That SHOULD include all like, and comment activities

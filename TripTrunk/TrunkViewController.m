@@ -886,7 +886,6 @@
 }
 
 -(void)photoWasDeleted:(NSNumber*)likes photo:(Photo *)photo{
-    
     [self.photos removeObject:photo];
     [self.collectionView reloadData];
 }
