@@ -826,10 +826,12 @@
     if (self.caption.attributedText.length > 0){
             self.previousComment = self.caption.text;
     }
-        self.caption.hidden = NO;
-        self.captionLabel.hidden = YES;
-        self.caption.editable = YES;
-        [self.caption becomeFirstResponder];
+    self.caption.hidden = NO;
+    self.captionLabel.hidden = YES;
+    self.caption.editable = YES;
+    [self.caption becomeFirstResponder];
+    self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
+
 }
 
 -(void)textViewDidBeginEditing:(UITextView *)textView
@@ -876,7 +878,6 @@
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification{
-    self.bottomButtonWrapper.hidden = !self.bottomButtonWrapper.hidden;
 
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     int captionOffset = 0; int quicktype = 0;
@@ -885,6 +886,7 @@
     } else if (keyboardSize.height < 258) {
         quicktype = -90;
     }
+    
     if(self.view.frame.origin.y >= 0)
         captionOffset = self.bottomButtonWrapper.frame.origin.y-self.bottomButtonWrapper.frame.size.height-keyboardSize.height-self.photoToolbarWrapper.frame.size.height-quicktype;
     self.view.frame = CGRectMake(self.view.frame.origin.x,
@@ -1795,7 +1797,7 @@
     } else if (button == 1){
         self.photo.caption = @"";
     }
-    self.caption.hidden = YES;
+    self.caption.hidden = YES;  
     self.caption.text = self.photo.caption;
     self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];
     [self.photo saveInBackground];
