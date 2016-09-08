@@ -677,6 +677,23 @@ CLCloudinary *cloudinary;
     return str;
 }
 
+/*
+ * THIS IS A HACK
+ * Matt Schoch 9/8/2016
+ * This filters out the hardcoded "problem locations" of the result array.
+ * There is a performance p
+ */
+- (NSArray *)arrayWithoutProblemLocations:(NSArray *)locations {
+    NSArray *problemLocations = @[
+                                 @"Lake Tahoe, CA, United States",
+                                 @"Lake Tahoe, NV, United States"
+                                 ];
+    // Create the predicate, which says the value is NOT IN the problem location array.
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", problemLocations];
+    
+    return [locations filteredArrayUsingPredicate:predicate];
+}
+
 - (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
@@ -688,7 +705,15 @@ CLCloudinary *cloudinary;
 
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
-            NSArray *response = (NSArray *)responseObject;
+            NSArray *responseArray = (NSArray *)responseObject;
+            
+            /*
+             * THIS IS A HACK
+             * Matt Schoch 9/8/2016
+             * We shouldn't be filtering this result list at all, but we're manually removing stuff (i.e. Lake Tahoe) that doesn't have a valid City/State.
+             * When Location API gets switched, remove this arrayWithoutProblemLocations call.
+             */
+            NSArray *response = [self arrayWithoutProblemLocations:responseArray];
             return completionBlock(response, nil);
         }
         return completionBlock(nil, nil);
