@@ -670,6 +670,16 @@
                              
                          }
                          
+                         // Ensure we dont have nulls..
+                         if (!self.trip.city) {
+                             NSArray *searchedAddress = [address componentsSeparatedByString:@","];
+                             self.trip.city = [searchedAddress objectAtIndex:0];
+                         }
+                         if (!self.trip.state) {
+                             NSArray *searchedAddress = [address componentsSeparatedByString:@","];
+                             self.trip.state = [searchedAddress objectAtIndex:1];
+                         }
+                         
                      }
                      [self parseTrip];
                      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -750,7 +760,7 @@
 // This is mainly so we know if we need to update the Activity models with a new city or not.
 - (BOOL)setTripCityName:(NSString *)cityName
 {
-    if (![self.trip.city isEqualToString:cityName]) {
+    if (cityName && ![self.trip.city isEqualToString:cityName]) {
         self.trip.city = cityName;
         _needsCityUpdate = YES;
     }
