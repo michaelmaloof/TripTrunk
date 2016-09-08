@@ -69,7 +69,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>25</string>
 	<key>FacebookAppID</key>
 	<string>339286769601593</string>
 	<key>FacebookDisplayName</key>
@@ -142,6 +142,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need your permission to access your photos so that you are able to upload to your trunks on TripTrunk!</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-ExtraBold.otf</string>
@@ -209,7 +211,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need your permission to access your photos so that you are able to upload to your trunks on TripTrunk!</string>
 </dict>
 </plist>
