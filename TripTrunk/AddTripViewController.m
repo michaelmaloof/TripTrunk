@@ -670,7 +670,15 @@
                              
                          }
                          
-                         // Ensure we dont have nulls..
+                         /**
+                          Matt Schoch - 9/8/2016
+                          THIS IS A HACK
+                          sometimes the place we search for  (i.e. Lake Tahoe, CA) isn't a real city, so Apple's placemark doesn't have a city/state for it.
+                          In that case, we get a null, null location. 
+                          Here we are checking for those nulls and just forcing the city/state to be whatever value was searched for.
+                          
+                          This should be removed when we no longer use geobytes+apple for finding addresses.
+                          */
                          if (!self.trip.city) {
                              NSArray *searchedAddress = [address componentsSeparatedByString:@","];
                              self.trip.city = [searchedAddress objectAtIndex:0];
