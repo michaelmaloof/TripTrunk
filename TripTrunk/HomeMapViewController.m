@@ -886,6 +886,8 @@ list of trips the user hasn't seen since last being in the app
         //        trunkView.state = self.stateNameFromMapPin;
         trunkView.location = self.location;
         trunkView.user = self.user;
+        if(!self.friends)
+            trunkView.trips = self.trips;
         self.cityNameFromMapPin = nil;
     }
 }

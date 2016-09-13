@@ -64,7 +64,15 @@
     self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
                                                      selector:@selector(rotateColors) userInfo:nil repeats:YES];
     [self handleVisitedTrunks];
-    [self beginLoadingTrunks];
+    if(self.trips){
+        for(Trip *trip in self.trips){
+            if([trip.city isEqualToString:self.city])
+                [self.parseLocations addObject:trip];
+        }
+        [self reloadTable];
+    }else{
+        [self beginLoadingTrunks];
+    }
     [self removeTextFromBackButton];
 }
 
