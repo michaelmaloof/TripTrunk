@@ -115,6 +115,7 @@
 		C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D0E1B04FC2200CABBC9 /* AFURLSessionManager.m */; };
 		C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */; };
 		C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C910B1931B66B97700788BE0 /* ActivityListViewController.m */; };
+		C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C93913261D89D8DE00BB7251 /* UploadOperation.m */; };
 		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
@@ -349,6 +350,8 @@
 		C90C3D1B1B053F4B00CABBC9 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
 		C910B1921B66B97700788BE0 /* ActivityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityListViewController.h; sourceTree = "<group>"; };
 		C910B1931B66B97700788BE0 /* ActivityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityListViewController.m; sourceTree = "<group>"; };
+		C93913251D89D8DE00BB7251 /* UploadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadOperation.h; sourceTree = "<group>"; };
+		C93913261D89D8DE00BB7251 /* UploadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadOperation.m; sourceTree = "<group>"; };
 		C9525A331B251FC100185713 /* libCloudinary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCloudinary.a; sourceTree = "<group>"; };
 		C9525A3C1B25218800185713 /* TTUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUtility.h; sourceTree = "<group>"; };
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
@@ -635,6 +638,8 @@
 				C9C7299F1B0248D900BA68D2 /* SocialUtility.m */,
 				C9525A3C1B25218800185713 /* TTUtility.h */,
 				C9525A3D1B25218800185713 /* TTUtility.m */,
+				C93913251D89D8DE00BB7251 /* UploadOperation.h */,
+				C93913261D89D8DE00BB7251 /* UploadOperation.m */,
 				C9F0D6691B73D15900957F59 /* TTCache.h */,
 				C9F0D66A1B73D15900957F59 /* TTCache.m */,
 				C9996DD31B45CB2C00326A51 /* ParseErrorHandlingController.h */,
@@ -1076,6 +1081,7 @@
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
+				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,

@@ -18,6 +18,8 @@
 #import <CoreText/CoreText.h>
 #import "TTHashtagMentionColorization.h"
 
+#import "UploadOperation.h"
+
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
 static TTTTimeIntervalFormatter *timeFormatter;
@@ -183,9 +185,7 @@ CLCloudinary *cloudinary;
         [progressView incrementTaskCount];
     }
     
-    NSBlockOperation *operation = [NSBlockOperation new];
-    
-    [operation addExecutionBlock:^{
+    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
         CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
 
         // prepare for a background task
@@ -201,7 +201,7 @@ CLCloudinary *cloudinary;
           withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
               if (successResult) {
                   NSString* publicId = [successResult valueForKey:@"public_id"];
-                  NSLog(@"Block upload success. Public ID=%@, Full result=%@", publicId, successResult);
+                  NSLog(@"Block upload success. Public ID=%@", publicId);
                   NSString* url = [successResult valueForKey:@"url"];
                   photo.imageUrl = url;
                   PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -234,13 +234,17 @@ CLCloudinary *cloudinary;
                           if (photo.caption && ![photo.caption isEqualToString:@""]) {
                               [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                   if(error){
+                                      queueCompletionHandler();
                                       completionBlock(NO, nil, nil, nil);
                                       [ParseErrorHandlingController handleError:error];
                                   }else{
+                                      queueCompletionHandler();
                                       completionBlock(YES, commentObject, url, nil);
                                   }
                               }];
-                          }else{
+                          }
+                          else {
+                              queueCompletionHandler();
                               completionBlock(YES, nil, url, nil);
                           }
                           // post the notification so that the TrunkViewController can know to reload the data
@@ -253,13 +257,13 @@ CLCloudinary *cloudinary;
                   NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
                   [[UIApplication sharedApplication] endBackgroundTask:bgTask];
                   bgTask = UIBackgroundTaskInvalid;
+                  queueCompletionHandler();
               }
-          } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
-          }];
+          } andProgress:nil];
     }];
+    // Add the upload operation to the Queue
+    [operationQueue addOperation: operation];
     
-    [operationQueue addOperation:operation];
-
 }
 
 - (void)addToQueue:(NSBlockOperation *)operation;
