@@ -274,7 +274,7 @@ UIView *topView;
     
 }
 
-- (void)submitButtonPressed {    
+- (void)submitButtonPressed {
     // Let the delegate handle the submit button press
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentSubmitButtonPressedWithComment:)]) {
         [self.delegate commentSubmitButtonPressedWithComment:[self separateMentions:self.commentField.text]];
@@ -282,6 +282,8 @@ UIView *topView;
     self.commentField.text = @"";
     // hide the keyboard
     [self endEditing:YES];
+    //fixes the keyboard reappearing but looks glitchy, I'm not sure what is making commentField first responder
+    [self.commentField resignFirstResponder];
 
 }
 
