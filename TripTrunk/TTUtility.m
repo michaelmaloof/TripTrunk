@@ -244,6 +244,8 @@ CLCloudinary *cloudinary;
                               }];
                           }
                           else {
+                              // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+                              // completionBlock tells the method that called this uploadPhoto that it's finished successfully.
                               queueCompletionHandler();
                               completionBlock(YES, nil, url, nil);
                           }
