@@ -43,8 +43,6 @@
 @property (strong, nonatomic) NSMutableArray *facebookPhotos;
 
 //############################################# MENTIONS ##################################################
-//@property (weak, nonatomic) IBOutlet UITextView *caption;
-//@property (weak, nonatomic) IBOutlet TTTAttributedLabel *captionLabel;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTSuggestionTableViewController *autocompletePopover;
 @property (strong, nonatomic) NSString *previousComment;
@@ -158,55 +156,14 @@
 }
 
 - (void)selectPhotosButtonPressed{
-    
-    // request authorization status
-//    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            // Navigation Bar apperance
-//            UINavigationBar *navBar = [UINavigationBar appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
-//            
-//            // tint color
-//            navBar.tintColor = [TTColor tripTrunkBlue];
-//            
-//            //Button attributes
-//            UIBarItem *buttons = [UIBarButtonItem appearanceWhenContainedIn:[CTAssetsPickerController class], nil];
-//            NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
-//            [buttons setTitleTextAttributes:attributes forState:UIControlStateNormal];
-//            
-//            // init picker
-//            CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
-//            
-//            // set delegate
-//            picker.delegate = self;
-//            
-//            // present picker
-//            [self presentViewController:picker animated:YES completion:nil];
-//        });
-//    }];
-    
-    //remove this if statement!!!! fix the uploader
-    if(self.photos.count<10){
     DLFPhotosPickerViewController *photosPicker = [[DLFPhotosPickerViewController alloc] init];
     [photosPicker setPhotosPickerDelegate:self];
     [photosPicker setMultipleSelections:YES];
     [self presentViewController:photosPicker animated:YES completion:nil];
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!",@"Whoops!")
-                                                        message:NSLocalizedString(@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.",@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-    }
     
 }
 
 #pragma mark - DLFPhotosPickerViewDelegate
-//- (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhoto:(PHAsset *)photo {
-//    [photosPicker dismissViewControllerAnimated:YES completion:^{
-//        [self.tripCollectionView reloadData];
-//    }];
-//}
 
 - (void)photosPickerDidCancel:(DLFPhotosPickerViewController *)photosPicker {
     [photosPicker dismissViewControllerAnimated:YES completion:nil];
@@ -214,20 +171,12 @@
 
 - (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhotos:(NSArray *)photos {
     NSLog(@"selected %d photos", (int)photos.count);
-        for (PHAsset *asset in photos){
-            if(self.photos.count >=10){ ///REMOVE THIS HACK
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!",@"Whoops!")
-                                                                message:NSLocalizedString(@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.",@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.")
-                                                               delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                                      otherButtonTitles:nil, nil];
-                [alert show];
-                break;
-            }
-            Photo *photo = [[Photo alloc] init];
-            photo.imageAsset = asset;
-            [self.photos addObject:photo];
-        }
+    for (PHAsset *asset in photos){
+        Photo *photo = [[Photo alloc] init];
+        photo.imageAsset = asset;
+        [self.photos addObject:photo];
+    }
+
     [photosPicker dismissViewControllerAnimated:YES completion:^{
         [self.tripCollectionView reloadData];
     }];
@@ -320,9 +269,13 @@
     }];
 }
 
--(void)savePhotosToParse{
+- (void)savePhotosToParse{
     
     __block int uploadingFailCount = 0;
+    
+    
+    // TODO: pass the whole array into the utility
+    // Then recursively upload each photo so it's one at a time instead of all in a row.
     
     for (Photo *photo in self.photos)
     {
@@ -364,6 +317,7 @@
                                                                 uploadingFailCount++;
                                                             }
                                                         }];
+                                                        
                                                     }];
     }
     
@@ -443,26 +397,6 @@
         }];
     }];
 }
-
-
-//-(void)uploadPhotosToFacebook{
-//    //FIXME: Don't forget to handle the privacy issue
-//    NSDictionary *params = @{
-//                             @"url": self.facebookPhotos[0],
-//                             };
-//    /* make the API call */
-//    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-//                                  initWithGraphPath:@"/me/photos"
-//                                  parameters:params
-//                                  HTTPMethod:@"POST"];
-//    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
-//                                          id result,
-//                                          NSError *error) {
-//        if(error)
-//            NSLog(@"Error uploading to facebook: %@",error);
-//        else NSLog(@"Facebook upload result: %@",result);
-//    }];
-//}
 
 #pragma mark - Keyboard Events
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

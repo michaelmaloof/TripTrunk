@@ -26,6 +26,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
     MBProgressHUD *HUD;
     MSFloatingProgressView *progressView;
     TTNoInternetView *internetView;
+    NSOperationQueue *operationQueue;
 }
 
 @end
@@ -54,6 +55,10 @@ CLCloudinary *cloudinary;
         
         // Initialize the base cloudinary object
         cloudinary = [[CLCloudinary alloc] initWithUrl:CLOUDINARY_URL];
+        
+        // Initialize the Operation Queue
+        operationQueue = [NSOperationQueue new];
+        [operationQueue setMaxConcurrentOperationCount:2];
         
         if (!timeFormatter) {
             timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
@@ -167,7 +172,7 @@ CLCloudinary *cloudinary;
 
 -(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSString* url, NSError *error))completionBlock
 {
-    CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
     // Initialize the progressView if it isn't initialized already
     if (!progressView) {
         progressView = [[MSFloatingProgressView alloc] init];
@@ -177,75 +182,90 @@ CLCloudinary *cloudinary;
     else {
         [progressView incrementTaskCount];
     }
-    // prepare for a background task
-    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        //TODO: Locally cache photos here
-        // This block executes if we're notified that iOS will terminate the app because we're out of background time.
-        // Ideally, we cache the photos here, and then when the app starts again we resume uploading.
-        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-    [uploader upload:imageData
-             options:@{@"type":@"upload"}
-      withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
-          if (successResult) {
-              NSString* publicId = [successResult valueForKey:@"public_id"];
-              NSLog(@"Block upload success. Public ID=%@, Full result=%@", publicId, successResult);
-              NSString* url = [successResult valueForKey:@"url"];
-              photo.imageUrl = url;
-              PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
-              // Friends of the user get Read Access
-              NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
-              [photoACL setReadAccess:YES forRoleWithName:roleName];
-              // Also add ReadAccess for the TRUNK MEMBER role so any members of the trunk get read access
-              NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
-              [photoACL setReadAccess:YES forRoleWithName:trunkRole];
-              // Only the user and trunk creator gets Write Access
-              [photoACL setWriteAccess:YES forUser:photo.user];
-              [photoACL setWriteAccess:YES forUser:photo.trip.creator];
-              // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
-              if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
-                  [photoACL setPublicReadAccess:NO];
-              }
-              else {
-                  [photoACL setPublicReadAccess:YES];
-              }
-              // Set the ACL.
-              photo.ACL = photoACL;
-              [photo saveEventually:^(BOOL succeeded, NSError *error) {
-                  if(error) {
-                      [ParseErrorHandlingController handleError:error];
+    
+    NSBlockOperation *operation = [NSBlockOperation new];
+    
+    [operation addExecutionBlock:^{
+        CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+
+        // prepare for a background task
+        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            //TODO: Locally cache photos here
+            // This block executes if we're notified that iOS will terminate the app because we're out of background time.
+            // Ideally, we cache the photos here, and then when the app starts again we resume uploading.
+            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+        [uploader upload:imageData
+                 options:@{@"type":@"upload"}
+          withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+              if (successResult) {
+                  NSString* publicId = [successResult valueForKey:@"public_id"];
+                  NSLog(@"Block upload success. Public ID=%@, Full result=%@", publicId, successResult);
+                  NSString* url = [successResult valueForKey:@"url"];
+                  photo.imageUrl = url;
+                  PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
+                  // Friends of the user get Read Access
+                  NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
+                  [photoACL setReadAccess:YES forRoleWithName:roleName];
+                  // Also add ReadAccess for the TRUNK MEMBER role so any members of the trunk get read access
+                  NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
+                  [photoACL setReadAccess:YES forRoleWithName:trunkRole];
+                  // Only the user and trunk creator gets Write Access
+                  [photoACL setWriteAccess:YES forUser:photo.user];
+                  [photoACL setWriteAccess:YES forUser:photo.trip.creator];
+                  // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
+                  if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
+                      [photoACL setPublicReadAccess:NO];
                   }
                   else {
-                      // Add photo to the cache
-                      [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-                      // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
-                      if (photo.caption && ![photo.caption isEqualToString:@""]) {
-                          [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                              if(error){
-                                  completionBlock(NO, nil, nil, nil);
-                                  [ParseErrorHandlingController handleError:error];
-                              }else{
-                                  completionBlock(YES, commentObject, url, nil);
-                              }
-                          }];
-                      }else{
-                          completionBlock(YES, nil, url, nil);
-                      }
-                      // post the notification so that the TrunkViewController can know to reload the data
-                      [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-                      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                      bgTask = UIBackgroundTaskInvalid;
+                      [photoACL setPublicReadAccess:YES];
                   }
-              }];
-          } else {
-              NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
-              [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-              bgTask = UIBackgroundTaskInvalid;
-          }
-      } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
-      }];
+                  // Set the ACL.
+                  photo.ACL = photoACL;
+                  [photo saveEventually:^(BOOL succeeded, NSError *error) {
+                      if(error) {
+                          [ParseErrorHandlingController handleError:error];
+                      }
+                      else {
+                          // Add photo to the cache
+                          [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                          // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
+                          if (photo.caption && ![photo.caption isEqualToString:@""]) {
+                              [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                                  if(error){
+                                      completionBlock(NO, nil, nil, nil);
+                                      [ParseErrorHandlingController handleError:error];
+                                  }else{
+                                      completionBlock(YES, commentObject, url, nil);
+                                  }
+                              }];
+                          }else{
+                              completionBlock(YES, nil, url, nil);
+                          }
+                          // post the notification so that the TrunkViewController can know to reload the data
+                          [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                          [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                          bgTask = UIBackgroundTaskInvalid;
+                      }
+                  }];
+              } else {
+                  NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+                  [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                  bgTask = UIBackgroundTaskInvalid;
+              }
+          } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+          }];
+    }];
+    
+    [operationQueue addOperation:operation];
 
+}
+
+- (void)addToQueue:(NSBlockOperation *)operation;
+{
+    NSLog(@"Adding operation to Queue");
+    [operationQueue addOperation:operation];
 }
 
 - (void)downloadPhoto:(Photo *)photo;
@@ -471,7 +491,7 @@ CLCloudinary *cloudinary;
 
 - (void)uploaderSuccess:(NSDictionary*)result context:(id)context {
     NSString* publicId = [result valueForKey:@"public_id"];
-    NSLog(@"Upload success. Public ID=%@, Full result=%@", publicId, result);
+    NSLog(@"Upload success. Public ID=%@", publicId);
 
     // Mark the task as completed in the progressview -- if all uploads are finished, it will remove from the screen
     if ([progressView taskCompleted]) {

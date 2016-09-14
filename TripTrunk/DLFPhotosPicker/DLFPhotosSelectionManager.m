@@ -41,8 +41,6 @@
 
 @property (nonatomic, strong) NSMutableArray *items;
 
-@property BOOL stopHighlighting;
-
 @end
 
 @implementation DLFPhotosSelectionManager
@@ -90,31 +88,13 @@
     [self.selectedPhotosView setHidden:NO];
 }
 
-- (BOOL)stopHighlightingCell{
-    return self.stopHighlighting;
-}
-
 - (void)addSelectedAsset:(PHAsset *)asset {
-    //temporary limit of 10
-        [self.items addObject:asset];
-        [self.selectedPhotosView addAsset:asset];
-        [self.selectedPhotosView setHidden:NO];
-        self.stopHighlighting = NO; //remove this crap!
-    
-    if(self.items.count > 10){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops!",@"Whoops!")
-                                                        message:NSLocalizedString(@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.",@"Unfortunately, at this time you can only upload 10 photos at a time. However, after these upload, you can upload more. We apologize for the inconvenience.")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                              otherButtonTitles:nil, nil];
-        [alert show];
-        [self removeAsset:asset];
-        self.stopHighlighting = YES;
-    }
+    [self.items addObject:asset];
+    [self.selectedPhotosView addAsset:asset];
+    [self.selectedPhotosView setHidden:NO];
 }
 
 - (void)removeAsset:(PHAsset *)asset {
-    self.stopHighlighting = NO; //remove this crap!
     [self.items removeObject:asset];
     [self.selectedPhotosView removeAsset:asset];
     if (self.items.count == 0) {

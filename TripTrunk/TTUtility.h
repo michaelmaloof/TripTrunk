@@ -145,9 +145,16 @@
  */
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason;
 
--(void)noInternetConnection;
+- (void)noInternetConnection;
 
--(void)internetConnectionFound;
+- (void)internetConnectionFound;
+
+/**
+ * Adds an Operation to the utilities operation queue
+ * Primarily should be used for uploading photos
+ */
+- (void)addToQueue:(NSBlockOperation *)operation;
+
 
 @end
 
