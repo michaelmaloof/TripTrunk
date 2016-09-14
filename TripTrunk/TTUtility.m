@@ -266,12 +266,6 @@ CLCloudinary *cloudinary;
     
 }
 
-- (void)addToQueue:(NSBlockOperation *)operation;
-{
-    NSLog(@"Adding operation to Queue");
-    [operationQueue addOperation:operation];
-}
-
 - (void)downloadPhoto:(Photo *)photo;
 {
     // Show HUD spinner
