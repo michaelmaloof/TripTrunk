@@ -151,7 +151,8 @@
                 }
             }
             
-            [self.tableView reloadData];
+            //Moved to appear
+            //[self.tableView reloadData];
             
         } else {
             NSLog(@"Error loading photo Activities: %@", error);
@@ -557,7 +558,8 @@
             
             [self.tempComments addObject:comment];
             
-            [self.tableView reloadData];
+            //FIXME: Why is this here?
+            //[self.tableView reloadData];
 
             //update comment count here
             
