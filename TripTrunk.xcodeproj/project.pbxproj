@@ -361,6 +361,7 @@
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		C976378F1D8B2DD7000E8C37 /* TripTrunk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TripTrunk.entitlements; sourceTree = "<group>"; };
 		C977065A1B9754B000FB11B2 /* ActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityTableViewCell.h; sourceTree = "<group>"; };
 		C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityTableViewCell.m; sourceTree = "<group>"; };
 		C977065C1B9754B000FB11B2 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
@@ -631,6 +632,7 @@
 		224F3F8E1AE1D35E003A1DEB /* TripTrunk */ = {
 			isa = PBXGroup;
 			children = (
+				C976378F1D8B2DD7000E8C37 /* TripTrunk.entitlements */,
 				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
@@ -909,6 +911,9 @@
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -1258,8 +1263,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TripTrunk/TripTrunk.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 8WCRSCZ8NE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1283,7 +1290,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "99a34635-2c24-4cc0-9dfa-ab0db5813419";
+				PROVISIONING_PROFILE_SPECIFIER = "XC: com.triptrunk.TripTrunk";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1295,8 +1303,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TripTrunk/TripTrunk.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: TripTrunk Inc (8WCRSCZ8NE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: TripTrunk Inc (8WCRSCZ8NE)";
+				DEVELOPMENT_TEAM = 8WCRSCZ8NE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1320,7 +1330,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "99a34635-2c24-4cc0-9dfa-ab0db5813419";
+				PROVISIONING_PROFILE_SPECIFIER = "XC: com.triptrunk.TripTrunk";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
