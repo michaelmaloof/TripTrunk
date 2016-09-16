@@ -148,6 +148,7 @@ list of trips the user hasn't seen since last being in the app
     [self setVisitedTrunks]; //FIXME this should be a class method handling this
     [self designNavBar];
     [self implementUserIntoMap];
+
 }
 
 /**
@@ -462,6 +463,7 @@ list of trips the user hasn't seen since last being in the app
             }
         }
     }];
+
 }
 
 -(void)sortIntoHotOrNot{

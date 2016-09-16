@@ -44,8 +44,11 @@
  */
 - (NSString *)profileImageUrl:(NSString *)urlString;
 
-
-
+/**
+ *  Handles uploading a photo and publishing to facebook if needed. This method internally uses uploadPhotoToCloudinary:withImageData:block
+ *
+ */
+-(void)uploadPhoto:(Photo *)photo toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 
 /**
  *  Uploads a Photo to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse
@@ -54,7 +57,7 @@
  *  @param photo     TripTrunk parse Photo object
  *  @param imageData NSData of a JPEG image (works with PNG as well, but that takes up more space, so we recommend JPEG)
  */
-- (void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL succeeded, PFObject *commentObject, NSString* url, NSError *error))completionBlock;
+-(void)uploadPhotoToCloudinary:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, NSError *error, Photo *savedPhoto))completionBlock;
 
 /**
  *  Save the given photo to Camera Roll

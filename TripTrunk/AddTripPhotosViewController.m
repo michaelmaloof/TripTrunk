@@ -26,6 +26,7 @@
 #import "PhotoViewController.h"
 #import "DLFPhotosPickerViewController.h"
 #import "DLFPhotoCell.h"
+#import "SocialUtility.h"
 
 #define OVERLAY_VIEW_TAG 121212121
 
@@ -271,9 +272,6 @@
 
 - (void)savePhotosToParse{
     
-    __block int uploadingFailCount = 0;
-    
-    
     // TODO: pass the whole array into the utility
     // Then recursively upload each photo so it's one at a time instead of all in a row.
     
@@ -288,44 +286,21 @@
         photo.tripName = self.trip.name;
         photo.city = self.trip.city;
         
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        [options setVersion:PHImageRequestOptionsVersionCurrent];
-        [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
-        [options setNetworkAccessAllowed:YES];
-        
-        [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
-                                                    resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
-                                                        // Calls the method to actually upload the image and save the Photo to parse
-                                                        [[TTUtility sharedInstance] uploadPhoto:photo withImageData:imageData block:^(BOOL succeeded, PFObject *commentObject, NSString* url, NSError *error) {
-                                                            if(!error){
-                                                                NSString *photoComment = @"";
-                                                                if(commentObject){
-                                                                    [self updateMentionsInDatabase:commentObject];
-                                                                    photoComment = commentObject[@"content"];
-                                                                }
-                                                                
-                                                                NSDictionary *photoDetails = @{@"url":url,
-                                                                                               @"caption":photoComment};
-                                                                [self.facebookPhotos addObject:photoDetails];
-                                                                if((self.photos.count == self.facebookPhotos.count) && self.publishToFacebook){
-                                                                    TrunkViewController *trunk = [[TrunkViewController alloc] init];
-                                                                    [trunk initFacebookUpload:self.facebookPhotos];
-                                                                }
-                                                            }
-                                                            else{
-                                                                NSLog(@"Error: %@",error);
-                                                                uploadingFailCount++;
-                                                            }
-                                                        }];
-                                                        
-                                                    }];
+        // Upload the photo - this method will also handle publish to facebook if needed
+        [[TTUtility sharedInstance] uploadPhoto:photo toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
+            // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
+            if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
+                // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
+                [SocialUtility addComment:savedPhoto.caption forPhoto:savedPhoto isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                    if (!error && commentObject) {
+                        [self updateMentionsInDatabase:commentObject];
+                    }
+                }];
+            }
+        }];
     }
     
-    if (uploadingFailCount > 0) {
-        [self updateTripDetailForUploadingError:uploadingFailCount];
-    }
-    
-    
+    // NOTE: This stuff will be executed BEFORE the photo uploads finish because of they async nature of uploading.
     
     /* THIS IS A HACK
      * Because of issues grouping photosAdded notifications (Matt added 5 photos, instead of Matt added a photo, 5 times)

@@ -43,6 +43,17 @@
 
 @implementation AppDelegate
 
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = kPARSE_APP_ID;
+        configuration.clientKey = kPARSE_CLIENT_KEY;
+        configuration.server = kPARSE_SERVER_KEY;
+    }]];
+    
+    return YES;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -54,11 +65,6 @@
 }
 
 -(void)launchWithoutQuickAction:(NSDictionary*)launchOptions{
-    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
-        configuration.applicationId = kPARSE_APP_ID;
-        configuration.clientKey = kPARSE_CLIENT_KEY;
-        configuration.server = kPARSE_SERVER_KEY;
-    }]];
     
     [PFUser enableRevocableSessionInBackground];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
@@ -340,11 +346,6 @@
     NSString *shortcutTrunk = @"Trunk";
     NSString *shortcutRecent = @"Recent";
 
-    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
-        configuration.applicationId = kPARSE_APP_ID;
-        configuration.clientKey = kPARSE_CLIENT_KEY;
-        configuration.server = kPARSE_SERVER_KEY;
-    }]];
     [PFUser enableRevocableSessionInBackground];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     [PFImageView class];

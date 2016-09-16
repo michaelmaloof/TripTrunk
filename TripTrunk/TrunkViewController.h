@@ -14,5 +14,4 @@
 @interface TrunkViewController : TTBaseViewController
 @property Trip *trip;
 
--(void)initFacebookUpload:(NSArray*)facebookPhotos;
 @end

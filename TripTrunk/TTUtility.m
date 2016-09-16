@@ -17,6 +17,9 @@
 #import "SocialUtility.h"
 #import <CoreText/CoreText.h>
 #import "TTHashtagMentionColorization.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 
 #import "UploadOperation.h"
 
@@ -171,8 +174,7 @@ CLCloudinary *cloudinary;
     }
 }
 
-
--(void)uploadPhoto:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, PFObject *commentObject, NSString* url, NSError *error))completionBlock
+-(void)uploadPhoto:(Photo *)photo toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 {
     
     // Initialize the progressView if it isn't initialized already
@@ -185,86 +187,114 @@ CLCloudinary *cloudinary;
         [progressView incrementTaskCount];
     }
     
-    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
-        CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    /*
+    // First, locally save the photo in case it doesn't complete uploading.
+    [photo pin];
+     
+     TODO: Pinning doesn't work.
+     First, all PFCachePolicy's in queries need to be removed.
+     Then, the actual imageData needs to be pinned, with the Photo object. But, just pinning the Photo object below doesn't include the imageAsset.
+    */
+    
+    // We need to get the actual Image Data for the Photo's imageAsset.
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    [options setVersion:PHImageRequestOptionsVersionCurrent];
+    [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
+    [options setNetworkAccessAllowed:YES];
+    
+    [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
+                                                resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+                                                    
+                                                    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
 
-        // prepare for a background task
-        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-            //TODO: Locally cache photos here
-            // This block executes if we're notified that iOS will terminate the app because we're out of background time.
-            // Ideally, we cache the photos here, and then when the app starts again we resume uploading.
-            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-            bgTask = UIBackgroundTaskInvalid;
-        }];
-        [uploader upload:imageData
-                 options:@{@"type":@"upload"}
-          withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
-              if (successResult) {
-                  NSString* publicId = [successResult valueForKey:@"public_id"];
-                  NSLog(@"Block upload success. Public ID=%@", publicId);
-                  NSString* url = [successResult valueForKey:@"url"];
-                  photo.imageUrl = url;
-                  PFACL *photoACL = [PFACL ACLWithUser:[PFUser currentUser]];
-                  // Friends of the user get Read Access
-                  NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
-                  [photoACL setReadAccess:YES forRoleWithName:roleName];
-                  // Also add ReadAccess for the TRUNK MEMBER role so any members of the trunk get read access
-                  NSString *trunkRole = [NSString stringWithFormat:@"trunkMembersOf_%@", photo.trip.objectId];
-                  [photoACL setReadAccess:YES forRoleWithName:trunkRole];
-                  // Only the user and trunk creator gets Write Access
-                  [photoACL setWriteAccess:YES forUser:photo.user];
-                  [photoACL setWriteAccess:YES forUser:photo.trip.creator];
-                  // If it's a private user, then don't give PublicReadAccess for this photo - only Members and Followers can see it.
-                  if ([[[PFUser currentUser] objectForKey:@"private"] boolValue]) {
-                      [photoACL setPublicReadAccess:NO];
+                                                        [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
+                                                            if (succeeded) {
+                                                                
+                                                                // Add photo to the local cache
+                                                                [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                                                                
+                                                                // post the notification so that the TrunkViewController can know to reload the data
+                                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                                                                
+                                                                // Photo saved successfully, so we can unpin it from the local datastore.
+                                                                // TODO: Uncomment this once pinning is actually implemented.
+                                                                //  [photo unpin];
+                                                                
+                                                                // Upload Photo to Facebook also if needed
+                                                                if (publishToFacebook) {
+                                                                    // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+                                                                    [self initFacebookUpload:savedPhoto];
+                                                                }
+                                                                
+                                                                // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+                                                                queueCompletionHandler();
+                                                                
+                                                                // Tell the calling-method this whole upload is complete
+                                                                completionBlock(savedPhoto);
+                                                            }
+                                                            else {
+                                                                // Error uploading photo
+                                                                NSLog(@"Error uploading photo...");
+                                                                completionBlock(nil);
+                                                            }
+                                                        }];
+                                                    }];
+                                                    
+                                                    // Add the upload operation to the OperationQueue
+                                                    [operationQueue addOperation: operation];
+                                                    
+                                                }];
+}
+
+
+-(void)uploadPhotoToCloudinary:(Photo *)photo withImageData:(NSData *)imageData block:(void (^)(BOOL success, NSError *error, Photo *savedPhoto))completionBlock
+{
+    
+    CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+    // prepare for a background task
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        //TODO: Locally cache photos here
+        // This block executes if we're notified that iOS will terminate the app because we're out of background time.
+        // Ideally, we cache the photos here, and then when the app starts again we resume uploading.
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    [uploader upload:imageData
+             options:@{@"type":@"upload"}
+      withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+          if (successResult) {
+              // Photo Uploaded Successfully to Cloudinary
+              NSLog(@"Block upload success. Public ID=%@", [successResult valueForKey:@"public_id"]);
+              
+              photo.imageUrl = [successResult valueForKey:@"url"];
+              
+              // Save the photo to the Database
+              [photo saveEventually:^(BOOL succeeded, NSError *error) {
+                  if(error) {
+                      [ParseErrorHandlingController handleError:error];
+                      completionBlock(nil, error, photo);
                   }
                   else {
-                      [photoACL setPublicReadAccess:YES];
+                      
+                      // We can end our background task now since the photo is uploaded.
+                      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                      bgTask = UIBackgroundTaskInvalid;
+                      
+                      // Tell the completion handler that it was successful.
+                      completionBlock(YES, nil, photo);
                   }
-                  // Set the ACL.
-                  photo.ACL = photoACL;
-                  [photo saveEventually:^(BOOL succeeded, NSError *error) {
-                      if(error) {
-                          [ParseErrorHandlingController handleError:error];
-                      }
-                      else {
-                          // Add photo to the cache
-                          [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-                          // If the photo had a caption, add the caption as a comment so it'll show up as the first comment, like Instagram does it.
-                          if (photo.caption && ![photo.caption isEqualToString:@""]) {
-                              [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                                  if(error){
-                                      queueCompletionHandler();
-                                      completionBlock(NO, nil, nil, nil);
-                                      [ParseErrorHandlingController handleError:error];
-                                  }else{
-                                      queueCompletionHandler();
-                                      completionBlock(YES, commentObject, url, nil);
-                                  }
-                              }];
-                          }
-                          else {
-                              // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
-                              // completionBlock tells the method that called this uploadPhoto that it's finished successfully.
-                              queueCompletionHandler();
-                              completionBlock(YES, nil, url, nil);
-                          }
-                          // post the notification so that the TrunkViewController can know to reload the data
-                          [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-                          [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                          bgTask = UIBackgroundTaskInvalid;
-                      }
-                  }];
-              } else {
-                  NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
-                  [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                  bgTask = UIBackgroundTaskInvalid;
-                  queueCompletionHandler();
-              }
-          } andProgress:nil];
-    }];
-    // Add the upload operation to the Queue
-    [operationQueue addOperation: operation];
+              }];
+          }
+          else {
+              // Error Uploading Photo
+              NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+              [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+              bgTask = UIBackgroundTaskInvalid;
+              completionBlock(nil, [NSError new], photo); // TODO: Add a descriptive error
+          }
+      } andProgress:nil];
     
 }
 
@@ -796,7 +826,46 @@ CLCloudinary *cloudinary;
 }
 
 
+#pragma mark - Facebook Photo Upload
 
+- (void)initFacebookUpload:(Photo *)photo {
+    NSDictionary *photoDetails = @{
+                                   @"url":photo.imageUrl,
+                                   @"caption": photo.caption ? photo.caption : @""
+                                   };
+    if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
+        [self uploadPhotosToFacebook:photoDetails];
+    } else {
+        [PFFacebookUtils logInInBackgroundWithPublishPermissions:@[@"publish_actions"] block:^(PFUser * _Nullable user, NSError * _Nullable error) {
+            if (!error) {
+                if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
+                    [self uploadPhotosToFacebook:photoDetails];
+                }else{
+                    NSLog(@"User did not give permission to post");
+                }
+            } else {
+                // An error occurred. See: https://developers.facebook.com/docs/ios/errors
+                NSLog(@"Error : Requesting \"publish_actions\" permission failed with error : %@", error);
+            }
+        }];
+    }
+}
+
+- (void)uploadPhotosToFacebook:(NSDictionary *)photoDetails {
+    NSString *caption = photoDetails[@"caption"];
+    if([caption isEqualToString:@"Type Photo Caption Here"])
+        caption = @"";
+    
+    NSDictionary *params = @{@"url": photoDetails[@"url"],
+                             @"caption":caption};
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/photos" parameters:params HTTPMethod:@"POST"];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        if(error)
+            NSLog(@"Error uploading to facebook: %@",error);
+        else NSLog(@"Facebook upload result: %@",result);
+    }];
+}
 
 
 @end

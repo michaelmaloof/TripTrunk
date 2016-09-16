@@ -435,7 +435,7 @@
     [commentActivity setObject:comment forKey:@"content"];
     [commentActivity setObject:[NSNumber numberWithBool:isCaption] forKey:@"isCaption"];
     
-    // Permissions: commenter and photo owner can edit/delete comments.
+    // Permissions: commenter and photo owner can edit/delete comments.	
     PFACL *commentACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [commentACL setWriteAccess:YES forUser:photo.user];
     
