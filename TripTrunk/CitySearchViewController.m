@@ -162,11 +162,6 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // When there's no results, it returns %s
-    if (_locations.count == 1 && [[_locations objectAtIndex:0] isEqualToString:@"%s"]) {
-        return 0;
-    }
-
     return _locations.count;
 }
 
@@ -174,9 +169,9 @@
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"LocationCell"];
 
-    NSString *location = [_locations objectAtIndex:indexPath.row];
-    if (![location isEqualToString:@"%s"]) {
-        [cell.textLabel setText:location];
+    TTPlace *place = [_locations objectAtIndex:indexPath.row];
+    if (![place.name isEqualToString:@"%s"]) {
+        [cell.textLabel setText:place.name];
     }
     
     return cell;
@@ -187,7 +182,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *location = [_locations objectAtIndex:indexPath.row];
+    TTPlace *location = [_locations objectAtIndex:indexPath.row];
     
     if (location) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(citySearchDidSelectLocation:)]) {

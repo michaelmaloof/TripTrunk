@@ -307,11 +307,11 @@
 
 #pragma mark - CitySearchViewController Delegate
 
-- (void)citySearchDidSelectLocation:(NSString *)location {
+- (void)citySearchDidSelectLocation:(TTPlace *)location {
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
     // If it's a US city/state, we don't need to display the country, we'll assume United States.
-    [self.hometownTextField setText:[location stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+    [self.hometownTextField setText:[location.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
 }
 
 - (IBAction)addFacebook:(id)sender{

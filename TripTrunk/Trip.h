@@ -27,6 +27,7 @@
 @property double lat;
 @property double longitude;
 @property NSString *descriptionStory;
+@property NSString *placeID; // PlaceID is a Google ID for this Place
 
 
 

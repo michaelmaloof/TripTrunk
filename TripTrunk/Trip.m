@@ -24,6 +24,7 @@
 @dynamic longitude;
 @dynamic descriptionStory;
 @dynamic publicTripDetail;
+@dynamic placeID;
 
 +(NSString *)parseClassName
 {

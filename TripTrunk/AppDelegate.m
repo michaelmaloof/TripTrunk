@@ -22,6 +22,8 @@
 #import <AWSCore/AWSCore.h>
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
+@import GooglePlaces;
+#define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -60,7 +62,10 @@
     [self handleDatabaseAndConsoleLog];
     [self setNavbarAndTabbarColors];
     [self checkForShortCutItems:launchOptions];
-    [self handleFontOutput];    
+    [self handleFontOutput];
+    
+    // Initialize Google Places for the Location Search
+    [GMSPlacesClient provideAPIKey:kGOOGLE_API_KEY];
     return YES;
 }
 

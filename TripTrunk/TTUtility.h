@@ -14,7 +14,7 @@
 #import "Cloudinary.h"
 #import <Parse/Parse.h>
 #import "LoginViewController.h"
-
+#import "TTPlace.h"
 
 @interface TTUtility : NSObject <CLUploaderDelegate>
 
@@ -139,7 +139,7 @@
 
 - (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock;
 
-- (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock;
+- (void)locationDetailsForLocation:(TTPlace *)location block:(void (^)(TTPlace *ttPlace, NSError *error))completionBlock;
 
 /**
  *  Flags the photo as inappropriate

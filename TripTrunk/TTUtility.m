@@ -20,6 +20,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <GooglePlaces/GooglePlaces.h>
+#import "Underscore.h"
+#define _ Underscore
 
 #import "UploadOperation.h"
 
@@ -743,16 +746,15 @@ CLCloudinary *cloudinary;
     
     return [locations filteredArrayUsingPredicate:predicate];
 }
-
-- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
+- (void)locationsForSearchOLD:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
     NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-
+    
     
     AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
     [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
-
+    
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
             NSArray *responseArray = (NSArray *)responseObject;
@@ -767,7 +769,7 @@ CLCloudinary *cloudinary;
             return completionBlock(response, nil);
         }
         return completionBlock(nil, nil);
-
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error searching for location");
         return completionBlock(nil, error);
@@ -776,30 +778,87 @@ CLCloudinary *cloudinary;
     [request start];
 }
 
-- (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock {
+- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
+
+    GMSPlacesClient *placesClient = [GMSPlacesClient sharedClient];
+
+    GMSAutocompleteFilter *filter = [[GMSAutocompleteFilter alloc] init];
+    filter.type = kGMSPlacesAutocompleteTypeFilterCity;
     
-    NSString *urlString = [NSString stringWithFormat:@"http://getcitydetails.geobytes.com/GetCityDetails?fqcn=%@", str];
+    // Only search if we actually have something typed in.
+    if (str && ![str isEqualToString:@""]) {
+        [placesClient autocompleteQuery:str
+                                 bounds:nil
+                                 filter:filter
+                               callback:^(NSArray *results, NSError *error) {
+                                   if (error != nil) {
+                                       NSLog(@"Autocomplete error %@", [error localizedDescription]);
+                                       return completionBlock(nil, error);
+                                   }
+                                   
+                                   // Map the Google Places result into objects containing just the Location String and the PlaceId
+                                   NSArray *places = Underscore.arrayMap(results, ^TTPlace *(GMSAutocompletePrediction *place) {
+                                       NSLog(@"Result '%@', with placeID: '%@'", place.attributedFullText.string, place.placeID);
+                                       TTPlace *ttPlace = [TTPlace new];
+                                       ttPlace.name = place.attributedFullText.string;
+                                       ttPlace.placeID = place.placeID;
+                                       return ttPlace;
+                                   });
+                                   return completionBlock(places, nil);
+                               }];
+    }
+    else {
+        completionBlock(nil, nil);
+    }
     
-    NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+}
+
+- (void)locationDetailsForLocation:(TTPlace *)location block:(void (^)(TTPlace *ttPlace, NSError *error))completionBlock {
     
-    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
     
-    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
-    
-    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (responseObject) {
-            NSDictionary *response = (NSDictionary *)responseObject;
-            
-            return completionBlock(response, nil);
-        }
-        return completionBlock(nil, nil);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error searching for location");
-        return completionBlock(nil, error);
+    [[GMSPlacesClient sharedClient] lookUpPlaceID:location.placeID
+                                         callback:^(GMSPlace * _Nullable place, NSError * _Nullable error) {
+                                             if (error) {
+                                                 NSLog(@"Place Details error %@", [error localizedDescription]);
+                                                 return completionBlock(nil, error);
+                                             }
+                                             
+                                             if (place) {
+                                                 
+                                                 TTPlace *ttPlace = [TTPlace new];
+                                                 ttPlace.name = place.name;
+                                                 ttPlace.placeID = location.placeID;
+                                                 ttPlace.latitude = place.coordinate.latitude;
+                                                 ttPlace.longitude = place.coordinate.longitude;
+                                                
+                                                 
+                                                 for (NSObject *component in place.addressComponents) {
+                                                     if ([[component valueForKey:@"type"] isEqualToString:@"locality"]) {
+                                                         ttPlace.city = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"administrative_area_level_1"]) {
+                                                         ttPlace.state = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"country"]) {
+                                                         ttPlace.country = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"administrative_area_level_2"]) {
+                                                         ttPlace.admin2 = [component valueForKey:@"name"];
+                                                     }
+                                                 }
+                                                 // Just in case there's no Locality, use the adminArea2
+                                                 // Not sure if this is actually possible from Google, they may guarantee a locality..
+                                                 if (ttPlace.city == nil){
+                                                     ttPlace.city = ttPlace.admin2;
+                                                 }
+                                                 
+                                                 return completionBlock(ttPlace, nil);
+                                             }
+                                             else {
+                                                 NSLog(@"No place details for %@", location.placeID);
+                                                 return completionBlock(nil, nil);
+                                             }
     }];
-    
-    [request start];
 }
 
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason {

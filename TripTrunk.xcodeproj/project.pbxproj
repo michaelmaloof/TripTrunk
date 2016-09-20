@@ -121,6 +121,13 @@
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
+		C95702681D91B1DE009DE079 /* Strings in Resources */ = {isa = PBXBuildFile; fileRef = C957025C1D91B1DE009DE079 /* Strings */; };
+		C95702691D91B1DE009DE079 /* Times in Resources */ = {isa = PBXBuildFile; fileRef = C957025D1D91B1DE009DE079 /* Times */; };
+		C957026A1D91B1DE009DE079 /* Underscore.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702601D91B1DE009DE079 /* Underscore.m */; };
+		C957026B1D91B1DE009DE079 /* Underscore+Functional.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702621D91B1DE009DE079 /* Underscore+Functional.m */; };
+		C957026C1D91B1DE009DE079 /* USArrayWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702641D91B1DE009DE079 /* USArrayWrapper.m */; };
+		C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702671D91B1DE009DE079 /* USDictionaryWrapper.m */; };
+		C95702701D91BD11009DE079 /* TTPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = C957026F1D91BD11009DE079 /* TTPlace.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */; };
@@ -357,6 +364,20 @@
 		C9525A3D1B25218800185713 /* TTUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUtility.m; sourceTree = "<group>"; };
 		C95493871B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
 		C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
+		C957025C1D91B1DE009DE079 /* Strings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Strings; sourceTree = "<group>"; };
+		C957025D1D91B1DE009DE079 /* Times */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Times; sourceTree = "<group>"; };
+		C957025E1D91B1DE009DE079 /* Underscore-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Underscore-Prefix.pch"; sourceTree = "<group>"; };
+		C957025F1D91B1DE009DE079 /* Underscore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Underscore.h; sourceTree = "<group>"; };
+		C95702601D91B1DE009DE079 /* Underscore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Underscore.m; sourceTree = "<group>"; };
+		C95702611D91B1DE009DE079 /* Underscore+Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Underscore+Functional.h"; sourceTree = "<group>"; };
+		C95702621D91B1DE009DE079 /* Underscore+Functional.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Underscore+Functional.m"; sourceTree = "<group>"; };
+		C95702631D91B1DE009DE079 /* USArrayWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = USArrayWrapper.h; sourceTree = "<group>"; };
+		C95702641D91B1DE009DE079 /* USArrayWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = USArrayWrapper.m; sourceTree = "<group>"; };
+		C95702651D91B1DE009DE079 /* USConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = USConstants.h; sourceTree = "<group>"; };
+		C95702661D91B1DE009DE079 /* USDictionaryWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = USDictionaryWrapper.h; sourceTree = "<group>"; };
+		C95702671D91B1DE009DE079 /* USDictionaryWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = USDictionaryWrapper.m; sourceTree = "<group>"; };
+		C957026E1D91BD11009DE079 /* TTPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPlace.h; sourceTree = "<group>"; };
+		C957026F1D91BD11009DE079 /* TTPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPlace.m; sourceTree = "<group>"; };
 		C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
@@ -605,6 +626,8 @@
 				223547F61AE333F2001FE916 /* Photo.m */,
 				220408F21AF311D6009DB060 /* Comment.h */,
 				220408F31AF311D6009DB060 /* Comment.m */,
+				C957026E1D91BD11009DE079 /* TTPlace.h */,
+				C957026F1D91BD11009DE079 /* TTPlace.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -823,9 +846,29 @@
 			path = Cloudinary;
 			sourceTree = "<group>";
 		};
+		C957025B1D91B1D1009DE079 /* Underscore */ = {
+			isa = PBXGroup;
+			children = (
+				C957025C1D91B1DE009DE079 /* Strings */,
+				C957025D1D91B1DE009DE079 /* Times */,
+				C957025E1D91B1DE009DE079 /* Underscore-Prefix.pch */,
+				C957025F1D91B1DE009DE079 /* Underscore.h */,
+				C95702601D91B1DE009DE079 /* Underscore.m */,
+				C95702611D91B1DE009DE079 /* Underscore+Functional.h */,
+				C95702621D91B1DE009DE079 /* Underscore+Functional.m */,
+				C95702631D91B1DE009DE079 /* USArrayWrapper.h */,
+				C95702641D91B1DE009DE079 /* USArrayWrapper.m */,
+				C95702651D91B1DE009DE079 /* USConstants.h */,
+				C95702661D91B1DE009DE079 /* USDictionaryWrapper.h */,
+				C95702671D91B1DE009DE079 /* USDictionaryWrapper.m */,
+			);
+			name = Underscore;
+			sourceTree = "<group>";
+		};
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				C957025B1D91B1D1009DE079 /* Underscore */,
 				27AF315A1D2C0E8B00D93963 /* AmazonAws */,
 				27F3E3711D3D778600634B75 /* DLFPhotosPicker */,
 				C9D893351BB596FB00259AB4 /* NSObject+Properties.h */,
@@ -899,7 +942,7 @@
 		224F3F841AE1D35E003A1DEB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Michael Maloof";
 				TargetAttributes = {
 					224F3F8B1AE1D35E003A1DEB = {
@@ -953,6 +996,7 @@
 				276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */,
 				276718CE1CF4D1030064F784 /* Montserrat-Black.otf in Resources */,
 				C977065E1B9754B000FB11B2 /* ActivityTableViewCell.xib in Resources */,
+				C95702681D91B1DE009DE079 /* Strings in Resources */,
 				C90ADEAE1BA21F1A000809D0 /* EditProfileViewController.xib in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */,
@@ -971,6 +1015,7 @@
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
 				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 				276718CF1CF4D1030064F784 /* Montserrat-Bold.otf in Resources */,
+				C95702691D91B1DE009DE079 /* Times in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1042,12 +1087,14 @@
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
+				C957026B1D91B1DE009DE079 /* Underscore+Functional.m in Sources */,
 				27F3E3851D3D778600634B75 /* DLFPhotosLibrary.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
+				C957026C1D91B1DE009DE079 /* USArrayWrapper.m in Sources */,
 				22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */,
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				225E554A1CB074CD00FAAB00 /* TTReportBugViewController.m in Sources */,
@@ -1067,6 +1114,7 @@
 				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
 				2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
+				C957026A1D91B1DE009DE079 /* Underscore.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
@@ -1104,6 +1152,7 @@
 				27F3E3831D3D778600634B75 /* DLFMasterViewController.m in Sources */,
 				27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */,
 				27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */,
+				C95702701D91BD11009DE079 /* TTPlace.m in Sources */,
 				220408F11AF1C1EA009DB060 /* PhotoViewController.m in Sources */,
 				2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */,
 				27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */,
@@ -1112,6 +1161,7 @@
 				22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
+				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
@@ -1183,8 +1233,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1229,8 +1281,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

@@ -34,6 +34,9 @@ PODS:
     - AWSCore (= 2.4.5)
   - AWSSQS (2.4.5):
     - AWSCore (= 2.4.5)
+  - GoogleMaps/Base (2.0.1)
+  - GooglePlaces (2.0.1):
+    - GoogleMaps/Base (= 2.0.1)
 
 DEPENDENCIES:
   - AWSAutoScaling
@@ -53,6 +56,7 @@ DEPENDENCIES:
   - AWSSimpleDB
   - AWSSNS
   - AWSSQS
+  - GooglePlaces
 
 SPEC CHECKSUMS:
   AWSAutoScaling: 5da3636051c3c407696bc85918b74160c938ba8a
@@ -73,7 +77,9 @@ SPEC CHECKSUMS:
   AWSSimpleDB: c7f91fdd299ca58f222ee95e89a27022cd47ada1
   AWSSNS: aaf565330d8f2f7c4f2cb13d2a20bceae8259f2f
   AWSSQS: 8026703bf7cbe8ea1728f95f358f7cb4536e5040
+  GoogleMaps: f09da64fc987c1aa29394567c3cab5a3df83c402
+  GooglePlaces: 72fab1d1651c6df0322f2aad245ffb15b80d3c56
 
-PODFILE CHECKSUM: ec29e528c859a82ebdf65424f95a93c82ddc890a
+PODFILE CHECKSUM: 8e5028258d2c25bbac9046ba6099697babaee0a4
 
 COCOAPODS: 1.0.1
