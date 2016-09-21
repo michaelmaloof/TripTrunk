@@ -22,6 +22,8 @@
 #import <AWSCore/AWSCore.h>
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
+#import "GoogleAnalytics/GAI.h"
+#import "TTAnalytics.h"
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -60,7 +62,20 @@
     [self handleDatabaseAndConsoleLog];
     [self setNavbarAndTabbarColors];
     [self checkForShortCutItems:launchOptions];
-    [self handleFontOutput];    
+    [self handleFontOutput];
+    
+    // Configure tracker from GoogleService-Info.plist.
+//    NSError *configureError;
+//    [[GGLContext sharedInstance] configureWithError:&configureError];
+//    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
+    
+    // Optional: configure GAI options.
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
+    gai.dispatchInterval = 20;
+    [TTAnalytics initAnalyticsOnStart];
+
     return YES;
 }
 

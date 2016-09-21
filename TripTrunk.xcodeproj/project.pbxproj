@@ -55,6 +55,11 @@
 		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
+		271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BB71D91A43D0054741F /* libAdIdAccess.a */; };
+		271D8BBA1D91A43D0054741F /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BB81D91A43D0054741F /* libGoogleAnalyticsServices.a */; };
+		271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 271D8BBB1D91A76B0054741F /* GoogleService-Info.plist */; };
+		271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BBD1D91AF000054741F /* CoreData.framework */; };
+		271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8BC01D91C3540054741F /* TTAnalytics.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		272ACA041D2C5CA700329B28 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA011D2C5CA700329B28 /* Parse.framework */; };
 		272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
@@ -243,6 +248,22 @@
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
 		2715140F1C99E0F80054E43F /* TTFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTFont.m; sourceTree = "<group>"; };
+		271D8BAD1D91A43D0054741F /* GAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAI.h; sourceTree = "<group>"; };
+		271D8BAE1D91A43D0054741F /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIDictionaryBuilder.h; sourceTree = "<group>"; };
+		271D8BAF1D91A43D0054741F /* GAIEcommerceFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIEcommerceFields.h; sourceTree = "<group>"; };
+		271D8BB01D91A43D0054741F /* GAIEcommerceProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIEcommerceProduct.h; sourceTree = "<group>"; };
+		271D8BB11D91A43D0054741F /* GAIEcommerceProductAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIEcommerceProductAction.h; sourceTree = "<group>"; };
+		271D8BB21D91A43D0054741F /* GAIEcommercePromotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIEcommercePromotion.h; sourceTree = "<group>"; };
+		271D8BB31D91A43D0054741F /* GAIFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIFields.h; sourceTree = "<group>"; };
+		271D8BB41D91A43D0054741F /* GAILogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAILogger.h; sourceTree = "<group>"; };
+		271D8BB51D91A43D0054741F /* GAITrackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITrackedViewController.h; sourceTree = "<group>"; };
+		271D8BB61D91A43D0054741F /* GAITracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
+		271D8BB71D91A43D0054741F /* libAdIdAccess.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdIdAccess.a; sourceTree = "<group>"; };
+		271D8BB81D91A43D0054741F /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
+		271D8BBB1D91A76B0054741F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		271D8BBD1D91AF000054741F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		271D8BBF1D91C3540054741F /* TTAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTAnalytics.h; sourceTree = "<group>"; };
+		271D8BC01D91C3540054741F /* TTAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAnalytics.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		272ACA011D2C5CA700329B28 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -415,9 +436,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */,
 				C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */,
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
 				223547EE1AE2BBEE001FE916 /* Social.framework in Frameworks */,
+				271D8BBA1D91A43D0054741F /* libGoogleAnalyticsServices.a in Frameworks */,
 				C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */,
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
@@ -428,6 +451,7 @@
 				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */,
+				271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */,
 				224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */,
 				C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */,
 				224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */,
@@ -650,6 +674,8 @@
 				27A581431C888D910095ED94 /* TTPushNotificationHandler.m */,
 				27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */,
 				27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */,
+				271D8BBF1D91C3540054741F /* TTAnalytics.h */,
+				271D8BC01D91C3540054741F /* TTAnalytics.m */,
 				2715140B1C99D8AF0054E43F /* TTColor.h */,
 				2715140C1C99D8AF0054E43F /* TTColor.m */,
 				2715140E1C99E0F80054E43F /* TTFont.h */,
@@ -730,6 +756,26 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		271D8BAC1D91A43D0054741F /* GoogleAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				271D8BBB1D91A76B0054741F /* GoogleService-Info.plist */,
+				271D8BAD1D91A43D0054741F /* GAI.h */,
+				271D8BAE1D91A43D0054741F /* GAIDictionaryBuilder.h */,
+				271D8BAF1D91A43D0054741F /* GAIEcommerceFields.h */,
+				271D8BB01D91A43D0054741F /* GAIEcommerceProduct.h */,
+				271D8BB11D91A43D0054741F /* GAIEcommerceProductAction.h */,
+				271D8BB21D91A43D0054741F /* GAIEcommercePromotion.h */,
+				271D8BB31D91A43D0054741F /* GAIFields.h */,
+				271D8BB41D91A43D0054741F /* GAILogger.h */,
+				271D8BB51D91A43D0054741F /* GAITrackedViewController.h */,
+				271D8BB61D91A43D0054741F /* GAITracker.h */,
+				271D8BB71D91A43D0054741F /* libAdIdAccess.a */,
+				271D8BB81D91A43D0054741F /* libGoogleAnalyticsServices.a */,
+			);
+			path = GoogleAnalytics;
+			sourceTree = "<group>";
+		};
 		27AF315A1D2C0E8B00D93963 /* AmazonAws */ = {
 			isa = PBXGroup;
 			children = (
@@ -764,6 +810,7 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				271D8BBD1D91AF000054741F /* CoreData.framework */,
 				27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */,
 				C9CA64591BE523A500A25EBC /* PhotosUI.framework */,
 				2CE5F489EC595090710B7495 /* libPods-TripTrunk.a */,
@@ -826,6 +873,7 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				271D8BAC1D91A43D0054741F /* GoogleAnalytics */,
 				27AF315A1D2C0E8B00D93963 /* AmazonAws */,
 				27F3E3711D3D778600634B75 /* DLFPhotosPicker */,
 				C9D893351BB596FB00259AB4 /* NSObject+Properties.h */,
@@ -969,6 +1017,7 @@
 				276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */,
 				276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
+				271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */,
 				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 				276718CF1CF4D1030064F784 /* Montserrat-Bold.otf in Resources */,
 			);
@@ -1065,6 +1114,7 @@
 				2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
+				271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */,
 				2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
@@ -1280,6 +1330,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1287,6 +1338,8 @@
 					"-force_load",
 					"$(PROJECT_DIR)/libCloudinary.a",
 					"$(TARGET_BUILD_DIR)/libPods-TripTrunk.a",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics/libGoogleAnalyticsServices.a",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics/libAdIdAccess.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1320,6 +1373,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1327,6 +1381,8 @@
 					"-force_load",
 					"$(PROJECT_DIR)/libCloudinary.a",
 					"$(BUILT_PRODUCTS_DIR)/libPods-TripTrunk.a",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics/libGoogleAnalyticsServices.a",
+					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics/libAdIdAccess.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.triptrunk.TripTrunk;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,8 +9,7 @@
 #import "TTBaseViewController.h"
 #import "AFNetworkReachabilityManager.h"
 #import "TTUtility.h"
-
-
+#import "TTAnalytics.h"
 
 @interface TTBaseViewController ()
 
@@ -47,9 +46,12 @@
 
 //This is to remove the titles under the tab bar icons
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
     [self tabBarTitle];
     self.tabBarController.tabBar.hidden = NO;
 
+    NSString *screenName = [NSString stringWithFormat:@"%@",[self class]];
+    [TTAnalytics trackScreen:screenName];
 }
 
 -(void)checkUserInternetConnection{
