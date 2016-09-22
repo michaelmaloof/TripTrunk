@@ -11,10 +11,13 @@
 
 @interface TTAnalytics : NSObject
 
-+(void)initAnalyticsOnStart;
++(void)initAnalyticsOnStart:(BOOL)env;
 +(void)trackScreen:(NSString*)screenName;
 +(void)accountCreated;
 +(void)photoLiked:(PFUser*)owner;
-+(void)photoViewed;
++(void)photoViewed:(NSString*)photo;
 +(void)errorOccurred:(NSString*)errorMessage method:(NSString*)method;
++(void)userMentioned:(NSString*)user;
++(void)commentAdded:(NSString*)user;
++(void)trunkCreated:(NSUInteger)numOfPhotos numOfMembers:(NSUInteger)numOfMembers;
 @end

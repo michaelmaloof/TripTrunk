@@ -22,7 +22,6 @@
 #import <AWSCore/AWSCore.h>
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
-#import "GoogleAnalytics/GAI.h"
 #import "TTAnalytics.h"
 
 //TripTrunk Parse Keys
@@ -64,10 +63,12 @@
     [self checkForShortCutItems:launchOptions];
     [self handleFontOutput];
     
-    GAI *gai = [GAI sharedInstance];
-    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
-    gai.dispatchInterval = 20;
-    [TTAnalytics initAnalyticsOnStart];
+    
+    
+    BOOL env = YES;
+    if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
+        env = NO;
+    [TTAnalytics initAnalyticsOnStart:env];
 
     return YES;
 }

@@ -135,6 +135,7 @@
                     if (view == (HomeMapViewController*)controller.viewControllers[0]){
                         
                         [view.viewedPhotos addObject:self.photo.objectId];
+                        [TTAnalytics photoViewed:self.photo.objectId];
                         [self.delegate photoWasViewed:self.photo];
                     }
                 }

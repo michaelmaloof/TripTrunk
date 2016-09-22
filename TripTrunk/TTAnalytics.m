@@ -6,7 +6,8 @@
 //  Copyright © 2016 Michael Maloof. All rights reserved.
 //
 
-#define trackingID @"UA-72708236-2"
+#define devTrackingID @"UA-72708236-2"
+#define prodTrackingID @"UA-72708236-3"
 
 #import "TTAnalytics.h"
 #import "GoogleAnalytics/GAI.h"
@@ -19,11 +20,19 @@
 #import "GoogleAnalytics/GAITrackedViewController.h"
 #import "GoogleAnalytics/GAITracker.h"
 
+id<GAITracker> tracker;
 
 @implementation TTAnalytics
 
-+(void)initAnalyticsOnStart{
-    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackingID];
++(void)initAnalyticsOnStart:(BOOL)env{
+    
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.dispatchInterval = 20;
+    
+    if(env)
+       tracker = [[GAI sharedInstance] trackerWithTrackingId:prodTrackingID];
+    else tracker = [[GAI sharedInstance] trackerWithTrackingId:devTrackingID];
     NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     NSString *user = [PFUser currentUser].username;
     [tracker set:kGAIUserId value:user];
@@ -35,13 +44,13 @@
 }
 
 +(void)trackScreen:(NSString*)screenName{
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:screenName];
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
 +(void)errorOccurred:(NSString*)errorMessage method:(NSString*)method{
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    tracker = [[GAI sharedInstance] defaultTracker];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Error"
                                                           action:method
                                                            label:errorMessage
@@ -49,7 +58,7 @@
 }
 
 +(void)accountCreated{
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    tracker = [[GAI sharedInstance] defaultTracker];
     NSString *user = [PFUser currentUser].username;
     [tracker set:kGAIUserId value:user];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Users"
@@ -59,7 +68,7 @@
 }
 
 +(void)photoLiked:(PFUser*)owner{
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    tracker = [[GAI sharedInstance] defaultTracker];
     NSString *user = owner.username;
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
                                                           action:@"Like"
@@ -67,11 +76,43 @@
                                                            value:nil] build]];
 }
 
-+(void)photoViewed{
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
++(void)photoViewed:(NSString*)photo{
+    tracker = [[GAI sharedInstance] defaultTracker];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
                                                           action:@"Photo Viewed"
+                                                           label:photo
+                                                           value:nil] build]];
+}
+
++(void)userMentioned:(NSString*)user{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"User Mention"
+                                                           label:user
+                                                           value:nil] build]];
+}
+
++(void)commentAdded:(NSString*)user{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Comment"
+                                                           label:user
+                                                           value:nil] build]];
+}
+
++(void)trunkCreated:(NSUInteger)numOfPhotos numOfMembers:(NSUInteger)numOfMembers{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Trunk Created"
                                                            label:nil
+                                                           value:nil] build]];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Trunk"
+                                                          action:@"photo count"
+                                                           label:[NSString stringWithFormat:@"%li",numOfPhotos]
+                                                           value:nil] build]];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Trunk"
+                                                          action:@"member count"
+                                                           label:[NSString stringWithFormat:@"%li",numOfMembers]
                                                            value:nil] build]];
 }
 

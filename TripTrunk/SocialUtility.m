@@ -477,6 +477,8 @@
                 if(error){
                     [ParseErrorHandlingController errorCommentingOnPhoto:photo];
                     [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addComment:"];
+                }else{
+                    [TTAnalytics commentAdded:photo.userName];
                 }
                 completionBlock(succeeded, object, commentActivity, error);
             }

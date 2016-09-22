@@ -30,7 +30,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    
+    NSString *screenName = [NSString stringWithFormat:@"%@",[self class]];
+    [TTAnalytics trackScreen:screenName];
 }
 
 #pragma mark - UITableViewDelegate and DataSource Methods
@@ -424,9 +425,13 @@
     if (mentionList) {
         for(PFUser *user in mentionList){
             [SocialUtility addMention:object isCaption:[object[@"isCaption"] boolValue] withUser:user forPhoto:photo block:^(BOOL succeeded, NSError *error){
-                if(succeeded)
+                if(succeeded){
                     NSLog(@"Mention added to db for %@",user.username);
-                else [ParseErrorHandlingController handleError:error];
+                    [TTAnalytics userMentioned:user.username];
+                }else{
+                    [ParseErrorHandlingController handleError:error];
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"saveMentionToDatabase:"];
+                }
             }];
         }
     }
@@ -532,10 +537,12 @@
     if (mentionList) {
         for(PFUser *user in mentionList){
             [SocialUtility deleteMention:object withUser:user block:^(BOOL succeeded, NSError *error){
-                if(succeeded)
+                if(succeeded){
                     NSLog(@"Mention removed to db for %@",user.username);
-                else [ParseErrorHandlingController handleError:error];
-
+                }else{
+                    [ParseErrorHandlingController handleError:error];
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"removeMentionFromDatabase:"];
+                }
             }];
         }
     }
@@ -606,6 +613,7 @@
             status = [followingStatus boolValue];
         }else{
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"mentionUserFollowingCurrentUser:"];
         }
     }];
     return status;

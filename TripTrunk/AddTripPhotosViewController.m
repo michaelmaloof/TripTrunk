@@ -294,6 +294,7 @@
                 // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
                 [SocialUtility addComment:savedPhoto.caption forPhoto:savedPhoto isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                     if (!error && commentObject) {
+                        [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
                         [self updateMentionsInDatabase:commentObject];
                     }
                 }];
