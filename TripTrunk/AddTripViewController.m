@@ -479,13 +479,8 @@
         }
         else {
             if (ttPlace) {
-                // Set the Trip Location stuff here, because this API call gives us everything we need, including coordinates.
-                self.trip.lat = ttPlace.latitude;
-                self.trip.longitude = ttPlace.longitude;
-                self.trip.state = ttPlace.state;
-                self.trip.city = ttPlace.city;
-                self.trip.country = ttPlace.country;
-                self.trip.placeID = ttPlace.placeID;
+                // Set the Trip Location stuff here, because this API call gives us everything we need, including coordinates.                
+                [self.trip setPlaceData:ttPlace];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];

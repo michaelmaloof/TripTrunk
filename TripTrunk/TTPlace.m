@@ -8,6 +8,34 @@
 
 #import "TTPlace.h"
 
+
+
 @implementation TTPlace
+@dynamic name;
+@dynamic city;
+@dynamic state;
+@dynamic country;
+@dynamic gpID;
+@dynamic admin2;
+@dynamic latitude;
+@dynamic longitude;
+
+
+//+ (NSDictionary *)dictionary
+//{
+//    return @{@"name": self.name};
+//}
+
++ (NSString *)parseClassName
+{
+    return @"TTPlace";
+}
+
+
++ (void)load
+{
+    [self registerSubclass];
+}
+
 
 @end

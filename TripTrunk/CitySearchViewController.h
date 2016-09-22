@@ -25,7 +25,7 @@
 /**
  * returns an TTPlace with 2 keys:
  * name - NSString for the city, state, country of the location
- * placeId - NSString of the Google PlaceID for this location, used to get the Lat/Long, etc.
+ * gpID - NSString of the Google PlaceID for this location, used to get the Lat/Long, etc.
  */
 - (void)citySearchDidSelectLocation:(TTPlace *)location;
 

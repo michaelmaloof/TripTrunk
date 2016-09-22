@@ -798,10 +798,10 @@ CLCloudinary *cloudinary;
                                    
                                    // Map the Google Places result into objects containing just the Location String and the PlaceId
                                    NSArray *places = Underscore.arrayMap(results, ^TTPlace *(GMSAutocompletePrediction *place) {
-                                       NSLog(@"Result '%@', with placeID: '%@'", place.attributedFullText.string, place.placeID);
+                                       NSLog(@"Result '%@', with gpID: '%@'", place.attributedFullText.string, place.placeID);
                                        TTPlace *ttPlace = [TTPlace new];
                                        ttPlace.name = place.attributedFullText.string;
-                                       ttPlace.placeID = place.placeID;
+                                       ttPlace.gpID = place.placeID;
                                        return ttPlace;
                                    });
                                    return completionBlock(places, nil);
@@ -816,7 +816,7 @@ CLCloudinary *cloudinary;
 - (void)locationDetailsForLocation:(TTPlace *)location block:(void (^)(TTPlace *ttPlace, NSError *error))completionBlock {
     
     
-    [[GMSPlacesClient sharedClient] lookUpPlaceID:location.placeID
+    [[GMSPlacesClient sharedClient] lookUpPlaceID:location.gpID
                                          callback:^(GMSPlace * _Nullable place, NSError * _Nullable error) {
                                              if (error) {
                                                  NSLog(@"Place Details error %@", [error localizedDescription]);
@@ -827,7 +827,7 @@ CLCloudinary *cloudinary;
                                                  
                                                  TTPlace *ttPlace = [TTPlace new];
                                                  ttPlace.name = place.name;
-                                                 ttPlace.placeID = location.placeID;
+                                                 ttPlace.gpID = location.gpID;
                                                  ttPlace.latitude = place.coordinate.latitude;
                                                  ttPlace.longitude = place.coordinate.longitude;
                                                 
@@ -855,7 +855,7 @@ CLCloudinary *cloudinary;
                                                  return completionBlock(ttPlace, nil);
                                              }
                                              else {
-                                                 NSLog(@"No place details for %@", location.placeID);
+                                                 NSLog(@"No place details for %@", location.gpID);
                                                  return completionBlock(nil, nil);
                                              }
     }];

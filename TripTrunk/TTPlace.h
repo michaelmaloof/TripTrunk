@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Parse/Parse.h>
+#import <Parse/PFObject+Subclass.h>
 
-@interface TTPlace : NSObject
+@interface TTPlace : PFObject <PFSubclassing>
 
 @property NSString *name;
 @property NSString *city;
 @property NSString *state;
 @property NSString *country;
-@property NSString *placeID;
+@property NSString *gpID;
 @property NSString *admin2;
 @property double latitude;
 @property double longitude;

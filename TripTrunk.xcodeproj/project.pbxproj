@@ -128,6 +128,7 @@
 		C957026C1D91B1DE009DE079 /* USArrayWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702641D91B1DE009DE079 /* USArrayWrapper.m */; };
 		C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702671D91B1DE009DE079 /* USDictionaryWrapper.m */; };
 		C95702701D91BD11009DE079 /* TTPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = C957026F1D91BD11009DE079 /* TTPlace.m */; };
+		C95702731D942496009DE079 /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = C95702721D942496009DE079 /* Activity.m */; };
 		C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */; };
 		C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C95FD1401B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		C977065D1B9754B000FB11B2 /* ActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C977065B1B9754B000FB11B2 /* ActivityTableViewCell.m */; };
@@ -378,6 +379,8 @@
 		C95702671D91B1DE009DE079 /* USDictionaryWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = USDictionaryWrapper.m; sourceTree = "<group>"; };
 		C957026E1D91BD11009DE079 /* TTPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPlace.h; sourceTree = "<group>"; };
 		C957026F1D91BD11009DE079 /* TTPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPlace.m; sourceTree = "<group>"; };
+		C95702711D942496009DE079 /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
+		C95702721D942496009DE079 /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
 		C95FD13D1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		C95FD13E1B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		C95FD13F1B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
@@ -622,6 +625,8 @@
 				22FEABC21CB159BD0001AE18 /* ReportedBug.m */,
 				223547F21AE322C3001FE916 /* Trip.h */,
 				223547F31AE322C3001FE916 /* Trip.m */,
+				C95702711D942496009DE079 /* Activity.h */,
+				C95702721D942496009DE079 /* Activity.m */,
 				223547F51AE333F2001FE916 /* Photo.h */,
 				223547F61AE333F2001FE916 /* Photo.m */,
 				220408F21AF311D6009DB060 /* Comment.h */,
@@ -1163,6 +1168,7 @@
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
+				C95702731D942496009DE079 /* Activity.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,

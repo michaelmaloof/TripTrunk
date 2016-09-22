@@ -24,7 +24,7 @@
 @dynamic longitude;
 @dynamic descriptionStory;
 @dynamic publicTripDetail;
-@dynamic placeID;
+@dynamic gpID;
 
 +(NSString *)parseClassName
 {
@@ -35,6 +35,16 @@
 +(void)load
 {
     [self registerSubclass];
+}
+
+- (void)setPlaceData:(TTPlace *)place;
+{
+    self.lat = place.latitude;
+    self.longitude = place.longitude;
+    self.state = place.state;
+    self.city = place.city;
+    self.country = place.country;
+    self.gpID = place.gpID;
 }
 
 @end

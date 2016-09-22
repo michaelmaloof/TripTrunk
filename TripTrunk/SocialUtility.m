@@ -191,59 +191,6 @@
     });
 }
 
-+ (void)addUser:(PFUser *)user toTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock
-{
-    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
-        return;
-    }
-    
-    PFObject *addToTripActivity = [PFObject objectWithClassName:@"Activity"];
-    [addToTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-    [addToTripActivity setObject:user forKey:@"toUser"];
-    [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
-    [addToTripActivity setObject:trip forKey:@"trip"];
-    
-    PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [followACL setPublicReadAccess:YES];
-    [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
-    [followACL setWriteAccess:YES forUser:trip.creator];
-    addToTripActivity.ACL = followACL;
-    
-    [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
-        if (completionBlock) {
-            completionBlock(succeeded, error);
-        }
-    }];
-}
-
-+ (PFObject *)createAddToTripObjectForUser:(PFUser *)user onTrip:(Trip *)trip
-{
-    //COMMENTED OUT because we are adding "self" as a member for easier querying
-//    if ([[user objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
-//        return nil;
-//    }
-    
-    NSString *location = [NSString stringWithFormat:@"%@", trip.city];
-    
-    PFObject *addToTripActivity = [PFObject objectWithClassName:@"Activity"];
-    [addToTripActivity setObject:[PFUser currentUser] forKey:@"fromUser"];
-    [addToTripActivity setObject:user forKey:@"toUser"];
-    [addToTripActivity setObject:@"addToTrip" forKey:@"type"];
-    [addToTripActivity setObject:trip forKey:@"trip"];
-    [addToTripActivity setObject:location forKey:@"content"];
-    [addToTripActivity setValue:[NSNumber numberWithDouble:trip.lat] forKey:@"latitude"];
-    [addToTripActivity setValue:[NSNumber numberWithDouble:trip.longitude] forKey:@"longitude"];
-    
-    PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [followACL setPublicReadAccess:YES];
-    [followACL setWriteAccess:YES forUser:user]; // let's the user added to the trip remove themselves
-    [followACL setWriteAccess:YES forUser:trip.creator];
-    addToTripActivity.ACL = followACL;
-    
-    
-    return addToTripActivity;
-}
-
 + (void)deleteTrip:(Trip *)trip;
 {
     // If the user isn't the trip creator, don't let them delete this trip
