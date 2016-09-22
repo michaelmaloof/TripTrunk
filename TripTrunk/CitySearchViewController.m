@@ -8,6 +8,7 @@
 
 #import "CitySearchViewController.h"
 #import "TTUtility.h"
+#import "TTAnalytics.h"
 
 @interface CitySearchViewController () <UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
@@ -116,6 +117,7 @@
         
         if (error){
             [self handleError];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"updateSearchResultsForSearchController:"];
         }
         
         [_locations removeAllObjects];

@@ -27,6 +27,7 @@
 #import "DLFPhotosPickerViewController.h"
 #import "DLFPhotoCell.h"
 #import "SocialUtility.h"
+#import "TTAnalytics.h"
 
 #define OVERLAY_VIEW_TAG 121212121
 
@@ -612,6 +613,7 @@
                         }
                     }else{
                         NSLog(@"Error: %@",error);
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"textViewDidChange:"];
                     }
                 }];
                 
@@ -776,6 +778,7 @@
             [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
         }else{
             NSLog(@"Error: %@",error);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"buildMentionUsersCache:"];
         }
     }];
 }

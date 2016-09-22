@@ -64,15 +64,8 @@
     [self checkForShortCutItems:launchOptions];
     [self handleFontOutput];
     
-    // Configure tracker from GoogleService-Info.plist.
-//    NSError *configureError;
-//    [[GGLContext sharedInstance] configureWithError:&configureError];
-//    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
-    
-    // Optional: configure GAI options.
     GAI *gai = [GAI sharedInstance];
     gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
-    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
     gai.dispatchInterval = 20;
     [TTAnalytics initAnalyticsOnStart];
 
@@ -132,6 +125,7 @@
                 [self setActivityBadgeIcon:[response intValue]];
             }else{
                 [self setActivityBadgeIcon:0];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForActivityNotifications:"];
             }
         }];
     }
@@ -466,6 +460,8 @@
                         
                     }
                 }
+            }else{
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"performActionForShortcutItem:"];
             }
         }];
 

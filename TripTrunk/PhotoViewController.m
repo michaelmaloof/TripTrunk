@@ -26,6 +26,7 @@
 #import "TTTAttributedLabel.h"
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
+#import "TTAnalytics.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
@@ -618,6 +619,7 @@
             else {
                 NSLog(@"Error loading photo Activities: %@", error);
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"refreshPhotoActivitiesWithUpdateNow:"];
             }
             [self hidePhotoContent:NO];
             
@@ -1554,6 +1556,7 @@
                         }
                     }else{
                         NSLog(@"Error: %@",error);
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"textViewDidChange:"];
                     }
                 }];
                 
@@ -1709,6 +1712,7 @@
             [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
         }else{
             NSLog(@"Error: %@",error);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"buildMentionUsersCache:"];
         }
     }];
 }

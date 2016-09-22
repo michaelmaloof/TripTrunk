@@ -16,6 +16,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "HomeMapViewController.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "TTAnalytics.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -267,6 +268,7 @@
             if(error)
             {
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadUserTrunks:"];
                 self.wasError = YES;
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
@@ -362,6 +364,7 @@
                 self.wasError = YES;
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadTrunkListBasedOnProfile:"];
                 [self reloadTable];
             }
             else if (!error)
@@ -439,6 +442,7 @@
             {
                 self.wasError = YES;
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadMutualTrunkList:"];
                 [self reloadTable];
                 NSLog(@"Error: %@",error);
             }
@@ -632,6 +636,7 @@
         {
             self.wasError = YES;
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForTrunks:"];
             NSLog(@"Error: %@",error);
             [self reloadTable];
         }

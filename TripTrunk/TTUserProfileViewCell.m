@@ -11,6 +11,7 @@
 @implementation TTUserProfileViewCell
 
 -(void)awakeFromNib{
+    [super awakeFromNib];
     self.backgroundColor = [TTColor tripTrunkBlue];
 }
 

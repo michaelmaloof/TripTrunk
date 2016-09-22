@@ -11,6 +11,7 @@
 @implementation PhotoCollectionViewCell
 
 -(void)awakeFromNib{
+    [super awakeFromNib];
     self.backgroundColor = [TTColor tripTrunkRed];
 }
 

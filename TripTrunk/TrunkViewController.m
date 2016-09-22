@@ -26,6 +26,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import "TTAnalytics.h"
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate,UIActionSheetDelegate>
 
@@ -367,6 +368,7 @@
             }else
             {
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"checkIfIsMember:"];
                 NSLog(@"Error: %@",error);
             }
             
@@ -465,6 +467,8 @@
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
             self.scrollViewHeightConstraint.constant = heightOfScroll;
             self.contentViewHeightConstraint.constant = heightOfScroll;
+        }else{
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryParseMethod:"];
         }
     }];
 
@@ -504,6 +508,8 @@
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
             self.scrollViewHeightConstraint.constant = heightOfScroll;
             self.contentViewHeightConstraint.constant = heightOfScroll;
+        }else{
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryNewlyAddedPhoto:"];
         }
     }];
 }

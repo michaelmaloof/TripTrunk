@@ -94,6 +94,7 @@ static NSString * const CellReuseIdentifier = @"photoCell";
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(photoLibraryDidChangeNotification:) name:DLFPhotosLibraryDidChangeNotification object:nil];
 }
 

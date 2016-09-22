@@ -30,6 +30,7 @@
 @implementation ActivityTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self roundProfileImageView];

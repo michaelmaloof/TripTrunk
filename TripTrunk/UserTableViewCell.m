@@ -19,6 +19,7 @@
 @implementation UserTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     [self.followButton setTintColor:[TTColor tripTrunkBlue]];
     [self setProfileImageDisplay];

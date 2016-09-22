@@ -13,6 +13,7 @@
 #import "MSTextField.h"
 #import "MBProgressHUD.h"
 #import "CitySearchViewController.h"
+#import "TTAnalytics.h"
 
 @interface UsernameViewController () <CitySearchViewControllerDelegate, UIAlertViewDelegate>
 
@@ -155,6 +156,7 @@
         }
         else {
             NSLog(@"%@",error);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleFacebookUser:"];
         }
     }];
 

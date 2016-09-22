@@ -18,6 +18,7 @@
 #import "EULAViewController.h"
 #import "TTNewsFeedViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "TTAnalytics.h"
 
 /**
  HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
@@ -431,6 +432,7 @@ list of trips the user hasn't seen since last being in the app
             if(error)
             {
                 NSLog(@"Error: %@",error);
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryParseMethodForUser:"];
                 if (self.user == nil){
                     [self setTitleImage];
                 } else {
@@ -518,6 +520,7 @@ list of trips the user hasn't seen since last being in the app
         if(error)
         {
             NSLog(@"Error: %@",error);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForTrunks:"];
             if (self.user == nil)
             {
                 [self setTitleImage];
@@ -664,6 +667,8 @@ list of trips the user hasn't seen since last being in the app
                  trip.lat = placemark.location.coordinate.latitude;
                  trip.longitude = placemark.location.coordinate.longitude;
                  [self createTripForMap:trip dot:hot isMostRecent:isMostRecent annotation:annotation needToSave:YES delete:replace];
+             }else{
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addTripToMap:"];
              }
              
          }];

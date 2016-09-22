@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "ParseErrorHandlingController.h"
 #import "TTUtility.h"
+#import "TTAnalytics.h"
 
 @implementation SocialUtility
 
@@ -73,6 +74,7 @@
             
             if (error) {
                 NSLog(@"Error saving follow activity%@", error);
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followUserInBackground:"];
                 //FIXME Need to remove the user from follow list
             }
             
@@ -104,6 +106,9 @@
     followActivity.ACL = followACL;
     
     [followActivity saveEventually:^(BOOL succeeded, NSError *error) {
+        
+        if(error)
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"requestToFollowUserInBackground:"];
 
         // Cache the following status as PENDING
         [[TTCache sharedCache] setFollowStatus:[NSNumber numberWithInt:2] user:user];
@@ -141,6 +146,7 @@
             }
         }else if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"unfollowUser:"];
             completionBlock(NO, error);
         }
     }];
@@ -158,6 +164,8 @@
                                 block:^(id  _Nullable success, NSError * _Nullable error) {
                                     if (!error) {
                                         completionBlock(YES, error);
+                                    }else{
+                                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"acceptFollowRequest:"];
                                     }
                                 }];
     
@@ -210,6 +218,9 @@
     addToTripActivity.ACL = followACL;
     
     [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
+        if(error)
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addUser:"];
+        
         if (completionBlock) {
             completionBlock(succeeded, error);
         }
@@ -272,6 +283,7 @@
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
              [ParseErrorHandlingController handleError:error];
+             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"deleteTrip:"];
          }
      }];
     
@@ -294,6 +306,7 @@
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
              [ParseErrorHandlingController handleError:error];
+             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"deleteTrip:"];
          }
      }];
     
@@ -351,6 +364,7 @@
              NSLog(@"Error: %@ %@", error, [error userInfo]);
              completionBlock(NO, error);
              [ParseErrorHandlingController handleError:error];
+             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"removeUser:"];
          }
      }];
 }
@@ -379,12 +393,14 @@
             [PFObject saveAllInBackground:objectsToUpdate block:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error){
                     [ParseErrorHandlingController handleError:error];
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"updateActivityContent:"];
                 }
             }];
             
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"updateActivityContent:"];
         }
     }];
 }
@@ -410,6 +426,7 @@
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
              [ParseErrorHandlingController handleError:error];
+             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"updatePhotosForTrip:"];
          }
      }];
 }
@@ -448,14 +465,18 @@
         commentActivity.ACL = commentACL;
         
         [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error)
+            if (error){
                 [ParseErrorHandlingController handleError:error];
-            else [[TTUtility sharedInstance] internetConnectionFound];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addComment:"];
+            }else{
+                [[TTUtility sharedInstance] internetConnectionFound];
+            }
             
             if (completionBlock){
                 //has to be done this way because saveEventually will continue to try over and over. We don't want to decrement the likerCount until it FAILS completely
                 if(error){
                     [ParseErrorHandlingController errorCommentingOnPhoto:photo];
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addComment:"];
                 }
                 completionBlock(succeeded, object, commentActivity, error);
             }
@@ -502,6 +523,7 @@
                     }
                 } else if (!error){
                     [ParseErrorHandlingController handleError:error];
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addMention:"];
                     NSLog(@"Comment NOT added");
                 }
             }];
@@ -528,6 +550,7 @@
         }else{
             NSLog(@"Error: %@", error);
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"deleteMention:"];
             return completionBlock(false, error);
         }
      }];
@@ -551,6 +574,7 @@
         
         if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"getCommentsForPhoto:"];
         } else {
             [[TTUtility sharedInstance] internetConnectionFound];
         }
@@ -574,6 +598,7 @@
                 [query getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                     if (error){
                         [ParseErrorHandlingController handleError:error];
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"deleteComment:"];
                     } else {
                         [[TTUtility sharedInstance] internetConnectionFound];
                         [object setObject:@"" forKey:@"caption"];
@@ -592,17 +617,19 @@
 
 + (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
-    
+    [TTAnalytics photoLiked:photo.user];
     NSDictionary *params = @{
                                 @"photoId" : photo.objectId
                              };
     [PFCloud callFunctionInBackground:@"Activity.Like" withParameters:params block:^(PFObject *response, NSError *error) {
         if (error) {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"likePhoto:"];
             completionBlock(false, error);
         }
         else {
             [[TTUtility sharedInstance] internetConnectionFound];
+            
             completionBlock(true, nil);
         }
  
@@ -632,6 +659,7 @@
         
         else if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"unlikePhoto:"];
             [ParseErrorHandlingController errorUnlikingPhoto:photo];
             
             if (completionBlock) {
@@ -753,6 +781,7 @@
         completionBlock(objects, error);
         if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForAllActivities:"];
         } else {
             [[TTUtility sharedInstance] internetConnectionFound];
         }
@@ -847,6 +876,7 @@
         completionBlock(objects, error);
         if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForFollowingActivities:"];
         } else {
             [[TTUtility sharedInstance] internetConnectionFound];
         }
@@ -866,6 +896,7 @@
 
     [isFollowingQuery countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
         if (error) {
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followingStatusFromUser:"];
             return completionBlock (0, error);
         }
         else if (!error && number > 0) {
@@ -917,6 +948,7 @@
         if(error)
         {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followingUsers:"];
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
         }
@@ -961,6 +993,7 @@
         if(error)
         {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"pendingUsers:"];
             if (error.code != 120){
                 NSLog(@"Error: %@",error);
             }
@@ -1005,6 +1038,7 @@
         if(error)
         {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followers:"];
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
         }
@@ -1044,7 +1078,8 @@
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query setLimit:1000];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        
+        if(error)
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followerCount:"];
         completionBlock(number, error);
         
     }];
@@ -1061,6 +1096,8 @@
     [query setLimit:1000];
     [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if(error)
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"followingCount:"];
         completionBlock(number, error);
         
     }];
@@ -1085,6 +1122,7 @@
         
         if (error){
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"trunkCount:"];
         }else {
 //            [[TTUtility sharedInstance] internetConnectionFound];
         }
@@ -1116,6 +1154,7 @@
             NSLog(@"Error: %@",error);
             completionBlock(nil, error);
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"trunkMembers:"];
         }else{
             [[TTUtility sharedInstance] internetConnectionFound];
             // These are Activity objects, so loop through and just pull out the "toUser" User objects.
@@ -1148,6 +1187,7 @@
             NSLog(@"Error: %@",error);
             completionBlock(false, error);
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"memberStatusOfTrunk:"];
         }else{
             [[TTUtility sharedInstance] internetConnectionFound];
             if(objects.count >0)

@@ -7,9 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Parse/Parse.h>
 
 @interface TTAnalytics : NSObject
 
-+(void)trackScreen:(NSString*)screenName;
 +(void)initAnalyticsOnStart;
++(void)trackScreen:(NSString*)screenName;
++(void)accountCreated;
++(void)photoLiked:(PFUser*)owner;
++(void)photoViewed;
++(void)errorOccurred:(NSString*)errorMessage method:(NSString*)method;
 @end

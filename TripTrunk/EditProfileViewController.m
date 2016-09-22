@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "AppDelegate.h"
 #import "TTReportBugViewController.h"
+#import "TTAnalytics.h"
 
 @interface EditProfileViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate, UITextViewDelegate>
 
@@ -368,6 +369,7 @@
         //ERROR HANDLE: tell the user we linked the acccount but we need them to relogin, then take them to the login screen
              NSString *errorString = [error userInfo][@"error"];
              NSLog(@"%@",errorString);
+             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loginWithFacebook:"];
              
              [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
                  UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -410,6 +412,7 @@
                          }
                      }else{
                         //ERROR HANDLE: tell the user we linked the acccount but we need them to relogin, then take them to the login screen
+                         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loginWithFacebook:"];
                          
                          [PFUser logOutInBackgroundWithBlock:^(NSError * _Nullable error) {
                              UIAlertView *alertView = [[UIAlertView alloc] init];

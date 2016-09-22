@@ -23,6 +23,7 @@
 #import "TTUserProfileViewCell.h"
 #import "TTUserProfileCollectionView.h"
 #import "PhotoViewController.h"
+#import "TTAnalytics.h"
 
 @interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *trunkCountButton;
@@ -454,6 +455,7 @@
             
         } else {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadUserImages:"];
         }
     }];
 
@@ -497,6 +499,7 @@
             
         } else {
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"refreshUserPhotos:"];
         }
     }];
 

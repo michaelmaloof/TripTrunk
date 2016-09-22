@@ -23,6 +23,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "TTColor.h"
 #import "TTSubPhotoButton.h"
+#import "TTAnalytics.h"
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -237,6 +238,7 @@
                     
         }else{
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadNewsFeed:"];
             [refreshControl endRefreshing];
         }
         }
@@ -422,6 +424,7 @@
                     [subPhotoArray replaceObjectAtIndex:i withObject:smallPhoto];
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                     NSLog(@"Error loading subPhotoButtonimage: %@",error);
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"cellForItemAtIndexPath:"];
                 }];
             }
             

@@ -19,6 +19,7 @@
 #import "TrunkListViewController.h"
 #import "ActivityListViewController.h"
 #import "UserProfileViewController.h"
+#import "TTAnalytics.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
 
@@ -479,6 +480,7 @@
             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
             [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"citySearchDidSelectLocation:"];
         }else{
             //Certain locations are messed up with our third party city selector so we manually fix them here
            if ([location isEqualToString:@"Barcelona, CT, Spain"]){
@@ -618,6 +620,7 @@
              if (placemarks == nil && error)
              {
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
                  // TODO: Set title image
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
@@ -625,6 +628,7 @@
                  self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks == nil && !error) {
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
                  // TODO: Set title image
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
@@ -632,6 +636,7 @@
                  self.navigationItem.rightBarButtonItem.enabled = YES;
              } else if (placemarks.count == 0){
                  NSLog(@"Error geocoding address: %@ withError: %@",address, error);
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
                  // TODO: Set title image
                  self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
                  [self tabBarTitle];
@@ -937,6 +942,7 @@
              
              if(error) {
                  [ParseErrorHandlingController handleError:error];
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"parseTrip:"];
                  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                                      message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
                                                                     delegate:self

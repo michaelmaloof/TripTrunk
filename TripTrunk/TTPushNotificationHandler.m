@@ -12,6 +12,7 @@
 #import "TrunkViewController.h"
 #import "PhotoViewController.h"
 #import "UserProfileViewController.h"
+#import "TTAnalytics.h"
 
 @implementation TTPushNotificationHandler
 
@@ -45,8 +46,11 @@
                     
                 }else {
                     NSLog(@"Error loading photo Activities: %@", error);
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleMentionPush:"];
                 }
             }];
+        }else{
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleMentionPush:"];
         }
     }];
 }
@@ -82,9 +86,13 @@
                             photoViewController.fromNotification = YES;
                             
                             [controller pushViewController:photoViewController animated:YES];
+                        }else{
+                            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handlePhotoPush:"];
                         }
                     }];
                 }
+            }else{
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handlePhotoPush:"];
             }
         }];
         
@@ -108,6 +116,8 @@
                     TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
                     trunkViewController.trip = (Trip *)trip;
                     [controller pushViewController:trunkViewController animated:YES];
+                }else{
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleActivityPush:"];
                 }
             }];
         }
@@ -125,6 +135,8 @@
                     // Push to the user's profile from the home map view tab
                     UserProfileViewController *profileViewController = [[UserProfileViewController alloc] initWithUser:(PFUser *)user];
                     [controller pushViewController:profileViewController animated:YES];
+                }else{
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleActivityPush:"];
                 }
             }];
         }
@@ -145,6 +157,8 @@
                     photoViewController.photo = (Photo *)photo;
                     photoViewController.fromNotification = YES;
                     [controller pushViewController:photoViewController animated:YES];
+                }else{
+                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"handleActivityPush:"];
                 }
             }];
         }

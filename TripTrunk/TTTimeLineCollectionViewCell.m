@@ -10,10 +10,9 @@
 
 @implementation TTTimeLineCollectionViewCell
 - (void)awakeFromNib {
-
-self.userprofile.backgroundColor = [TTColor tripTrunkBlue];
-self.newsfeedPhoto.backgroundColor = [TTColor tripTrunkBlue];
-
+    [super awakeFromNib];
+    self.userprofile.backgroundColor = [TTColor tripTrunkBlue];
+    self.newsfeedPhoto.backgroundColor = [TTColor tripTrunkBlue];
 }
 
 

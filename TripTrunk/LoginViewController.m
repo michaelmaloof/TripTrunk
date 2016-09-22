@@ -13,7 +13,7 @@
 #import "MSTextField.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "EULAViewController.h"
-
+#import "TTAnalytics.h"
 
 @interface LoginViewController ()
 
@@ -118,6 +118,7 @@
         if (error)
         {
             NSString *errorString = [error userInfo][@"error"];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"_loginWithFacebook:"];
             NSLog(@"%@",errorString);
             NSLog(@"%@",error);
             return;
@@ -146,6 +147,8 @@
                             [user setObject:fbid forKey:@"fbid"];
                             [user saveInBackground];
                         }
+                    }else{
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"_loginWithFacebook:"];
                     }
                     }];
                     

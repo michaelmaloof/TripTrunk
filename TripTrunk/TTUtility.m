@@ -20,6 +20,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import "TTAnalytics.h"
 
 #import "UploadOperation.h"
 
@@ -101,6 +102,7 @@ CLCloudinary *cloudinary;
                   
                   if(error) {
                       [ParseErrorHandlingController handleError:error];
+                      [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadProfilePic:"];
                   }
                   else {
                       [[TTUtility sharedInstance] internetConnectionFound];
@@ -235,6 +237,7 @@ CLCloudinary *cloudinary;
                                                             else {
                                                                 // Error uploading photo
                                                                 NSLog(@"Error uploading photo...");
+                                                                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
                                                                 completionBlock(nil);
                                                             }
                                                         }];
@@ -289,6 +292,7 @@ CLCloudinary *cloudinary;
           }
           else {
               // Error Uploading Photo
+              [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",errorResult] method:@"uploadPhotoToCloudinary:"];
               NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
               [[UIApplication sharedApplication] endBackgroundTask:bgTask];
               bgTask = UIBackgroundTaskInvalid;
@@ -334,6 +338,7 @@ CLCloudinary *cloudinary;
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error downloading photo");
+        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhoto:"];
         
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
@@ -391,6 +396,7 @@ CLCloudinary *cloudinary;
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error downloading photo");
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
             [[UIApplication sharedApplication] endBackgroundTask:bgTask];
             bgTask = UIBackgroundTaskInvalid;
         }];
@@ -437,6 +443,7 @@ CLCloudinary *cloudinary;
                           NSLog(@"Error: %@ %@", error, [error userInfo]);
                           completionBlock(NO,error);
                           [ParseErrorHandlingController handleError:error];
+                          [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"deletePhoto:"];
                       }
                   }];
                  
@@ -531,6 +538,7 @@ CLCloudinary *cloudinary;
 }
 
 -(void)uploaderError:(NSString *)result code:(NSInteger)code context:(id)context {
+    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",result] method:@"uploaderError:"];
     NSLog(@"Upload error: %@, %ld", result, (long)code);
     
     // Get rid of the progress view
@@ -770,6 +778,7 @@ CLCloudinary *cloudinary;
 
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error searching for location");
+        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationsForSearch:"];
         return completionBlock(nil, error);
     }];
     
@@ -796,6 +805,7 @@ CLCloudinary *cloudinary;
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error searching for location");
+        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationDetailsForLocation:"];
         return completionBlock(nil, error);
     }];
     
@@ -846,6 +856,7 @@ CLCloudinary *cloudinary;
             } else {
                 // An error occurred. See: https://developers.facebook.com/docs/ios/errors
                 NSLog(@"Error : Requesting \"publish_actions\" permission failed with error : %@", error);
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"initFacebookUpload:"];
             }
         }];
     }
@@ -861,9 +872,12 @@ CLCloudinary *cloudinary;
     
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/photos" parameters:params HTTPMethod:@"POST"];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        if(error)
+        if(error){
             NSLog(@"Error uploading to facebook: %@",error);
-        else NSLog(@"Facebook upload result: %@",result);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhotosToFacebook:"];
+        }else{
+            NSLog(@"Facebook upload result: %@",result);
+        }
     }];
 }
 

@@ -15,6 +15,7 @@
 #import "TTUtility.h"
 #import "TTCache.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "TTAnalytics.h"
 
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate>
 
@@ -107,6 +108,7 @@
             if (error.code != 120){
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadPromotedUsers:"];
             }
         }
     }];
@@ -139,6 +141,7 @@
             if (error.code != 120){
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"getFriendsFromFbids:"];
                 self.isLoadingFacebook = NO;
             }
         }
@@ -179,6 +182,7 @@
             if (error.code != 120){
                 NSLog(@"Error: %@",error);
                 [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"searchFacebookFriends:"];
                 self.isLoadingSearch = NO;
             }
         }
@@ -239,6 +243,7 @@
                 else if (error){
                     if (error.code != 120){
                         NSLog(@"Error loading pending: %@",error);
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadFollowing:"];
                         self.isLoadingPending = NO;
                     }
                 } else {
@@ -249,6 +254,7 @@
         else {
             if (error.code != 120){
                 NSLog(@"Error loading following: %@",error);
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadFollowing:"];
                 self.isLoadingPending = NO;
                 self.isLoadingFollowing= NO;
             }
@@ -284,6 +290,8 @@
                         [self getFriendsFromFbids:friendList];
                     }
                 }
+            }else{
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"refreshFacebookFriends:"];
             }
         }];
     }

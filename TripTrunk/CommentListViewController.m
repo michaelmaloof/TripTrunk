@@ -18,6 +18,7 @@
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "TTCache.h"
+#import "TTAnalytics.h"
 
 #define COMMENT_CELL @"comment_table_view_cell"
 
@@ -156,6 +157,7 @@
         } else {
             NSLog(@"Error loading photo Activities: %@", error);
             [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadComments:"];
         }
 
 }];
@@ -672,6 +674,7 @@
                         }
                     }else{
                         NSLog(@"Error: %@",error);
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"displayAutocompletePopoverFromView:"];
                     }
                 }];
                 
@@ -828,6 +831,7 @@
             [[TTCache sharedCache] setMentionUsers:self.autocompletePopover.friendsArray];
         }else{
             NSLog(@"Error: %@",error);
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"buildMentionUsersCache:"];
         }
     }];
 }
