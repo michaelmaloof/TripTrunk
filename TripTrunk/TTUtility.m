@@ -798,7 +798,7 @@ CLCloudinary *cloudinary;
                                    
                                    // Map the Google Places result into objects containing just the Location String and the PlaceId
                                    NSArray *places = Underscore.arrayMap(results, ^TTPlace *(GMSAutocompletePrediction *place) {
-                                       NSLog(@"Result '%@', with gpID: '%@'", place.attributedFullText.string, place.placeID);
+//                                       NSLog(@"Result '%@', with gpID: '%@'", place.attributedFullText.string, place.placeID);
                                        TTPlace *ttPlace = [TTPlace new];
                                        ttPlace.name = place.attributedFullText.string;
                                        ttPlace.gpID = place.placeID;
