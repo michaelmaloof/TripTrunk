@@ -76,11 +76,6 @@
 @property NSMutableArray *friends;
 
 /**
-We use to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat. Only trunks made before version 2 of the app will have this issue.
- */
-@property NSMutableArray *trunksToBeUpdated;
-
-/**
 list of trips the user hasn't seen since last being in the app
  */
 @property NSMutableArray *unseenTrips; //fixme should be in utility class
@@ -192,9 +187,6 @@ list of trips the user hasn't seen since last being in the app
     //Each viewDidAppear we reload the trunks from parse with a query to get the most recent list of trunks and updates. We leave the old set of map locations in this array. Once we finish placing the new pins, we use this array to remove all the old ones. It prevents the user from ever seeing a blank map (excluding the original load)
     self.annotationsToDelete = [[NSMutableArray alloc]init];
     self.visitedTrunks = [[NSMutableArray alloc]init];
-    //We used to not save the long and lat of a trunk on the Trip parse data. Trunks of the user that dont have this info will be saved in this array and then updated to now include the long and lat.
-    self.trunksToBeUpdated = nil;
-    self.trunksToBeUpdated = [[NSMutableArray alloc]init];
     //We need this to do the logic in determing if a user has seen a trunk and if a trunk should be red or blue.
     self.today = [NSDate date];
     //we need the date the user last oppened the app to put the logo on certain trunks
@@ -740,9 +732,6 @@ list of trips the user hasn't seen since last being in the app
         }
     }
     
-    if (isNeeded == YES){
-        [self.trunksToBeUpdated addObject:trip];
-    }
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
@@ -864,24 +853,6 @@ list of trips the user hasn't seen since last being in the app
 -(void)viewWillDisappear:(BOOL)animated{
     
     self.navigationItem.leftBarButtonItem = nil;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (Trip *trip in self.trunksToBeUpdated) {
-            NSNumber *lat = [NSNumber numberWithDouble: trip.lat];
-            NSNumber *lon = [NSNumber numberWithDouble: trip.longitude];
-            [PFCloud callFunctionInBackground:@"updateTrunkLocation"
-                               withParameters:@{@"latitude": lat, @"longitude": lon, @"tripId": trip.objectId}
-                                        block:^(NSString *response, NSError *error) {
-                                            if (!error) {
-                                            
-                                            }
-                                            else {
-                                                NSLog(@"Error for %@ : %@", trip.name, error);
-                                            }
-                                        }];
-        }
-        
-    });
-    
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

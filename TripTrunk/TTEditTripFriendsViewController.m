@@ -518,7 +518,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
         NSArray *users = self.isTripCreation ? [[self idsFromUsers:self.membersToAdd] arrayByAddingObject:[PFUser currentUser].objectId] : [self idsFromUsers:self.membersToAdd];
         // Create the params dictionary of all the info we need in the Cloud Function
         
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                 users, @"users",
                                 [PFUser currentUser].objectId, @"fromUserId",
                                 self.trip.objectId, @"tripId",
@@ -527,8 +527,9 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
                                 [NSString stringWithFormat:@"%@", self.trip.city], @"content",
                                 [NSNumber numberWithDouble:self.trip.lat], @"latitude",
                                 [NSNumber numberWithDouble:self.trip.longitude], @"longitude",
+                                self.trip.gpID, @"gpID",
                                 nil];
-        
+
         [PFCloud callFunctionInBackground:@"AddMembersToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
             

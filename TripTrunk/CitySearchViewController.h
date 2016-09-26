@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TTBaseTableViewController.h"
+#import "TTPlace.h"
 
 
 @protocol CitySearchViewControllerDelegate;
@@ -21,6 +22,11 @@
 
 @protocol CitySearchViewControllerDelegate <NSObject>
 
-- (void)citySearchDidSelectLocation:(NSString *)location;
+/**
+ * returns an TTPlace with 2 keys:
+ * name - NSString for the city, state, country of the location
+ * gpID - NSString of the Google PlaceID for this location, used to get the Lat/Long, etc.
+ */
+- (void)citySearchDidSelectLocation:(TTPlace *)location;
 
 @end

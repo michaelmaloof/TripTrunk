@@ -751,16 +751,15 @@ CLCloudinary *cloudinary;
     
     return [locations filteredArrayUsingPredicate:predicate];
 }
-
-- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
+- (void)locationsForSearchOLD:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
     NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-
+    
     
     AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
     [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
-
+    
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
             NSArray *responseArray = (NSArray *)responseObject;
@@ -775,7 +774,7 @@ CLCloudinary *cloudinary;
             return completionBlock(response, nil);
         }
         return completionBlock(nil, nil);
-
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error searching for location");
         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationsForSearch:"];
@@ -785,15 +784,38 @@ CLCloudinary *cloudinary;
     [request start];
 }
 
-- (void)locationDetailsForLocation:(NSString *)str block:(void (^)(NSDictionary *locationDetails, NSError *error))completionBlock {
+- (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
+
+    GMSPlacesClient *placesClient = [GMSPlacesClient sharedClient];
+
+    GMSAutocompleteFilter *filter = [[GMSAutocompleteFilter alloc] init];
+    filter.type = kGMSPlacesAutocompleteTypeFilterCity;
     
-    NSString *urlString = [NSString stringWithFormat:@"http://getcitydetails.geobytes.com/GetCityDetails?fqcn=%@", str];
-    
-    NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
-    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
-    
-    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
+    // Only search if we actually have something typed in.
+    if (str && ![str isEqualToString:@""]) {
+        [placesClient autocompleteQuery:str
+                                 bounds:nil
+                                 filter:filter
+                               callback:^(NSArray *results, NSError *error) {
+                                   if (error != nil) {
+                                       NSLog(@"Autocomplete error %@", [error localizedDescription]);
+                                       return completionBlock(nil, error);
+                                   }
+                                   
+                                   // Map the Google Places result into objects containing just the Location String and the PlaceId
+                                   NSArray *places = Underscore.arrayMap(results, ^TTPlace *(GMSAutocompletePrediction *place) {
+//                                       NSLog(@"Result '%@', with gpID: '%@'", place.attributedFullText.string, place.placeID);
+                                       TTPlace *ttPlace = [TTPlace new];
+                                       ttPlace.name = place.attributedFullText.string;
+                                       ttPlace.gpID = place.placeID;
+                                       return ttPlace;
+                                   });
+                                   return completionBlock(places, nil);
+                               }];
+    }
+    else {
+        completionBlock(nil, nil);
+    }
     
     [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (responseObject) {
@@ -808,8 +830,6 @@ CLCloudinary *cloudinary;
         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationDetailsForLocation:"];
         return completionBlock(nil, error);
     }];
-    
-    [request start];
 }
 
 - (void)reportPhoto:(Photo *)photo withReason:(NSString *)reason {

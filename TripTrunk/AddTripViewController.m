@@ -117,9 +117,6 @@
     self.startTripTextView.textAlignment = NSTextAlignmentCenter;
     self.endTripTextView.text = self.trip.endDate;
     self.endTripTextView.textAlignment = NSTextAlignmentCenter;
-    self.city = self.trip.city;
-    self.state = self.trip.state;
-    self.country = self.trip.country;
     self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Update",@"Update");
     self.navigationItem.rightBarButtonItem.tag = 1;
     self.navigationItem.leftBarButtonItem.tag = 1;
@@ -470,13 +467,12 @@
 #pragma mark - CitySearchViewController Delegate
 
 //if they select location we present a view that allows the user to search for locations
-- (void)citySearchDidSelectLocation:(NSString *)location {
+- (void)citySearchDidSelectLocation:(TTPlace *)location {
     [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-    __block BOOL iserror = NO;
     
-    [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(NSDictionary *locationDetails, NSError *error) {
+    [[TTUtility sharedInstance] locationDetailsForLocation:location block:^(TTPlace *ttPlace, NSError *error) {
         
-        if (error){
+        if (error) {
             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
             [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
@@ -511,11 +507,9 @@
             }else {
                 iserror = YES;
             }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (iserror == NO){
-                    self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.city, self.state, self.country];
-                } else {
+            else {
+                // TODO: 9/20/2016 - this shouldn't ever happen anymore using Google API
+                dispatch_async(dispatch_get_main_queue(), ^{
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Unavailable",@"Location Unavailable")
                                                                     message:NSLocalizedString(@"We apologize. Please try another location.",@"We apologize. Please try another location.")
                                                                    delegate:self
@@ -523,8 +517,10 @@
                                                           otherButtonTitles:nil, nil];
                     alert.tag = 69;
                     [alert show];
-                }
-            });
+                    
+                });
+            }
+
         }
     }];
     
@@ -604,16 +600,23 @@
         [self notEnoughInfo:NSLocalizedString(@"Please give your trunk a start and end date.",@"Please give your trunk a start and end date.")];
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         self.navigationItem.rightBarButtonItem.enabled = YES;
-    }else {
-        //FIXME dont do this every time they click next. only if they changed location text fields
-        self.title = NSLocalizedString(@"Verifying Location...",@"Verifying Location...");
-        //take the location the user typed in, make sure its a real location and meets the correct requirements
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        NSString *address = self.locationTextView.text;
-        //hack because MM isnt a valid address for apple.
-        if ([address isEqualToString:@"Manila, MM, Philippines"]){
-            address = @"Manila, Philippines";
+    }
+    else {
+        //make sure the user filled in all the correct text fields
+        if (![self.tripNameTextView.text isEqualToString:@""] && ![self.locationTextView.text isEqualToString:@""] && ![self.startTripTextView.text isEqualToString:@""] && ![self.endTripTextView.text isEqualToString:@""])
+        {
+            [self parseTrip];
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
+        else {
+            [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
+            self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+            [self tabBarTitle];
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
+    
+        self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
+        [self tabBarTitle];
 
         [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
          {

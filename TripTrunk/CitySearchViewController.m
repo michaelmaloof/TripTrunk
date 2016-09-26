@@ -36,6 +36,9 @@
 
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.definesPresentationContext = YES;
+    
+
+
 
     // Set Done button
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
@@ -48,6 +51,10 @@
     NSDictionary *attributes = @{NSFontAttributeName: [TTFont tripTrunkFont16]};
     [self.navigationItem.rightBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
     [self.navigationItem.leftBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    // Hide the extra separator lines AND the line below the Google attribution.
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
     
     
     // Add keyboard notifications so that the keyboard won't cover the table when searching
@@ -164,21 +171,30 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // When there's no results, it returns %s
-    if (_locations.count == 1 && [[_locations objectAtIndex:0] isEqualToString:@"%s"]) {
-        return 0;
+    if (_locations.count > 0) {
+        // Only displays Powered By Google Attribution if there are locations to show.
+        return _locations.count + 1;
     }
-
-    return _locations.count;
+    return 0;
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == _locations.count) {
+        // Last row - aka Google Attribution
+        UITableViewCell *attributionCell = [UITableViewCell new];
+        [attributionCell.imageView setImage:[UIImage imageNamed:@"google-attribution"]];
+        [attributionCell setBackgroundColor:[UIColor clearColor]];
+        [attributionCell.imageView setBackgroundColor:[UIColor clearColor]];
+        return attributionCell;
+    }
+    
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"LocationCell"];
 
-    NSString *location = [_locations objectAtIndex:indexPath.row];
-    if (![location isEqualToString:@"%s"]) {
-        [cell.textLabel setText:location];
+    TTPlace *place = [_locations objectAtIndex:indexPath.row];
+    if (![place.name isEqualToString:@"%s"]) {
+        [cell.textLabel setText:place.name];
     }
     
     return cell;
@@ -187,9 +203,14 @@
 
 #pragma mark - UITableViewDelegate
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *location = [_locations objectAtIndex:indexPath.row];
+    if (indexPath.row == _locations.count) {
+        // Last row - aka Google Attribution
+        return;
+    }
+    
+    TTPlace *location = [_locations objectAtIndex:indexPath.row];
     
     if (location) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(citySearchDidSelectLocation:)]) {

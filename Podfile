@@ -18,4 +18,5 @@ target :'TripTrunk' do
     pod 'AWSSimpleDB'
     pod 'AWSSNS'
     pod 'AWSSQS'
+    pod 'GooglePlaces'
 end

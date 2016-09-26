@@ -10,7 +10,10 @@
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
 #import "PublicTripDetail.h"
+#import "TTPlace.h"
+
 @class PublicTripDetail;
+
 @interface Trip : PFObject <PFSubclassing>
 
 @property NSString *name;
@@ -27,7 +30,9 @@
 @property double lat;
 @property double longitude;
 @property NSString *descriptionStory;
+@property NSString *gpID; // gpID is a Google ID for this Place
 
+- (void)setPlaceData:(TTPlace *)place;
 
 
 @end

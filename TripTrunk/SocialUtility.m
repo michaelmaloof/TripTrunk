@@ -358,6 +358,11 @@
              for (PFObject *object in objects) {
                  [object deleteInBackground];
              }
+             // If the Trip is private, tell CloudCode to also remove any photos they added.
+             if (trip.isPrivate) {
+                 [PFCloud callFunctionInBackground:@"RemovePhotosForUser" withParameters:@{@"tripId": trip.objectId, @"user": user }];
+             }
+             
              completionBlock(YES, nil);
 
          } else {
