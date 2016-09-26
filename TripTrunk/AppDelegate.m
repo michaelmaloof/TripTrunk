@@ -22,6 +22,8 @@
 #import <AWSCore/AWSCore.h>
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
+@import GooglePlaces;
+#define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 #import "TTAnalytics.h"
 
 //TripTrunk Parse Keys
@@ -63,6 +65,8 @@
     [self checkForShortCutItems:launchOptions];
     [self handleFontOutput];
     
+    // Initialize Google Places for the Location Search
+    [GMSPlacesClient provideAPIKey:kGOOGLE_API_KEY];
     
     
     BOOL env = YES;

@@ -20,6 +20,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import <GooglePlaces/GooglePlaces.h>
+#import "Underscore.h"
+#define _ Underscore
 #import "TTAnalytics.h"
 
 #import "UploadOperation.h"
@@ -817,18 +820,53 @@ CLCloudinary *cloudinary;
         completionBlock(nil, nil);
     }
     
-    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if (responseObject) {
-            NSDictionary *response = (NSDictionary *)responseObject;
-            
-            return completionBlock(response, nil);
-        }
-        return completionBlock(nil, nil);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error searching for location");
-        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationDetailsForLocation:"];
-        return completionBlock(nil, error);
+}
+
+- (void)locationDetailsForLocation:(TTPlace *)location block:(void (^)(TTPlace *ttPlace, NSError *error))completionBlock {
+    
+    
+    [[GMSPlacesClient sharedClient] lookUpPlaceID:location.gpID
+                                         callback:^(GMSPlace * _Nullable place, NSError * _Nullable error) {
+                                             if (error) {
+                                                 NSLog(@"Place Details error %@", [error localizedDescription]);
+                                                 return completionBlock(nil, error);
+                                             }
+                                             
+                                             if (place) {
+                                                 
+                                                 TTPlace *ttPlace = [TTPlace new];
+                                                 ttPlace.name = place.name;
+                                                 ttPlace.gpID = location.gpID;
+                                                 ttPlace.latitude = place.coordinate.latitude;
+                                                 ttPlace.longitude = place.coordinate.longitude;
+                                                
+                                                 
+                                                 for (NSObject *component in place.addressComponents) {
+                                                     if ([[component valueForKey:@"type"] isEqualToString:@"locality"]) {
+                                                         ttPlace.city = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"administrative_area_level_1"]) {
+                                                         ttPlace.state = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"country"]) {
+                                                         ttPlace.country = [component valueForKey:@"name"];
+                                                     }
+                                                     else if ([[component valueForKey:@"type"] isEqualToString:@"administrative_area_level_2"]) {
+                                                         ttPlace.admin2 = [component valueForKey:@"name"];
+                                                     }
+                                                 }
+                                                 // Just in case there's no Locality, use the adminArea2
+                                                 // Not sure if this is actually possible from Google, they may guarantee a locality..
+                                                 if (ttPlace.city == nil){
+                                                     ttPlace.city = ttPlace.admin2;
+                                                 }
+                                                 
+                                                 return completionBlock(ttPlace, nil);
+                                             }
+                                             else {
+                                                 NSLog(@"No place details for %@", location.gpID);
+                                                 return completionBlock(nil, nil);
+                                             }
     }];
 }
 

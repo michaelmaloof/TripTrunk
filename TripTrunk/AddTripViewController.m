@@ -19,6 +19,7 @@
 #import "TrunkListViewController.h"
 #import "ActivityListViewController.h"
 #import "UserProfileViewController.h"
+#import "TTPlace.h"
 #import "TTAnalytics.h"
 
 @interface AddTripViewController () <UIAlertViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate, CitySearchViewControllerDelegate, UITextViewDelegate>
@@ -477,35 +478,15 @@
             [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"citySearchDidSelectLocation:"];
-        }else{
-            //Certain locations are messed up with our third party city selector so we manually fix them here
-           if ([location isEqualToString:@"Barcelona, CT, Spain"]){
-                self.city = @"Barcelona";
-                self.state =@"Catalonia";
-                self.country = @"Spain";
-            } else if ([location isEqualToString:@"Sao Paulo, SP, Brazil"]){
-                self.city = @"Sao Paulo";
-                self.state =@"Sao Paulo";
-                self.country = @"Brazil";
-            }else if ([location isEqualToString:@"Taipei, TP, Taiwan"]){
-                self.city = @"Taipei";
-                self.state =@"Taipei City";
-                self.country = @"Taiwan";
-            }else if ([location isEqualToString:@"Freeport, FP, The Bahamas"]){
-                self.city = @"Freeport";
-                self.state =@"Bahamas";
-                self.country = @"Bahamas";
-//            }else if ([location isEqualToString:@"Manila, MM, Philippines"]){
-            }else if ([location containsString:@"Manila, MM, Philippines"]){ //if you do isEqual it wont work
-                self.city = @"Manila";
-                self.state =@"MM";
-                self.country = @"Philippines";
-            }else if (locationDetails != nil){
-                self.city = locationDetails[@"geobytescity"];
-                self.state = locationDetails[@"geobytesregion"];
-                self.country = locationDetails[@"geobytescountry"];
-            }else {
-                iserror = YES;
+        }
+        else {
+            if (ttPlace) {
+                // Set the Trip Location stuff here, because this API call gives us everything we need, including coordinates.                
+                [self.trip setPlaceData:ttPlace];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.locationTextView.text = [NSString stringWithFormat:@"%@, %@, %@", self.trip.city, self.trip.state, self.trip.country];
+                });
             }
             else {
                 // TODO: 9/20/2016 - this shouldn't ever happen anymore using Google API
@@ -618,101 +599,7 @@
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
         [self tabBarTitle];
 
-        [geocoder geocodeAddressString:address completionHandler:^(NSArray *placemarks, NSError *error)
-         {
-             if (placemarks == nil && error)
-             {
-                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
-                 // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                 [self tabBarTitle];
-                 [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later.",@"Something seems to have gone wrong. Please try again later.")];
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
-             } else if (placemarks == nil && !error) {
-                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
-                 // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                 [self tabBarTitle];
-                 [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
-             } else if (placemarks.count == 0){
-                 NSLog(@"Error geocoding address: %@ withError: %@",address, error);
-                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"onNextTapped:"];
-                 // TODO: Set title image
-                 self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                 [self tabBarTitle];
-                 [self notEnoughInfo:NSLocalizedString(@"Something is currently wrong with this location. Please try a different location.",@"Something is currently wrong with this location. Please try a different location.")];
-                 self.navigationItem.rightBarButtonItem.enabled = YES;
-             }
-             
-             else if (!error)
-             {
-                 //make sure the user filled in all the correct text fields
-                 if (![self.tripNameTextView.text isEqualToString:@""] && ![self.locationTextView.text isEqualToString:@""] && ![self.startTripTextView.text isEqualToString:@""] && ![self.endTripTextView.text isEqualToString:@""])
-                 {
-                     // Trip Input has correct data - save the trip!
-                     
-                     CLPlacemark *placemark = placemarks.firstObject;
-                     
-                     if ([self.locationTextView.text isEqualToString:@"Rincon, Puerto Rico, Puerto Rico"]){
-                         self.trip.lat = 18.338371;
-                         self.trip.longitude = -67.251679;
-                         self.trip.state = @"Puerto Rico";
-                         self.trip.city = @"Rincon";
-                         self.trip.country = @"Puerto Rico";
-                     } else {
-                         
-                         self.trip.lat = placemark.location.coordinate.latitude;
-                         self.trip.longitude = placemark.location.coordinate.longitude;
-                         self.trip.country = placemark.country;
-          
-                    
-                         if (placemark.locality == nil){
-                             [self setTripCityName:placemark.administrativeArea];
-                             self.trip.state = placemark.administrativeArea;
-                         } else{
-                             [self setTripCityName:placemark.locality];
-                             self.trip.state = placemark.administrativeArea;
-                             
-                         }
-                         
-                         /**
-                          Matt Schoch - 9/8/2016
-                          THIS IS A HACK
-                          sometimes the place we search for  (i.e. Lake Tahoe, CA) isn't a real city, so Apple's placemark doesn't have a city/state for it.
-                          In that case, we get a null, null location. 
-                          Here we are checking for those nulls and just forcing the city/state to be whatever value was searched for.
-                          
-                          This should be removed when we no longer use geobytes+apple for finding addresses.
-                          */
-                         if (!self.trip.city) {
-                             NSArray *searchedAddress = [address componentsSeparatedByString:@","];
-                             self.trip.city = [searchedAddress objectAtIndex:0];
-                         }
-                         if (!self.trip.state) {
-                             NSArray *searchedAddress = [address componentsSeparatedByString:@","];
-                             self.trip.state = [searchedAddress objectAtIndex:1];
-                         }
-                         
-                     }
-                     [self parseTrip];
-                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                 }
-                 
-                 else
-                 {
-                     [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
-                     self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-                     [self tabBarTitle];
-                     self.navigationItem.rightBarButtonItem.enabled = YES;
-                 }
-             }
-             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-             [self tabBarTitle];
-             return;
-         }];
+        return;
     }
 }
 
