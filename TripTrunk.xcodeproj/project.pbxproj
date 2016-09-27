@@ -1391,6 +1391,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
+					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1434,6 +1435,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
+					"$(PROJECT_DIR)/FacebookSDK",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

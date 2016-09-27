@@ -71,7 +71,16 @@ id<GAITracker> tracker;
     tracker = [[GAI sharedInstance] defaultTracker];
     NSString *user = owner.username;
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
-                                                          action:@"Like"
+                                                          action:@"Photo Liked"
+                                                           label:user
+                                                           value:nil] build]];
+}
+
++(void)photoUnliked:(PFUser*)owner{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    NSString *user = owner.username;
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Photo Unliked"
                                                            label:user
                                                            value:nil] build]];
 }
@@ -92,6 +101,14 @@ id<GAITracker> tracker;
                                                            value:nil] build]];
 }
 
++(void)deleteUserMention{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"User Mention"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
 +(void)commentAdded:(NSString*)user{
     tracker = [[GAI sharedInstance] defaultTracker];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
@@ -108,14 +125,61 @@ id<GAITracker> tracker;
                                                            value:nil] build]];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Trunk"
                                                           action:@"photo count"
-                                                           label:[NSString stringWithFormat:@"%li",numOfPhotos]
+                                                           label:[NSString stringWithFormat:@"%li",(unsigned long)numOfPhotos]
                                                            value:nil] build]];
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Trunk"
                                                           action:@"member count"
-                                                           label:[NSString stringWithFormat:@"%li",numOfMembers]
+                                                           label:[NSString stringWithFormat:@"%li",(unsigned long)numOfMembers]
                                                            value:nil] build]];
 }
 
++(void)facebookPhotoUpload{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Facebook Photo Upload"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
++(void)downloadPhoto{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Photo Downloaded"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
++(void)reportPhoto{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Photo Reported"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
++(void)deleteTrunk{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Trunk Deleted"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
++(void)deleteUser{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"User Deleted From Trunk"
+                                                           label:nil
+                                                           value:nil] build]];
+}
+
++(void)deleteComment{
+    tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"Activity"
+                                                          action:@"Comment Deleted"
+                                                           label:nil
+                                                           value:nil] build]];
+}
 
 
 @end

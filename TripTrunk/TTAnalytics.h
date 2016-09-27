@@ -15,9 +15,17 @@
 +(void)trackScreen:(NSString*)screenName;
 +(void)accountCreated;
 +(void)photoLiked:(PFUser*)owner;
++(void)photoUnliked:(PFUser*)owner;
 +(void)photoViewed:(NSString*)photo;
 +(void)errorOccurred:(NSString*)errorMessage method:(NSString*)method;
 +(void)userMentioned:(NSString*)user;
++(void)deleteUserMention;
 +(void)commentAdded:(NSString*)user;
 +(void)trunkCreated:(NSUInteger)numOfPhotos numOfMembers:(NSUInteger)numOfMembers;
++(void)facebookPhotoUpload;
++(void)downloadPhoto;
++(void)reportPhoto;
++(void)deleteTrunk;
++(void)deleteUser;
++(void)deleteComment;
 @end

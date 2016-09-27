@@ -327,6 +327,7 @@ CLCloudinary *cloudinary;
         if (responseObject) {
             UIImage *image = (UIImage *)responseObject;
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+            [TTAnalytics downloadPhoto];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
@@ -375,6 +376,7 @@ CLCloudinary *cloudinary;
             if (responseObject) {
                 // Save image to phone
                 UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
+                [TTAnalytics downloadPhoto];
 
                 // Increment counter so we know when to hide the HUD
                 completedDownloads++;
@@ -882,6 +884,7 @@ CLCloudinary *cloudinary;
     [report setValue:reason forKey:@"reason"];
     [report setObject:[PFUser currentUser] forKey:@"user"];
     [report saveInBackground];
+    [TTAnalytics reportPhoto];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // Hide HUD spinner
@@ -935,6 +938,7 @@ CLCloudinary *cloudinary;
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhotosToFacebook:"];
         }else{
             NSLog(@"Facebook upload result: %@",result);
+            [TTAnalytics facebookPhotoUpload];
         }
     }];
 }

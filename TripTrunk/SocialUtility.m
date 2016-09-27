@@ -279,6 +279,7 @@
              }
              
              [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
+             [TTAnalytics deleteTrunk];
              
          } else {
              NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -362,7 +363,7 @@
              if (trip.isPrivate) {
                  [PFCloud callFunctionInBackground:@"RemovePhotosForUser" withParameters:@{@"tripId": trip.objectId, @"user": user }];
              }
-             
+             [TTAnalytics deleteUser];
              completionBlock(YES, nil);
 
          } else {
@@ -553,6 +554,7 @@
         if (!error && object.count != 0){
              [object[0] deleteEventually];
             [[TTUtility sharedInstance] internetConnectionFound];
+            [TTAnalytics deleteUserMention];
             return completionBlock(true, error);
         }else{
             NSLog(@"Error: %@", error);
@@ -610,6 +612,7 @@
                         [[TTUtility sharedInstance] internetConnectionFound];
                         [object setObject:@"" forKey:@"caption"];
                         [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                            [TTAnalytics deleteComment];
                             completionBlock(succeeded, error);
                         }];
                         
@@ -646,6 +649,7 @@
 
 + (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
+    [TTAnalytics photoUnliked:photo.user];
     PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
     [queryExistingLikes whereKey:@"photo" equalTo:photo];
     [queryExistingLikes whereKey:@"type" equalTo:@"like"];
