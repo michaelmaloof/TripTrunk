@@ -470,8 +470,8 @@
     
     NSArray *sortedMatchArray = [self sortedArray:matches key:@"username"];
     NSArray *sortedUsernameArray = [self sortedArray:usernames key:@"username"];
-    NSArray *sortedFirstNameArray = [self sortedArray:firstNames key:@"firstNameLowercase"];
-    NSArray *sortedLastNameArray = [self sortedArray:lastNames key:@"lastNameLowercase"];
+    NSArray *sortedFirstNameArray = [self sortedArray:firstNames key:@"lowercaseName"];
+    NSArray *sortedLastNameArray = [self sortedArray:lastNames key:@"lowercaseName"];
     
     NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
     [sortedArray addObjectsFromArray:sortedMatchArray];
