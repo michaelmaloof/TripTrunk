@@ -59,6 +59,11 @@
     [self loadFollowing];
 }
 
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, self.bottomLayoutGuide.length, 0);
+}
+
 -(void)setUpTableViewandSearch{
     self.searchResults = [[NSMutableArray alloc] init];
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
@@ -398,8 +403,8 @@
 //        https://www.parse.com/questions/duplicates-objects-in-pfqueryviewcontroller-with-paging-enable-using-a-query-with-ordering-constraint-based-on-date
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-        
-    query.limit = 10;
+    
+    query.limit = 50;
     
     if (self.removeResults == NO){
         self.searchCount = self.searchCount + 10;
@@ -422,6 +427,12 @@
         [self.searchResults addObjectsFromArray:objects];
         self.searchString = searchTerm;
         self.isLoadingSearch = NO;
+            
+            NSMutableArray *sortedArray = [self sortResultsByUsername:self.searchResults searchTerm:searchTerm];
+            [self.searchResults removeAllObjects];
+            [self.searchResults addObjectsFromArray:sortedArray];
+            
+            
         [self.tableView reloadData];
         [[TTUtility sharedInstance] internetConnectionFound];
         }
@@ -435,6 +446,47 @@
 
 }
     }
+}
+
+//FIXME: There has to be a better way to do this!!!
+-(NSMutableArray*)sortResultsByUsername:(NSArray*)results searchTerm:(NSString*)searchTerm{
+    NSMutableArray *matches = [[NSMutableArray alloc] init];
+    NSMutableArray *usernames = [[NSMutableArray alloc] init];
+    NSMutableArray *firstNames = [[NSMutableArray alloc] init];
+    NSMutableArray *lastNames = [[NSMutableArray alloc] init];
+    searchTerm = [searchTerm lowercaseString];
+    for(PFUser *user in results){
+        if([[user.username lowercaseString] hasPrefix:searchTerm]){
+            [matches addObject:user];
+        }else if([user.username containsString:searchTerm]){
+            [usernames addObject:user];
+        }else if([user[@"firstNameLowercase"] containsString:searchTerm]){
+            [firstNames addObject:user];
+        }else if([user[@"lastNameLowercase"] containsString:searchTerm]){
+            [lastNames addObject:user];
+        }
+
+    }
+    
+    NSArray *sortedMatchArray = [self sortedArray:matches key:@"username"];
+    NSArray *sortedUsernameArray = [self sortedArray:usernames key:@"username"];
+    NSArray *sortedFirstNameArray = [self sortedArray:firstNames key:@"firstNameLowercase"];
+    NSArray *sortedLastNameArray = [self sortedArray:lastNames key:@"lastNameLowercase"];
+    
+    NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
+    [sortedArray addObjectsFromArray:sortedMatchArray];
+    [sortedArray addObjectsFromArray:sortedUsernameArray];
+    [sortedArray addObjectsFromArray:sortedFirstNameArray];
+    [sortedArray addObjectsFromArray:sortedLastNameArray];
+    
+    return sortedArray;
+}
+
+-(NSArray*)sortedArray:(NSArray*)theArray key:(NSString*)key{
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
+    NSArray *sortedArray = [theArray sortedArrayUsingDescriptors:sortDescriptors];
+    return sortedArray;
 }
 
 
