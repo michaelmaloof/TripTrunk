@@ -14,6 +14,7 @@
 #import "Trip.h"
 #import "TTCache.h"
 #import "TTAnalytics.h"
+#import "TTUsernameSort.h"
 
 @interface TTSuggestionTableViewController()
 @property unsigned long popoverHeight;
@@ -328,9 +329,9 @@
     //Filter the array for only users that match the predicate
     self.displayFriendsArray = [self.friendsArray filteredArrayUsingPredicate:predicate];
     
-    //sort the Array alphabetically
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES];
-    NSArray *sortedArray=[self.displayFriendsArray sortedArrayUsingDescriptors:@[sort]];
+    //sort the Array by username, firstname, then lastname
+    TTUsernameSort *us = [[TTUsernameSort alloc] init];
+    NSArray *sortedArray = [us sortResultsByUsername:self.displayFriendsArray searchTerm:[self.mentionText substringFromIndex:1]];
     self.displayFriendsArray = [NSArray arrayWithArray:sortedArray];
     
     //tell the delegate that it should adjust the size of the popover based on content

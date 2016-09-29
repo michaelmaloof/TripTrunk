@@ -16,6 +16,7 @@
 #import "TTCache.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TTAnalytics.h"
+#import "TTUsernameSort.h"
 
 @interface FindFriendsViewController() <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate>
 
@@ -428,7 +429,8 @@
         self.searchString = searchTerm;
         self.isLoadingSearch = NO;
             
-            NSMutableArray *sortedArray = [self sortResultsByUsername:self.searchResults searchTerm:searchTerm];
+            TTUsernameSort *us = [[TTUsernameSort alloc] init];
+            NSMutableArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
             [self.searchResults removeAllObjects];
             [self.searchResults addObjectsFromArray:sortedArray];
             
@@ -444,49 +446,8 @@
 //    self.searchString = searchTerm;
 //    [self.tableView reloadData];
 
-}
-    }
-}
-
-//FIXME: There has to be a better way to do this!!!
--(NSMutableArray*)sortResultsByUsername:(NSArray*)results searchTerm:(NSString*)searchTerm{
-    NSMutableArray *matches = [[NSMutableArray alloc] init];
-    NSMutableArray *usernames = [[NSMutableArray alloc] init];
-    NSMutableArray *firstNames = [[NSMutableArray alloc] init];
-    NSMutableArray *lastNames = [[NSMutableArray alloc] init];
-    searchTerm = [searchTerm lowercaseString];
-    for(PFUser *user in results){
-        if([[user.username lowercaseString] hasPrefix:searchTerm]){
-            [matches addObject:user];
-        }else if([user.username containsString:searchTerm]){
-            [usernames addObject:user];
-        }else if([user[@"firstNameLowercase"] containsString:searchTerm]){
-            [firstNames addObject:user];
-        }else if([user[@"lastNameLowercase"] containsString:searchTerm]){
-            [lastNames addObject:user];
         }
-
     }
-    
-    NSArray *sortedMatchArray = [self sortedArray:matches key:@"username"];
-    NSArray *sortedUsernameArray = [self sortedArray:usernames key:@"username"];
-    NSArray *sortedFirstNameArray = [self sortedArray:firstNames key:@"lowercaseName"];
-    NSArray *sortedLastNameArray = [self sortedArray:lastNames key:@"lowercaseName"];
-    
-    NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
-    [sortedArray addObjectsFromArray:sortedMatchArray];
-    [sortedArray addObjectsFromArray:sortedUsernameArray];
-    [sortedArray addObjectsFromArray:sortedFirstNameArray];
-    [sortedArray addObjectsFromArray:sortedLastNameArray];
-    
-    return sortedArray;
-}
-
--(NSArray*)sortedArray:(NSArray*)theArray key:(NSString*)key{
-    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
-    NSArray *sortedArray = [theArray sortedArrayUsingDescriptors:sortDescriptors];
-    return sortedArray;
 }
 
 

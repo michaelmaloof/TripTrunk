@@ -60,6 +60,7 @@
 		271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 271D8BBB1D91A76B0054741F /* GoogleService-Info.plist */; };
 		271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BBD1D91AF000054741F /* CoreData.framework */; };
 		271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8BC01D91C3540054741F /* TTAnalytics.m */; };
+		271EE31A1D9DA15E00A3911C /* TTUsernameSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 271EE3191D9DA15E00A3911C /* TTUsernameSort.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		272ACA041D2C5CA700329B28 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA011D2C5CA700329B28 /* Parse.framework */; };
 		272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
@@ -272,6 +273,8 @@
 		271D8BBD1D91AF000054741F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		271D8BBF1D91C3540054741F /* TTAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTAnalytics.h; sourceTree = "<group>"; };
 		271D8BC01D91C3540054741F /* TTAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAnalytics.m; sourceTree = "<group>"; };
+		271EE3181D9DA15E00A3911C /* TTUsernameSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUsernameSort.h; sourceTree = "<group>"; };
+		271EE3191D9DA15E00A3911C /* TTUsernameSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUsernameSort.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		272ACA011D2C5CA700329B28 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -702,6 +705,8 @@
 				27A581431C888D910095ED94 /* TTPushNotificationHandler.m */,
 				27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */,
 				27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */,
+				271EE3181D9DA15E00A3911C /* TTUsernameSort.h */,
+				271EE3191D9DA15E00A3911C /* TTUsernameSort.m */,
 				271D8BBF1D91C3540054741F /* TTAnalytics.h */,
 				271D8BC01D91C3540054741F /* TTAnalytics.m */,
 				2715140B1C99D8AF0054E43F /* TTColor.h */,
@@ -1166,6 +1171,7 @@
 				2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */,
 				224F3FBB1AE1D8F6003A1DEB /* LoginViewController.m in Sources */,
 				22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */,
+				271EE31A1D9DA15E00A3911C /* TTUsernameSort.m in Sources */,
 				271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */,
 				2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
