@@ -161,6 +161,29 @@
             }
         }
     }
+    
+    //The following code refactors the 3 loops above into 1 loop.
+    //Will have to be fully tested.
+//    for (UINavigationController *controller in self.tabBarController.viewControllers){
+//        for (id view in controller.viewControllers){
+//            if ([view isKindOfClass:[HomeMapViewController class]]){
+//                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+//                    HomeMapViewController *view2 = (HomeMapViewController*)view;
+//                    if (view2 == (HomeMapViewController*)controller.viewControllers[0]){
+//                        if (![view2.viewedTrips containsObject:self.trip])
+//                            [view2.viewedTrips addObject:self.trip];
+//                        
+//                        self.photosSeen = [[NSMutableArray alloc]init];
+//                        self.photosSeen = view2.viewedPhotos;
+//                    }
+//                }
+//                [view userHasViewedTrip:self.trip];
+//            }
+//            
+//            if ([view isKindOfClass:[TrunkListViewController class]])
+//                [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
+//        }
+//    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -449,24 +472,29 @@
         if(!error)
         {
             [[TTUtility sharedInstance] internetConnectionFound];
-            // Objects is an array of Parse Photo objects
-            self.photos = [NSMutableArray arrayWithArray:objects];
-            //update photo count when it is not right 
-            if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
-                self.trip.publicTripDetail.photoCount = (int)self.photos.count;
-                [self.trip saveInBackground];
-            }
-            [self.collectionView reloadData];
-            CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
-            NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
-            NSInteger numOfRows = self.photos.count/self.numberOfImagesPerRow;
-            if(self.photos.count % self.numberOfImagesPerRow != 0)
-                numOfRows++;
-            NSInteger heightOfScroll = imageHeight*numOfRows+collectionViewPosition.y;
             
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
-            self.scrollViewHeightConstraint.constant = heightOfScroll;
-            self.contentViewHeightConstraint.constant = heightOfScroll;
+            [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                
+                // Objects is an array of Parse Photo objects
+                self.photos = [NSMutableArray arrayWithArray:objects];
+                //update photo count when it is not right 
+                if ((int)self.photos.count != self.trip.publicTripDetail.photoCount){
+                    self.trip.publicTripDetail.photoCount = (int)self.photos.count;
+                    [self.trip saveInBackground];
+                }
+                [self.collectionView reloadData];
+                CGPoint collectionViewPosition = [self.scrollView convertPoint:CGPointZero fromView:self.collectionView];
+                NSInteger imageHeight = self.view.frame.size.width/self.numberOfImagesPerRow;
+                NSInteger numOfRows = self.photos.count/self.numberOfImagesPerRow;
+                if(self.photos.count % self.numberOfImagesPerRow != 0)
+                    numOfRows++;
+                NSInteger heightOfScroll = imageHeight*numOfRows+collectionViewPosition.y;
+                
+                self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, heightOfScroll);
+                self.scrollViewHeightConstraint.constant = heightOfScroll;
+                self.contentViewHeightConstraint.constant = heightOfScroll;
+                
+            }];
         }else{
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryParseMethod:"];
         }
