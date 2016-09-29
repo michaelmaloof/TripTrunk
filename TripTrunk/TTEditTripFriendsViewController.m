@@ -10,11 +10,11 @@
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
-
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "TTUtility.h"
 #import "TTTrunkMemberViewCell.h"
+#import "TTUsernameSort.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -595,6 +595,9 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
                 [ParseErrorHandlingController handleError:error];
             } else {
                 [self.searchResults addObjectsFromArray:objects];
+                TTUsernameSort *us = [[TTUsernameSort alloc] init];
+                NSArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
+                self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
                 [self.followingTableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
                 

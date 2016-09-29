@@ -10,10 +10,10 @@
 #import "AddTripPhotosViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "UIImageView+AFNetworking.h"
-
 #import "SocialUtility.h"
 #import "UserTableViewCell.h"
 #import "TTUtility.h"
+#import "TTUsernameSort.h"
 
 #define USER_CELL @"user_table_view_cell"
 
@@ -541,6 +541,9 @@
                 [ParseErrorHandlingController handleError:error];
             } else {
                 [self.searchResults addObjectsFromArray:objects];
+                TTUsernameSort *us = [[TTUsernameSort alloc] init];
+                NSArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
+                self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
                 [self.tableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
