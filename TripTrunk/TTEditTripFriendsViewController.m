@@ -608,6 +608,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
     }
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    [self filterResults:searchText];
+}
+
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController{
 

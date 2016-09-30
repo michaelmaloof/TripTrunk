@@ -551,6 +551,10 @@
     }
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    [self filterResults:searchText];
+}
+
 /**
  *  Delegate method executed when the "Done" button is pressed
  */

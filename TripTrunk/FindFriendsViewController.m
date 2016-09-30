@@ -498,6 +498,10 @@
     [self.tableView setNeedsLayout];
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    [self searchBarShouldEndEditing:searchBar];
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
