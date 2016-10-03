@@ -31,10 +31,10 @@
 #define kPARSE_CLIENT_KEY @"NvbwXKFHZ2cp7F4Fc9ipXNNybviqGboCwiinIoVa"
 
 //TripTrunk-DEV
-//#define kPARSE_SERVER_KEY @"https://api-dev.triptrunkapp.com/parse/" // This is the DEV URL
+#define kPARSE_SERVER_KEY @"https://api-dev.triptrunkapp.com/parse/" // This is the DEV URL
 
 //TripTrunk-PROD
-#define kPARSE_SERVER_KEY @"https://api.triptrunkapp.com/parse/" // This is the PRODUCTION URL
+//#define kPARSE_SERVER_KEY @"https://api.triptrunkapp.com/parse/" // This is the PRODUCTION URL
 
 //TripTrunk Local
 //#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" // This is your LOCALHOST URL
@@ -72,7 +72,7 @@
     BOOL env = YES;
     if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
         env = NO;
-    [TTAnalytics initAnalyticsOnStart:env];
+//    [TTAnalytics initAnalyticsOnStart:env];
 
     return YES;
 }
