@@ -244,7 +244,7 @@
     [self.user setValue:firstName forKey:@"firstName"];
     [self.user setValue:lastName forKey:@"lastName"];
     [self.user setValue:fullName forKey:@"name"];
-    [self.user setValue:self.emailAddress.text forKey:@"email"];
+    [self.user setValue:[self.emailAddress.text lowercaseString] forKey:@"email"];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSaveUserAndClose:)])
         [self.delegate shouldSaveUserAndClose:self.user];

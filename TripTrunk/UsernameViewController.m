@@ -128,7 +128,7 @@
             
             NSString *facebookID = userData[@"id"];
             //                NSString *name = userData[@"name"];
-            NSString *email = userData[@"email"];
+            NSString *email = [userData[@"email"] lowercaseString];
             
             if (email == nil){
                 email = @"";
@@ -164,7 +164,7 @@
 
 
 - (void)updateFieldsWithFBInfo:(NSDictionary *)userData {
-    [self.emailTextField setText:userData[@"email"]];
+    [self.emailTextField setText:[userData[@"email"] lowercaseString]];
 //    [self.fullnameTextField setText:userData[@"name"]];
 }
 
@@ -220,7 +220,7 @@
         NSString *username =  [_usernameTextField.text lowercaseString];
         NSString *firstName = _firstNameTextField.text;
         NSString *lastName = _fullnameTextField.text;
-        NSString *email = _emailTextField.text;
+        NSString *email = [_emailTextField.text lowercaseString];
         NSString *password = _passwordTextField.text;
         NSString *hometown = _hometownTextField.text;
         
@@ -360,7 +360,7 @@
     if(![self validateUsernameDoesNotBeginWithIllegalChars:username])
         return NO;
     
-    if(![self validateEmailAddressIsValidFormat:self.emailTextField.text])
+    if(![self validateEmailAddressIsValidFormat:[self.emailTextField.text lowercaseString]])
         return NO;
     
     return YES;

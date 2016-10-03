@@ -804,6 +804,7 @@
                     alert.tag = 0;
                     [alert show];
                     self.user[@"email"] = NSLocalizedString(@"<Error: please update>",@"<Error: please update>");
+                    [[self presentedViewController] dismissViewControllerAnimated:YES completion:nil];
                 }
                 
                 else if (error.code != 120){
