@@ -68,11 +68,15 @@
     // Initialize Google Places for the Location Search
     [GMSPlacesClient provideAPIKey:kGOOGLE_API_KEY];
     
-    
-    BOOL env = YES;
-    if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
-        env = NO;
-//    [TTAnalytics initAnalyticsOnStart:env];
+    //Intiate google analytics for all non-dev users
+    if(![[PFUser currentUser].objectId isEqualToString:@"B6xgcsV7lL"] && //Austin
+       ![[PFUser currentUser].objectId isEqualToString:@"mzITFRYJjy"] && //Mike: appdever
+       ![[PFUser currentUser].objectId isEqualToString:@"H00sH608n2"]){  //Mike: altrius
+            BOOL env = YES;
+            if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
+                env = NO;
+            [TTAnalytics initAnalyticsOnStart:env];
+    }
 
     return YES;
 }
