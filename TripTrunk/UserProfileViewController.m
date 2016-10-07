@@ -1116,7 +1116,6 @@
     self.hometownLabel.text = @"";
     self.profilePicImageView.image = nil;
     self.bioTextView.text = @"";
-    self.trunkCountLabel.text = @"0";
     [self.followersButton setTitle:@"0" forState:UIControlStateNormal];
     [self.followingButton setTitle:@"0" forState:UIControlStateNormal];
     [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
