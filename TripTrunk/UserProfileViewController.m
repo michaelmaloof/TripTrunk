@@ -81,8 +81,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.trunkCountButton.hidden = YES;
-    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
+//    self.trunkCountButton.hidden = YES;
+    [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
     [self.followButton setHidden:YES];
     self.followersButton.enabled = NO;
     self.followingButton.enabled = NO;
@@ -270,17 +270,16 @@
 
 -(void)setInitialDesign{
     [self roundFollowButton];
-    self.trunkCountButton.hidden = YES;
-    [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
+//    self.trunkCountButton.hidden = YES;
+    [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
     self.followButton.tag = 0;
     [self setButtonColor];
     //round the profile image
     [self.profilePicImageView.layer  setCornerRadius:50.0];
     [self.profilePicImageView.layer  setMasksToBounds:YES];
     //hide the follow button until we know if the current user follows them or not
-    self.followButton.hidden = YES;
+//    self.followButton.hidden = YES;
     self.numberOfImagesPerRow = 3;
-    
     self.privateCount = 0;
     [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -543,16 +542,16 @@
 
         
         if (followersCount < 1){ //FOLLOWERS
-            [self.followersButton setTitle:@"" forState:UIControlStateNormal];
-            [self.followersButton setTitle:@"" forState:UIControlStateDisabled];
+            [self.followersButton setTitle:@"0" forState:UIControlStateNormal];
+            [self.followersButton setTitle:@"0" forState:UIControlStateDisabled];
         } else {
             [self.followersButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followersCount] forState:UIControlStateNormal];
             [self.followersButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followersCount] forState:UIControlStateDisabled];
         }
         
         if (followingCount < 1){ //FOLLOWING
-            [self.followingButton setTitle:@"" forState:UIControlStateNormal];
-            [self.followingButton setTitle:@"" forState:UIControlStateDisabled];
+            [self.followingButton setTitle:@"0" forState:UIControlStateNormal];
+            [self.followingButton setTitle:@"0" forState:UIControlStateDisabled];
             
         } else {
             [self.followingButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)followingCount] forState:UIControlStateNormal];
@@ -580,17 +579,17 @@
             self.trunkCount= count;
             
             if (count == 0){
-                self.trunkCountButton.hidden = YES;
-                [self.trunkCountButton setTitle:@"" forState:UIControlStateNormal];
-                self.trunkCountButton.hidden = NO;
+//                self.trunkCountButton.hidden = YES;
+                [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
+//                self.trunkCountButton.hidden = NO;
                 self.photosLabel.hidden = YES;
                 self.trunkListButton.hidden = YES;
                 self.triangle.hidden = YES;
 
             }else {
-                self.trunkCountButton.hidden = YES;
+//                self.trunkCountButton.hidden = YES;
                 [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-                self.trunkCountButton.hidden = NO;
+//                self.trunkCountButton.hidden = NO;
                 self.photosLabel.hidden = NO;
                 self.trunkListButton.hidden = NO;
                 self.triangle.hidden = NO;
@@ -1117,9 +1116,10 @@
     self.hometownLabel.text = @"";
     self.profilePicImageView.image = nil;
     self.bioTextView.text = @"";
-    self.followersButton.titleLabel.text = @"0";
-    self.followingButton.titleLabel.text = @"0";
-    self.followButton.titleLabel.text = @"0";
+    self.trunkCountLabel.text = @"0";
+    [self.followersButton setTitle:@"0" forState:UIControlStateNormal];
+    [self.followingButton setTitle:@"0" forState:UIControlStateNormal];
+    [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
     [self.collectionView reloadData];
 }
 
