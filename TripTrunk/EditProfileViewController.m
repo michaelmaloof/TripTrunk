@@ -455,6 +455,7 @@
 }
 - (IBAction)logoutWasTapped:(id)sender {
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
+    [self.delegate userLoggedOut];
 }
 
 - (IBAction)reportBug:(id)sender {

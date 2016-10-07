@@ -24,8 +24,9 @@
 #import "TTUserProfileCollectionView.h"
 #import "PhotoViewController.h"
 #import "TTAnalytics.h"
+#import "EditProfileViewController.h"
 
-@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate>
+@interface UserProfileViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EditProfileViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PhotoDelegate, EditProfileViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *trunkCountButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
@@ -1105,6 +1106,21 @@
         [self.myPhotos removeObjectAtIndex:index];
         [self.collectionView reloadData];
     }
+}
+
+#pragma mark - EditProfileViewControllerDelegate
+-(void)userLoggedOut{
+    self.user = nil;
+    self.title = @"";
+    self.myPhotos = [[NSMutableArray alloc] init];
+    self.nameLabel.text = @"";
+    self.hometownLabel.text = @"";
+    self.profilePicImageView.image = nil;
+    self.bioTextView.text = @"";
+    self.followersButton.titleLabel.text = @"0";
+    self.followingButton.titleLabel.text = @"0";
+    self.followButton.titleLabel.text = @"0";
+    [self.collectionView reloadData];
 }
 
 @end

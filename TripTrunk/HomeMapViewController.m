@@ -19,7 +19,7 @@
 #import "TTNewsFeedViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "TTAnalytics.h"
-
+#import "EditProfileViewController.h"
 /**
  HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
  */
@@ -140,6 +140,9 @@ list of trips the user hasn't seen since last being in the app
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    
+    if(![PFUser currentUser])
+        [self.mapView removeAnnotations:self.mapView.annotations];
     self.visitedTrunks = [[NSMutableArray alloc]init]; //FIXME this should be a class method handling this
     [self setVisitedTrunks]; //FIXME this should be a class method handling this
     [self designNavBar];
@@ -1182,6 +1185,8 @@ list of trips the user hasn't seen since last being in the app
     [self.navigationController pushViewController:vc animated:YES];
 
 }
+
+
 @end
 
 

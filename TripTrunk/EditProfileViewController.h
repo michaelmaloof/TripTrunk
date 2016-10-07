@@ -34,5 +34,6 @@
 
 - (void)shouldSaveUserAndClose:(PFUser *)user;
 - (void)privacyChanged:(PFUser *)user;
+- (void)userLoggedOut;
 
 @end
