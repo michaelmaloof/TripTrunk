@@ -135,6 +135,23 @@ list of trips the user hasn't seen since last being in the app
 @implementation HomeMapViewController
 
 - (void)viewDidLoad {
+    
+    NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+    NSString *message = [uploadError stringForKey:@"uploadError"];
+    
+    if(message){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Previous Session Upload" message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            // Ok action example
+        }];
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError synchronize];
+    }
+    
+    
     [super viewDidLoad];
     [self setArraysBoolsandDates];
 }

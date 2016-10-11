@@ -24,12 +24,14 @@
 #import "Underscore.h"
 #define _ Underscore
 #import "TTAnalytics.h"
-
 #import "UploadOperation.h"
+#import "AddTripPhotosViewController.h"
 
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 static TTTTimeIntervalFormatter *timeFormatter;
+
 
 @interface TTUtility () <MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
@@ -37,12 +39,15 @@ static TTTTimeIntervalFormatter *timeFormatter;
     TTNoInternetView *internetView;
     NSOperationQueue *operationQueue;
 }
-
+@property NSString* trip;
+@property int photoCount;
+@property int totalPhotos;
 @end
 
 @implementation TTUtility
 
 CLCloudinary *cloudinary;
+
 
 + (TTUtility*)sharedInstance
 {
@@ -179,8 +184,13 @@ CLCloudinary *cloudinary;
     }
 }
 
--(void)uploadPhoto:(Photo *)photo toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
+-(void)uploadPhoto:(Photo *)photo photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 {
+    self.trip = photo.tripName;
+    self.totalPhotos = photosCount;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+
     
     // Initialize the progressView if it isn't initialized already
     if (!progressView) {
@@ -214,6 +224,8 @@ CLCloudinary *cloudinary;
 
                                                         [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
                                                             if (succeeded) {
+                                                                
+                                                                self.photoCount++;
                                                                 
                                                                 // Add photo to the local cache
                                                                 [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
@@ -539,6 +551,13 @@ CLCloudinary *cloudinary;
     if ([progressView taskCompleted]) {
         // Uploading is totally complete, so nil the progress view
         progressView = nil;
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
+        localNotification.alertBody = [NSString stringWithFormat:@"Successfully upoaded %d/%d photos to the '%@' trunk",self.photoCount,self.totalPhotos,self.trip];
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        self.trip = nil;
+        self.photoCount = 0;
     }
 }
 
@@ -551,6 +570,13 @@ CLCloudinary *cloudinary;
  {
     [progressView removeFromWindow];
      progressView = nil;
+     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+     localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
+     localNotification.alertBody = [NSString stringWithFormat:@"There was an error uploading photos to the '%@' trunk",self.trip];
+     localNotification.timeZone = [NSTimeZone defaultTimeZone];
+     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+     self.trip = nil;
+     self.photoCount = 0;
  }
     
 }
@@ -944,4 +970,34 @@ CLCloudinary *cloudinary;
 }
 
 
+-(void)appWillTerminate:(NSNotification*)note{
+    NSLog(@"appWillTerminate");
+    
+    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos to the '%@' trunk, however, %d photos did not upload.", @"Successfully upoaded %d/%d photos to the '%@' trunk, however, %d photos did not upload.");
+    message = [NSString stringWithFormat:message,self.photoCount,self.totalPhotos,self.trip,self.totalPhotos-self.photoCount];
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
+        UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+    }
+
+    if(self.photoCount != self.totalPhotos){        
+        NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+        [uploadError setObject:message forKey:@"uploadError"];
+        [uploadError synchronize];
+        
+        
+        NSLog(@"setting up notification.");
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
+        localNotification.alertBody = message;
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        self.trip = nil;
+        self.photoCount = 0;
+    }
+    [NSThread sleepForTimeInterval:2];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+}
 @end

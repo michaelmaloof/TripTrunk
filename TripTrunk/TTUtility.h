@@ -48,7 +48,7 @@
  *  Handles uploading a photo and publishing to facebook if needed. This method internally uses uploadPhotoToCloudinary:withImageData:block
  *
  */
--(void)uploadPhoto:(Photo *)photo toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
+-(void)uploadPhoto:(Photo *)photo photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 
 /**
  *  Uploads a Photo to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse

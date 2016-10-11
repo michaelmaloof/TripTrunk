@@ -288,7 +288,7 @@
         photo.city = self.trip.city;
         
         // Upload the photo - this method will also handle publish to facebook if needed
-        [[TTUtility sharedInstance] uploadPhoto:photo toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
+        [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
             // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
             if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
                 // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
