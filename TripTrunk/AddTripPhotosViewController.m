@@ -289,6 +289,10 @@
         
         // Upload the photo - this method will also handle publish to facebook if needed
         [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
+            PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
+            [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
+            [countIncrement save];
+            
             // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
             if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
                 // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
@@ -308,10 +312,14 @@
      * Because of issues grouping photosAdded notifications (Matt added 5 photos, instead of Matt added a photo, 5 times)
      * We are just saving an object that will notifiy the server to send the notification
      * Eventually this should be done properly and the client shouldn't get any say in sending notifications, CloudCode should handle it all.
+     
+     UPDATE (NEW HACK):
+     I moved the count increment to happen after each upload: lines 292-294
+     I changed the photoCount to always be 0 so CC won't add to it
      */
-    NSNumber *count = [NSNumber numberWithInteger: self.photos.count];
+//    NSNumber *count = [NSNumber numberWithInteger: self.photos.count];
     PFObject *photosAddedNotification = [PFObject objectWithClassName:@"PushNotification"];
-    [photosAddedNotification setObject:count forKey:@"photoCount"];
+    [photosAddedNotification setObject:@"0" forKey:@"photoCount"];
     [photosAddedNotification setObject:self.trip forKey:@"trip"];
     [photosAddedNotification setObject:self.trip.name forKey:@"tripName"];
     [photosAddedNotification setObject:[PFUser currentUser] forKey:@"fromUser"];
