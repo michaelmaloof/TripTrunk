@@ -76,6 +76,25 @@
         self.facebookPublishButton.enabled = NO;
         self.facebookPublishButton.selected = YES;
     }
+    
+    //This checks to see if there was a failure while uploading the last time
+    //if so, it loads the PHAsset localIdentifiers and recreates the array and then we can restart the upload
+    //still to do:
+    //1. add an option to continue upload or cancel in HomeMapVC
+    //2. everytime an upload completes remove it from the array and resave the nsuserdefaults
+    NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+    NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
+    
+    if(localIdentifiers){
+        PHFetchResult *savedAssets = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
+        [savedAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+            Photo *photo = [[Photo alloc] init];
+            photo.imageAsset = asset;
+            [self.photos addObject:photo];
+        }];
+    }
+    
+    
     //############################################# MENTIONS ##################################################
     [self buildMentionUsersCache];
     //############################################# MENTIONS ##################################################
@@ -173,11 +192,17 @@
 
 - (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhotos:(NSArray *)photos {
     NSLog(@"selected %d photos", (int)photos.count);
+    //We are using localIdentifiers to save a reference to each photo. If a photo fails to upload then we can reload
+    //the photo references and restart the upload for what hasn't uploaded
+    NSMutableArray *localIdentifiers = [[NSMutableArray alloc] init];
     for (PHAsset *asset in photos){
         Photo *photo = [[Photo alloc] init];
         photo.imageAsset = asset;
         [self.photos addObject:photo];
+        [localIdentifiers addObject:asset.localIdentifier];
     }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:localIdentifiers forKey:@"currentImageUpload"];
 
     [photosPicker dismissViewControllerAnimated:YES completion:^{
         [self.tripCollectionView reloadData];
