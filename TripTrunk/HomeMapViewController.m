@@ -151,14 +151,14 @@ list of trips the user hasn't seen since last being in the app
                 [self.navigationController showViewController:vc sender:self];
             }];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
-            // just dismiss
+            [uploadError setObject:nil forKey:@"uploadError"];
+            [uploadError setObject:nil forKey:@"currentImageUpload"];
+            [uploadError setObject:nil forKey:@"currentTripUpload"];
+            [uploadError synchronize];
         }];
         [alert addAction:yesAction];
         [alert addAction:cancelAction];
         [self presentViewController:alert animated:YES completion:nil];
-        
-        [uploadError setObject:nil forKey:@"uploadError"];
-        [uploadError synchronize];
     }
     
     

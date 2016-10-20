@@ -84,6 +84,11 @@
     //2. everytime an upload completes remove it from the array and resave the nsuserdefaults
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
     NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
+//    NSArray *tripArray = [uploadError arrayForKey:@"currentTripUpload"];
+//    Trip *savedTrip = [tripArray objectAtIndex:0];
+//    NSData *encodedObject = [uploadError objectForKey:@"currentTripUpload"];
+//    Trip *savedTrip = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+    NSString *tripId = [uploadError stringForKey:@"currentTripId"];
     
     if(localIdentifiers){
         PHFetchResult *savedAssets = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
@@ -91,6 +96,12 @@
             Photo *photo = [[Photo alloc] init];
             photo.imageAsset = asset;
             [self.photos addObject:photo];
+        }];
+        
+        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+        [query whereKey:@"objectId" equalTo:tripId];
+        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            self.trip = objects[0];
         }];
     }
     
@@ -108,6 +119,7 @@
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
+    
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.submitTrunk.hidden = YES;
     
@@ -250,6 +262,11 @@
     
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
+        //clear the saved upload details. If it creashes again, these will be resaved
+        NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError setObject:nil forKey:@"currentTripId"];
+        [uploadError synchronize];
         int originalCount = self.trip.publicTripDetail.photoCount;
         
         if (self.photos.count > 0){
@@ -297,7 +314,7 @@
 }
 
 - (void)savePhotosToParse{
-    
+
     // TODO: pass the whole array into the utility
     // Then recursively upload each photo so it's one at a time instead of all in a row.
     
@@ -317,6 +334,23 @@
             PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
             [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
             [countIncrement save];
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+            NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+            int i = 0;
+            
+            for(NSString *li in localIdentifiers){
+                if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                    [localIdentifiers removeObjectAtIndex:i];
+                    break;
+                }
+                i++;
+            }
+            
+            [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+            [defaults synchronize];
+            
             
             // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
             if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
