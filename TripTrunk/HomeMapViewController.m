@@ -154,6 +154,7 @@ list of trips the user hasn't seen since last being in the app
             [uploadError setObject:nil forKey:@"uploadError"];
             [uploadError setObject:nil forKey:@"currentImageUpload"];
             [uploadError setObject:nil forKey:@"currentTripUpload"];
+            [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
             [uploadError synchronize];
         }];
         [alert addAction:yesAction];

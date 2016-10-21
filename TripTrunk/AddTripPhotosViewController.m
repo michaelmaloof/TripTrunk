@@ -38,6 +38,7 @@
 @property NSInteger path;
 @property BOOL alreadyTrip;
 @property NSMutableArray *currentSelectionPhotos;
+@property NSMutableArray *photoCaptions;
 @property float amount;
 //Facebook
 @property (strong, nonatomic) IBOutlet UIButton *facebookPublishButton;
@@ -68,6 +69,7 @@
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.facebookPhotos = [[NSMutableArray alloc] init];
+    self.photoCaptions = [[NSMutableArray alloc] init];
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -79,30 +81,49 @@
     
     //This checks to see if there was a failure while uploading the last time
     //if so, it loads the PHAsset localIdentifiers and recreates the array and then we can restart the upload
-    //still to do:
-    //1. add an option to continue upload or cancel in HomeMapVC
-    //2. everytime an upload completes remove it from the array and resave the nsuserdefaults
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
-    NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
-//    NSArray *tripArray = [uploadError arrayForKey:@"currentTripUpload"];
-//    Trip *savedTrip = [tripArray objectAtIndex:0];
-//    NSData *encodedObject = [uploadError objectForKey:@"currentTripUpload"];
-//    Trip *savedTrip = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-    NSString *tripId = [uploadError stringForKey:@"currentTripId"];
+    NSString *message = [uploadError stringForKey:@"uploadError"];
     
-    if(localIdentifiers){
-        PHFetchResult *savedAssets = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
-        [savedAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
-            Photo *photo = [[Photo alloc] init];
-            photo.imageAsset = asset;
-            [self.photos addObject:photo];
-        }];
+    if(message){
+        NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
+        NSString *tripId = [uploadError stringForKey:@"currentTripId"];
+        self.photoCaptions = [NSMutableArray arrayWithArray:[uploadError arrayForKey:@"currentPhotoCaptions"]];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
-        [query whereKey:@"objectId" equalTo:tripId];
-        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            self.trip = objects[0];
-        }];
+        NSMutableArray *sortPhotos = [[NSMutableArray alloc] init];
+        for(int li=0;li<localIdentifiers.count;li++){
+            [sortPhotos addObject:@""];
+        }
+        
+        if(localIdentifiers){
+            PHFetchResult *savedAssets = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
+            [savedAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+                Photo *photo = [[Photo alloc] init];
+                photo.imageAsset = asset;
+                photo.caption = self.photoCaptions[idx];
+                
+                for(int li=0;li<localIdentifiers.count;li++){
+                    if([asset.localIdentifier isEqualToString:localIdentifiers[li]]){
+                        [sortPhotos replaceObjectAtIndex:li withObject:photo];
+                        break;
+                    }
+                }
+            }];
+            self.photos = sortPhotos;
+            
+            if(tripId){
+                PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+                [query whereKey:@"objectId" equalTo:tripId];
+                [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                    self.trip = objects[0];
+                }];
+            }
+        }
+    }else{
+        //clean up -> may not be necessary
+        [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError setObject:nil forKey:@"currentTripId"];
+        [uploadError synchronize];
     }
     
     
@@ -204,17 +225,11 @@
 
 - (void)photosPicker:(DLFPhotosPickerViewController *)photosPicker detailViewController:(DLFDetailViewController *)detailViewController didSelectPhotos:(NSArray *)photos {
     NSLog(@"selected %d photos", (int)photos.count);
-    //We are using localIdentifiers to save a reference to each photo. If a photo fails to upload then we can reload
-    //the photo references and restart the upload for what hasn't uploaded
-    NSMutableArray *localIdentifiers = [[NSMutableArray alloc] init];
     for (PHAsset *asset in photos){
         Photo *photo = [[Photo alloc] init];
         photo.imageAsset = asset;
         [self.photos addObject:photo];
-        [localIdentifiers addObject:asset.localIdentifier];
     }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:localIdentifiers forKey:@"currentImageUpload"];
 
     [photosPicker dismissViewControllerAnimated:YES completion:^{
         [self.tripCollectionView reloadData];
@@ -264,6 +279,19 @@
         
         //clear the saved upload details. If it creashes again, these will be resaved
         NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+        NSMutableArray *localIdentifiers = [[NSMutableArray alloc] init];
+        
+        for(Photo *photo in self.photos){
+            [localIdentifiers addObject:photo.imageAsset.localIdentifier];
+            if(photo.caption)
+                [self.photoCaptions addObject:photo.caption];
+            else [self.photoCaptions addObject:@""];
+        }
+        
+        NSLog(@"%@",localIdentifiers);
+        
+        [uploadError setObject:localIdentifiers forKey:@"currentImageUpload"];
+        [uploadError setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
         [uploadError setObject:nil forKey:@"uploadError"];
         [uploadError setObject:nil forKey:@"currentTripId"];
         [uploadError synchronize];
@@ -343,11 +371,13 @@
             for(NSString *li in localIdentifiers){
                 if([li isEqualToString:photo.imageAsset.localIdentifier]){
                     [localIdentifiers removeObjectAtIndex:i];
+                    [self.photoCaptions removeObjectAtIndex:i];
                     break;
                 }
                 i++;
             }
             
+            [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
             [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
             [defaults synchronize];
             
@@ -503,6 +533,10 @@
         [cell.layer setMasksToBounds:YES];
     } else{ //photos selected
         Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+        if(photo.caption){
+            if([photo.caption isEqualToString:@""])
+                photo.caption = nil;
+        }
         [cell.layer setCornerRadius:0.0];
         [cell.layer setMasksToBounds:YES];
         cell.tripImageView.caption = photo.caption;
