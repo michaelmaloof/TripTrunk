@@ -87,6 +87,7 @@
     if(message){
         NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
         NSString *tripId = [uploadError stringForKey:@"currentTripId"];
+        BOOL currentFacebookUpload = [uploadError boolForKey:@"currentFacebookUpload"];
         self.photoCaptions = [NSMutableArray arrayWithArray:[uploadError arrayForKey:@"currentPhotoCaptions"]];
         
         NSMutableArray *sortPhotos = [[NSMutableArray alloc] init];
@@ -109,6 +110,16 @@
                 }
             }];
             self.photos = sortPhotos;
+            if(currentFacebookUpload){
+                self.publishToFacebook = YES;
+                self.facebookPublishButton.selected = YES;
+            }
+            
+            for(id p in sortPhotos){
+                if(![p isKindOfClass:[Photo class]]){
+                    [sortPhotos removeObject:p];
+                }
+            }
             
             if(tripId){
                 PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
@@ -120,6 +131,7 @@
         }
     }else{
         //clean up -> may not be necessary
+        [uploadError setObject:nil forKey:@"currentFacebookUpload"];
         [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
         [uploadError setObject:nil forKey:@"uploadError"];
         [uploadError setObject:nil forKey:@"currentTripId"];
@@ -290,6 +302,9 @@
         
         NSLog(@"%@",localIdentifiers);
         
+        if(self.publishToFacebook)
+            [uploadError setObject:@"YES" forKey:@"currentFacebookUpload"];
+        else [uploadError setObject:nil forKey:@"currentFacebookUpload"];
         [uploadError setObject:localIdentifiers forKey:@"currentImageUpload"];
         [uploadError setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
         [uploadError setObject:nil forKey:@"uploadError"];
