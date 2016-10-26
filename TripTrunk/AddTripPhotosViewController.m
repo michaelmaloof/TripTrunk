@@ -91,6 +91,7 @@
         self.photoCaptions = [NSMutableArray arrayWithArray:[uploadError arrayForKey:@"currentPhotoCaptions"]];
         
         NSMutableArray *sortPhotos = [[NSMutableArray alloc] init];
+        NSMutableArray *captionedPhotos = [[NSMutableArray alloc] init];
         for(int li=0;li<localIdentifiers.count;li++){
             [sortPhotos addObject:@""];
         }
@@ -100,16 +101,25 @@
             [savedAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
                 Photo *photo = [[Photo alloc] init];
                 photo.imageAsset = asset;
-                photo.caption = self.photoCaptions[idx];
+//                photo.caption = self.photoCaptions[idx];
                 
                 for(int li=0;li<localIdentifiers.count;li++){
                     if([asset.localIdentifier isEqualToString:localIdentifiers[li]]){
                         [sortPhotos replaceObjectAtIndex:li withObject:photo];
-                        break;
                     }
                 }
+
             }];
-            self.photos = sortPhotos;
+            
+            int li=0;
+            for(Photo *p in sortPhotos){
+                p.caption = self.photoCaptions[li];
+                [captionedPhotos addObject:p];
+                li++;
+            }
+            
+            sortPhotos = captionedPhotos;
+            
             if(currentFacebookUpload){
                 self.publishToFacebook = YES;
                 self.facebookPublishButton.selected = YES;
@@ -120,6 +130,8 @@
                     [sortPhotos removeObject:p];
                 }
             }
+            
+            self.photos = sortPhotos;
             
             if(tripId){
                 PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
