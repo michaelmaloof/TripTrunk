@@ -16,9 +16,6 @@
 -(void)memberWasAdded:(id)sender;
 -(void)memberWasAddedTemporary:(PFUser*)profile;
 -(void)memberFailedToLoad:(PFUser*)sender;
-
-
-
 @end
 
 @interface AddTripFriendsViewController : TTBaseTableViewController

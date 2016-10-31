@@ -10,7 +10,6 @@
 #import "Trip.h"
 #import "TTBaseViewController.h"
 
-
 @interface AddTripViewController : TTBaseViewController
 @property Trip *trip;
 

@@ -75,12 +75,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setInitialDesign];
-    self.myPhotos = [[NSMutableArray alloc] init];
-    [self handlePhotosSeen];
+//    [self setInitialDesign];
+//    self.myPhotos = [[NSMutableArray alloc] init];
+//    [self handlePhotosSeen];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    //This was moved because when you delete a trip the photos won't disappear.
+    [self setInitialDesign];
+    self.myPhotos = [[NSMutableArray alloc] init];
+    [self handlePhotosSeen];
+    
 //    self.trunkCountButton.hidden = YES;
     [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
     [self.followButton setHidden:YES];
@@ -96,7 +102,10 @@
         self.mapButton.userInteractionEnabled = YES;
         self.trunkCountButton.userInteractionEnabled = YES;
         if (self.hasDoneFirstLoad == YES){
-            [self refreshUserPhotos];
+//            [self refreshUserPhotos];
+            //This was changed to loadUserImages because when you delete a trip the photos won't disappear.
+            //I left the old way just in case I broke something else
+            [self loadUserImages];
         } else {
             [self loadUser];
         }

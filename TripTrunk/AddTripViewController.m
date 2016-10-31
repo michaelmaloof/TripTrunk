@@ -705,7 +705,7 @@
             //FIXME this needs to return if it was a success or not
             [SocialUtility deleteTrip:self.trip];
             dispatch_async(dispatch_get_main_queue(), ^{
-
+                
             NSMutableArray *locationArray = [[NSMutableArray alloc]init];
             for (UINavigationController *controller in self.tabBarController.viewControllers){
                 for (UIViewController *view in controller.viewControllers){
@@ -721,6 +721,7 @@
                     }
                 }
             }
+                
             });
 
             NSMutableArray *locationArray2 = [[NSMutableArray alloc]init];
@@ -729,6 +730,7 @@
                     [locationArray2 addObject:vc];
                 }
             }
+            
             if (locationArray2.count > 0){
                 [self.navigationController popToViewController:[locationArray2 lastObject] animated:YES];
             }
@@ -747,6 +749,8 @@
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
             }
+        
+        
     }
 }
 
