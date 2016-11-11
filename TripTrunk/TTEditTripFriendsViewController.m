@@ -535,6 +535,21 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
             
             if(!error){
                 if (!self.isTripCreation) {
+                    ///-----------------------------
+                    //THIS INCREMENTS THE MEMBER COUNT BY 1
+                    //This should move to AddMembersToTrip cloud code function
+                    PublicTripDetail *ptdId = self.trip.publicTripDetail;
+                    PFQuery *query3 = [PFQuery queryWithClassName:@"PublicTripDetail"];
+                    [query3 getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+                        int count = 0;
+                        if(pfObject[@"memberCount"])
+                            count = [pfObject[@"memberCount"] intValue];
+                        
+                        count++;
+                        [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+                        [pfObject saveInBackground];
+                    }];
+                    ///-----------------------------^
                     if (self.delegate)
                         [self.delegate membersAdded:self.membersToAdd];
                     

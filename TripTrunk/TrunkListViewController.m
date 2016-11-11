@@ -17,6 +17,7 @@
 #import "HomeMapViewController.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TTAnalytics.h"
+#import "PublicTripDetail.h"
 
 @interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -46,7 +47,6 @@
 @implementation TrunkListViewController
 
 #pragma mark - Setup
-
 -(void)viewDidLoad {
     [self displayTitle];
     [self displayFlameImage];
@@ -183,7 +183,6 @@
 }
 
 #pragma mark - Loading Trunks
-
 -(void)beginLoadingTrunks{
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
     if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
@@ -800,6 +799,7 @@
 }
 
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     __weak TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
@@ -827,6 +827,10 @@
     }
     
     NSString *countString;
+    NSString *memberCountString = @"";
+    if(trip.publicTripDetail[@"memberCount"] && [trip.publicTripDetail[@"memberCount"] intValue]>1){
+        memberCountString = [NSString stringWithFormat:@"+%d",[trip.publicTripDetail[@"memberCount"] intValue]-1];
+    }
     if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
         countString = @"";
     }
@@ -840,7 +844,7 @@
     
     NSString *subtitle;
     if (self.isList == NO){
-        subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.creator.username, countString];
+        subtitle = [NSString stringWithFormat:@"%@ %@ %@", cell.trip.creator.username, memberCountString, countString];
     } else {
         subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.city, countString];
     }

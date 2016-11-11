@@ -829,6 +829,7 @@
         self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
     }
     
+    self.trip.publicTripDetail.memberCount = 1;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
      {
@@ -850,6 +851,13 @@
              else
              {
                  [[TTUtility sharedInstance] internetConnectionFound];
+                 //trip needs to be saved after the publicTripDetail is created otherwise we get a loop error
+                 PFQuery *query = [PFQuery queryWithClassName:@"PublicTripDetail"];
+                 [query getObjectInBackgroundWithId:self.trip.publicTripDetail.objectId block:^(PFObject *pfObject, NSError *error) {
+                     [pfObject setObject:self.trip forKey:@"trip"];
+                     [pfObject saveInBackground];
+                 }];
+                 
                  if (self.navigationItem.leftBarButtonItem.tag == 0)
                  {
                      [self performSegueWithIdentifier:@"addFriends" sender:self];

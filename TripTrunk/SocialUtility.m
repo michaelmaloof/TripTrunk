@@ -222,6 +222,17 @@
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addUser:"];
         
         if (completionBlock) {
+//            PublicTripDetail *ptdId = trip.publicTripDetail;
+//                PFQuery *query3 = [PFQuery queryWithClassName:@"PublicTripDetail"];
+//                [query3 getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+//                    int count = 0;
+//                    if(pfObject[@"memberCount"])
+//                        count = [pfObject[@"memberCount"] intValue];
+//                    
+//                    count++;
+//                    [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+//                    [pfObject saveInBackground];
+//                }];
             completionBlock(succeeded, error);
         }
     }];
@@ -353,6 +364,21 @@
          if (!error) {
              // The find succeeded.
              // Delete the found objects
+             
+             ///-----------------------------
+             //THIS DECREMENTS THE MEMBER COUNT BY 1
+             PublicTripDetail *ptdId = trip.publicTripDetail;
+             PFQuery *query3 = [PFQuery queryWithClassName:@"PublicTripDetail"];
+             [query3 getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+                 int count = 0;
+                 if(pfObject[@"memberCount"])
+                     count = [pfObject[@"memberCount"] intValue];
+                 
+                 count--;
+                 [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+                 [pfObject saveInBackground];
+             }];
+             ///-----------------------------^
              
              [[TTUtility sharedInstance] internetConnectionFound];
              

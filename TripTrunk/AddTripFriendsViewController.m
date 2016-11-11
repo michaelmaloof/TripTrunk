@@ -486,6 +486,22 @@
             self.navigationItem.rightBarButtonItem.enabled = YES;
             // Perform the Navigation to the next/previous screen.
             // NOTE: this will happen BEFORE the cloud functions finish saving everything. That's fine. Hopefully.
+            if(!error){
+                //THIS INCREMENTS THE MEMBER COUNT BY 1number of members added
+                //This needs to be moved to AddMembersToTrip in CC
+                PublicTripDetail *ptdId = self.trip.publicTripDetail;
+                PFQuery *query = [PFQuery queryWithClassName:@"PublicTripDetail"];
+                [query getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+                    int count = 0;
+                    if(pfObject[@"memberCount"])
+                        count = [pfObject[@"memberCount"] intValue];
+                    
+                    count = count+(int)self.membersToAdd.count;
+                    [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+                    [pfObject saveInBackground];
+                }];
+                ///-----------------------------^
+            }
             
             if (!self.isTripCreation) {
                 // Adding friends to an existing trip, so pop back
