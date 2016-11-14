@@ -19,12 +19,13 @@
 @optional
 -(void)membersAdded:(NSArray*)users;
 -(void)membersAddFailed:(NSArray*)users;
+-(void)memberCountUpdated:(int)count forTrip:(Trip*)trip;
 @end
 
 @interface TTEditTripFriendsViewController : TTBaseViewController
 - (id)initWithTrip:(Trip *)trip andExistingMembers:(NSArray *)members;
 
-@property id<EditMemberDelegate> delegate;
+@property NSObject<EditMemberDelegate>* delegate;
 @property (strong, nonatomic) Trip *trip;
 @property (nonatomic)BOOL isTripCreation;
 @property (strong, nonatomic) NSMutableArray *existingMembers;
