@@ -38,6 +38,7 @@
 @property NSInteger path;
 @property BOOL alreadyTrip;
 @property NSMutableArray *currentSelectionPhotos;
+@property NSMutableArray *photoCaptions;
 @property float amount;
 //Facebook
 @property (strong, nonatomic) IBOutlet UIButton *facebookPublishButton;
@@ -68,6 +69,7 @@
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.facebookPhotos = [[NSMutableArray alloc] init];
+    self.photoCaptions = [[NSMutableArray alloc] init];
     self.currentSelectionPhotos= [[NSMutableArray alloc]init];
     self.tripCollectionView.backgroundColor = [TTColor tripTrunkClear];
     self.tripCollectionView.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -76,6 +78,79 @@
         self.facebookPublishButton.enabled = NO;
         self.facebookPublishButton.selected = YES;
     }
+    
+    //This checks to see if there was a failure while uploading the last time
+    //if so, it loads the PHAsset localIdentifiers and recreates the array and then we can restart the upload
+    NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+    NSString *message = [uploadError stringForKey:@"uploadError"];
+    
+    if(message){
+        NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
+        NSString *tripId = [uploadError stringForKey:@"currentTripId"];
+        BOOL currentFacebookUpload = [uploadError boolForKey:@"currentFacebookUpload"];
+        self.photoCaptions = [NSMutableArray arrayWithArray:[uploadError arrayForKey:@"currentPhotoCaptions"]];
+        
+        NSMutableArray *sortPhotos = [[NSMutableArray alloc] init];
+        NSMutableArray *captionedPhotos = [[NSMutableArray alloc] init];
+        for(int li=0;li<localIdentifiers.count;li++){
+            [sortPhotos addObject:@""];
+        }
+        
+        if(localIdentifiers){
+            PHFetchResult *savedAssets = [PHAsset fetchAssetsWithLocalIdentifiers:localIdentifiers options:nil];
+            [savedAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+                Photo *photo = [[Photo alloc] init];
+                photo.imageAsset = asset;
+//                photo.caption = self.photoCaptions[idx];
+                
+                for(int li=0;li<localIdentifiers.count;li++){
+                    if([asset.localIdentifier isEqualToString:localIdentifiers[li]]){
+                        [sortPhotos replaceObjectAtIndex:li withObject:photo];
+                    }
+                }
+
+            }];
+            
+            int li=0;
+            for(Photo *p in sortPhotos){
+                p.caption = self.photoCaptions[li];
+                [captionedPhotos addObject:p];
+                li++;
+            }
+            
+            sortPhotos = captionedPhotos;
+            
+            if(currentFacebookUpload){
+                self.publishToFacebook = YES;
+                self.facebookPublishButton.selected = YES;
+            }
+            
+            for(id p in sortPhotos){
+                if(![p isKindOfClass:[Photo class]]){
+                    [sortPhotos removeObject:p];
+                }
+            }
+            
+            self.photos = sortPhotos;
+            
+            if(tripId){
+                PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+                [query whereKey:@"objectId" equalTo:tripId];
+                [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                    self.trip = objects[0];
+                }];
+            }
+        }
+    }else{
+        //clean up -> may not be necessary
+        [uploadError setObject:nil forKey:@"currentFacebookUpload"];
+        [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError setObject:nil forKey:@"currentTripId"];
+        [uploadError synchronize];
+    }
+    
+    
     //############################################# MENTIONS ##################################################
     [self buildMentionUsersCache];
     //############################################# MENTIONS ##################################################
@@ -89,6 +164,7 @@
 
 #pragma mark - Button Actions
 - (IBAction)onDoneTapped:(id)sender {
+    
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.submitTrunk.hidden = YES;
     
@@ -225,6 +301,27 @@
     
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
+        //clear the saved upload details. If it creashes again, these will be resaved
+        NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
+        NSMutableArray *localIdentifiers = [[NSMutableArray alloc] init];
+        
+        for(Photo *photo in self.photos){
+            [localIdentifiers addObject:photo.imageAsset.localIdentifier];
+            if(photo.caption)
+                [self.photoCaptions addObject:photo.caption];
+            else [self.photoCaptions addObject:@""];
+        }
+        
+        NSLog(@"%@",localIdentifiers);
+        
+        if(self.publishToFacebook)
+            [uploadError setObject:@"YES" forKey:@"currentFacebookUpload"];
+        else [uploadError setObject:nil forKey:@"currentFacebookUpload"];
+        [uploadError setObject:localIdentifiers forKey:@"currentImageUpload"];
+        [uploadError setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError setObject:nil forKey:@"currentTripId"];
+        [uploadError synchronize];
         int originalCount = self.trip.publicTripDetail.photoCount;
         
         if (self.photos.count > 0){
@@ -272,7 +369,7 @@
 }
 
 - (void)savePhotosToParse{
-    
+
     // TODO: pass the whole array into the utility
     // Then recursively upload each photo so it's one at a time instead of all in a row.
     
@@ -292,6 +389,25 @@
             PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
             [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
             [countIncrement save];
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+            NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+            int i = 0;
+            
+            for(NSString *li in localIdentifiers){
+                if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                    [localIdentifiers removeObjectAtIndex:i];
+                    [self.photoCaptions removeObjectAtIndex:i];
+                    break;
+                }
+                i++;
+            }
+            
+            [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+            [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+            [defaults synchronize];
+            
             
             // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
             if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
@@ -444,6 +560,10 @@
         [cell.layer setMasksToBounds:YES];
     } else{ //photos selected
         Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+        if(photo.caption){
+            if([photo.caption isEqualToString:@""])
+                photo.caption = nil;
+        }
         [cell.layer setCornerRadius:0.0];
         [cell.layer setMasksToBounds:YES];
         cell.tripImageView.caption = photo.caption;

@@ -39,9 +39,10 @@ static TTTTimeIntervalFormatter *timeFormatter;
     TTNoInternetView *internetView;
     NSOperationQueue *operationQueue;
 }
-@property NSString* trip;
+@property NSString* tripName;
 @property int photoCount;
 @property int totalPhotos;
+@property Trip *trip;
 @end
 
 @implementation TTUtility
@@ -186,8 +187,9 @@ CLCloudinary *cloudinary;
 
 -(void)uploadPhoto:(Photo *)photo photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 {
-    self.trip = photo.tripName;
+    self.tripName = photo.tripName;
     self.totalPhotos = photosCount;
+    self.trip = photo.trip;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
 
@@ -553,10 +555,10 @@ CLCloudinary *cloudinary;
         progressView = nil;
         UILocalNotification* localNotification = [[UILocalNotification alloc] init];
         localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
-        localNotification.alertBody = [NSString stringWithFormat:@"Successfully upoaded %d/%d photos to the '%@' trunk",self.photoCount,self.totalPhotos,self.trip];
+        localNotification.alertBody = [NSString stringWithFormat:@"Successfully upoaded %d/%d photos to the '%@' trunk",self.photoCount,self.totalPhotos,self.tripName];
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-        self.trip = nil;
+        self.tripName = nil;
         self.photoCount = 0;
     }
 }
@@ -572,10 +574,10 @@ CLCloudinary *cloudinary;
      progressView = nil;
      UILocalNotification* localNotification = [[UILocalNotification alloc] init];
      localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
-     localNotification.alertBody = [NSString stringWithFormat:@"There was an error uploading photos to the '%@' trunk",self.trip];
+     localNotification.alertBody = [NSString stringWithFormat:@"There was an error uploading photos to the '%@' trunk",self.tripName];
      localNotification.timeZone = [NSTimeZone defaultTimeZone];
      [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-     self.trip = nil;
+     self.tripName = nil;
      self.photoCount = 0;
  }
     
@@ -973,8 +975,8 @@ CLCloudinary *cloudinary;
 -(void)appWillTerminate:(NSNotification*)note{
     NSLog(@"appWillTerminate");
     
-    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos to the '%@' trunk, however, %d photos did not upload.", @"Successfully upoaded %d/%d photos to the '%@' trunk, however, %d photos did not upload.");
-    message = [NSString stringWithFormat:message,self.photoCount,self.totalPhotos,self.trip,self.totalPhotos-self.photoCount];
+    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos to the '%@' trunk. However, %d photos did not upload.", @"Successfully upoaded %d/%d photos to the '%@' trunk. However, %d photos did not upload.");
+    message = [NSString stringWithFormat:message,self.photoCount,self.totalPhotos,self.tripName,self.totalPhotos-self.photoCount];
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
         UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
@@ -982,9 +984,11 @@ CLCloudinary *cloudinary;
         [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
     }
 
-    if(self.photoCount != self.totalPhotos){        
+    if(self.photoCount != self.totalPhotos){
+        
         NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
         [uploadError setObject:message forKey:@"uploadError"];
+        [uploadError setObject:self.trip.objectId forKey:@"currentTripId"];
         [uploadError synchronize];
         
         
@@ -994,6 +998,7 @@ CLCloudinary *cloudinary;
         localNotification.alertBody = message;
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        self.tripName = nil;
         self.trip = nil;
         self.photoCount = 0;
     }

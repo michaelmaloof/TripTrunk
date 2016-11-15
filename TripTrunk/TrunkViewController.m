@@ -184,6 +184,7 @@
 //                [view reloadTrunkList:self.trip seen:YES addPhoto:NO photoRemoved:NO];
 //        }
 //    }
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{

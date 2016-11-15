@@ -20,6 +20,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "TTAnalytics.h"
 #import "EditProfileViewController.h"
+#import "TrunkViewController.h"
 /**
  HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
  */
@@ -140,15 +141,25 @@ list of trips the user hasn't seen since last being in the app
     NSString *message = [uploadError stringForKey:@"uploadError"];
     
     if(message){
+        NSString *continueMessage = NSLocalizedString(@"Would you like to continue uploading?",@"Would you like to continue uploading?");
+        message = [NSString stringWithFormat:@"%@ %@",message,continueMessage];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Previous Session Upload" message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
-            // Ok action example
+        UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                AddTripPhotosViewController *vc = (AddTripPhotosViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddTripViewController"];
+            
+                [self.navigationController showViewController:vc sender:self];
+            }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            [uploadError setObject:nil forKey:@"uploadError"];
+            [uploadError setObject:nil forKey:@"currentImageUpload"];
+            [uploadError setObject:nil forKey:@"currentTripUpload"];
+            [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
+            [uploadError synchronize];
         }];
-        [alert addAction:okAction];
+        [alert addAction:yesAction];
+        [alert addAction:cancelAction];
         [self presentViewController:alert animated:YES completion:nil];
-        
-        [uploadError setObject:nil forKey:@"uploadError"];
-        [uploadError synchronize];
     }
     
     
