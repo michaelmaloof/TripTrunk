@@ -17,8 +17,10 @@
 #import "HomeMapViewController.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "TTAnalytics.h"
+#import "PublicTripDetail.h"
+#import "TrunkMembersViewController.h"
 
-@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface TrunkListViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MemberCountDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property NSIndexPath *path;
@@ -46,7 +48,6 @@
 @implementation TrunkListViewController
 
 #pragma mark - Setup
-
 -(void)viewDidLoad {
     [self displayTitle];
     [self displayFlameImage];
@@ -183,7 +184,6 @@
 }
 
 #pragma mark - Loading Trunks
-
 -(void)beginLoadingTrunks{
     //FIXME self.filter.tag amd self.trunkListToggle.tag logic needs to be used in viewDidAppear on if statements to not reset the current tag the user is on
     if (self.isList == YES && ![self.user.objectId isEqualToString:[PFUser currentUser].objectId]){
@@ -701,6 +701,7 @@
                 TrunkViewController *trunkView = segue.destinationViewController;
                 Trip *trip = [self.parseLocations objectAtIndex:self.path.row];
                 trunkView.trip = trip;
+                trunkView.delegate = self;
             }
         } else if (self.filter.tag == 1 && self.meParseLocations != nil && self.isList == NO){
             if (self.path.row < self.meParseLocations.count)
@@ -708,20 +709,24 @@
                 TrunkViewController *trunkView = segue.destinationViewController;
                 Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
                 trunkView.trip = trip;
+                trunkView.delegate = self;
             }
         } else if (self.user != nil && self.isList == NO) {
             // This is a User Globe Map, so there is no self.filter.tag, and it uses the meParseLocations object.
             TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
+            trunkView.delegate = self;
         } else if (self.isList == YES && self.trunkListToggle.tag == 0){
             TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.meParseLocations objectAtIndex:self.path.row];
             trunkView.trip = trip;
+            trunkView.delegate = self;
         } else if (self.isList == YES && self.trunkListToggle.tag == 1){
             TrunkViewController *trunkView = segue.destinationViewController;
             Trip *trip = [self.mutualTrunks objectAtIndex:self.path.row];
             trunkView.trip = trip;
+            trunkView.delegate = self;
         }
         self.path = nil;
     }
@@ -800,6 +805,7 @@
 }
 
 -(TrunkTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     __weak TrunkTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TripCell" forIndexPath:indexPath];
     Trip *trip = [[Trip alloc]init];
     cell.seenLogo.hidden = YES;
@@ -827,6 +833,10 @@
     }
     
     NSString *countString;
+    NSString *memberCountString = @"";
+    if(trip.publicTripDetail[@"memberCount"] && [trip.publicTripDetail[@"memberCount"] intValue]>1){
+        memberCountString = [NSString stringWithFormat:@"+%d",[trip.publicTripDetail[@"memberCount"] intValue]-1];
+    }
     if (cell.trip.publicTripDetail.photoCount == 0 || !cell.trip.publicTripDetail.photoCount) {
         countString = @"";
     }
@@ -840,7 +850,7 @@
     
     NSString *subtitle;
     if (self.isList == NO){
-        subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.creator.username, countString];
+        subtitle = [NSString stringWithFormat:@"%@ %@ %@", cell.trip.creator.username, memberCountString, countString];
     } else {
         subtitle = [NSString stringWithFormat:@"%@ %@", cell.trip.city, countString];
     }
@@ -1123,6 +1133,34 @@
     [self reloadTable];
 }
 
+#pragma mark - MemberCountDelegate
+-(void)memberCountUpdated:(int)count forTrip:(Trip*)trip{
+    NSLog(@"COUNT >>>>>>> %d",count);
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    if (self.filter.tag == 0 && self.user == nil && self.isList == NO) {
+        array = self.parseLocations;
+        self.parseLocations = [self updateMemberCountForArray:array withCount:count forTrip:trip];
+    } else if (self.trunkListToggle.tag == 1 && self.isList == YES){
+        array = self.mutualTrunks;
+        self.mutualTrunks = [self updateMemberCountForArray:array withCount:count forTrip:trip];
+    } else {
+        array = self.meParseLocations;
+        self.meParseLocations = [self updateMemberCountForArray:array withCount:count forTrip:trip];
+    }
+    
+    [self reloadTable];
+}
 
+-(NSMutableArray*)updateMemberCountForArray:(NSMutableArray*)array withCount:(int)count forTrip:(Trip*)trip{
+    for(Trip *t in array){
+        if(t.objectId == trip.objectId){
+            t.publicTripDetail.memberCount = count;
+            break;
+        }
+    }
+    
+    return array;
+}
 
 @end

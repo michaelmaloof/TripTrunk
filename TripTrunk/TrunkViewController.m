@@ -943,6 +943,12 @@
     [self performSegueWithIdentifier:@"addPhotos" sender:self];
 }
 
+#pragma mark - EditMemberDelegate
+-(void)memberCountUpdated:(int)count forTrip:(Trip*)trip{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(memberCountUpdated:forTrip:)])
+        [self.delegate memberCountUpdated:(int)count forTrip:(Trip*)trip];
+}
+
 @end
 
 

@@ -15,6 +15,7 @@
 @property NSDate *mostRecentPhoto;
 @property int photoCount;
 @property int totalLikes;
+@property int memberCount;
 @property Trip *trip;
 
 @end
