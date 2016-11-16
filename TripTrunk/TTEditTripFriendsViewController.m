@@ -616,6 +616,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger) section {
                 TTUsernameSort *us = [[TTUsernameSort alloc] init];
                 NSArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
                 self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
+                self.isSearching = YES;
                 [self.followingTableView reloadData];
                 [[TTUtility sharedInstance] internetConnectionFound];
                 
