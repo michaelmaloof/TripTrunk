@@ -13,6 +13,7 @@
 @dynamic photoCount;
 @dynamic totalLikes;
 @dynamic trip;
+@dynamic memberCount;
 
 +(NSString *)parseClassName
 {
