@@ -36,15 +36,27 @@
                                               otherButtonTitles:nil, nil];
         [alert show];
     } else {
-        [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
-                                                        message:NSLocalizedString(@"If you don't see the email in 24 hours please try to reset the password again",@"If you don't see the email in 24 hours please try to reset the password again")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                              otherButtonTitles:nil, nil];
-        alert.tag = 1;
-        [alert show];
-    }
+        [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text block:^(BOOL succeeded, NSError * _Nullable error) {
+            if(!error){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
+                                                                message:NSLocalizedString(@"If you don't see the email in 24 hours please try to reset the password again",@"If you don't see the email in 24 hours please try to reset the password again")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                      otherButtonTitles:nil, nil];
+                alert.tag = 1;
+                [alert show];
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                message:error.localizedDescription
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+                                                      otherButtonTitles:nil, nil];
+                alert.tag = 1;
+                [alert show];
+            }
+
+        }];
+            }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -69,7 +81,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)txtField
 {
     [txtField resignFirstResponder];
-    [self resetButton];
+    [self reset];
     return NO;
 }
 
