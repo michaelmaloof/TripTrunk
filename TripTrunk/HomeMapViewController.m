@@ -1233,7 +1233,7 @@ list of trips the user hasn't seen since last being in the app
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
         NSDictionary *dict = [[NSDictionary alloc] init];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/TripTrunk"] options:dict completionHandler:^(BOOL success) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/triptrunk/id1025174493?mt=8"] options:dict completionHandler:^(BOOL success) {
             //do nothing
         }];
     }];
