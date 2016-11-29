@@ -131,11 +131,20 @@ list of trips the user hasn't seen since last being in the app
  */
 @property TTNewsFeedViewController *newsVC; //FIXME this should be handlded differenlty
 
+@property BOOL updateNeeded;
+
 @end
 
 @implementation HomeMapViewController
 
 - (void)viewDidLoad {
+    
+    if([TTUtility checkForUpdate]){
+        [self displayUpdateMessage];
+        self.updateNeeded = YES;
+    }else{
+        self.updateNeeded = NO;
+    }
     
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
     NSString *message = [uploadError stringForKey:@"uploadError"];
@@ -168,6 +177,9 @@ list of trips the user hasn't seen since last being in the app
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    
+    if(self.updateNeeded)
+        [self displayUpdateMessage];
     
     if(![PFUser currentUser])
         [self.mapView removeAnnotations:self.mapView.annotations];
@@ -1212,6 +1224,22 @@ list of trips the user hasn't seen since last being in the app
     vc.isList = YES;
     [self.navigationController pushViewController:vc animated:YES];
 
+}
+
+-(void)displayUpdateMessage{
+    NSString *updateMessage = NSLocalizedString(@"There is a new version available for TripTrunk. Please update the app in the AppStore.",@"There is a new version available for TripTrunk. Please update the app in the AppStore.");
+    NSString *title = NSLocalizedString(@"New Version Available", @"New Version Available");
+    NSString *message = [NSString stringWithFormat:@"%@",updateMessage];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        NSDictionary *dict = [[NSDictionary alloc] init];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/TripTrunk"] options:dict completionHandler:^(BOOL success) {
+            //do nothing
+        }];
+    }];
+    
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 

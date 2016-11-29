@@ -25,6 +25,7 @@
 @import GooglePlaces;
 #define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 #import "TTAnalytics.h"
+#import "TTUtility.h"
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -495,6 +496,9 @@
     else appName = @"DEV";
     NSLog(@"%@ ENVIRONMENT",appName);
     NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
+    NSLog(@"Parse version: %@",PARSE_VERSION);
+    NSLog(@"App Version: %@ (%@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
+    NSLog(@"Is this version out of date? %@",([TTUtility checkForUpdate] ? @"YES" : @"NO"));
 }
 
 -(void)checkForShortCutItems:(NSDictionary*)launchOptions{
