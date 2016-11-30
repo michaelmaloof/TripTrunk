@@ -654,8 +654,10 @@
 + (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
     [TTAnalytics photoLiked:photo.user];
+    PFUser *user = [PFUser currentUser];
     NSDictionary *params = @{
-                                @"photoId" : photo.objectId
+                                @"photoId" : photo.objectId,
+                                @"userId" : user.objectId
                              };
     [PFCloud callFunctionInBackground:@"Activity.Like" withParameters:params block:^(PFObject *response, NSError *error) {
         if (error) {

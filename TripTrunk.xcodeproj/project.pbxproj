@@ -62,10 +62,8 @@
 		271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8BC01D91C3540054741F /* TTAnalytics.m */; };
 		271EE31A1D9DA15E00A3911C /* TTUsernameSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 271EE3191D9DA15E00A3911C /* TTUsernameSort.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
-		272ACA041D2C5CA700329B28 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA011D2C5CA700329B28 /* Parse.framework */; };
 		272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
 		272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA031D2C5CA700329B28 /* ParseUI.framework */; };
-		272ACA081D2C5D9500329B28 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA071D2C5D9500329B28 /* Bolts.framework */; };
 		276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */; };
 		276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */; };
 		276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */; };
@@ -74,6 +72,8 @@
 		276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */; };
 		276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C91CF4D1030064F784 /* Montserrat-Light.otf */; };
 		276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */; };
+		27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F421DECEF9A009F3648 /* Bolts.framework */; };
+		27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F431DECEF9A009F3648 /* Parse.framework */; };
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
 		2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */; };
@@ -277,10 +277,8 @@
 		271EE3191D9DA15E00A3911C /* TTUsernameSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUsernameSort.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
-		272ACA011D2C5CA700329B28 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		272ACA031D2C5CA700329B28 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
-		272ACA071D2C5D9500329B28 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
 		276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
 		276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-UltraLight.otf"; sourceTree = "<group>"; };
@@ -289,6 +287,8 @@
 		276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Hairline.otf"; sourceTree = "<group>"; };
 		276718C91CF4D1030064F784 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.otf"; sourceTree = "<group>"; };
 		276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
+		27677F421DECEF9A009F3648 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		27677F431DECEF9A009F3648 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		2768C9221CCFE2A000CFA89E /* TTUserProfileCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileCollectionView.h; sourceTree = "<group>"; };
 		2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileCollectionView.m; sourceTree = "<group>"; };
 		2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileViewCell.h; sourceTree = "<group>"; };
@@ -472,10 +472,10 @@
 				223547EC1AE2BBD8001FE916 /* CoreLocation.framework in Frameworks */,
 				223547EA1AE2BBD0001FE916 /* MapKit.framework in Frameworks */,
 				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
-				272ACA081D2C5D9500329B28 /* Bolts.framework in Frameworks */,
 				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
 				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
 				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
+				27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */,
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */,
 				271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */,
@@ -489,9 +489,9 @@
 				224F3FE81AE1E56B003A1DEB /* CFNetwork.framework in Frameworks */,
 				224F3FE61AE1E565003A1DEB /* AudioToolbox.framework in Frameworks */,
 				29ECA46ACCB191A513316C9E /* libPods-TripTrunk.a in Frameworks */,
-				272ACA041D2C5CA700329B28 /* Parse.framework in Frameworks */,
 				27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */,
 				272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */,
+				27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,8 +761,8 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				272ACA071D2C5D9500329B28 /* Bolts.framework */,
-				272ACA011D2C5CA700329B28 /* Parse.framework */,
+				27677F421DECEF9A009F3648 /* Bolts.framework */,
+				27677F431DECEF9A009F3648 /* Parse.framework */,
 				272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */,
 				272ACA031D2C5CA700329B28 /* ParseUI.framework */,
 				223547E71AE2BBAE001FE916 /* Accounts.framework */,

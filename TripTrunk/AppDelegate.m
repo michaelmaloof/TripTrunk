@@ -25,6 +25,7 @@
 @import GooglePlaces;
 #define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 #import "TTAnalytics.h"
+#import "TTUtility.h"
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -161,17 +162,20 @@
     //TODO: clear any cached data, clear userdefaults, and display loginViewController
     // clear cache
     [[TTCache sharedCache] clear];
+    
     // Unsubscribe from push notifications by removing the user association from the current installation.
     [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
     [[PFInstallation currentInstallation] saveInBackground];
     [PFQuery clearAllCachedResults];
     [PFUser logOut];
+    
     // This pushes the user back to the map view, on the map tab, which should then show the loginview
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
     [homeNavController dismissViewControllerAnimated:YES completion:nil];
     [homeNavController popToRootViewControllerAnimated:YES];
     [tabbarcontroller setSelectedIndex:0];
+    NSLog(@"User has logged out");
 }
 
 #pragma mark - Tab Bar
@@ -495,6 +499,9 @@
     else appName = @"DEV";
     NSLog(@"%@ ENVIRONMENT",appName);
     NSLog(@"Cloudinary Version: %@",[CLCloudinary version]);
+    NSLog(@"Parse version: %@",PARSE_VERSION);
+    NSLog(@"App Version: %@ (%@)",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
+    NSLog(@"Is this version out of date? %@",([TTUtility checkForUpdate] ? @"YES" : @"NO"));
 }
 
 -(void)checkForShortCutItems:(NSDictionary*)launchOptions{

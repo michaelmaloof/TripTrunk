@@ -153,6 +153,12 @@
 
 - (void)internetConnectionFound;
 
+/**
+ *  Checks to see if the current App is older than the AppStore version
+ *
+ */
++(BOOL)checkForUpdate;
+
 @end
 
 
