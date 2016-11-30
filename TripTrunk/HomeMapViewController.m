@@ -21,6 +21,8 @@
 #import "TTAnalytics.h"
 #import "EditProfileViewController.h"
 #import "TrunkViewController.h"
+#import "AppDelegate.h"
+
 /**
  HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
  */
@@ -139,13 +141,6 @@ list of trips the user hasn't seen since last being in the app
 
 - (void)viewDidLoad {
     
-    if([TTUtility checkForUpdate]){
-        [self displayUpdateMessage];
-        self.updateNeeded = YES;
-    }else{
-        self.updateNeeded = NO;
-    }
-    
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
     NSString *message = [uploadError stringForKey:@"uploadError"];
     
@@ -178,8 +173,9 @@ list of trips the user hasn't seen since last being in the app
 
 -(void)viewDidAppear:(BOOL)animated {
     
-    if(self.updateNeeded)
-        [self displayUpdateMessage];
+    if([TTUtility checkForUpdate]){
+        [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
+    }
     
     if(![PFUser currentUser])
         [self.mapView removeAnnotations:self.mapView.annotations];
@@ -1225,23 +1221,6 @@ list of trips the user hasn't seen since last being in the app
     [self.navigationController pushViewController:vc animated:YES];
 
 }
-
--(void)displayUpdateMessage{
-    NSString *updateMessage = NSLocalizedString(@"There is a new version available for TripTrunk. Please update the app in the AppStore.",@"There is a new version available for TripTrunk. Please update the app in the AppStore.");
-    NSString *title = NSLocalizedString(@"New Version Available", @"New Version Available");
-    NSString *message = [NSString stringWithFormat:@"%@",updateMessage];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
-        NSDictionary *dict = [[NSDictionary alloc] init];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/triptrunk/id1025174493?mt=8"] options:dict completionHandler:^(BOOL success) {
-            //do nothing
-        }];
-    }];
-    
-    [alert addAction:okAction];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
 
 @end
 

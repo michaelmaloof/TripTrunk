@@ -14,6 +14,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "EULAViewController.h"
 #import "TTAnalytics.h"
+#import "TTUtility.h"
 
 @interface LoginViewController ()
 
@@ -37,6 +38,24 @@
     [self handleLoginDisplay];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:YES];
+    if([TTUtility checkForUpdate]){
+        NSString *updateMessage = NSLocalizedString(@"There is a new version available for TripTrunk. Please update the app in the AppStore.",@"There is a new version available for TripTrunk. Please update the app in the AppStore.");
+        NSString *title = NSLocalizedString(@"New Version Available", @"New Version Available");
+        NSString *message = [NSString stringWithFormat:@"%@",updateMessage];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/triptrunk/id1025174493?mt=8"]];
+        }];
+        
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    [self handleLoginDisplay];
+}
+
 -(void)setPlaceholderText{
     
     NSAttributedString *username = [[NSAttributedString alloc] initWithString:@"username" attributes:@{ NSForegroundColorAttributeName : [TTColor tripTrunkRed]}];
@@ -52,10 +71,6 @@
     [self.loginButton.layer setMasksToBounds:YES];
     [self.facebook.layer setCornerRadius:20.0f];
     [self.facebook.layer setMasksToBounds:YES];
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [self handleLoginDisplay];
 }
 
 -(void)textFieldDidChange :(UITextField *)theTextField{
@@ -223,8 +238,5 @@
     UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
     [self presentViewController:homeNavController animated:YES completion:nil];
 }
-
-
-
 
 @end
