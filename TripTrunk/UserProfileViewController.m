@@ -76,7 +76,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    [self setInitialDesign];
-//    self.myPhotos = [[NSMutableArray alloc] init];
+    self.myPhotos = [[NSMutableArray alloc] init];
 //    [self handlePhotosSeen];
 }
 
@@ -84,7 +84,7 @@
     [super viewWillAppear:YES];
     //This was moved because when you delete a trip the photos won't disappear.
     [self setInitialDesign];
-    self.myPhotos = [[NSMutableArray alloc] init];
+    //self.myPhotos = [[NSMutableArray alloc] init];
     [self handlePhotosSeen];
     
 //    self.trunkCountButton.hidden = YES;
