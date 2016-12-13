@@ -435,7 +435,7 @@
      */
 //    NSNumber *count = [NSNumber numberWithInteger: self.photos.count];
     PFObject *photosAddedNotification = [PFObject objectWithClassName:@"PushNotification"];
-    [photosAddedNotification setObject:@"0" forKey:@"photoCount"];
+    [photosAddedNotification setObject:[NSNumber numberWithInt:0] forKey:@"photoCount"];
     [photosAddedNotification setObject:self.trip forKey:@"trip"];
     [photosAddedNotification setObject:self.trip.name forKey:@"tripName"];
     [photosAddedNotification setObject:[PFUser currentUser] forKey:@"fromUser"];
