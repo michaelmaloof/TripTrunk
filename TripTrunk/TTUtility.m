@@ -543,6 +543,141 @@ CLCloudinary *cloudinary;
     return transformedUrl;
 }
 
+-(void)uploadVideo:(Photo *)video photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(PFObject *video))completionBlock;
+{
+    self.tripName = video.tripName;
+    self.totalPhotos = photosCount;
+    self.trip = video.trip;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+    
+    
+    // Initialize the progressView if it isn't initialized already
+    if (!progressView) {
+        progressView = [[MSFloatingProgressView alloc] init];
+        [progressView addToWindow];
+    }
+    // Already initialized, so tell it that we're uploading another photo
+    else {
+        [progressView incrementTaskCount];
+    }
+    
+    /*
+     // First, locally save the photo in case it doesn't complete uploading.
+     [photo pin];
+     
+     TODO: Pinning doesn't work.
+     First, all PFCachePolicy's in queries need to be removed.
+     Then, the actual imageData needs to be pinned, with the Photo object. But, just pinning the Photo object below doesn't include the imageAsset.
+     */
+    
+    // We need to get the actual Image Data for the Photo's imageAsset.
+    PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+    [options setVersion:PHVideoRequestOptionsVersionCurrent];
+    [options setDeliveryMode:PHVideoRequestOptionsDeliveryModeHighQualityFormat];
+    [options setNetworkAccessAllowed:YES];
+    
+    [[PHImageManager defaultManager] requestAVAssetForVideo:video.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+                                                    
+//                                                    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+        
+                                                        [self uploadVideoToCloudinary:video withAVAsset:asset block:^(BOOL success, NSError *error, PFObject *savedVideo) {
+                                                            if (success) {
+                                                                
+//                                                                self.photoCount++;
+//                                                                
+//                                                                // Add photo to the local cache
+//                                                                [[TTCache sharedCache] setAttributesForPhoto:video likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+//                                                                
+//                                                                // post the notification so that the TrunkViewController can know to reload the data
+//                                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+//                                                                
+//                                                                // Photo saved successfully, so we can unpin it from the local datastore.
+//                                                                // TODO: Uncomment this once pinning is actually implemented.
+//                                                                //  [photo unpin];
+//                                                                
+//                                                                // Upload Photo to Facebook also if needed
+//                                                                if (publishToFacebook) {
+//                                                                    // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+//                                                                    [self initFacebookUpload:savedVideo];
+//                                                                }
+                                                                
+//                                                                 //queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+//                                                                queueCompletionHandler();
+                                                                
+                                                                // Tell the calling-method this whole upload is complete
+                                                                completionBlock(savedVideo);
+                                                            }
+                                                            else {
+                                                                // Error uploading photo
+                                                                NSLog(@"Error uploading video...");
+//                                                                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideo:"];
+                                                                completionBlock(nil);
+                                                            }
+                                                        }];
+                                                    }];
+//                                                    
+//                                                    // Add the upload operation to the OperationQueue
+//                                                    [operationQueue addOperation: operation];
+//        
+//                                                }];
+}
+
+-(void)uploadVideoToCloudinary:(Photo *)video withAVAsset:(AVAsset*)asset block:(void (^)(BOOL success, NSError *error, PFObject *savedVideo))completionBlock{
+    
+    CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+    // prepare for a background task
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    NSString *pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+    pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    NSData *fileData = [NSData dataWithContentsOfFile:pathToVideo];
+    [uploader upload:fileData
+             options:@{@"type":@"upload",@"resource_type":@"video"}
+      withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+          if (successResult) {
+              // Video Uploaded Successfully to Cloudinary
+              NSLog(@"Block upload success. Public ID=%@", [successResult valueForKey:@"public_id"]);
+              
+              PFObject *videoObject = [PFObject objectWithClassName:@"Video"];
+              [videoObject setObject:[PFUser currentUser] forKey:@"user"];
+              [videoObject setObject:video.trip forKey:@"trip"];
+              [videoObject setObject:video.trip.city forKey:@"city"];
+              [videoObject setObject:[successResult valueForKey:@"url"] forKey:@"videoUrl"];
+              
+              PFACL *videoObjectACL = [PFACL ACLWithUser:[PFUser currentUser]];
+//              [videoObjectACL setPublicReadAccess:YES];
+//              [videoObjectACL setWriteAccess:true forUser:user];
+              videoObject.ACL = videoObjectACL;
+              
+              [videoObject saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                  
+                  if (error) {
+                      NSLog(@"Error saving video: %@", error);
+                      [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideoToCloudinary:"];
+                  }
+                  
+                  if (completionBlock) {
+                      completionBlock(YES, nil, videoObject);
+                  }
+              }];
+          }
+          else {
+              // Error Uploading Video
+              [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",errorResult] method:@"uploadVideoToCloudinary:"];
+              NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+              [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+              bgTask = UIBackgroundTaskInvalid;
+              completionBlock(nil, [NSError new], video); // TODO: Add a descriptive error
+          }
+      } andProgress:nil];
+    
+}
+
 #pragma mark - Cloudinary CLUploaderDelegate
 
 - (void)uploaderSuccess:(NSDictionary*)result context:(id)context {

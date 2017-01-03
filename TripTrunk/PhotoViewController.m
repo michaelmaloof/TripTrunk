@@ -28,6 +28,9 @@
 #import "TTHashtagMentionColorization.h"
 #import "TTAnalytics.h"
 
+#import <QuartzCore/QuartzCore.h>
+#import "AVFoundation/AVFoundation.h"
+
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
 
@@ -77,6 +80,8 @@
 @property BOOL isLikedByCurrentUser;
 @property BOOL viewMoved;
 @property BOOL shouldShowTrunkNameButton;
+@property AVPlayerLayer *layer;
+@property AVPlayer *player;
 
 @property BOOL isFetchingTrip;
 
@@ -113,6 +118,9 @@
 -(void)viewDidAppear:(BOOL)animated{
     NSRange cursorPosition = [self.caption selectedRange];
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
+    //If the player is loaded, continue playing the video
+    //If it's not loaded, it will ignore this command
+    [self.player play];
 }
 
 -(void)setCaptionAndNavBar{
@@ -480,6 +488,41 @@
 
 - (void)loadImageForPhoto: (Photo *)photo {
     if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
+        
+        if(photo.video){
+            
+            NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+            UIImage *placeholderImage = photo.image;
+            [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+            [self.imageView setImageWithURLRequest:request
+                                  placeholderImage:placeholderImage
+                                           success:nil failure:nil];
+            
+            [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+
+                NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
+                self.player = [AVPlayer playerWithURL:url];
+                
+                self.layer = [AVPlayerLayer layer];
+                [self.layer setPlayer:self.player];
+                [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
+                [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
+                
+                int a = (int)self.view.layer.sublayers.count-4;
+                [self.view.layer insertSublayer:self.layer atIndex:a];
+                
+                [self.player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(playerItemDidReachEnd:)
+                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                           object:[self.player currentItem]];
+                
+                [self.player play];
+            }];
+            
+        }else{
+            
         NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
         UIImage *placeholderImage = photo.image;
@@ -487,7 +530,8 @@
         [self.imageView setImageWithURLRequest:request
                               placeholderImage:placeholderImage
                                        success:nil failure:nil];
-        
+            
+        }
         
     } else if (photo.imageAsset){ //not imagURL, its an imageAsset from AddTripPhotosViewController
         CGRect screenRect = [[UIScreen mainScreen] bounds];
@@ -503,6 +547,13 @@
                                                     self.imageView.image = result;
                                                 }];
     }
+}
+
+//handle the end of the video
+- (void)playerItemDidReachEnd:(NSNotification *)notification {
+    AVPlayerItem *p = [notification object];
+    [p seekToTime:kCMTimeZero];
+    [self.player play];
 }
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
@@ -633,6 +684,7 @@
 
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    [self clearVideo];
     if (self.isZoomed == NO && self.isEditingCaption == NO){
         // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
         if (!self.photos || self.photos.count == 0) {
@@ -680,6 +732,7 @@
 
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    [self clearVideo];
     if (!self.isZoomed && !self.isEditingCaption){
 
         if (!self.photos || self.photos.count == 0) {
@@ -737,7 +790,9 @@
 }
 
 - (void)swipeUp:(UISwipeGestureRecognizer*)gestureRecognizer
-{    if (self.isZoomed == NO)
+{
+    [self.player pause];
+    if (self.isZoomed == NO)
     {
     
     CommentListViewController *vc = [[CommentListViewController alloc] initWithComments:self.commentActivities forPhoto:self.photo];
@@ -747,6 +802,7 @@
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    [self clearVideo];
     if (self.isZoomed == NO){
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -1774,6 +1830,11 @@
             }
         }
 
+}
+
+-(void)clearVideo{
+    [self.player pause];
+    [self.layer removeFromSuperlayer];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{

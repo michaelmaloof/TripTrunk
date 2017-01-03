@@ -28,10 +28,11 @@
 #import "DLFPhotoCell.h"
 #import "SocialUtility.h"
 #import "TTAnalytics.h"
+#import "GMImagePickerController.h"
 
 #define OVERLAY_VIEW_TAG 121212121
 
-@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate,DLFPhotosPickerViewControllerDelegate>
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate,DLFPhotosPickerViewControllerDelegate, GMImagePickerControllerDelegate>
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
@@ -234,11 +235,15 @@
 }
 
 - (void)selectPhotosButtonPressed{
-    DLFPhotosPickerViewController *photosPicker = [[DLFPhotosPickerViewController alloc] init];
-    [photosPicker setPhotosPickerDelegate:self];
-    [photosPicker setMultipleSelections:YES];
-    [self presentViewController:photosPicker animated:YES completion:nil];
+//    DLFPhotosPickerViewController *photosPicker = [[DLFPhotosPickerViewController alloc] init];
+//    [photosPicker setPhotosPickerDelegate:self];
+//    [photosPicker setMultipleSelections:YES];
+//    [self presentViewController:photosPicker animated:YES completion:nil];
     
+    
+    GMImagePickerController *picker = [[GMImagePickerController alloc] init];
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 #pragma mark - DLFPhotosPickerViewDelegate
@@ -281,6 +286,31 @@
     }
 }
 
+#pragma mark - GMImagePickerController
+- (void)assetsPickerController:(GMImagePickerController *)picker didFinishPickingAssets:(NSArray *)assetArray
+{
+    
+    NSLog(@"GMImagePicker: User ended picking assets. Number of selected items is: %lu", (unsigned long)assetArray.count);
+    
+    for (PHAsset *asset in assetArray){
+        Photo *photo = [[Photo alloc] init];
+        photo.imageAsset = asset;
+        [self.photos addObject:photo];
+    }
+    
+    [picker.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [self.tripCollectionView reloadData];
+    }];
+
+
+}
+
+
+-(void)assetsPickerControllerDidCancel:(GMImagePickerController *)picker
+{
+    NSLog(@"GMImagePicker: User pressed cancel button");
+}
+
 #pragma mark - CTAssetsPickerController Delegate Methods
 
 //-(void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
@@ -317,6 +347,7 @@
         if(self.publishToFacebook)
             [uploadError setObject:@"YES" forKey:@"currentFacebookUpload"];
         else [uploadError setObject:nil forKey:@"currentFacebookUpload"];
+        
         [uploadError setObject:localIdentifiers forKey:@"currentImageUpload"];
         [uploadError setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
         [uploadError setObject:nil forKey:@"uploadError"];
@@ -385,41 +416,82 @@
         photo.city = self.trip.city;
         
         // Upload the photo - this method will also handle publish to facebook if needed
-        [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
-            PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
-            [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
-            [countIncrement save];
-            
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
-            NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
-            int i = 0;
-            
-            for(NSString *li in localIdentifiers){
-                if([li isEqualToString:photo.imageAsset.localIdentifier]){
-                    [localIdentifiers removeObjectAtIndex:i];
-                    [self.photoCaptions removeObjectAtIndex:i];
-                    break;
-                }
-                i++;
-            }
-            
-            [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
-            [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
-            [defaults synchronize];
-            
-            
-            // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
-            if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
-                // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
-                [SocialUtility addComment:savedPhoto.caption forPhoto:savedPhoto isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                    if (!error && commentObject) {
-                        [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
-                        [self updateMentionsInDatabase:commentObject];
+        if(photo.imageAsset.mediaType == 2){
+            [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:NO block:^(PFObject *video) {
+                photo.video = video;
+                [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
+                    PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
+                    [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
+                    [countIncrement save];
+                    
+                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                    NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+                    NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+                    int i = 0;
+                    
+                    for(NSString *li in localIdentifiers){
+                        if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                            [localIdentifiers removeObjectAtIndex:i];
+                            [self.photoCaptions removeObjectAtIndex:i];
+                            break;
+                        }
+                        i++;
+                    }
+                    
+                    [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+                    [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+                    [defaults synchronize];
+                    
+                    
+                    // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
+                    if (photo.caption && ![photo.caption isEqualToString:@""]) {
+                        // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
+                        [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                            if (!error && commentObject) {
+                                [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                                [self updateMentionsInDatabase:commentObject];
+                            }
+                        }];
                     }
                 }];
-            }
-        }];
+            }];
+        }else{
+            [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
+                PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
+                [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
+                [countIncrement save];
+                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+                NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+                int i = 0;
+                
+                for(NSString *li in localIdentifiers){
+                    if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                        [localIdentifiers removeObjectAtIndex:i];
+                        [self.photoCaptions removeObjectAtIndex:i];
+                        break;
+                    }
+                    i++;
+                }
+                
+                [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+                [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+                [defaults synchronize];
+                
+                
+                // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
+                if (savedPhoto.caption && ![savedPhoto.caption isEqualToString:@""]) {
+                    // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
+                    [SocialUtility addComment:savedPhoto.caption forPhoto:savedPhoto isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                        if (!error && commentObject) {
+                            [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                            [self updateMentionsInDatabase:commentObject];
+                        }
+                    }];
+                }
+            }];
+        }
     }
     
     // NOTE: This stuff will be executed BEFORE the photo uploads finish because of they async nature of uploading.
@@ -559,29 +631,35 @@
         [cell.layer setCornerRadius:15.0];
         [cell.layer setMasksToBounds:YES];
     } else{ //photos selected
-        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
-        if(photo.caption){
-            if([photo.caption isEqualToString:@""])
-                photo.caption = nil;
-        }
+//        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+//        if(photo.caption){
+//            if([photo.caption isEqualToString:@""])
+//                photo.caption = nil;
+//        }
+//        [cell.layer setCornerRadius:0.0];
+//        [cell.layer setMasksToBounds:YES];
+//        cell.tripImageView.caption = photo.caption;
+//        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+//                                                   targetSize:CGSizeMake(200, 200)
+//                                                  contentMode:PHImageContentModeAspectFill
+//                                                      options:nil
+//                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//                                                    // Set the image.
+//                                                    // TODO: Use a weak cell reference
+//                                                    cell.tripImageView.image = result;
+//                                                }];
+//        //we change the design if the photo has a caption or not
+//        if(photo.caption){
+//            cell.captionImageView.hidden = NO;
+//        } else {
+//            cell.captionImageView.hidden = YES;
+//        }
+        
+        Photo *video = [self.photos objectAtIndex:indexPath.row-1];
         [cell.layer setCornerRadius:0.0];
         [cell.layer setMasksToBounds:YES];
-        cell.tripImageView.caption = photo.caption;
-        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
-                                                   targetSize:CGSizeMake(200, 200)
-                                                  contentMode:PHImageContentModeAspectFill
-                                                      options:nil
-                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                                                    // Set the image.
-                                                    // TODO: Use a weak cell reference
-                                                    cell.tripImageView.image = result;
-                                                }];
-        //we change the design if the photo has a caption or not
-        if(photo.caption){
-            cell.captionImageView.hidden = NO;
-        } else {
-            cell.captionImageView.hidden = YES;
-        }
+        cell.backgroundColor = [UIColor blackColor];
+        
         [cell layoutIfNeeded];
     }
     return cell;

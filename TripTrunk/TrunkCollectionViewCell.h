@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet PFImageView *photo;
 @property Photo *tripPhoto;
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
+@property (strong, nonatomic) IBOutlet UIImageView *videoIcon;
 
 @end

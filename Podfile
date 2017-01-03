@@ -19,4 +19,5 @@ target :'TripTrunk' do
     pod 'AWSSNS'
     pod 'AWSSQS'
     pod 'GooglePlaces'
+    pod 'GMImagePicker', '~> 0.0.2'
 end

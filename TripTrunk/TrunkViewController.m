@@ -678,6 +678,7 @@
 {
     if (collectionView == self.collectionView){
         TrunkCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
+        cell.videoIcon.hidden = YES;
         cell.logo.hidden = YES;
         cell.photo.image = nil;
         [cell.photo setContentMode:UIViewContentModeScaleAspectFill];
@@ -714,6 +715,10 @@
                                            weakCell.photo.image = image;
                                            [weakCell layoutIfNeeded];
                                        } failure:nil];
+        
+            if(cell.tripPhoto.video)
+                cell.videoIcon.hidden = NO;
+        
             return weakCell;
             return cell;
     } else {

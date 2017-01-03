@@ -159,6 +159,16 @@
  */
 +(BOOL)checkForUpdate;
 
+/**
+ *  Uploads a Video to Cloudinary, sets the url on the Photo object, and then saves the Photo object to Parse
+ *  This is an Asynchronous operation that uses an NSOperationQueue to ensure we only are uploading 2 photos at a time to prevent timeouts.
+ *
+ *  @param video     TripTrunk parse Video object
+ *  @param imageData NSData of a JPEG image (works with PNG as well, but that takes up more space, so we recommend JPEG)
+ */
+-(void)uploadVideo:(Photo *)video photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(PFObject *video))completionBlock;
+-(void)uploadVideoToCloudinary:(Photo *)video withAVAsset:(AVAsset*)asset block:(void (^)(BOOL success, NSError *error, PFObject *savedVideo))completionBlock;
+
 @end
 
 

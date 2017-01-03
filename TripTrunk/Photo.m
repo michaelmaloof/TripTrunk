@@ -21,6 +21,7 @@
 @dynamic city;
 @dynamic tripName;
 @dynamic imageUrl;
+@dynamic video;
 
 @synthesize image;
 @synthesize imageAsset;

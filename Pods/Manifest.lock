@@ -34,6 +34,7 @@ PODS:
     - AWSCore (= 2.4.5)
   - AWSSQS (2.4.5):
     - AWSCore (= 2.4.5)
+  - GMImagePicker (0.0.2)
   - GoogleMaps/Base (2.0.1)
   - GooglePlaces (2.0.1):
     - GoogleMaps/Base (= 2.0.1)
@@ -56,6 +57,7 @@ DEPENDENCIES:
   - AWSSimpleDB
   - AWSSNS
   - AWSSQS
+  - GMImagePicker (~> 0.0.2)
   - GooglePlaces
 
 SPEC CHECKSUMS:
@@ -77,9 +79,10 @@ SPEC CHECKSUMS:
   AWSSimpleDB: c7f91fdd299ca58f222ee95e89a27022cd47ada1
   AWSSNS: aaf565330d8f2f7c4f2cb13d2a20bceae8259f2f
   AWSSQS: 8026703bf7cbe8ea1728f95f358f7cb4536e5040
+  GMImagePicker: 6438a6764d6280b1dbf19b59140313f5a73daeeb
   GoogleMaps: f09da64fc987c1aa29394567c3cab5a3df83c402
   GooglePlaces: 72fab1d1651c6df0322f2aad245ffb15b80d3c56
 
-PODFILE CHECKSUM: 8e5028258d2c25bbac9046ba6099697babaee0a4
+PODFILE CHECKSUM: 74ca5b874ab0580131f6e85295d81c89e7cddaeb
 
 COCOAPODS: 1.0.1
