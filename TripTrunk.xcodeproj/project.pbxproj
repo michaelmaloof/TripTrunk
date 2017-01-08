@@ -54,6 +54,13 @@
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
+		22F5B6FA1E22E00000C020DB /* TTOnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B6F91E22E00000C020DB /* TTOnboardingViewController.m */; };
+		22F5B6FD1E22E11C00C020DB /* TTUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B6FC1E22E11C00C020DB /* TTUsernameViewController.m */; };
+		22F5B7001E22E29500C020DB /* TTPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B6FF1E22E29500C020DB /* TTPasswordViewController.m */; };
+		22F5B7031E22E41400C020DB /* TTNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B7021E22E41400C020DB /* TTNameViewController.m */; };
+		22F5B7061E22E4B800C020DB /* TTEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B7051E22E4B800C020DB /* TTEmailViewController.m */; };
+		22F5B7091E22E56000C020DB /* TTLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B7081E22E56000C020DB /* TTLocationViewController.m */; };
+		22F5B70C1E22E65400C020DB /* TTHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F5B70B1E22E65400C020DB /* TTHomeViewController.m */; };
 		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
@@ -256,6 +263,20 @@
 		22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCaptionViewController.m; sourceTree = "<group>"; };
 		22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTForgotPasswordViewController.h; sourceTree = "<group>"; };
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
+		22F5B6F81E22E00000C020DB /* TTOnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingViewController.h; sourceTree = "<group>"; };
+		22F5B6F91E22E00000C020DB /* TTOnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingViewController.m; sourceTree = "<group>"; };
+		22F5B6FB1E22E11C00C020DB /* TTUsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUsernameViewController.h; sourceTree = "<group>"; };
+		22F5B6FC1E22E11C00C020DB /* TTUsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUsernameViewController.m; sourceTree = "<group>"; };
+		22F5B6FE1E22E29500C020DB /* TTPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPasswordViewController.h; sourceTree = "<group>"; };
+		22F5B6FF1E22E29500C020DB /* TTPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPasswordViewController.m; sourceTree = "<group>"; };
+		22F5B7011E22E41400C020DB /* TTNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNameViewController.h; sourceTree = "<group>"; };
+		22F5B7021E22E41400C020DB /* TTNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNameViewController.m; sourceTree = "<group>"; };
+		22F5B7041E22E4B800C020DB /* TTEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEmailViewController.h; sourceTree = "<group>"; };
+		22F5B7051E22E4B800C020DB /* TTEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEmailViewController.m; sourceTree = "<group>"; };
+		22F5B7071E22E56000C020DB /* TTLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTLocationViewController.h; sourceTree = "<group>"; };
+		22F5B7081E22E56000C020DB /* TTLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTLocationViewController.m; sourceTree = "<group>"; };
+		22F5B70A1E22E65400C020DB /* TTHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHomeViewController.h; sourceTree = "<group>"; };
+		22F5B70B1E22E65400C020DB /* TTHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHomeViewController.m; sourceTree = "<group>"; };
 		22FEABC11CB159BD0001AE18 /* ReportedBug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportedBug.h; sourceTree = "<group>"; };
 		22FEABC21CB159BD0001AE18 /* ReportedBug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportedBug.m; sourceTree = "<group>"; };
 		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
@@ -800,6 +821,20 @@
 				22A534CA1E1E001D0013FBC2 /* TTBaseLoginViewController.m */,
 				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
 				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+				22F5B6F81E22E00000C020DB /* TTOnboardingViewController.h */,
+				22F5B6F91E22E00000C020DB /* TTOnboardingViewController.m */,
+				22F5B6FB1E22E11C00C020DB /* TTUsernameViewController.h */,
+				22F5B6FC1E22E11C00C020DB /* TTUsernameViewController.m */,
+				22F5B6FE1E22E29500C020DB /* TTPasswordViewController.h */,
+				22F5B6FF1E22E29500C020DB /* TTPasswordViewController.m */,
+				22F5B7011E22E41400C020DB /* TTNameViewController.h */,
+				22F5B7021E22E41400C020DB /* TTNameViewController.m */,
+				22F5B7041E22E4B800C020DB /* TTEmailViewController.h */,
+				22F5B7051E22E4B800C020DB /* TTEmailViewController.m */,
+				22F5B7071E22E56000C020DB /* TTLocationViewController.h */,
+				22F5B7081E22E56000C020DB /* TTLocationViewController.m */,
+				22F5B70A1E22E65400C020DB /* TTHomeViewController.h */,
+				22F5B70B1E22E65400C020DB /* TTHomeViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1183,6 +1218,7 @@
 				C90C3D141B04FC2200CABBC9 /* AFURLConnectionOperation.m in Sources */,
 				225E554A1CB074CD00FAAB00 /* TTReportBugViewController.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
+				22F5B7031E22E41400C020DB /* TTNameViewController.m in Sources */,
 				271514101C99E0F80054E43F /* TTFont.m in Sources */,
 				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
@@ -1201,6 +1237,7 @@
 				2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */,
 				C9CD1CA61AFC079600D967A5 /* UsernameViewController.m in Sources */,
 				C957026A1D91B1DE009DE079 /* Underscore.m in Sources */,
+				22F5B7061E22E4B800C020DB /* TTEmailViewController.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
@@ -1212,7 +1249,9 @@
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
+				22F5B70C1E22E65400C020DB /* TTHomeViewController.m in Sources */,
 				27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */,
+				22F5B6FD1E22E11C00C020DB /* TTUsernameViewController.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
@@ -1220,12 +1259,14 @@
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
+				22F5B6FA1E22E00000C020DB /* TTOnboardingViewController.m in Sources */,
 				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
+				22F5B7001E22E29500C020DB /* TTPasswordViewController.m in Sources */,
 				272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
@@ -1254,6 +1295,7 @@
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
+				22F5B7091E22E56000C020DB /* TTLocationViewController.m in Sources */,
 				C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
 				22A534CB1E1E001D0013FBC2 /* TTBaseLoginViewController.m in Sources */,

@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Onboarding View Controller-->
         <scene sceneID="5u1-UY-Kyz">
             <objects>
-                <viewController id="1ip-ec-yA9" sceneMemberID="viewController">
+                <viewController id="1ip-ec-yA9" customClass="TTOnboardingViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lxf-9X-iqh"/>
                         <viewControllerLayoutGuide type="bottom" id="QC8-no-57r"/>
@@ -40,32 +40,48 @@
                                 <rect key="frame" x="125" y="243" width="106" height="181"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOZ-fU-Ae0">
-                                <rect key="frame" x="71" y="544" width="233" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Continue without Facebook">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnX-eX-gJf">
                                 <rect key="frame" x="37" y="493" width="322" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_continueWithFacebook_button">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="continueWithFacebookWasTapped:" destination="1ip-ec-yA9" eventType="touchUpInside" id="7Lr-80-kDL"/>
+                                    <segue destination="pSC-mU-ins" kind="show" identifier="withFacebook" id="w0E-fy-9rb"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOZ-fU-Ae0">
+                                <rect key="frame" x="71" y="558" width="233" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Continue without Facebook">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="continueWithoutFacebookWasTapped:" destination="1ip-ec-yA9" eventType="touchUpInside" id="t0h-HI-VLI"/>
+                                    <segue destination="pSC-mU-ins" kind="show" identifier="withoutFacebook" id="xGz-Wz-4PM"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="blueElephant" destination="dgP-N0-iGV" id="Mtw-nc-aKI"/>
+                        <outlet property="facebook" destination="tnX-eX-gJf" id="TCb-de-b7W"/>
+                        <outlet property="icon" destination="DaS-pE-NfA" id="TUz-mO-N22"/>
+                        <outlet property="info" destination="19x-Ml-UAb" id="U7Z-YM-kZL"/>
+                        <outlet property="tripTrunkTitle" destination="z4K-HL-y7G" id="Ffj-NW-qAD"/>
+                        <outlet property="withoutFacebook" destination="bOZ-fU-Ae0" id="vD2-fE-7YL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnc-aF-krN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-452" y="-575.26236881559225"/>
         </scene>
-        <!--View Controller-->
+        <!--Username View Controller-->
         <scene sceneID="eNt-wJ-GzW">
             <objects>
-                <viewController id="pSC-mU-ins" sceneMemberID="viewController">
+                <viewController id="pSC-mU-ins" customClass="TTUsernameViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="rV0-r5-O3g"/>
                         <viewControllerLayoutGuide type="bottom" id="ABs-db-bmB"/>
@@ -103,6 +119,9 @@
                                 <rect key="frame" x="34" y="441" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_back_button_login"/>
+                                <connections>
+                                    <action selector="backButtonWasTapped:" destination="pSC-mU-ins" eventType="touchUpInside" id="kSx-9c-ero"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0VR-vd-vkm">
                                 <rect key="frame" x="99" y="450" width="143" height="30"/>
@@ -111,24 +130,40 @@
                                 <state key="normal" title="Already have an account?">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="accountWasTapped:" destination="pSC-mU-ins" eventType="touchUpInside" id="HHy-u2-Jif"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lug-rw-aBV">
                                 <rect key="frame" x="255" y="449" width="83" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_next_button"/>
+                                <connections>
+                                    <action selector="nextButtonWasTapped:" destination="pSC-mU-ins" eventType="touchUpInside" id="X8q-Dg-vcv"/>
+                                    <segue destination="p45-b1-m7c" kind="show" identifier="next" id="3kY-BT-uFF"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="account" destination="0VR-vd-vkm" id="QtN-pz-8rN"/>
+                        <outlet property="backButton" destination="Lh3-5W-niY" id="eVJ-xi-E9x"/>
+                        <outlet property="info" destination="hFe-Zc-iA3" id="pj8-PV-6FU"/>
+                        <outlet property="nextButton" destination="lug-rw-aBV" id="2eg-j9-Xmu"/>
+                        <outlet property="pageTitle" destination="Ikv-Ap-isl" id="4oT-ly-idp"/>
+                        <outlet property="trunkImage" destination="IjR-A0-yKj" id="QRp-ng-tRo"/>
+                        <outlet property="usernameTextField" destination="dSs-aS-nDK" id="vWN-El-bTT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2CD-da-fEI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="224.80000000000001" y="-570.76461769115451"/>
         </scene>
-        <!--View Controller-->
+        <!--Password View Controller-->
         <scene sceneID="Ykl-o8-38u">
             <objects>
-                <viewController id="p45-b1-m7c" sceneMemberID="viewController">
+                <viewController id="p45-b1-m7c" customClass="TTPasswordViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dkh-Gh-VYf"/>
                         <viewControllerLayoutGuide type="bottom" id="Gte-kH-xWy"/>
@@ -166,24 +201,51 @@
                                 <rect key="frame" x="33" y="451" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_back_button_login"/>
+                                <connections>
+                                    <action selector="backButtonWasTapped:" destination="p45-b1-m7c" eventType="touchUpInside" id="vWG-Cj-APE"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LF8-H6-1LX">
                                 <rect key="frame" x="249" y="451" width="83" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_next_button"/>
+                                <connections>
+                                    <action selector="nextButtonWasTapped:" destination="p45-b1-m7c" eventType="touchUpInside" id="jR8-0l-dNg"/>
+                                    <segue destination="hSI-EF-EvR" kind="show" identifier="next" id="xfs-Cs-dA2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEY-Mq-DQo">
+                                <rect key="frame" x="98" y="455" width="143" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="Forgot Password?">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="forgotPasswordWasTapped:" destination="p45-b1-m7c" eventType="touchUpInside" id="jV9-fP-IKz"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="backButton" destination="bLO-Xt-oMF" id="Spl-Ab-jlt"/>
+                        <outlet property="forgotPassword" destination="hEY-Mq-DQo" id="cKq-yA-9Dz"/>
+                        <outlet property="info" destination="OTJ-zQ-e3w" id="3yE-wG-K2K"/>
+                        <outlet property="nextButton" destination="LF8-H6-1LX" id="UVl-zc-3yR"/>
+                        <outlet property="pageTitle" destination="YjI-KF-edN" id="xmk-FA-q4K"/>
+                        <outlet property="passwordTextField" destination="xNQ-jU-9wO" id="dBk-6c-VQN"/>
+                        <outlet property="trunkImage" destination="4eN-46-Gem" id="JAm-9F-K3k"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="19h-Xt-fDV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="909.60000000000002" y="-571.66416791604206"/>
         </scene>
-        <!--View Controller-->
+        <!--Name View Controller-->
         <scene sceneID="KcK-QT-CUX">
             <objects>
-                <viewController id="hSI-EF-EvR" sceneMemberID="viewController">
+                <viewController id="hSI-EF-EvR" customClass="TTNameViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vec-52-j2s"/>
                         <viewControllerLayoutGuide type="bottom" id="EkK-Hf-cts"/>
@@ -221,24 +283,39 @@
                                 <rect key="frame" x="41" y="454" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_back_button_login"/>
+                                <connections>
+                                    <action selector="backButtonWasTapped:" destination="hSI-EF-EvR" eventType="touchUpInside" id="Edh-2g-MwC"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RsU-Iy-CsU">
                                 <rect key="frame" x="257" y="454" width="83" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_next_button"/>
+                                <connections>
+                                    <action selector="nextButtonWasTapped:" destination="hSI-EF-EvR" eventType="touchUpInside" id="9vI-SL-gbb"/>
+                                    <segue destination="HGR-2G-BQv" kind="show" identifier="next" id="C3i-Of-Gps"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="backButton" destination="F7Z-XH-OiY" id="Z7A-XU-PKz"/>
+                        <outlet property="info" destination="0vM-CQ-PGY" id="NnL-14-bJB"/>
+                        <outlet property="nameTextField" destination="WwY-X5-XFn" id="T8s-Mc-eGC"/>
+                        <outlet property="nextButton" destination="RsU-Iy-CsU" id="MXZ-Te-Th8"/>
+                        <outlet property="pageTitle" destination="feH-OM-7ZA" id="AfB-5y-XDg"/>
+                        <outlet property="trunkImage" destination="gTt-Z1-dNG" id="d2Y-ly-sTM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nmg-fX-pdg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1629.5999999999999" y="-570.76461769115451"/>
         </scene>
-        <!--View Controller-->
+        <!--Email View Controller-->
         <scene sceneID="iaF-Ic-ecI">
             <objects>
-                <viewController id="HGR-2G-BQv" sceneMemberID="viewController">
+                <viewController id="HGR-2G-BQv" customClass="TTEmailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UIZ-se-Sew"/>
                         <viewControllerLayoutGuide type="bottom" id="Esy-LJ-AON"/>
@@ -276,24 +353,39 @@
                                 <rect key="frame" x="38" y="437" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_back_button_login"/>
+                                <connections>
+                                    <action selector="backWasTapped:" destination="HGR-2G-BQv" eventType="touchUpInside" id="Zpi-gd-ibQ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBB-w3-qgu">
                                 <rect key="frame" x="254" y="437" width="83" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_next_button"/>
+                                <connections>
+                                    <action selector="nextWasTapped:" destination="HGR-2G-BQv" eventType="touchUpInside" id="qLp-dE-IBv"/>
+                                    <segue destination="2GM-gD-mO8" kind="show" identifier="next" id="Wuw-Na-2OB"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="backButton" destination="eEQ-gt-rEG" id="vdx-Gl-jXI"/>
+                        <outlet property="emailTextField" destination="bVq-O9-SQg" id="fDS-2s-c5L"/>
+                        <outlet property="info" destination="kvS-1W-Ug7" id="Fi3-3j-dUO"/>
+                        <outlet property="nextButton" destination="lBB-w3-qgu" id="Jm3-mh-jti"/>
+                        <outlet property="pageTitle" destination="iIE-Ur-XeW" id="mWw-wU-tBe"/>
+                        <outlet property="trunkImage" destination="c2q-0T-t8F" id="mZ2-Af-gSU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KiJ-vR-j0o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2317.5999999999999" y="-572.56371814092961"/>
         </scene>
-        <!--View Controller-->
+        <!--Location View Controller-->
         <scene sceneID="Y2h-2W-EDl">
             <objects>
-                <viewController id="2GM-gD-mO8" sceneMemberID="viewController">
+                <viewController id="2GM-gD-mO8" customClass="TTLocationViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Dk-18-7lZ"/>
                         <viewControllerLayoutGuide type="bottom" id="XdW-HQ-gJB"/>
@@ -320,6 +412,10 @@
                                 <rect key="frame" x="176" y="450" width="164" height="54"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_turnOn_button"/>
+                                <connections>
+                                    <action selector="turnOnWasTapped:" destination="2GM-gD-mO8" eventType="touchUpInside" id="rNF-8y-oIu"/>
+                                    <segue destination="0eV-tc-rHf" kind="show" identifier="turnOn" id="Efi-ts-9rv"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Allow TripTrunk to access your location?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ah-Pv-gUy">
                                 <rect key="frame" x="34" y="421" width="306" height="21"/>
@@ -334,19 +430,30 @@
                                 <state key="normal" title="No Thanks">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="noThanksWasTapped:" destination="2GM-gD-mO8" eventType="touchUpInside" id="pQ5-qO-u5b"/>
+                                    <segue destination="0eV-tc-rHf" kind="show" identifier="noThanks" id="6Qp-0X-Jkg"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="allowLabel" destination="2ah-Pv-gUy" id="M9x-o4-IXM"/>
+                        <outlet property="info" destination="xcp-d9-C6J" id="vv1-jr-hZp"/>
+                        <outlet property="noThanks" destination="bB7-Oe-Rnp" id="waF-M2-SUG"/>
+                        <outlet property="pageTitle" destination="Cgk-Wn-Tmq" id="08F-K7-5KK"/>
+                        <outlet property="turnOn" destination="Z8W-4h-bun" id="ddh-iz-ebL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8fS-U6-tLV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3031" y="-575"/>
         </scene>
-        <!--View Controller-->
+        <!--Home View Controller-->
         <scene sceneID="uEh-cR-nZA">
             <objects>
-                <viewController id="0eV-tc-rHf" sceneMemberID="viewController">
+                <viewController id="0eV-tc-rHf" customClass="TTHomeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="omZ-OR-jYz"/>
                         <viewControllerLayoutGuide type="bottom" id="BWB-xA-0Z1"/>
@@ -373,7 +480,7 @@
                                 <rect key="frame" x="0.0" y="227" width="321" height="80"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ex. Los Angeles" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tru-22-v53">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ex. City, State, Country" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tru-22-v53">
                                 <rect key="frame" x="77" y="343" width="220" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
@@ -384,15 +491,29 @@
                                 <rect key="frame" x="38" y="440" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_back_button_login"/>
+                                <connections>
+                                    <action selector="backButtonWasTapped:" destination="0eV-tc-rHf" eventType="touchUpInside" id="YJz-fj-uqZ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdO-47-nto">
                                 <rect key="frame" x="221" y="441" width="125" height="49"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="tt_finish_button"/>
+                                <connections>
+                                    <action selector="finishButtonWasTapped:" destination="0eV-tc-rHf" eventType="touchUpInside" id="2Wp-vi-4dI"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="backButton" destination="IZN-42-LdJ" id="b74-tH-PDL"/>
+                        <outlet property="finishButton" destination="qdO-47-nto" id="wFf-6q-qNY"/>
+                        <outlet property="homeTextField" destination="tru-22-v53" id="TXT-VA-b3A"/>
+                        <outlet property="info" destination="H1M-FF-lmM" id="ae4-La-yjY"/>
+                        <outlet property="pageTitle" destination="Kir-TX-07a" id="eqw-wy-MLq"/>
+                        <outlet property="trunkImage" destination="hsB-dG-g2i" id="2wN-mc-iNu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kub-oM-xDn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -414,4 +535,8 @@
         <image name="tt_trunk_username" width="223" height="80"/>
         <image name="tt_turnOn_button" width="164" height="54"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="w0E-fy-9rb"/>
+        <segue reference="Efi-ts-9rv"/>
+    </inferredMetricsTieBreakers>
 </document>
