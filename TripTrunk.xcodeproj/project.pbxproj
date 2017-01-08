@@ -49,6 +49,8 @@
 		2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2268B09D1B32485300C941C4 /* HomeMapViewController.m */; };
 		226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 226AAC0E1BB21CEF0031AF98 /* UserCellCollectionViewCell.m */; };
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
+		22A534C51E1B42600013FBC2 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22A534C41E1B42600013FBC2 /* Login.storyboard */; };
+		22A534CB1E1E001D0013FBC2 /* TTBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A534CA1E1E001D0013FBC2 /* TTBaseLoginViewController.m */; };
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
@@ -245,6 +247,9 @@
 		226AAC0E1BB21CEF0031AF98 /* UserCellCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCellCollectionViewCell.m; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
+		22A534C41E1B42600013FBC2 /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		22A534C91E1E001D0013FBC2 /* TTBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseLoginViewController.h; sourceTree = "<group>"; };
+		22A534CA1E1E001D0013FBC2 /* TTBaseLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseLoginViewController.m; sourceTree = "<group>"; };
 		22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNoInternetView.h; sourceTree = "<group>"; };
 		22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNoInternetView.m; sourceTree = "<group>"; };
 		22CBFDDD1BE2D4BB00D38E8D /* EditCaptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCaptionViewController.h; sourceTree = "<group>"; };
@@ -509,6 +514,7 @@
 		220408DD1AED559A009DB060 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				22F5B6F71E22D3D500C020DB /* Storyboards */,
 				220408DE1AED55C1009DB060 /* ViewControllers */,
 				220408DF1AED55E7009DB060 /* ViewCells */,
 				220408E01AED560B009DB060 /* ImageView */,
@@ -523,8 +529,7 @@
 				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
 				22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */,
 				22343AE91BC9A85F00F0B2E5 /* TTBaseTableViewController.m */,
-				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
-				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+				22F5B6F61E22D38200C020DB /* Login */,
 				22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */,
 				22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */,
 				22DDB34F1BD5E21D00FBEAAC /* TTForgotPasswordViewController.h */,
@@ -688,7 +693,6 @@
 			isa = PBXGroup;
 			children = (
 				C976378F1D8B2DD7000E8C37 /* TripTrunk.entitlements */,
-				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
 				C9C7299E1B0248D900BA68D2 /* SocialUtility.h */,
@@ -787,6 +791,26 @@
 			);
 			name = Frameworks;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		22F5B6F61E22D38200C020DB /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				22A534C91E1E001D0013FBC2 /* TTBaseLoginViewController.h */,
+				22A534CA1E1E001D0013FBC2 /* TTBaseLoginViewController.m */,
+				224F3FB91AE1D8F6003A1DEB /* LoginViewController.h */,
+				224F3FBA1AE1D8F6003A1DEB /* LoginViewController.m */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		22F5B6F71E22D3D500C020DB /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
+				22A534C41E1B42600013FBC2 /* Login.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		271D8BAC1D91A43D0054741F /* GoogleAnalytics */ = {
@@ -1059,6 +1083,7 @@
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
 				276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */,
 				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
+				22A534C51E1B42600013FBC2 /* Login.storyboard in Resources */,
 				C9FC5A231BC49CE200EB5158 /* EULAViewController.xib in Resources */,
 				225E554C1CB0762F00FAAB00 /* TTReportBugViewController.xib in Resources */,
 				4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */,
@@ -1231,6 +1256,7 @@
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
 				C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
+				22A534CB1E1E001D0013FBC2 /* TTBaseLoginViewController.m in Sources */,
 				C9FC5A221BC49CE200EB5158 /* EULAViewController.m in Sources */,
 				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				C90C3D0F1B04FC2200CABBC9 /* AFHTTPRequestOperation.m in Sources */,
