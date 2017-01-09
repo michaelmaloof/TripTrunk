@@ -22,6 +22,7 @@
 #import "EditProfileViewController.h"
 #import "TrunkViewController.h"
 #import "AppDelegate.h"
+#import "TTOnboardingViewController.h"
 
 /**
  HomeViewController displays trips on a map. Can be used on the user's "home" map, where all their friend's trips are shown, or can be used on a profile, which shows just that user's trips.
@@ -362,8 +363,9 @@ list of trips the user hasn't seen since last being in the app
 - (BOOL)checkUserRegistration {
     // No logged-in user
     if (![PFUser currentUser]) {
-        [self.navigationController performSegueWithIdentifier:@"loginView" sender:nil];
-        return NO;
+        UIStoryboard *secondStoryBoard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+        TTOnboardingViewController *onBoard = [secondStoryBoard instantiateInitialViewController];
+        [self.navigationController pushViewController:onBoard animated:YES];
     }
     // User is logged in, but hasn't completed registration (i.e. hasn't set a username or hometown, etc.)
     else if (![[PFUser currentUser] valueForKey:@"completedRegistration"] || [[[PFUser currentUser] valueForKey:@"completedRegistration"] boolValue] == FALSE) {

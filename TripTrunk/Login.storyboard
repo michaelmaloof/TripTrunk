@@ -48,7 +48,6 @@
                                 </state>
                                 <connections>
                                     <action selector="continueWithFacebookWasTapped:" destination="1ip-ec-yA9" eventType="touchUpInside" id="7Lr-80-kDL"/>
-                                    <segue destination="pSC-mU-ins" kind="show" identifier="withFacebook" id="w0E-fy-9rb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOZ-fU-Ae0">
@@ -59,7 +58,6 @@
                                 </state>
                                 <connections>
                                     <action selector="continueWithoutFacebookWasTapped:" destination="1ip-ec-yA9" eventType="touchUpInside" id="t0h-HI-VLI"/>
-                                    <segue destination="pSC-mU-ins" kind="show" identifier="withoutFacebook" id="xGz-Wz-4PM"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -72,6 +70,7 @@
                         <outlet property="info" destination="19x-Ml-UAb" id="U7Z-YM-kZL"/>
                         <outlet property="tripTrunkTitle" destination="z4K-HL-y7G" id="Ffj-NW-qAD"/>
                         <outlet property="withoutFacebook" destination="bOZ-fU-Ae0" id="vD2-fE-7YL"/>
+                        <segue destination="pSC-mU-ins" kind="show" identifier="setUsernameSegue" id="1Uc-t3-dTS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnc-aF-krN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -536,7 +535,6 @@
         <image name="tt_turnOn_button" width="164" height="54"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="w0E-fy-9rb"/>
         <segue reference="Efi-ts-9rv"/>
     </inferredMetricsTieBreakers>
 </document>

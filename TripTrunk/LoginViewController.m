@@ -185,7 +185,7 @@
  - (void)showSetUsernameView {
                 [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
                 
-            }
+}
 
 #pragma mark - Keyboard delegate methods
 

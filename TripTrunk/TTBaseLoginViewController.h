@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "TTBaseViewController.h"
+#import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import "MSTextField.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "EULAViewController.h"
+#import "TTAnalytics.h"
+#import "TTUtility.h"
 
 @interface TTBaseLoginViewController : TTBaseViewController
 

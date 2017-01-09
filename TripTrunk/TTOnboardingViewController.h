@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTBaseLoginViewController.h"
 
-@interface TTOnboardingViewController : UIViewController
+@interface TTOnboardingViewController : TTBaseLoginViewController
 
 @end
