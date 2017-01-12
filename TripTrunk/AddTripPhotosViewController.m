@@ -32,7 +32,7 @@
 
 #define OVERLAY_VIEW_TAG 121212121
 
-@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate,DLFPhotosPickerViewControllerDelegate, GMImagePickerControllerDelegate>
+@interface AddTripPhotosViewController ()  <UINavigationControllerDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate,PhotoDelegate,DLFPhotosPickerViewControllerDelegate, GMImagePickerControllerDelegate,UIVideoEditorControllerDelegate>
 @property NSMutableArray *photos;
 @property (weak, nonatomic) IBOutlet UICollectionView *tripCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *submitTrunk;
@@ -45,6 +45,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *facebookPublishButton;
 @property BOOL publishToFacebook;
 @property (strong, nonatomic) NSMutableArray *facebookPhotos;
+@property NSInteger editingVideoAtIndex;
 
 //############################################# MENTIONS ##################################################
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
@@ -417,7 +418,7 @@
         
         // Upload the photo - this method will also handle publish to facebook if needed
         if(photo.imageAsset.mediaType == 2){
-            [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:NO block:^(PFObject *video) {
+            [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                 photo.video = video;
                 [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
                     PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
@@ -625,37 +626,59 @@
 -(PhotoCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     PhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell" forIndexPath:indexPath];
-        if (indexPath.row == 0){ //add photo
+    if (indexPath.row == 0){ //add photo
+        cell.videoIcon.hidden = YES;
+        cell.videoErrorImage.hidden = YES;
         cell.tripImageView.image = [UIImage imageNamed:@"add"];
         cell.captionImageView.hidden = YES;
         [cell.layer setCornerRadius:15.0];
         [cell.layer setMasksToBounds:YES];
     } else{ //photos selected
-//        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
-//        if(photo.caption){
-//            if([photo.caption isEqualToString:@""])
-//                photo.caption = nil;
-//        }
-//        [cell.layer setCornerRadius:0.0];
-//        [cell.layer setMasksToBounds:YES];
-//        cell.tripImageView.caption = photo.caption;
-//        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
-//                                                   targetSize:CGSizeMake(200, 200)
-//                                                  contentMode:PHImageContentModeAspectFill
-//                                                      options:nil
-//                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-//                                                    // Set the image.
-//                                                    // TODO: Use a weak cell reference
-//                                                    cell.tripImageView.image = result;
-//                                                }];
-//        //we change the design if the photo has a caption or not
-//        if(photo.caption){
-//            cell.captionImageView.hidden = NO;
-//        } else {
-//            cell.captionImageView.hidden = YES;
-//        }
+        cell.videoIcon.hidden = YES;
+        cell.videoErrorImage.hidden = YES;
+        Photo *photo = [self.photos objectAtIndex:indexPath.row-1];
+        if(photo.caption){
+            if([photo.caption isEqualToString:@""])
+                photo.caption = nil;
+        }
+        [cell.layer setCornerRadius:0.0];
+        [cell.layer setMasksToBounds:YES];
+        cell.tripImageView.caption = photo.caption;
+        [[PHImageManager defaultManager] requestImageForAsset:photo.imageAsset
+                                                   targetSize:CGSizeMake(200, 200)
+                                                  contentMode:PHImageContentModeAspectFill
+                                                      options:nil
+                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                                                    // Set the image.
+                                                    // TODO: Use a weak cell reference
+                                                    cell.tripImageView.image = result;
+                                                }];
+        //we change the design if the photo has a caption or not
+        if(photo.caption){
+            cell.captionImageView.hidden = NO;
+        } else {
+            cell.captionImageView.hidden = YES;
+        }
         
-        Photo *video = [self.photos objectAtIndex:indexPath.row-1];
+        if(photo.imageAsset.mediaType == 2)
+            cell.videoIcon.hidden = NO;
+        
+        PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+        [options setVersion:PHVideoRequestOptionsVersionCurrent];
+        [options setDeliveryMode:PHVideoRequestOptionsDeliveryModeHighQualityFormat];
+        [options setNetworkAccessAllowed:YES];
+    
+        if(!photo.editedPath){
+            [[PHImageManager defaultManager] requestAVAssetForVideo:photo.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(CMTimeGetSeconds(asset.duration) > 15){
+                        [self disableUploadButton];
+                        cell.videoErrorImage.hidden = NO;
+                    }
+                });
+            }];
+        }
+        
         [cell.layer setCornerRadius:0.0];
         [cell.layer setMasksToBounds:YES];
         cell.backgroundColor = [UIColor blackColor];
@@ -668,12 +691,95 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0){ // add photos
         [self selectPhotosButtonPressed];
-    } else { //add captio to selected photos
-        self.path = indexPath.row-1;
-        [self performSegueWithIdentifier:@"addPhotoCaption" sender:self];
+    } else { 
+        
+        Photo *video = [self.photos objectAtIndex:indexPath.row-1];
+        
+        if(video.imageAsset.mediaType == 1){
+            
+            self.path = indexPath.row-1;
+            [self performSegueWithIdentifier:@"addPhotoCaption" sender:self];
+            
+        }else{
+            
+            NSString *message = NSLocalizedString(@"Would you like to Trim this video or set the caption?","Would you like to Trim this video or set the caption?");
+            NSString *trimActionString = NSLocalizedString(@"Trim Video", @"Trim Video");
+            NSString *setCaptionActionString = NSLocalizedString(@"Set Caption", @"Set Caption");
+            NSString *cancelActionString = NSLocalizedString(@"Cancel", @"Cancel");
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertAction *trimAction = [UIAlertAction actionWithTitle:trimActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                UIVideoEditorController* videoEditor = [[UIVideoEditorController alloc] init];
+                videoEditor.delegate=self;
+                
+                PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+                [options setVersion:PHVideoRequestOptionsVersionCurrent];
+                [options setDeliveryMode:PHVideoRequestOptionsDeliveryModeHighQualityFormat];
+                [options setNetworkAccessAllowed:YES];
+                
+                
+                [[PHImageManager defaultManager] requestAVAssetForVideo:video.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+                    
+                    NSString *pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+                    pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+                    
+                    if ([UIVideoEditorController canEditVideoAtPath:pathToVideo]){
+                        videoEditor.videoPath = pathToVideo;
+                        videoEditor.videoMaximumDuration = 15.0;
+                        self.editingVideoAtIndex = indexPath.row-1;
+                        
+                        [self presentViewController:videoEditor animated:YES completion:nil];
+                    }else{
+                        NSLog( @"can't edit video at %@", pathToVideo );
+                    }
+                    
+                    
+                }];
+            }];
+            UIAlertAction *captionAction = [UIAlertAction actionWithTitle:setCaptionActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                self.path = indexPath.row-1;
+                [self performSegueWithIdentifier:@"addPhotoCaption" sender:self];
+            }];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+
+            }];
+            
+            [alert addAction:trimAction];
+            [alert addAction:captionAction];
+            [alert addAction:cancelAction];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }
+        
+        
     }
 }
 
+#pragma mark - VideoEditorController delegate
+- (void)videoEditorController:(UIVideoEditorController *)editor didSaveEditedVideoToPath:(NSString *)editedVideoPath{
+    NSLog(@"video edited: %@",editedVideoPath);
+    //    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",editedVideoPath]];
+    
+    Photo *photo = [self.photos objectAtIndex:self.editingVideoAtIndex];
+    photo.editedPath = editedVideoPath;
+    
+    [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [self enableUploadButton];
+        [self.tripCollectionView reloadData];
+    }];
+}
+
+- (void)videoEditorController:(UIVideoEditorController *)editor didFailWithError:(NSError *)error{
+    NSLog(@"Error trimming video");
+    [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [self.tripCollectionView reloadData];
+    }];
+}
+
+- (void)videoEditorControllerDidCancel:(UIVideoEditorController *)editor{
+    NSLog(@"User canceled video truncation.");
+}
+
+#pragma mark
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addPhotoCaption"]) {
         PhotoViewController *vc = segue.destinationViewController;
@@ -734,6 +840,16 @@
         self.facebookPublishButton.selected = YES;
     else self.facebookPublishButton.selected = NO;
     
+}
+
+-(void)disableUploadButton{
+    self.submitTrunk.enabled = NO;
+    self.submitTrunk.alpha = 0.5;
+}
+
+-(void)enableUploadButton{
+    self.submitTrunk.enabled = YES;
+    self.submitTrunk.alpha = 1.0;
 }
 
 

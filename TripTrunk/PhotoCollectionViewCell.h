@@ -11,5 +11,7 @@
 @interface PhotoCollectionViewCell : TTBaseCollectionViewCell
 @property (weak, nonatomic) IBOutlet TripImageView *tripImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *captionImageView;
+@property (strong, nonatomic) IBOutlet UIImageView *videoIcon;
+@property (strong, nonatomic) IBOutlet UIImageView *videoErrorImage;
 
 @end

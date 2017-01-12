@@ -27,6 +27,7 @@
 @property NSString *userName;
 @property NSString *imageUrl;
 @property PFObject *video;
+@property NSString *editedPath;
 
 /**
  *  Transient image property. This doesn't get saved to Parse, it's used so that we can keep the Image itself with the object after downloading from the URL

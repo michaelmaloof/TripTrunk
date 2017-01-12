@@ -43,6 +43,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
 @property int photoCount;
 @property int totalPhotos;
 @property Trip *trip;
+@property NSData *videoFileData;
 @end
 
 @implementation TTUtility
@@ -579,51 +580,53 @@ CLCloudinary *cloudinary;
     
     [[PHImageManager defaultManager] requestAVAssetForVideo:video.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
                                                     
-//                                                    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+            UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+
+                [self uploadVideoToCloudinary:video withAVAsset:asset block:^(BOOL success, NSError *error, Photo *savedVideo) {
+                    if (success) {
+                        
+                        self.photoCount++;
+
+                        // Add photo to the local cache
+                        [[TTCache sharedCache] setAttributesForPhoto:video likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+
+                        // post the notification so that the TrunkViewController can know to reload the data
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+
+                        // Photo saved successfully, so we can unpin it from the local datastore.
+                        // TODO: Uncomment this once pinning is actually implemented.
+                        //  [photo unpin];
+                                                                
+                        // Upload Photo to Facebook also if needed
+                        if (publishToFacebook) {
+                            // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+                            savedVideo[@"caption"] = video.caption ? video.caption : @"";
+                            savedVideo[@"fileData"] = self.videoFileData;
+                            [self initFacebookUpload:savedVideo];
+                        }
+                        
+                        //queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+                        queueCompletionHandler();
+                        
+                        // Tell the calling-method this whole upload is complete
+                        completionBlock(savedVideo);
+                    }
+                    else {
+                        // Error uploading photo
+                        NSLog(@"Error uploading video...");
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideo:"];
+                        completionBlock(nil);
+                    }
+                }];
+            }];
         
-                                                        [self uploadVideoToCloudinary:video withAVAsset:asset block:^(BOOL success, NSError *error, PFObject *savedVideo) {
-                                                            if (success) {
-                                                                
-//                                                                self.photoCount++;
-//                                                                
-//                                                                // Add photo to the local cache
-//                                                                [[TTCache sharedCache] setAttributesForPhoto:video likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-//                                                                
-//                                                                // post the notification so that the TrunkViewController can know to reload the data
-//                                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-//                                                                
-//                                                                // Photo saved successfully, so we can unpin it from the local datastore.
-//                                                                // TODO: Uncomment this once pinning is actually implemented.
-//                                                                //  [photo unpin];
-//                                                                
-//                                                                // Upload Photo to Facebook also if needed
-//                                                                if (publishToFacebook) {
-//                                                                    // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
-//                                                                    [self initFacebookUpload:savedVideo];
-//                                                                }
-                                                                
-//                                                                 //queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
-//                                                                queueCompletionHandler();
-                                                                
-                                                                // Tell the calling-method this whole upload is complete
-                                                                completionBlock(savedVideo);
-                                                            }
-                                                            else {
-                                                                // Error uploading photo
-                                                                NSLog(@"Error uploading video...");
-//                                                                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideo:"];
-                                                                completionBlock(nil);
-                                                            }
-                                                        }];
-                                                    }];
-//                                                    
-//                                                    // Add the upload operation to the OperationQueue
-//                                                    [operationQueue addOperation: operation];
-//        
-//                                                }];
+            // Add the upload operation to the OperationQueue
+            [operationQueue addOperation: operation];
+
+        }];
 }
 
--(void)uploadVideoToCloudinary:(Photo *)video withAVAsset:(AVAsset*)asset block:(void (^)(BOOL success, NSError *error, PFObject *savedVideo))completionBlock{
+-(void)uploadVideoToCloudinary:(Photo *)video withAVAsset:(AVAsset*)asset block:(void (^)(BOOL success, NSError *error, Photo *savedVideo))completionBlock{
     
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
@@ -633,15 +636,30 @@ CLCloudinary *cloudinary;
         bgTask = UIBackgroundTaskInvalid;
     }];
     
-    NSString *pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+    NSString *pathToVideo;
+    if(video.editedPath)
+        pathToVideo = video.editedPath;
+    else pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+    
     pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     NSData *fileData = [NSData dataWithContentsOfFile:pathToVideo];
+    self.videoFileData = fileData;
     [uploader upload:fileData
              options:@{@"type":@"upload",@"resource_type":@"video"}
       withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
           if (successResult) {
               // Video Uploaded Successfully to Cloudinary
               NSLog(@"Block upload success. Public ID=%@", [successResult valueForKey:@"public_id"]);
+              
+              //remove trimmed video if applicable
+              if(video.editedPath){
+                  NSFileManager *fileManager = [NSFileManager defaultManager];
+                  NSError *error;
+                  BOOL success = [fileManager removeItemAtPath:video.editedPath error:&error];
+                  if (success)
+                      NSLog(@"Temporary file deleted:%@ ",video.editedPath);
+                  else NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
+              }
               
               PFObject *videoObject = [PFObject objectWithClassName:@"Video"];
               [videoObject setObject:[PFUser currentUser] forKey:@"user"];
@@ -662,7 +680,7 @@ CLCloudinary *cloudinary;
                   }
                   
                   if (completionBlock) {
-                      completionBlock(YES, nil, videoObject);
+                      completionBlock(YES, nil, (Photo *)videoObject);
                   }
               }];
           }
@@ -1063,10 +1081,30 @@ CLCloudinary *cloudinary;
 #pragma mark - Facebook Photo Upload
 
 - (void)initFacebookUpload:(Photo *)photo {
-    NSDictionary *photoDetails = @{
-                                   @"url":photo.imageUrl,
-                                   @"caption": photo.caption ? photo.caption : @""
-                                   };
+    
+    NSDictionary *photoDetails;
+    if(photo[@"videoUrl"]){
+        if([photo[@"caption"] isEqualToString:@"Type Photo Caption Here"])
+            photo[@"caption"] = @"";
+        
+        photoDetails = @{
+                        @"caption" : photo[@"caption"] ? photo[@"caption"] : @"",
+                        @"video.mov" : photo[@"fileData"],
+                        @"contentType" : @"video/quicktime",
+                        @"title" : @" ",
+                        @"description" : photo[@"caption"] ? photo[@"caption"] : @""
+                        };
+    }else{
+        if([photo.caption isEqualToString:@"Type Photo Caption Here"])
+            photo.caption = @"";
+        
+        photoDetails = @{
+                        @"url" : photo.imageUrl,
+                        @"caption" : photo.caption ? photo.caption : @""
+                        };
+    }
+    
+    
     if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"publish_actions"]) {
         [self uploadPhotosToFacebook:photoDetails];
     } else {
@@ -1087,14 +1125,13 @@ CLCloudinary *cloudinary;
 }
 
 - (void)uploadPhotosToFacebook:(NSDictionary *)photoDetails {
-    NSString *caption = photoDetails[@"caption"];
-    if([caption isEqualToString:@"Type Photo Caption Here"])
-        caption = @"";
     
-    NSDictionary *params = @{@"url": photoDetails[@"url"],
-                             @"caption":caption};
+    NSString *graphPath;
+    if(photoDetails[@"url"])
+        graphPath = @"/me/photod";
+    else graphPath = @"/me/videos";
     
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/photos" parameters:params HTTPMethod:@"POST"];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:photoDetails HTTPMethod:@"POST"];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         if(error){
             NSLog(@"Error uploading to facebook: %@",error);

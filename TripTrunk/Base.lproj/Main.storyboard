@@ -2750,7 +2750,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF-A">
-                                        <rect key="frame" x="173.66666666666666" y="12" width="67" height="27"/>
+                                        <rect key="frame" x="177.66666666666666" y="12" width="59" height="26"/>
                                         <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
                                         <state key="normal" title="Comments">
                                             <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3466,6 +3466,28 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                     <gestureRecognizers/>
                                                 </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video_error_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4rb-kQ-Itg">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="cCP-dS-vuq">
+                                                    <rect key="frame" x="76" y="8" width="16" height="11"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="11" id="AJa-0z-K99"/>
+                                                        <constraint firstAttribute="width" constant="16" id="B5y-MT-ZZM"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="B5y-MT-ZZM"/>
+                                                            <exclude reference="AJa-0z-K99"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="B5y-MT-ZZM"/>
+                                                            <include reference="AJa-0z-K99"/>
+                                                        </mask>
+                                                    </variation>
+                                                </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="editPencil" translatesAutoresizingMaskIntoConstraints="NO" id="1oU-Km-cc8">
                                                     <rect key="frame" x="67" y="66" width="20" height="20"/>
                                                     <constraints>
@@ -3489,24 +3511,30 @@
                                         </view>
                                         <color key="backgroundColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="4rb-kQ-Itg" secondAttribute="trailing" id="1Rx-tq-vVF"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="top" id="3Ti-ks-yPn"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leadingMargin" constant="-8" id="6p5-6g-pAE"/>
+                                            <constraint firstItem="cCP-dS-vuq" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="top" constant="8" id="Cdl-J3-uwZ"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="JgM-K6-At2" secondAttribute="trailing" constant="-8" id="Dym-B5-Uc0"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="1oU-Km-cc8" secondAttribute="trailing" constant="5" id="Gt6-QW-G78"/>
                                             <constraint firstAttribute="trailing" secondItem="1oU-Km-cc8" secondAttribute="trailing" constant="2" id="HxD-Pa-iNj"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leadingMargin" constant="-1" id="LzQ-ko-3v5"/>
+                                            <constraint firstAttribute="bottom" secondItem="4rb-kQ-Itg" secondAttribute="bottom" id="NHv-ca-vr6"/>
+                                            <constraint firstItem="4rb-kQ-Itg" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leading" id="QjA-mT-W3v"/>
                                             <constraint firstAttribute="bottom" secondItem="JgM-K6-At2" secondAttribute="bottom" id="SG0-lV-hAG"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="1oU-Km-cc8" secondAttribute="bottom" constant="6" id="Tmp-P4-YHd"/>
                                             <constraint firstItem="1oU-Km-cc8" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="topMargin" constant="58" id="a2D-WX-UU5"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="JgM-K6-At2" secondAttribute="bottom" constant="9" id="d2n-Hd-zHl"/>
                                             <constraint firstItem="1oU-Km-cc8" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leadingMargin" constant="59" id="dvK-hZ-1Y8"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="topMargin" id="eKf-5a-zdf"/>
+                                            <constraint firstItem="4rb-kQ-Itg" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="top" id="fbE-9i-hE3"/>
                                             <constraint firstAttribute="bottom" secondItem="1oU-Km-cc8" secondAttribute="bottom" constant="3" id="hJx-ad-Fn9"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="leading" secondItem="yNK-EV-9lM" secondAttribute="leading" id="i3U-m8-n0d"/>
                                             <constraint firstAttribute="trailing" secondItem="JgM-K6-At2" secondAttribute="trailing" id="kat-XN-5MM"/>
                                             <constraint firstItem="1oU-Km-cc8" firstAttribute="bottom" secondItem="JgM-K6-At2" secondAttribute="bottom" constant="-5" id="l0N-eb-TTH"/>
                                             <constraint firstItem="1oU-Km-cc8" firstAttribute="trailing" secondItem="JgM-K6-At2" secondAttribute="trailing" constant="-5" id="r86-wz-qRm"/>
                                             <constraint firstItem="JgM-K6-At2" firstAttribute="top" secondItem="yNK-EV-9lM" secondAttribute="topMargin" constant="-8" id="uE8-7J-oum"/>
+                                            <constraint firstAttribute="trailing" secondItem="cCP-dS-vuq" secondAttribute="trailing" constant="8" id="uxl-Z8-utz"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="JgM-K6-At2" secondAttribute="trailing" constant="10" id="xor-3K-g6U"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="JgM-K6-At2" secondAttribute="bottom" constant="-8" id="yLW-6n-3N6"/>
                                         </constraints>
@@ -3549,6 +3577,8 @@
                                         <connections>
                                             <outlet property="captionImageView" destination="1oU-Km-cc8" id="XSB-Cf-PLi"/>
                                             <outlet property="tripImageView" destination="JgM-K6-At2" id="6iU-vy-q4p"/>
+                                            <outlet property="videoErrorImage" destination="4rb-kQ-Itg" id="DZG-Pa-xld"/>
+                                            <outlet property="videoIcon" destination="cCP-dS-vuq" id="Gob-KK-rZf"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -3695,7 +3725,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qc3-8Y-lbt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2995.5" y="-1024.5"/>
+            <point key="canvasLocation" x="2994.202898550725" y="-1024.7282608695652"/>
         </scene>
         <!--Edit Trip Friends View Controller-->
         <scene sceneID="4z2-0V-ye6">
@@ -5447,12 +5477,13 @@
         <image name="paw_blue_list" width="13" height="13"/>
         <image name="tripTrunkTitle" width="95" height="26"/>
         <image name="unlocked" width="16" height="17"/>
+        <image name="video_error_icon" width="100" height="100"/>
         <image name="video_icon" width="16" height="11"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="JSU-Dg-jAI"/>
         <segue reference="bhX-wL-LGH"/>
-        <segue reference="8D2-7c-Dcs"/>
         <segue reference="hXf-dS-IMJ"/>
+        <segue reference="meg-3f-try"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,6 +22,7 @@
 @dynamic tripName;
 @dynamic imageUrl;
 @dynamic video;
+@dynamic editedPath;
 
 @synthesize image;
 @synthesize imageAsset;
