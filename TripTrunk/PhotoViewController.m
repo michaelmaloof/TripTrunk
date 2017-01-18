@@ -27,6 +27,7 @@
 #import "TTSuggestionTableViewController.h"
 #import "TTHashtagMentionColorization.h"
 #import "TTAnalytics.h"
+#import "MBProgressHUD.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import "AVFoundation/AVFoundation.h"
@@ -480,6 +481,7 @@
 - (void)tripLoaded:(Trip *)trip {
     if (self.shouldShowTrunkNameButton) {
         [self.photo.trip fetchIfNeeded];
+        [self.photo.video fetchIfNeeded];
         [self.trunkNameButton setTitle:trip.name forState:UIControlStateNormal];
     }
 }
@@ -519,6 +521,7 @@
                                                            object:[self.player currentItem]];
                 
                 [self.player play];
+                
             }];
             
         }else{
@@ -1302,7 +1305,10 @@
         }
         // Download Photo
         else if (alertView.tag == 1) {
-            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+//            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+            if(self.photo.video)
+                [[TTUtility sharedInstance] downloadPhotoVideo:[self urlOfCurrentlyPlayingInPlayer:self.player]];
+            else [[TTUtility sharedInstance] downloadPhotoImage:self.imageView.image];
         }
         // Report Photo
         else if (alertView.tag == 2) {
@@ -1392,8 +1398,10 @@
             [alert show];
         }
         else if (buttonIndex == 2 ){
-            [[TTUtility sharedInstance] downloadPhoto:self.photo];
-
+//            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+            if(self.photo.video)
+                [[TTUtility sharedInstance] downloadPhotoVideo:[self urlOfCurrentlyPlayingInPlayer:self.player]];
+            else [[TTUtility sharedInstance] downloadPhotoImage:self.imageView.image];
         }
         
     }
@@ -1409,12 +1417,23 @@
             [alert show];
         }
         else if (buttonIndex == 1) {
-            [[TTUtility sharedInstance] downloadPhoto:self.photo];
-
+//            [[TTUtility sharedInstance] downloadPhoto:self.photo];
+            if(self.photo.video)
+                [[TTUtility sharedInstance] downloadPhotoVideo:[self urlOfCurrentlyPlayingInPlayer:self.player]];
+            else [[TTUtility sharedInstance] downloadPhotoImage:self.imageView.image];
             
         }
     }
     
+}
+
+-(NSURL *)urlOfCurrentlyPlayingInPlayer:(AVPlayer *)player{
+    // get current asset
+    AVAsset *currentPlayerAsset = player.currentItem.asset;
+    // make sure the current asset is an AVURLAsset
+    if (![currentPlayerAsset isKindOfClass:AVURLAsset.class]) return nil;
+    // return the NSURL
+    return [(AVURLAsset *)currentPlayerAsset URL];
 }
 
 #pragma mark - UIScrollViewDelegate Methods

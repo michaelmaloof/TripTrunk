@@ -27,6 +27,7 @@
 #import "UploadOperation.h"
 #import "AddTripPhotosViewController.h"
 
+
 #define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -318,6 +319,42 @@ CLCloudinary *cloudinary;
           }
       } andProgress:nil];
     
+}
+
+- (void)downloadPhotoImage:(UIImage *)photo{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = NSLocalizedString(@"Downloading", @"Downloading");
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+    
+    UIImageWriteToSavedPhotosAlbum(photo,nil,nil,nil);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete!");
+        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+    });
+}
+
+- (void)downloadPhotoVideo:(NSURL *)video{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = NSLocalizedString(@"Downloading", @"Downloading");
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+    
+//    UISaveVideoAtPathToSavedPhotosAlbum(video, nil, nil, nil);
+    
+    NSData *videoData = [NSData dataWithContentsOfURL:video];
+    NSString *videoPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"file.mov"];
+    [videoData writeToFile:videoPath atomically:YES];
+
+    UISaveVideoAtPathToSavedPhotosAlbum(videoPath, nil, nil, nil);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete!");
+        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+    });
 }
 
 - (void)downloadPhoto:(Photo *)photo;
@@ -668,8 +705,18 @@ CLCloudinary *cloudinary;
               [videoObject setObject:[successResult valueForKey:@"url"] forKey:@"videoUrl"];
               
               PFACL *videoObjectACL = [PFACL ACLWithUser:[PFUser currentUser]];
-//              [videoObjectACL setPublicReadAccess:YES];
-//              [videoObjectACL setWriteAccess:true forUser:user];
+
+              if (self.trip.isPrivate == NO) {
+                  [videoObjectACL setPublicReadAccess:YES];
+              }
+              // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
+              // TODO: only update ACL if private status changed during editing.
+              if (self.trip.isPrivate == YES) {
+                  [videoObjectACL setPublicReadAccess:NO];
+                  [videoObjectACL setReadAccess:YES forUser:self.trip.creator];
+                  [videoObjectACL setWriteAccess:YES forUser:self.trip.creator];
+              }
+              
               videoObject.ACL = videoObjectACL;
               
               [videoObject saveEventually:^(BOOL succeeded, NSError * _Nullable error) {

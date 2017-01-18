@@ -65,6 +65,8 @@
  *  @param photo   Photo Object containing the imageUrl of the remote image to save
  */
 - (void)downloadPhoto:(Photo *)photo;
+- (void)downloadPhotoImage:(UIImage *)photo;
+- (void)downloadPhotoVideo:(NSURL *)video;
 
 /**
  *  Save a list of photos to Camera Roll
