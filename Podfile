@@ -23,6 +23,7 @@ target :'TripTrunk' do
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
     pod 'FBSDKShareKit'
+    pod 'Bolts'
     pod 'Google/SignIn'
     
     post_install do |installer|

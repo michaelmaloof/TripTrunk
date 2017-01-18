@@ -76,6 +76,7 @@
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
 		2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */; };
+		27765A881E3020CB00F27383 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27765A871E3020CB00F27383 /* Bolts.framework */; };
 		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
 		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
@@ -290,6 +291,8 @@
 		2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileViewCell.h; sourceTree = "<group>"; };
 		2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileViewCell.m; sourceTree = "<group>"; };
 		2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTUserProfileViewCell.xib; sourceTree = "<group>"; };
+		27765A851E3020A200F27383 /* libBolts.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBolts.a; path = "../../../Users/Mike/Library/Developer/Xcode/DerivedData/TripTrunk-hizaposcnrxmpueeydvdzntollpj/Build/Products/Debug-iphoneos/Bolts/libBolts.a"; sourceTree = "<group>"; };
+		27765A871E3020CB00F27383 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		2795EF211D5CE73D003116F4 /* TTBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseCollectionViewCell.h; sourceTree = "<group>"; };
 		2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
 		2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
@@ -457,6 +460,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27765A881E3020CB00F27383 /* Bolts.framework in Frameworks */,
 				271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */,
 				C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */,
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
@@ -831,6 +835,8 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27765A871E3020CB00F27383 /* Bolts.framework */,
+				27765A851E3020A200F27383 /* libBolts.a */,
 				271D8BBD1D91AF000054741F /* CoreData.framework */,
 				27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */,
 				C9CA64591BE523A500A25EBC /* PhotosUI.framework */,
@@ -1378,6 +1384,8 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1421,6 +1429,8 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
