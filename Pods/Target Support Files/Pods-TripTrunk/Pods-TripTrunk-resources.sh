@@ -80,6 +80,7 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "GMImagePicker/GMImagePicker/GMEmptyFolder@1x.png"
   install_resource "GMImagePicker/GMImagePicker/GMEmptyFolder@2x.png"
   install_resource "GMImagePicker/GMImagePicker/GMSelected.png"
@@ -95,8 +96,10 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "GMImagePicker/GMImagePicker/it.lproj"
   install_resource "GMImagePicker/GMImagePicker/pt.lproj"
   install_resource "GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Resources/GooglePlaces.bundle"
+  install_resource "GoogleSignIn/Resources/GoogleSignIn.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "GMImagePicker/GMImagePicker/GMEmptyFolder@1x.png"
   install_resource "GMImagePicker/GMImagePicker/GMEmptyFolder@2x.png"
   install_resource "GMImagePicker/GMImagePicker/GMSelected.png"
@@ -112,6 +115,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "GMImagePicker/GMImagePicker/it.lproj"
   install_resource "GMImagePicker/GMImagePicker/pt.lproj"
   install_resource "GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Resources/GooglePlaces.bundle"
+  install_resource "GoogleSignIn/Resources/GoogleSignIn.bundle"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

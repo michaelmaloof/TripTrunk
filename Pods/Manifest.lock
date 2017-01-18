@@ -34,10 +34,50 @@ PODS:
     - AWSCore (= 2.4.5)
   - AWSSQS (2.4.5):
     - AWSCore (= 2.4.5)
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
+  - FBSDKCoreKit (4.15.1):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.15.1):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.15.1):
+    - FBSDKCoreKit
+  - FirebaseAnalytics (3.4.2):
+    - FirebaseInstanceID (~> 1.0)
+    - GoogleInterchangeUtilities (~> 1.2)
+    - GoogleSymbolUtilities (~> 1.1)
+    - GoogleUtilities (~> 1.2)
+  - FirebaseInstanceID (1.0.8)
   - GMImagePicker (0.0.2)
+  - Google/Core (3.0.3):
+    - FirebaseAnalytics (~> 3.2)
+  - Google/SignIn (3.0.3):
+    - Google/Core
+    - GoogleSignIn (~> 4.0)
+  - GoogleAppUtilities (1.1.1):
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleAuthUtilities (2.0.1):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+  - GoogleInterchangeUtilities (1.2.1):
+    - GoogleSymbolUtilities (~> 1.0)
   - GoogleMaps/Base (2.0.1)
+  - GoogleNetworkingUtilities (1.2.1):
+    - GoogleSymbolUtilities (~> 1.0)
   - GooglePlaces (2.0.1):
     - GoogleMaps/Base (= 2.0.1)
+  - GoogleSignIn (4.0.0):
+    - GoogleAppUtilities (~> 1.1)
+    - GoogleAuthUtilities (~> 2.0)
+    - GoogleNetworkingUtilities (~> 1.2)
+    - GoogleUtilities (~> 1.3)
+  - GoogleSymbolUtilities (1.1.1)
+  - GoogleUtilities (1.3.1):
+    - GoogleSymbolUtilities (~> 1.0)
 
 DEPENDENCIES:
   - AWSAutoScaling
@@ -57,7 +97,11 @@ DEPENDENCIES:
   - AWSSimpleDB
   - AWSSNS
   - AWSSQS
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - GMImagePicker (~> 0.0.2)
+  - Google/SignIn
   - GooglePlaces
 
 SPEC CHECKSUMS:
@@ -79,10 +123,24 @@ SPEC CHECKSUMS:
   AWSSimpleDB: c7f91fdd299ca58f222ee95e89a27022cd47ada1
   AWSSNS: aaf565330d8f2f7c4f2cb13d2a20bceae8259f2f
   AWSSQS: 8026703bf7cbe8ea1728f95f358f7cb4536e5040
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  FBSDKCoreKit: fc7fa53d16b095ee3fd53f0cd59f1df8bcbb634d
+  FBSDKLoginKit: 073f79b3b2e762fc6f54a283fe15f45372d59f5f
+  FBSDKShareKit: 11cbb5a4d7b5fda8143cc95b76188147e6725736
+  FirebaseAnalytics: 3f5358d9104adf159cc8d99b7b501e50099a39ad
+  FirebaseInstanceID: ba1e640935235e5fac39dfa816fe7660e72e1a8a
   GMImagePicker: 6438a6764d6280b1dbf19b59140313f5a73daeeb
+  Google: 813c467362eabc11385f5a5cc9ad0cb651a58f4e
+  GoogleAppUtilities: f1730f91f67767b453c289577040dd3f425ffdc7
+  GoogleAuthUtilities: d7a19615cd7627688afcf181737f1011ee8b5a23
+  GoogleInterchangeUtilities: def8415a862effc67d549d5b5b0b9c7a2f97d4de
   GoogleMaps: f09da64fc987c1aa29394567c3cab5a3df83c402
+  GoogleNetworkingUtilities: 3e83269048cfb498dc7ec83ab36813360965c74f
   GooglePlaces: 72fab1d1651c6df0322f2aad245ffb15b80d3c56
+  GoogleSignIn: 09036ed61f8e75f1424100d63f7719480b2428c3
+  GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
+  GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
 
-PODFILE CHECKSUM: 74ca5b874ab0580131f6e85295d81c89e7cddaeb
+PODFILE CHECKSUM: a3dba90c65b028e343296c798a9d19bdd98834e3
 
 COCOAPODS: 1.0.1

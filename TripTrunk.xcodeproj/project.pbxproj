@@ -72,7 +72,6 @@
 		276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */; };
 		276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C91CF4D1030064F784 /* Montserrat-Light.otf */; };
 		276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */; };
-		27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F421DECEF9A009F3648 /* Bolts.framework */; };
 		27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F431DECEF9A009F3648 /* Parse.framework */; };
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
@@ -99,8 +98,6 @@
 		4C80831D1BDABCDD00DB1AC0 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C80831B1BDABCDD00DB1AC0 /* TutorialViewController.m */; };
 		4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */; };
 		C9021F221B9F82CB00E2EA96 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
-		C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
-		C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
 		C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C903F7131B98885500F56FE1 /* CommentListViewController.m */; };
 		C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C90552161B3C3ABC007B5946 /* MBProgressHUD.m */; };
 		C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C90ADEAB1BA21F1A000809D0 /* EditProfileViewController.m */; };
@@ -287,7 +284,6 @@
 		276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Hairline.otf"; sourceTree = "<group>"; };
 		276718C91CF4D1030064F784 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.otf"; sourceTree = "<group>"; };
 		276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
-		27677F421DECEF9A009F3648 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		27677F431DECEF9A009F3648 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		2768C9221CCFE2A000CFA89E /* TTUserProfileCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileCollectionView.h; sourceTree = "<group>"; };
 		2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileCollectionView.m; sourceTree = "<group>"; };
@@ -342,8 +338,6 @@
 		4C80831C1BDABCDD00DB1AC0 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
 		73F80275B39DB49036E27D01 /* Pods-TripTrunk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TripTrunk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TripTrunk/Pods-TripTrunk.debug.xcconfig"; sourceTree = "<group>"; };
 		C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
-		C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C903F7121B98885500F56FE1 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
 		C903F7131B98885500F56FE1 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
 		C90552151B3C3ABC007B5946 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -474,13 +468,11 @@
 				223547E81AE2BBAE001FE916 /* Accounts.framework in Frameworks */,
 				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
 				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
-				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
 				27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */,
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */,
 				271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */,
 				224F3FF41AE1E5A6003A1DEB /* SystemConfiguration.framework in Frameworks */,
-				C9026A141AF95C6100A617F0 /* FBSDKLoginKit.framework in Frameworks */,
 				224F3FF01AE1E590003A1DEB /* Security.framework in Frameworks */,
 				224F3FEE1AE1E589003A1DEB /* QuartzCore.framework in Frameworks */,
 				224F3FEC1AE1E583003A1DEB /* MobileCoreServices.framework in Frameworks */,
@@ -491,7 +483,6 @@
 				29ECA46ACCB191A513316C9E /* libPods-TripTrunk.a in Frameworks */,
 				27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */,
 				272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */,
-				27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,7 +752,6 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				27677F421DECEF9A009F3648 /* Bolts.framework */,
 				27677F431DECEF9A009F3648 /* Parse.framework */,
 				272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */,
 				272ACA031D2C5CA700329B28 /* ParseUI.framework */,
@@ -770,8 +760,6 @@
 				224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */,
 				224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */,
 				223547EB1AE2BBD8001FE916 /* CoreLocation.framework */,
-				C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */,
-				C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */,
 				C9525A331B251FC100185713 /* libCloudinary.a */,
 				224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */,
 				C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */,
@@ -1388,7 +1376,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
@@ -1432,7 +1419,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
