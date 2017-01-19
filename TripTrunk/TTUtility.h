@@ -74,6 +74,7 @@
  *  @param photos Array of Photo objects to save, each containing the imageUrl of a remote image to save
  */
 - (void)downloadPhotos:(NSArray *)photos;
+- (void)downloadAllTrunkPhotos:(NSArray *)photos;
 
 /**
  *  Deletes the photo and all Activities that reference the photo

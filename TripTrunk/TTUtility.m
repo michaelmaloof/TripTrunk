@@ -404,8 +404,6 @@ CLCloudinary *cloudinary;
 
 - (void)downloadPhotos:(NSArray *)photos;
 {
-    
-
     // Show HUD spinner
     dispatch_async(dispatch_get_main_queue(), ^{
         HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
@@ -458,6 +456,97 @@ CLCloudinary *cloudinary;
             bgTask = UIBackgroundTaskInvalid;
         }];
         [request start];
+    }
+    
+}
+
+- (void)downloadAllTrunkPhotos:(NSArray *)photos{
+    NSLog(@"downloadAllTrunkPhotos");
+    // Show HUD spinner
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        NSString *downloadOneOf = NSLocalizedString(@"Downloading 1 of", "Downloading 1 of");
+        HUD.labelText = [NSString stringWithFormat:@"%@ %lu", downloadOneOf,(unsigned long)photos.count];
+        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+    });
+    
+    __block int completedDownloads = 0;
+    for (Photo *photo in photos) {
+        // prepare for a background task
+        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+        
+        if(photo.video){
+            [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                NSLog(@"Downloading video: %@",photo.video[@"videoUrl"]);
+                NSData *videoData = [NSData dataWithContentsOfURL:[NSURL URLWithString:photo.video[@"videoUrl"]]];
+                NSString *videoPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"file.mov"];
+                [videoData writeToFile:videoPath atomically:YES];
+                
+                UISaveVideoAtPathToSavedPhotosAlbum(videoPath, nil, nil, nil);
+                
+                completedDownloads++;
+                if (completedDownloads == photos.count) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Hide HUD spinner
+                        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
+                        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+                    });
+                }else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
+                        NSString *of = NSLocalizedString(@"of", "of");
+                        HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
+                    });
+                }
+                
+                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                bgTask = UIBackgroundTaskInvalid;
+                
+            }];
+            
+        }else{
+    
+            AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+            [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+            [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if (responseObject) {
+                    NSLog(@"Downloading photo: %@",photo.imageUrl);
+                    // Save image to phone
+                    UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
+                    [TTAnalytics downloadPhoto];
+                    
+                    // Increment counter so we know when to hide the HUD
+                    completedDownloads++;
+                    if (completedDownloads == photos.count) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Hide HUD spinner
+                            HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
+                            [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+                        });
+                    }
+                    else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
+                            NSString *of = NSLocalizedString(@"of", "of");
+                            HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
+                        });
+                    }
+                    
+                    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                    bgTask = UIBackgroundTaskInvalid;
+                    
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Error downloading photo");
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
+                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                bgTask = UIBackgroundTaskInvalid;
+            }];
+            [request start];
+        }
     }
     
 }

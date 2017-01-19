@@ -625,7 +625,8 @@
         else if (alertView.tag == 3) {
             
             if (self.photos.count > 0){
-                [[TTUtility sharedInstance] downloadPhotos:self.photos];
+//                [[TTUtility sharedInstance] downloadPhotos:self.photos];
+                [[TTUtility sharedInstance] downloadAllTrunkPhotos:self.photos];
             }
         }
     }
