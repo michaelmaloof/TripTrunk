@@ -224,48 +224,48 @@ CLCloudinary *cloudinary;
     [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
                                                 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                                                     
-                                                    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+                UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
 
-                                                        [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
-                                                            if (succeeded) {
-                                                                
-                                                                self.photoCount++;
-                                                                
-                                                                // Add photo to the local cache
-                                                                [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-                                                                
-                                                                // post the notification so that the TrunkViewController can know to reload the data
-                                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-                                                                
-                                                                // Photo saved successfully, so we can unpin it from the local datastore.
-                                                                // TODO: Uncomment this once pinning is actually implemented.
-                                                                //  [photo unpin];
-                                                                
-                                                                // Upload Photo to Facebook also if needed
-                                                                if (publishToFacebook) {
-                                                                    // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
-                                                                    [self initFacebookUpload:savedPhoto];
-                                                                }
-                                                                
-                                                                // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
-                                                                queueCompletionHandler();
-                                                                
-                                                                // Tell the calling-method this whole upload is complete
-                                                                completionBlock(savedPhoto);
-                                                            }
-                                                            else {
-                                                                // Error uploading photo
-                                                                NSLog(@"Error uploading photo...");
-                                                                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
-                                                                completionBlock(nil);
-                                                            }
-                                                        }];
-                                                    }];
-                                                    
-                                                    // Add the upload operation to the OperationQueue
-                                                    [operationQueue addOperation: operation];
-                                                    
-                                                }];
+                    [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
+                        if (succeeded) {
+                            
+                            self.photoCount++;
+                            
+                            // Add photo to the local cache
+                            [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+                            
+                            // post the notification so that the TrunkViewController can know to reload the data
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                            
+                            // Photo saved successfully, so we can unpin it from the local datastore.
+                            // TODO: Uncomment this once pinning is actually implemented.
+                            //  [photo unpin];
+                            
+                            // Upload Photo to Facebook also if needed
+                            if (publishToFacebook) {
+                                // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+                                [self initFacebookUpload:savedPhoto];
+                            }
+                            
+                            // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+                            queueCompletionHandler();
+                            
+                            // Tell the calling-method this whole upload is complete
+                            completionBlock(savedPhoto);
+                        }
+                        else {
+                            // Error uploading photo
+                            NSLog(@"Error uploading photo...");
+                            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
+                            completionBlock(nil);
+                        }
+                    }];
+                }];
+                
+                // Add the upload operation to the OperationQueue
+                [operationQueue addOperation: operation];
+                
+            }];
 }
 
 
@@ -402,63 +402,63 @@ CLCloudinary *cloudinary;
     [request start];
 }
 
-- (void)downloadPhotos:(NSArray *)photos;
-{
-    // Show HUD spinner
-    dispatch_async(dispatch_get_main_queue(), ^{
-        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-        NSString *downloadOneOf = NSLocalizedString(@"Downloading 1 of", "Downloading 1 of");
-        HUD.labelText = [NSString stringWithFormat:@"%@ %lu", downloadOneOf,(unsigned long)photos.count];
-        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
-    });
-    
-    __block int completedDownloads = 0;
-    for (Photo *photo in photos) {
-        // prepare for a background task
-        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-            bgTask = UIBackgroundTaskInvalid;
-        }];
-        
-        AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
-        [request setResponseSerializer: [AFImageResponseSerializer serializer]];
-        [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-            if (responseObject) {
-                // Save image to phone
-                UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
-                [TTAnalytics downloadPhoto];
-
-                // Increment counter so we know when to hide the HUD
-                completedDownloads++;
-                if (completedDownloads == photos.count) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        // Hide HUD spinner
-                        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
-                        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
-                    });
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
-                        NSString *of = NSLocalizedString(@"of", "of");
-                        HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
-                    });
-                }
-                
-                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                bgTask = UIBackgroundTaskInvalid;
-
-            }
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error downloading photo");
-            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
-            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-            bgTask = UIBackgroundTaskInvalid;
-        }];
-        [request start];
-    }
-    
-}
+//- (void)downloadPhotos:(NSArray *)photos;
+//{
+//    // Show HUD spinner
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+//        NSString *downloadOneOf = NSLocalizedString(@"Downloading 1 of", "Downloading 1 of");
+//        HUD.labelText = [NSString stringWithFormat:@"%@ %lu", downloadOneOf,(unsigned long)photos.count];
+//        HUD.mode = MBProgressHUDModeIndeterminate; // change to Determinate to show progress
+//    });
+//    
+//    __block int completedDownloads = 0;
+//    for (Photo *photo in photos) {
+//        // prepare for a background task
+//        __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+//            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//            bgTask = UIBackgroundTaskInvalid;
+//        }];
+//        
+//        AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+//        [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+//        [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//            if (responseObject) {
+//                // Save image to phone
+//                UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
+//                [TTAnalytics downloadPhoto];
+//
+//                // Increment counter so we know when to hide the HUD
+//                completedDownloads++;
+//                if (completedDownloads == photos.count) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        // Hide HUD spinner
+//                        HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
+//                        [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+//                    });
+//                }
+//                else {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
+//                        NSString *of = NSLocalizedString(@"of", "of");
+//                        HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
+//                    });
+//                }
+//                
+//                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//                bgTask = UIBackgroundTaskInvalid;
+//
+//            }
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"Error downloading photo");
+//            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
+//            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//            bgTask = UIBackgroundTaskInvalid;
+//        }];
+//        [request start];
+//    }
+//    
+//}
 
 - (void)downloadAllTrunkPhotos:(NSArray *)photos{
     NSLog(@"downloadAllTrunkPhotos");
@@ -583,7 +583,23 @@ CLCloudinary *cloudinary;
                           
                           [[NSNotificationCenter defaultCenter] postNotificationName:@"ActivityObjectsDeleted" object:nil];
                           
-                           completionBlock(YES,nil);
+                          if(photo.video){
+                              //if this is a video, we need to delete the corresponding video object
+                              [photo.video deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                  //FIXME: This is temporary and should be moved to Cloud Code
+                                  NSArray *urlSegments = [photo.video[@"videoUrl"] componentsSeparatedByString: @"/"];
+                                  NSArray *publicId = [[urlSegments lastObject] componentsSeparatedByString:@"."];
+                                  CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+                                  [uploader destroy:publicId[0] options:@{@"resource_type":@"video"} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+                                      completionBlock(YES,nil);
+                                  } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+                                      //nil
+                                  }];
+                                  
+                              }];
+                          }else{
+                              completionBlock(YES,nil);
+                          }
                           
                       } else {
                           NSLog(@"Error: %@ %@", error, [error userInfo]);
