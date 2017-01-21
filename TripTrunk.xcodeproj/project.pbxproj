@@ -44,6 +44,8 @@
 		224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
 		224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
 		22560FD31BFCE459005D81E2 /* PublicTripDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 22560FD21BFCE459005D81E2 /* PublicTripDetail.m */; };
+		22599EDC1E33F1FC003235B0 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F431DECEF9A009F3648 /* Parse.framework */; };
+		22599EDD1E33F1FF003235B0 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F421DECEF9A009F3648 /* Bolts.framework */; };
 		225E554A1CB074CD00FAAB00 /* TTReportBugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 225E55491CB074CD00FAAB00 /* TTReportBugViewController.m */; };
 		225E554C1CB0762F00FAAB00 /* TTReportBugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 225E554B1CB0762F00FAAB00 /* TTReportBugViewController.xib */; };
 		2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2268B09D1B32485300C941C4 /* HomeMapViewController.m */; };
@@ -51,6 +53,30 @@
 		229D42861AE850C700458244 /* TripImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 229D42851AE850C700458244 /* TripImageView.m */; };
 		22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A81F031C8B2DF400CF76BD /* TTNoInternetView.m */; };
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
+		22D9A47C1E33E29F002F1DFD /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A0F1AF955FD00A617F0 /* FBSDKCoreKit.framework */; };
+		22D9A47D1E33E2A3002F1DFD /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9026A131AF95C6100A617F0 /* FBSDKLoginKit.framework */; };
+		22D9A47E1E33E2B8002F1DFD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF91AE1E5BE003A1DEB /* UIKit.framework */; };
+		22D9A47F1E33E2BA002F1DFD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF31AE1E5A6003A1DEB /* SystemConfiguration.framework */; };
+		22D9A4801E33E2BD002F1DFD /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547ED1AE2BBEE001FE916 /* Social.framework */; };
+		22D9A4811E33E2BF002F1DFD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEF1AE1E590003A1DEB /* Security.framework */; };
+		22D9A4821E33E2C2002F1DFD /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FED1AE1E589003A1DEB /* QuartzCore.framework */; };
+		22D9A4831E33E2C4002F1DFD /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9ABA4D91B4EAC4D006F0625 /* Photos.framework */; };
+		22D9A4841E33E2C7002F1DFD /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FEB1AE1E583003A1DEB /* MobileCoreServices.framework */; };
+		22D9A4851E33E2CB002F1DFD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E91AE2BBD0001FE916 /* MapKit.framework */; };
+		22D9A4861E33E357002F1DFD /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
+		22D9A4891E33E360002F1DFD /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA031D2C5CA700329B28 /* ParseUI.framework */; };
+		22D9A48A1E33E362002F1DFD /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547E71AE2BBAE001FE916 /* Accounts.framework */; };
+		22D9A48B1E33E365002F1DFD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE51AE1E565003A1DEB /* AudioToolbox.framework */; };
+		22D9A48C1E33E367002F1DFD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE71AE1E56B003A1DEB /* CFNetwork.framework */; };
+		22D9A48D1E33E369002F1DFD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FE91AE1E572003A1DEB /* CoreGraphics.framework */; };
+		22D9A48E1E33E36C002F1DFD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223547EB1AE2BBD8001FE916 /* CoreLocation.framework */; };
+		22D9A48F1E33E375002F1DFD /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF71AE1E5B8003A1DEB /* libsqlite3.dylib */; };
+		22D9A4901E33E37A002F1DFD /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9021F211B9F82CB00E2EA96 /* libstdc++.6.dylib */; };
+		22D9A4911E33E37C002F1DFD /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F3FF51AE1E5AE003A1DEB /* libz.dylib */; };
+		22D9A4921E33E39B002F1DFD /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BBD1D91AF000054741F /* CoreData.framework */; };
+		22D9A4931E33E39C002F1DFD /* AWSMobileHubHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */; };
+		22D9A4941E33E39E002F1DFD /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CA64591BE523A500A25EBC /* PhotosUI.framework */; };
+		22D9A4951E33E3A0002F1DFD /* libPods-TripTrunk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE5F489EC595090710B7495 /* libPods-TripTrunk.a */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
@@ -125,7 +151,6 @@
 		C9525A341B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9525A331B251FC100185713 /* libCloudinary.a */; };
 		C9525A3E1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
-		C9525A3F1B25218800185713 /* TTUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C9525A3D1B25218800185713 /* TTUtility.m */; };
 		C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C95493881B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m */; };
 		C95702681D91B1DE009DE079 /* Strings in Resources */ = {isa = PBXBuildFile; fileRef = C957025C1D91B1DE009DE079 /* Strings */; };
 		C95702691D91B1DE009DE079 /* Times in Resources */ = {isa = PBXBuildFile; fileRef = C957025D1D91B1DE009DE079 /* Times */; };
@@ -243,6 +268,7 @@
 		2268B09D1B32485300C941C4 /* HomeMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeMapViewController.m; sourceTree = "<group>"; };
 		226AAC0D1BB21CEF0031AF98 /* UserCellCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCellCollectionViewCell.h; sourceTree = "<group>"; };
 		226AAC0E1BB21CEF0031AF98 /* UserCellCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCellCollectionViewCell.m; sourceTree = "<group>"; };
+		228E89961E33E76600FF1C0C /* GooglePlaces.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlaces.framework; path = Pods/GooglePlaces/Frameworks/GooglePlaces.framework; sourceTree = "<group>"; };
 		229D42841AE850C700458244 /* TripImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripImageView.h; sourceTree = "<group>"; };
 		229D42851AE850C700458244 /* TripImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripImageView.m; sourceTree = "<group>"; };
 		22A81F021C8B2DF400CF76BD /* TTNoInternetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNoInternetView.h; sourceTree = "<group>"; };
@@ -499,7 +525,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22D9A4911E33E37C002F1DFD /* libz.dylib in Frameworks */,
+				22D9A4921E33E39B002F1DFD /* CoreData.framework in Frameworks */,
+				22D9A48C1E33E367002F1DFD /* CFNetwork.framework in Frameworks */,
+				22D9A48B1E33E365002F1DFD /* AudioToolbox.framework in Frameworks */,
+				22D9A4901E33E37A002F1DFD /* libstdc++.6.dylib in Frameworks */,
+				22D9A4931E33E39C002F1DFD /* AWSMobileHubHelper.framework in Frameworks */,
+				22599EDC1E33F1FC003235B0 /* Parse.framework in Frameworks */,
+				22D9A4821E33E2C2002F1DFD /* QuartzCore.framework in Frameworks */,
 				C9525A351B251FC100185713 /* libCloudinary.a in Frameworks */,
+				22D9A48F1E33E375002F1DFD /* libsqlite3.dylib in Frameworks */,
+				22D9A4861E33E357002F1DFD /* ParseFacebookUtilsV4.framework in Frameworks */,
+				22D9A47F1E33E2BA002F1DFD /* SystemConfiguration.framework in Frameworks */,
+				22D9A4841E33E2C7002F1DFD /* MobileCoreServices.framework in Frameworks */,
+				22D9A48D1E33E369002F1DFD /* CoreGraphics.framework in Frameworks */,
+				22D9A4851E33E2CB002F1DFD /* MapKit.framework in Frameworks */,
+				22599EDD1E33F1FF003235B0 /* Bolts.framework in Frameworks */,
+				22D9A47E1E33E2B8002F1DFD /* UIKit.framework in Frameworks */,
+				22D9A4941E33E39E002F1DFD /* PhotosUI.framework in Frameworks */,
+				22D9A4951E33E3A0002F1DFD /* libPods-TripTrunk.a in Frameworks */,
+				22D9A4801E33E2BD002F1DFD /* Social.framework in Frameworks */,
+				22D9A4811E33E2BF002F1DFD /* Security.framework in Frameworks */,
+				22D9A47C1E33E29F002F1DFD /* FBSDKCoreKit.framework in Frameworks */,
+				22D9A4891E33E360002F1DFD /* ParseUI.framework in Frameworks */,
+				22D9A48E1E33E36C002F1DFD /* CoreLocation.framework in Frameworks */,
+				22D9A47D1E33E2A3002F1DFD /* FBSDKLoginKit.framework in Frameworks */,
+				22D9A48A1E33E362002F1DFD /* Accounts.framework in Frameworks */,
+				22D9A4831E33E2C4002F1DFD /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +895,7 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				228E89961E33E76600FF1C0C /* GooglePlaces.framework */,
 				271D8BBD1D91AF000054741F /* CoreData.framework */,
 				27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */,
 				C9CA64591BE523A500A25EBC /* PhotosUI.framework */,
@@ -1115,7 +1168,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		BDB8B6C66AE1B7E88706C5C3 /* [CP] Embed Pods Frameworks */ = {
@@ -1247,7 +1300,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9525A3F1B25218800185713 /* TTUtility.m in Sources */,
 				224F3FAC1AE1D35E003A1DEB /* TripTrunkTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1389,6 +1441,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
+					"$(PROJECT_DIR)/Pods/GooglePlaces/Frameworks",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1433,6 +1486,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
+					"$(PROJECT_DIR)/Pods/GooglePlaces/Frameworks",
 				);
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1468,6 +1522,8 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FacebookSDK",
+					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1493,6 +1549,8 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FacebookSDK",
+					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
 				INFOPLIST_FILE = TripTrunkTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
