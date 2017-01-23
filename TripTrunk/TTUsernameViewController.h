@@ -11,5 +11,6 @@
 
 
 @interface TTUsernameViewController : TTBaseLoginViewController
+@property NSString *username;
 
 @end

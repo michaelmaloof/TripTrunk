@@ -365,13 +365,12 @@ list of trips the user hasn't seen since last being in the app
     if (![PFUser currentUser]) {
         UIStoryboard *secondStoryBoard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
         TTOnboardingViewController *onBoard = [secondStoryBoard instantiateInitialViewController];
-        [self.navigationController pushViewController:onBoard animated:YES];
+        [self.navigationController presentViewController:onBoard animated:NO completion:nil];
+        return NO;
     }
     // User is logged in, but hasn't completed registration (i.e. hasn't set a username or hometown, etc.)
     else if (![[PFUser currentUser] valueForKey:@"completedRegistration"] || [[[PFUser currentUser] valueForKey:@"completedRegistration"] boolValue] == FALSE) {
-        
         [self.navigationController performSegueWithIdentifier:@"presentUsernameSegue" sender:nil];
-        
         return NO;
     }
     // User is logged in and good-to-go

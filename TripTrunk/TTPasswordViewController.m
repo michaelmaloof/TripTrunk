@@ -7,8 +7,9 @@
 //
 
 #import "TTPasswordViewController.h"
+#import "TTNameViewController.h"
 
-@interface TTPasswordViewController ()
+@interface TTPasswordViewController () <UITextFieldDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
 @property (weak, nonatomic) IBOutlet UITextView *info;
 @property (weak, nonatomic) IBOutlet UIImageView *trunkImage;
@@ -23,19 +24,56 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.passwordTextField.delegate = self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+-(void)viewDidAppear:(BOOL)animated{
+    if (![self.password isEqualToString:@""]){
+        self.passwordTextField.text = self.password;
+    }
+    [self.passwordTextField becomeFirstResponder];
+
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    TTNameViewController *nameVC = segue.destinationViewController;
+    nameVC.username = self.username;
+    nameVC.password = self.password;
+    nameVC.isFirstName = YES;
+}
+
+//Keyboard
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self submitPassword];
+    return NO;
+}
+
+-(void)submitPassword {
+    NSString *password =  [self.passwordTextField.text lowercaseString];
+    if([self validateLoginInput:password type:1] == YES){
+        self.password = password;
+        [self performSegueWithIdentifier:@"next" sender:self];
+    }
+}
+
+-(BOOL)validatePassword:(NSString*)password {
+    return [self validateLoginInput:password type:1];
 }
 
 //UIButtons
 - (IBAction)backButtonWasTapped:(id)sender {
+    [self previousLoginViewController];
 }
 
 - (IBAction)forgotPasswordWasTapped:(id)sender {
 }
+
 - (IBAction)nextButtonWasTapped:(id)sender {
+    [self submitPassword];
 }
 
 @end

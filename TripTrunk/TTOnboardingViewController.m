@@ -9,7 +9,6 @@
 #import "TTOnboardingViewController.h"
 
 @interface TTOnboardingViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *icon;
 @property (weak, nonatomic) IBOutlet UIImageView *tripTrunkTitle;
 @property (weak, nonatomic) IBOutlet UITextView *info;
 @property (weak, nonatomic) IBOutlet UIImageView *blueElephant;

@@ -9,5 +9,10 @@
 #import "TTBaseLoginViewController.h"
 
 @interface TTLocationViewController : TTBaseLoginViewController
+@property NSString *email;
+@property NSString *password;
+@property NSString *username;
+@property NSString *firstName;
+@property NSString *lastName;
 
 @end

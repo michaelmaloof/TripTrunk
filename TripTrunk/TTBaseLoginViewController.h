@@ -18,4 +18,8 @@
 
 @interface TTBaseLoginViewController : TTBaseViewController
 
+-(void)previousLoginViewController;
+-(BOOL)validateLoginInput:(NSString*)input type:(int)inputType;
+
+
 @end
