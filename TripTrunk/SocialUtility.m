@@ -12,6 +12,7 @@
 #import "ParseErrorHandlingController.h"
 #import "TTUtility.h"
 #import "TTAnalytics.h"
+#define CLOUDINARY_URL @"cloudinary://334349235853935:YZoImSo-gkdMtZPH3OJdZEOvifo@triptrunk"
 
 @implementation SocialUtility
 
@@ -311,6 +312,28 @@
              // Delete the found Photos
              for (PFObject *object in objects) {
                  [object deleteEventually];
+                 //FIXME: This is termporary. Move to CC
+                 if(object[@"video"]){
+                     CLCloudinary *cloudinary = [[CLCloudinary alloc] init];
+                     // Initialize the base cloudinary object
+                     cloudinary = [[CLCloudinary alloc] initWithUrl:CLOUDINARY_URL];
+                     Photo *photo = [[Photo alloc] init];
+                     photo = (Photo*)object;
+                     [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        [photo.video deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                            NSLog(@"Video object deleted from Parse");
+                             NSArray *urlSegments = [photo.video[@"videoUrl"] componentsSeparatedByString: @"/"];
+                             NSArray *publicId = [[urlSegments lastObject] componentsSeparatedByString:@"."];
+                             CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:nil];
+                             [uploader destroy:publicId[0] options:@{@"resource_type":@"video"} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+                                 NSLog(@"Video deleted from Cloudinary");
+                             } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+                                 //nil
+                             }];
+                         }];
+                         
+                     }];
+                 }
              }
              
              [[NSNotificationCenter defaultCenter] postNotificationName:@"PhotoObjectsDeleted" object:nil];
