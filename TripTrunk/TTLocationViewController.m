@@ -8,8 +8,9 @@
 
 #import "TTLocationViewController.h"
 #import "TTHomeViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface TTLocationViewController ()
+@interface TTLocationViewController () <CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
 @property (weak, nonatomic) IBOutlet UITextView *info;
 @property (weak, nonatomic) IBOutlet UILabel *allowLabel;
@@ -18,10 +19,13 @@
 
 @end
 
-@implementation TTLocationViewController
+@implementation TTLocationViewController{
+    CLLocationManager *locationManager;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    locationManager = [[CLLocationManager alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,7 +40,10 @@
 
 - (IBAction)turnOnWasTapped:(id)sender {
     //TODO Track Location:
-    [self performSegueWithIdentifier:@"next" sender:self];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
+   [self performSegueWithIdentifier:@"next" sender:self];
 
 }
 
@@ -48,5 +55,15 @@
     homeVC.firstName = self.email;
     homeVC.lastName = self.email;
 }
+
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"Failed to get location %@",error);
+}
+
+
 
 @end

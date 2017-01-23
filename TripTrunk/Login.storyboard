@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Our elephants never forget. Let TripTrunk make sure you never forget your epic adventures." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="19x-Ml-UAb">
-                                <rect key="frame" x="67.5" y="401" width="240" height="100"/>
+                                <rect key="frame" x="68" y="401" width="240" height="100"/>
                                 <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="bPF-Oj-piQ"/>
@@ -164,7 +164,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lug-rw-aBV">
-                                <rect key="frame" x="256" y="320.5" width="83" height="39"/>
+                                <rect key="frame" x="256" y="321" width="83" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="2HY-NW-N5f"/>
                                     <constraint firstAttribute="height" constant="39" id="dm6-cj-FNF"/>
@@ -270,7 +270,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LF8-H6-1LX">
-                                <rect key="frame" x="256" y="320.5" width="83" height="39"/>
+                                <rect key="frame" x="256" y="321" width="83" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="JJP-N3-kKu"/>
                                     <constraint firstAttribute="width" constant="83" id="z3M-vA-z2B"/>
@@ -400,7 +400,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RsU-Iy-CsU">
-                                <rect key="frame" x="256" y="320.5" width="83" height="39"/>
+                                <rect key="frame" x="256" y="321" width="83" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="STj-f1-Bhh"/>
                                     <constraint firstAttribute="width" constant="83" id="gXR-Og-e1M"/>
@@ -493,7 +493,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBB-w3-qgu">
-                                <rect key="frame" x="256" y="319.5" width="83" height="39"/>
+                                <rect key="frame" x="256" y="320" width="83" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="2lP-Nd-OlY"/>
                                     <constraint firstAttribute="height" constant="39" id="y00-zc-aWj"/>
@@ -641,7 +641,7 @@
                         <outlet property="noThanks" destination="bB7-Oe-Rnp" id="waF-M2-SUG"/>
                         <outlet property="pageTitle" destination="Cgk-Wn-Tmq" id="08F-K7-5KK"/>
                         <outlet property="turnOn" destination="Z8W-4h-bun" id="ddh-iz-ebL"/>
-                        <segue destination="0eV-tc-rHf" kind="show" animates="NO" id="Bql-Wb-vHf"/>
+                        <segue destination="0eV-tc-rHf" kind="show" identifier="next" animates="NO" id="Bql-Wb-vHf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8fS-U6-tLV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -699,7 +699,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdO-47-nto">
-                                <rect key="frame" x="214" y="315.5" width="125" height="49"/>
+                                <rect key="frame" x="214" y="316" width="125" height="49"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="49" id="lgJ-Kd-5g1"/>
                                     <constraint firstAttribute="width" constant="125" id="z8s-Zt-G5R"/>
@@ -751,7 +751,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eh6-iT-bpl" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sd9-6H-UU9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sd9-6H-UU9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

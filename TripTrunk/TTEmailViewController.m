@@ -47,7 +47,7 @@
 
 -(void)submitEmail{
     NSString *email =  [self.emailTextField.text lowercaseString];
-    if([self validateLoginInput:email type:4] == YES){
+    if([self validateLoginInput:email type:3] == YES){
         self.email = email;
         [self performSegueWithIdentifier:@"next" sender:self];
     }

@@ -6,9 +6,9 @@
 //  Copyright © 2017 Michael Maloof. All rights reserved.
 //
 
-#import "TTBaseLoginViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface TTLocationViewController : TTBaseLoginViewController
+@interface TTLocationViewController : UIViewController
 @property NSString *email;
 @property NSString *password;
 @property NSString *username;
