@@ -420,6 +420,7 @@
         if(photo.imageAsset.mediaType == 2){
             [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                 photo.video = video;
+                photo.editedPath = nil;
                 [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
                     PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                     [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
