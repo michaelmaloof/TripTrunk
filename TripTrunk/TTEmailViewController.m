@@ -60,6 +60,7 @@
     locationVC.email = self.email;
     locationVC.firstName = self.email;
     locationVC.lastName = self.email;
+    locationVC.isFBUser = self.isFBUser;
 }
 
 //UIButtons

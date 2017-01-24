@@ -69,6 +69,7 @@
             lastNameVc.password = self.username;
             lastNameVc.firstName = self.firstName;
             lastNameVc.isFirstName = NO;
+            lastNameVc.isFBUser = self.isFBUser;
             [self.navigationController pushViewController:lastNameVc animated:NO];
         }else {
             self.lastName = name;
@@ -84,6 +85,7 @@
         emailVC.password = self.username;
         emailVC.firstName = self.firstName;
         emailVC.lastName = self.lastName;
+        emailVC.isFBUser = self.isFBUser;
     }
 }
 

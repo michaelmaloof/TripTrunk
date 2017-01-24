@@ -14,5 +14,6 @@
 @property NSString *username;
 @property NSString *firstName;
 @property NSString *lastName;
+@property BOOL isFBUser;
 
 @end

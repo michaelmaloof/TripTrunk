@@ -17,6 +17,7 @@
 #import "TTUtility.h"
 
 @interface TTBaseLoginViewController : TTBaseViewController
+@property (nonatomic)BOOL isFBUser;
 
 -(void)previousLoginViewController;
 -(BOOL)validateLoginInput:(NSString*)input type:(int)inputType;

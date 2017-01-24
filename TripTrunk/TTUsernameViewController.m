@@ -67,6 +67,9 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     TTPasswordViewController *passwordVC = segue.destinationViewController;
     passwordVC.username = self.username;
+    passwordVC.isFBUser = self.isFBUser;
+
+    
 }
 
 @end

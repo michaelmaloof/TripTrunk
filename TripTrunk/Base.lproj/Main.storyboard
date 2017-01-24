@@ -2728,7 +2728,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF-A">
-                                        <rect key="frame" x="173.66666666666666" y="12" width="67" height="27"/>
+                                        <rect key="frame" x="177.66666666666666" y="12" width="59" height="26"/>
                                         <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
                                         <state key="normal" title="Comments">
                                             <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

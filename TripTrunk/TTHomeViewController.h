@@ -14,6 +14,7 @@
 @property NSString *username;
 @property NSString *firstName;
 @property NSString *lastName;
+@property NSString *hometown;
 
 
 @end

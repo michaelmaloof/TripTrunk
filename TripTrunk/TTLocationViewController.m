@@ -54,6 +54,7 @@
     homeVC.email = self.email;
     homeVC.firstName = self.email;
     homeVC.lastName = self.email;
+    homeVC.isFBUser = self.isFBUser;
 }
 
 

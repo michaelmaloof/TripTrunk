@@ -7,6 +7,7 @@
 //
 
 #import "TTOnboardingViewController.h"
+#import "TTUsernameViewController.h"
 
 @interface TTOnboardingViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *tripTrunkTitle;
@@ -56,6 +57,7 @@
          if (!user) {
              NSLog(@"Uh oh. The user cancelled the Facebook login.");
          } else if (user.isNew) {
+             self.isFBUser = YES;
              [self showSetUsernameView];
          } else {
              if ([user objectForKey:@"fbid"] == nil) {
@@ -77,6 +79,7 @@
              }
              // Make sure the user has a TripTrunk username
              if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
+                 self.isFBUser = YES;
                  [self showSetUsernameView];
              } else {
                  [self dismissViewControllerAnimated:YES completion:^{
@@ -88,6 +91,11 @@
 
 - (void)showSetUsernameView {
     [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    TTUsernameViewController *username = segue.destinationViewController;
+    username.isFBUser = self.isFBUser;
 }
 
 @end

@@ -39,6 +39,7 @@
     TTNameViewController *nameVC = segue.destinationViewController;
     nameVC.username = self.username;
     nameVC.password = self.password;
+    nameVC.isFBUser = self.isFBUser;
     nameVC.isFirstName = YES;
 }
 
