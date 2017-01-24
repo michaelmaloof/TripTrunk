@@ -33,5 +33,5 @@
 @property BOOL fromAddPhotosViewController;
 
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
-
+//-(void)canRotate;
 @end

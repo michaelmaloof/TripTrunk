@@ -534,5 +534,32 @@
     //    }
 }
 
+#pragma mark - Allow Landscape
+/* Allow Landscape mode for specific ViewControllers */
+//Just add -(void)canRotate{} to any view to make it rotate.
+//I was going to allow the PhotoViewController to rotate but there is a lot more involved in getting this to work properly
+/*-(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    UIViewController* topVC = [self topViewControllerWith: self.window.rootViewController];
+    if ([topVC respondsToSelector:@selector(canRotate)]) {
+        return UIInterfaceOrientationMaskAllButUpsideDown;
+    }
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+// get the top ViewController
+- (UIViewController*) topViewControllerWith:(UIViewController *)rootViewController {
+    if (rootViewController == nil) { return nil; }
+    if ([rootViewController isKindOfClass: [UITabBarController class]]) {
+        return [self topViewControllerWith: ((UITabBarController*) rootViewController).selectedViewController];
+    }
+    else if ([rootViewController isKindOfClass: [UINavigationController class]]) {
+        return [self topViewControllerWith: ((UINavigationController*) rootViewController).visibleViewController];
+    }
+    else if (rootViewController.presentedViewController != nil) {
+        return [self topViewControllerWith: [rootViewController presentedViewController]];
+    }
+    return rootViewController;
+}*/
+
 
 @end

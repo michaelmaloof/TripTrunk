@@ -83,7 +83,7 @@
 @property BOOL shouldShowTrunkNameButton;
 @property AVPlayerLayer *layer;
 @property AVPlayer *player;
-
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
 
 @end
@@ -388,6 +388,7 @@
 }
 
 -(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     [self.imageView setFrame:[[UIScreen mainScreen] bounds]];
     [self.scrollView setContentSize:CGSizeMake(_imageView.frame.size.width, _imageView.frame.size.height)];
     [self centerScrollViewContents];
@@ -398,12 +399,15 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     self.navigationController.navigationBarHidden = NO;
     self.tabBarController.tabBar.hidden = NO;
     if (self.isEditingCaption){
         [self.caption endEditing:YES];
     }
+    
+    [self.activityIndicator stopAnimating];
 }
 
 - (void)centerScrollViewContents {
@@ -492,6 +496,10 @@
     if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
         
         if(photo.video){
+            self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            self.activityIndicator.center = self.view.center;
+            [self.activityIndicator startAnimating];
+            [self.navigationController.view addSubview:self.activityIndicator];
             
             NSString *urlString = [[TTUtility sharedInstance] mediumQualityScaledDownImageUrl:photo.imageUrl];
             NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -519,9 +527,10 @@
                                                          selector:@selector(playerItemDidReachEnd:)
                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                            object:[self.player currentItem]];
-                
+                [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
+            
+            
                 [self.player play];
-                
             }];
             
         }else{
@@ -552,11 +561,22 @@
     }
 }
 
+//AVPlayer Observers
 //handle the end of the video
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     AVPlayerItem *p = [notification object];
     [p seekToTime:kCMTimeZero];
     [self.player play];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == self.player && [keyPath isEqualToString:@"status"]) {
+        if (self.player.status == AVPlayerItemStatusReadyToPlay) {
+            [self.activityIndicator stopAnimating];
+        } else if (self.player.status == AVPlayerStatusFailed) {
+            NSLog(@"There was an error loading the video");
+        }
+    }
 }
 
 -(void)refreshPhotoActivitiesWithUpdateNow:(BOOL)updateNow forPhotoStatus:(BOOL)isCurrentPhoto {
@@ -1852,13 +1872,19 @@
 }
 
 -(void)clearVideo{
+    @try{
+        [self.player removeObserver:self forKeyPath:@"status"];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
     [self.player pause];
     [self.layer removeFromSuperlayer];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:YES];
     self.captionLabel.enabled = YES;
-
+    
 }
 
 //############################################# MENTIONS ##################################################
@@ -1866,6 +1892,11 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    @try{
+        [self.player removeObserver:self forKeyPath:@"status"];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
@@ -1931,7 +1962,8 @@
     }
 }
 
-
-
+#pragma mark - Allow Landscape
+//implement to allow landscape mode on landscape videos
+//-(void)canRotate{}
 @end
 
