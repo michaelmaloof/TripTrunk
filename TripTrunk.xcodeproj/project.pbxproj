@@ -64,6 +64,8 @@
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
 		272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA031D2C5CA700329B28 /* ParseUI.framework */; };
+		27340DF11E3FBFED0070F051 /* mute.caf in Resources */ = {isa = PBXBuildFile; fileRef = 27340DEE1E3FBFED0070F051 /* mute.caf */; };
+		27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */; };
 		276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */; };
 		276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */; };
 		276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */; };
@@ -279,6 +281,10 @@
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		272ACA031D2C5CA700329B28 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		27340DEE1E3FBFED0070F051 /* mute.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mute.caf; sourceTree = "<group>"; };
+		27340DEF1E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharkfoodMuteSwitchDetector.h; sourceTree = "<group>"; };
+		27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkfoodMuteSwitchDetector.m; sourceTree = "<group>"; };
+		27340DF31E3FC4360070F051 /* SoundSwitch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SoundSwitch-Prefix.pch"; sourceTree = "<group>"; };
 		276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
 		276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
 		276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-UltraLight.otf"; sourceTree = "<group>"; };
@@ -809,6 +815,17 @@
 			path = GoogleAnalytics;
 			sourceTree = "<group>";
 		};
+		27340DED1E3FBFD50070F051 /* Sharkfood */ = {
+			isa = PBXGroup;
+			children = (
+				27340DF31E3FC4360070F051 /* SoundSwitch-Prefix.pch */,
+				27340DEE1E3FBFED0070F051 /* mute.caf */,
+				27340DEF1E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.h */,
+				27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */,
+			);
+			name = Sharkfood;
+			sourceTree = "<group>";
+		};
 		27AF315A1D2C0E8B00D93963 /* AmazonAws */ = {
 			isa = PBXGroup;
 			children = (
@@ -925,6 +942,7 @@
 		C95FD1431B2A66AD001755FF /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				27340DED1E3FBFD50070F051 /* Sharkfood */,
 				C957025B1D91B1D1009DE079 /* Underscore */,
 				271D8BAC1D91A43D0054741F /* GoogleAnalytics */,
 				27AF315A1D2C0E8B00D93963 /* AmazonAws */,
@@ -1070,6 +1088,7 @@
 				276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */,
 				2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */,
 				276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */,
+				27340DF11E3FBFED0070F051 /* mute.caf in Resources */,
 				276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
 				271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */,
@@ -1151,6 +1170,7 @@
 				27F3E3851D3D778600634B75 /* DLFPhotosLibrary.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
+				27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
@@ -1391,6 +1411,7 @@
 					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
+				GCC_PREFIX_HEADER = "TripTrunk/SoundSwitch-Prefix.pch";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1435,6 +1456,7 @@
 					"$(PROJECT_DIR)/FacebookSDK",
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 				);
+				GCC_PREFIX_HEADER = "TripTrunk/SoundSwitch-Prefix.pch";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -1279,14 +1279,14 @@
                                                                     </constraints>
                                                                     <variation key="default">
                                                                         <mask key="constraints">
-                                                                            <exclude reference="KBb-S7-D3v"/>
                                                                             <exclude reference="73s-HM-Qfp"/>
+                                                                            <exclude reference="KBb-S7-D3v"/>
                                                                         </mask>
                                                                     </variation>
                                                                     <variation key="heightClass=regular-widthClass=compact">
                                                                         <mask key="constraints">
-                                                                            <include reference="KBb-S7-D3v"/>
                                                                             <include reference="73s-HM-Qfp"/>
+                                                                            <include reference="KBb-S7-D3v"/>
                                                                         </mask>
                                                                     </variation>
                                                                 </imageView>
@@ -2441,6 +2441,20 @@
                                     </mask>
                                 </variation>
                             </scrollView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85x-x5-njl">
+                                <rect key="frame" x="5" y="697" width="35" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="35" id="SrY-5f-7Hm"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="WUN-Ke-rr5"/>
+                                    <constraint firstAttribute="height" constant="34" id="bCn-vm-Zq1"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="34" id="qwS-Jm-EcY"/>
+                                </constraints>
+                                <state key="normal" image="sound_off"/>
+                                <state key="selected" image="sound_on"/>
+                                <connections>
+                                    <action selector="toggleVideoSound:" destination="aHH-Uj-SSR" eventType="touchUpInside" id="bI0-Wi-yrS"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hR0-63-pl9">
                                 <rect key="frame" x="-4" y="0.0" width="422" height="61"/>
                                 <subviews>
@@ -2750,7 +2764,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe2-XC-VCF-A">
-                                        <rect key="frame" x="177.66666666666666" y="12" width="59" height="26"/>
+                                        <rect key="frame" x="173.66666666666666" y="12" width="67" height="27"/>
                                         <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
                                         <state key="normal" title="Comments">
                                             <color key="titleColor" red="0.49019607843137253" green="0.7803921568627451" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3088,6 +3102,7 @@
                             <constraint firstAttribute="centerY" secondItem="g0k-n4-hcD" secondAttribute="centerY" id="1qM-to-aaD"/>
                             <constraint firstAttribute="trailing" secondItem="pMh-vC-nPM" secondAttribute="trailing" constant="-4" id="2Eg-oo-laM"/>
                             <constraint firstItem="36W-q1-gHS" firstAttribute="top" secondItem="aUx-2M-TRQ" secondAttribute="bottom" id="3Pz-P0-AkI"/>
+                            <constraint firstItem="85x-x5-njl" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leading" constant="5" id="ArO-CV-d4A"/>
                             <constraint firstItem="aUx-2M-TRQ" firstAttribute="top" secondItem="pMh-vC-nPM" secondAttribute="bottom" id="Fa4-JA-G0g"/>
                             <constraint firstItem="g0k-n4-hcD" firstAttribute="leading" secondItem="s0j-au-kD5" secondAttribute="leadingMargin" constant="64" id="ImZ-p9-QDq">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-16"/>
@@ -3117,6 +3132,7 @@
                             <constraint firstItem="g0k-n4-hcD" firstAttribute="top" secondItem="HLk-IP-VEv" secondAttribute="bottom" id="q7U-o2-Oxu">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
                             </constraint>
+                            <constraint firstAttribute="bottomMargin" secondItem="85x-x5-njl" secondAttribute="bottom" constant="5" id="wNL-7m-yYg"/>
                             <constraint firstAttribute="trailing" secondItem="hR0-63-pl9" secondAttribute="trailing" constant="-4" id="yBW-aH-oqG"/>
                         </constraints>
                         <variation key="default">
@@ -3128,7 +3144,16 @@
                                 <exclude reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <exclude reference="OlX-6N-agJ"/>
+                                <exclude reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <exclude reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <exclude reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                                 <exclude reference="Rdr-sM-euh"/>
                                 <exclude reference="hqH-ri-Sff"/>
                                 <exclude reference="yBW-aH-oqG"/>
@@ -3141,16 +3166,7 @@
                                 <exclude reference="Zo6-bM-aaN"/>
                                 <exclude reference="dg3-GD-a57"/>
                                 <exclude reference="kpd-f9-VQY"/>
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <exclude reference="OlX-6N-agJ"/>
-                                <exclude reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <exclude reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <exclude reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -3162,7 +3178,16 @@
                                 <include reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <include reference="OlX-6N-agJ"/>
+                                <include reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <include reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <include reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                                 <include reference="Rdr-sM-euh"/>
                                 <include reference="hqH-ri-Sff"/>
                                 <include reference="yBW-aH-oqG"/>
@@ -3175,16 +3200,7 @@
                                 <include reference="Zo6-bM-aaN"/>
                                 <include reference="dg3-GD-a57"/>
                                 <include reference="kpd-f9-VQY"/>
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <include reference="OlX-6N-agJ"/>
-                                <include reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <include reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <include reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                             </mask>
                         </variation>
                     </view>
@@ -3214,11 +3230,12 @@
                         <outlet property="timeStamp" destination="dWA-ve-gIJ" id="aFb-8b-dJ6"/>
                         <outlet property="topButtonWrapper" destination="hR0-63-pl9" id="UWT-my-qEN"/>
                         <outlet property="trunkNameButton" destination="HFK-1a-bML" id="oRk-p1-U7d"/>
+                        <outlet property="video_sound_button" destination="85x-x5-njl" id="91J-ey-jZq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1O6-QX-DAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2248.8000000000002" y="-1742.8785607196403"/>
+            <point key="canvasLocation" x="2247.826086956522" y="-1742.9347826086957"/>
         </scene>
         <!--Suggestion Table View Controller-->
         <scene sceneID="Q3V-vg-pMT">
@@ -3477,14 +3494,14 @@
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
-                                                            <exclude reference="B5y-MT-ZZM"/>
                                                             <exclude reference="AJa-0z-K99"/>
+                                                            <exclude reference="B5y-MT-ZZM"/>
                                                         </mask>
                                                     </variation>
                                                     <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
-                                                            <include reference="B5y-MT-ZZM"/>
                                                             <include reference="AJa-0z-K99"/>
+                                                            <include reference="B5y-MT-ZZM"/>
                                                         </mask>
                                                     </variation>
                                                 </imageView>
@@ -5475,6 +5492,8 @@
         <image name="moreIcon" width="26" height="6"/>
         <image name="moreTrunk" width="150" height="150"/>
         <image name="paw_blue_list" width="13" height="13"/>
+        <image name="sound_off" width="170" height="170"/>
+        <image name="sound_on" width="170" height="170"/>
         <image name="tripTrunkTitle" width="95" height="26"/>
         <image name="unlocked" width="16" height="17"/>
         <image name="video_error_icon" width="100" height="100"/>

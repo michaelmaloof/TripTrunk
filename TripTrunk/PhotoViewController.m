@@ -28,13 +28,12 @@
 #import "TTHashtagMentionColorization.h"
 #import "TTAnalytics.h"
 #import "MBProgressHUD.h"
-
 #import <QuartzCore/QuartzCore.h>
 #import "AVFoundation/AVFoundation.h"
+#import "SharkfoodMuteSwitchDetector.h"
 
 #define screenWidth [[UIScreen mainScreen] bounds].size.width
 #define screenHeight [[UIScreen mainScreen] bounds].size.height
-
 
 @interface PhotoViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate,EditDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate,TTSuggestionTableViewControllerDelegate, TTTAttributedLabelDelegate>
 // IBOutlets
@@ -52,6 +51,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *photoTakenBy;
 @property (weak, nonatomic) IBOutlet UIButton *trunkNameButton;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *captionButtonConstraint;
+@property (strong, nonatomic) IBOutlet UIButton *video_sound_button;
 @property CGFloat height;
 @property CGFloat originY;
 @property CGFloat width;
@@ -85,10 +85,26 @@
 @property AVPlayer *player;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
-
+@property (nonatomic,strong) SharkfoodMuteSwitchDetector* detector;
 @end
 
 @implementation PhotoViewController
+
+//Monitor Ring/Silent switch and adjust the GUI to match
+-(id)initWithCoder:(NSCoder *)aDecoder{
+    self = [super initWithCoder:aDecoder];
+    if (self){
+        self.detector = [SharkfoodMuteSwitchDetector shared];
+        __weak PhotoViewController* sself = self;
+        self.detector.silentNotify = ^(BOOL silent){
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+            if(silent)
+                sself.video_sound_button.selected = NO;
+            else sself.video_sound_button.selected = YES;
+        };
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -512,14 +528,14 @@
             [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
 
                 NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
-                self.player = [AVPlayer playerWithURL:url];
+                self.player = [AVPlayer playerWithURL:url];http://stackoverflow.com/questions/6901363/detecting-the-iphones-ring-silent-mute-switch-using-avaudioplayer-not-worki
                 
                 self.layer = [AVPlayerLayer layer];
                 [self.layer setPlayer:self.player];
                 [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
                 [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
                 
-                int a = (int)self.view.layer.sublayers.count-4;
+                int a = (int)self.view.layer.sublayers.count-7;
                 [self.view.layer insertSublayer:self.layer atIndex:a];
                 
                 [self.player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
@@ -528,9 +544,10 @@
                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                            object:[self.player currentItem]];
                 [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
-            
-            
+                
                 [self.player play];
+                self.video_sound_button.hidden = NO;
+
             }];
             
         }else{
@@ -566,6 +583,7 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     AVPlayerItem *p = [notification object];
     [p seekToTime:kCMTimeZero];
+    
     [self.player play];
 }
 
@@ -1252,6 +1270,19 @@
     }
 }
 
+- (IBAction)toggleVideoSound:(id)sender {
+    
+    if(self.video_sound_button.selected){
+        self.video_sound_button.selected = NO;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        self.player.muted = YES;
+    }else{
+        self.video_sound_button.selected = YES;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
+        self.player.muted = NO;
+    }
+}
+
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
@@ -1877,6 +1908,15 @@
     }@catch(id anException){
         //do nothing, obviously it wasn't attached because an exception was thrown
     }
+    __weak PhotoViewController* sself = self;
+    self.detector.silentNotify = ^(BOOL silent){
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        if(silent)
+            sself.video_sound_button.selected = NO;
+        else sself.video_sound_button.selected = YES;
+        
+    };
+    self.video_sound_button.hidden = YES;
     [self.player pause];
     [self.layer removeFromSuperlayer];
 }
