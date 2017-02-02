@@ -211,5 +211,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>MaxVideoLength</key>
+	<integer>15</integer>
 </dict>
 </plist>

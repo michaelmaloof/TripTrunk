@@ -327,6 +327,20 @@
 //}
 
 #pragma mark - Saving Photos
+- (void)convertVideoToMediumQuailtyWithInputURL:(NSURL*)inputURL
+                                   outputURL:(NSURL*)outputURL
+                                     handler:(void (^)(AVAssetExportSession*))handler
+{
+    [[NSFileManager defaultManager] removeItemAtURL:outputURL error:nil];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:inputURL options:nil];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+    exportSession.outputURL = outputURL;
+    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^(void)
+     {
+         handler(exportSession);
+     }];
+}
 
 - (void)uploadAllPhotos { //FIXME: Handle error handling better on lost trunks here
     
@@ -418,45 +432,114 @@
         
         // Upload the photo - this method will also handle publish to facebook if needed
         if(photo.imageAsset.mediaType == 2){
-            [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
-                photo.video = video;
-                photo.editedPath = nil;
-                [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
-                    PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
-                    [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
-                    [countIncrement save];
-                    
-                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                    NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
-                    NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
-                    int i = 0;
-                    
-                    for(NSString *li in localIdentifiers){
-                        if([li isEqualToString:photo.imageAsset.localIdentifier]){
-                            [localIdentifiers removeObjectAtIndex:i];
-                            [self.photoCaptions removeObjectAtIndex:i];
-                            break;
-                        }
-                        i++;
-                    }
-                    
-                    [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
-                    [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
-                    [defaults synchronize];
-                    
-                    
-                    // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
-                    if (photo.caption && ![photo.caption isEqualToString:@""]) {
-                        // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
-                        [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
-                            if (!error && commentObject) {
-                                [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
-                                [self updateMentionsInDatabase:commentObject];
-                            }
-                        }];
-                    }
-                }];
+            
+            PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+            [options setVersion:PHVideoRequestOptionsVersionCurrent];
+            [options setDeliveryMode:PHVideoRequestOptionsDeliveryModeHighQualityFormat];
+            [options setNetworkAccessAllowed:YES];
+            
+            [[PHImageManager defaultManager] requestAVAssetForVideo:photo.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+                
+                //load the video but check for a trimmed video first.
+                NSString *pathToVideo;
+                if(photo.editedPath)
+                    pathToVideo = photo.editedPath;
+                else pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+                
+                               
+                NSURL *videoURL = [NSURL URLWithString:pathToVideo];
+                NSURL *outputURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"video.mov"]];
+                [self convertVideoToMediumQuailtyWithInputURL:videoURL outputURL:outputURL handler:^(AVAssetExportSession *exportSession)
+                 {
+                     if (exportSession.status == AVAssetExportSessionStatusCompleted){
+                         NSLog(@"completed\n");
+                         photo.editedPath = outputURL.absoluteString;
+                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
+                             photo.video = video;
+                             photo.editedPath = nil;
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
+                                 PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
+                                 [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
+                                 [countIncrement save];
+                                 
+                                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                 NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+                                 NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+                                 int i = 0;
+                                 
+                                 for(NSString *li in localIdentifiers){
+                                     if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                                         [localIdentifiers removeObjectAtIndex:i];
+                                         [self.photoCaptions removeObjectAtIndex:i];
+                                         break;
+                                     }
+                                     i++;
+                                 }
+                                 
+                                 [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+                                 [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+                                 [defaults synchronize];
+                                 
+                                 
+                                 // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
+                                 if (photo.caption && ![photo.caption isEqualToString:@""]) {
+                                     // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
+                                     [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                                         if (!error && commentObject) {
+                                             [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                                             [self updateMentionsInDatabase:commentObject];
+                                         }
+                                     }];
+                                 }
+                             }];
+                         }];
+                     }else{
+                         NSLog(@"Video compression error\n");
+                         //Upload uncompressed video
+                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
+                             photo.video = video;
+                             photo.editedPath = nil;
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
+                                 PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
+                                 [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
+                                 [countIncrement save];
+                                 
+                                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                                 NSArray *identifiers = [defaults arrayForKey:@"currentImageUpload"];
+                                 NSMutableArray *localIdentifiers = [NSMutableArray arrayWithArray:identifiers];
+                                 int i = 0;
+                                 
+                                 for(NSString *li in localIdentifiers){
+                                     if([li isEqualToString:photo.imageAsset.localIdentifier]){
+                                         [localIdentifiers removeObjectAtIndex:i];
+                                         [self.photoCaptions removeObjectAtIndex:i];
+                                         break;
+                                     }
+                                     i++;
+                                 }
+                                 
+                                 [defaults setObject:self.photoCaptions forKey:@"currentPhotoCaptions"];
+                                 [defaults setObject:localIdentifiers forKey:@"currentImageUpload"];
+                                 [defaults synchronize];
+                                 
+                                 
+                                 // If the photo has a caption, we need to add that as a comment so it shows up in the comments list. Otherwise we're done!
+                                 if (photo.caption && ![photo.caption isEqualToString:@""]) {
+                                     // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
+                                     [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
+                                         if (!error && commentObject) {
+                                             [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                                             [self updateMentionsInDatabase:commentObject];
+                                         }
+                                     }];
+                                 }
+                             }];
+                         }];
+                     }
+                 }];
+                
             }];
+            
         }else{
             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
                 PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
@@ -672,7 +755,8 @@
         if(!photo.editedPath){
             [[PHImageManager defaultManager] requestAVAssetForVideo:photo.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if(CMTimeGetSeconds(asset.duration) > 15){
+                    int maxVideoLength = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MaxVideoLength"] intValue];
+                    if(CMTimeGetSeconds(asset.duration) > maxVideoLength){
                         [self disableUploadButton];
                         cell.videoErrorImage.hidden = NO;
                     }
