@@ -448,7 +448,8 @@
                 
                                
                 NSURL *videoURL = [NSURL URLWithString:pathToVideo];
-                NSURL *outputURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"video.mov"]];
+                NSString *randString = [NSString stringWithFormat:@"video-%f.mov",[[NSDate date] timeIntervalSince1970]];
+                NSURL *outputURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:randString]];
                 [self convertVideoToMediumQuailtyWithInputURL:videoURL outputURL:outputURL handler:^(AVAssetExportSession *exportSession)
                  {
                      if (exportSession.status == AVAssetExportSessionStatusCompleted){
@@ -456,6 +457,10 @@
                          photo.editedPath = outputURL.absoluteString;
                          [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
+                             //remove compressed or trimmed video from temp directory
+                             NSFileManager *manager = [NSFileManager defaultManager];
+                             NSString *deletePath = [photo.editedPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+                             [manager removeItemAtPath:deletePath error:nil];
                              photo.editedPath = nil;
                              [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
