@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2Gs-oZ-UjQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2Gs-oZ-UjQ">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -74,11 +74,11 @@
                                         <rect key="frame" x="8" y="0.0" width="398" height="406.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
+                                                    <rect key="frame" x="58" y="8" width="240" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="19" id="S26-NW-fgh"/>
                                                         <constraint firstAttribute="width" constant="266" id="hoA-Oa-rtI">
@@ -107,8 +107,8 @@
                                                         </mask>
                                                     </variation>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="11m" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2D-C4-KB0">
-                                                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11m" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2D-C4-KB0">
+                                                    <rect key="frame" x="336" y="5" width="54" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="30" id="5F5-Ev-6ak"/>
                                                         <constraint firstAttribute="width" constant="54" id="AlH-ra-SD7"/>
@@ -138,12 +138,12 @@
                                                         </mask>
                                                     </variation>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dXI-oM-KDj">
-                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dXI-oM-KDj">
+                                                    <rect key="frame" x="0.0" y="60" width="398" height="338.66666666666669"/>
                                                     <gestureRecognizers/>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYb-FJ-b87">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYb-FJ-b87">
+                                                    <rect key="frame" x="58" y="40" width="295" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="15" id="Ysq-IQ-Gh2"/>
                                                         <constraint firstAttribute="width" constant="295" id="q2Z-QW-eSc"/>
@@ -165,8 +165,8 @@
                                                         </mask>
                                                     </variation>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W95-rK-hFQ">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W95-rK-hFQ">
+                                                    <rect key="frame" x="58" y="24" width="329" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="329" id="SK6-qV-JVg"/>
                                                         <constraint firstAttribute="width" constant="266" id="mAq-8t-mrJ"/>
@@ -193,8 +193,8 @@
                                                         </mask>
                                                     </variation>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6hP-2Q-apq">
+                                                    <rect key="frame" x="12" y="8" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="53h-PL-fD0"/>
                                                         <constraint firstAttribute="width" constant="40" id="WGm-kS-SOv"/>
@@ -212,8 +212,8 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="lock" translatesAutoresizingMaskIntoConstraints="NO" id="Rv5-sb-10g">
-                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock" translatesAutoresizingMaskIntoConstraints="NO" id="Rv5-sb-10g">
+                                                    <rect key="frame" x="365" y="32" width="25" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="25" id="3Vb-M8-WY2"/>
                                                         <constraint firstAttribute="width" constant="25" id="Oq5-Kh-5ps"/>
@@ -237,8 +237,8 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nl0-28-JjT" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nl0-28-JjT" customClass="TTSubPhotoButton">
+                                                    <rect key="frame" x="55" y="338.66666666666669" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="WHP-Gi-Fc4"/>
                                                         <constraint firstAttribute="width" constant="50" id="f6n-ZH-qph"/>
@@ -264,8 +264,8 @@
                                                         <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="WVN-H0-GY4"/>
                                                     </connections>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLo-5G-pUP" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLo-5G-pUP" customClass="TTSubPhotoButton">
+                                                    <rect key="frame" x="115" y="338.66666666666669" width="50" height="50"/>
                                                     <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="GAS-EF-ZQi"/>
@@ -292,8 +292,8 @@
                                                         <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="YHd-C1-fgb"/>
                                                     </connections>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGp-aQ-orO" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGp-aQ-orO" customClass="TTSubPhotoButton">
+                                                    <rect key="frame" x="174" y="338.66666666666669" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="SgR-3U-REA"/>
                                                         <constraint firstAttribute="height" constant="50" id="sMm-KD-2M4"/>
@@ -319,8 +319,8 @@
                                                         <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="NXO-tN-U3r"/>
                                                     </connections>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-5A-Bsu" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-5A-Bsu" customClass="TTSubPhotoButton">
+                                                    <rect key="frame" x="235" y="338.66666666666669" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Ut9-Q9-k7Q"/>
                                                         <constraint firstAttribute="width" constant="50" id="e0g-ml-y9p"/>
@@ -346,8 +346,8 @@
                                                         <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="enc-7N-RWP"/>
                                                     </connections>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fp7-P6-uLU" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fp7-P6-uLU" customClass="TTSubPhotoButton">
+                                                    <rect key="frame" x="293" y="338.66666666666669" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="Mqk-fe-YTm"/>
                                                         <constraint firstAttribute="height" constant="50" id="XWi-Hh-9ei"/>
@@ -714,7 +714,7 @@
                                         <rect key="frame" x="0.0" y="22" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AKn-8L-1Iv" id="f0d-3e-NRL">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="69"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rsa-WS-Nbe">
@@ -1214,7 +1214,7 @@
                                                     <constraint firstAttribute="width" constant="72" id="R7c-YD-dJ4"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="12"/>
-                                                <state key="normal" title="Add Photo">
+                                                <state key="normal" title="Add Photo/Video">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <variation key="default">
@@ -2014,7 +2014,7 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All TripTrunk users are able to see photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="toz-pw-wEs">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All TripTrunk users are able to see photos/videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="toz-pw-wEs">
                                 <rect key="frame" x="120" y="554" width="207" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="207" id="E42-u5-07l"/>
@@ -2039,7 +2039,7 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only trunk members are able to see photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vGJ-Vd-awa">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only trunk members are able to see photos/videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vGJ-Vd-awa">
                                 <rect key="frame" x="120" y="610" width="213" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="213" id="FfO-p7-w83"/>
@@ -3144,16 +3144,7 @@
                                 <exclude reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <exclude reference="OlX-6N-agJ"/>
-                                <exclude reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <exclude reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <exclude reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                                 <exclude reference="Rdr-sM-euh"/>
                                 <exclude reference="hqH-ri-Sff"/>
                                 <exclude reference="yBW-aH-oqG"/>
@@ -3166,7 +3157,16 @@
                                 <exclude reference="Zo6-bM-aaN"/>
                                 <exclude reference="dg3-GD-a57"/>
                                 <exclude reference="kpd-f9-VQY"/>
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <exclude reference="OlX-6N-agJ"/>
+                                <exclude reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <exclude reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <exclude reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -3178,16 +3178,7 @@
                                 <include reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <include reference="OlX-6N-agJ"/>
-                                <include reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <include reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <include reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                                 <include reference="Rdr-sM-euh"/>
                                 <include reference="hqH-ri-Sff"/>
                                 <include reference="yBW-aH-oqG"/>
@@ -3200,7 +3191,16 @@
                                 <include reference="Zo6-bM-aaN"/>
                                 <include reference="dg3-GD-a57"/>
                                 <include reference="kpd-f9-VQY"/>
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <include reference="OlX-6N-agJ"/>
+                                <include reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <include reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <include reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                             </mask>
                         </variation>
                     </view>
@@ -3250,7 +3250,7 @@
                                 <rect key="frame" x="0.0" y="28" width="300" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tri-Yb-OfN" id="02l-cE-yPL">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Load" translatesAutoresizingMaskIntoConstraints="NO" id="Mfs-wT-q7x" customClass="TTUserProfileImage">
@@ -3437,11 +3437,11 @@
                                     <action selector="onDoneTapped:" destination="npq-fR-GHM" eventType="touchUpInside" id="DL1-sx-naU"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click photo to add caption" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PrH-qe-6U7">
-                                <rect key="frame" x="139" y="76" width="136" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click photo/video to add caption" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PrH-qe-6U7">
+                                <rect key="frame" x="97.666666666666686" y="76" width="220" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="MIM-8B-SZ5"/>
-                                    <constraint firstAttribute="width" constant="136" id="rcC-f2-Uhs"/>
+                                    <constraint firstAttribute="width" constant="220" id="rcC-f2-Uhs"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="10"/>
                                 <color key="textColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3770,7 +3770,7 @@
                                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lUL-u8-3cb" id="nyy-bJ-gfY">
-                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableViewCellContentView>
                                                     </tableViewCell>
@@ -3848,7 +3848,7 @@
                                                 </collectionViewFlowLayout>
                                                 <cells>
                                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="hi9-0O-3ny" customClass="TTTrunkMemberViewCell">
-                                                        <rect key="frame" x="0.0" y="16" width="80" height="80"/>
+                                                        <rect key="frame" x="0.0" y="15.666666666666666" width="80" height="80"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
@@ -4129,7 +4129,7 @@
                                 <rect key="frame" x="0.0" y="30" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hgo-b2-68r" id="3WF-8I-k7n">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -4155,7 +4155,7 @@
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cf5-8f-zW5">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cf5-8f-zW5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4178,7 +4178,7 @@
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="WHY-MW-Yo5">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="WHY-MW-Yo5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -5500,9 +5500,9 @@
         <image name="video_icon" width="16" height="11"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JSU-Dg-jAI"/>
-        <segue reference="bhX-wL-LGH"/>
-        <segue reference="hXf-dS-IMJ"/>
+        <segue reference="5P2-gM-OYf"/>
+        <segue reference="yXb-jN-ymd"/>
         <segue reference="meg-3f-try"/>
+        <segue reference="bhX-wL-LGH"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -197,14 +197,14 @@ static NSString * const CellReuseIdentifier = @"photoCell";
 }
 
 - (void)didTapHintButton:(id)sender {
-    NSString *message = NSLocalizedString(@"Slide to left or right to quickly select multiple photos. Give it a try!", nil);
+    NSString *message = NSLocalizedString(@"Slide to left or right to quickly select multiple photos/videos. Give it a try!", nil);
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Slide to Select", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Close", @"Close") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
     }];
     [alert addAction:action];
     
-    NSString *message2 = NSLocalizedString(@"Tap and hold a photo to zoom in", nil);
+    NSString *message2 = NSLocalizedString(@"Tap and hold a photo/video to zoom in", nil);
     UIAlertController *alert2 = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Long Tap Gesture", nil) message:message2 preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action2 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Next", @"Next") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self presentViewController:alert animated:YES completion:nil];

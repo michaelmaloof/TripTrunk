@@ -937,7 +937,7 @@
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
     if([textView.text isEqualToString:@""]){
-        textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here")];
+        textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:NSLocalizedString(@"Type Photo/Video Caption Here", @"Type Photo/Video Caption Here")];
         textView.textColor = [TTColor tripTrunkLightGray];
         textView.selectedRange = NSMakeRange(0, 0);
     }
@@ -1051,7 +1051,7 @@
         //this looks like it needs to be rewritten. Plus, there should probabaly be a break; in the for loop
         //and why is there no if(save == YES) for refreshPhotoActivitesWithUpdateNow?
         
-        if (![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo Caption Here"] && self.caption.text != nil){
+        if (![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo/Video Caption Here"] && self.caption.text != nil){
             //begin process of adding a caption to the current photo
             self.addCaption.enabled = NO;
             self.photo.caption = [self separateMentions:self.caption.text];
@@ -1141,7 +1141,7 @@
             }
         }
     } else {
-        if(![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo Caption Here"])
+        if(![self.caption.text isEqualToString:@""] && ![self.caption.text isEqualToString:@"Type Photo/Video Caption Here"])
             [self.delegate captionWasAdded:self.caption.text];
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -1321,7 +1321,7 @@
                         if (error) {
                             //error!!
                             self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount +1;
-                            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo/video was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
                             [errorAlert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }]];
                             [self presentViewController:errorAlert animated:YES completion:nil];
                         }
@@ -1347,7 +1347,7 @@
                     }];
                 }
                 else{
-                    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo/video was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
                     [errorAlert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }]];
                     [self presentViewController:errorAlert animated:YES completion:nil];
                 }
@@ -1591,7 +1591,7 @@
 //    NSRange cursorPosition = [textView selectedRange];
 //    self.caption.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.caption.text];
 //    [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
-    NSString *placeholderText = NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here");
+    NSString *placeholderText = NSLocalizedString(@"Type Photo/Video Caption Here", @"Type Photo/Video Caption Here");
     if ([textView.text isEqualToString:placeholderText])
         textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:@""];
     
@@ -1600,7 +1600,7 @@
 
 //As the user types, check for a @mention and display a popup with a list of users to autocomplete
 - (void)textViewDidChange:(UITextView *)textView{
-    NSString *placeholderText = NSLocalizedString(@"Type Photo Caption Here", @"Type Photo Caption Here");
+    NSString *placeholderText = NSLocalizedString(@"Type Photo/Video Caption Here", @"Type Photo/Video Caption Here");
     if([textView.text isEqualToString:@""]){
         textView.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:placeholderText];
         textView.textColor = [TTColor tripTrunkLightGray];
@@ -1982,7 +1982,7 @@
 - (IBAction)privatebuttonTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] init];
     alertView.delegate = self;
-    alertView.title = NSLocalizedString(@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and by members of the trunk where the photo is located.",@"The user who posted this photo has a private account. Their photos can only be seen by people they follow and members of the trunk where the photo is located.");
+    alertView.title = NSLocalizedString(@"The user who posted this photo/video has a private account. Their photos can only be seen by people they follow and by members of the trunk where the photo/video is located.",@"The user who posted this photo/video has a private account. Their photos can only be seen by people they follow and members of the trunk where the photo/video is located.");
     alertView.backgroundColor = [TTColor tripTrunkLightBlue];
    [alertView addButtonWithTitle:NSLocalizedString(@"Ok",@"Ok")];
     alertView.tag = 3;

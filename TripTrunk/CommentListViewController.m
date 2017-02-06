@@ -466,7 +466,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = NSLocalizedString(@"You could be the first to comment on this photo",@"You could be the first to comment on this photo");
+    NSString *text = NSLocalizedString(@"You could be the first to comment on this photo/video",@"You could be the first to comment on this photo/video");
 
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;

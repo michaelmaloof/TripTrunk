@@ -783,7 +783,7 @@ enum TTActivityViewType : NSUInteger {
 {
     NSString *text = NSLocalizedString(@"Keep using TripTrunk!", @"Keep using TripTrunk!");
     if (_viewType == TTActivityViewLikes) {
-        text = NSLocalizedString(@"You could be the first to like this photo",@"You could be the first to like this photo");
+        text = NSLocalizedString(@"You could be the first to like this photo/video",@"You could be the first to like this photo/video");
     }
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;

@@ -938,20 +938,20 @@ CLCloudinary *cloudinary;
     if ([type isEqualToString:@"like"]) {
         
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
-            content = NSLocalizedString(@"liked your photo. ",@"liked your photo. ");
+            content = NSLocalizedString(@"liked your photo/video. ",@"liked your photo/video. ");
         } else if ([toUser.objectId isEqualToString:user.objectId]){
             isAllActivity = YES;
             engagedOnOwnContent = YES;
-            content = NSLocalizedString(@"liked their own photo. ",@"liked their own photo. ");
+            content = NSLocalizedString(@"liked their own photo/video. ",@"liked their own photo/video. ");
         }
         else {
             isAllActivity = YES;
-            content = NSLocalizedString(@"liked a photo by ",@"liked a photo by ");
+            content = NSLocalizedString(@"liked a photo/video by ",@"liked a photo/video by ");
         }
     }
     else if ([type isEqualToString:@"comment"]) {
         if ([toUser.objectId isEqualToString:[PFUser currentUser].objectId]){
-            NSString *commented = NSLocalizedString(@"commented on your photo",@"commented on your photo");
+            NSString *commented = NSLocalizedString(@"commented on your photo/video",@"commented on your photo/video");
             content = [NSString stringWithFormat:@"%@: %@ ", commented,activity[@"content"]];
         } else if ([toUser.objectId isEqualToString:user.objectId]){
             isAllActivity = YES;
@@ -959,13 +959,13 @@ CLCloudinary *cloudinary;
             
             if ([activity[@"isCaption"]boolValue] == NO){
             
-                content = NSLocalizedString(@"commented on their own photo ",@"commented on their own photo ");
+                content = NSLocalizedString(@"commented on their own photo/video ",@"commented on their own photo/video ");
             } else {
-                content = NSLocalizedString(@"wrote a caption for their photo ",@"wrote a caption for their photo ");
+                content = NSLocalizedString(@"wrote a caption for their photo/video ",@"wrote a caption for their photo/video ");
             }
         } else {
             isAllActivity = YES;
-            content = NSLocalizedString(@"commented on a photo by",@"commented on a photo by");
+            content = NSLocalizedString(@"commented on a photo/video by",@"commented on a photo/video by");
         }
     }
     else if ([type isEqualToString:@"addToTrip"]) {
@@ -986,7 +986,7 @@ CLCloudinary *cloudinary;
         }
     }
     else if ([type isEqualToString:@"addedPhoto"]) {
-        NSString *addedPhoto = NSLocalizedString(@"added a photo to",@"added a photo to");
+        NSString *addedPhoto = NSLocalizedString(@"added a photo/video to",@"added a photo/video to");
         content = [NSString stringWithFormat:@"%@ %@ ",addedPhoto, [activity[@"trip"] valueForKey:@"name"]];
     }
     else if ([type isEqualToString:@"pending_follow"]) {
@@ -995,7 +995,7 @@ CLCloudinary *cloudinary;
     
     else if ([type isEqualToString:@"mention"]) {
         if ([activity[@"isCaption"]boolValue] == YES) {
-            content =  NSLocalizedString(@"mentioned you in a photo caption. ",@"mentioned you in a photo caption. ");
+            content =  NSLocalizedString(@"mentioned you in a photo/video caption. ",@"mentioned you in a photo/video caption. ");
 
         }else {
             content =  NSLocalizedString(@"mentioned you in a comment. ",@"mentioned you in a comment. ");
@@ -1236,7 +1236,7 @@ CLCloudinary *cloudinary;
     
     NSDictionary *photoDetails;
     if(photo[@"videoUrl"]){
-        if([photo[@"caption"] isEqualToString:@"Type Photo Caption Here"])
+        if([photo[@"caption"] isEqualToString:@"Type Photo/video Caption Here"])
             photo[@"caption"] = @"";
         
         photoDetails = @{
@@ -1247,7 +1247,7 @@ CLCloudinary *cloudinary;
                         @"description" : photo[@"caption"] ? photo[@"caption"] : @""
                         };
     }else{
-        if([photo.caption isEqualToString:@"Type Photo Caption Here"])
+        if([photo.caption isEqualToString:@"Type Photo/video Caption Here"])
             photo.caption = @"";
         
         photoDetails = @{
@@ -1299,7 +1299,7 @@ CLCloudinary *cloudinary;
 -(void)appWillTerminate:(NSNotification*)note{
     NSLog(@"appWillTerminate");
     
-    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos to the '%@' trunk. However, %d photos did not upload.", @"Successfully upoaded %d/%d photos to the '%@' trunk. However, %d photos did not upload.");
+    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.", @"Successfully upoaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.");
     message = [NSString stringWithFormat:message,self.photoCount,self.totalPhotos,self.tripName,self.totalPhotos-self.photoCount];
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
