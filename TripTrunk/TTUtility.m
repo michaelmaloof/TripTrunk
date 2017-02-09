@@ -1350,4 +1350,41 @@ CLCloudinary *cloudinary;
     }
     return NO;
 }
+
+
+#pragma mark - Video
++(void)updateVideoViewCount:(NSString*)objectId withCount:(int)count{
+    //This is an increment in app however it doesn't use master key
+//    //Must send the ID when you swipe otherwise it increments the viewCount on the wrong video
+//    PFQuery *query = [PFQuery queryWithClassName:@"Photo"];
+//    [query whereKey:@"objectId" equalTo:objectId];
+//    
+//    [query getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//        int updatedCount = [object[@"viewCount"] intValue]+count;
+//        object[@"viewCount"] = [NSNumber numberWithInt:updatedCount];
+//        [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//            if(error)
+//                NSLog(@"Error updating viewCount for video: %@ :: Photo: %@ :: message: %@",object[@"video"][@"objectId"],object[@"objectId"],error);
+//            else NSLog(@"View count updated for this video: %@",object[@"video"][@"objectId"]);
+//        }];
+//    }];
+    
+    //Cloud Code version of increment
+    NSDictionary *params = @{
+                             @"photoId" : objectId,
+                             @"count" : [NSNumber numberWithInt:count]
+                             };
+    [PFCloud callFunctionInBackground:@"IncrementVideoViewCount" withParameters:params block:^(PFObject *response, NSError *error) {
+        if (error) {
+            [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"updateVideoViewCount:"];
+            NSLog(@"view count failed for video: %@",objectId);
+        }
+        else {
+            [[TTUtility sharedInstance] internetConnectionFound];
+            NSLog(@"view count updated for video: %@",objectId);
+        }
+        
+    }];
+}
 @end

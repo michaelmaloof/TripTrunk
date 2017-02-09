@@ -86,6 +86,7 @@
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
 @property (nonatomic,strong) SharkfoodMuteSwitchDetector* detector;
+@property int viewCount;
 @end
 
 @implementation PhotoViewController
@@ -423,7 +424,16 @@
         [self.caption endEditing:YES];
     }
     
+    //prevent calling this if it's a photo
+    if(self.photo.video)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self.activityIndicator stopAnimating];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:YES];
+    self.captionLabel.enabled = YES;
+    
 }
 
 - (void)centerScrollViewContents {
@@ -544,7 +554,7 @@
                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                            object:[self.player currentItem]];
                 [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
-                
+                self.viewCount = 1;
                 [self.player play];
                 self.video_sound_button.hidden = NO;
 
@@ -583,7 +593,7 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     AVPlayerItem *p = [notification object];
     [p seekToTime:kCMTimeZero];
-    
+    self.viewCount++;
     [self.player play];
 }
 
@@ -725,6 +735,9 @@
 
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    //prevent calling this if it's a photo
+    if(self.photo.video)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (self.isZoomed == NO && self.isEditingCaption == NO){
         // Prevents a crash when the PhotoViewController was presented from a Push Notification--aka it doesn't have a self.photos array
@@ -773,6 +786,9 @@
 
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    //prevent calling this if it's a photo
+    if(self.photo.video)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (!self.isZoomed && !self.isEditingCaption){
 
@@ -843,6 +859,9 @@
 
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    //prevent calling this if it's a photo
+    if(self.photo.video)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (self.isZoomed == NO){
         [self.navigationController popViewControllerAnimated:YES];
@@ -1903,6 +1922,7 @@
 }
 
 -(void)clearVideo{
+    
     @try{
         [self.player removeObserver:self forKeyPath:@"status"];
     }@catch(id anException){
@@ -1919,12 +1939,6 @@
     self.video_sound_button.hidden = YES;
     [self.player pause];
     [self.layer removeFromSuperlayer];
-}
-
--(void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:YES];
-    self.captionLabel.enabled = YES;
-    
 }
 
 //############################################# MENTIONS ##################################################

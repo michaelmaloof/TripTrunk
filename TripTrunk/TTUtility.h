@@ -73,7 +73,7 @@
  *
  *  @param photos Array of Photo objects to save, each containing the imageUrl of a remote image to save
  */
-- (void)downloadPhotos:(NSArray *)photos;
+//- (void)downloadPhotos:(NSArray *)photos;
 - (void)downloadAllTrunkPhotos:(NSArray *)photos;
 
 /**
@@ -171,6 +171,14 @@
  */
 -(void)uploadVideo:(Photo *)video photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(PFObject *video))completionBlock;
 -(void)uploadVideoToCloudinary:(Photo *)video withAVAsset:(AVAsset*)asset block:(void (^)(BOOL success, NSError *error, Photo *savedVideo))completionBlock;
+
+/**
+ *  increments the view count for a video
+ *
+ *  @param objectId     objectId of the photo associated with the video
+ *  @param count        The count to add to the current number in the DB)
+ */
++(void)updateVideoViewCount:(NSString*)objectId withCount:(int)count;
 
 @end
 
