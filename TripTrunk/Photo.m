@@ -23,6 +23,7 @@
 @dynamic imageUrl;
 @dynamic video;
 @dynamic editedPath;
+@dynamic viewCount;
 
 @synthesize image;
 @synthesize imageAsset;

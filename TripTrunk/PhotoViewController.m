@@ -86,6 +86,7 @@
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
 @property (nonatomic,strong) SharkfoodMuteSwitchDetector* detector;
+@property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
 @property int viewCount;
 @end
 
@@ -519,6 +520,8 @@
 #pragma mark - Photo Data
 
 - (void)loadImageForPhoto: (Photo *)photo {
+    self.viewCountLabel.text = 0;
+    self.viewCountLabel.hidden = YES;
     if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
         
         if(photo.video){
@@ -545,7 +548,7 @@
                 [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
                 [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
                 
-                int a = (int)self.view.layer.sublayers.count-7;
+                int a = (int)self.view.layer.sublayers.count-8;
                 [self.view.layer insertSublayer:self.layer atIndex:a];
                 
                 [self.player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
@@ -555,9 +558,11 @@
                                                            object:[self.player currentItem]];
                 [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
                 self.viewCount = 1;
+                self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
+                self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
                 [self.player play];
                 self.video_sound_button.hidden = NO;
-
+                self.viewCountLabel.hidden = NO;
             }];
             
         }else{
@@ -594,6 +599,8 @@
     AVPlayerItem *p = [notification object];
     [p seekToTime:kCMTimeZero];
     self.viewCount++;
+    self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
+    self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
     [self.player play];
 }
 
