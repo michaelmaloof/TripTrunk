@@ -115,6 +115,15 @@
     } else {
         [self prepareAddCaptionForNewPhoto];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveVideoViews)
+                                                 name:UIApplicationWillTerminateNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveVideoViews)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object: nil];
 }
 
 #pragma On Appear
@@ -140,6 +149,13 @@
     //If the player is loaded, continue playing the video
     //If it's not loaded, it will ignore this command
     [self.player play];
+}
+
+-(void)saveVideoViews{
+    if(self.photo.video && self.viewCount > 0){
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
+        self.viewCount = 0;
+    }
 }
 
 -(void)setCaptionAndNavBar{
@@ -426,7 +442,7 @@
     }
     
     //prevent calling this if it's a photo
-    if(self.photo.video)
+    if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self.activityIndicator stopAnimating];
 }
@@ -743,7 +759,7 @@
 - (void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     //prevent calling this if it's a photo
-    if(self.photo.video)
+    if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (self.isZoomed == NO && self.isEditingCaption == NO){
@@ -794,7 +810,7 @@
 - (void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     //prevent calling this if it's a photo
-    if(self.photo.video)
+    if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (!self.isZoomed && !self.isEditingCaption){
@@ -867,7 +883,7 @@
 - (void)swipeDown:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     //prevent calling this if it's a photo
-    if(self.photo.video)
+    if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
     if (self.isZoomed == NO){
@@ -1953,6 +1969,8 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
     @try{
         [self.player removeObserver:self forKeyPath:@"status"];
     }@catch(id anException){
