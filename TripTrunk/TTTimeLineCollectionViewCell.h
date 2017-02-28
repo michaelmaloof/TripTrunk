@@ -7,6 +7,7 @@
 //
 
 #import "TTBaseCollectionViewCell.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface TTTimeLineCollectionViewCell : TTBaseCollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *privateImageView;
@@ -17,4 +18,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeStamp;
 @property (weak, nonatomic) IBOutlet UIButton *location;
 @property (nonatomic, strong) IBOutletCollection(UIButton) NSArray *subPhotoButtons;
+@property (strong, nonatomic) IBOutlet UIView *photoVideoView;
+@property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
+@property (strong, nonatomic) IBOutlet UIButton *videoSoundButton;
+@property AVPlayer * avPlayer;
 @end

@@ -64,17 +64,17 @@
                                     <constraint firstAttribute="height" constant="687" id="6Pk-hq-h9M"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="sP5-KT-4cf">
-                                    <size key="itemSize" width="398" height="406.5"/>
+                                    <size key="itemSize" width="398" height="450"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewsFeedCell" id="N3J-xl-9a4" customClass="TTTimeLineCollectionViewCell">
-                                        <rect key="frame" x="8" y="0.0" width="398" height="406.5"/>
+                                        <rect key="frame" x="8" y="0.0" width="398" height="450"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="398" height="406.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="450"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agu-Rc-1D1">
@@ -138,10 +138,195 @@
                                                         </mask>
                                                     </variation>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dXI-oM-KDj">
-                                                    <rect key="frame" x="0.0" y="60" width="398" height="338.66666666666669"/>
-                                                    <gestureRecognizers/>
-                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GJp-N2-8e8" userLabel="PhotoVideoView">
+                                                    <rect key="frame" x="0.0" y="60" width="398" height="382"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dXI-oM-KDj">
+                                                            <rect key="frame" x="0.0" y="0.0" width="398" height="382"/>
+                                                            <gestureRecognizers/>
+                                                        </imageView>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nl0-28-JjT" customClass="TTSubPhotoButton">
+                                                            <rect key="frame" x="52" y="322" width="50" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="50" id="WHP-Gi-Fc4"/>
+                                                                <constraint firstAttribute="width" constant="50" id="f6n-ZH-qph"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
+                                                                    <integer key="value" value="1"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="WHP-Gi-Fc4"/>
+                                                                    <exclude reference="f6n-ZH-qph"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="WHP-Gi-Fc4"/>
+                                                                    <include reference="f6n-ZH-qph"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <connections>
+                                                                <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="WVN-H0-GY4"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLo-5G-pUP" customClass="TTSubPhotoButton">
+                                                            <rect key="frame" x="112" y="322" width="50" height="50"/>
+                                                            <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="50" id="GAS-EF-ZQi"/>
+                                                                <constraint firstAttribute="height" constant="50" id="QJ3-pW-PRa"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
+                                                                    <integer key="value" value="2"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="GAS-EF-ZQi"/>
+                                                                    <exclude reference="QJ3-pW-PRa"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="GAS-EF-ZQi"/>
+                                                                    <include reference="QJ3-pW-PRa"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <connections>
+                                                                <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="YHd-C1-fgb"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGp-aQ-orO" customClass="TTSubPhotoButton">
+                                                            <rect key="frame" x="171" y="322" width="50" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="50" id="SgR-3U-REA"/>
+                                                                <constraint firstAttribute="height" constant="50" id="sMm-KD-2M4"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
+                                                                    <integer key="value" value="3"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="SgR-3U-REA"/>
+                                                                    <exclude reference="sMm-KD-2M4"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="SgR-3U-REA"/>
+                                                                    <include reference="sMm-KD-2M4"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <connections>
+                                                                <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="NXO-tN-U3r"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-5A-Bsu" customClass="TTSubPhotoButton">
+                                                            <rect key="frame" x="232" y="322" width="50" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="50" id="Ut9-Q9-k7Q"/>
+                                                                <constraint firstAttribute="width" constant="50" id="e0g-ml-y9p"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
+                                                                    <integer key="value" value="4"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="Ut9-Q9-k7Q"/>
+                                                                    <exclude reference="e0g-ml-y9p"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="Ut9-Q9-k7Q"/>
+                                                                    <include reference="e0g-ml-y9p"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <connections>
+                                                                <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="enc-7N-RWP"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fp7-P6-uLU" customClass="TTSubPhotoButton">
+                                                            <rect key="frame" x="290" y="322" width="50" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="50" id="Mqk-fe-YTm"/>
+                                                                <constraint firstAttribute="height" constant="50" id="XWi-Hh-9ei"/>
+                                                            </constraints>
+                                                            <state key="normal" image="ellipsis" backgroundImage="moreTrunk"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="Mqk-fe-YTm"/>
+                                                                    <exclude reference="XWi-Hh-9ei"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="Mqk-fe-YTm"/>
+                                                                    <include reference="XWi-Hh-9ei"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <connections>
+                                                                <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="vZk-Gg-YWt"/>
+                                                            </connections>
+                                                        </button>
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rok-gL-E9w" userLabel="View Count">
+                                                            <rect key="frame" x="290" y="8" width="100" height="21"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="100" id="XSp-bo-KXz"/>
+                                                                <constraint firstAttribute="height" constant="21" id="dqX-KB-2ay"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WMn-cn-OdS" userLabel="Video Sound button">
+                                                            <rect key="frame" x="8" y="8" width="25" height="25"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="25" id="2eD-Bd-r9V"/>
+                                                                <constraint firstAttribute="height" constant="25" id="yjT-pl-f7a"/>
+                                                            </constraints>
+                                                            <state key="normal" image="sound_off"/>
+                                                            <state key="selected" image="sound_on"/>
+                                                            <connections>
+                                                                <action selector="toggleVideoSound:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="ZCU-rp-09g"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstItem="Fp7-P6-uLU" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="1s7-gw-w1f"/>
+                                                        <constraint firstItem="Fp7-P6-uLU" firstAttribute="leading" secondItem="YDb-5A-Bsu" secondAttribute="trailing" constant="8" id="2Bv-ko-lvm"/>
+                                                        <constraint firstAttribute="bottomMargin" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-8" id="9Hy-11-YSz"/>
+                                                        <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" id="BdJ-be-2wN"/>
+                                                        <constraint firstItem="zLo-5G-pUP" firstAttribute="leading" secondItem="nl0-28-JjT" secondAttribute="trailing" constant="10" id="ExN-Wp-yn4"/>
+                                                        <constraint firstItem="cGp-aQ-orO" firstAttribute="leading" secondItem="zLo-5G-pUP" secondAttribute="trailing" constant="9" id="Hyc-jT-xqt"/>
+                                                        <constraint firstItem="Rok-gL-E9w" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" constant="8" id="KsJ-aR-bkK"/>
+                                                        <constraint firstAttribute="trailing" secondItem="dXI-oM-KDj" secondAttribute="trailing" id="KwQ-eW-TC5"/>
+                                                        <constraint firstItem="YDb-5A-Bsu" firstAttribute="leading" secondItem="cGp-aQ-orO" secondAttribute="trailing" constant="11" id="QXc-uN-bGl"/>
+                                                        <constraint firstItem="cGp-aQ-orO" firstAttribute="centerX" secondItem="GJp-N2-8e8" secondAttribute="centerX" constant="-3.6999999999999886" id="Rq3-rZ-z7g"/>
+                                                        <constraint firstItem="WMn-cn-OdS" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" constant="8" id="YCa-q2-s8V"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Rok-gL-E9w" secondAttribute="trailing" constant="8" id="cKH-YU-7l0"/>
+                                                        <constraint firstItem="nl0-28-JjT" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="dkr-Nx-8JC"/>
+                                                        <constraint firstItem="WMn-cn-OdS" firstAttribute="leading" secondItem="GJp-N2-8e8" secondAttribute="leading" constant="8" id="dvY-Mz-f4T"/>
+                                                        <constraint firstItem="dXI-oM-KDj" firstAttribute="leading" secondItem="GJp-N2-8e8" secondAttribute="leading" id="etO-Yh-U0F"/>
+                                                        <constraint firstItem="cGp-aQ-orO" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="gMM-HG-nKE"/>
+                                                        <constraint firstItem="zLo-5G-pUP" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="klt-hu-5mW"/>
+                                                        <constraint firstItem="YDb-5A-Bsu" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="xV7-wv-mmE"/>
+                                                    </constraints>
+                                                </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYb-FJ-b87">
                                                     <rect key="frame" x="58" y="40" width="295" height="15"/>
                                                     <constraints>
@@ -237,194 +422,45 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nl0-28-JjT" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="55" y="338.66666666666669" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="WHP-Gi-Fc4"/>
-                                                        <constraint firstAttribute="width" constant="50" id="f6n-ZH-qph"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
-                                                            <integer key="value" value="1"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="WHP-Gi-Fc4"/>
-                                                            <exclude reference="f6n-ZH-qph"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="WHP-Gi-Fc4"/>
-                                                            <include reference="f6n-ZH-qph"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="WVN-H0-GY4"/>
-                                                    </connections>
-                                                </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLo-5G-pUP" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="115" y="338.66666666666669" width="50" height="50"/>
-                                                    <color key="backgroundColor" red="0.5568627451" green="0.82745098039999998" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="GAS-EF-ZQi"/>
-                                                        <constraint firstAttribute="height" constant="50" id="QJ3-pW-PRa"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
-                                                            <integer key="value" value="2"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="GAS-EF-ZQi"/>
-                                                            <exclude reference="QJ3-pW-PRa"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="GAS-EF-ZQi"/>
-                                                            <include reference="QJ3-pW-PRa"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="YHd-C1-fgb"/>
-                                                    </connections>
-                                                </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGp-aQ-orO" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="174" y="338.66666666666669" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="SgR-3U-REA"/>
-                                                        <constraint firstAttribute="height" constant="50" id="sMm-KD-2M4"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
-                                                            <integer key="value" value="3"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="SgR-3U-REA"/>
-                                                            <exclude reference="sMm-KD-2M4"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="SgR-3U-REA"/>
-                                                            <include reference="sMm-KD-2M4"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="NXO-tN-U3r"/>
-                                                    </connections>
-                                                </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDb-5A-Bsu" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="235" y="338.66666666666669" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="Ut9-Q9-k7Q"/>
-                                                        <constraint firstAttribute="width" constant="50" id="e0g-ml-y9p"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
-                                                            <integer key="value" value="4"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="Ut9-Q9-k7Q"/>
-                                                            <exclude reference="e0g-ml-y9p"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="Ut9-Q9-k7Q"/>
-                                                            <include reference="e0g-ml-y9p"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="enc-7N-RWP"/>
-                                                    </connections>
-                                                </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fp7-P6-uLU" customClass="TTSubPhotoButton">
-                                                    <rect key="frame" x="293" y="338.66666666666669" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="Mqk-fe-YTm"/>
-                                                        <constraint firstAttribute="height" constant="50" id="XWi-Hh-9ei"/>
-                                                    </constraints>
-                                                    <state key="normal" image="ellipsis" backgroundImage="moreTrunk"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="subPhotoIndex">
-                                                            <integer key="value" value="5"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <variation key="default">
-                                                        <mask key="constraints">
-                                                            <exclude reference="Mqk-fe-YTm"/>
-                                                            <exclude reference="XWi-Hh-9ei"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <mask key="constraints">
-                                                            <include reference="Mqk-fe-YTm"/>
-                                                            <include reference="XWi-Hh-9ei"/>
-                                                        </mask>
-                                                    </variation>
-                                                    <connections>
-                                                        <action selector="subPhotoButtonWasTapped:" destination="dUS-I7-5Tv" eventType="touchUpInside" id="vZk-Gg-YWt"/>
-                                                    </connections>
-                                                </button>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="6" id="0MI-Df-NhF"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="top" secondItem="L2D-C4-KB0" secondAttribute="bottom" constant="6" id="2rj-qS-W7n"/>
+                                            <constraint firstItem="Rv5-sb-10g" firstAttribute="top" secondItem="L2D-C4-KB0" secondAttribute="bottom" constant="6" id="5zm-2y-CdV"/>
                                             <constraint firstItem="HYb-FJ-b87" firstAttribute="top" secondItem="W95-rK-hFQ" secondAttribute="bottom" constant="1" id="6sk-Aj-zWW"/>
-                                            <constraint firstItem="cGp-aQ-orO" firstAttribute="centerX" secondItem="N3J-xl-9a4" secondAttribute="centerX" id="8t1-R3-WcN"/>
                                             <constraint firstItem="L2D-C4-KB0" firstAttribute="leading" secondItem="agu-Rc-1D1" secondAttribute="trailing" constant="8" id="9ox-n9-eDt"/>
                                             <constraint firstItem="6hP-2Q-apq" firstAttribute="leading" secondItem="N3J-xl-9a4" secondAttribute="leadingMargin" id="BBv-L6-ZXd">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="4"/>
                                             </constraint>
                                             <constraint firstItem="L2D-C4-KB0" firstAttribute="centerY" secondItem="agu-Rc-1D1" secondAttribute="centerY" id="BbR-7b-PO2"/>
-                                            <constraint firstItem="cGp-aQ-orO" firstAttribute="leading" secondItem="zLo-5G-pUP" secondAttribute="trailing" constant="9" id="BmZ-rF-AEO"/>
                                             <constraint firstItem="agu-Rc-1D1" firstAttribute="leading" secondItem="6hP-2Q-apq" secondAttribute="trailing" constant="13" id="DR2-SF-Pmy">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="6"/>
                                             </constraint>
-                                            <constraint firstItem="YDb-5A-Bsu" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="Ei9-Ya-hw5"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="dXI-oM-KDj" secondAttribute="bottom" id="FKF-Tr-605"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="Rv5-sb-10g" secondAttribute="bottom" constant="3" id="H68-Xm-YfQ"/>
+                                            <constraint firstItem="GJp-N2-8e8" firstAttribute="leading" secondItem="N3J-xl-9a4" secondAttribute="leading" id="HIp-UG-mak"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="leading" secondItem="HYb-FJ-b87" secondAttribute="trailing" constant="12" id="HXD-kn-iqO"/>
-                                            <constraint firstItem="Fp7-P6-uLU" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="MVX-gO-KlE"/>
+                                            <constraint firstItem="GJp-N2-8e8" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="top" constant="60" id="LAv-GO-YXU"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="trailing" secondItem="N3J-xl-9a4" secondAttribute="trailingMargin" id="MZj-PO-int"/>
                                             <constraint firstItem="HYb-FJ-b87" firstAttribute="leading" secondItem="6hP-2Q-apq" secondAttribute="trailing" constant="6" id="N9a-lh-LEg"/>
-                                            <constraint firstItem="zLo-5G-pUP" firstAttribute="leading" secondItem="nl0-28-JjT" secondAttribute="trailing" constant="10" id="OIy-4V-K8W"/>
-                                            <constraint firstItem="YDb-5A-Bsu" firstAttribute="leading" secondItem="cGp-aQ-orO" secondAttribute="trailing" constant="11" id="RNK-KR-TY6"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="width" secondItem="N3J-xl-9a4" secondAttribute="width" id="S5V-BF-dvZ"/>
+                                            <constraint firstAttribute="bottom" secondItem="GJp-N2-8e8" secondAttribute="bottom" constant="8" id="Ofu-22-1we"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="trailing" secondItem="N3J-xl-9a4" secondAttribute="trailingMargin" id="Vuf-0X-UQu"/>
-                                            <constraint firstItem="nl0-28-JjT" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="WBi-sz-qG5"/>
                                             <constraint firstItem="W95-rK-hFQ" firstAttribute="leading" secondItem="6hP-2Q-apq" secondAttribute="trailing" constant="13" id="aur-gb-u1N">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="6"/>
                                             </constraint>
                                             <constraint firstItem="agu-Rc-1D1" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" id="bwH-sE-cXG"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="trailing" secondItem="N3J-xl-9a4" secondAttribute="trailingMargin" id="cYO-je-8fl"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="leading" secondItem="HYb-FJ-b87" secondAttribute="trailing" constant="12" id="eA1-Sv-mBk"/>
-                                            <constraint firstItem="Fp7-P6-uLU" firstAttribute="leading" secondItem="YDb-5A-Bsu" secondAttribute="trailing" constant="8" id="eQv-49-RTa"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="6" id="egq-P1-t1m"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" constant="22" id="hcB-0I-B1Q">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                                             </constraint>
                                             <constraint firstAttribute="trailingMargin" secondItem="L2D-C4-KB0" secondAttribute="trailing" id="iEJ-8s-oMg"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="HYb-FJ-b87" secondAttribute="bottom" constant="5" id="kLJ-qt-SlZ"/>
-                                            <constraint firstItem="zLo-5G-pUP" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="kvf-zV-jb0"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" constant="51" id="mTT-Nf-nbe"/>
+                                            <constraint firstAttribute="trailing" secondItem="GJp-N2-8e8" secondAttribute="trailing" id="m3c-yX-vlW"/>
                                             <constraint firstItem="L2D-C4-KB0" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" constant="-3" id="mTu-1W-Per"/>
                                             <constraint firstItem="W95-rK-hFQ" firstAttribute="top" secondItem="agu-Rc-1D1" secondAttribute="bottom" constant="1" id="mgP-f2-mnM">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                             </constraint>
                                             <constraint firstItem="6hP-2Q-apq" firstAttribute="top" secondItem="N3J-xl-9a4" secondAttribute="topMargin" id="n0J-Ue-4gS"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="centerX" secondItem="N3J-xl-9a4" secondAttribute="centerX" id="pVx-C2-2VV"/>
-                                            <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="Rv5-sb-10g" secondAttribute="bottom" constant="3" id="qCH-AU-4aO"/>
-                                            <constraint firstItem="cGp-aQ-orO" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="vhR-Sp-KoZ"/>
                                             <constraint firstItem="6hP-2Q-apq" firstAttribute="top" secondItem="agu-Rc-1D1" secondAttribute="top" id="wLx-qx-7M8"/>
                                             <constraint firstItem="Rv5-sb-10g" firstAttribute="top" secondItem="L2D-C4-KB0" secondAttribute="bottom" constant="3" id="xii-gk-uuJ"/>
                                         </constraints>
@@ -432,16 +468,10 @@
                                             <mask key="subviews">
                                                 <exclude reference="agu-Rc-1D1"/>
                                                 <exclude reference="L2D-C4-KB0"/>
-                                                <exclude reference="dXI-oM-KDj"/>
                                                 <exclude reference="HYb-FJ-b87"/>
                                                 <exclude reference="W95-rK-hFQ"/>
                                                 <exclude reference="6hP-2Q-apq"/>
                                                 <exclude reference="Rv5-sb-10g"/>
-                                                <exclude reference="nl0-28-JjT"/>
-                                                <exclude reference="zLo-5G-pUP"/>
-                                                <exclude reference="cGp-aQ-orO"/>
-                                                <exclude reference="YDb-5A-Bsu"/>
-                                                <exclude reference="Fp7-P6-uLU"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="BBv-L6-ZXd"/>
@@ -467,39 +497,16 @@
                                                 <exclude reference="cYO-je-8fl"/>
                                                 <exclude reference="eA1-Sv-mBk"/>
                                                 <exclude reference="xii-gk-uuJ"/>
-                                                <exclude reference="WBi-sz-qG5"/>
-                                                <exclude reference="FKF-Tr-605"/>
-                                                <exclude reference="H68-Xm-YfQ"/>
-                                                <exclude reference="S5V-BF-dvZ"/>
-                                                <exclude reference="kLJ-qt-SlZ"/>
-                                                <exclude reference="mTT-Nf-nbe"/>
-                                                <exclude reference="pVx-C2-2VV"/>
-                                                <exclude reference="qCH-AU-4aO"/>
-                                                <exclude reference="OIy-4V-K8W"/>
-                                                <exclude reference="kvf-zV-jb0"/>
-                                                <exclude reference="8t1-R3-WcN"/>
-                                                <exclude reference="BmZ-rF-AEO"/>
-                                                <exclude reference="vhR-Sp-KoZ"/>
-                                                <exclude reference="Ei9-Ya-hw5"/>
-                                                <exclude reference="RNK-KR-TY6"/>
-                                                <exclude reference="MVX-gO-KlE"/>
-                                                <exclude reference="eQv-49-RTa"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
                                             <mask key="subviews">
                                                 <include reference="agu-Rc-1D1"/>
                                                 <include reference="L2D-C4-KB0"/>
-                                                <include reference="dXI-oM-KDj"/>
                                                 <include reference="HYb-FJ-b87"/>
                                                 <include reference="W95-rK-hFQ"/>
                                                 <include reference="6hP-2Q-apq"/>
                                                 <include reference="Rv5-sb-10g"/>
-                                                <include reference="nl0-28-JjT"/>
-                                                <include reference="zLo-5G-pUP"/>
-                                                <include reference="cGp-aQ-orO"/>
-                                                <include reference="YDb-5A-Bsu"/>
-                                                <include reference="Fp7-P6-uLU"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <include reference="BBv-L6-ZXd"/>
@@ -525,33 +532,19 @@
                                                 <include reference="cYO-je-8fl"/>
                                                 <exclude reference="eA1-Sv-mBk"/>
                                                 <exclude reference="xii-gk-uuJ"/>
-                                                <include reference="WBi-sz-qG5"/>
-                                                <include reference="FKF-Tr-605"/>
-                                                <exclude reference="H68-Xm-YfQ"/>
-                                                <include reference="S5V-BF-dvZ"/>
-                                                <include reference="kLJ-qt-SlZ"/>
-                                                <exclude reference="mTT-Nf-nbe"/>
-                                                <include reference="pVx-C2-2VV"/>
-                                                <include reference="qCH-AU-4aO"/>
-                                                <include reference="OIy-4V-K8W"/>
-                                                <include reference="kvf-zV-jb0"/>
-                                                <include reference="8t1-R3-WcN"/>
-                                                <include reference="BmZ-rF-AEO"/>
-                                                <include reference="vhR-Sp-KoZ"/>
-                                                <include reference="Ei9-Ya-hw5"/>
-                                                <include reference="RNK-KR-TY6"/>
-                                                <include reference="MVX-gO-KlE"/>
-                                                <include reference="eQv-49-RTa"/>
                                             </mask>
                                         </variation>
                                         <connections>
                                             <outlet property="location" destination="HYb-FJ-b87" id="OIB-5y-egS"/>
                                             <outlet property="newsfeedPhoto" destination="dXI-oM-KDj" id="Pgp-cC-9yV"/>
+                                            <outlet property="photoVideoView" destination="GJp-N2-8e8" id="tJS-3I-dQ9"/>
                                             <outlet property="privateImageView" destination="Rv5-sb-10g" id="tVj-29-a13"/>
                                             <outlet property="timeStamp" destination="L2D-C4-KB0" id="L1F-hA-xa3"/>
                                             <outlet property="tripName" destination="W95-rK-hFQ" id="Mf5-Ma-cNM"/>
                                             <outlet property="username" destination="agu-Rc-1D1" id="ihZ-ji-s4R"/>
                                             <outlet property="userprofile" destination="6hP-2Q-apq" id="GTh-bf-jwP"/>
+                                            <outlet property="videoSoundButton" destination="WMn-cn-OdS" id="5WB-JP-tQz"/>
+                                            <outlet property="viewCountLabel" destination="Rok-gL-E9w" id="muV-bQ-XDB"/>
                                             <outletCollection property="subPhotoButtons" destination="nl0-28-JjT" id="3J9-hD-dkQ"/>
                                             <outletCollection property="subPhotoButtons" destination="zLo-5G-pUP" id="CO7-8g-79O"/>
                                             <outletCollection property="subPhotoButtons" destination="cGp-aQ-orO" id="KYv-fO-ujd"/>
@@ -626,7 +619,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5qi-dZ-bd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1300.5" y="-960.75"/>
+            <point key="canvasLocation" x="-1301.449275362319" y="-961.14130434782612"/>
         </scene>
         <!--Home Map View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -2399,7 +2392,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g0k-n4-hcD">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
-                                    <imageView multipleTouchEnabled="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ozt-n1-1q6" customClass="PFImageView">
+                                    <imageView multipleTouchEnabled="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="photoImageView" translatesAutoresizingMaskIntoConstraints="NO" id="ozt-n1-1q6" customClass="PFImageView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <gestureRecognizers/>
@@ -3450,7 +3443,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click photo/video to add caption" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PrH-qe-6U7">
-                                <rect key="frame" x="97.666666666666686" y="76" width="220" height="21"/>
+                                <rect key="frame" x="97" y="76" width="220" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="MIM-8B-SZ5"/>
                                     <constraint firstAttribute="width" constant="220" id="rcC-f2-Uhs"/>
@@ -5512,9 +5505,9 @@
         <image name="video_icon" width="16" height="11"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5P2-gM-OYf"/>
-        <segue reference="yXb-jN-ymd"/>
-        <segue reference="meg-3f-try"/>
         <segue reference="bhX-wL-LGH"/>
+        <segue reference="JSU-Dg-jAI"/>
+        <segue reference="hXf-dS-IMJ"/>
+        <segue reference="8D2-7c-Dcs"/>
     </inferredMetricsTieBreakers>
 </document>

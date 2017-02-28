@@ -16,6 +16,19 @@
 }
 
 
-
+//-(void)prepareForReuse{
+//    [super prepareForReuse];
+//    
+//    self.privateImageView = nil;
+//    self.userprofile = nil;
+//    self.newsfeedPhoto = nil;
+//    self.username = nil;
+//    self.tripName = nil;
+//    self.timeStamp = nil;
+//    self.location = nil;
+//    self.subPhotoButtons = nil;
+//    self.photoVideoView = nil;
+//
+//}
 
 @end

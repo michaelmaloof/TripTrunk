@@ -81,11 +81,11 @@
 @property BOOL isLikedByCurrentUser;
 @property BOOL viewMoved;
 @property BOOL shouldShowTrunkNameButton;
-@property AVPlayerLayer *layer;
-@property AVPlayer *player;
+@property (nonatomic, weak) AVPlayerLayer *layer;
+@property (nonatomic, weak) AVPlayer *player;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
-@property (nonatomic,strong) SharkfoodMuteSwitchDetector* detector;
+@property (nonatomic, weak) SharkfoodMuteSwitchDetector* detector;
 @property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
 @property int viewCount;
 @end
@@ -557,17 +557,20 @@
             [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
 
                 NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
-                self.player = [AVPlayer playerWithURL:url];http://stackoverflow.com/questions/6901363/detecting-the-iphones-ring-silent-mute-switch-using-avaudioplayer-not-worki
+                self.player = [AVPlayer playerWithURL:url];
                 
                 self.layer = [AVPlayerLayer layer];
                 [self.layer setPlayer:self.player];
                 [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
                 [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
                 
-                int a = (int)self.view.layer.sublayers.count-8;
-                [self.view.layer insertSublayer:self.layer atIndex:a];
+
+                //int videoSubviewIndex;
+                if(self.view.layer.sublayers.count == 9)
+                    [self.view.layer insertSublayer:self.layer atIndex:1];
+                else [self.view.layer addSublayer:self.layer];
                 
-                [self.player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
+                [self.player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
                 [[NSNotificationCenter defaultCenter] addObserver:self
                                                          selector:@selector(playerItemDidReachEnd:)
                                                              name:AVPlayerItemDidPlayToEndTimeNotification
@@ -576,9 +579,12 @@
                 self.viewCount = 1;
                 self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
                 self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
+                [self.player.currentItem seekToTime:kCMTimeZero];
                 [self.player play];
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
+                
+                NSLog(@"%@", NSStringFromCGRect(self.layer.frame));
             }];
             
         }else{
@@ -886,6 +892,7 @@
     if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self clearVideo];
+    [self deallocateVideo];
     if (self.isZoomed == NO){
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -1451,6 +1458,8 @@
 
 - (IBAction)closeButtonPressed:(id)sender {
 //    [self dismissViewControllerAnimated:YES completion:nil];
+    [self clearVideo];
+    [self deallocateVideo];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -1962,12 +1971,25 @@
     self.video_sound_button.hidden = YES;
     [self.player pause];
     [self.layer removeFromSuperlayer];
+    self.player = nil;
+    self.layer = nil;
 }
 
 //############################################# MENTIONS ##################################################
 
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
+    @try{
+        [self.player removeObserver:self forKeyPath:@"status"];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
+}
+
+-(void)deallocateVideo{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
