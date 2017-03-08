@@ -40,8 +40,10 @@
 @property NSMutableArray *photoUsers;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) SharkfoodMuteSwitchDetector* detector;
-
+@property BOOL phoneMuted; ///<--Maloof would be so proud
 @property int viewCount;
+@property (nonatomic, strong) NSMutableDictionary *viewsDictionary;
+@property (nonatomic, strong) NSString *videoId;
 @end
 
 @implementation TTNewsFeedViewController
@@ -49,16 +51,25 @@
 //Monitor Ring/Silent switch and adjust the GUI to match
 -(id)initWithCoder:(NSCoder *)aDecoder{
     self = [super initWithCoder:aDecoder];
-//    if (self){
-//        self.detector = [SharkfoodMuteSwitchDetector shared];
-//        __weak PhotoViewController* sself = self;
-//        self.detector.silentNotify = ^(BOOL silent){
-//            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
-//            if(silent)
-//                sself.video_sound_button.selected = NO;
-//            else sself.video_sound_button.selected = YES;
-//        };
-//    }
+    if (self){
+        self.detector = [SharkfoodMuteSwitchDetector shared];
+        __weak TTNewsFeedViewController* sself = self;
+        self.detector.silentNotify = ^(BOOL silent){
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+            if(silent)
+                sself.phoneMuted = YES;
+            else sself.phoneMuted = NO;
+            
+            for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+                TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+                
+                if(silent)
+                    videoCell.videoSoundButton.selected = NO;
+                else videoCell.videoSoundButton.selected = YES;
+            }
+        };
+        
+    }
     return self;
 }
 
@@ -82,6 +93,12 @@
     [refreshControl endRefreshing];
     self.objid = [[NSMutableArray alloc]init];
     
+    self.viewsDictionary = [[NSMutableDictionary alloc] init];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
@@ -93,8 +110,6 @@
         }
         [self loadNewsFeed:NO refresh:nil];
     }];
-    
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -322,6 +337,7 @@
     [self clearVideo];
     [self deallocateVideo];
     [self.delegate backWasTapped:self];
+    [self saveViewCountsFromDictionaryToParse];
 }
 
 -(void)switchToMap{
@@ -329,6 +345,132 @@
 }
 
 
+#pragma mark - Button Acctions
+-(void)usernameTapped:(UIButton*)sender{
+    [self clearVideo];
+    [self deallocateVideo];
+    Photo *photo = self.mainPhotos[sender.tag];
+    PFUser *user = (PFUser*)photo.user;
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+
+-(void)trunkTapped:(UIButton*)sender{
+    [self clearVideo];
+    [self deallocateVideo];
+    Photo *photo = self.mainPhotos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)locationWasTapped:(UIButton*)sender{
+    [self clearVideo];
+    [self deallocateVideo];
+    Photo *photo = self.mainPhotos[sender.tag];
+    Trip *trip = photo.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkListViewController *trunkViewController = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
+    trunkViewController.city = trip.city;
+    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
+    trunkViewController.location = location;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+- (IBAction)subPhotoButtonWasTapped:(TTSubPhotoButton *)sender {
+    [self clearVideo];
+    [self deallocateVideo];
+    Photo *mainPhoto = self.mainPhotos[sender.tag];
+    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
+    
+    if([[sender valueForKey:@"subPhotoIndex"] intValue]<5 && array.count >= [[sender valueForKey:@"subPhotoIndex"] intValue]){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+        Photo *photo = array[[[sender valueForKey:@"subPhotoIndex"] intValue]-1];
+        photo.image = sender.imageView.image;
+        photoViewController.photo = (Photo *)photo;
+        photoViewController.arrayInt = [[sender valueForKey:@"subPhotoIndex"] intValue];
+        photoViewController.fromTimeline = YES;
+        photoViewController.photos = [self returnPhotosForView:mainPhoto];
+        [self.navigationController showViewController:photoViewController sender:self];
+    }else{
+        Trip *trip = mainPhoto.trip;
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+        trunkViewController.trip = (Trip *)trip;
+        [self.navigationController pushViewController:trunkViewController animated:YES];
+    }
+}
+
+-(void)swipeLeft:(UIGestureRecognizer *)gestureRecognizer {[self clearVideo];
+    [self deallocateVideo];
+    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
+    Trip *trip = mainPhoto.trip;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
+    trunkViewController.trip = (Trip *)trip;
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+
+-(NSArray*)returnPhotosForView:(Photo*)mainPhoto{
+    NSMutableArray *allPhotosInTrunkForThisUser = [NSMutableArray arrayWithObject:mainPhoto];
+    NSArray *photos = [self.subPhotos objectForKey:mainPhoto.objectId];
+    for(Photo* obj in photos){
+        [allPhotosInTrunkForThisUser addObject:obj];
+        if(allPhotosInTrunkForThisUser.count == 5)
+            break;
+    }
+    return allPhotosInTrunkForThisUser;
+}
+
+// handle method
+- (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
+    [self clearVideo];
+    [self deallocateVideo];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
+    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
+    photoViewController.photo = (Photo *)mainPhoto;
+    photoViewController.photos = [self returnPhotosForView:mainPhoto];
+    photoViewController.arrayInt = 0;
+     photoViewController.fromTimeline = YES;
+    photoViewController.trip = mainPhoto.trip;
+    [self.navigationController showViewController:photoViewController sender:self];
+}
+
+- (void) handleImageTapProfile:(UIGestureRecognizer *)gestureRecognizer {
+    [self clearVideo];
+    [self deallocateVideo];
+    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
+    PFUser *user = (PFUser*)photo.user;
+    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+#pragma mark -
+- (NSString *)stringForTimeStamp:(NSDate*)created {
+    
+    self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
+
+    NSString *time = @"";
+    time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
+
+    return time;
+}
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    [self loadNewsFeed:YES refresh:refreshControl];
+}
+
+#pragma mark - UICollectionViewDelegate
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     __weak TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
@@ -338,6 +480,13 @@
     [cell.userprofile setImage:nil];
     [cell.newsfeedPhoto setImage:nil];
     [cell.timeStamp setText:nil];
+    cell.videoSoundButton.hidden = YES;
+    
+    [cell.privateImageView setImage:nil];
+    [cell.userprofile setImage:nil];
+    cell.photoVideoView=nil;
+    [cell.viewCountLabel setText:nil];
+    //cell.avPlayer=nil;
     
     Photo *photo = self.mainPhotos[indexPath.row];
     if (!photo.trip.isPrivate)
@@ -353,7 +502,7 @@
     [cell.username addTarget:self action:@selector(usernameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.tripName addTarget:self action:@selector(trunkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.location addTarget:self action:@selector(locationWasTapped:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     UITapGestureRecognizer *profileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageTapProfile:)];
     [profileTap setCancelsTouchesInView:YES];
     [profileTap setNumberOfTapsRequired:1];
@@ -395,7 +544,7 @@
     swipeleft.delegate = self;
     [swipeleft.view setTag:indexPath.row];
     [cell.newsfeedPhoto addGestureRecognizer:swipeleft];
-
+    
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.newsfeedPhoto setImage:image];
         [cell setNeedsLayout];
@@ -408,7 +557,6 @@
                 
                 NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
                 player = [AVPlayer playerWithURL:url];
-//                [player setValue:[NSNumber numberWithUnsignedInteger:indexPath.row] forKey:@"tag"];
                 
                 layer = [AVPlayerLayer layer];
                 [layer setPlayer:player];
@@ -422,21 +570,27 @@
                                                          selector:@selector(newsFeedPlayerItemDidReachEnd:)
                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                            object:[player currentItem]];
-//                [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
+                //                [player addObserver:self forKeyPath:@"status" options:0 context:nil];
                 self.viewCount = 1;
                 photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
                 cell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
-//                [player.currentItem seekToTime:kCMTimeZero];
                 
                 //------------------------
                 //ABSOLUTELY RIDICULOUS PLAY HACK BECAUSE THE 'RIGHT WAY' WILL NOT WORK!
-                if(indexPath.row == 0)
+                if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
                     [player play];
+                    [self incrementViewInDictionaryForVideo:photo.objectId];
+                    self.videoId = photo.objectId;
+                }
                 //------------------------
                 
-                //self.video_sound_button.hidden = NO;
+                cell.videoSoundButton.hidden = NO;
                 cell.viewCountLabel.hidden = NO;
-
+                
+                if(self.phoneMuted)
+                    cell.videoSoundButton.selected = NO;
+                else cell.videoSoundButton.selected = YES;
+                
                 
             }];
         }
@@ -528,137 +682,23 @@
         }
     }
     
+    [cell setNeedsDisplay];
     return  cell;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-  
     return self.mainPhotos.count;
 }
 
--(void)usernameTapped:(UIButton*)sender{
-    [self clearVideo];
-    [self deallocateVideo];
-    Photo *photo = self.mainPhotos[sender.tag];
-    PFUser *user = (PFUser*)photo.user;
-    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-}
-
-
--(void)trunkTapped:(UIButton*)sender{
-    [self clearVideo];
-    [self deallocateVideo];
-    Photo *photo = self.mainPhotos[sender.tag];
-    Trip *trip = photo.trip;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-    trunkViewController.trip = (Trip *)trip;
-    [self.navigationController pushViewController:trunkViewController animated:YES];
-}
-
--(void)locationWasTapped:(UIButton*)sender{
-    [self clearVideo];
-    [self deallocateVideo];
-    Photo *photo = self.mainPhotos[sender.tag];
-    Trip *trip = photo.trip;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    TrunkListViewController *trunkViewController = (TrunkListViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkList"];
-    trunkViewController.city = trip.city;
-    CLLocation *location = [[CLLocation alloc]initWithLatitude:trip.lat longitude:trip.longitude];
-    trunkViewController.location = location;
-    [self.navigationController pushViewController:trunkViewController animated:YES];
-}
-
-- (IBAction)subPhotoButtonWasTapped:(TTSubPhotoButton *)sender {
-    [self clearVideo];
-    [self deallocateVideo];
-    Photo *mainPhoto = self.mainPhotos[sender.tag];
-    NSArray *array = [self.subPhotos objectForKey:mainPhoto.objectId];
-    
-    if([[sender valueForKey:@"subPhotoIndex"] intValue]<5 && array.count >= [[sender valueForKey:@"subPhotoIndex"] intValue]){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-        Photo *photo = array[[[sender valueForKey:@"subPhotoIndex"] intValue]-1];
-        photo.image = sender.imageView.image;
-        photoViewController.photo = (Photo *)photo;
-        photoViewController.arrayInt = [[sender valueForKey:@"subPhotoIndex"] intValue];
-        photoViewController.fromTimeline = YES;
-        photoViewController.photos = [self returnPhotosForView:mainPhoto];
-        [self.navigationController showViewController:photoViewController sender:self];
-    }else{
-        Trip *trip = mainPhoto.trip;
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-        trunkViewController.trip = (Trip *)trip;
-        [self.navigationController pushViewController:trunkViewController animated:YES];
-    }
-}
-
--(void)swipeLeft:(UIGestureRecognizer *)gestureRecognizer {[self clearVideo];
-    [self deallocateVideo];
-    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-    Trip *trip = mainPhoto.trip;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    TrunkViewController *trunkViewController = (TrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TrunkView"];
-    trunkViewController.trip = (Trip *)trip;
-    [self.navigationController pushViewController:trunkViewController animated:YES];
-}
-
-
--(NSArray*)returnPhotosForView:(Photo*)mainPhoto{
-    NSMutableArray *allPhotosInTrunkForThisUser = [NSMutableArray arrayWithObject:mainPhoto];
-    NSArray *photos = [self.subPhotos objectForKey:mainPhoto.objectId];
-    for(Photo* obj in photos){
-        [allPhotosInTrunkForThisUser addObject:obj];
-        if(allPhotosInTrunkForThisUser.count == 5)
-            break;
-    }
-    return allPhotosInTrunkForThisUser;
-}
-
-
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return CGSizeMake(self.view.frame.size.width, 406.5);
 }
 
-// handle method
-- (void) handleImageTap:(UIGestureRecognizer *)gestureRecognizer {
-    [self clearVideo];
-    [self deallocateVideo];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PhotoViewController *photoViewController = (PhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhotoView"];
-    Photo *mainPhoto = self.mainPhotos[gestureRecognizer.view.tag];
-    photoViewController.photo = (Photo *)mainPhoto;
-    photoViewController.photos = [self returnPhotosForView:mainPhoto];
-    photoViewController.arrayInt = 0;
-     photoViewController.fromTimeline = YES;
-    photoViewController.trip = mainPhoto.trip;
-    [self.navigationController showViewController:photoViewController sender:self];
-}
 
-- (void) handleImageTapProfile:(UIGestureRecognizer *)gestureRecognizer {
-    [self clearVideo];
-    [self deallocateVideo];
-    Photo *photo = self.mainPhotos[gestureRecognizer.view.tag];
-    PFUser *user = (PFUser*)photo.user;
-    UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser: user];
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-}
-- (NSString *)stringForTimeStamp:(NSDate*)created {
-    
-    self.timeFormatter = [[TTTTimeIntervalFormatter alloc] init];
-
-    NSString *time = @"";
-    time = [self.timeFormatter stringTimeStampFromDate:[NSDate date] toDate:created];
-
-    return time;
+#pragma mark - UIScrollViewDelegate
+-(void)scrollViewDidScroll:(UIScrollView *)sender{
+    if (self.isViewLoaded && self.view.window)
+        [self checkWhichVideoToEnable:NO];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
@@ -674,19 +714,7 @@
     float reload_distance = -200;
     if(y > h + reload_distance) {
         [self loadNewsFeed:NO refresh:nil];
-        }
-}
-
-
-
-- (void)refresh:(UIRefreshControl *)refreshControl {
-    [self loadNewsFeed:YES refresh:refreshControl];
-}
-
-#pragma mark - UIScrollViewDelegate
--(void)scrollViewDidScroll:(UIScrollView *)sender{
-    if (self.isViewLoaded && self.view.window)
-        [self checkWhichVideoToEnable:NO];
+    }
 }
 
 #pragma mark - Video
@@ -702,23 +730,46 @@
         amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
         
         TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+        Photo *photo = self.mainPhotos[indexPath.row];
         if(reset){
             self.viewCount++;
-            Photo *photo = self.mainPhotos[indexPath.row];
             photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
             [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
             videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
+            
         }
         
-        if(amountVisible>screenHeight/2.1)
-            [videoCell.avPlayer play];
-        else [videoCell.avPlayer pause];
+        if(amountVisible>screenHeight/2.1){
+            if(![self.videoId isEqualToString:photo.objectId]){
+                [self incrementViewInDictionaryForVideo:photo.objectId];
+                [videoCell.avPlayer play];
+                self.videoId = photo.objectId;
+            }
+        }else{
+            [videoCell.avPlayer pause];
+        }
     }
 }
 
-- (void)newsFeedPlayerItemDidReachEnd:(NSNotification *)notification {
+- (void)newsFeedPlayerItemDidReachEnd:(NSNotification *)notification{
     if (self.isViewLoaded && self.view.window)
         [self checkWhichVideoToEnable:YES];
+    
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenHeight = screenRect.size.height;
+    
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
+        int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
+        int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
+        amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
+
+        Photo *photo = self.mainPhotos[indexPath.row];
+        if(amountVisible>screenHeight/2.1)
+            [self incrementViewInDictionaryForVideo:photo.objectId];
+    }
 }
 
 //- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -749,34 +800,68 @@
     }@catch(id anException){
         //do nothing, obviously it wasn't attached because an exception was thrown
     }
-//    __weak PhotoViewController* sself = self;
-//    self.detector.silentNotify = ^(BOOL silent){
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
-//        if(silent)
-//            sself.video_sound_button.selected = NO;
-//        else sself.video_sound_button.selected = YES;
-//        
-//    };
-//    self.video_sound_button.hidden = YES;
     
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
         TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
         [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
         [videoCell.avPlayer pause];
+        
+        self.detector.silentNotify = ^(BOOL silent){
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+            if(silent){
+                videoCell.videoSoundButton.selected = NO;
+                self.phoneMuted = YES;
+            }else{
+                videoCell.videoSoundButton.selected = YES;
+                self.phoneMuted = NO;
+            }
+    
+        };
+        videoCell.videoSoundButton.hidden = YES;
     }
 }
 
 - (IBAction)toggleVideoSound:(id)sender {
     
-//    if(self.video_sound_button.selected){
-//        self.video_sound_button.selected = NO;
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
-//        self.player.muted = YES;
-//    }else{
-//        self.video_sound_button.selected = YES;
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
-//        self.player.muted = NO;
-//    }
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+        if(videoCell.videoSoundButton.selected){
+            videoCell.videoSoundButton.selected = NO;
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+            videoCell.avPlayer.muted = YES;
+        }else{
+            videoCell.videoSoundButton.selected = YES;
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
+            videoCell.avPlayer.muted = NO;
+        }
+    }
+    
+}
+
+-(void)incrementViewInDictionaryForVideo:(NSString*)objectId{
+    BOOL savedCount = NO;
+    for(id key in self.viewsDictionary){
+        if([key isEqualToString:objectId]){
+            int currentCount = [self.viewsDictionary[key] intValue]+1;
+            self.viewsDictionary[key] = [NSNumber numberWithInt:currentCount];
+            savedCount = YES;
+            break;
+        }
+    }
+    
+    if(!savedCount){
+        [self.viewsDictionary setObject:@"1" forKey:objectId];
+    }
+    
+    NSLog(@"%@",self.viewsDictionary);
+}
+
+-(void)saveViewCountsFromDictionaryToParse{
+    for(id key in self.viewsDictionary){
+        [TTUtility updateVideoViewCount:key withCount:[self.viewsDictionary[key] intValue]];
+    }
+    
+    [self.viewsDictionary removeAllObjects];
 }
 
 
