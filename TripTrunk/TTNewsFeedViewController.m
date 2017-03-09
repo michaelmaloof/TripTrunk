@@ -94,6 +94,14 @@
     self.objid = [[NSMutableArray alloc]init];
     
     self.viewsDictionary = [[NSMutableDictionary alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveViewCountsFromDictionaryToParse)
+                                                 name:UIApplicationWillTerminateNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveViewCountsFromDictionaryToParse)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object: nil];
     
 }
 
@@ -578,7 +586,9 @@
                 //------------------------
                 //ABSOLUTELY RIDICULOUS PLAY HACK BECAUSE THE 'RIGHT WAY' WILL NOT WORK!
                 if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
-                    [player play];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [player play];
+                    });
                     [self incrementViewInDictionaryForVideo:photo.objectId];
                     self.videoId = photo.objectId;
                 }
@@ -741,8 +751,10 @@
         
         if(amountVisible>screenHeight/2.1){
             if(![self.videoId isEqualToString:photo.objectId]){
-                [self incrementViewInDictionaryForVideo:photo.objectId];
-                [videoCell.avPlayer play];
+//                [self incrementViewInDictionaryForVideo:photo.objectId];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [videoCell.avPlayer play];
+                });
                 self.videoId = photo.objectId;
             }
         }else{

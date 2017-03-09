@@ -148,7 +148,10 @@
     [self.caption setSelectedRange:NSMakeRange(cursorPosition.location, 0)];
     //If the player is loaded, continue playing the video
     //If it's not loaded, it will ignore this command
-    [self.player play];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.player play];
+    });
 }
 
 -(void)saveVideoViews{
@@ -430,6 +433,8 @@
     self.bottomButtonWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
     self.captionWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
     self.photoToolbarWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
+    
+    self.layer.frame = self.view.layer.bounds;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -580,7 +585,9 @@
                 self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
                 self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
                 [self.player.currentItem seekToTime:kCMTimeZero];
-                [self.player play];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.player play];
+                });
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
                 
@@ -623,7 +630,9 @@
     self.viewCount++;
     self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
     self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
-    [self.player play];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.player play];
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
