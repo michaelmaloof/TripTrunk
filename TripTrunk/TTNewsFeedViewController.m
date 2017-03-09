@@ -44,6 +44,7 @@
 @property int viewCount;
 @property (nonatomic, strong) NSMutableDictionary *viewsDictionary;
 @property (nonatomic, strong) NSString *videoId;
+@property (nonatomic, strong) AVPlayer *currentVideo;
 @end
 
 @implementation TTNewsFeedViewController
@@ -751,7 +752,10 @@
         
         if(amountVisible>screenHeight/2.1){
             if(![self.videoId isEqualToString:photo.objectId]){
-//                [self incrementViewInDictionaryForVideo:photo.objectId];
+                if(videoCell.avPlayer != self.currentVideo){
+                    [self incrementViewInDictionaryForVideo:photo.objectId];
+                    self.currentVideo = videoCell.avPlayer;
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [videoCell.avPlayer play];
                 });
