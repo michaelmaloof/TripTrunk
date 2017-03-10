@@ -434,7 +434,7 @@
     self.captionWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
     self.photoToolbarWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
     
-    self.layer.frame = self.view.layer.bounds;
+    [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -450,6 +450,7 @@
     if(self.photo.video && self.viewCount > 0)
         [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
     [self.activityIndicator stopAnimating];
+    [self clearVideo];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -568,12 +569,8 @@
                 [self.layer setPlayer:self.player];
                 [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
                 [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
-                
 
-                //int videoSubviewIndex;
-                if(self.view.layer.sublayers.count == 9)
-                    [self.view.layer insertSublayer:self.layer atIndex:1];
-                else [self.view.layer addSublayer:self.layer];
+                [self.scrollView.layer addSublayer:self.layer];
                 
                 [self.player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
                 [[NSNotificationCenter defaultCenter] addObserver:self
@@ -591,7 +588,6 @@
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
                 
-                NSLog(@"%@", NSStringFromCGRect(self.layer.frame));
             }];
             
         }else{
@@ -639,6 +635,7 @@
     if (object == self.player && [keyPath isEqualToString:@"status"]) {
         if (self.player.status == AVPlayerItemStatusReadyToPlay) {
             [self.activityIndicator stopAnimating];
+            [self.scrollView sendSubviewToBack:self.imageView];
         } else if (self.player.status == AVPlayerStatusFailed) {
             NSLog(@"There was an error loading the video");
         }
