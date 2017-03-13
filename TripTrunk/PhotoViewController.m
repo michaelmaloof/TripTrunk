@@ -544,6 +544,8 @@
 - (void)loadImageForPhoto: (Photo *)photo {
     self.viewCountLabel.text = 0;
     self.viewCountLabel.hidden = YES;
+    self.scrollView.scrollEnabled = YES;
+    self.scrollView.pinchGestureRecognizer.enabled = YES;
     if (photo.imageUrl){ //it has an imagURL, thus its a photo were downloading from a trunk
         
         if(photo.video){
@@ -587,7 +589,8 @@
                 });
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
-                
+                self.scrollView.scrollEnabled = NO;
+                self.scrollView.pinchGestureRecognizer.enabled = NO;
             }];
             
         }else{
