@@ -489,7 +489,8 @@
     [cell.userprofile setImage:nil];
     [cell.newsfeedPhoto setImage:nil];
     [cell.timeStamp setText:nil];
-    cell.videoSoundButton.hidden = YES;
+    cell.newsfeedPhoto.hidden = NO;
+    cell.videoContainerView.hidden = YES;
     
     [cell.privateImageView setImage:nil];
     [cell.userprofile setImage:nil];
@@ -554,57 +555,62 @@
     [swipeleft.view setTag:indexPath.row];
     [cell.newsfeedPhoto addGestureRecognizer:swipeleft];
     
+    if(photo.video){
+        cell.videoContainerView.hidden = NO;
+        [cell.videoContainerView addGestureRecognizer:tap];
+        [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            
+            AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];
+            AVPlayer *player = [[AVPlayer alloc] init];
+            
+            NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
+            player = [AVPlayer playerWithURL:url];
+            
+            layer = [AVPlayerLayer layer];
+            [layer setPlayer:player];
+            [layer setFrame:CGRectMake(0, 0, cell.videoContainerView.frame.size.width, cell.videoContainerView.frame.size.height)];
+            [layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+            cell.avPlayer = player;
+            [cell.videoContainerView.layer addSublayer:layer];
+            [cell.photoVideoView bringSubviewToFront:cell.videoContainerView];
+            
+            [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(newsFeedPlayerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[player currentItem]];
+            //                [player addObserver:self forKeyPath:@"status" options:0 context:nil];
+            self.viewCount = 1;
+            photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
+            cell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
+            
+            //------------------------
+            //ABSOLUTELY RIDICULOUS PLAY HACK BECAUSE THE 'RIGHT WAY' WILL NOT WORK!
+//            if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [player play];
+//                    cell.newsfeedPhoto.hidden = YES;
+//                    NSLog(@"Now playing video: %@",photo.objectId);
+//                });
+//                [self incrementViewInDictionaryForVideo:photo.objectId];
+//                self.videoId = photo.objectId;
+//            }
+            //------------------------
+            
+            cell.videoSoundButton.hidden = NO;
+            cell.viewCountLabel.hidden = NO;
+            
+            if(self.phoneMuted)
+                cell.videoSoundButton.selected = NO;
+            else cell.videoSoundButton.selected = YES;
+            
+            
+        }];
+    }
+    
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.newsfeedPhoto setImage:image];
         [cell setNeedsLayout];
-        
-        if(photo.video){
-            [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                
-                AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];
-                AVPlayer *player = [[AVPlayer alloc] init];
-                
-                NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
-                player = [AVPlayer playerWithURL:url];
-                
-                layer = [AVPlayerLayer layer];
-                [layer setPlayer:player];
-                [layer setFrame:CGRectMake(0, 0, cell.photoVideoView.frame.size.width, cell.photoVideoView.frame.size.height)];
-                [layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-                cell.avPlayer = player;
-                [cell.photoVideoView.layer insertSublayer:layer atIndex:1];
-                
-                [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
-                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                         selector:@selector(newsFeedPlayerItemDidReachEnd:)
-                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                                           object:[player currentItem]];
-                //                [player addObserver:self forKeyPath:@"status" options:0 context:nil];
-                self.viewCount = 1;
-                photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
-                cell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
-                
-                //------------------------
-                //ABSOLUTELY RIDICULOUS PLAY HACK BECAUSE THE 'RIGHT WAY' WILL NOT WORK!
-                if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [player play];
-                    });
-                    [self incrementViewInDictionaryForVideo:photo.objectId];
-                    self.videoId = photo.objectId;
-                }
-                //------------------------
-                
-                cell.videoSoundButton.hidden = NO;
-                cell.viewCountLabel.hidden = NO;
-                
-                if(self.phoneMuted)
-                    cell.videoSoundButton.selected = NO;
-                else cell.videoSoundButton.selected = YES;
-                
-                
-            }];
-        }
     } failure:nil];
     
     for(int i=0;i<5;i++){
@@ -692,7 +698,7 @@
             }
         }
     }
-    
+
     [cell setNeedsDisplay];
     return  cell;
 }
@@ -742,36 +748,30 @@
         
         TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
         Photo *photo = self.mainPhotos[indexPath.row];
-        if(reset){
-            self.viewCount++;
-            photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
-            [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
-            videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
-            
-        }
-        
-        if(amountVisible>screenHeight/2.1){
-            if(![self.videoId isEqualToString:photo.objectId]){
-                if(videoCell.avPlayer != self.currentVideo){
-                    [self incrementViewInDictionaryForVideo:photo.objectId];
-                    self.currentVideo = videoCell.avPlayer;
+        if(photo.video){
+            if(amountVisible>screenHeight/2.1){
+                if(![self.videoId isEqualToString:photo.objectId]){
+                    if(videoCell.avPlayer != self.currentVideo){
+                        [self incrementViewInDictionaryForVideo:photo.objectId];
+                        self.currentVideo = videoCell.avPlayer;
+                    
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [videoCell.avPlayer play];
+                            videoCell.newsfeedPhoto.hidden = YES;
+                            NSLog(@"Now playing video (check): %@",photo.objectId);
+                        });
+                        self.videoId = photo.objectId;
+                    }
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [videoCell.avPlayer play];
-                });
-                self.videoId = photo.objectId;
+            }else{
+                [videoCell.avPlayer pause];
             }
-        }else{
-            [videoCell.avPlayer pause];
         }
     }
 }
 
 - (void)newsFeedPlayerItemDidReachEnd:(NSNotification *)notification{
-    if (self.isViewLoaded && self.view.window)
-        [self checkWhichVideoToEnable:YES];
-    
-    
+
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
     
@@ -781,10 +781,19 @@
         int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
         int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
         amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
-
+        
         Photo *photo = self.mainPhotos[indexPath.row];
-        if(amountVisible>screenHeight/2.1)
+        TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+
+        if(amountVisible>screenHeight/2.1){
+            self.viewCount++;
+            photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
+            [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
+            [videoCell.avPlayer play];
             [self incrementViewInDictionaryForVideo:photo.objectId];
+            videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
+            NSLog(@"Now playing video (loop): %@",photo.objectId);
+        }
     }
 }
 

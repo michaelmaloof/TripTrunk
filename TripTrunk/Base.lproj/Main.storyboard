@@ -145,6 +145,9 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="398" height="382"/>
                                                             <gestureRecognizers/>
                                                         </imageView>
+                                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMZ-pU-vJt">
+                                                            <rect key="frame" x="0.0" y="0.0" width="398" height="382"/>
+                                                        </view>
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nl0-28-JjT" customClass="TTSubPhotoButton">
                                                             <rect key="frame" x="52" y="322" width="50" height="50"/>
                                                             <constraints>
@@ -305,16 +308,17 @@
                                                             </connections>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="Fp7-P6-uLU" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="1s7-gw-w1f"/>
                                                         <constraint firstItem="Fp7-P6-uLU" firstAttribute="leading" secondItem="YDb-5A-Bsu" secondAttribute="trailing" constant="8" id="2Bv-ko-lvm"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-8" id="9Hy-11-YSz"/>
                                                         <constraint firstItem="dXI-oM-KDj" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" id="BdJ-be-2wN"/>
                                                         <constraint firstItem="zLo-5G-pUP" firstAttribute="leading" secondItem="nl0-28-JjT" secondAttribute="trailing" constant="10" id="ExN-Wp-yn4"/>
+                                                        <constraint firstItem="mMZ-pU-vJt" firstAttribute="height" secondItem="dXI-oM-KDj" secondAttribute="height" id="FxD-4T-XNB"/>
                                                         <constraint firstItem="cGp-aQ-orO" firstAttribute="leading" secondItem="zLo-5G-pUP" secondAttribute="trailing" constant="9" id="Hyc-jT-xqt"/>
                                                         <constraint firstItem="Rok-gL-E9w" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" constant="8" id="KsJ-aR-bkK"/>
                                                         <constraint firstAttribute="trailing" secondItem="dXI-oM-KDj" secondAttribute="trailing" id="KwQ-eW-TC5"/>
+                                                        <constraint firstItem="mMZ-pU-vJt" firstAttribute="leading" secondItem="GJp-N2-8e8" secondAttribute="leading" id="NaK-w7-5HD"/>
                                                         <constraint firstItem="YDb-5A-Bsu" firstAttribute="leading" secondItem="cGp-aQ-orO" secondAttribute="trailing" constant="11" id="QXc-uN-bGl"/>
                                                         <constraint firstItem="cGp-aQ-orO" firstAttribute="centerX" secondItem="GJp-N2-8e8" secondAttribute="centerX" constant="-3.6999999999999886" id="Rq3-rZ-z7g"/>
                                                         <constraint firstItem="WMn-cn-OdS" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" constant="8" id="YCa-q2-s8V"/>
@@ -324,7 +328,9 @@
                                                         <constraint firstItem="dXI-oM-KDj" firstAttribute="leading" secondItem="GJp-N2-8e8" secondAttribute="leading" id="etO-Yh-U0F"/>
                                                         <constraint firstItem="cGp-aQ-orO" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="gMM-HG-nKE"/>
                                                         <constraint firstItem="zLo-5G-pUP" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="klt-hu-5mW"/>
+                                                        <constraint firstItem="mMZ-pU-vJt" firstAttribute="width" secondItem="dXI-oM-KDj" secondAttribute="width" id="orm-ba-aTi"/>
                                                         <constraint firstItem="YDb-5A-Bsu" firstAttribute="bottom" secondItem="dXI-oM-KDj" secondAttribute="bottom" constant="-10" id="xV7-wv-mmE"/>
+                                                        <constraint firstItem="mMZ-pU-vJt" firstAttribute="top" secondItem="GJp-N2-8e8" secondAttribute="top" id="zfn-tE-2oo"/>
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYb-FJ-b87">
@@ -543,6 +549,7 @@
                                             <outlet property="tripName" destination="W95-rK-hFQ" id="Mf5-Ma-cNM"/>
                                             <outlet property="username" destination="agu-Rc-1D1" id="ihZ-ji-s4R"/>
                                             <outlet property="userprofile" destination="6hP-2Q-apq" id="GTh-bf-jwP"/>
+                                            <outlet property="videoContainerView" destination="mMZ-pU-vJt" id="59t-V8-ORa"/>
                                             <outlet property="videoSoundButton" destination="WMn-cn-OdS" id="5WB-JP-tQz"/>
                                             <outlet property="viewCountLabel" destination="Rok-gL-E9w" id="muV-bQ-XDB"/>
                                             <outletCollection property="subPhotoButtons" destination="nl0-28-JjT" id="3J9-hD-dkQ"/>
@@ -619,7 +626,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5qi-dZ-bd6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1301.449275362319" y="-961.14130434782612"/>
+            <point key="canvasLocation" x="-1302" y="-962"/>
         </scene>
         <!--Home Map View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -3147,16 +3154,7 @@
                                 <exclude reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <exclude reference="OlX-6N-agJ"/>
-                                <exclude reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <exclude reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <exclude reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                                 <exclude reference="Rdr-sM-euh"/>
                                 <exclude reference="hqH-ri-Sff"/>
                                 <exclude reference="yBW-aH-oqG"/>
@@ -3169,7 +3167,16 @@
                                 <exclude reference="Zo6-bM-aaN"/>
                                 <exclude reference="dg3-GD-a57"/>
                                 <exclude reference="kpd-f9-VQY"/>
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <exclude reference="OlX-6N-agJ"/>
+                                <exclude reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <exclude reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <exclude reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -3181,16 +3188,7 @@
                                 <include reference="pMh-vC-nPM"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1qM-to-aaD"/>
-                                <exclude reference="ImZ-p9-QDq"/>
-                                <include reference="OlX-6N-agJ"/>
-                                <include reference="Pnc-6f-JIN"/>
-                                <exclude reference="XO3-jB-Qk3"/>
-                                <include reference="dQJ-KD-D0f"/>
-                                <exclude reference="gSa-As-mfQ"/>
-                                <exclude reference="hIR-GY-QyD"/>
-                                <include reference="mYv-Rg-R5i"/>
-                                <exclude reference="q7U-o2-Oxu"/>
+                                <exclude reference="gcu-A7-CvH"/>
                                 <include reference="Rdr-sM-euh"/>
                                 <include reference="hqH-ri-Sff"/>
                                 <include reference="yBW-aH-oqG"/>
@@ -3203,7 +3201,16 @@
                                 <include reference="Zo6-bM-aaN"/>
                                 <include reference="dg3-GD-a57"/>
                                 <include reference="kpd-f9-VQY"/>
-                                <exclude reference="gcu-A7-CvH"/>
+                                <exclude reference="1qM-to-aaD"/>
+                                <exclude reference="ImZ-p9-QDq"/>
+                                <include reference="OlX-6N-agJ"/>
+                                <include reference="Pnc-6f-JIN"/>
+                                <exclude reference="XO3-jB-Qk3"/>
+                                <include reference="dQJ-KD-D0f"/>
+                                <exclude reference="gSa-As-mfQ"/>
+                                <exclude reference="hIR-GY-QyD"/>
+                                <include reference="mYv-Rg-R5i"/>
+                                <exclude reference="q7U-o2-Oxu"/>
                             </mask>
                         </variation>
                     </view>
@@ -4159,7 +4166,7 @@
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cf5-8f-zW5">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cf5-8f-zW5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4182,7 +4189,7 @@
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="WHY-MW-Yo5">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="WHY-MW-Yo5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -5473,6 +5480,19 @@
                 <exit id="8fT-FS-kWe" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1387.5" y="-1662.75"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="QoF-SZ-0Ll">
+            <objects>
+                <viewController id="KsU-en-DK6" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jYc-4X-Cxb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vKL-2s-bC2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

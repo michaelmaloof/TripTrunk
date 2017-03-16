@@ -18,22 +18,26 @@
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self setNeedsDisplay];
+    
+//    self.videoContainerView.frame = self.newsfeedPhoto.frame;
 }
 
 -(void)prepareForReuse{
     [super prepareForReuse];
-//    self.privateImageView=nil;
-//    self.userprofile=nil;
-//    self.newsfeedPhoto=nil;
-//    self.username=nil;
-//    self.tripName=nil;
-//    self.timeStamp=nil;
-//    self.location=nil;
-//    self.subPhotoButtons=nil;
-//    self.photoVideoView=nil;
-//    self.viewCountLabel=nil;
-//    self.videoSoundButton=nil;
-//    self.avPlayer=nil;
+    
+//    self.privateImageView;
+//    self.userprofile;
+//    self.newsfeedPhoto;
+//    self.username;
+//    self.tripName;
+//    self.timeStamp;
+//    self.location;
+//    self.subPhotoButtons;
+//    self.photoVideoView;
+//    self.viewCountLabel;
+//    self.videoSoundButton;
+//    self.videoContainerView = nil;
+//    self.avPlayer = nil;
 }
 
 @end

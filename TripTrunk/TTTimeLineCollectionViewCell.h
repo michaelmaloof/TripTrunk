@@ -21,5 +21,6 @@
 @property (strong, nonatomic) IBOutlet UIView *photoVideoView;
 @property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
 @property (strong, nonatomic) IBOutlet UIButton *videoSoundButton;
+@property (strong, nonatomic) IBOutlet UIView *videoContainerView;
 @property AVPlayer * avPlayer;
 @end
