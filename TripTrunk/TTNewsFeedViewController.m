@@ -496,7 +496,7 @@
     [cell.userprofile setImage:nil];
     cell.photoVideoView=nil;
     [cell.viewCountLabel setText:nil];
-    //cell.avPlayer=nil;
+    cell.videoSoundButton.hidden = YES;
     
     Photo *photo = self.mainPhotos[indexPath.row];
     if (!photo.trip.isPrivate)
