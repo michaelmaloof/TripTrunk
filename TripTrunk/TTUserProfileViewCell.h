@@ -12,5 +12,6 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
+@property (strong, nonatomic) IBOutlet UIImageView *videoIcon;
 
 @end

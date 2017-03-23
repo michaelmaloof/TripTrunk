@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -24,13 +28,33 @@
                             <constraint firstAttribute="width" constant="20" id="FYl-iy-yM9"/>
                         </constraints>
                     </imageView>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Hqf-od-Q3C">
+                        <rect key="frame" x="225" y="8" width="17" height="11"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="17" id="1QY-5Z-xMJ"/>
+                            <constraint firstAttribute="height" constant="11" id="UgZ-Dw-zoY"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="UgZ-Dw-zoY"/>
+                                <exclude reference="1QY-5Z-xMJ"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="UgZ-Dw-zoY"/>
+                                <include reference="1QY-5Z-xMJ"/>
+                            </mask>
+                        </variation>
+                    </imageView>
                 </subviews>
-                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="fo9-xL-BlV" secondAttribute="bottom" id="6gJ-x1-Ebm"/>
                 <constraint firstItem="fo9-xL-BlV" firstAttribute="top" secondItem="0UV-OC-24G" secondAttribute="top" id="8EE-YB-kfk"/>
                 <constraint firstAttribute="bottom" secondItem="lcM-LV-Dsj" secondAttribute="bottom" constant="6" id="EDf-RA-kbi"/>
+                <constraint firstAttribute="trailing" secondItem="Hqf-od-Q3C" secondAttribute="trailing" constant="8" id="Uyc-r1-tu6"/>
+                <constraint firstItem="Hqf-od-Q3C" firstAttribute="top" secondItem="0UV-OC-24G" secondAttribute="top" constant="8" id="YXY-4w-KYm"/>
                 <constraint firstItem="fo9-xL-BlV" firstAttribute="leading" secondItem="0UV-OC-24G" secondAttribute="leading" id="Zou-p6-K3Y"/>
                 <constraint firstAttribute="trailing" secondItem="lcM-LV-Dsj" secondAttribute="trailing" constant="3" id="cP8-wi-uQx"/>
                 <constraint firstAttribute="trailing" secondItem="fo9-xL-BlV" secondAttribute="trailing" id="evt-gv-TNM"/>
@@ -39,11 +63,13 @@
             <connections>
                 <outlet property="image" destination="fo9-xL-BlV" id="8aM-kz-yBf"/>
                 <outlet property="logo" destination="lcM-LV-Dsj" id="tRl-YL-axX"/>
+                <outlet property="videoIcon" destination="Hqf-od-Q3C" id="sgl-7V-xgL"/>
             </connections>
             <point key="canvasLocation" x="359" y="508"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="logo_large" width="34" height="33"/>
+        <image name="logo_large" width="17" height="16"/>
+        <image name="video_icon" width="16" height="11"/>
     </resources>
 </document>

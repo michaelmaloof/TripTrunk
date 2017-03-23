@@ -999,6 +999,7 @@
 
     TTUserProfileViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"myImagesCell" forIndexPath:indexPath];
     cell.image.image = nil;
+    cell.videoIcon.hidden = YES;
     cell.backgroundColor = [TTColor tripTrunkBlue];
     Photo *photo = [self.myPhotos objectAtIndex:indexPath.item];
     
@@ -1017,6 +1018,8 @@
         cell.logo.hidden = YES;
     }
 
+    if(photo.video)
+        cell.videoIcon.hidden = NO;
     
     [cell.image setContentMode:UIViewContentModeScaleAspectFill];
     //        cell.photo.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, self.view.frame.size.width/3, self.view.frame.size.width/3);
