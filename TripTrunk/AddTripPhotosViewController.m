@@ -67,7 +67,7 @@
     } else {
         self.alreadyTrip = NO;
     }
-    self.title = NSLocalizedString(@"Add Photos",@"Add Photos");
+    self.title = NSLocalizedString(@"Add Photos/Videos",@"Add Photos/Videos");
     self.tripCollectionView.delegate = self;
     self.photos = [[NSMutableArray alloc]init];
     self.facebookPhotos = [[NSMutableArray alloc] init];
@@ -455,14 +455,14 @@
                      if (exportSession.status == AVAssetExportSessionStatusCompleted){
                          NSLog(@"completed\n");
                          photo.editedPath = outputURL.absoluteString;
-                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
+                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
                              //remove compressed or trimmed video from temp directory
                              NSFileManager *manager = [NSFileManager defaultManager];
                              NSString *deletePath = [photo.editedPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
                              [manager removeItemAtPath:deletePath error:nil];
                              photo.editedPath = nil;
-                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                                  [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
                                  [countIncrement save];
@@ -504,7 +504,7 @@
                          [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
                              photo.editedPath = nil;
-                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:0 toFacebook:NO block:^(Photo *photo) {
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                                  [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
                                  [countIncrement save];

@@ -558,6 +558,7 @@
     if(photo.video){
         cell.videoContainerView.hidden = NO;
         [cell.videoContainerView addGestureRecognizer:tap];
+        [cell.videoContainerView setTag:indexPath.row];
         [photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
             
             AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];

@@ -42,6 +42,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
 }
 @property NSString* tripName;
 @property int photoCount;
+@property int videoCount;
 @property int totalPhotos;
 @property Trip *trip;
 @property NSData *videoFileData;
@@ -189,6 +190,7 @@ CLCloudinary *cloudinary;
 
 -(void)uploadPhoto:(Photo *)photo photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(Photo *photo))completionBlock;
 {
+    NSLog(@"uploading photo");
     self.tripName = photo.tripName;
     self.totalPhotos = photosCount;
     self.trip = photo.trip;
@@ -228,8 +230,6 @@ CLCloudinary *cloudinary;
 
                     [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
                         if (succeeded) {
-                            
-                            self.photoCount++;
                             
                             // Add photo to the local cache
                             [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
@@ -688,6 +688,7 @@ CLCloudinary *cloudinary;
 
 -(void)uploadVideo:(Photo *)video photosCount:(int)photosCount toFacebook:(BOOL)publishToFacebook block:(void (^)(PFObject *video))completionBlock;
 {
+    NSLog(@"uploading video");
     self.tripName = video.tripName;
     self.totalPhotos = photosCount;
     self.trip = video.trip;
@@ -726,8 +727,6 @@ CLCloudinary *cloudinary;
 
                 [self uploadVideoToCloudinary:video withAVAsset:asset block:^(BOOL success, NSError *error, Photo *savedVideo) {
                     if (success) {
-                        
-                        self.photoCount++;
 
                         // Add photo to the local cache
                         [[TTCache sharedCache] setAttributesForPhoto:video likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
@@ -853,18 +852,46 @@ CLCloudinary *cloudinary;
 - (void)uploaderSuccess:(NSDictionary*)result context:(id)context {
     NSString* publicId = [result valueForKey:@"public_id"];
     NSLog(@"Upload success. Public ID=%@", publicId);
-
+    
+    //don't increment for a video, the thumbnail will be counted instead (as a photo)
+    if(!result[@"video"]){
+        self.photoCount++;
+    }else{
+        self.photoCount--;
+        self.videoCount++;
+    }
+    
     // Mark the task as completed in the progressview -- if all uploads are finished, it will remove from the screen
-    if ([progressView taskCompleted]) {
+    if ([progressView taskCompleted] && self.photoCount+self.videoCount >= self.totalPhotos) {
         // Uploading is totally complete, so nil the progress view
         progressView = nil;
         UILocalNotification* localNotification = [[UILocalNotification alloc] init];
         localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
-        localNotification.alertBody = [NSString stringWithFormat:@"Successfully upoaded %d/%d photos to the '%@' trunk",self.photoCount,self.totalPhotos,self.tripName];
+        
+        //protect against a counting error
+        int totalUploaded = self.photoCount+self.videoCount;
+        if(totalUploaded > self.totalPhotos)
+            totalUploaded = self.totalPhotos;
+        
+        NSString *videosIncluded = @"";
+        NSString *photosIncluded = @"";
+        if(self.photoCount > 0)
+            photosIncluded = NSLocalizedString(@"photos ",@"photos ");
+        
+        if(self.videoCount > 0)
+            videosIncluded = NSLocalizedString(@"videos ",@"videos ");
+        
+        if(self.photoCount > 0 && self.videoCount > 0)
+            videosIncluded = NSLocalizedString(@"& videos ",@"& videos ");
+        
+        NSString *alertSuccess = [NSString stringWithFormat:@"Successfully uploaded %1$d/%2$d %3$@%4$@to the '%5$@' trunk",totalUploaded,self.totalPhotos,photosIncluded,videosIncluded,self.tripName];
+        
+        localNotification.alertBody = NSLocalizedString(alertSuccess,alertSuccess);
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
         self.tripName = nil;
         self.photoCount = 0;
+        self.videoCount = 0;
     }
 }
 
@@ -879,11 +906,15 @@ CLCloudinary *cloudinary;
      progressView = nil;
      UILocalNotification* localNotification = [[UILocalNotification alloc] init];
      localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
-     localNotification.alertBody = [NSString stringWithFormat:@"There was an error uploading photos to the '%@' trunk",self.tripName];
+     
+     NSString *alertFail = [NSString stringWithFormat:@"There was an error uploading photos & videos to the '%@' trunk",self.tripName];
+     
+     localNotification.alertBody = NSLocalizedString(alertFail, alertFail);
      localNotification.timeZone = [NSTimeZone defaultTimeZone];
      [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
      self.tripName = nil;
      self.photoCount = 0;
+     self.videoCount = 0;
  }
     
 }
