@@ -18,12 +18,17 @@
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self setNeedsDisplay];
-    
-//    self.videoContainerView.frame = self.newsfeedPhoto.frame;
 }
 
 -(void)prepareForReuse{
     [super prepareForReuse];
+    
+    for (CALayer *layer in self.videoContainerView.layer.sublayers) {
+        [layer removeFromSuperlayer];
+    }
+    
+    [self.videoContainerView setNeedsDisplay];
+    [self setNeedsDisplay];
     
 //    self.privateImageView;
 //    self.userprofile;
@@ -38,6 +43,7 @@
 //    self.videoSoundButton;
 //    self.videoContainerView = nil;
 //    self.avPlayer = nil;
+    
 }
 
 @end

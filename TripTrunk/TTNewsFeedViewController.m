@@ -563,6 +563,7 @@
             
             AVPlayerLayer *layer = [[AVPlayerLayer alloc] init];
             AVPlayer *player = [[AVPlayer alloc] init];
+            layer.backgroundColor = (__bridge CGColorRef _Nullable)([UIColor clearColor]);
             
             NSURL *url = [NSURL URLWithString:photo.video[@"videoUrl"]];
             player = [AVPlayer playerWithURL:url];
@@ -572,8 +573,14 @@
             [layer setFrame:CGRectMake(0, 0, cell.videoContainerView.frame.size.width, cell.videoContainerView.frame.size.height)];
             [layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
             cell.avPlayer = player;
-            [cell.videoContainerView.layer addSublayer:layer];
-            [cell.photoVideoView bringSubviewToFront:cell.videoContainerView];
+            if(url == [self urlOfCurrentlyPlayingInPlayer:player]){
+                [cell.videoContainerView.layer addSublayer:layer];
+                cell.videoContainerView.backgroundColor = [UIColor clearColor];
+                cell.videoContainerView.layer.backgroundColor = (__bridge CGColorRef _Nullable)([UIColor clearColor]);
+                [cell.photoVideoView bringSubviewToFront:cell.videoContainerView];
+            }else{
+                NSLog(@"NOT THE SAME VIDEO");
+            }
             
             [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -736,6 +743,16 @@
 }
 
 #pragma mark - Video
+-(NSURL *)urlOfCurrentlyPlayingInPlayer:(AVPlayer *)player{
+    // get current asset
+    AVAsset *currentPlayerAsset = player.currentItem.asset;
+    // make sure the current asset is an AVURLAsset
+    if (![currentPlayerAsset isKindOfClass:AVURLAsset.class]) return nil;
+    // return the NSURL
+    return [(AVURLAsset *)currentPlayerAsset URL];
+}
+
+
 -(void)checkWhichVideoToEnable:(BOOL)reset{
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
@@ -790,7 +807,7 @@
             self.viewCount++;
             photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
             [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
-            [videoCell.avPlayer play];
+            //[videoCell.avPlayer play];
             [self incrementViewInDictionaryForVideo:photo.objectId];
             videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
             NSLog(@"Now playing video (loop): %@",photo.objectId);
