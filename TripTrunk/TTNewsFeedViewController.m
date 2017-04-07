@@ -578,8 +578,6 @@
                 cell.videoContainerView.backgroundColor = [UIColor clearColor];
                 cell.videoContainerView.layer.backgroundColor = (__bridge CGColorRef _Nullable)([UIColor clearColor]);
                 [cell.photoVideoView bringSubviewToFront:cell.videoContainerView];
-            }else{
-                NSLog(@"NOT THE SAME VIDEO");
             }
             
             [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];

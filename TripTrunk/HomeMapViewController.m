@@ -143,18 +143,25 @@ list of trips the user hasn't seen since last being in the app
     
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
     NSString *message = [uploadError stringForKey:@"uploadError"];
+    BOOL messageError = NO;
+    if ([message rangeOfString:@"(null)"].location != NSNotFound)
+        messageError = YES;
+
     
-    if(message){
+    if(message && !messageError){
+        NSString *affirmButton = NSLocalizedString(@"Yes",@"Yes");
+        NSString *cancelButton = NSLocalizedString(@"Cancel",@"Cancel");
+        NSString *continueTitle = NSLocalizedString(@"Previous Session Upload",@"Previous Session Upload");
         NSString *continueMessage = NSLocalizedString(@"Would you like to continue uploading?",@"Would you like to continue uploading?");
         message = [NSString stringWithFormat:@"%@ %@",message,continueMessage];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Previous Session Upload" message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:continueTitle message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *yesAction = [UIAlertAction actionWithTitle:affirmButton style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
                 UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                 AddTripPhotosViewController *vc = (AddTripPhotosViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddTripViewController"];
             
                 [self.navigationController showViewController:vc sender:self];
             }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButton style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             [uploadError setObject:nil forKey:@"uploadError"];
             [uploadError setObject:nil forKey:@"currentImageUpload"];
             [uploadError setObject:nil forKey:@"currentTripUpload"];
@@ -164,6 +171,13 @@ list of trips the user hasn't seen since last being in the app
         [alert addAction:yesAction];
         [alert addAction:cancelAction];
         [self presentViewController:alert animated:YES completion:nil];
+    }else{
+        //clear NSUserDefaults of false message
+        [uploadError setObject:nil forKey:@"uploadError"];
+        [uploadError setObject:nil forKey:@"currentImageUpload"];
+        [uploadError setObject:nil forKey:@"currentTripUpload"];
+        [uploadError setObject:nil forKey:@"currentPhotoCaptions"];
+        [uploadError synchronize];
     }
     
     

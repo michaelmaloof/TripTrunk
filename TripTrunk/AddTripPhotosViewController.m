@@ -85,8 +85,12 @@
     //if so, it loads the PHAsset localIdentifiers and recreates the array and then we can restart the upload
     NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
     NSString *message = [uploadError stringForKey:@"uploadError"];
+    BOOL messageError = NO;
+    if ([message rangeOfString:@"(null)"].location != NSNotFound)
+        messageError = YES;
     
-    if(message){
+    
+    if(message && messageError){
         NSArray *localIdentifiers = [uploadError arrayForKey:@"currentImageUpload"];
         NSString *tripId = [uploadError stringForKey:@"currentTripId"];
         BOOL currentFacebookUpload = [uploadError boolForKey:@"currentFacebookUpload"];
