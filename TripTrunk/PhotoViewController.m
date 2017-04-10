@@ -586,11 +586,11 @@
                 [self.player.currentItem seekToTime:kCMTimeZero];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.player play];
+                    self.scrollView.scrollEnabled = NO;
+                    self.scrollView.pinchGestureRecognizer.enabled = NO;
                 });
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
-                self.scrollView.scrollEnabled = NO;
-                self.scrollView.pinchGestureRecognizer.enabled = NO;
             }];
             
         }else{
@@ -631,6 +631,8 @@
     self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.player play];
+        self.scrollView.scrollEnabled = NO;
+        self.scrollView.pinchGestureRecognizer.enabled = NO;
     });
 }
 
