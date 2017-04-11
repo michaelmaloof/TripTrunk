@@ -23,9 +23,8 @@
 -(void)prepareForReuse{
     [super prepareForReuse];
     
-    for (CALayer *layer in self.videoContainerView.layer.sublayers) {
-        [layer removeFromSuperlayer];
-    }
+    //Prevent videos from showing in wrong cells by removing the sublayer each reuse
+    [self.videoContainerView.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     
     [self.videoContainerView setNeedsDisplay];
     [self setNeedsDisplay];

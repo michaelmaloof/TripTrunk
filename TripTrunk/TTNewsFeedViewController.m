@@ -555,6 +555,12 @@
     [swipeleft.view setTag:indexPath.row];
     [cell.newsfeedPhoto addGestureRecognizer:swipeleft];
     
+    [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        [cell.newsfeedPhoto setImage:image];
+        //[cell bringSubviewToFront:cell.newsfeedPhoto];
+        [cell setNeedsLayout];
+    } failure:nil];
+    
     if(photo.video){
         cell.videoContainerView.hidden = NO;
         [cell.videoContainerView addGestureRecognizer:tap];
@@ -592,15 +598,15 @@
             
             //------------------------
             //ABSOLUTELY RIDICULOUS PLAY HACK BECAUSE THE 'RIGHT WAY' WILL NOT WORK!
-//            if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [player play];
-//                    cell.newsfeedPhoto.hidden = YES;
-//                    NSLog(@"Now playing video: %@",photo.objectId);
-//                });
-//                [self incrementViewInDictionaryForVideo:photo.objectId];
-//                self.videoId = photo.objectId;
-//            }
+            //            if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
+            //                dispatch_async(dispatch_get_main_queue(), ^{
+            //                    [player play];
+            //                    cell.newsfeedPhoto.hidden = YES;
+            //                    NSLog(@"Now playing video: %@",photo.objectId);
+            //                });
+            //                [self incrementViewInDictionaryForVideo:photo.objectId];
+            //                self.videoId = photo.objectId;
+            //            }
             //------------------------
             
             cell.videoSoundButton.hidden = NO;
@@ -613,11 +619,6 @@
             
         }];
     }
-    
-    [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-        [cell.newsfeedPhoto setImage:image];
-        [cell setNeedsLayout];
-    } failure:nil];
     
     for(int i=0;i<5;i++){
         UIButton *button = cell.subPhotoButtons[i];
@@ -773,7 +774,7 @@
                     
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [videoCell.avPlayer play];
-                            videoCell.newsfeedPhoto.hidden = YES;
+                            //videoCell.newsfeedPhoto.hidden = YES;
                             NSLog(@"Now playing video (check): %@",photo.objectId);
                         });
                         self.videoId = photo.objectId;
