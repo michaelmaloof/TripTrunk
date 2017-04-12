@@ -557,7 +557,6 @@
     
     [cell.newsfeedPhoto setImageWithURLRequest:requestNew placeholderImage:placeholderImage success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
         [cell.newsfeedPhoto setImage:image];
-        //[cell bringSubviewToFront:cell.newsfeedPhoto];
         [cell setNeedsLayout];
     } failure:nil];
     
@@ -601,7 +600,6 @@
             //            if(indexPath.row == 0){ //<-----need to check if row 0 is visible, this isn't good enough
             //                dispatch_async(dispatch_get_main_queue(), ^{
             //                    [player play];
-            //                    cell.newsfeedPhoto.hidden = YES;
             //                    NSLog(@"Now playing video: %@",photo.objectId);
             //                });
             //                [self incrementViewInDictionaryForVideo:photo.objectId];

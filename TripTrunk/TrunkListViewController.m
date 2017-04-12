@@ -841,10 +841,10 @@
         countString = @"";
     }
     else if (cell.trip.publicTripDetail.photoCount == 1) {
-        countString = @"(1 Photo)";
+        countString = NSLocalizedString(@"(1 Photo/Video)",@"(1 Photo/Video)");
     }
     else {
-        NSString *photos = NSLocalizedString(@"Photos",@"Photos");
+        NSString *photos = NSLocalizedString(@"Photos/Videos",@"Photos/Videos");
         countString = [NSString stringWithFormat:@"(%i %@)", cell.trip.publicTripDetail.photoCount, photos];
     }
     

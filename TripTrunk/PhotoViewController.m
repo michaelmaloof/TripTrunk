@@ -435,6 +435,7 @@
     self.photoToolbarWrapper.backgroundColor = [TTColor tripTrunkWhiteTransparent];
     
     [self.layer setFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
+    self.scrollView.scrollEnabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1979,6 +1980,7 @@
         else sself.video_sound_button.selected = YES;
         
     };
+    [self.activityIndicator stopAnimating];
     self.video_sound_button.hidden = YES;
     [self.player pause];
     [self.layer removeFromSuperlayer];
