@@ -123,6 +123,22 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:YES];
+    
+    __weak TTNewsFeedViewController* sself = self;
+    self.detector.silentNotify = ^(BOOL silent){
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        if(silent)
+            sself.phoneMuted = YES;
+        else sself.phoneMuted = NO;
+        
+        for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+            TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+            
+            if(silent)
+                videoCell.videoSoundButton.selected = NO;
+            else videoCell.videoSoundButton.selected = YES;
+        }
+    };
 }
 
 -(void)viewDidLayoutSubviews{

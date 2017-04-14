@@ -141,6 +141,15 @@
         // Still hide the tab bar!
         self.tabBarController.tabBar.hidden = YES;
     }
+    
+    __weak PhotoViewController* sself = self;
+    self.detector.silentNotify = ^(BOOL silent){
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        if(silent)
+            sself.video_sound_button.selected = NO;
+        else sself.video_sound_button.selected = YES;
+        
+    };
 }
 
 -(void)viewDidAppear:(BOOL)animated{
