@@ -940,8 +940,8 @@
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
-                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
-                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo/Video",@"Delete Photo/Video")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo/Video",@"Download Photo/Video"), nil];
         
     }
     
@@ -949,15 +949,15 @@
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
-                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo",@"Delete Photo")
-                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
+                                    destructiveButtonTitle:NSLocalizedString(@"Delete Photo/Video",@"Delete Photo/Video")
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo/Video",@"Download Photo/Video"), nil];
     }
     else {
         actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
                                     destructiveButtonTitle:nil
-                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo",@"Download Photo"), nil];
+                                         otherButtonTitles:NSLocalizedString(@"Report Inappropriate",@"Report Inappropriate"),NSLocalizedString(@"Download Photo/Video",@"Download Photo/Video"), nil];
     }
 
     

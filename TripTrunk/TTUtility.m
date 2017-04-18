@@ -737,7 +737,7 @@ CLCloudinary *cloudinary;
                         // Photo saved successfully, so we can unpin it from the local datastore.
                         // TODO: Uncomment this once pinning is actually implemented.
                         //  [photo unpin];
-                                                                
+                        
                         // Upload Photo to Facebook also if needed
                         if (publishToFacebook) {
                             // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.

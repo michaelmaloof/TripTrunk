@@ -461,6 +461,7 @@
                          photo.editedPath = outputURL.absoluteString;
                          [[TTUtility sharedInstance] uploadVideo:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
+                             
                              //remove compressed or trimmed video from temp directory
                              NSFileManager *manager = [NSFileManager defaultManager];
                              NSString *deletePath = [photo.editedPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];

@@ -39,6 +39,7 @@
 
 //TripTrunk Local
 //#define kPARSE_SERVER_KEY @"http://localhost:3000/parse/" // This is your LOCALHOST URL
+//#define kPARSE_SERVER_KEY @"http://10.0.1.6:3000/parse/" // This is Mike's Local IP Address
 //#define kPARSE_SERVER_KEY @"http://192.168.0.100:3000/parse/" // This is Matt's Local IP Address
 
 @interface AppDelegate ()
