@@ -886,12 +886,18 @@ CLCloudinary *cloudinary;
         
         NSString *alertSuccess = [NSString stringWithFormat:@"Successfully uploaded %1$d/%2$d %3$@%4$@to the '%5$@' trunk",totalUploaded,self.totalPhotos,photosIncluded,videosIncluded,self.tripName];
         
-        localNotification.alertBody = NSLocalizedString(alertSuccess,alertSuccess);
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-        self.tripName = nil;
-        self.photoCount = 0;
-        self.videoCount = 0;
+        BOOL messageError = NO;
+        if ([alertSuccess rangeOfString:@"(null)"].location != NSNotFound)
+            messageError = YES;
+        
+        if(!messageError){
+            localNotification.alertBody = NSLocalizedString(alertSuccess,alertSuccess);
+            localNotification.timeZone = [NSTimeZone defaultTimeZone];
+            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+            self.tripName = nil;
+            self.photoCount = 0;
+            self.videoCount = 0;
+        }
     }
 }
 

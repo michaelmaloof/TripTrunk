@@ -1503,7 +1503,7 @@
         if (buttonIndex == 0) {
             UIAlertView *alertView = [[UIAlertView alloc] init];
             alertView.delegate = self;
-            alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo?",@"Are you sure you want to delete this photo?");
+            alertView.title = NSLocalizedString(@"Are you sure you want to delete this photo/video?",@"Are you sure you want to delete this photo/video?");
             alertView.backgroundColor = [TTColor tripTrunkLightBlue];
             [alertView addButtonWithTitle:NSLocalizedString(@"No",@"No")];
             [alertView addButtonWithTitle:NSLocalizedString(@"Yes",@"Yes")];
