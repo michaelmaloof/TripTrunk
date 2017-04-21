@@ -124,6 +124,8 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:YES];
     
+    self.videoId = @"";
+    
     __weak TTNewsFeedViewController* sself = self;
     self.detector.silentNotify = ^(BOOL silent){
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
@@ -148,6 +150,15 @@
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
     
+    self.videoId = @"";
+    
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+        [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
+        [videoCell.avPlayer pause];
+    }
+
+
     if (!self.isLoading){
         self.isLoading = YES;
         int mainCount = (int)self.mainPhotos.count;
