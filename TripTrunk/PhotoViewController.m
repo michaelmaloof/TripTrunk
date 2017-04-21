@@ -110,12 +110,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (self.fromAddPhotosViewController == NO){
-        [self prepareForViewPhotoFromTrunk];
-    } else {
-        [self prepareAddCaptionForNewPhoto];
-    }
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(saveVideoViews)
                                                  name:UIApplicationWillTerminateNotification
@@ -158,9 +153,11 @@
     //If the player is loaded, continue playing the video
     //If it's not loaded, it will ignore this command
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.player play];
-    });
+    if (self.fromAddPhotosViewController == NO){
+        [self prepareForViewPhotoFromTrunk];
+    } else {
+        [self prepareAddCaptionForNewPhoto];
+    }
 }
 
 -(void)saveVideoViews{
