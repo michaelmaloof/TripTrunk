@@ -106,10 +106,9 @@
     });
 
     self.photos = [[NSMutableArray alloc] init];
-    self.members = [[NSMutableArray alloc] init];
+    
     self.numberOfImagesPerRow = 3;
-    // Load initial data
-    [self checkIfIsMember];
+    
     // Add observer for when uploading is finished.
     // TTUtility posts the notification when the uploader is done so that we know to refresh the view to show new pictures
     // Notification is also used if a photo is deleted.
@@ -189,6 +188,12 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
+    //-------------------->
+    //This could be moved back to viewDidLoad and we could pass the membersToAdd into the self.members array instead of calling the server again for the data
+    // Load initial data
+    self.members = [[NSMutableArray alloc] init];
+    [self checkIfIsMember];
+    //-------------------->
     [self.memberCollectionView reloadData];
 }
 
@@ -659,17 +664,17 @@
         return self.photos.count;
         
     } else {
-        if (self.isMember == YES){
-            if (self.trip.isPrivate == NO){
-                return self.members.count +1;
-            } else if (self.trip.isPrivate == YES){
-                return self.members.count +1;
-            } else {
-                return self.members.count +1;
-            }
-        } else {
+//        if (self.isMember == YES){
+//            if (self.trip.isPrivate == NO){
+//                return self.members.count +1;
+//            } else if (self.trip.isPrivate == YES){
+//                return self.members.count +1;
+//            } else {
+//                return self.members.count +1;
+//            }
+//        } else {
             return self.members.count +1;
-        }
+//        }
     }
 }
 
@@ -723,26 +728,24 @@
             return weakCell;
             return cell;
     } else {
-        UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
+        __weak UserCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MyCell2" forIndexPath:indexPath];
         cell.profileImage.image = nil;
         NSInteger index = indexPath.item;
         [cell.profileImage setContentMode:UIViewContentModeScaleAspectFill];
-        __weak UserCellCollectionViewCell *weakCell = cell;
         if (indexPath.item == 0){
             cell.profileImage.alpha = 1;
             cell.profileImage.image = [UIImage imageNamed:@"members"];
         }else {
             PFUser *possibleFriend = [[PFUser alloc]init];
-            if (self.isMember == NO){
+//            if (self.isMember == NO){
+//                possibleFriend = [self.members objectAtIndex:index - 1];
+//            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
+//                possibleFriend = [self.members objectAtIndex:index - 1];
+//            } else if (self.isMember == YES && self.trip.isPrivate == YES){
+//                possibleFriend = [self.members objectAtIndex:index - 1];
+//            } else {
                 possibleFriend = [self.members objectAtIndex:index - 1];
-            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
-                possibleFriend = [self.members objectAtIndex:index - 1];
-            } else if (self.isMember == YES && self.trip.isPrivate == YES){
-                possibleFriend = [self.members objectAtIndex:index - 1];
-            } else {
-                possibleFriend = [self.members objectAtIndex:index - 1];
-
-            }
+//            }
             
             if ([self.loadingMembers containsObject:possibleFriend]){
                 cell.profileImage.alpha = .5;
@@ -758,12 +761,11 @@
                                             placeholderImage:nil
                                                      success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                                          
-                                                         [weakCell.profileImage setImage:image];
-                                                         [weakCell setNeedsLayout];
+                                                         [cell.profileImage setImage:image];
+                                                         [cell setNeedsLayout];
                                                          
                                                      } failure:nil];
         }
-        return weakCell;
         
         return cell;
     }
@@ -795,15 +797,15 @@
             [self.navigationController pushViewController:vc animated:YES];
         }else {
             PFUser *user = [[PFUser alloc]init];
-            if (self.isMember == NO){
+//            if (self.isMember == NO){
+//                user = [self.members objectAtIndex:indexPath.row -1];
+//            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
+//                user = [self.members objectAtIndex:indexPath.row -1];
+//            } else if (self.isMember == YES && self.trip.isPrivate == YES){
+//                user = [self.members objectAtIndex:indexPath.row -1];
+//            } else {
                 user = [self.members objectAtIndex:indexPath.row -1];
-            } else if (self.isMember == YES && self.trip.isPrivate == NO) {
-                user = [self.members objectAtIndex:indexPath.row -1];
-            } else if (self.isMember == YES && self.trip.isPrivate == YES){
-                user = [self.members objectAtIndex:indexPath.row -1];
-            } else {
-                user = [self.members objectAtIndex:indexPath.row -1];
-            }
+//            }
             if (user) {
                 UserProfileViewController *vc = [[UserProfileViewController alloc] initWithUser:user];
                 [self.navigationController pushViewController:vc animated:YES];
