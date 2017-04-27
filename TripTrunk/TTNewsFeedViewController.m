@@ -76,15 +76,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.hidesBackButton = YES;
-
-    [self setTitleImage];
-    [self createLeftButtons];
-    self.trips = [[NSMutableArray alloc] init];
-    self.mainPhotos = [[NSMutableArray alloc]init];
-    self.subPhotos = [[NSMutableDictionary alloc]init];
-    self.photoUsers = [[NSMutableArray alloc]init];
-    self.userTrips = [[NSMutableArray alloc] init];
+    
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
                        action:@selector(refresh:)
@@ -92,7 +84,6 @@
     [self.collectionView addSubview:refreshControl];
     refreshControl.tintColor = [TTColor tripTrunkBlue];
     [refreshControl endRefreshing];
-    self.objid = [[NSMutableArray alloc]init];
     
     self.viewsDictionary = [[NSMutableDictionary alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -108,6 +99,19 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    //moved from viewDidLoad to fix delete bug
+    self.navigationItem.hidesBackButton = YES;
+    
+    [self setTitleImage];
+    [self createLeftButtons];
+    self.trips = [[NSMutableArray alloc] init];
+    self.mainPhotos = [[NSMutableArray alloc] init];
+    self.subPhotos = [[NSMutableDictionary alloc] init];
+    self.photoUsers = [[NSMutableArray alloc] init];
+    self.userTrips = [[NSMutableArray alloc] init];
+    self.objid = [[NSMutableArray alloc] init];
+    
+    
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
         {
