@@ -94,7 +94,7 @@
                                              selector:@selector(saveViewCountsFromDictionaryToParse)
                                                  name:UIApplicationWillResignActiveNotification
                                                object: nil];
-    
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -149,7 +149,7 @@
 
 -(void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    
+    [self performSelector:@selector(checkWhichVideoToEnable:) withObject:nil afterDelay:2.0];
 }
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
@@ -506,6 +506,7 @@
     return time;
 }
 
+#pragma mark - UIRefreshControl
 - (void)refresh:(UIRefreshControl *)refreshControl {
     [self loadNewsFeed:YES refresh:refreshControl];
 }
@@ -854,10 +855,11 @@
 //}
 
 -(void)deallocateVideo{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
-    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
+    
     @try{
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
+        [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
 //        [self.player removeObserver:self forKeyPath:@"status"];
     }@catch(id anException){
         //do nothing, obviously it wasn't attached because an exception was thrown
