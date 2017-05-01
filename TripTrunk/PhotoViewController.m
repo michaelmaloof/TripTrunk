@@ -119,6 +119,11 @@
                                              selector:@selector(saveVideoViews)
                                                  name:UIApplicationWillResignActiveNotification
                                                object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivePlaybackStartedNotification:)
+                                                 name:@"PlaybackStartedNotification"
+                                               object:nil];
 }
 
 #pragma On Appear
@@ -598,6 +603,27 @@
                 });
                 self.video_sound_button.hidden = NO;
                 self.viewCountLabel.hidden = NO;
+                
+                // Declare block scope variables to avoid retention cycles
+                // from references inside the block
+                __block AVPlayer* blockPlayer = self.player;
+                __block id obs;
+                
+                // Setup boundary time observer to trigger when audio really begins,
+                // specifically after 1/3 of a second playback
+                obs = [self.player addBoundaryTimeObserverForTimes:
+                       @[[NSValue valueWithCMTime:CMTimeMake(1, 3)]]
+                                                        queue:NULL
+                                                   usingBlock:^{
+                                                       
+                                                       // Raise a notificaiton when playback has started
+                                                       [[NSNotificationCenter defaultCenter]
+                                                        postNotificationName:@"PlaybackStartedNotification"
+                                                        object:url];
+                                                       
+                                                       // Remove the boundary time observer
+                                                       [blockPlayer removeTimeObserver:obs];
+                                                   }];
             }];
             
         }else{
@@ -646,11 +672,17 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == self.player && [keyPath isEqualToString:@"status"]) {
         if (self.player.status == AVPlayerItemStatusReadyToPlay) {
-            [self.activityIndicator stopAnimating];
+            //[self.activityIndicator stopAnimating];
             [self.scrollView sendSubviewToBack:self.imageView];
         } else if (self.player.status == AVPlayerStatusFailed) {
             NSLog(@"There was an error loading the video");
         }
+    }
+}
+
+-(void) receivePlaybackStartedNotification:(NSNotification *) notification {
+    if ([[notification name] isEqualToString:@"PlaybackStartedNotification"]) {
+        [self.activityIndicator stopAnimating];
     }
 }
 
@@ -2001,6 +2033,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:@"PlaybackStartedNotification"];
+    
     @try{
         [self.player removeObserver:self forKeyPath:@"status"];
     }@catch(id anException){
@@ -2012,6 +2046,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
     [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:@"PlaybackStartedNotification"];
+    
     @try{
         [self.player removeObserver:self forKeyPath:@"status"];
     }@catch(id anException){
