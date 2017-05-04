@@ -85,6 +85,7 @@
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */; };
 		27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */; };
+		27BFA4931EBB8DA100A6CFB4 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */; };
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
@@ -311,6 +312,7 @@
 		27AF315B1D2C0E8B00D93963 /* AWSMobileClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWSMobileClient.h; sourceTree = "<group>"; };
 		27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSMobileClient.m; sourceTree = "<group>"; };
 		27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSMobileHubHelper.framework; path = TripTrunk/AmazonAws/AWSMobileHubHelper.framework; sourceTree = "<group>"; };
+		27BFA4921EBB8DA100A6CFB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Login.storyboard; sourceTree = "<group>"; };
 		27C531E01C7F832C00F8B974 /* TTSuggestionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionViewCell.h; sourceTree = "<group>"; };
 		27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionViewCell.m; sourceTree = "<group>"; };
 		27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileImage.h; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 		220408DD1AED559A009DB060 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				27BFA4901EBB8D3A00A6CFB4 /* Storyboards */,
 				220408DE1AED55C1009DB060 /* ViewControllers */,
 				220408DF1AED55E7009DB060 /* ViewCells */,
 				220408E01AED560B009DB060 /* ImageView */,
@@ -694,7 +697,6 @@
 			isa = PBXGroup;
 			children = (
 				C976378F1D8B2DD7000E8C37 /* TripTrunk.entitlements */,
-				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
 				224F3F931AE1D35E003A1DEB /* AppDelegate.h */,
 				224F3F941AE1D35E003A1DEB /* AppDelegate.m */,
 				C9C7299E1B0248D900BA68D2 /* SocialUtility.h */,
@@ -833,6 +835,15 @@
 				27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */,
 			);
 			path = AmazonAws;
+			sourceTree = "<group>";
+		};
+		27BFA4901EBB8D3A00A6CFB4 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
+				27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		27F3E3711D3D778600634B75 /* DLFPhotosPicker */ = {
@@ -1082,6 +1093,7 @@
 				225E554C1CB0762F00FAAB00 /* TTReportBugViewController.xib in Resources */,
 				4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */,
 				C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */,
+				27BFA4931EBB8DA100A6CFB4 /* Login.storyboard in Resources */,
 				276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
@@ -1298,6 +1310,14 @@
 				224F3F9F1AE1D35E003A1DEB /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27BFA4921EBB8DA100A6CFB4 /* Base */,
+			);
+			name = Login.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
