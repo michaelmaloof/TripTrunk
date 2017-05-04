@@ -86,6 +86,7 @@
 		27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */; };
 		27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */; };
 		27BFA4931EBB8DA100A6CFB4 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */; };
+		27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */; };
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
@@ -313,6 +314,8 @@
 		27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSMobileClient.m; sourceTree = "<group>"; };
 		27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSMobileHubHelper.framework; path = TripTrunk/AmazonAws/AWSMobileHubHelper.framework; sourceTree = "<group>"; };
 		27BFA4921EBB8DA100A6CFB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Login.storyboard; sourceTree = "<group>"; };
+		27BFA4941EBBC06500A6CFB4 /* TTOnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingViewController.h; sourceTree = "<group>"; };
+		27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingViewController.m; sourceTree = "<group>"; };
 		27C531E01C7F832C00F8B974 /* TTSuggestionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionViewCell.h; sourceTree = "<group>"; };
 		27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionViewCell.m; sourceTree = "<group>"; };
 		27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileImage.h; sourceTree = "<group>"; };
@@ -528,6 +531,8 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				27BFA4941EBBC06500A6CFB4 /* TTOnboardingViewController.h */,
+				27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */,
 				22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */,
 				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
 				22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */,
@@ -1227,6 +1232,7 @@
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
+				27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
