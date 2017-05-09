@@ -527,7 +527,8 @@
 
 - (void)filterResults:(NSString *)searchTerm {
     if (![searchTerm isEqualToString:@""]){
-        [self.searchResults removeAllObjects];
+        //[self.searchResults removeAllObjects];
+        
         
         //TODO: add NOT IN existingUsers query to both of these
         
@@ -556,6 +557,7 @@
             if (error){
                 [ParseErrorHandlingController handleError:error];
             } else {
+                self.searchResults = [[NSMutableArray alloc] init];
                 [self.searchResults addObjectsFromArray:objects];
                 TTUsernameSort *us = [[TTUsernameSort alloc] init];
                 NSArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];

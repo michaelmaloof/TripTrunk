@@ -423,7 +423,8 @@
         } else {
         
         if (self.removeResults == YES) {
-            [self.searchResults removeAllObjects];
+            //[self.searchResults removeAllObjects];
+            self.searchResults = [[NSMutableArray alloc] init];
         }
         [self.searchResults addObjectsFromArray:objects];
         self.searchString = searchTerm;
@@ -431,7 +432,8 @@
             
             TTUsernameSort *us = [[TTUsernameSort alloc] init];
             NSMutableArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
-            [self.searchResults removeAllObjects];
+            //[self.searchResults removeAllObjects];
+            self.searchResults = [[NSMutableArray alloc] init];
             [self.searchResults addObjectsFromArray:sortedArray];
             
             
