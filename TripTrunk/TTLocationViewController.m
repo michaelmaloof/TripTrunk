@@ -41,28 +41,36 @@
 - (IBAction)turnOnWasTapped:(id)sender {
     //TODO Track Location:
     locationManager.delegate = self;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager startUpdatingLocation];
-   [self performSegueWithIdentifier:@"next" sender:self];
-
+    [locationManager requestWhenInUseAuthorization];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    TTHomeViewController *homeVC = segue.destinationViewController;
-    homeVC.username = self.username;
-    homeVC.password = self.password;
-    homeVC.email = self.email;
-    homeVC.firstName = self.email;
-    homeVC.lastName = self.email;
-    homeVC.isFBUser = self.isFBUser;
+    TTHomeViewController *vc = segue.destinationViewController;
+    vc.aNewUser = self.user;
 }
 
 
 #pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"Failed to get location %@",error);
+    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationManager:didFailWithError"];
+    [self performSegueWithIdentifier:@"next" sender:self];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    if (status == kCLAuthorizationStatusDenied) {
+        // The user denied authorization
+        [self performSegueWithIdentifier:@"next" sender:self];
+    }else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        // The user accepted authorization
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager startUpdatingLocation];
+        [self performSegueWithIdentifier:@"next" sender:self];
+    }
+}
+
+- (IBAction)backWasTapped:(id)sender {
+    [self previousLoginViewController];
 }
 
 

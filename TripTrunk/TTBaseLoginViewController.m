@@ -42,7 +42,7 @@
 }
 
 -(void)previousLoginViewController{
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(BOOL)validateLoginInput:(NSString *)input type:(int)inputType{

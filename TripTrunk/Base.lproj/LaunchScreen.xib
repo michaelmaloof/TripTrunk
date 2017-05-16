@@ -15,32 +15,18 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_TripTrunk_title" translatesAutoresizingMaskIntoConstraints="NO" id="0px-de-Wug">
-                    <rect key="frame" x="140" y="322" width="200" height="39"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="200" id="V3A-62-Wpq"/>
-                        <constraint firstAttribute="height" constant="39" id="oSu-Pj-mrq"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="39" id="z5L-GH-TSb"/>
-                    </constraints>
-                </imageView>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_blueElephanRedBalloon" translatesAutoresizingMaskIntoConstraints="NO" id="dsU-xE-2oV">
-                    <rect key="frame" x="140" y="115" width="200" height="200"/>
+                    <rect key="frame" x="114" y="81.5" width="252" height="253"/>
                     <constraints>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="0ao-kq-sOG"/>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="E44-pm-bFe"/>
-                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="JgY-9v-QMo"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="SiO-5Z-2lT"/>
-                        <constraint firstAttribute="height" constant="200" id="vCX-o1-knr"/>
-                        <constraint firstAttribute="width" constant="200" id="xl1-Ro-Bf6"/>
+                        <constraint firstAttribute="width" constant="252" id="Jcx-n8-azF"/>
+                        <constraint firstAttribute="height" constant="253" id="yam-Zo-nQ8"/>
                     </constraints>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="dsU-xE-2oV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="L2X-Ca-0x2"/>
-                <constraint firstItem="0px-de-Wug" firstAttribute="top" secondItem="dsU-xE-2oV" secondAttribute="bottom" constant="7" id="aFu-IV-wPg"/>
-                <constraint firstItem="dsU-xE-2oV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-25" id="cLe-Sy-KF4"/>
-                <constraint firstItem="0px-de-Wug" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="iVJ-Tq-f7B"/>
+                <constraint firstItem="dsU-xE-2oV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="9mS-ag-sCw"/>
+                <constraint firstItem="dsU-xE-2oV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-32" id="fmJ-bF-BfP"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -48,7 +34,6 @@
         </view>
     </objects>
     <resources>
-        <image name="tt_TripTrunk_title" width="209" height="39"/>
-        <image name="tt_blueElephanRedBalloon" width="142" height="121"/>
+        <image name="tt_blueElephanRedBalloon" width="252" height="253"/>
     </resources>
 </document>

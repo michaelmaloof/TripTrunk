@@ -7,13 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTBaseLoginViewController.h"
 
-@interface TTLocationViewController : UIViewController
-@property NSString *email;
-@property NSString *password;
-@property NSString *username;
-@property NSString *firstName;
-@property NSString *lastName;
-@property BOOL isFBUser;
-
+@interface TTLocationViewController : TTBaseLoginViewController
+@property NSMutableDictionary *user;
 @end

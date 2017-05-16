@@ -7,7 +7,7 @@
 //
 
 #import "TTNameViewController.h"
-#import "TTEmailViewController.h"
+#import "TTLastNameViewController.h"
 
 @interface TTNameViewController () <UITextFieldDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
@@ -16,7 +16,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
-
+@property NSString *firstName;
+@property BOOL meetsMinimumRequirements;
 @end
 
 @implementation TTNameViewController
@@ -24,18 +25,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.nameTextField.delegate = self;
-    if (self.isFirstName == NO){
-        self.pageTitle.text = @"Last Name";
-        self.nameTextField.placeholder = @"Barnard";
+    self.nextButton.hidden = YES;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    if (![self.user[@"First Name"] isEqualToString:@""]){
+        self.nameTextField.text = [self.user[@"First Name"] capitalizedString];
+        
+        if(self.nameTextField.text.length > 0){
+            self.nextButton.hidden = NO;
+            self.meetsMinimumRequirements = YES;
+        }else{
+            self.nextButton.hidden = YES;
+            self.meetsMinimumRequirements = NO;
+        }
     }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    if (![self.firstName isEqualToString:@""] && self.isFirstName == YES){
-        self.nameTextField.text = self.firstName;
-    } else if (![self.lastName isEqualToString:@""] && self.firstName == NO){
-        self.nameTextField.text = self.lastName;
-    }
     [self.nameTextField becomeFirstResponder];
 }
 
@@ -54,38 +62,45 @@
     [self.view endEditing:YES];
 }
 
+#pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self submitName];
     return NO;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    //name has changed
+    self.nextButton.hidden = YES;
+    self.meetsMinimumRequirements = NO;
+    
+    //textField delegates are called before update, init for new range
+    NSUInteger postRange = (range.location +1) - range.length;
+    
+    if(postRange > 0){
+        self.nextButton.hidden = NO;
+        self.meetsMinimumRequirements = YES;
+    }else{
+        self.nextButton.hidden = YES;
+        self.meetsMinimumRequirements = NO;
+    }
+    
+    
+    return YES;
+}
+
 -(void)submitName{
-    NSString *name =  [self.nameTextField.text lowercaseString];
-    if([self validateLoginInput:name type:2]){
-        if (self.isFirstName == YES){
-            self.firstName = name;
-            TTNameViewController *lastNameVc = [self.storyboard instantiateViewControllerWithIdentifier:@"NameVC"];
-            lastNameVc.username = self.username;
-            lastNameVc.password = self.username;
-            lastNameVc.firstName = self.firstName;
-            lastNameVc.isFirstName = NO;
-            lastNameVc.isFBUser = self.isFBUser;
-            [self.navigationController pushViewController:lastNameVc animated:NO];
-        }else {
-            self.lastName = name;
-            [self performSegueWithIdentifier:@"next" sender:self];
-        }
+    if(self.meetsMinimumRequirements){
+        self.firstName =  [self.nameTextField.text lowercaseString];
+        [self performSegueWithIdentifier:@"next" sender:self];
     }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"next"]){
-        TTEmailViewController *emailVC = segue.destinationViewController;
-        emailVC.username = self.username;
-        emailVC.password = self.username;
-        emailVC.firstName = self.firstName;
-        emailVC.lastName = self.lastName;
-        emailVC.isFBUser = self.isFBUser;
+        TTLastNameViewController *vc = segue.destinationViewController;
+        [self.user setObject:self.firstName forKey:@"First Name"];
+        vc.user = self.user;
     }
 }
 

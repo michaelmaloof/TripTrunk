@@ -16,7 +16,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
+//FIXME: Why is this here on an account creation?
 @property (weak, nonatomic) IBOutlet UIButton *forgotPassword;
+@property (strong, nonatomic) IBOutlet UILabel *acceptabilityLabel;
+@property NSString *password;
+@property BOOL meetsMinimumRequirements;
 
 @end
 
@@ -25,22 +29,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.passwordTextField.delegate = self;
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.passwordTextField.text = @"";
+    self.nextButton.hidden = YES;
+    self.meetsMinimumRequirements = NO;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    if (![self.password isEqualToString:@""]){
-        self.passwordTextField.text = self.password;
-    }
     [self.passwordTextField becomeFirstResponder];
-
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     TTNameViewController *nameVC = segue.destinationViewController;
-    nameVC.username = self.username;
-    nameVC.password = self.password;
-    nameVC.isFBUser = self.isFBUser;
-    nameVC.isFirstName = YES;
+    [self.user setObject:self.password forKey:@"Password"];
+    nameVC.user = self.user;
 }
 
 //Keyboard
@@ -53,11 +59,38 @@
     return NO;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    //password has changed
+    self.acceptabilityLabel.text = @"";
+    self.nextButton.hidden = YES;
+    self.meetsMinimumRequirements = NO;
+    
+    //textField delegates are called before update, init for new range
+    NSUInteger postRange = (range.location +1) - range.length;
+    
+    if(postRange > 7){
+        self.nextButton.hidden = NO;
+        self.meetsMinimumRequirements = YES;
+    }else{
+        self.nextButton.hidden = YES;
+        self.meetsMinimumRequirements = NO;
+    }
+    
+    
+    return YES;
+}
+
 -(void)submitPassword {
-    NSString *password =  [self.passwordTextField.text lowercaseString];
-    if([self validateLoginInput:password type:1] == YES){
-        self.password = password;
-        [self performSegueWithIdentifier:@"next" sender:self];
+    if(self.meetsMinimumRequirements){
+        NSString *password =  [self.passwordTextField.text lowercaseString];
+        if([self validateLoginInput:password type:1] == YES){
+            self.password = password;
+            [self performSegueWithIdentifier:@"next" sender:self];
+        }else{
+            self.acceptabilityLabel.text = NSLocalizedString(@"Password can't have any spaces.", @"Password can't have any spaces.");
+            self.nextButton.hidden = YES;
+        }
     }
 }
 

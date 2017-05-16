@@ -18,7 +18,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
 @property (weak, nonatomic) IBOutlet UIButton *account;
-
+@property (strong, nonatomic) IBOutlet UIImageView *availabilityIcon;
+@property (strong, nonatomic) IBOutlet UILabel *availabilityLabel;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *aI;
+@property BOOL lookupInterrupted;
+@property BOOL lookupFinished;
 @end
 
 @implementation TTUsernameViewController
@@ -26,13 +30,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.usernameTextField.delegate = self;
+    self.nextButton.hidden = YES;
+    self.aI.hidden = YES;
+    [self.aI startAnimating];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.lookupFinished = NO;
+    self.availabilityLabel.text = @"";
+    self.availabilityIcon.image = nil;
+    self.nextButton.hidden = YES;
+    int minimumUsernameLength = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MinimumUsernameLength"] intValue];
+    if(self.usernameTextField.text.length >= minimumUsernameLength)
+        [self performSelector:@selector(checkUsernameAvailability) withObject:nil afterDelay:1.5f];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    if (![self.username isEqualToString:@""]){
-        self.usernameTextField.text = self.username;
-    }
-    
+//    if (![self.username isEqualToString:@""]){
+//        self.usernameTextField.text = self.username;
+//    }
     [self.usernameTextField becomeFirstResponder];
 }
 
@@ -51,25 +69,105 @@
     [self.view endEditing:YES];
 }
 
+
+#pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self submitUsername];
     return NO;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    //username has changed, cancel the selector if called
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkUsernameAvailability) object:nil];
+    self.availabilityLabel.text = @"";
+    self.aI.hidden = YES;
+    self.availabilityIcon.image = nil;
+    self.account.hidden = NO;
+    self.nextButton.hidden = YES;
+    self.lookupInterrupted = YES;
+    self.lookupFinished = NO;
+    
+    //textField delegates are called before update, init for new range
+    NSUInteger postRange = (range.location +1) - range.length;
+    int minimumUsernameLength = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MinimumUsernameLength"] intValue];
+    
+    if(postRange > 0 && postRange < minimumUsernameLength){
+        self.availabilityLabel.text = @"Please select a longer username...";
+        self.aI.hidden = YES;
+        self.availabilityIcon.image = nil;
+    }else{
+        self.availabilityLabel.text = @"";
+        if(postRange >= minimumUsernameLength){
+            [self performSelector:@selector(checkUsernameAvailability) withObject:nil afterDelay:1.5f];
+        }
+    }
+    
+    
+    return YES;
+}
+
+-(void)checkUsernameAvailability{
+    self.availabilityLabel.text = @"Checking username availability...";
+    self.aI.hidden = NO;
+    self.availabilityIcon.image = nil;
+    self.lookupInterrupted = NO;
+    
+    //Cloud code to check availability
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.usernameTextField.text, @"username", nil];
+    
+    [PFCloud callFunctionInBackground:@"ValidateUsername" withParameters:params
+                                block:^(id  _Nullable success, NSError * _Nullable error) {
+                                    if (!error)
+                                        [self usernameDetermination:YES];
+                                    else [self usernameDetermination:NO];
+                                    
+    }];
+}
+
+-(void)usernameDetermination:(BOOL)available{
+    
+    if(!self.lookupInterrupted){
+        if(available){
+            self.availabilityLabel.text = @"Username available!";
+            self.aI.hidden = YES;
+            self.account.hidden = YES;
+            self.nextButton.hidden = NO;
+            self.availabilityIcon.image = [UIImage imageNamed:@"tt_Green_Check"];
+            self.lookupFinished = YES;
+        }else{
+            self.availabilityLabel.text = @"Sorry, please select a different username.";
+            self.aI.hidden = YES;
+            self.availabilityIcon.image = [UIImage imageNamed:@"tt_Red_X"];
+            self.lookupFinished = NO;
+        }
+    }
+}
+
 -(void)submitUsername{
-    NSString *username =  [_usernameTextField.text lowercaseString];
-    if([self validateLoginInput:username type:0] == YES){
+    if(self.lookupFinished){
+        NSString *username =  [self.usernameTextField.text lowercaseString];
         self.username = username;
         [self performSegueWithIdentifier:@"next" sender:self];
     }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    TTPasswordViewController *passwordVC = segue.destinationViewController;
-    passwordVC.username = self.username;
-    passwordVC.isFBUser = self.isFBUser;
-
+    TTPasswordViewController *vc = segue.destinationViewController;
+    NSMutableDictionary *user = [[NSMutableDictionary alloc] init];
+    [user setObject:self.username forKey:@"Username"];
+    [user setObject:self.isFBUser ? @"1":@"0" forKey:@"Facebook User"];
     
+    vc.user = user;
 }
+
+//-(void)dealloc{
+//    @try{
+//        [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    }@catch(id anException){
+//        //do nothing, obviously it wasn't attached because an exception was thrown
+//    }
+//}
 
 @end

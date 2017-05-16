@@ -30,6 +30,8 @@
 + (UIColor *)tripTrunkDarkGray;
 + (UIColor *)tripTrunkClear;
 + (UIColor *)tripTrunkGreen;
++ (UIColor *)tripTrunkButtonTextBlue;
++ (UIColor *)tripTrunkBackgroundLightBlue;
 //+ (UIColor *)tripTrunkCoral;
 + (UIColor *)tripTrunkWhiteTransparent;
 @end

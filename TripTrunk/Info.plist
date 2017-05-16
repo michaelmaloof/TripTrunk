@@ -87,6 +87,8 @@
 	<true/>
 	<key>MaxVideoLength</key>
 	<integer>15</integer>
+	<key>MinimumUsernameLength</key>
+	<integer>2</integer>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -213,5 +215,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your permission to access your location when you upload your photos.</string>
 </dict>
 </plist>

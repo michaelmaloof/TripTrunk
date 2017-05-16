@@ -38,6 +38,7 @@
 
 //UIButtons
 - (IBAction)backButtonWasTapped:(id)sender {
+    [self previousLoginViewController];
 }
 - (IBAction)finishButtonWasTapped:(id)sender {
     //approve hometown FIRST
@@ -84,39 +85,52 @@
 
 -(void)submitTripTrunkAccount{
     // Init the user ONLY if it doesn't exist. If we're logging in with FB, _user is already populated
-    if (!_user) {
-        _user = [PFUser user];
+    if (!self.user) {
+        self.user = [PFUser user];
     }
     else {
-        _user = [PFUser currentUser];
+        self.user = [PFUser currentUser];
     }
     
-    _user.username = self.username;
-    [_user setValue:self.firstName forKey:@"firstName"];
-    [_user setValue:self.lastName forKey:@"lastName"];
-    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
-    [_user setValue:fullName forKey:@"name"];
-    _user.email = self.email;
-    [_user setPassword:self.password];
-    [_user setValue:self.hometown forKey:@"hometown"];
+//    self.user.username = self.username;
+//    [self.user setValue:self.firstName forKey:@"firstName"];
+//    [self.user setValue:self.lastName forKey:@"lastName"];
+//    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+//    [self.user setValue:fullName forKey:@"name"];
+//    self.user.email = self.email;
+//    [self.user setPassword:self.password];
+//    [self.user setValue:self.hometown forKey:@"hometown"];
+    
+    self.user.username = self.aNewUser[@"Username"];
+    [self.user setValue:self.aNewUser[@"First Name"] forKey:@"firstName"];
+    [self.user setValue:self.aNewUser[@"Last Name"] forKey:@"lastName"];
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.aNewUser[@"First Name"], self.aNewUser[@"Last Name"]];
+    [self.user setValue:fullName forKey:@"name"];
+    self.user.email = self.aNewUser[@"Email"];
+    self.user.password = self.aNewUser[@"Password"];
+    [self.user setValue:self.homeTextField.text forKey:@"hometown"];
+    
+    
     
     // Set that the user has completed registration
-    [_user setValue:[NSNumber numberWithBool:YES] forKey:@"completedRegistration"];
+    [self.user setValue:[NSNumber numberWithBool:YES] forKey:@"completedRegistration"];
     
     NSError *error;
     // fb user exists so save, signup if it's a new user
     if (self.isFBUser) {
-        [_user save:&error];
+        [self.user save:&error];
         // After setting the username/password, the Session Token gets erased because it was authenticated with FB.
         // So, we now have to Log In again otherwise an error with throw.
-        [PFUser logInWithUsernameInBackground:_user.username password:_user.password];
+        [PFUser logInWithUsernameInBackground:self.user.username password:self.user.password];
     }
     else
     {
-        [_user signUp:&error];
+        [self.user signUp:&error];
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    [self performSegueWithIdentifier:@"next" sender:self];
 }
 
 

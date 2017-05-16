@@ -9,7 +9,5 @@
 #import "TTBaseLoginViewController.h"
 
 @interface TTPasswordViewController : TTBaseLoginViewController
-@property NSString *username;
-@property NSString *password;
-
+@property NSMutableDictionary *user;
 @end

@@ -94,6 +94,14 @@
     return [UIColor colorWithRed:0.0/255.0 green:179.0/255.0 blue:0.0/255.0 alpha:1.0];
 }
 
++ (UIColor *)tripTrunkButtonTextBlue {
+    return [UIColor colorWithRed:78.0/255.0 green:179.0/255.0 blue:252.0/255.0 alpha:1.0];
+}
+
++ (UIColor *)tripTrunkBackgroundLightBlue {
+    return [UIColor colorWithRed:230.0/255.0 green:244.0/255.0 blue:254.0/255.0 alpha:1.0];
+}
+
 //+ (UIColor *)tripTrunkCoral {
 //    return [UIColor colorWithRed:217.0/255.0 green:135.0/255.0 blue:135.0/255.0 alpha:1.0];
 //}

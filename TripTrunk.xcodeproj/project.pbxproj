@@ -94,6 +94,10 @@
 		27BFA4AA1EBBC7D000A6CFB4 /* TTNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4A21EBBC7D000A6CFB4 /* TTNameViewController.m */; };
 		27BFA4AB1EBBC7D000A6CFB4 /* TTPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4A41EBBC7D000A6CFB4 /* TTPasswordViewController.m */; };
 		27BFA4AC1EBBC7D000A6CFB4 /* TTUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4A61EBBC7D000A6CFB4 /* TTUsernameViewController.m */; };
+		27BFA4AF1EC3915700A6CFB4 /* TTOnboardingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4AE1EC3915700A6CFB4 /* TTOnboardingButton.m */; };
+		27BFA4B21EC3BAE400A6CFB4 /* TTOnboardingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4B11EC3BAE400A6CFB4 /* TTOnboardingTextField.m */; };
+		27BFA4B71ECA4FCA00A6CFB4 /* TTLastNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4B61ECA4FCA00A6CFB4 /* TTLastNameViewController.m */; };
+		27BFA4BB1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4BA1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m */; };
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
@@ -337,6 +341,14 @@
 		27BFA4A41EBBC7D000A6CFB4 /* TTPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPasswordViewController.m; sourceTree = "<group>"; };
 		27BFA4A51EBBC7D000A6CFB4 /* TTUsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUsernameViewController.h; sourceTree = "<group>"; };
 		27BFA4A61EBBC7D000A6CFB4 /* TTUsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUsernameViewController.m; sourceTree = "<group>"; };
+		27BFA4AD1EC3915700A6CFB4 /* TTOnboardingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingButton.h; sourceTree = "<group>"; };
+		27BFA4AE1EC3915700A6CFB4 /* TTOnboardingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingButton.m; sourceTree = "<group>"; };
+		27BFA4B01EC3BAE400A6CFB4 /* TTOnboardingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingTextField.h; sourceTree = "<group>"; };
+		27BFA4B11EC3BAE400A6CFB4 /* TTOnboardingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingTextField.m; sourceTree = "<group>"; };
+		27BFA4B61ECA4FCA00A6CFB4 /* TTLastNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTLastNameViewController.m; sourceTree = "<group>"; };
+		27BFA4B81ECA4FE300A6CFB4 /* TTLastNameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLastNameViewController.h; sourceTree = "<group>"; };
+		27BFA4B91ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingFinishedViewController.h; sourceTree = "<group>"; };
+		27BFA4BA1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingFinishedViewController.m; sourceTree = "<group>"; };
 		27C531E01C7F832C00F8B974 /* TTSuggestionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionViewCell.h; sourceTree = "<group>"; };
 		27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionViewCell.m; sourceTree = "<group>"; };
 		27C531E31C7F8F9C00F8B974 /* TTUserProfileImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileImage.h; sourceTree = "<group>"; };
@@ -876,6 +888,8 @@
 			children = (
 				27BFA4941EBBC06500A6CFB4 /* TTOnboardingViewController.h */,
 				27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */,
+				27BFA4B91ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.h */,
+				27BFA4BA1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m */,
 				27BFA4981EBBC79F00A6CFB4 /* TTBaseLoginViewController.h */,
 				27BFA4991EBBC79F00A6CFB4 /* TTBaseLoginViewController.m */,
 				27BFA49B1EBBC7D000A6CFB4 /* TTEmailViewController.h */,
@@ -886,10 +900,16 @@
 				27BFA4A01EBBC7D000A6CFB4 /* TTLocationViewController.m */,
 				27BFA4A11EBBC7D000A6CFB4 /* TTNameViewController.h */,
 				27BFA4A21EBBC7D000A6CFB4 /* TTNameViewController.m */,
+				27BFA4B81ECA4FE300A6CFB4 /* TTLastNameViewController.h */,
+				27BFA4B61ECA4FCA00A6CFB4 /* TTLastNameViewController.m */,
 				27BFA4A31EBBC7D000A6CFB4 /* TTPasswordViewController.h */,
 				27BFA4A41EBBC7D000A6CFB4 /* TTPasswordViewController.m */,
 				27BFA4A51EBBC7D000A6CFB4 /* TTUsernameViewController.h */,
 				27BFA4A61EBBC7D000A6CFB4 /* TTUsernameViewController.m */,
+				27BFA4AD1EC3915700A6CFB4 /* TTOnboardingButton.h */,
+				27BFA4AE1EC3915700A6CFB4 /* TTOnboardingButton.m */,
+				27BFA4B01EC3BAE400A6CFB4 /* TTOnboardingTextField.h */,
+				27BFA4B11EC3BAE400A6CFB4 /* TTOnboardingTextField.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1274,12 +1294,14 @@
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
+				27BFA4AF1EC3915700A6CFB4 /* TTOnboardingButton.m in Sources */,
 				27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */,
 				223547F41AE322C3001FE916 /* Trip.m in Sources */,
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				27BFA4AA1EBBC7D000A6CFB4 /* TTNameViewController.m in Sources */,
+				27BFA4B21EC3BAE400A6CFB4 /* TTOnboardingTextField.m in Sources */,
 				27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */,
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
@@ -1314,7 +1336,9 @@
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
 				C95702731D942496009DE079 /* Activity.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,
+				27BFA4BB1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m in Sources */,
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
+				27BFA4B71ECA4FCA00A6CFB4 /* TTLastNameViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				27BFA4AB1EBBC7D000A6CFB4 /* TTPasswordViewController.m in Sources */,
 				C90C3D111B04FC2200CABBC9 /* AFHTTPSessionManager.m in Sources */,
