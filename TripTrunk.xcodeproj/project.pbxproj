@@ -102,6 +102,9 @@
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
+		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
+		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
+		27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */; };
 		27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */; };
 		27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3731D3D778600634B75 /* DLFAssetsLayout.m */; };
 		27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3761D3D778600634B75 /* DLFDetailViewController.m */; };
@@ -363,6 +366,12 @@
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
+		27ED88221ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingLoginUsernameViewController.h; sourceTree = "<group>"; };
+		27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingLoginUsernameViewController.m; sourceTree = "<group>"; };
+		27ED88251ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingLoginPasswordViewController.h; sourceTree = "<group>"; };
+		27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingLoginPasswordViewController.m; sourceTree = "<group>"; };
+		27ED88281ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingResetPasswordViewController.h; sourceTree = "<group>"; };
+		27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingResetPasswordViewController.m; sourceTree = "<group>"; };
 		27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrunkMemberViewCell.h; sourceTree = "<group>"; };
 		27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrunkMemberViewCell.m; sourceTree = "<group>"; };
 		27F3E3721D3D778600634B75 /* DLFAssetsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLFAssetsLayout.h; sourceTree = "<group>"; };
@@ -910,6 +919,12 @@
 				27BFA4AE1EC3915700A6CFB4 /* TTOnboardingButton.m */,
 				27BFA4B01EC3BAE400A6CFB4 /* TTOnboardingTextField.h */,
 				27BFA4B11EC3BAE400A6CFB4 /* TTOnboardingTextField.m */,
+				27ED88221ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.h */,
+				27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */,
+				27ED88251ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.h */,
+				27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */,
+				27ED88281ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.h */,
+				27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1244,6 +1259,7 @@
 				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
 				C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */,
 				27BFA4AC1EBBC7D000A6CFB4 /* TTUsernameViewController.m in Sources */,
+				27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */,
 				27BFA4A91EBBC7D000A6CFB4 /* TTLocationViewController.m in Sources */,
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */,
@@ -1300,6 +1316,7 @@
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
+				27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */,
 				27BFA4AA1EBBC7D000A6CFB4 /* TTNameViewController.m in Sources */,
 				27BFA4B21EC3BAE400A6CFB4 /* TTOnboardingTextField.m in Sources */,
 				27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */,
@@ -1333,6 +1350,7 @@
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
+				27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
 				C95702731D942496009DE079 /* Activity.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,

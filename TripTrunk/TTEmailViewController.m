@@ -16,6 +16,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *aI;
+@property (strong, nonatomic) IBOutlet UILabel *availabilityLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *availabilityIcon;
 @property NSString *email;
 @property BOOL meetsMinimumRequirements;
 @end
@@ -26,6 +29,7 @@
     [super viewDidLoad];
     self.emailTextField.delegate = self;
     self.nextButton.hidden = YES;
+    self.aI.hidden = YES;
 }
 
 -(void)viewWillAppear:(BOOL)animated{

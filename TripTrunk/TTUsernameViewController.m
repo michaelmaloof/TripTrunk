@@ -62,6 +62,7 @@
     [self submitUsername];
 }
 - (IBAction)accountWasTapped:(id)sender {
+    [self performSegueWithIdentifier:@"login" sender:self];
 }
 
 //Keyboard
@@ -154,12 +155,14 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    TTPasswordViewController *vc = segue.destinationViewController;
-    NSMutableDictionary *user = [[NSMutableDictionary alloc] init];
-    [user setObject:self.username forKey:@"Username"];
-    [user setObject:self.isFBUser ? @"1":@"0" forKey:@"Facebook User"];
-    
-    vc.user = user;
+    if([segue.identifier isEqualToString:@"next"]){
+        TTPasswordViewController *vc = segue.destinationViewController;
+        NSMutableDictionary *user = [[NSMutableDictionary alloc] init];
+        [user setObject:self.username forKey:@"Username"];
+        [user setObject:self.isFBUser ? @"1":@"0" forKey:@"Facebook User"];
+        
+        vc.user = user;
+    }
 }
 
 //-(void)dealloc{

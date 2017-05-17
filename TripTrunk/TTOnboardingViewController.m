@@ -98,4 +98,11 @@
     username.isFBUser = self.isFBUser;
 }
 
+- (IBAction)termsWasTapped:(id)sender {
+    EULAViewController *eula = [[EULAViewController alloc] initWithNibName:@"EULAViewController" bundle:[NSBundle mainBundle]];
+    eula.alreadyAccepted = YES;
+    UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
+    [self presentViewController:homeNavController animated:YES completion:nil];
+}
+
 @end

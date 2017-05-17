@@ -44,9 +44,11 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    TTNameViewController *nameVC = segue.destinationViewController;
-    [self.user setObject:self.password forKey:@"Password"];
-    nameVC.user = self.user;
+    if([segue.identifier isEqualToString:@"next"]){
+        TTNameViewController *nameVC = segue.destinationViewController;
+        [self.user setObject:self.password forKey:@"Password"];
+        nameVC.user = self.user;
+    }
 }
 
 //Keyboard
