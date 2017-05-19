@@ -153,6 +153,7 @@
  *  Delegate method executed when the "Done" button is pressed
  */
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    
     [self closeView];
 }
 

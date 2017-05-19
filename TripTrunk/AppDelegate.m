@@ -50,7 +50,6 @@
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = kPARSE_APP_ID;
         configuration.clientKey = kPARSE_CLIENT_KEY;
@@ -78,7 +77,7 @@
             if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
                 env = NO;
             [TTAnalytics initAnalyticsOnStart:env];
-    }
+    }    
 
     return YES;
 }
@@ -491,6 +490,7 @@
                                                            [TTFont tripTrunkFontBold38], NSFontAttributeName, nil]];
     
     [[UITabBar appearance] setTintColor:[TTColor tripTrunkBlue]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 -(void)handleDatabaseAndConsoleLog{

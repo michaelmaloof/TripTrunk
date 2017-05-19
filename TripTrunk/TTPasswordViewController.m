@@ -37,6 +37,8 @@
     self.passwordTextField.text = @"";
     self.nextButton.hidden = YES;
     self.meetsMinimumRequirements = NO;
+    //Why do we have this here?
+    self.forgotPassword.hidden = YES;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -73,9 +75,11 @@
     
     if(postRange > 7){
         self.nextButton.hidden = NO;
+        //self.forgotPassword.hidden = YES;
         self.meetsMinimumRequirements = YES;
     }else{
         self.nextButton.hidden = YES;
+        //self.forgotPassword.hidden = NO;
         self.meetsMinimumRequirements = NO;
     }
     

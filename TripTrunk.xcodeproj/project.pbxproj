@@ -105,6 +105,7 @@
 		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
 		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
 		27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */; };
+		27ED882D1ECF8AE100373F72 /* TTEmailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */; };
 		27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */; };
 		27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3731D3D778600634B75 /* DLFAssetsLayout.m */; };
 		27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3761D3D778600634B75 /* DLFDetailViewController.m */; };
@@ -372,6 +373,8 @@
 		27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingLoginPasswordViewController.m; sourceTree = "<group>"; };
 		27ED88281ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingResetPasswordViewController.h; sourceTree = "<group>"; };
 		27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingResetPasswordViewController.m; sourceTree = "<group>"; };
+		27ED882B1ECF8AE100373F72 /* TTEmailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEmailValidation.h; sourceTree = "<group>"; };
+		27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEmailValidation.m; sourceTree = "<group>"; };
 		27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrunkMemberViewCell.h; sourceTree = "<group>"; };
 		27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrunkMemberViewCell.m; sourceTree = "<group>"; };
 		27F3E3721D3D778600634B75 /* DLFAssetsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLFAssetsLayout.h; sourceTree = "<group>"; };
@@ -925,6 +928,8 @@
 				27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */,
 				27ED88281ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.h */,
 				27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */,
+				27ED882B1ECF8AE100373F72 /* TTEmailValidation.h */,
+				27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1328,6 +1333,7 @@
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
 				272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */,
+				27ED882D1ECF8AE100373F72 /* TTEmailValidation.m in Sources */,
 				2268B09E1B32485300C941C4 /* HomeMapViewController.m in Sources */,
 				C9F9177C1B4ECFDC00AE8953 /* MSFloatingProgressView.m in Sources */,
 				27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */,

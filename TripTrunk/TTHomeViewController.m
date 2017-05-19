@@ -21,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *finishButton;
 @property (strong, nonatomic) PFUser *user;
-
 @end
 
 @implementation TTHomeViewController
@@ -30,6 +29,11 @@
     [super viewDidLoad];
     _user = [PFUser currentUser];
     self.homeTextField.delegate = self;
+    self.finishButton.hidden = YES;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -84,53 +88,38 @@
 }
 
 -(void)submitTripTrunkAccount{
-    // Init the user ONLY if it doesn't exist. If we're logging in with FB, _user is already populated
-    if (!self.user) {
-        self.user = [PFUser user];
+    if(![self.homeTextField.text isEqualToString:@""]){
+        // Init the user ONLY if it doesn't exist. If we're logging in with FB, _user is already populated
+        if (!self.user)
+            self.user = [PFUser user];
+        else self.user = [PFUser currentUser];
+        
+        self.user.username = self.aNewUser[@"Username"];
+        [self.user setValue:self.aNewUser[@"First Name"] forKey:@"firstName"];
+        [self.user setValue:self.aNewUser[@"Last Name"] forKey:@"lastName"];
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.aNewUser[@"First Name"], self.aNewUser[@"Last Name"]];
+        [self.user setValue:fullName forKey:@"name"];
+        self.user.email = self.aNewUser[@"Email"];
+        self.user.password = self.aNewUser[@"Password"];
+        [self.user setValue:self.homeTextField.text forKey:@"hometown"];
+        
+        // Set that the user has completed registration
+        [self.user setValue:[NSNumber numberWithBool:YES] forKey:@"completedRegistration"];
+        
+        NSError *error;
+        // fb user exists so save, signup if it's a new user
+        if (self.isFBUser) {
+            [self.user save:&error];
+            // After setting the username/password, the Session Token gets erased because it was authenticated with FB.
+            // So, we now have to Log In again otherwise an error with throw.
+            [PFUser logInWithUsernameInBackground:self.user.username password:self.user.password];
+        }else{
+            [self.user signUp:&error];
+        }
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [self performSegueWithIdentifier:@"next" sender:self];
     }
-    else {
-        self.user = [PFUser currentUser];
-    }
-    
-//    self.user.username = self.username;
-//    [self.user setValue:self.firstName forKey:@"firstName"];
-//    [self.user setValue:self.lastName forKey:@"lastName"];
-//    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
-//    [self.user setValue:fullName forKey:@"name"];
-//    self.user.email = self.email;
-//    [self.user setPassword:self.password];
-//    [self.user setValue:self.hometown forKey:@"hometown"];
-    
-    self.user.username = self.aNewUser[@"Username"];
-    [self.user setValue:self.aNewUser[@"First Name"] forKey:@"firstName"];
-    [self.user setValue:self.aNewUser[@"Last Name"] forKey:@"lastName"];
-    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.aNewUser[@"First Name"], self.aNewUser[@"Last Name"]];
-    [self.user setValue:fullName forKey:@"name"];
-    self.user.email = self.aNewUser[@"Email"];
-    self.user.password = self.aNewUser[@"Password"];
-    [self.user setValue:self.homeTextField.text forKey:@"hometown"];
-    
-    
-    
-    // Set that the user has completed registration
-    [self.user setValue:[NSNumber numberWithBool:YES] forKey:@"completedRegistration"];
-    
-    NSError *error;
-    // fb user exists so save, signup if it's a new user
-    if (self.isFBUser) {
-        [self.user save:&error];
-        // After setting the username/password, the Session Token gets erased because it was authenticated with FB.
-        // So, we now have to Log In again otherwise an error with throw.
-        [PFUser logInWithUsernameInBackground:self.user.username password:self.user.password];
-    }
-    else
-    {
-        [self.user signUp:&error];
-    }
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-
-    [self performSegueWithIdentifier:@"next" sender:self];
 }
 
 
@@ -142,6 +131,7 @@
     // If it's a US city/state, we don't need to display the country, we'll assume United States.
     
     [self.homeTextField setText:[location.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+    self.finishButton.hidden = NO;
 }
 
 #pragma mark - Keyboard delegate methods
@@ -182,6 +172,7 @@
     
     return  YES;
 }
+
 
 
 @end

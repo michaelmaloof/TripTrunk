@@ -9,6 +9,7 @@
 #import "TTOnboardingResetPasswordViewController.h"
 #import "TTOnboardingTextField.h"
 #import "TTOnboardingButton.h"
+#import "TTEmailValidation.h"
 
 @interface TTOnboardingResetPasswordViewController ()
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *emailTextField;
@@ -44,6 +45,19 @@
         self.meetsMinimumRequirements = NO;
     }
     
+    NSString *e = textField.text; NSString *email;
+    if([string isEqualToString:@""])
+        email = [e substringToIndex:e.length - 1];
+    else email = [e stringByAppendingString:string];
+    
+    if([TTEmailValidation emailIsValid:email]){
+        self.resetButton.hidden = NO;
+        self.meetsMinimumRequirements = YES;
+    }else{
+        self.resetButton.hidden = YES;
+        self.meetsMinimumRequirements = NO;
+    }
+    
     
     return YES;
 }
@@ -57,15 +71,15 @@
     if(self.meetsMinimumRequirements){
         NSString *email =  [self.emailTextField.text lowercaseString];
         if([self validateLoginInput:email type:3]){
-            //reset password
-            if (![self.emailTextField.text containsString:@"@"]){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please Enter Valid Email",@"Please Enter Valid Email")
-                                                                message:NSLocalizedString(@"",@"")
-                                                               delegate:self
-                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                                      otherButtonTitles:nil, nil];
-                [alert show];
-            } else {
+//            //reset password
+//            if (![self.emailTextField.text containsString:@"@"]){
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please Enter Valid Email",@"Please Enter Valid Email")
+//                                                                message:NSLocalizedString(@"",@"")
+//                                                               delegate:self
+//                                                      cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
+//                                                      otherButtonTitles:nil, nil];
+//                [alert show];
+//            } else {
                 [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text block:^(BOOL succeeded, NSError * _Nullable error) {
                     if(!error){
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
@@ -86,7 +100,7 @@
                     }
                     
                 }];
-            }
+//            }
         }
     }
 }

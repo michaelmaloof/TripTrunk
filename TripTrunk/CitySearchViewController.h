@@ -17,7 +17,6 @@
 
 @property (nonatomic, strong) id<CitySearchViewControllerDelegate> delegate;
 
-
 @end
 
 @protocol CitySearchViewControllerDelegate <NSObject>

@@ -728,32 +728,15 @@ relies heavily on your location.</string>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8W-4h-bun" customClass="TTOnboardingButton">
-                                <rect key="frame" x="175" y="398" width="164" height="50"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="aES-xI-D1p"/>
-                                    <constraint firstAttribute="width" constant="164" id="wmh-8g-E50"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
-                                <state key="normal" title="TURN ON">
-                                    <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="turnOnWasTapped:" destination="2GM-gD-mO8" eventType="touchUpInside" id="rNF-8y-oIu"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ah-Pv-gUy">
-                                <rect key="frame" x="94" y="288" width="186" height="60"/>
+                                <rect key="frame" x="32" y="288" width="307" height="91"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="186" id="G6t-Zq-crO"/>
-                                    <constraint firstAttribute="height" constant="60" id="M58-M0-Ejv"/>
+                                    <constraint firstAttribute="width" constant="307" id="G6t-Zq-crO"/>
+                                    <constraint firstAttribute="height" constant="91" id="M58-M0-Ejv"/>
                                 </constraints>
                                 <string key="text">Allow TripTrunk to
-access your location?</string>
+access your location?
+</string>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -784,6 +767,24 @@ access your location?</string>
                                     <action selector="backWasTapped:" destination="2GM-gD-mO8" eventType="touchUpInside" id="cH1-qe-35k"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8W-4h-bun" customClass="TTOnboardingButton">
+                                <rect key="frame" x="175" y="398" width="164" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="aES-xI-D1p"/>
+                                    <constraint firstAttribute="width" constant="164" id="wmh-8g-E50"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
+                                <state key="normal" title="TURN ON">
+                                    <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="turnOnWasTapped:" destination="2GM-gD-mO8" eventType="touchUpInside" id="rNF-8y-oIu"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -792,12 +793,12 @@ access your location?</string>
                             <constraint firstItem="2ah-Pv-gUy" firstAttribute="top" secondItem="peh-3m-18W" secondAttribute="bottom" constant="18" id="LJO-P0-3za"/>
                             <constraint firstItem="bB7-Oe-Rnp" firstAttribute="centerX" secondItem="Z8W-4h-bun" secondAttribute="centerX" id="POQ-Pb-7bF"/>
                             <constraint firstItem="TXI-8N-AQx" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="16" id="QH4-M7-nqa"/>
-                            <constraint firstItem="Z8W-4h-bun" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="50" id="R6m-sq-fOJ"/>
+                            <constraint firstItem="Z8W-4h-bun" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="19" id="R6m-sq-fOJ"/>
                             <constraint firstItem="Cgk-Wn-Tmq" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="20" id="RCg-NH-l0A"/>
                             <constraint firstItem="peh-3m-18W" firstAttribute="width" secondItem="as8-h1-3i6" secondAttribute="width" id="X1K-3m-i0U"/>
-                            <constraint firstItem="2ah-Pv-gUy" firstAttribute="centerX" secondItem="as8-h1-3i6" secondAttribute="centerX" id="Yd8-Pc-vh2"/>
+                            <constraint firstItem="2ah-Pv-gUy" firstAttribute="centerX" secondItem="as8-h1-3i6" secondAttribute="centerX" constant="-2" id="Yd8-Pc-vh2"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Z8W-4h-bun" secondAttribute="trailing" constant="20" id="cG2-yh-Sm0"/>
-                            <constraint firstItem="TXI-8N-AQx" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="50" id="fU7-pj-4Zv"/>
+                            <constraint firstItem="TXI-8N-AQx" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="19" id="fU7-pj-4Zv"/>
                             <constraint firstItem="peh-3m-18W" firstAttribute="top" secondItem="as8-h1-3i6" secondAttribute="top" id="gRp-wV-nx6"/>
                             <constraint firstItem="xcp-d9-C6J" firstAttribute="top" secondItem="Cgk-Wn-Tmq" secondAttribute="bottom" constant="-5" id="j1o-gC-Vzx"/>
                             <constraint firstItem="xcp-d9-C6J" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="16" id="nF7-pZ-G89"/>
@@ -931,7 +932,7 @@ access your location?</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eh6-iT-bpl" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sd9-6H-UU9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sd9-6H-UU9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1141,7 +1142,7 @@ access your location?</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-5R-enU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-5R-enU">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="0N4-AZ-FUA"/>
@@ -1157,12 +1158,14 @@ access your location?</string>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Enter your username." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XvV-Q9-T3i">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XvV-Q9-T3i">
                                 <rect key="frame" x="32" y="181" width="307" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="0Zr-2a-d6H"/>
                                     <constraint firstAttribute="width" constant="307" id="wui-zE-U8F"/>
                                 </constraints>
+                                <string key="text">What is the username that you
+use on TripTrunk?</string>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1186,7 +1189,7 @@ access your location?</string>
                                     <constraint firstAttribute="width" constant="182" id="v9G-WK-igZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
-                                <state key="normal" title="Don't have an account?">
+                                <state key="normal" title="Don't have an account yet?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
@@ -1281,13 +1284,13 @@ access your location?</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="Zgh-Qk-p7t">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="Zgh-Qk-p7t">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="Lpa-q1-0RQ"/>
                                 </constraints>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Enter your password." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DG2-T6-B9f">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="What is your password for TripTrunk?" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DG2-T6-B9f">
                                 <rect key="frame" x="32" y="181" width="307" height="67"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="307" id="WtR-kU-gwF"/>
@@ -1347,7 +1350,7 @@ access your location?</string>
                                     <constraint firstAttribute="height" constant="30" id="WwO-z3-DM2"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
-                                <state key="normal" title="Forgot Password?">
+                                <state key="normal" title="Forgot your password?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
@@ -1414,7 +1417,7 @@ access your location?</string>
                                     <constraint firstAttribute="height" constant="270" id="QOh-3G-v3T"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxW-Ak-3nu">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxW-Ak-3nu">
                                 <rect key="frame" x="36" y="165" width="303" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="303" id="akX-Tn-wWB"/>
@@ -1467,7 +1470,7 @@ access your location?</string>
                                     <action selector="resetWasTapped:" destination="Bam-7x-FeI" eventType="touchUpInside" id="xCM-74-dxw"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Enter your email address for a password reset link." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1mh-gt-CJd">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Enter your email and we'll send you a link to reset your password." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1mh-gt-CJd">
                                 <rect key="frame" x="32" y="181" width="307" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="307" id="SYa-GG-Fww"/>
