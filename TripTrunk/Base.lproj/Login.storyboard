@@ -822,7 +822,7 @@ access your location?
         <!--Home View Controller-->
         <scene sceneID="uEh-cR-nZA">
             <objects>
-                <viewController id="0eV-tc-rHf" customClass="TTHomeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginHomeViewController" id="0eV-tc-rHf" customClass="TTHomeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="omZ-OR-jYz"/>
                         <viewControllerLayoutGuide type="bottom" id="BWB-xA-0Z1"/>
@@ -847,7 +847,7 @@ access your location?
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="City" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tru-22-v53" customClass="TTOnboardingTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="City" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tru-22-v53" customClass="TTCitySearchTextField">
                                 <rect key="frame" x="36" y="250" width="303" height="50"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -930,9 +930,9 @@ access your location?
         <!--Navigation Controller-->
         <scene sceneID="UOi-Tz-FOw">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eh6-iT-bpl" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LoginNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="eh6-iT-bpl" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sd9-6H-UU9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sd9-6H-UU9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1427,7 +1427,7 @@ use on TripTrunk?</string>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="elephant@triptrunk.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dVS-Bd-KeQ" customClass="TTOnboardingTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="elephant@triptrunkapp.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dVS-Bd-KeQ" customClass="TTOnboardingTextField">
                                 <rect key="frame" x="36" y="250" width="303" height="50"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -1519,6 +1519,65 @@ use on TripTrunk?</string>
             </objects>
             <point key="canvasLocation" x="1849" y="806"/>
         </scene>
+        <!--City Search Results Table View Controller-->
+        <scene sceneID="G0a-YD-z7c">
+            <objects>
+                <tableViewController storyboardIdentifier="TTCitySearchResultsTableViewController" id="2dg-XX-b31" customClass="TTCitySearchResultsTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="85a-jf-UYo">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="132"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="toS-yj-7wL" customClass="TTCitySearchResultsTableViewCell">
+                                <rect key="frame" x="0.0" y="28" width="300" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="toS-yj-7wL" id="ewF-Xy-roM">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" alpha="0.34999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_location_icon" translatesAutoresizingMaskIntoConstraints="NO" id="XRE-BW-biG">
+                                            <rect key="frame" x="8" y="8" width="28" height="28"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="28" id="X0i-36-ou9"/>
+                                                <constraint firstAttribute="height" constant="28" id="yfV-A6-icA"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DZx-uM-Lh1">
+                                            <rect key="frame" x="44" y="10.5" width="248" height="22"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="DZx-uM-Lh1" firstAttribute="centerY" secondItem="ewF-Xy-roM" secondAttribute="centerY" id="7ai-yb-AoO"/>
+                                        <constraint firstItem="XRE-BW-biG" firstAttribute="leading" secondItem="ewF-Xy-roM" secondAttribute="leading" constant="8" id="Gpo-bQ-yZE"/>
+                                        <constraint firstItem="DZx-uM-Lh1" firstAttribute="leading" secondItem="XRE-BW-biG" secondAttribute="trailing" constant="8" id="QOo-KA-oVy"/>
+                                        <constraint firstAttribute="trailing" secondItem="DZx-uM-Lh1" secondAttribute="trailing" constant="8" id="g8D-KR-NTc"/>
+                                        <constraint firstItem="XRE-BW-biG" firstAttribute="centerY" secondItem="ewF-Xy-roM" secondAttribute="centerY" id="vgm-oe-9SF"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="name" destination="DZx-uM-Lh1" id="GD1-6T-GWh"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="2dg-XX-b31" id="VWP-hL-9ta"/>
+                            <outlet property="delegate" destination="2dg-XX-b31" id="7G0-YC-GJ0"/>
+                        </connections>
+                    </tableView>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="300" height="132"/>
+                    <connections>
+                        <outlet property="resultsTable" destination="85a-jf-UYo" id="PXl-bT-amd"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KaV-sz-BeM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1848" y="1213.4932533733133"/>
+        </scene>
     </scenes>
     <resources>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
@@ -1531,6 +1590,7 @@ use on TripTrunk?</string>
         <image name="tt_Onboarding_Skateboard" width="375" height="258"/>
         <image name="tt_Onboarding_TreesRoad" width="375" height="258"/>
         <image name="tt_blueElephanRedBalloon" width="252" height="253"/>
+        <image name="tt_location_icon" width="145" height="145"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="2eZ-NB-Jll"/>

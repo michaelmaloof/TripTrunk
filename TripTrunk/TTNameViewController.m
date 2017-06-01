@@ -74,10 +74,13 @@
     self.nextButton.hidden = YES;
     self.meetsMinimumRequirements = NO;
     
-    //textField delegates are called before update, init for new range
-    NSUInteger postRange = (range.location +1) - range.length;
+    NSString *typedText;
     
-    if(postRange > 0){
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if(typedText.length > 0){
         self.nextButton.hidden = NO;
         self.meetsMinimumRequirements = YES;
     }else{

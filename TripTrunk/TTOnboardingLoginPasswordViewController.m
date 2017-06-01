@@ -28,10 +28,13 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     
-    //textField delegates are called before update, init for new range
-    NSUInteger postRange = (range.location +1) - range.length;
+    NSString *typedText;
     
-    if(postRange > 7){
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if(typedText.length > 7){
         self.loginButton.hidden = NO;
         self.forgotPasswordButton.hidden = YES;
     }else{

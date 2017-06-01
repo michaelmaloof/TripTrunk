@@ -12,15 +12,20 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MBProgressHUD.h"
 #import "CitySearchViewController.h"
+#import "TTCitySearchTextField.h"
+#import "TTCitySearchResultsTableViewController.h"
 
-@interface TTHomeViewController () <CitySearchViewControllerDelegate, UITextFieldDelegate>
+@interface TTHomeViewController () <UITextFieldDelegate, TTCitySearchTextFieldDelegate, UIPopoverPresentationControllerDelegate,TTCitySearchResultsDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
 @property (weak, nonatomic) IBOutlet UITextView *info;
 @property (weak, nonatomic) IBOutlet UIImageView *trunkImage;
-@property (weak, nonatomic) IBOutlet UITextField *homeTextField;
+@property (weak, nonatomic) IBOutlet TTCitySearchTextField *homeTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *finishButton;
 @property (strong, nonatomic) PFUser *user;
+@property (strong, nonatomic) TTCitySearchResultsTableViewController *citySearchPopover;
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
+@property BOOL meetsMinimumRequirements;
 @end
 
 @implementation TTHomeViewController
@@ -28,12 +33,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _user = [PFUser currentUser];
-    self.homeTextField.delegate = self;
+    self.homeTextField.csdelegate = self;
+    self.citySearchPopover.srdelegate = self;
     self.finishButton.hidden = YES;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    self.meetsMinimumRequirements = NO;
+    self.finishButton.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -123,56 +131,72 @@
 }
 
 
-#pragma mark - CitySearchViewController Delegate
+//#pragma mark - CitySearchViewController Delegate
+//
+//- (void)citySearchDidSelectLocation:(TTPlace *)location {
+//    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+//    
+//    // If it's a US city/state, we don't need to display the country, we'll assume United States.
+//    
+//    [self.homeTextField setText:[location.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+//    self.finishButton.hidden = NO;
+//}
 
-- (void)citySearchDidSelectLocation:(TTPlace *)location {
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-    
-    // If it's a US city/state, we don't need to display the country, we'll assume United States.
-    
-    [self.homeTextField setText:[location.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
-    self.finishButton.hidden = NO;
-}
 
-#pragma mark - Keyboard delegate methods
 
-// The following method needed to dismiss the keyboard after input with a click anywhere on the screen outside text boxes
+#pragma mark - TTCitySearchTextFieldDelegate
+-(void)displayCitySearchPopoverFromView:(NSArray*)results{
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-
-// Go to the next textfield or close the keyboard when the return button is pressed
-
-- (BOOL) textFieldShouldReturn:(UITextField *) textField {
-    
-    BOOL didResign = [textField resignFirstResponder];
-    if (!didResign) return NO;
-    
-    if ([textField isKindOfClass:[MSTextField class]])
-        dispatch_async(dispatch_get_main_queue(),
-                       ^ { [[(MSTextField *)textField nextField] becomeFirstResponder]; });
-    
-    return YES;
-    
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if ([textField isEqual:self.homeTextField]) {
-        [textField resignFirstResponder];
+    if(self.popover.delegate == nil){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+        self.citySearchPopover = [storyboard instantiateViewControllerWithIdentifier:@"TTCitySearchResultsTableViewController"];
+        self.citySearchPopover.searchResults = results;
+        self.citySearchPopover.modalPresentationStyle = UIModalPresentationPopover;
         
-        CitySearchViewController *searchView = [[CitySearchViewController alloc] init];
-        searchView.delegate = self;
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:searchView];
-        [self presentViewController:navController animated:YES completion:nil];
-        return NO;
+        //force the popover to display like an iPad popover otherwise it will be full screen
+        self.popover  = self.citySearchPopover.popoverPresentationController;
+        self.popover.delegate = self;
+        self.popover.sourceView = self.homeTextField;
+        self.popover.sourceRect = [self.homeTextField bounds];
+        self.popover.permittedArrowDirections = UIPopoverArrowDirectionDown;
+        
+        self.citySearchPopover.preferredContentSize = CGSizeMake([self.citySearchPopover preferredWidthForPopover], [self.citySearchPopover preferredHeightForPopover]);
+        self.citySearchPopover.srdelegate = self;
+        [self presentViewController:self.citySearchPopover animated:YES completion:nil];
+    }else{
+        self.citySearchPopover.searchResults = results;
+        self.citySearchPopover.preferredContentSize = CGSizeMake([self.citySearchPopover preferredWidthForPopover], [self.citySearchPopover preferredHeightForPopover]);
+        [self.citySearchPopover reloadTable];
     }
-    
-    return  YES;
 }
 
+-(void)dismissCitySearchPopoverFromView{
+    self.popover.delegate = nil;
+    [self.citySearchPopover dismissViewControllerAnimated:YES completion:nil];
+}
 
+-(void)resetCitySearchTextField{
+    self.meetsMinimumRequirements = NO;
+    self.finishButton.hidden = YES;
+}
+
+#pragma mark - UIPopoverPresentationControllerDelegate
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
+    // Return no adaptive presentation style, use default presentation behaviour
+    return UIModalPresentationNone;
+}
+
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverController{
+    self.popover.delegate = nil;
+}
+
+#pragma mark - TTCitySearchResultsDelegate
+-(void)didSelectTableRow:(NSString*)selectedCity{
+    [self.homeTextField setText:[selectedCity stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+    [self.homeTextField resignFirstResponder];
+    self.meetsMinimumRequirements = YES;
+    self.finishButton.hidden = NO;
+    [self dismissCitySearchPopoverFromView];
+}
 
 @end

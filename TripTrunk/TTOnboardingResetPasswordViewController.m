@@ -34,9 +34,6 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     
-    //textField delegates are called before update, init for new range
-    //NSUInteger postRange = (range.location +1) - range.length;
-    
     if([self.emailTextField.text containsString:@"@"] && [self.emailTextField.text containsString:@"."]){
         self.resetButton.hidden = NO;
         self.meetsMinimumRequirements = YES;

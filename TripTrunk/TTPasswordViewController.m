@@ -70,13 +70,20 @@
     self.nextButton.hidden = YES;
     self.meetsMinimumRequirements = NO;
     
-    //textField delegates are called before update, init for new range
-    NSUInteger postRange = (range.location +1) - range.length;
+    NSString *typedText;
     
-    if(postRange > 7){
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if(typedText.length > 7){
         self.nextButton.hidden = NO;
         //self.forgotPassword.hidden = YES;
         self.meetsMinimumRequirements = YES;
+    }else if([typedText containsString:@" "]){
+            self.acceptabilityLabel.text = @"Password cannot contain spaces.";
+            self.nextButton.hidden = YES;
+            self.meetsMinimumRequirements = NO;
     }else{
         self.nextButton.hidden = YES;
         //self.forgotPassword.hidden = NO;

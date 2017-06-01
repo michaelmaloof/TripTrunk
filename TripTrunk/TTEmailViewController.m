@@ -77,16 +77,20 @@
     self.lookupInterrupted = YES;
     self.lookupFinished = NO;
     
-    //textField delegates are called before update, init for new range
-    //NSUInteger postRange = (range.location +1) - range.length;
     //int minimumUsernameLength = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MinimumUsernameLength"] intValue];
 
-    NSString *e = textField.text; NSString *email;
-    if([string isEqualToString:@""])
-        email = [e substringToIndex:e.length - 1];
-    else email = [e stringByAppendingString:string];
+//    NSString *e = textField.text; NSString *email;
+//    if([string isEqualToString:@""])
+//        email = [e substringToIndex:e.length - 1];
+//    else email = [e stringByAppendingString:string];
     
-    if([TTEmailValidation emailIsValid:email]){
+    NSString *typedText;
+    
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if([TTEmailValidation emailIsValid:typedText]){
         self.availabilityLabel.text = @"";
         [self performSelector:@selector(checkEmailAvailability) withObject:nil afterDelay:1.5f];
     }else{

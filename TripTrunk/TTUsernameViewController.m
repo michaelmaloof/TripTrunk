@@ -89,17 +89,24 @@
     self.lookupInterrupted = YES;
     self.lookupFinished = NO;
     
-    //textField delegates are called before update, init for new range
-    NSUInteger postRange = (range.location +1) - range.length;
     int minimumUsernameLength = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MinimumUsernameLength"] intValue];
+    NSString *typedText;
     
-    if(postRange > 0 && postRange < minimumUsernameLength){
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if(typedText.length > 0 && typedText.length < minimumUsernameLength){
         self.availabilityLabel.text = @"Please select a longer username...";
+        self.aI.hidden = YES;
+        self.availabilityIcon.image = nil;
+    }else if([typedText containsString:@" "]){
+        self.availabilityLabel.text = @"Username cannot contain spaces.";
         self.aI.hidden = YES;
         self.availabilityIcon.image = nil;
     }else{
         self.availabilityLabel.text = @"";
-        if(postRange >= minimumUsernameLength){
+        if(typedText.length >= minimumUsernameLength){
             [self performSelector:@selector(checkUsernameAvailability) withObject:nil afterDelay:1.5f];
         }
     }

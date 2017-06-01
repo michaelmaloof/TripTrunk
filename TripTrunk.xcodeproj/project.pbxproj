@@ -66,6 +66,9 @@
 		272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA031D2C5CA700329B28 /* ParseUI.framework */; };
 		27340DF11E3FBFED0070F051 /* mute.caf in Resources */ = {isa = PBXBuildFile; fileRef = 27340DEE1E3FBFED0070F051 /* mute.caf */; };
 		27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */; };
+		27444E481ED4BA7C0021DC7A /* TTCitySearchTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E471ED4BA7C0021DC7A /* TTCitySearchTextField.m */; };
+		27444E4B1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E4A1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m */; };
+		27444E4E1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E4D1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m */; };
 		276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */; };
 		276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */; };
 		276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */; };
@@ -302,6 +305,12 @@
 		27340DEF1E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharkfoodMuteSwitchDetector.h; sourceTree = "<group>"; };
 		27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkfoodMuteSwitchDetector.m; sourceTree = "<group>"; };
 		27340DF31E3FC4360070F051 /* SoundSwitch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SoundSwitch-Prefix.pch"; sourceTree = "<group>"; };
+		27444E461ED4BA7C0021DC7A /* TTCitySearchTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCitySearchTextField.h; sourceTree = "<group>"; };
+		27444E471ED4BA7C0021DC7A /* TTCitySearchTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCitySearchTextField.m; sourceTree = "<group>"; };
+		27444E491ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCitySearchResultsTableViewController.h; sourceTree = "<group>"; };
+		27444E4A1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCitySearchResultsTableViewController.m; sourceTree = "<group>"; };
+		27444E4C1EDDE6830021DC7A /* TTCitySearchResultsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCitySearchResultsTableViewCell.h; sourceTree = "<group>"; };
+		27444E4D1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCitySearchResultsTableViewCell.m; sourceTree = "<group>"; };
 		276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
 		276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
 		276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-UltraLight.otf"; sourceTree = "<group>"; };
@@ -576,6 +585,7 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				27444E4F1EDDECB70021DC7A /* GoolgeCitySearch */,
 				27BFA4971EBBC6DB00A6CFB4 /* Login */,
 				22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */,
 				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
@@ -875,6 +885,19 @@
 				27340DF01E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m */,
 			);
 			name = Sharkfood;
+			sourceTree = "<group>";
+		};
+		27444E4F1EDDECB70021DC7A /* GoolgeCitySearch */ = {
+			isa = PBXGroup;
+			children = (
+				27444E461ED4BA7C0021DC7A /* TTCitySearchTextField.h */,
+				27444E471ED4BA7C0021DC7A /* TTCitySearchTextField.m */,
+				27444E491ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.h */,
+				27444E4A1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m */,
+				27444E4C1EDDE6830021DC7A /* TTCitySearchResultsTableViewCell.h */,
+				27444E4D1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m */,
+			);
+			name = GoolgeCitySearch;
 			sourceTree = "<group>";
 		};
 		27AF315A1D2C0E8B00D93963 /* AmazonAws */ = {
@@ -1328,6 +1351,7 @@
 				C90C3D171B04FC2200CABBC9 /* AFURLSessionManager.m in Sources */,
 				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
+				27444E481ED4BA7C0021DC7A /* TTCitySearchTextField.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
@@ -1362,6 +1386,7 @@
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,
 				27BFA4BB1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m in Sources */,
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
+				27444E4B1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m in Sources */,
 				27BFA4B71ECA4FCA00A6CFB4 /* TTLastNameViewController.m in Sources */,
 				C90C3D101B04FC2200CABBC9 /* AFHTTPRequestOperationManager.m in Sources */,
 				27BFA4AB1EBBC7D000A6CFB4 /* TTPasswordViewController.m in Sources */,
@@ -1375,6 +1400,7 @@
 				220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */,
 				226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */,
 				C90C3D161B04FC2200CABBC9 /* AFURLResponseSerialization.m in Sources */,
+				27444E4E1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m in Sources */,
 				22560FD31BFCE459005D81E2 /* PublicTripDetail.m in Sources */,
 				224F3F921AE1D35E003A1DEB /* main.m in Sources */,
 			);
