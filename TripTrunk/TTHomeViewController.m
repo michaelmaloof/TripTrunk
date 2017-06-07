@@ -88,11 +88,81 @@
 }
 
 -(void)createAccount{
-    if (self.isFBUser == YES){
-        [self handleFacebookUser];
-    }else {
-        [self submitTripTrunkAccount];
-    }
+    
+    __block BOOL usernameIsAvailable;
+    __block BOOL emailIsAvailable;
+    [self usernameStillAvailableFromInitialCheckWithCompletionBlock:^(BOOL available) {
+        if(available)
+            usernameIsAvailable = YES;
+        else usernameIsAvailable = NO;
+        
+        
+        [self emailStillAvailableFromInitialCheckWithCompletionBlock:^(BOOL available) {
+            if(available)
+                emailIsAvailable = YES;
+            else emailIsAvailable = NO;
+            
+            
+            
+            if(usernameIsAvailable && emailIsAvailable){
+                if (self.isFBUser == YES)
+                    [self handleFacebookUser];
+                else [self submitTripTrunkAccount];
+            }else{
+                
+                NSString *username = @""; NSString *email = @"";
+                NSString *and = @""; NSString *is = @" is";
+                
+                if(!usernameIsAvailable)
+                    username = NSLocalizedString(@" username",@" username");
+                
+                if(!emailIsAvailable)
+                    email = NSLocalizedString(@" email address",@" email address");
+                
+                if(!usernameIsAvailable && !emailIsAvailable){
+                    and = NSLocalizedString(@" and",@" and");
+                    is = NSLocalizedString(@" are",@" are");
+                }
+                
+                NSString *message = [NSString stringWithFormat:@"We're sorry but the%@%@%@ you used%@ no longer available. Please select a new%@%@%@.",username,and,email,is,username,and,email];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Account Creation Error",@"Account Creation Error")
+                                                                message:NSLocalizedString(message, message)
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Ok",@"Ok")
+                                                      otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }];
+        
+    }];
+}
+
+-(void)usernameStillAvailableFromInitialCheckWithCompletionBlock:(void(^)(BOOL))completionBlock{
+    //Cloud code to check availability
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.aNewUser[@"Username"], @"username", nil];
+    
+    [PFCloud callFunctionInBackground:@"ValidateUsername" withParameters:params
+                                block:^(id  _Nullable success, NSError * _Nullable error) {
+                                    if (error)
+                                        completionBlock(NO);
+                                    else completionBlock(YES);
+    }];
+}
+
+-(void)emailStillAvailableFromInitialCheckWithCompletionBlock:(void(^)(BOOL))completionBlock{
+    //Cloud code to check availability
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.aNewUser[@"Email"], @"emailaddress", nil];
+    
+    [PFCloud callFunctionInBackground:@"ValidateEmailAddress" withParameters:params
+                                block:^(id  _Nullable success, NSError * _Nullable error) {
+                                    if (error)
+                                        completionBlock(NO);
+                                    else completionBlock(YES);
+    }];
 }
 
 -(void)submitTripTrunkAccount{

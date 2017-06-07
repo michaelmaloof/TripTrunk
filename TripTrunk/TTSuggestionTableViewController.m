@@ -607,6 +607,9 @@
     return [photo.user.objectId isEqualToString:[PFUser currentUser].objectId];
 }
 
+
+//FIXME: Does this actually work? Doesn't it return the status before the code executes?
+//If so, this needs to be a completion block
 -(BOOL)mentionUserFollowingCurrentUser:(PFUser*)user{
     __block BOOL status;
     [SocialUtility followingStatusFromUser:user toUser:[PFUser currentUser] block:^(NSNumber *followingStatus, NSError *error) {
