@@ -1,5 +1,5 @@
 //
-// Copyright 2014-2016 Amazon.com,
+// Copyright 2014-2017 Amazon.com,
 // Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Amazon Software License (the "License").
@@ -50,6 +50,11 @@ typedef NS_ENUM(NSInteger, AWSCognitoIdentityUserStatus) {
 @class AWSCognitoIdentityUserVerifyAttributeResponse;
 @class AWSCognitoIdentityUserGetAttributeVerificationCodeResponse;
 @class AWSCognitoIdentityUserSetUserSettingsResponse;
+@class AWSCognitoIdentityUserGlobalSignOutResponse;
+@class AWSCognitoIdentityUserListDevicesResponse;
+@class AWSCognitoIdentityUserUpdateDeviceStatusResponse;
+@class AWSCognitoIdentityUserGetDeviceResponse;
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -72,9 +77,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, getter=isSignedIn) BOOL signedIn;
 
 /**
+ Get the device id
+ */
+@property (nonatomic, readonly) NSString * deviceId;
+
+/**
  Confirm a users' sign up with the confirmation code
  */
 - (AWSTask<AWSCognitoIdentityUserConfirmSignUpResponse *> *)confirmSignUp:(NSString *)confirmationCode;
+
+
+/**
+ Confirm a users' sign up with the confirmation code.  If forceAliasCreation is set, if another user is aliased to the same email/phone this code was sent to, reassign alias to this user.
+ */
+-(AWSTask<AWSCognitoIdentityUserConfirmSignUpResponse *> *) confirmSignUp:(NSString *) confirmationCode forceAliasCreation:(BOOL)forceAliasCreation;
 
 /**
  Resend the confirmation code sent during sign up
@@ -82,22 +98,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (AWSTask<AWSCognitoIdentityUserResendConfirmationCodeResponse *> *)resendConfirmationCode;
 
 /**
- Get a session with default scopes
+ Get a session with id, access and refresh tokens.
  */
 - (AWSTask<AWSCognitoIdentityUserSession *> *)getSession;
-
-/**
- Get a session with custom scopes.  For future use, not supported by service yet.
- */
-- (AWSTask<AWSCognitoIdentityUserSession *> *)getSession:(nullable NSSet<NSString *> *)scopes;
 
 /**
  Get a session with the following username and password
  */
 - (AWSTask<AWSCognitoIdentityUserSession *> *)getSession:(NSString *)username
                                                 password:(NSString *)password
-                                          validationData:(nullable NSArray<AWSCognitoIdentityUserAttributeType *> *)validationData
-                                                  scopes:(nullable NSSet<NSString *> *)scopes;
+                                          validationData:(nullable NSArray<AWSCognitoIdentityUserAttributeType *> *)validationData;
 
 /**
  Get details about this user, including user attributes
@@ -159,9 +169,53 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)signOut;
 
 /**
+ Invalidate any active sessions with the service.  Last known user remains.
+ */
+- (AWSTask<AWSCognitoIdentityUserGlobalSignOutResponse *> *) globalSignOut;
+
+/**
  Remove all sessions from the keychain for this user and clear last known user.
  */
 - (void)signOutAndClearLastKnownUser;
+
+
+/**
+ List devices for this user
+ */
+- (AWSTask<AWSCognitoIdentityUserListDevicesResponse *> *) listDevices: (int) limit paginationToken:(NSString * _Nullable) paginationToken;
+
+/**
+ Update device remembered status for a specific device id.
+ */
+- (AWSTask<AWSCognitoIdentityUserUpdateDeviceStatusResponse *> *) updateDeviceStatus: (NSString *) deviceId remembered:(BOOL) remembered;
+
+/**
+ Convenience method to update device remembered status for this device.
+ */
+- (AWSTask<AWSCognitoIdentityUserUpdateDeviceStatusResponse *> *) updateDeviceStatus: (BOOL) remembered;
+
+
+/**
+ Get device details for a specific deviceId.
+ */
+- (AWSTask<AWSCognitoIdentityUserGetDeviceResponse *> *) getDevice: (NSString *) deviceId;
+
+/**
+ Convenience method to get device details for this device.
+ */
+- (AWSTask<AWSCognitoIdentityUserGetDeviceResponse *> *) getDevice;
+
+
+/**
+ Forget (stop tracking) a specific deviceId.
+ */
+- (AWSTask *) forgetDevice: (NSString *) deviceId;
+
+/**
+ Forget (stop tracking) this device.
+ */
+- (AWSTask *) forgetDevice;
+
 
 @end
 
@@ -204,7 +258,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AWSCognitoIdentityUserAttributeType : AWSCognitoIdentityProviderAttributeType
-
+- (instancetype) initWithName:(NSString *) name value:(NSString *) value;
 @end
 
 #pragma Response wrappers
@@ -251,5 +305,22 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AWSCognitoIdentityUserSetUserSettingsResponse : AWSCognitoIdentityProviderSetUserSettingsResponse
 
 @end
+
+@interface AWSCognitoIdentityUserGlobalSignOutResponse : AWSCognitoIdentityProviderGlobalSignOutResponse
+
+@end
+
+@interface AWSCognitoIdentityUserListDevicesResponse : AWSCognitoIdentityProviderListDevicesResponse
+
+@end
+
+@interface AWSCognitoIdentityUserUpdateDeviceStatusResponse : AWSCognitoIdentityProviderUpdateDeviceStatusResponse
+
+@end
+
+@interface AWSCognitoIdentityUserGetDeviceResponse : AWSCognitoIdentityProviderGetDeviceResponse
+
+@end
+
 
 NS_ASSUME_NONNULL_END

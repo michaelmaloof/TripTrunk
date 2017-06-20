@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
 // permissions and limitations under the License.
 //
 
-#import "AWSSTS.h"
-
+#import "AWSSTSService.h"
 #import "AWSNetworking.h"
 #import "AWSCategory.h"
+#import "AWSNetworking.h"
 #import "AWSSignature.h"
 #import "AWSService.h"
-#import "AWSNetworking.h"
 #import "AWSURLRequestSerialization.h"
 #import "AWSURLResponseSerialization.h"
 #import "AWSURLRequestRetryHandler.h"
@@ -27,6 +26,7 @@
 #import "AWSSTSResources.h"
 
 static NSString *const AWSInfoSTS = @"STS";
+
 
 @interface AWSSTSResponseSerializer : AWSXMLResponseSerializer
 
@@ -62,15 +62,15 @@ static NSDictionary *errorCodeDictionary = nil;
                                           currentRequest:currentRequest
                                                     data:data
                                                    error:error];
-
     if (!*error && [responseObject isKindOfClass:[NSDictionary class]]) {
+
         NSDictionary *errorInfo = responseObject[@"Error"];
         if (errorInfo[@"Code"] && errorCodeDictionary[errorInfo[@"Code"]]) {
             if (error) {
                 *error = [NSError errorWithDomain:AWSSTSErrorDomain
                                              code:[errorCodeDictionary[errorInfo[@"Code"]] integerValue]
                                          userInfo:errorInfo
-                          ];
+                         ];
                 return responseObject;
             }
         } else if (errorInfo) {
@@ -78,6 +78,7 @@ static NSDictionary *errorCodeDictionary = nil;
                 *error = [NSError errorWithDomain:AWSSTSErrorDomain
                                              code:AWSSTSErrorUnknown
                                          userInfo:errorInfo];
+                return responseObject;
             }
         }
     }
@@ -128,7 +129,14 @@ static NSDictionary *errorCodeDictionary = nil;
 
 @end
 
+@interface AWSEndpoint()
+
+- (void) setRegion:(AWSRegionType)regionType service:(AWSServiceType)serviceType;
+
+@end
+
 @implementation AWSSTS
+
 
 #pragma mark - Setup
 
@@ -182,7 +190,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
             AWSServiceConfiguration *serviceConfiguration = [[AWSServiceConfiguration alloc] initWithRegion:serviceInfo.region
                                                                                         credentialsProvider:serviceInfo.cognitoCredentialsProvider];
             [AWSSTS registerSTSWithConfiguration:serviceConfiguration
-                                          forKey:key];
+                                                                forKey:key];
         }
 
         return [_serviceClients objectForKey:key];
@@ -205,11 +213,16 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 - (instancetype)initWithConfiguration:(AWSServiceConfiguration *)configuration {
     if (self = [super init]) {
         _configuration = [configuration copy];
-
-        _configuration.endpoint = [[AWSEndpoint alloc] initWithRegion:_configuration.regionType
+       	
+        if(!configuration.endpoint){
+            _configuration.endpoint = [[AWSEndpoint alloc] initWithRegion:_configuration.regionType
                                                               service:AWSServiceSTS
                                                          useUnsafeURL:NO];
-
+        }else{
+            [_configuration.endpoint setRegion:_configuration.regionType
+                                      service:AWSServiceSTS];
+        }
+       	
         AWSSignatureV4Signer *signer = [[AWSSignatureV4Signer alloc] initWithCredentialsProvider:_configuration.credentialsProvider
                                                                                         endpoint:_configuration.endpoint];
         AWSNetworkingRequestInterceptor *baseInterceptor = [[AWSNetworkingRequestInterceptor alloc] initWithUserAgent:_configuration.userAgent];
@@ -217,10 +230,11 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 
         _configuration.baseURL = _configuration.endpoint.URL;
         _configuration.retryHandler = [[AWSSTSRequestRetryHandler alloc] initWithMaximumRetryCount:_configuration.maxRetryCount];
-
+         
+		
         _networking = [[AWSNetworking alloc] initWithConfiguration:_configuration];
     }
-
+    
     return self;
 }
 
@@ -235,19 +249,21 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
         if (!request) {
             request = [AWSRequest new];
         }
-        
+
         AWSNetworkingRequest *networkingRequest = request.internalRequest;
         if (request) {
             networkingRequest.parameters = [[AWSMTLJSONAdapter JSONDictionaryFromModel:request] aws_removeNullValues];
         } else {
             networkingRequest.parameters = @{};
         }
+
         networkingRequest.HTTPMethod = HTTPMethod;
         networkingRequest.requestSerializer = [[AWSQueryStringRequestSerializer alloc] initWithJSONDefinition:[[AWSSTSResources sharedInstance] JSONObject]
                                                                                                    actionName:operationName];
         networkingRequest.responseSerializer = [[AWSSTSResponseSerializer alloc] initWithJSONDefinition:[[AWSSTSResources sharedInstance] JSONObject]
                                                                                              actionName:operationName
                                                                                             outputClass:outputClass];
+        
         return [self.networking sendRequest:networkingRequest];
     }
 }
@@ -264,15 +280,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)assumeRole:(AWSSTSAssumeRoleRequest *)request
- completionHandler:(void (^)(AWSSTSAssumeRoleResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSAssumeRoleResponse *response, NSError *error))completionHandler {
     [[self assumeRole:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSAssumeRoleResponse *> * _Nonnull task) {
         AWSSTSAssumeRoleResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -292,15 +303,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)assumeRoleWithSAML:(AWSSTSAssumeRoleWithSAMLRequest *)request
-         completionHandler:(void (^)(AWSSTSAssumeRoleWithSAMLResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSAssumeRoleWithSAMLResponse *response, NSError *error))completionHandler {
     [[self assumeRoleWithSAML:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSAssumeRoleWithSAMLResponse *> * _Nonnull task) {
         AWSSTSAssumeRoleWithSAMLResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -320,15 +326,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)assumeRoleWithWebIdentity:(AWSSTSAssumeRoleWithWebIdentityRequest *)request
-                completionHandler:(void (^)(AWSSTSAssumeRoleWithWebIdentityResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSAssumeRoleWithWebIdentityResponse *response, NSError *error))completionHandler {
     [[self assumeRoleWithWebIdentity:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSAssumeRoleWithWebIdentityResponse *> * _Nonnull task) {
         AWSSTSAssumeRoleWithWebIdentityResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -348,15 +349,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)decodeAuthorizationMessage:(AWSSTSDecodeAuthorizationMessageRequest *)request
-                 completionHandler:(void (^)(AWSSTSDecodeAuthorizationMessageResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSDecodeAuthorizationMessageResponse *response, NSError *error))completionHandler {
     [[self decodeAuthorizationMessage:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSDecodeAuthorizationMessageResponse *> * _Nonnull task) {
         AWSSTSDecodeAuthorizationMessageResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -376,15 +372,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)getCallerIdentity:(AWSSTSGetCallerIdentityRequest *)request
-        completionHandler:(void (^)(AWSSTSGetCallerIdentityResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSGetCallerIdentityResponse *response, NSError *error))completionHandler {
     [[self getCallerIdentity:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSGetCallerIdentityResponse *> * _Nonnull task) {
         AWSSTSGetCallerIdentityResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -404,15 +395,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)getFederationToken:(AWSSTSGetFederationTokenRequest *)request
-         completionHandler:(void (^)(AWSSTSGetFederationTokenResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSGetFederationTokenResponse *response, NSError *error))completionHandler {
     [[self getFederationToken:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSGetFederationTokenResponse *> * _Nonnull task) {
         AWSSTSGetFederationTokenResponse *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -432,20 +418,15 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)getSessionToken:(AWSSTSGetSessionTokenRequest *)request
-      completionHandler:(void (^)(AWSSTSGetSessionTokenResponse *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSSTSGetSessionTokenResponse *response, NSError *error))completionHandler {
     [[self getSessionToken:request] continueWithBlock:^id _Nullable(AWSTask<AWSSTSGetSessionTokenResponse *> * _Nonnull task) {
         AWSSTSGetSessionTokenResponse *result = task.result;
         NSError *error = task.error;
 
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
-        
         if (completionHandler) {
             completionHandler(result, error);
         }
-        
+
         return nil;
     }];
 }

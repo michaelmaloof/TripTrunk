@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -150,6 +150,8 @@ NSString *const AWSNetworkingErrorDomain = @"com.amazonaws.AWSNetworkingErrorDom
     configuration.HTTPMethod = self.HTTPMethod;
     configuration.headers = [self.headers copy];
     configuration.allowsCellularAccess = self.allowsCellularAccess;
+    configuration.sharedContainerIdentifier = self.sharedContainerIdentifier;
+    
     configuration.requestSerializer = self.requestSerializer;
     configuration.requestInterceptors = [self.requestInterceptors copy];
     configuration.responseSerializer = self.responseSerializer;

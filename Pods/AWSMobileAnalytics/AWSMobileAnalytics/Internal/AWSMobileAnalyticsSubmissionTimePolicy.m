@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 //
 
 #import "AWSMobileAnalyticsSubmissionTimePolicy.h"
-#import "AWSLogging.h"
+#import "AWSCocoaLumberjack.h"
 static NSString* const AWSMobileAnalyticsSubmittedTimeKey = @"AWSMobileAnalyticsSubmissionTimePolicy.submissionTime";
 
 @interface AWSMobileAnalyticsSubmissionTimePolicy()
@@ -49,7 +49,7 @@ static NSString* const AWSMobileAnalyticsSubmittedTimeKey = @"AWSMobileAnalytics
     NSTimeInterval timeSinceLastSubmission = [[NSDate date] timeIntervalSince1970] - self.lastSubmittedTime;
     
     if (!(timeSinceLastSubmission > self.waitInterval)) {
-        AWSLogWarn(@"Submission request being dropped because it has been submitted too frequently, please try again in %.f seconds.",self.waitInterval - timeSinceLastSubmission);
+        AWSDDLogWarn(@"Submission request being dropped because it has been submitted too frequently, please try again in %.f seconds.",self.waitInterval - timeSinceLastSubmission);
     }
     return timeSinceLastSubmission > self.waitInterval;
 }

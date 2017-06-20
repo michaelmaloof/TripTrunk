@@ -28,7 +28,6 @@
 		22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22474D7C1AE5E29400C76E87 /* PhotoCollectionViewCell.m */; };
 		224F3F921AE1D35E003A1DEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F911AE1D35E003A1DEB /* main.m */; };
 		224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3F941AE1D35E003A1DEB /* AppDelegate.m */; };
-		224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F991AE1D35E003A1DEB /* Main.storyboard */; };
 		224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F9C1AE1D35E003A1DEB /* Images.xcassets */; };
 		224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */; };
 		224F3FAC1AE1D35E003A1DEB /* TripTrunkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 224F3FAB1AE1D35E003A1DEB /* TripTrunkTests.m */; };
@@ -69,6 +68,13 @@
 		27444E481ED4BA7C0021DC7A /* TTCitySearchTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E471ED4BA7C0021DC7A /* TTCitySearchTextField.m */; };
 		27444E4B1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E4A1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m */; };
 		27444E4E1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E4D1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m */; };
+		27444E511EF1D3AA0021DC7A /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27444E501EF1D3A80021DC7A /* Home.storyboard */; };
+		27444E551EF1E3B30021DC7A /* TTHomeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E541EF1E3B30021DC7A /* TTHomeMapViewController.m */; };
+		27444E5A1EF325980021DC7A /* TTHomeMapCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E591EF325980021DC7A /* TTHomeMapCollectionViewCell.m */; };
+		27444E5D1EF87C010021DC7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27444E5B1EF87C010021DC7A /* Main.storyboard */; };
+		27444E601EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E5F1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m */; };
+		27444E621EF9AD210021DC7A /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = 27444E611EF9AD210021DC7A /* style.json */; };
+		27444E651EF9CEB10021DC7A /* TTRoundedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E641EF9CEB10021DC7A /* TTRoundedButton.m */; };
 		276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */; };
 		276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */; };
 		276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */; };
@@ -239,7 +245,6 @@
 		224F3F931AE1D35E003A1DEB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		224F3F941AE1D35E003A1DEB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		224F3F961AE1D35E003A1DEB /* HomeMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeMapViewController.h; sourceTree = "<group>"; };
-		224F3F9A1AE1D35E003A1DEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		224F3F9C1AE1D35E003A1DEB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		224F3F9F1AE1D35E003A1DEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		224F3FA51AE1D35E003A1DEB /* TripTrunkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripTrunkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -311,6 +316,17 @@
 		27444E4A1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCitySearchResultsTableViewController.m; sourceTree = "<group>"; };
 		27444E4C1EDDE6830021DC7A /* TTCitySearchResultsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCitySearchResultsTableViewCell.h; sourceTree = "<group>"; };
 		27444E4D1EDDE6840021DC7A /* TTCitySearchResultsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCitySearchResultsTableViewCell.m; sourceTree = "<group>"; };
+		27444E501EF1D3A80021DC7A /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		27444E531EF1E3B30021DC7A /* TTHomeMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHomeMapViewController.h; sourceTree = "<group>"; };
+		27444E541EF1E3B30021DC7A /* TTHomeMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHomeMapViewController.m; sourceTree = "<group>"; };
+		27444E581EF325980021DC7A /* TTHomeMapCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHomeMapCollectionViewCell.h; sourceTree = "<group>"; };
+		27444E591EF325980021DC7A /* TTHomeMapCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHomeMapCollectionViewCell.m; sourceTree = "<group>"; };
+		27444E5C1EF87C010021DC7A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		27444E5E1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHomeMapViewFlowLayout.h; sourceTree = "<group>"; };
+		27444E5F1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHomeMapViewFlowLayout.m; sourceTree = "<group>"; };
+		27444E611EF9AD210021DC7A /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
+		27444E631EF9CEB10021DC7A /* TTRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTRoundedButton.h; sourceTree = "<group>"; };
+		27444E641EF9CEB10021DC7A /* TTRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedButton.m; sourceTree = "<group>"; };
 		276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
 		276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
 		276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-UltraLight.otf"; sourceTree = "<group>"; };
@@ -587,6 +603,7 @@
 			children = (
 				27444E4F1EDDECB70021DC7A /* GoolgeCitySearch */,
 				27BFA4971EBBC6DB00A6CFB4 /* Login */,
+				27444E521EF1D6500021DC7A /* Home */,
 				22343AE51BC9A42C00F0B2E5 /* TTBaseViewController.h */,
 				22343AE61BC9A42C00F0B2E5 /* TTBaseViewController.m */,
 				22343AE81BC9A85F00F0B2E5 /* TTBaseTableViewController.h */,
@@ -900,6 +917,37 @@
 			name = GoolgeCitySearch;
 			sourceTree = "<group>";
 		};
+		27444E521EF1D6500021DC7A /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				27444E571EF3219A0021DC7A /* ViewCells */,
+				27444E531EF1E3B30021DC7A /* TTHomeMapViewController.h */,
+				27444E541EF1E3B30021DC7A /* TTHomeMapViewController.m */,
+				27444E5E1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.h */,
+				27444E5F1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m */,
+				27444E631EF9CEB10021DC7A /* TTRoundedButton.h */,
+				27444E641EF9CEB10021DC7A /* TTRoundedButton.m */,
+				27444E611EF9AD210021DC7A /* style.json */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		27444E561EF321220021DC7A /* ViewCells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ViewCells;
+			sourceTree = "<group>";
+		};
+		27444E571EF3219A0021DC7A /* ViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				27444E581EF325980021DC7A /* TTHomeMapCollectionViewCell.h */,
+				27444E591EF325980021DC7A /* TTHomeMapCollectionViewCell.m */,
+			);
+			name = ViewCells;
+			sourceTree = "<group>";
+		};
 		27AF315A1D2C0E8B00D93963 /* AmazonAws */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,8 +960,9 @@
 		27BFA4901EBB8D3A00A6CFB4 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				224F3F991AE1D35E003A1DEB /* Main.storyboard */,
+				27444E5B1EF87C010021DC7A /* Main.storyboard */,
 				27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */,
+				27444E501EF1D3A80021DC7A /* Home.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -921,6 +970,7 @@
 		27BFA4971EBBC6DB00A6CFB4 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				27444E561EF321220021DC7A /* ViewCells */,
 				27BFA4941EBBC06500A6CFB4 /* TTOnboardingViewController.h */,
 				27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */,
 				27BFA4B91ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.h */,
@@ -1198,18 +1248,20 @@
 				C95702681D91B1DE009DE079 /* Strings in Resources */,
 				C90ADEAE1BA21F1A000809D0 /* EditProfileViewController.xib in Resources */,
 				C90C3CF21B04F40000CABBC9 /* FriendsListViewController.xib in Resources */,
+				27444E5D1EF87C010021DC7A /* Main.storyboard in Resources */,
 				276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */,
-				224F3F9B1AE1D35E003A1DEB /* Main.storyboard in Resources */,
 				C9FC5A231BC49CE200EB5158 /* EULAViewController.xib in Resources */,
 				225E554C1CB0762F00FAAB00 /* TTReportBugViewController.xib in Resources */,
 				4C80831E1BDABCDD00DB1AC0 /* TutorialViewController.xib in Resources */,
 				C9CAE0B71BA0788A00E92A7E /* UserProfileViewController.xib in Resources */,
+				27444E511EF1D3AA0021DC7A /* Home.storyboard in Resources */,
 				27BFA4931EBB8DA100A6CFB4 /* Login.storyboard in Resources */,
 				276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */,
 				224F3FA01AE1D35E003A1DEB /* LaunchScreen.xib in Resources */,
 				224F3F9D1AE1D35E003A1DEB /* Images.xcassets in Resources */,
 				276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */,
 				2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */,
+				27444E621EF9AD210021DC7A /* style.json in Resources */,
 				276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */,
 				27340DF11E3FBFED0070F051 /* mute.caf in Resources */,
 				276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */,
@@ -1325,6 +1377,7 @@
 				C957026A1D91B1DE009DE079 /* Underscore.m in Sources */,
 				27BFA4A81EBBC7D000A6CFB4 /* TTHomeViewController.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
+				27444E601EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				C90C3D121B04FC2200CABBC9 /* AFNetworkReachabilityManager.m in Sources */,
@@ -1333,6 +1386,7 @@
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */,
 				2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */,
+				27444E551EF1E3B30021DC7A /* TTHomeMapViewController.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
 				27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
@@ -1378,6 +1432,7 @@
 				2715140D1C99D8AF0054E43F /* TTColor.m in Sources */,
 				22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */,
 				223547FA1AE5A763001FE916 /* AddTripPhotosViewController.m in Sources */,
+				27444E651EF9CEB10021DC7A /* TTRoundedButton.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
 				27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */,
@@ -1396,6 +1451,7 @@
 				C9FC5A221BC49CE200EB5158 /* EULAViewController.m in Sources */,
 				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				C90C3D0F1B04FC2200CABBC9 /* AFHTTPRequestOperation.m in Sources */,
+				27444E5A1EF325980021DC7A /* TTHomeMapCollectionViewCell.m in Sources */,
 				27F3E3871D3D778600634B75 /* DLFPhotosSelectionManager.m in Sources */,
 				220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */,
 				226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */,
@@ -1426,20 +1482,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		224F3F991AE1D35E003A1DEB /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				224F3F9A1AE1D35E003A1DEB /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		224F3F9E1AE1D35E003A1DEB /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				224F3F9F1AE1D35E003A1DEB /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		27444E5B1EF87C010021DC7A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27444E5C1EF87C010021DC7A /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */ = {

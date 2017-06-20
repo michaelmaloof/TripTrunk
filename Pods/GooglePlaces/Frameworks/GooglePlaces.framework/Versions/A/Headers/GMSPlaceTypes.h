@@ -8,6 +8,12 @@
 //  Service: https://developers.google.com/maps/terms
 //
 
+#import <Foundation/Foundation.h>
+
+/**
+ * \defgroup PlaceTypes GMSPlaceType
+ * @{
+ */
 
 
 extern NSString *const kGMSPlaceTypeAccounting;
@@ -139,3 +145,5 @@ extern NSString *const kGMSPlaceTypeTravelAgency;
 extern NSString *const kGMSPlaceTypeUniversity;
 extern NSString *const kGMSPlaceTypeVeterinaryCare;
 extern NSString *const kGMSPlaceTypeZoo;
+
+/**@}*/

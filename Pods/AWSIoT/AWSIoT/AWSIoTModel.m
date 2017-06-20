@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              @"cloudwatchAlarm" : @"cloudwatchAlarm",
              @"cloudwatchMetric" : @"cloudwatchMetric",
              @"dynamoDB" : @"dynamoDB",
+             @"dynamoDBv2" : @"dynamoDBv2",
              @"elasticsearch" : @"elasticsearch",
              @"firehose" : @"firehose",
              @"kinesis" : @"kinesis",
@@ -48,47 +49,51 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)cloudwatchAlarmJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCloudwatchAlarmAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCloudwatchAlarmAction class]];
 }
 
 + (NSValueTransformer *)cloudwatchMetricJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCloudwatchMetricAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCloudwatchMetricAction class]];
 }
 
 + (NSValueTransformer *)dynamoDBJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTDynamoDBAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTDynamoDBAction class]];
+}
+
++ (NSValueTransformer *)dynamoDBv2JSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTDynamoDBv2Action class]];
 }
 
 + (NSValueTransformer *)elasticsearchJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTElasticsearchAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTElasticsearchAction class]];
 }
 
 + (NSValueTransformer *)firehoseJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTFirehoseAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTFirehoseAction class]];
 }
 
 + (NSValueTransformer *)kinesisJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTKinesisAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTKinesisAction class]];
 }
 
 + (NSValueTransformer *)lambdaJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTLambdaAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTLambdaAction class]];
 }
 
 + (NSValueTransformer *)republishJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTRepublishAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTRepublishAction class]];
 }
 
 + (NSValueTransformer *)s3JSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTS3Action class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTS3Action class]];
 }
 
 + (NSValueTransformer *)snsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTSnsAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTSnsAction class]];
 }
 
 + (NSValueTransformer *)sqsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTSqsAction class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTSqsAction class]];
 }
 
 @end
@@ -124,6 +129,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
              @"attributes" : @"attributes",
+             @"merge" : @"merge",
              };
 }
 
@@ -141,7 +147,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)creationDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -150,10 +156,10 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)statusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusInactive);
         }
         return @(AWSIoTCACertificateStatusUnknown);
@@ -175,6 +181,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
+             @"autoRegistrationStatus" : @"autoRegistrationStatus",
              @"certificateArn" : @"certificateArn",
              @"certificateId" : @"certificateId",
              @"certificatePem" : @"certificatePem",
@@ -184,8 +191,29 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              };
 }
 
++ (NSValueTransformer *)autoRegistrationStatusJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"ENABLE"] == NSOrderedSame) {
+            return @(AWSIoTAutoRegistrationStatusEnable);
+        }
+        if ([value caseInsensitiveCompare:@"DISABLE"] == NSOrderedSame) {
+            return @(AWSIoTAutoRegistrationStatusDisable);
+        }
+        return @(AWSIoTAutoRegistrationStatusUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTAutoRegistrationStatusEnable:
+                return @"ENABLE";
+            case AWSIoTAutoRegistrationStatusDisable:
+                return @"DISABLE";
+            default:
+                return nil;
+        }
+    }];
+}
+
 + (NSValueTransformer *)creationDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -194,10 +222,10 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)statusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusInactive);
         }
         return @(AWSIoTCACertificateStatusUnknown);
@@ -237,7 +265,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)creationDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -246,20 +274,23 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)statusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusInactive);
         }
-        if ([value isEqualToString:@"REVOKED"]) {
+        if ([value caseInsensitiveCompare:@"REVOKED"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRevoked);
         }
-        if ([value isEqualToString:@"PENDING_TRANSFER"]) {
+        if ([value caseInsensitiveCompare:@"PENDING_TRANSFER"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusPendingTransfer);
         }
-        if ([value isEqualToString:@"REGISTER_INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"REGISTER_INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRegisterInactive);
+        }
+        if ([value caseInsensitiveCompare:@"PENDING_ACTIVATION"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusPendingActivation);
         }
         return @(AWSIoTCertificateStatusUnknown);
     } reverseBlock:^NSString *(NSNumber *value) {
@@ -274,6 +305,8 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
                 return @"PENDING_TRANSFER";
             case AWSIoTCertificateStatusRegisterInactive:
                 return @"REGISTER_INACTIVE";
+            case AWSIoTCertificateStatusPendingActivation:
+                return @"PENDING_ACTIVATION";
             default:
                 return nil;
         }
@@ -300,7 +333,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)creationDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -308,7 +341,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)lastModifiedDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -317,20 +350,23 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)statusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusInactive);
         }
-        if ([value isEqualToString:@"REVOKED"]) {
+        if ([value caseInsensitiveCompare:@"REVOKED"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRevoked);
         }
-        if ([value isEqualToString:@"PENDING_TRANSFER"]) {
+        if ([value caseInsensitiveCompare:@"PENDING_TRANSFER"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusPendingTransfer);
         }
-        if ([value isEqualToString:@"REGISTER_INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"REGISTER_INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRegisterInactive);
+        }
+        if ([value caseInsensitiveCompare:@"PENDING_ACTIVATION"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusPendingActivation);
         }
         return @(AWSIoTCertificateStatusUnknown);
     } reverseBlock:^NSString *(NSNumber *value) {
@@ -345,6 +381,8 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
                 return @"PENDING_TRANSFER";
             case AWSIoTCertificateStatusRegisterInactive:
                 return @"REGISTER_INACTIVE";
+            case AWSIoTCertificateStatusPendingActivation:
+                return @"PENDING_ACTIVATION";
             default:
                 return nil;
         }
@@ -352,7 +390,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)transferDataJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTransferData class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTransferData class]];
 }
 
 @end
@@ -430,7 +468,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)keyPairJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTKeyPair class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTKeyPair class]];
 }
 
 @end
@@ -490,11 +528,12 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 	return @{
              @"attributePayload" : @"attributePayload",
              @"thingName" : @"thingName",
+             @"thingTypeName" : @"thingTypeName",
              };
 }
 
 + (NSValueTransformer *)attributePayloadJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTAttributePayload class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTAttributePayload class]];
 }
 
 @end
@@ -510,6 +549,32 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 @end
 
+@implementation AWSIoTCreateThingTypeRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeName" : @"thingTypeName",
+             @"thingTypeProperties" : @"thingTypeProperties",
+             };
+}
+
++ (NSValueTransformer *)thingTypePropertiesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTThingTypeProperties class]];
+}
+
+@end
+
+@implementation AWSIoTCreateThingTypeResponse
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeArn" : @"thingTypeArn",
+             @"thingTypeName" : @"thingTypeName",
+             };
+}
+
+@end
+
 @implementation AWSIoTCreateTopicRuleRequest
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
@@ -520,7 +585,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)topicRulePayloadJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRulePayload class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRulePayload class]];
 }
 
 @end
@@ -582,6 +647,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
+             @"expectedVersion" : @"expectedVersion",
              @"thingName" : @"thingName",
              };
 }
@@ -592,6 +658,20 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 @end
 
+@implementation AWSIoTDeleteThingTypeRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeName" : @"thingTypeName",
+             };
+}
+
+@end
+
+@implementation AWSIoTDeleteThingTypeResponse
+
+@end
+
 @implementation AWSIoTDeleteTopicRuleRequest
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
@@ -599,6 +679,21 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              @"ruleName" : @"ruleName",
              };
 }
+
+@end
+
+@implementation AWSIoTDeprecateThingTypeRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeName" : @"thingTypeName",
+             @"undoDeprecate" : @"undoDeprecate",
+             };
+}
+
+@end
+
+@implementation AWSIoTDeprecateThingTypeResponse
 
 @end
 
@@ -621,7 +716,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)certificateDescriptionJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCACertificateDescription class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCACertificateDescription class]];
 }
 
 @end
@@ -645,7 +740,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)certificateDescriptionJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCertificateDescription class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTCertificateDescription class]];
 }
 
 @end
@@ -681,7 +776,39 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              @"attributes" : @"attributes",
              @"defaultClientId" : @"defaultClientId",
              @"thingName" : @"thingName",
+             @"thingTypeName" : @"thingTypeName",
+             @"version" : @"version",
              };
+}
+
+@end
+
+@implementation AWSIoTDescribeThingTypeRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeName" : @"thingTypeName",
+             };
+}
+
+@end
+
+@implementation AWSIoTDescribeThingTypeResponse
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeMetadata" : @"thingTypeMetadata",
+             @"thingTypeName" : @"thingTypeName",
+             @"thingTypeProperties" : @"thingTypeProperties",
+             };
+}
+
++ (NSValueTransformer *)thingTypeMetadataJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTThingTypeMetadata class]];
+}
+
++ (NSValueTransformer *)thingTypePropertiesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTThingTypeProperties class]];
 }
 
 @end
@@ -727,13 +854,73 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
              @"hashKeyField" : @"hashKeyField",
+             @"hashKeyType" : @"hashKeyType",
              @"hashKeyValue" : @"hashKeyValue",
+             @"operation" : @"operation",
              @"payloadField" : @"payloadField",
              @"rangeKeyField" : @"rangeKeyField",
+             @"rangeKeyType" : @"rangeKeyType",
              @"rangeKeyValue" : @"rangeKeyValue",
              @"roleArn" : @"roleArn",
              @"tableName" : @"tableName",
              };
+}
+
++ (NSValueTransformer *)hashKeyTypeJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"STRING"] == NSOrderedSame) {
+            return @(AWSIoTDynamoKeyTypeString);
+        }
+        if ([value caseInsensitiveCompare:@"NUMBER"] == NSOrderedSame) {
+            return @(AWSIoTDynamoKeyTypeNumber);
+        }
+        return @(AWSIoTDynamoKeyTypeUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTDynamoKeyTypeString:
+                return @"STRING";
+            case AWSIoTDynamoKeyTypeNumber:
+                return @"NUMBER";
+            default:
+                return nil;
+        }
+    }];
+}
+
++ (NSValueTransformer *)rangeKeyTypeJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"STRING"] == NSOrderedSame) {
+            return @(AWSIoTDynamoKeyTypeString);
+        }
+        if ([value caseInsensitiveCompare:@"NUMBER"] == NSOrderedSame) {
+            return @(AWSIoTDynamoKeyTypeNumber);
+        }
+        return @(AWSIoTDynamoKeyTypeUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTDynamoKeyTypeString:
+                return @"STRING";
+            case AWSIoTDynamoKeyTypeNumber:
+                return @"NUMBER";
+            default:
+                return nil;
+        }
+    }];
+}
+
+@end
+
+@implementation AWSIoTDynamoDBv2Action
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"putItem" : @"putItem",
+             @"roleArn" : @"roleArn",
+             };
+}
+
++ (NSValueTransformer *)putItemJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTPutItemInput class]];
 }
 
 @end
@@ -768,6 +955,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 	return @{
              @"deliveryStreamName" : @"deliveryStreamName",
              @"roleArn" : @"roleArn",
+             @"separator" : @"separator",
              };
 }
 
@@ -788,19 +976,19 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)logLevelJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"DEBUG"]) {
+        if ([value caseInsensitiveCompare:@"DEBUG"] == NSOrderedSame) {
             return @(AWSIoTLogLevelDebug);
         }
-        if ([value isEqualToString:@"INFO"]) {
+        if ([value caseInsensitiveCompare:@"INFO"] == NSOrderedSame) {
             return @(AWSIoTLogLevelInfo);
         }
-        if ([value isEqualToString:@"ERROR"]) {
+        if ([value caseInsensitiveCompare:@"ERROR"] == NSOrderedSame) {
             return @(AWSIoTLogLevelError);
         }
-        if ([value isEqualToString:@"WARN"]) {
+        if ([value caseInsensitiveCompare:@"WARN"] == NSOrderedSame) {
             return @(AWSIoTLogLevelWarn);
         }
-        if ([value isEqualToString:@"DISABLED"]) {
+        if ([value caseInsensitiveCompare:@"DISABLED"] == NSOrderedSame) {
             return @(AWSIoTLogLevelDisabled);
         }
         return @(AWSIoTLogLevelUnknown);
@@ -906,7 +1094,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)ruleJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRule class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRule class]];
 }
 
 @end
@@ -966,7 +1154,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)certificatesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCACertificate class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCACertificate class]];
 }
 
 @end
@@ -994,7 +1182,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)certificatesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCertificate class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCertificate class]];
 }
 
 @end
@@ -1021,7 +1209,34 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)certificatesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCertificate class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTCertificate class]];
+}
+
+@end
+
+@implementation AWSIoTListOutgoingCertificatesRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"ascendingOrder" : @"ascendingOrder",
+             @"marker" : @"marker",
+             @"pageSize" : @"pageSize",
+             };
+}
+
+@end
+
+@implementation AWSIoTListOutgoingCertificatesResponse
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"nextMarker" : @"nextMarker",
+             @"outgoingCertificates" : @"outgoingCertificates",
+             };
+}
+
++ (NSValueTransformer *)outgoingCertificatesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTOutgoingCertificate class]];
 }
 
 @end
@@ -1048,7 +1263,31 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)policiesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicy class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicy class]];
+}
+
+@end
+
+@implementation AWSIoTListPolicyPrincipalsRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"ascendingOrder" : @"ascendingOrder",
+             @"marker" : @"marker",
+             @"pageSize" : @"pageSize",
+             @"policyName" : @"policyName",
+             };
+}
+
+@end
+
+@implementation AWSIoTListPolicyPrincipalsResponse
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"nextMarker" : @"nextMarker",
+             @"principals" : @"principals",
+             };
 }
 
 @end
@@ -1072,7 +1311,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)policyVersionsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicyVersion class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicyVersion class]];
 }
 
 @end
@@ -1100,7 +1339,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)policiesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicy class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTPolicy class]];
 }
 
 @end
@@ -1148,6 +1387,33 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 @end
 
+@implementation AWSIoTListThingTypesRequest
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"maxResults" : @"maxResults",
+             @"nextToken" : @"nextToken",
+             @"thingTypeName" : @"thingTypeName",
+             };
+}
+
+@end
+
+@implementation AWSIoTListThingTypesResponse
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"nextToken" : @"nextToken",
+             @"thingTypes" : @"thingTypes",
+             };
+}
+
++ (NSValueTransformer *)thingTypesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTThingTypeDefinition class]];
+}
+
+@end
+
 @implementation AWSIoTListThingsRequest
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
@@ -1156,6 +1422,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              @"attributeValue" : @"attributeValue",
              @"maxResults" : @"maxResults",
              @"nextToken" : @"nextToken",
+             @"thingTypeName" : @"thingTypeName",
              };
 }
 
@@ -1171,7 +1438,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)thingsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTThingAttribute class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTThingAttribute class]];
 }
 
 @end
@@ -1199,7 +1466,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)rulesJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTTopicRuleListItem class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTTopicRuleListItem class]];
 }
 
 @end
@@ -1215,19 +1482,19 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)logLevelJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"DEBUG"]) {
+        if ([value caseInsensitiveCompare:@"DEBUG"] == NSOrderedSame) {
             return @(AWSIoTLogLevelDebug);
         }
-        if ([value isEqualToString:@"INFO"]) {
+        if ([value caseInsensitiveCompare:@"INFO"] == NSOrderedSame) {
             return @(AWSIoTLogLevelInfo);
         }
-        if ([value isEqualToString:@"ERROR"]) {
+        if ([value caseInsensitiveCompare:@"ERROR"] == NSOrderedSame) {
             return @(AWSIoTLogLevelError);
         }
-        if ([value isEqualToString:@"WARN"]) {
+        if ([value caseInsensitiveCompare:@"WARN"] == NSOrderedSame) {
             return @(AWSIoTLogLevelWarn);
         }
-        if ([value isEqualToString:@"DISABLED"]) {
+        if ([value caseInsensitiveCompare:@"DISABLED"] == NSOrderedSame) {
             return @(AWSIoTLogLevelDisabled);
         }
         return @(AWSIoTLogLevelUnknown);
@@ -1246,6 +1513,37 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
             default:
                 return nil;
         }
+    }];
+}
+
+@end
+
+@implementation AWSIoTOutgoingCertificate
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"certificateArn" : @"certificateArn",
+             @"certificateId" : @"certificateId",
+             @"creationDate" : @"creationDate",
+             @"transferDate" : @"transferDate",
+             @"transferMessage" : @"transferMessage",
+             @"transferredTo" : @"transferredTo",
+             };
+}
+
++ (NSValueTransformer *)creationDateJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+        return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
+    } reverseBlock:^id(NSDate *date) {
+        return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    }];
+}
+
++ (NSValueTransformer *)transferDateJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+        return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
+    } reverseBlock:^id(NSDate *date) {
+        return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
     }];
 }
 
@@ -1273,7 +1571,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)createDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1282,10 +1580,21 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 @end
 
+@implementation AWSIoTPutItemInput
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"tableName" : @"tableName",
+             };
+}
+
+@end
+
 @implementation AWSIoTRegisterCACertificateRequest
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
+             @"allowAutoRegistration" : @"allowAutoRegistration",
              @"caCertificate" : @"caCertificate",
              @"setAsActive" : @"setAsActive",
              @"verificationCertificate" : @"verificationCertificate",
@@ -1312,7 +1621,49 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
              @"caCertificatePem" : @"caCertificatePem",
              @"certificatePem" : @"certificatePem",
              @"setAsActive" : @"setAsActive",
+             @"status" : @"status",
              };
+}
+
++ (NSValueTransformer *)statusJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusActive);
+        }
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusInactive);
+        }
+        if ([value caseInsensitiveCompare:@"REVOKED"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusRevoked);
+        }
+        if ([value caseInsensitiveCompare:@"PENDING_TRANSFER"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusPendingTransfer);
+        }
+        if ([value caseInsensitiveCompare:@"REGISTER_INACTIVE"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusRegisterInactive);
+        }
+        if ([value caseInsensitiveCompare:@"PENDING_ACTIVATION"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusPendingActivation);
+        }
+        return @(AWSIoTCertificateStatusUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTCertificateStatusActive:
+                return @"ACTIVE";
+            case AWSIoTCertificateStatusInactive:
+                return @"INACTIVE";
+            case AWSIoTCertificateStatusRevoked:
+                return @"REVOKED";
+            case AWSIoTCertificateStatusPendingTransfer:
+                return @"PENDING_TRANSFER";
+            case AWSIoTCertificateStatusRegisterInactive:
+                return @"REGISTER_INACTIVE";
+            case AWSIoTCertificateStatusPendingActivation:
+                return @"PENDING_ACTIVATION";
+            default:
+                return nil;
+        }
+    }];
 }
 
 @end
@@ -1349,7 +1700,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)topicRulePayloadJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRulePayload class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTTopicRulePayload class]];
 }
 
 @end
@@ -1370,9 +1721,61 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
              @"bucketName" : @"bucketName",
+             @"cannedAcl" : @"cannedAcl",
              @"key" : @"key",
              @"roleArn" : @"roleArn",
              };
+}
+
++ (NSValueTransformer *)cannedAclJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"private"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListPrivate);
+        }
+        if ([value caseInsensitiveCompare:@"public-read"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListPublicRead);
+        }
+        if ([value caseInsensitiveCompare:@"public-read-write"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListPublicReadWrite);
+        }
+        if ([value caseInsensitiveCompare:@"aws-exec-read"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListAwsExecRead);
+        }
+        if ([value caseInsensitiveCompare:@"authenticated-read"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListAuthenticatedRead);
+        }
+        if ([value caseInsensitiveCompare:@"bucket-owner-read"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListBucketOwnerRead);
+        }
+        if ([value caseInsensitiveCompare:@"bucket-owner-full-control"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListBucketOwnerFullControl);
+        }
+        if ([value caseInsensitiveCompare:@"log-delivery-write"] == NSOrderedSame) {
+            return @(AWSIoTCannedAccessControlListLogDeliveryWrite);
+        }
+        return @(AWSIoTCannedAccessControlListUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTCannedAccessControlListPrivate:
+                return @"private";
+            case AWSIoTCannedAccessControlListPublicRead:
+                return @"public-read";
+            case AWSIoTCannedAccessControlListPublicReadWrite:
+                return @"public-read-write";
+            case AWSIoTCannedAccessControlListAwsExecRead:
+                return @"aws-exec-read";
+            case AWSIoTCannedAccessControlListAuthenticatedRead:
+                return @"authenticated-read";
+            case AWSIoTCannedAccessControlListBucketOwnerRead:
+                return @"bucket-owner-read";
+            case AWSIoTCannedAccessControlListBucketOwnerFullControl:
+                return @"bucket-owner-full-control";
+            case AWSIoTCannedAccessControlListLogDeliveryWrite:
+                return @"log-delivery-write";
+            default:
+                return nil;
+        }
+    }];
 }
 
 @end
@@ -1397,7 +1800,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)loggingOptionsPayloadJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTLoggingOptionsPayload class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTLoggingOptionsPayload class]];
 }
 
 @end
@@ -1414,10 +1817,10 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)messageFormatJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"RAW"]) {
+        if ([value caseInsensitiveCompare:@"RAW"] == NSOrderedSame) {
             return @(AWSIoTMessageFormatRAW);
         }
-        if ([value isEqualToString:@"JSON"]) {
+        if ([value caseInsensitiveCompare:@"JSON"] == NSOrderedSame) {
             return @(AWSIoTMessageFormatJson);
         }
         return @(AWSIoTMessageFormatUnknown);
@@ -1453,6 +1856,67 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 	return @{
              @"attributes" : @"attributes",
              @"thingName" : @"thingName",
+             @"thingTypeName" : @"thingTypeName",
+             @"version" : @"version",
+             };
+}
+
+@end
+
+@implementation AWSIoTThingTypeDefinition
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"thingTypeMetadata" : @"thingTypeMetadata",
+             @"thingTypeName" : @"thingTypeName",
+             @"thingTypeProperties" : @"thingTypeProperties",
+             };
+}
+
++ (NSValueTransformer *)thingTypeMetadataJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTThingTypeMetadata class]];
+}
+
++ (NSValueTransformer *)thingTypePropertiesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTThingTypeProperties class]];
+}
+
+@end
+
+@implementation AWSIoTThingTypeMetadata
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"creationDate" : @"creationDate",
+             @"deprecated" : @"deprecated",
+             @"deprecationDate" : @"deprecationDate",
+             };
+}
+
++ (NSValueTransformer *)creationDateJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+        return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
+    } reverseBlock:^id(NSDate *date) {
+        return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    }];
+}
+
++ (NSValueTransformer *)deprecationDateJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+        return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
+    } reverseBlock:^id(NSDate *date) {
+        return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    }];
+}
+
+@end
+
+@implementation AWSIoTThingTypeProperties
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{
+             @"searchableAttributes" : @"searchableAttributes",
+             @"thingTypeDescription" : @"thingTypeDescription",
              };
 }
 
@@ -1473,11 +1937,11 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)actionsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTAction class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTAction class]];
 }
 
 + (NSValueTransformer *)createdAtJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1499,7 +1963,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)createdAtJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1521,7 +1985,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)actionsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTAction class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSIoTAction class]];
 }
 
 @end
@@ -1561,7 +2025,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)acceptDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1569,7 +2033,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)rejectDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1577,7 +2041,7 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 }
 
 + (NSValueTransformer *)transferDateJSONTransformer {
-	return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^id(NSNumber *number) {
         return [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
     } reverseBlock:^id(NSDate *date) {
         return [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
@@ -1591,16 +2055,38 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
              @"certificateId" : @"certificateId",
+             @"latestAutoRegistrationStatus" : @"newAutoRegistrationStatus",
              @"latestStatus" : @"newStatus",
              };
 }
 
++ (NSValueTransformer *)latestAutoRegistrationStatusJSONTransformer {
+    return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
+        if ([value caseInsensitiveCompare:@"ENABLE"] == NSOrderedSame) {
+            return @(AWSIoTAutoRegistrationStatusEnable);
+        }
+        if ([value caseInsensitiveCompare:@"DISABLE"] == NSOrderedSame) {
+            return @(AWSIoTAutoRegistrationStatusDisable);
+        }
+        return @(AWSIoTAutoRegistrationStatusUnknown);
+    } reverseBlock:^NSString *(NSNumber *value) {
+        switch ([value integerValue]) {
+            case AWSIoTAutoRegistrationStatusEnable:
+                return @"ENABLE";
+            case AWSIoTAutoRegistrationStatusDisable:
+                return @"DISABLE";
+            default:
+                return nil;
+        }
+    }];
+}
+
 + (NSValueTransformer *)latestStatusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCACertificateStatusInactive);
         }
         return @(AWSIoTCACertificateStatusUnknown);
@@ -1629,20 +2115,23 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 
 + (NSValueTransformer *)latestStatusJSONTransformer {
     return [AWSMTLValueTransformer reversibleTransformerWithForwardBlock:^NSNumber *(NSString *value) {
-        if ([value isEqualToString:@"ACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"ACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusActive);
         }
-        if ([value isEqualToString:@"INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusInactive);
         }
-        if ([value isEqualToString:@"REVOKED"]) {
+        if ([value caseInsensitiveCompare:@"REVOKED"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRevoked);
         }
-        if ([value isEqualToString:@"PENDING_TRANSFER"]) {
+        if ([value caseInsensitiveCompare:@"PENDING_TRANSFER"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusPendingTransfer);
         }
-        if ([value isEqualToString:@"REGISTER_INACTIVE"]) {
+        if ([value caseInsensitiveCompare:@"REGISTER_INACTIVE"] == NSOrderedSame) {
             return @(AWSIoTCertificateStatusRegisterInactive);
+        }
+        if ([value caseInsensitiveCompare:@"PENDING_ACTIVATION"] == NSOrderedSame) {
+            return @(AWSIoTCertificateStatusPendingActivation);
         }
         return @(AWSIoTCertificateStatusUnknown);
     } reverseBlock:^NSString *(NSNumber *value) {
@@ -1657,6 +2146,8 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
                 return @"PENDING_TRANSFER";
             case AWSIoTCertificateStatusRegisterInactive:
                 return @"REGISTER_INACTIVE";
+            case AWSIoTCertificateStatusPendingActivation:
+                return @"PENDING_ACTIVATION";
             default:
                 return nil;
         }
@@ -1670,12 +2161,15 @@ NSString *const AWSIoTErrorDomain = @"com.amazonaws.AWSIoTErrorDomain";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
 	return @{
              @"attributePayload" : @"attributePayload",
+             @"expectedVersion" : @"expectedVersion",
+             @"removeThingType" : @"removeThingType",
              @"thingName" : @"thingName",
+             @"thingTypeName" : @"thingTypeName",
              };
 }
 
 + (NSValueTransformer *)attributePayloadJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTAttributePayload class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSIoTAttributePayload class]];
 }
 
 @end

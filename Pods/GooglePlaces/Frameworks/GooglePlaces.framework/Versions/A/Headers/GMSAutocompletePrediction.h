@@ -9,16 +9,12 @@
 //
 
 
-#if __has_feature(modules)
-@import GoogleMapsBase;
-#else
-#import <GoogleMapsBase/GoogleMapsBase.h>
-#endif
+NS_ASSUME_NONNULL_BEGIN
 
-GMS_ASSUME_NONNULL_BEGIN
-
-/*
+/**
  * Attribute name for match fragments in |GMSAutocompletePrediction| attributedFullText.
+ *
+ * @related GMSAutocompletePrediction
  */
 extern NSString *const kGMSAutocompleteMatchAttribute;
 
@@ -69,20 +65,20 @@ extern NSString *const kGMSAutocompleteMatchAttribute;
  *
  * May be nil.
  */
-@property(nonatomic, copy, readonly) NSAttributedString *GMS_NULLABLE_PTR attributedSecondaryText;
+@property(nonatomic, copy, readonly, nullable) NSAttributedString *attributedSecondaryText;
 
 /**
  * An optional property representing the place ID of the prediction, suitable for use in a place
  * details request.
  */
-@property(nonatomic, copy, readonly) NSString *GMS_NULLABLE_PTR placeID;
+@property(nonatomic, copy, readonly, nullable) NSString *placeID;
 
 /**
  * The types of this autocomplete result.  Types are NSStrings, valid values are any types
- * documented at <https://developers.google.com/places/supported_types>.
+ * documented at <https://developers.google.com/places/ios-api/supported_types>.
  */
-@property(nonatomic, copy, readonly) GMS_NSArrayOf(NSString *) *types;
+@property(nonatomic, copy, readonly) NSArray<NSString *> *types;
 
 @end
 
-GMS_ASSUME_NONNULL_END
+NS_ASSUME_NONNULL_END

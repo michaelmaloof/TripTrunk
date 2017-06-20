@@ -9,12 +9,8 @@
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import <UIKit/UIKit.h>
 
-#if __has_feature(modules)
-@import GoogleMapsBase;
-#else
-#import <GoogleMapsBase/GoogleMapsBase.h>
-#endif
 #import <GooglePlaces/GMSPlace.h>
 #import <GooglePlaces/GMSPlacesErrors.h>
 #import <GooglePlaces/GMSUserAddedPlace.h>
@@ -26,60 +22,61 @@
 @class GMSPlacePhotoMetadata;
 @class GMSPlacePhotoMetadataList;
 
-GMS_ASSUME_NONNULL_BEGIN
+NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @relates GMSPlacesClient
  * Callback type for receiving place details lookups. If an error occurred,
  * |result| will be nil and |error| will contain information about the error.
  * @param result The |GMSPlace| that was returned.
  * @param error The error that occurred, if any.
+ *
+ * @related GMSPlacesClient
  */
-typedef void (^GMSPlaceResultCallback)(
-    GMSPlace * GMS_NULLABLE_PTR result,
-    NSError * GMS_NULLABLE_PTR error);
+typedef void (^GMSPlaceResultCallback)(GMSPlace *_Nullable result, NSError *_Nullable error);
 
 /**
- * @relates GMSPlacesClient
  * Callback type for receiving place likelihood lists. If an error occurred, |likelihoodList| will
  * be nil and |error| will contain information about the error.
  * @param likelihoodList The list of place likelihoods.
  * @param error The error that occurred, if any.
+ *
+ * @related GMSPlacesClient
  */
-typedef void (^GMSPlaceLikelihoodListCallback)(
-    GMSPlaceLikelihoodList * GMS_NULLABLE_PTR likelihoodList,
-    NSError * GMS_NULLABLE_PTR error);
+typedef void (^GMSPlaceLikelihoodListCallback)(GMSPlaceLikelihoodList *_Nullable likelihoodList,
+                                               NSError *_Nullable error);
 
 /**
- * @relates GMSPlacesClient
  * Callback type for receiving autocompletion results. |results| is an array of
  * GMSAutocompletePredictions representing candidate completions of the query.
  * @param results An array of |GMSAutocompletePrediction|s.
  * @param error The error that occurred, if any.
+ *
+ * @related GMSPlacesClient
  */
-typedef void (^GMSAutocompletePredictionsCallback)(GMS_NSArrayOf(GMSAutocompletePrediction *) *
-                                                       GMS_NULLABLE_PTR results,
-                                                   NSError *GMS_NULLABLE_PTR error);
+typedef void (^GMSAutocompletePredictionsCallback)(
+    NSArray<GMSAutocompletePrediction *> *_Nullable results, NSError *_Nullable error);
 
 /**
- * @relates GMSPlacesClient
  * Callback type for receiving place photos results. If an error occurred, |photos| will be nil and
  * |error| will contain information about the error.
  * @param photos The result containing |GMSPlacePhotoMetadata| objects.
  * @param error The error that occurred, if any.
+ *
+ * @related GMSPlacesClient
  */
-typedef void (^GMSPlacePhotoMetadataResultCallback)(
-    GMSPlacePhotoMetadataList *GMS_NULLABLE_PTR photos, NSError *GMS_NULLABLE_PTR error);
+typedef void (^GMSPlacePhotoMetadataResultCallback)(GMSPlacePhotoMetadataList *_Nullable photos,
+                                                    NSError *_Nullable error);
 
 /**
- * @relates GMSPlacesClient
  * Callback type for receiving |UIImage| objects from a |GMSPlacePhotoMetadata| object. If an error
  * occurred, |photo| will be nil and |error| will contain information about the error.
  * @param photo The |UIImage| which was loaded.
  * @param error The error that occurred, if any.
+ *
+ * @related GMSPlacesClient
  */
-typedef void (^GMSPlacePhotoImageResultCallback)(UIImage *GMS_NULLABLE_PTR photo,
-                                                 NSError *GMS_NULLABLE_PTR error);
+typedef void (^GMSPlacePhotoImageResultCallback)(UIImage *_Nullable photo,
+                                                 NSError *_Nullable error);
 
 /**
  * Main interface to the Places API. Used for searching and getting details about places. This class
@@ -220,8 +217,8 @@ typedef void (^GMSPlacePhotoImageResultCallback)(UIImage *GMS_NULLABLE_PTR photo
  * @param callback The callback to invoke with the predictions.
  */
 - (void)autocompleteQuery:(NSString *)query
-                   bounds:(GMSCoordinateBounds * GMS_NULLABLE_PTR)bounds
-                   filter:(GMSAutocompleteFilter * GMS_NULLABLE_PTR)filter
+                   bounds:(nullable GMSCoordinateBounds *)bounds
+                   filter:(nullable GMSAutocompleteFilter *)filter
                  callback:(GMSAutocompletePredictionsCallback)callback;
 
 /**
@@ -230,9 +227,8 @@ typedef void (^GMSPlacePhotoImageResultCallback)(UIImage *GMS_NULLABLE_PTR photo
  * @param place The details of the place to be added.
  * @param callback The callback to invoke with the place that was added.
  */
-- (void)addPlace:(GMSUserAddedPlace *)place
-        callback:(GMSPlaceResultCallback)callback;
+- (void)addPlace:(GMSUserAddedPlace *)place callback:(GMSPlaceResultCallback)callback;
 
 @end
 
-GMS_ASSUME_NONNULL_END
+NS_ASSUME_NONNULL_END

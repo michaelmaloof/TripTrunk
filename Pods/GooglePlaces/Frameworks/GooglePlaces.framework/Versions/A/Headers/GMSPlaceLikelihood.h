@@ -9,13 +9,9 @@
 //
 
 
-#if __has_feature(modules)
-@import GoogleMapsBase;
-#else
-#import <GoogleMapsBase/GoogleMapsBase.h>
-#endif
+#import <Foundation/Foundation.h>
 
-GMS_ASSUME_NONNULL_BEGIN
+NS_ASSUME_NONNULL_BEGIN
 
 @class GMSPlace;
 
@@ -24,7 +20,7 @@ GMS_ASSUME_NONNULL_BEGIN
  * list of returned places for a single request. For more information about place likelihoods, see
  * |GMSPlaceLikelihoodList|.
  */
-@interface GMSPlaceLikelihood : NSObject<NSCopying>
+@interface GMSPlaceLikelihood : NSObject <NSCopying>
 
 /**
  * The place contained in this place likelihood.
@@ -42,4 +38,4 @@ GMS_ASSUME_NONNULL_BEGIN
 
 @end
 
-GMS_ASSUME_NONNULL_END
+NS_ASSUME_NONNULL_END

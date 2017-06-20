@@ -75,11 +75,12 @@
 
 
 -(void)tabBarTitle{
-    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
-    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
+//REPAIR: This needs to be fixed for new design
+//    [[self.tabBarController.viewControllers objectAtIndex:0] setTitle:@""];
+//    [[self.tabBarController.viewControllers objectAtIndex:1] setTitle:@""];
+//    [[self.tabBarController.viewControllers objectAtIndex:2] setTitle:@""];
+//    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
+//    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     
 }
 

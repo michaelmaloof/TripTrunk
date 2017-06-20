@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ FOUNDATION_EXPORT NSString *const AWSCognitoIdentityErrorDomain;
 
 typedef NS_ENUM(NSInteger, AWSCognitoIdentityErrorType) {
     AWSCognitoIdentityErrorUnknown,
-    AWSCognitoIdentityErrorIncompleteSignature,
-    AWSCognitoIdentityErrorInvalidClientTokenId,
-    AWSCognitoIdentityErrorMissingAuthenticationToken,
     AWSCognitoIdentityErrorConcurrentModification,
     AWSCognitoIdentityErrorDeveloperUserAlreadyRegistered,
     AWSCognitoIdentityErrorExternalService,

@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 #import "AWSMobileAnalyticsInactiveSessionState.h"
 #import "AWSMobileAnalyticsDefaultSessionClient+SessionState.h"
 #import "AWSMobileAnalyticsSession.h"
-#import "AWSLogging.h"
+#import "AWSCocoaLumberjack.h"
 
 @implementation AWSMobileAnalyticsInactiveSessionState
 
@@ -26,7 +26,7 @@
 }
 
 -(void)pauseWithSessionClient:(AWSMobileAnalyticsDefaultSessionClient *)sessionClient{
-    AWSLogDebug( @"Session Pause Failed: No session is running.");
+    AWSDDLogDebug( @"Session Pause Failed: No session is running.");
 }
 
 -(void)startWithSessionClient:(AWSMobileAnalyticsDefaultSessionClient *)sessionClient{
@@ -35,15 +35,15 @@
 }
 
 -(void)stopWithSessionClient:(AWSMobileAnalyticsDefaultSessionClient *)sessionClient{
-    AWSLogDebug( @"Session Stop Failed: No session is running.");
+    AWSDDLogDebug( @"Session Stop Failed: No session is running.");
 }
 
 -(void)enterStateWithSessionClient:(AWSMobileAnalyticsDefaultSessionClient *)sessionClient{
-    AWSLogDebug( @"Session State: Entering Inactive State.");
+    AWSDDLogDebug( @"Session State: Entering Inactive State.");
 }
 
 -(void)exitStateWithSessionClient:(AWSMobileAnalyticsDefaultSessionClient *)sessionClient{
-    AWSLogDebug( @"Session State: Exiting Inactive State.");
+    AWSDDLogDebug( @"Session State: Exiting Inactive State.");
 }
 
 @end

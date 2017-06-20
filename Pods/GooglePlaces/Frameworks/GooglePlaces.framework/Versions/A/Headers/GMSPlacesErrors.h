@@ -8,18 +8,27 @@
 //  Service: https://developers.google.com/maps/terms
 //
 
-#if __has_feature(modules)
-@import GoogleMapsBase;
-#else
-#import <GoogleMapsBase/GoogleMapsBase.h>
-#endif
+/**
+ * \defgroup PlacesErrors GMSPlacesErrors
+ * @{
+ */
 
-GMS_ASSUME_NONNULL_BEGIN
+#import <Foundation/Foundation.h>
 
-/* Error domain used for Places API errors. */
-extern NSString * const kGMSPlacesErrorDomain;
+NS_ASSUME_NONNULL_BEGIN
 
-/* Error codes for |kGMSPlacesErrorDomain|. */
+/**
+ * Error domain used for Places API errors.
+ *
+ * @related GMSPlacesErrors
+ */
+extern NSString *const kGMSPlacesErrorDomain;
+
+/**
+ * Error codes for |kGMSPlacesErrorDomain|.
+ *
+ * @related GMSPlacesErrors
+ */
 typedef NS_ENUM(NSInteger, GMSPlacesErrorCode) {
   /**
    * Something went wrong with the connection to the Places API server.
@@ -29,14 +38,14 @@ typedef NS_ENUM(NSInteger, GMSPlacesErrorCode) {
    * The Places API server returned a response that we couldn't understand.
    * <p>
    * If you believe this error represents a bug, please file a report using the instructions on our
-   * <a href=https://developers.google.com/places/support">community and support page</a>.
+   * <a href="https://developers.google.com/places/support">community and support page</a>.
    */
   kGMSPlacesServerError = -2,
   /**
    * An internal error occurred in the Places API library.
    * <p>
    * If you believe this error represents a bug, please file a report using the instructions on our
-   * <a href=https://developers.google.com/places/support">community and support page</a>.
+   * <a href="https://developers.google.com/places/support">community and support page</a>.
    */
   kGMSPlacesInternalError = -3,
   /**
@@ -100,4 +109,6 @@ typedef NS_ENUM(NSInteger, GMSPlacesErrorCode) {
   kGMSPlacesLocationError = -11
 };
 
-GMS_ASSUME_NONNULL_END
+NS_ASSUME_NONNULL_END
+
+/**@}*/

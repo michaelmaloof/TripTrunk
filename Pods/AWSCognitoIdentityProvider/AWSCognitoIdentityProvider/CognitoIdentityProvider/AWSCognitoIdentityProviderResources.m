@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 //
 
 #import "AWSCognitoIdentityProviderResources.h"
-#import <AWSCore/AWSLogging.h>
+#import <AWSCore/AWSCocoaLumberjack.h>
 
 @interface AWSCognitoIdentityProviderResources ()
 
@@ -48,7 +48,7 @@
                                                                   error:&error];
         if (_definitionDictionary == nil) {
             if (error) {
-                AWSLogError(@"Failed to parse JSON service definition: %@",error);
+                AWSDDLogError(@"Failed to parse JSON service definition: %@",error);
             }
         }
     }
@@ -60,10 +60,10 @@
   \"version\":\"2.0\",\
   \"metadata\":{\
     \"apiVersion\":\"2016-04-18\",\
-    \"endpointPrefix\":\"AWSCognitoSignInService\",\
+    \"endpointPrefix\":\"cognito-idp\",\
     \"jsonVersion\":\"1.1\",\
     \"protocol\":\"json\",\
-    \"serviceFullName\":\"AWSCognitoIdentityProviderService\",\
+    \"serviceFullName\":\"Amazon Cognito Identity Provider\",\
     \"signatureVersion\":\"v4\",\
     \"targetPrefix\":\"AWSCognitoIdentityProviderService\"\
   },\
@@ -80,8 +80,11 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserImportInProgressException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Adds additional user attributes to the user pool schema.</p>\"\
     },\
     \"AdminConfirmSignUp\":{\
       \"name\":\"AdminConfirmSignUp\",\
@@ -101,8 +104,38 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Confirms user registration as an admin without using a confirmation code. Works on any user.</p>\"\
+    },\
+    \"AdminCreateUser\":{\
+      \"name\":\"AdminCreateUser\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminCreateUserRequest\"},\
+      \"output\":{\"shape\":\"AdminCreateUserResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UsernameExistsException\"},\
+        {\"shape\":\"InvalidPasswordException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"},\
+        {\"shape\":\"UnexpectedLambdaException\"},\
+        {\"shape\":\"UserLambdaValidationException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"PreconditionNotMetException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UnsupportedUserStateException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Creates a new user in the specified user pool and sends a welcome message via email or phone (SMS). This message is based on a template that you configured in your call to CreateUserPool or UpdateUserPool. This template includes your custom sign-up instructions and placeholders for user name and temporary password.</p> <p>Requires developer credentials.</p>\"\
     },\
     \"AdminDeleteUser\":{\
       \"name\":\"AdminDeleteUser\",\
@@ -115,8 +148,11 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Deletes a user as an administrator. Works on any user.</p>\"\
     },\
     \"AdminDeleteUserAttributes\":{\
       \"name\":\"AdminDeleteUserAttributes\",\
@@ -130,8 +166,11 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Deletes the user attributes in a user pool as an administrator. Works on any user.</p>\"\
     },\
     \"AdminDisableUser\":{\
       \"name\":\"AdminDisableUser\",\
@@ -145,8 +184,11 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Disables the specified user as an administrator. Works on any user.</p>\"\
     },\
     \"AdminEnableUser\":{\
       \"name\":\"AdminEnableUser\",\
@@ -160,8 +202,47 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Enables the specified user as an administrator. Works on any user.</p>\"\
+    },\
+    \"AdminForgetDevice\":{\
+      \"name\":\"AdminForgetDevice\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminForgetDeviceRequest\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Forgets the device, as an administrator.</p>\"\
+    },\
+    \"AdminGetDevice\":{\
+      \"name\":\"AdminGetDevice\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminGetDeviceRequest\"},\
+      \"output\":{\"shape\":\"AdminGetDeviceResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"NotAuthorizedException\"}\
+      ],\
+      \"documentation\":\"<p>Gets the device, as an administrator.</p>\"\
     },\
     \"AdminGetUser\":{\
       \"name\":\"AdminGetUser\",\
@@ -175,8 +256,56 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Gets the specified user by user name in a user pool as an administrator. Works on any user.</p>\"\
+    },\
+    \"AdminInitiateAuth\":{\
+      \"name\":\"AdminInitiateAuth\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminInitiateAuthRequest\"},\
+      \"output\":{\"shape\":\"AdminInitiateAuthResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"UnexpectedLambdaException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"UserLambdaValidationException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"MFAMethodNotFoundException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"}\
+      ],\
+      \"documentation\":\"<p>Initiates the authentication flow, as an administrator.</p>\"\
+    },\
+    \"AdminListDevices\":{\
+      \"name\":\"AdminListDevices\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminListDevicesRequest\"},\
+      \"output\":{\"shape\":\"AdminListDevicesResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"NotAuthorizedException\"}\
+      ],\
+      \"documentation\":\"<p>Lists devices, as an administrator.</p>\"\
     },\
     \"AdminResetUserPassword\":{\
       \"name\":\"AdminResetUserPassword\",\
@@ -195,8 +324,41 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Resets the specified user's password in a user pool as an administrator. Works on any user.</p> <p>When a developer calls this API, the current password is invalidated, so it must be changed. If a user tries to sign in after the API is called, the app will get a PasswordResetRequiredException exception back and should direct the user down the flow to reset the password, which is the same as the forgot password flow. In addition, if the user pool has phone verification selected and a verified phone number exists for the user, or if email verification is selected and a verified email exists for the user, calling this API will also result in sending a message to the end user with the code to change their password.</p>\"\
+    },\
+    \"AdminRespondToAuthChallenge\":{\
+      \"name\":\"AdminRespondToAuthChallenge\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminRespondToAuthChallengeRequest\"},\
+      \"output\":{\"shape\":\"AdminRespondToAuthChallengeResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"CodeMismatchException\"},\
+        {\"shape\":\"ExpiredCodeException\"},\
+        {\"shape\":\"UnexpectedLambdaException\"},\
+        {\"shape\":\"InvalidPasswordException\"},\
+        {\"shape\":\"UserLambdaValidationException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"MFAMethodNotFoundException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"AliasExistsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"}\
+      ],\
+      \"documentation\":\"<p>Responds to an authentication challenge, as an administrator.</p>\"\
     },\
     \"AdminSetUserSettings\":{\
       \"name\":\"AdminSetUserSettings\",\
@@ -209,8 +371,30 @@
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
-        {\"shape\":\"NotAuthorizedException\"}\
-      ]\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Sets all the user settings for a specified user name. Works on any user.</p>\"\
+    },\
+    \"AdminUpdateDeviceStatus\":{\
+      \"name\":\"AdminUpdateDeviceStatus\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"AdminUpdateDeviceStatusRequest\"},\
+      \"output\":{\"shape\":\"AdminUpdateDeviceStatusResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Updates the device status as an administrator.</p>\"\
     },\
     \"AdminUpdateUserAttributes\":{\
       \"name\":\"AdminUpdateUserAttributes\",\
@@ -228,28 +412,29 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"AliasExistsException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Updates the specified user's attributes, including developer attributes, as an administrator. Works on any user.</p>\"\
     },\
-    \"Authenticate\":{\
-      \"name\":\"Authenticate\",\
+    \"AdminUserGlobalSignOut\":{\
+      \"name\":\"AdminUserGlobalSignOut\",\
       \"http\":{\
         \"method\":\"POST\",\
         \"requestUri\":\"/\"\
       },\
-      \"input\":{\"shape\":\"AuthenticateRequest\"},\
-      \"output\":{\"shape\":\"AuthenticateResponse\"},\
+      \"input\":{\"shape\":\"AdminUserGlobalSignOutRequest\"},\
+      \"output\":{\"shape\":\"AdminUserGlobalSignOutResponse\"},\
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
-        {\"shape\":\"NotAuthorizedException\"},\
-        {\"shape\":\"UnexpectedLambdaException\"},\
-        {\"shape\":\"UserLambdaValidationException\"},\
-        {\"shape\":\"InvalidLambdaResponseException\"},\
-        {\"shape\":\"MFAMethodNotFoundException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Signs out users from all devices, as an administrator.</p>\"\
     },\
     \"ChangePassword\":{\
       \"name\":\"ChangePassword\",\
@@ -265,8 +450,38 @@
         {\"shape\":\"InvalidPasswordException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Changes the password for a specified user in a user pool.</p>\",\
+      \"authtype\":\"none\"\
+    },\
+    \"ConfirmDevice\":{\
+      \"name\":\"ConfirmDevice\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"ConfirmDeviceRequest\"},\
+      \"output\":{\"shape\":\"ConfirmDeviceResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InvalidPasswordException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"UsernameExistsException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Confirms tracking of the device. This API call is the call that beings device tracking.</p>\"\
     },\
     \"ConfirmForgotPassword\":{\
       \"name\":\"ConfirmForgotPassword\",\
@@ -289,8 +504,12 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Allows a user to enter a code provided when they reset their password to update their password.</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"ConfirmSignUp\":{\
       \"name\":\"ConfirmSignUp\",\
@@ -313,8 +532,30 @@
         {\"shape\":\"AliasExistsException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Confirms registration of a user and handles the existing alias from a previous user.</p>\",\
+      \"authtype\":\"none\"\
+    },\
+    \"CreateUserImportJob\":{\
+      \"name\":\"CreateUserImportJob\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"CreateUserImportJobRequest\"},\
+      \"output\":{\"shape\":\"CreateUserImportJobResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PreconditionNotMetException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Creates the user import job.</p>\"\
     },\
     \"CreateUserPool\":{\
       \"name\":\"CreateUserPool\",\
@@ -327,9 +568,14 @@
       \"errors\":[\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
-        {\"shape\":\"InternalErrorException\"},\
-        {\"shape\":\"LimitExceededException\"}\
-      ]\
+        {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Creates a new Amazon Cognito user pool and sets the password policy for the pool.</p>\"\
     },\
     \"CreateUserPoolClient\":{\
       \"name\":\"CreateUserPoolClient\",\
@@ -344,8 +590,10 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Creates the user pool client.</p>\"\
     },\
     \"DeleteUser\":{\
       \"name\":\"DeleteUser\",\
@@ -359,8 +607,13 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Allows a user to delete one's self.</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"DeleteUserAttributes\":{\
       \"name\":\"DeleteUserAttributes\",\
@@ -375,8 +628,13 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Deletes the attributes for a user.</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"DeleteUserPool\":{\
       \"name\":\"DeleteUserPool\",\
@@ -389,8 +647,11 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserImportInProgressException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Deletes the specified Amazon Cognito user pool.</p>\"\
     },\
     \"DeleteUserPoolClient\":{\
       \"name\":\"DeleteUserPoolClient\",\
@@ -403,8 +664,27 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Allows the developer to delete the user pool client.</p>\"\
+    },\
+    \"DescribeUserImportJob\":{\
+      \"name\":\"DescribeUserImportJob\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"DescribeUserImportJobRequest\"},\
+      \"output\":{\"shape\":\"DescribeUserImportJobResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Describes the user import job.</p>\"\
     },\
     \"DescribeUserPool\":{\
       \"name\":\"DescribeUserPool\",\
@@ -418,8 +698,10 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Returns the configuration information and metadata of the specified user pool.</p>\"\
     },\
     \"DescribeUserPoolClient\":{\
       \"name\":\"DescribeUserPoolClient\",\
@@ -433,29 +715,30 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Client method for returning the configuration information and metadata of the specified user pool client.</p>\"\
     },\
-    \"EnhanceAuth\":{\
-      \"name\":\"EnhanceAuth\",\
+    \"ForgetDevice\":{\
+      \"name\":\"ForgetDevice\",\
       \"http\":{\
         \"method\":\"POST\",\
         \"requestUri\":\"/\"\
       },\
-      \"input\":{\"shape\":\"EnhanceAuthRequest\"},\
-      \"output\":{\"shape\":\"EnhanceAuthResponse\"},\
+      \"input\":{\"shape\":\"ForgetDeviceRequest\"},\
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
-        {\"shape\":\"CodeMismatchException\"},\
-        {\"shape\":\"ExpiredCodeException\"},\
-        {\"shape\":\"UnexpectedLambdaException\"},\
-        {\"shape\":\"UserLambdaValidationException\"},\
-        {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Forgets the specified device.</p>\"\
     },\
     \"ForgotPassword\":{\
       \"name\":\"ForgotPassword\",\
@@ -474,57 +757,54 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Retrieves the password for the specified client ID or username.</p>\",\
+      \"authtype\":\"none\"\
     },\
-    \"GetAuthenticationDetails\":{\
-      \"name\":\"GetAuthenticationDetails\",\
+    \"GetCSVHeader\":{\
+      \"name\":\"GetCSVHeader\",\
       \"http\":{\
         \"method\":\"POST\",\
         \"requestUri\":\"/\"\
       },\
-      \"input\":{\"shape\":\"GetAuthenticationDetailsRequest\"},\
-      \"output\":{\"shape\":\"GetAuthenticationDetailsResponse\"},\
+      \"input\":{\"shape\":\"GetCSVHeaderRequest\"},\
+      \"output\":{\"shape\":\"GetCSVHeaderResponse\"},\
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
-        {\"shape\":\"UnexpectedLambdaException\"},\
-        {\"shape\":\"UserLambdaValidationException\"},\
         {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
-        {\"shape\":\"InvalidLambdaResponseException\"},\
-        {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Gets the header information for the .csv file to be used as input for the user import job.</p>\"\
     },\
-    \"GetJWKS\":{\
-      \"name\":\"GetJWKS\",\
+    \"GetDevice\":{\
+      \"name\":\"GetDevice\",\
       \"http\":{\
-        \"method\":\"GET\",\
-        \"requestUri\":\"/{userPoolId}/.well-known/jwks.json\",\
-        \"responseCode\":200\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
       },\
-      \"input\":{\"shape\":\"GetJWKSRequest\"},\
-      \"output\":{\"shape\":\"GetJWKSResponse\"},\
+      \"input\":{\"shape\":\"GetDeviceRequest\"},\
+      \"output\":{\"shape\":\"GetDeviceResponse\"},\
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
-    },\
-    \"GetOpenIdConfiguration\":{\
-      \"name\":\"GetOpenIdConfiguration\",\
-      \"http\":{\
-        \"method\":\"GET\",\
-        \"requestUri\":\"/{userPoolId}/.well-known/openid-configuration\",\
-        \"responseCode\":200\
-      },\
-      \"input\":{\"shape\":\"GetOpenIdConfigurationRequest\"},\
-      \"output\":{\"shape\":\"GetOpenIdConfigurationResponse\"},\
-      \"errors\":[\
-        {\"shape\":\"ResourceNotFoundException\"},\
-        {\"shape\":\"TooManyRequestsException\"},\
-        {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Gets the device.</p>\"\
     },\
     \"GetUser\":{\
       \"name\":\"GetUser\",\
@@ -539,8 +819,13 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Gets the user attributes and metadata for a user.</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"GetUserAttributeVerificationCode\":{\
       \"name\":\"GetUserAttributeVerificationCode\",\
@@ -558,8 +843,99 @@
         {\"shape\":\"UnexpectedLambdaException\"},\
         {\"shape\":\"UserLambdaValidationException\"},\
         {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"},\
+        {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Gets the user attribute verification code for the specified attribute name.</p>\",\
+      \"authtype\":\"none\"\
+    },\
+    \"GlobalSignOut\":{\
+      \"name\":\"GlobalSignOut\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"GlobalSignOutRequest\"},\
+      \"output\":{\"shape\":\"GlobalSignOutResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Signs out users from all devices.</p>\"\
+    },\
+    \"InitiateAuth\":{\
+      \"name\":\"InitiateAuth\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"InitiateAuthRequest\"},\
+      \"output\":{\"shape\":\"InitiateAuthResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"UnexpectedLambdaException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"UserLambdaValidationException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Initiates the authentication flow.</p>\"\
+    },\
+    \"ListDevices\":{\
+      \"name\":\"ListDevices\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"ListDevicesRequest\"},\
+      \"output\":{\"shape\":\"ListDevicesResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Lists the devices.</p>\"\
+    },\
+    \"ListUserImportJobs\":{\
+      \"name\":\"ListUserImportJobs\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"ListUserImportJobsRequest\"},\
+      \"output\":{\"shape\":\"ListUserImportJobsResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Lists the user import jobs.</p>\"\
     },\
     \"ListUserPoolClients\":{\
       \"name\":\"ListUserPoolClients\",\
@@ -573,8 +949,10 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Lists the clients that have been created for the specified user pool.</p>\"\
     },\
     \"ListUserPools\":{\
       \"name\":\"ListUserPools\",\
@@ -587,8 +965,10 @@
       \"errors\":[\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Lists the user pools associated with an AWS account.</p>\"\
     },\
     \"ListUsers\":{\
       \"name\":\"ListUsers\",\
@@ -602,24 +982,10 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
-        {\"shape\":\"InternalErrorException\"}\
-      ]\
-    },\
-    \"RefreshTokens\":{\
-      \"name\":\"RefreshTokens\",\
-      \"http\":{\
-        \"method\":\"POST\",\
-        \"requestUri\":\"/\"\
-      },\
-      \"input\":{\"shape\":\"RefreshTokensRequest\"},\
-      \"output\":{\"shape\":\"RefreshTokensResponse\"},\
-      \"errors\":[\
-        {\"shape\":\"ResourceNotFoundException\"},\
-        {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
-        {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Lists the users in the Amazon Cognito user pool.</p>\"\
     },\
     \"ResendConfirmationCode\":{\
       \"name\":\"ResendConfirmationCode\",\
@@ -638,8 +1004,46 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Resends the confirmation (for confirmation of registration) to a specific user in the user pool.</p>\",\
+      \"authtype\":\"none\"\
+    },\
+    \"RespondToAuthChallenge\":{\
+      \"name\":\"RespondToAuthChallenge\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"RespondToAuthChallengeRequest\"},\
+      \"output\":{\"shape\":\"RespondToAuthChallengeResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"CodeMismatchException\"},\
+        {\"shape\":\"ExpiredCodeException\"},\
+        {\"shape\":\"UnexpectedLambdaException\"},\
+        {\"shape\":\"UserLambdaValidationException\"},\
+        {\"shape\":\"InvalidPasswordException\"},\
+        {\"shape\":\"InvalidLambdaResponseException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"MFAMethodNotFoundException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"AliasExistsException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Responds to the authentication challenge.</p>\"\
     },\
     \"SetUserSettings\":{\
       \"name\":\"SetUserSettings\",\
@@ -652,8 +1056,14 @@
       \"errors\":[\
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
-        {\"shape\":\"NotAuthorizedException\"}\
-      ]\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
+        {\"shape\":\"InternalErrorException\"}\
+      ],\
+      \"documentation\":\"<p>Sets the user settings like multi-factor authentication (MFA). If MFA is to be removed for a particular attribute pass the attribute with code delivery as null. If null list is passed, all MFA options are removed.</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"SignUp\":{\
       \"name\":\"SignUp\",\
@@ -673,8 +1083,71 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"UsernameExistsException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"}\
+      ],\
+      \"documentation\":\"<p>Registers the user in the specified user pool and creates a user name, password, and user attributes.</p>\",\
+      \"authtype\":\"none\"\
+    },\
+    \"StartUserImportJob\":{\
+      \"name\":\"StartUserImportJob\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"StartUserImportJobRequest\"},\
+      \"output\":{\"shape\":\"StartUserImportJobResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"PreconditionNotMetException\"},\
+        {\"shape\":\"NotAuthorizedException\"}\
+      ],\
+      \"documentation\":\"<p>Starts the user import.</p>\"\
+    },\
+    \"StopUserImportJob\":{\
+      \"name\":\"StopUserImportJob\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"StopUserImportJobRequest\"},\
+      \"output\":{\"shape\":\"StopUserImportJobResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"PreconditionNotMetException\"},\
+        {\"shape\":\"NotAuthorizedException\"}\
+      ],\
+      \"documentation\":\"<p>Stops the user import job.</p>\"\
+    },\
+    \"UpdateDeviceStatus\":{\
+      \"name\":\"UpdateDeviceStatus\",\
+      \"http\":{\
+        \"method\":\"POST\",\
+        \"requestUri\":\"/\"\
+      },\
+      \"input\":{\"shape\":\"UpdateDeviceStatusRequest\"},\
+      \"output\":{\"shape\":\"UpdateDeviceStatusResponse\"},\
+      \"errors\":[\
+        {\"shape\":\"InvalidParameterException\"},\
+        {\"shape\":\"ResourceNotFoundException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"InvalidUserPoolConfigurationException\"},\
+        {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Updates the device status.</p>\"\
     },\
     \"UpdateUserAttributes\":{\
       \"name\":\"UpdateUserAttributes\",\
@@ -695,8 +1168,17 @@
         {\"shape\":\"InvalidLambdaResponseException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
         {\"shape\":\"AliasExistsException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"},\
+        {\"shape\":\"CodeDeliveryFailureException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Allows a user to update a specific attribute (one at a time).</p>\",\
+      \"authtype\":\"none\"\
     },\
     \"UpdateUserPool\":{\
       \"name\":\"UpdateUserPool\",\
@@ -711,8 +1193,14 @@
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"ConcurrentModificationException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
-        {\"shape\":\"InternalErrorException\"}\
-      ]\
+        {\"shape\":\"NotAuthorizedException\"},\
+        {\"shape\":\"UserImportInProgressException\"},\
+        {\"shape\":\"InternalErrorException\"},\
+        {\"shape\":\"InvalidSmsRoleAccessPolicyException\"},\
+        {\"shape\":\"InvalidSmsRoleTrustRelationshipException\"},\
+        {\"shape\":\"InvalidEmailRoleAccessPolicyException\"}\
+      ],\
+      \"documentation\":\"<p>Updates the specified user pool with the specified attributes.</p>\"\
     },\
     \"UpdateUserPoolClient\":{\
       \"name\":\"UpdateUserPoolClient\",\
@@ -726,8 +1214,10 @@
         {\"shape\":\"ResourceNotFoundException\"},\
         {\"shape\":\"InvalidParameterException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Allows the developer to update the specified user pool client and password policy.</p>\"\
     },\
     \"VerifyUserAttribute\":{\
       \"name\":\"VerifyUserAttribute\",\
@@ -744,17 +1234,17 @@
         {\"shape\":\"ExpiredCodeException\"},\
         {\"shape\":\"NotAuthorizedException\"},\
         {\"shape\":\"TooManyRequestsException\"},\
+        {\"shape\":\"LimitExceededException\"},\
+        {\"shape\":\"PasswordResetRequiredException\"},\
+        {\"shape\":\"UserNotFoundException\"},\
+        {\"shape\":\"UserNotConfirmedException\"},\
         {\"shape\":\"InternalErrorException\"}\
-      ]\
+      ],\
+      \"documentation\":\"<p>Verifies the specified user attributes in the user pool.</p>\",\
+      \"authtype\":\"none\"\
     }\
   },\
   \"shapes\":{\
-    \"AValueHexStringType\":{\
-      \"type\":\"string\",\
-      \"max\":1024,\
-      \"min\":1,\
-      \"pattern\":\"^[0-9a-fA-F]+$\"\
-    },\
     \"AddCustomAttributesRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\
@@ -762,14 +1252,22 @@
         \"CustomAttributes\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"CustomAttributes\":{\"shape\":\"CustomAttributesListType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to add custom attributes.</p>\"\
+        },\
+        \"CustomAttributes\":{\
+          \"shape\":\"CustomAttributesListType\",\
+          \"documentation\":\"<p>An array of custom attributes, such as Mutable and Name.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to add custom attributes.</p>\"\
     },\
     \"AddCustomAttributesResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to add custom attributes.</p>\"\
     },\
     \"AdminConfirmSignUpRequest\":{\
       \"type\":\"structure\",\
@@ -778,14 +1276,97 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for which you want to confirm user registration.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name for which you want to confirm user registration.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to confirm user registration.</p>\"\
     },\
     \"AdminConfirmSignUpResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to confirm registration.</p>\"\
+    },\
+    \"AdminCreateUserConfigType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"AllowAdminCreateUserOnly\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Set to True if only the administrator is allowed to create user profiles. Set to False if users can sign themselves up via an app.</p>\"\
+        },\
+        \"UnusedAccountValidityDays\":{\
+          \"shape\":\"AdminCreateUserUnusedAccountValidityDaysType\",\
+          \"documentation\":\"<p>The user account expiration limit, in days, after which the account is no longer usable. To reset the account after that time limit, you must call AdminCreateUser again, specifying \\\"RESEND\\\" for the MessageAction parameter.</p>\"\
+        },\
+        \"InviteMessageTemplate\":{\
+          \"shape\":\"MessageTemplateType\",\
+          \"documentation\":\"<p>The message template to be used for the welcome message to new users.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The type of configuration for creating a new user profile.</p>\"\
+    },\
+    \"AdminCreateUserRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"Username\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where the user will be created.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The username for the user. Must be unique within the user pool. Must be a UTF-8 string between 1 and 128 characters. After the user is created, the username cannot be changed.</p>\"\
+        },\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs that contain user attributes and attribute values to be set for the user to be created. You can create a user without specifying any attributes other than Username. However, any attributes that you specify as required (in CreateUserPool or in the <b>Attributes</b> tab of the console) must be supplied either by you (in your call to AdminCreateUser) or by the user (when he or she signs up in response to your welcome message).</p> <p>To send a message inviting the user to sign up, you must specify the user's email address or phone number. This can be done in your call to AdminCreateUser or in the <b>Users</b> tab of the Amazon Cognito console for managing your user pools.</p> <p>In your call to AdminCreateUser, you can set the email_verified attribute to True, and you can set the phone_number_verified attribute to True. (You cannot do this by calling other operations such as AdminUpdateUserAttributes.)</p> <ul> <li> <p> <b>email</b>: The email address of the user to whom the message that contains the code and username will be sent. Required if the email_verified attribute is set to True, or if \\\"EMAIL\\\" is specified in the DesiredDeliveryMediums parameter.</p> </li> <li> <p> <b>phone_number</b>: The phone number of the user to whom the message that contains the code and username will be sent. Required if the phone_number_verified attribute is set to True, or if \\\"SMS\\\" is specified in the DesiredDeliveryMediums parameter.</p> </li> </ul>\"\
+        },\
+        \"ValidationData\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>The user's validation data. This is an array of name-value pairs that contain user attributes and attribute values that you can use for custom validation, such as restricting the types of user accounts that can be registered. For example, you might choose to allow or disallow user sign-up based on the user's domain.</p> <p>To configure custom validation, you must create a Pre Sign-up Lambda trigger for the user pool as described in the Amazon Cognito Developer Guide. The Lambda trigger receives the validation data and uses it in the validation process.</p> <p>The user's validation data is not persisted.</p>\"\
+        },\
+        \"TemporaryPassword\":{\
+          \"shape\":\"PasswordType\",\
+          \"documentation\":\"<p>The user's temporary password. This password must conform to the password policy that you specified when you created the user pool.</p> <p>The temporary password is valid only once. To complete the Admin Create User flow, the user must enter the temporary password in the sign-in page along with a new password to be used in all future sign-ins.</p> <p>This parameter is not required. If you do not specify a value, Amazon Cognito generates one for you.</p> <p>The temporary password can only be used until the user account expiration limit that you specified when you created the user pool. To reset the account after that time limit, you must call AdminCreateUser again, specifying \\\"RESEND\\\" for the MessageAction parameter.</p>\"\
+        },\
+        \"ForceAliasCreation\":{\
+          \"shape\":\"ForceAliasCreation\",\
+          \"documentation\":\"<p>This parameter is only used if the phone_number_verified or email_verified attribute is set to True. Otherwise, it is ignored.</p> <p>If this parameter is set to True and the phone number or email address specified in the UserAttributes parameter already exists as an alias with a different user, the API call will migrate the alias from the previous user to the newly created user. The previous user will no longer be able to log in using that alias.</p> <p>If this parameter is set to False, the API throws an AliasExistsException error if the alias already exists. The default value is False.</p>\"\
+        },\
+        \"MessageAction\":{\
+          \"shape\":\"MessageActionType\",\
+          \"documentation\":\"<p>Set to \\\"RESEND\\\" to resend the invitation message to a user that already exists and reset the expiration limit on the user's account. Set to \\\"SUPPRESS\\\" to suppress sending the message. Only one value can be specified.</p>\"\
+        },\
+        \"DesiredDeliveryMediums\":{\
+          \"shape\":\"DeliveryMediumListType\",\
+          \"documentation\":\"<p>Specify \\\"EMAIL\\\" if email will be used to send the welcome message. Specify \\\"SMS\\\" if the phone number will be used. The default value is \\\"SMS\\\". More than one value can be specified.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to create a user in the specified user pool.</p>\"\
+    },\
+    \"AdminCreateUserResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"User\":{\
+          \"shape\":\"UserType\",\
+          \"documentation\":\"<p>The user returned in the request to create a new user.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to create the user.</p>\"\
+    },\
+    \"AdminCreateUserUnusedAccountValidityDaysType\":{\
+      \"type\":\"integer\",\
+      \"max\":90,\
+      \"min\":0\
     },\
     \"AdminDeleteUserAttributesRequest\":{\
       \"type\":\"structure\",\
@@ -795,15 +1376,26 @@
         \"UserAttributeNames\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"UserAttributeNames\":{\"shape\":\"AttributeNameListType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to delete user attributes.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user from which you would like to delete attributes.</p>\"\
+        },\
+        \"UserAttributeNames\":{\
+          \"shape\":\"AttributeNameListType\",\
+          \"documentation\":\"<p>An array of strings representing the user attribute names you wish to delete.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete user attributes as an administrator.</p>\"\
     },\
     \"AdminDeleteUserAttributesResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response received from the server for a request to delete user attributes.</p>\"\
     },\
     \"AdminDeleteUserRequest\":{\
       \"type\":\"structure\",\
@@ -812,9 +1404,16 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to delete the user.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to delete.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete a user as an administrator.</p>\"\
     },\
     \"AdminDisableUserRequest\":{\
       \"type\":\"structure\",\
@@ -823,14 +1422,22 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to disable the user.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to disable.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to disable any user as an administrator.</p>\"\
     },\
     \"AdminDisableUserResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response received from the server to disable the user as an administrator.</p>\"\
     },\
     \"AdminEnableUserRequest\":{\
       \"type\":\"structure\",\
@@ -839,14 +1446,79 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to enable the user.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to ebable.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request that enables the user as an administrator.</p>\"\
     },\
     \"AdminEnableUserResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to enable a user as an administrator.</p>\"\
+    },\
+    \"AdminForgetDeviceRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"Username\",\
+        \"DeviceKey\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name.</p>\"\
+        },\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Sends the forgot device request, as an administrator.</p>\"\
+    },\
+    \"AdminGetDeviceRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"DeviceKey\",\
+        \"UserPoolId\",\
+        \"Username\"\
+      ],\
+      \"members\":{\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to get the device, as an administrator.</p>\"\
+    },\
+    \"AdminGetDeviceResponse\":{\
+      \"type\":\"structure\",\
+      \"required\":[\"Device\"],\
+      \"members\":{\
+        \"Device\":{\
+          \"shape\":\"DeviceType\",\
+          \"documentation\":\"<p>The device.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Gets the device response, as an administrator.</p>\"\
     },\
     \"AdminGetUserRequest\":{\
       \"type\":\"structure\",\
@@ -855,22 +1527,141 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to get information about the user.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to retrieve.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to get the specified user as an administrator.</p>\"\
     },\
     \"AdminGetUserResponse\":{\
       \"type\":\"structure\",\
       \"required\":[\"Username\"],\
       \"members\":{\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"UserAttributes\":{\"shape\":\"AttributeListType\"},\
-        \"UserCreateDate\":{\"shape\":\"DateType\"},\
-        \"UserLastModifiedDate\":{\"shape\":\"DateType\"},\
-        \"Enabled\":{\"shape\":\"BooleanType\"},\
-        \"UserStatus\":{\"shape\":\"UserStatusType\"},\
-        \"MFAOptions\":{\"shape\":\"MFAOptionListType\"}\
-      }\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user about whom you are receiving information.</p>\"\
+        },\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs representing user attributes.</p>\"\
+        },\
+        \"UserCreateDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date the user was created.</p>\"\
+        },\
+        \"UserLastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date the user was last modified.</p>\"\
+        },\
+        \"Enabled\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Indicates that the status is enabled.</p>\"\
+        },\
+        \"UserStatus\":{\
+          \"shape\":\"UserStatusType\",\
+          \"documentation\":\"<p>The user status. Can be one of the following:</p> <ul> <li> <p>UNCONFIRMED - User has been created but not confirmed.</p> </li> <li> <p>CONFIRMED - User has been confirmed.</p> </li> <li> <p>ARCHIVED - User is no longer active.</p> </li> <li> <p>COMPROMISED - User is disabled due to a potential security threat.</p> </li> <li> <p>UNKNOWN - User status is not known.</p> </li> </ul>\"\
+        },\
+        \"MFAOptions\":{\
+          \"shape\":\"MFAOptionListType\",\
+          \"documentation\":\"<p>Specifies the options for MFA (e.g., email or phone number).</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server from the request to get the specified user as an administrator.</p>\"\
+    },\
+    \"AdminInitiateAuthRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"ClientId\",\
+        \"AuthFlow\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The ID of the Amazon Cognito user pool.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The client app ID.</p>\"\
+        },\
+        \"AuthFlow\":{\
+          \"shape\":\"AuthFlowType\",\
+          \"documentation\":\"<p>The authentication flow.</p>\"\
+        },\
+        \"AuthParameters\":{\
+          \"shape\":\"AuthParametersType\",\
+          \"documentation\":\"<p>The authentication parameters.</p>\"\
+        },\
+        \"ClientMetadata\":{\
+          \"shape\":\"ClientMetadataType\",\
+          \"documentation\":\"<p>The client app metadata.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Initiates the authorization request, as an administrator.</p>\"\
+    },\
+    \"AdminInitiateAuthResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The name of the challenge.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        },\
+        \"ChallengeParameters\":{\
+          \"shape\":\"ChallengeParametersType\",\
+          \"documentation\":\"<p>The challenge parameters.</p>\"\
+        },\
+        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
+      },\
+      \"documentation\":\"<p>Initiates the authentication response, as an administrator.</p>\"\
+    },\
+    \"AdminListDevicesRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"Username\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name.</p>\"\
+        },\
+        \"Limit\":{\
+          \"shape\":\"QueryLimitType\",\
+          \"documentation\":\"<p>The limit of the devices request.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>The pagination token.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list devices, as an administrator.</p>\"\
+    },\
+    \"AdminListDevicesResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"Devices\":{\
+          \"shape\":\"DeviceListType\",\
+          \"documentation\":\"<p>The devices in the list of devices response.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>The pagination token.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Lists the device's response, as an administrator.</p>\"\
     },\
     \"AdminResetUserPasswordRequest\":{\
       \"type\":\"structure\",\
@@ -879,14 +1670,72 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to reset the user's password.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user whose password you wish to reset.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to reset a user's password as an administrator.</p>\"\
     },\
     \"AdminResetUserPasswordResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to reset a user password as an administrator.</p>\"\
+    },\
+    \"AdminRespondToAuthChallengeRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"ClientId\",\
+        \"ChallengeName\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The ID of the Amazon Cognito user pool.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The client ID.</p>\"\
+        },\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The name of the challenge.</p>\"\
+        },\
+        \"ChallengeResponses\":{\
+          \"shape\":\"ChallengeResponsesType\",\
+          \"documentation\":\"<p>The challenge response.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request to respond to the authentication challenge, as an administrator.</p>\"\
+    },\
+    \"AdminRespondToAuthChallengeResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The name of the challenge.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        },\
+        \"ChallengeParameters\":{\
+          \"shape\":\"ChallengeParametersType\",\
+          \"documentation\":\"<p>The challenge parameters.</p>\"\
+        },\
+        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
+      },\
+      \"documentation\":\"<p>Responds to the authentication challenge, as an administrator.</p>\"\
     },\
     \"AdminSetUserSettingsRequest\":{\
       \"type\":\"structure\",\
@@ -896,15 +1745,59 @@
         \"MFAOptions\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"MFAOptions\":{\"shape\":\"MFAOptionListType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to set the user's settings, such as MFA options.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user for whom you wish to set user settings.</p>\"\
+        },\
+        \"MFAOptions\":{\
+          \"shape\":\"MFAOptionListType\",\
+          \"documentation\":\"<p>Specifies the options for MFA (e.g., email or phone number).</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to set user settings as an administrator.</p>\"\
     },\
     \"AdminSetUserSettingsResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to set user settings as an administrator.</p>\"\
+    },\
+    \"AdminUpdateDeviceStatusRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"Username\",\
+        \"DeviceKey\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID&gt;</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name.</p>\"\
+        },\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"DeviceRememberedStatus\":{\
+          \"shape\":\"DeviceRememberedStatusType\",\
+          \"documentation\":\"<p>The status indicating whether a device has been remembered or not.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request to update the device status, as an administrator.</p>\"\
+    },\
+    \"AdminUpdateDeviceStatusResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+      },\
+      \"documentation\":\"<p>The status response from the request to update the device, as an administrator.</p>\"\
     },\
     \"AdminUpdateUserAttributesRequest\":{\
       \"type\":\"structure\",\
@@ -914,15 +1807,50 @@
         \"UserAttributes\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"UserAttributes\":{\"shape\":\"AttributeListType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to update user attributes.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user for whom you want to update user attributes.</p>\"\
+        },\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs representing user attributes.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to update the user's attributes as an administrator.</p>\"\
     },\
     \"AdminUpdateUserAttributesResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to update user attributes as an administrator.</p>\"\
+    },\
+    \"AdminUserGlobalSignOutRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"Username\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request to sign out of all devices, as an administrator.</p>\"\
+    },\
+    \"AdminUserGlobalSignOutResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+      },\
+      \"documentation\":\"<p>The global sign-out response, as an administrator.</p>\"\
     },\
     \"AliasAttributeType\":{\
       \"type\":\"string\",\
@@ -939,15 +1867,19 @@
     \"AliasExistsException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message sent to the user when an alias exists.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when a user tries to confirm the account with an email or phone number that has already been supplied as an alias from a different account. This exception tells user that an account with this email or phone already exists.</p>\",\
       \"exception\":true\
     },\
     \"ArnType\":{\
       \"type\":\"string\",\
       \"max\":2048,\
       \"min\":20,\
-      \"pattern\":\"arn:[\\\\w+=/,.@-]+:[\\\\w+=/,.@-]+:[\\\\w+=/,.@-]*:[0-9]+:[\\\\w+=,.@-]+:[\\\\w+=/,.@-]+\"\
+      \"pattern\":\"arn:[\\\\w+=/,.@-]+:[\\\\w+=/,.@-]+:([\\\\w+=/,.@-]*)?:[0-9]+:[\\\\w+=/,.@-]+(:[\\\\w+=/,.@-]+)?(:[\\\\w+=/,.@-]+)?\"\
     },\
     \"AttributeDataType\":{\
       \"type\":\"string\",\
@@ -976,55 +1908,90 @@
       \"type\":\"structure\",\
       \"required\":[\"Name\"],\
       \"members\":{\
-        \"Name\":{\"shape\":\"AttributeNameType\"},\
-        \"Value\":{\"shape\":\"AttributeValueType\"}\
-      }\
+        \"Name\":{\
+          \"shape\":\"AttributeNameType\",\
+          \"documentation\":\"<p>The name of the attribute.</p>\"\
+        },\
+        \"Value\":{\
+          \"shape\":\"AttributeValueType\",\
+          \"documentation\":\"<p>The value of the attribute.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Specifies whether the attribute is standard or custom.</p>\"\
     },\
     \"AttributeValueType\":{\
       \"type\":\"string\",\
-      \"max\":256,\
+      \"max\":2048,\
       \"sensitive\":true\
     },\
-    \"AuthStateType\":{\
+    \"AuthFlowType\":{\
       \"type\":\"string\",\
-      \"pattern\":\"[A-Za-z0-9-_+/=]+\",\
-      \"sensitive\":true\
+      \"enum\":[\
+        \"USER_SRP_AUTH\",\
+        \"REFRESH_TOKEN_AUTH\",\
+        \"REFRESH_TOKEN\",\
+        \"CUSTOM_AUTH\",\
+        \"ADMIN_NO_SRP_AUTH\"\
+      ]\
     },\
-    \"AuthenticateRequest\":{\
-      \"type\":\"structure\",\
-      \"required\":[\
-        \"ClientId\",\
-        \"Username\",\
-        \"PasswordClaim\"\
-      ],\
-      \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"PasswordClaim\":{\"shape\":\"PasswordClaimType\"},\
-        \"Timestamp\":{\"shape\":\"DateType\"}\
-      }\
-    },\
-    \"AuthenticateResponse\":{\
-      \"type\":\"structure\",\
-      \"members\":{\
-        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"},\
-        \"AuthState\":{\"shape\":\"AuthStateType\"},\
-        \"CodeDeliveryDetails\":{\"shape\":\"CodeDeliveryDetailsType\"}\
-      }\
+    \"AuthParametersType\":{\
+      \"type\":\"map\",\
+      \"key\":{\"shape\":\"StringType\"},\
+      \"value\":{\"shape\":\"StringType\"}\
     },\
     \"AuthenticationResultType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"},\
-        \"ExpiresIn\":{\"shape\":\"IntegerType\"},\
-        \"TokenType\":{\"shape\":\"StringType\"},\
-        \"RefreshToken\":{\"shape\":\"TokenModelType\"},\
-        \"IdToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token of the authentication result.</p>\"\
+        },\
+        \"ExpiresIn\":{\
+          \"shape\":\"IntegerType\",\
+          \"documentation\":\"<p>The expiration period of the authentication result.</p>\"\
+        },\
+        \"TokenType\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The token type of the authentication result.</p>\"\
+        },\
+        \"RefreshToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The refresh token of the authentication result.</p>\"\
+        },\
+        \"IdToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The ID token of the authentication result.</p>\"\
+        },\
+        \"NewDeviceMetadata\":{\
+          \"shape\":\"NewDeviceMetadataType\",\
+          \"documentation\":\"<p>The new device metadata from an authentication result.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The result type of the authentication result.</p>\"\
     },\
-    \"BlobType\":{\"type\":\"blob\"},\
     \"BooleanType\":{\"type\":\"boolean\"},\
+    \"ChallengeNameType\":{\
+      \"type\":\"string\",\
+      \"enum\":[\
+        \"SMS_MFA\",\
+        \"PASSWORD_VERIFIER\",\
+        \"CUSTOM_CHALLENGE\",\
+        \"DEVICE_SRP_AUTH\",\
+        \"DEVICE_PASSWORD_VERIFIER\",\
+        \"ADMIN_NO_SRP_AUTH\",\
+        \"NEW_PASSWORD_REQUIRED\"\
+      ]\
+    },\
+    \"ChallengeParametersType\":{\
+      \"type\":\"map\",\
+      \"key\":{\"shape\":\"StringType\"},\
+      \"value\":{\"shape\":\"StringType\"}\
+    },\
+    \"ChallengeResponsesType\":{\
+      \"type\":\"map\",\
+      \"key\":{\"shape\":\"StringType\"},\
+      \"value\":{\"shape\":\"StringType\"}\
+    },\
     \"ChangePasswordRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\
@@ -1032,15 +1999,26 @@
         \"ProposedPassword\"\
       ],\
       \"members\":{\
-        \"PreviousPassword\":{\"shape\":\"PasswordType\"},\
-        \"ProposedPassword\":{\"shape\":\"PasswordType\"},\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"PreviousPassword\":{\
+          \"shape\":\"PasswordType\",\
+          \"documentation\":\"<p>The old password in the change password request.</p>\"\
+        },\
+        \"ProposedPassword\":{\
+          \"shape\":\"PasswordType\",\
+          \"documentation\":\"<p>The new password in the change password request.</p>\"\
+        },\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token in the change password request.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to change a user password.</p>\"\
     },\
     \"ChangePasswordResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>The response from the server to the change password request.</p>\"\
     },\
     \"ClientIdType\":{\
       \"type\":\"string\",\
@@ -1049,11 +2027,25 @@
       \"pattern\":\"[\\\\w+]+\",\
       \"sensitive\":true\
     },\
+    \"ClientMetadataType\":{\
+      \"type\":\"map\",\
+      \"key\":{\"shape\":\"StringType\"},\
+      \"value\":{\"shape\":\"StringType\"}\
+    },\
     \"ClientNameType\":{\
       \"type\":\"string\",\
       \"max\":128,\
       \"min\":1,\
       \"pattern\":\"[\\\\w\\\\s+=,.@-]+\"\
+    },\
+    \"ClientPermissionListType\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"ClientPermissionType\"}\
+    },\
+    \"ClientPermissionType\":{\
+      \"type\":\"string\",\
+      \"max\":2048,\
+      \"min\":1\
     },\
     \"ClientSecretType\":{\
       \"type\":\"string\",\
@@ -1069,24 +2061,95 @@
     \"CodeDeliveryDetailsType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Destination\":{\"shape\":\"StringType\"},\
-        \"DeliveryMedium\":{\"shape\":\"DeliveryMediumType\"},\
-        \"AttributeName\":{\"shape\":\"AttributeNameType\"}\
-      }\
+        \"Destination\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The destination for the code delivery details.</p>\"\
+        },\
+        \"DeliveryMedium\":{\
+          \"shape\":\"DeliveryMediumType\",\
+          \"documentation\":\"<p>The delivery medium (email message or phone number).</p>\"\
+        },\
+        \"AttributeName\":{\
+          \"shape\":\"AttributeNameType\",\
+          \"documentation\":\"<p>The name of the attribute in the code delivery details type.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The type of code delivery details being returned from the server.</p>\"\
+    },\
+    \"CodeDeliveryFailureException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message sent when a verification code fails to deliver successfully.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when a verification code fails to deliver successfully.</p>\",\
+      \"exception\":true\
     },\
     \"CodeMismatchException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message provided when the code mismatch exception is thrown.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown if the provided code does not match what the server was expecting.</p>\",\
       \"exception\":true\
+    },\
+    \"CompletionMessageType\":{\
+      \"type\":\"string\",\
+      \"max\":128,\
+      \"min\":1,\
+      \"pattern\":\"[\\\\w]+\"\
     },\
     \"ConcurrentModificationException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message provided when the concurrent exception is thrown.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown if two or more modifications are happening concurrently.</p>\",\
       \"exception\":true\
+    },\
+    \"ConfirmDeviceRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"AccessToken\",\
+        \"DeviceKey\"\
+      ],\
+      \"members\":{\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token.</p>\"\
+        },\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"DeviceSecretVerifierConfig\":{\
+          \"shape\":\"DeviceSecretVerifierConfigType\",\
+          \"documentation\":\"<p>The configuration of the device secret verifier.</p>\"\
+        },\
+        \"DeviceName\":{\
+          \"shape\":\"DeviceNameType\",\
+          \"documentation\":\"<p>The device name.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Confirms the device request.</p>\"\
+    },\
+    \"ConfirmDeviceResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserConfirmationNecessary\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Indicates whether the user confirmation is necessary to confirm the device response.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Confirms the device response.</p>\"\
     },\
     \"ConfirmForgotPasswordRequest\":{\
       \"type\":\"structure\",\
@@ -1097,17 +2160,34 @@
         \"Password\"\
       ],\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"ConfirmationCode\":{\"shape\":\"ConfirmationCodeType\"},\
-        \"Password\":{\"shape\":\"PasswordType\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"SecretHash\":{\
+          \"shape\":\"SecretHashType\",\
+          \"documentation\":\"<p>A keyed-hash message authentication code (HMAC) calculated using the secret key of a user pool client and username plus the client ID in the message.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user for whom you want to enter a code to retrieve a forgotten password.</p>\"\
+        },\
+        \"ConfirmationCode\":{\
+          \"shape\":\"ConfirmationCodeType\",\
+          \"documentation\":\"<p>The confirmation code sent by a user's request to retrieve a forgotten password.</p>\"\
+        },\
+        \"Password\":{\
+          \"shape\":\"PasswordType\",\
+          \"documentation\":\"<p>The password sent by sent by a user's request to retrieve a forgotten password.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request representing the confirmation for a password reset.</p>\"\
     },\
     \"ConfirmForgotPasswordResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>The response from the server that results from a user's request to retrieve a forgotten password.</p>\"\
     },\
     \"ConfirmSignUpRequest\":{\
       \"type\":\"structure\",\
@@ -1117,23 +2197,73 @@
         \"ConfirmationCode\"\
       ],\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"ConfirmationCode\":{\"shape\":\"ConfirmationCodeType\"},\
-        \"ForceAliasCreation\":{\"shape\":\"ForceAliasCreation\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"SecretHash\":{\
+          \"shape\":\"SecretHashType\",\
+          \"documentation\":\"<p>A keyed-hash message authentication code (HMAC) calculated using the secret key of a user pool client and username plus the client ID in the message.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user whose registration you wish to confirm.</p>\"\
+        },\
+        \"ConfirmationCode\":{\
+          \"shape\":\"ConfirmationCodeType\",\
+          \"documentation\":\"<p>The confirmation code sent by a user's request to confirm registration.</p>\"\
+        },\
+        \"ForceAliasCreation\":{\
+          \"shape\":\"ForceAliasCreation\",\
+          \"documentation\":\"<p>Boolean to be specified to force user confirmation irrespective of existing alias. By default set to False. If this parameter is set to True and the phone number/email used for sign up confirmation already exists as an alias with a different user, the API call will migrate the alias from the previous user to the newly created user being confirmed. If set to False, the API will throw an <b>AliasExistsException</b> error.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to confirm registration of a user.</p>\"\
     },\
     \"ConfirmSignUpResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the registration confirmation.</p>\"\
     },\
     \"ConfirmationCodeType\":{\
       \"type\":\"string\",\
       \"max\":2048,\
       \"min\":1,\
       \"pattern\":\"[\\\\S]+\"\
+    },\
+    \"CreateUserImportJobRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"JobName\",\
+        \"UserPoolId\",\
+        \"CloudWatchLogsRoleArn\"\
+      ],\
+      \"members\":{\
+        \"JobName\":{\
+          \"shape\":\"UserImportJobNameType\",\
+          \"documentation\":\"<p>The job name for the user import job.</p>\"\
+        },\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"CloudWatchLogsRoleArn\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>The role ARN for the Amazon CloudWatch Logging role for the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to create the user import job.</p>\"\
+    },\
+    \"CreateUserImportJobResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserImportJob\":{\
+          \"shape\":\"UserImportJobType\",\
+          \"documentation\":\"<p>The job object that represents the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to create the user import job.</p>\"\
     },\
     \"CreateUserPoolClientRequest\":{\
       \"type\":\"structure\",\
@@ -1142,38 +2272,119 @@
         \"ClientName\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientName\":{\"shape\":\"ClientNameType\"},\
-        \"GenerateSecret\":{\"shape\":\"GenerateSecret\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to create a user pool client.</p>\"\
+        },\
+        \"ClientName\":{\
+          \"shape\":\"ClientNameType\",\
+          \"documentation\":\"<p>The client name for the user pool client you would like to create.</p>\"\
+        },\
+        \"GenerateSecret\":{\
+          \"shape\":\"GenerateSecret\",\
+          \"documentation\":\"<p>Boolean to specify whether you want to generate a secret for the user pool client being created.</p>\"\
+        },\
+        \"RefreshTokenValidity\":{\
+          \"shape\":\"RefreshTokenValidityType\",\
+          \"documentation\":\"<p>Refreshes the token validity.</p>\"\
+        },\
+        \"ReadAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The read attributes.</p>\"\
+        },\
+        \"WriteAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The write attributes.</p>\"\
+        },\
+        \"ExplicitAuthFlows\":{\
+          \"shape\":\"ExplicitAuthFlowsListType\",\
+          \"documentation\":\"<p>The explicit authentication flows.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to create a user pool client.</p>\"\
     },\
     \"CreateUserPoolClientResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPoolClient\":{\"shape\":\"UserPoolClientType\"}\
-      }\
+        \"UserPoolClient\":{\
+          \"shape\":\"UserPoolClientType\",\
+          \"documentation\":\"<p>The user pool client that was just created.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to create a user pool client.</p>\"\
     },\
     \"CreateUserPoolRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"PoolName\"],\
       \"members\":{\
-        \"PoolName\":{\"shape\":\"UserPoolNameType\"},\
-        \"Policies\":{\"shape\":\"UserPoolPolicyType\"},\
-        \"LambdaConfig\":{\"shape\":\"LambdaConfigType\"},\
-        \"AutoVerifiedAttributes\":{\"shape\":\"VerifiedAttributesListType\"},\
-        \"AliasAttributes\":{\"shape\":\"AliasAttributesListType\"},\
-        \"SmsVerificationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"EmailVerificationMessage\":{\"shape\":\"EmailVerificationMessageType\"},\
-        \"EmailVerificationSubject\":{\"shape\":\"EmailVerificationSubjectType\"},\
-        \"SmsAuthenticationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"MfaConfiguration\":{\"shape\":\"UserPoolMfaType\"}\
-      }\
+        \"PoolName\":{\
+          \"shape\":\"UserPoolNameType\",\
+          \"documentation\":\"<p>A string used to name the user pool.</p>\"\
+        },\
+        \"Policies\":{\
+          \"shape\":\"UserPoolPolicyType\",\
+          \"documentation\":\"<p>The policies associated with the new user pool.</p>\"\
+        },\
+        \"LambdaConfig\":{\
+          \"shape\":\"LambdaConfigType\",\
+          \"documentation\":\"<p>The Lambda trigger configuration information for the new user pool.</p>\"\
+        },\
+        \"AutoVerifiedAttributes\":{\
+          \"shape\":\"VerifiedAttributesListType\",\
+          \"documentation\":\"<p>The attributes to be auto-verified. Possible values: <b>email</b>, <b>phone_number</b>.</p>\"\
+        },\
+        \"AliasAttributes\":{\
+          \"shape\":\"AliasAttributesListType\",\
+          \"documentation\":\"<p>Attributes supported as an alias for this user pool. Possible values: <b>phone_number</b>, <b>email</b>, or <b>preferred_username</b>.</p>\"\
+        },\
+        \"SmsVerificationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>A string representing the SMS verification message.</p>\"\
+        },\
+        \"EmailVerificationMessage\":{\
+          \"shape\":\"EmailVerificationMessageType\",\
+          \"documentation\":\"<p>A string representing the email verification message.</p>\"\
+        },\
+        \"EmailVerificationSubject\":{\
+          \"shape\":\"EmailVerificationSubjectType\",\
+          \"documentation\":\"<p>A string representing the email verification subject.</p>\"\
+        },\
+        \"SmsAuthenticationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>A string representing the SMS authentication message.</p>\"\
+        },\
+        \"MfaConfiguration\":{\
+          \"shape\":\"UserPoolMfaType\",\
+          \"documentation\":\"<p>Specifies MFA configuration details.</p>\"\
+        },\
+        \"DeviceConfiguration\":{\
+          \"shape\":\"DeviceConfigurationType\",\
+          \"documentation\":\"<p>The device configuration.</p>\"\
+        },\
+        \"EmailConfiguration\":{\
+          \"shape\":\"EmailConfigurationType\",\
+          \"documentation\":\"<p>The email configuration.</p>\"\
+        },\
+        \"SmsConfiguration\":{\
+          \"shape\":\"SmsConfigurationType\",\
+          \"documentation\":\"<p>The SMS configuration.</p>\"\
+        },\
+        \"AdminCreateUserConfig\":{\
+          \"shape\":\"AdminCreateUserConfigType\",\
+          \"documentation\":\"<p>The configuration for AdminCreateUser requests.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to create a user pool.</p>\"\
     },\
     \"CreateUserPoolResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPool\":{\"shape\":\"UserPoolType\"}\
-      }\
+        \"UserPool\":{\
+          \"shape\":\"UserPoolType\",\
+          \"documentation\":\"<p>A container for the user pool details.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to create a user pool.</p>\"\
     },\
     \"CustomAttributeNameType\":{\
       \"type\":\"string\",\
@@ -1192,14 +2403,22 @@
       \"type\":\"structure\",\
       \"required\":[\"UserAttributeNames\"],\
       \"members\":{\
-        \"UserAttributeNames\":{\"shape\":\"AttributeNameListType\"},\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"UserAttributeNames\":{\
+          \"shape\":\"AttributeNameListType\",\
+          \"documentation\":\"<p>An array of strings representing the user attribute names you wish to delete.</p>\"\
+        },\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token used in the request to delete user attributes.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete user attributes.</p>\"\
     },\
     \"DeleteUserAttributesResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to delete user attributes.</p>\"\
     },\
     \"DeleteUserPoolClientRequest\":{\
       \"type\":\"structure\",\
@@ -1208,22 +2427,41 @@
         \"ClientId\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientId\":{\"shape\":\"ClientIdType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to delete the client.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete a user pool client.</p>\"\
     },\
     \"DeleteUserPoolRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool you want to delete.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete a user pool.</p>\"\
     },\
     \"DeleteUserRequest\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token from a request to delete a user.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to delete a user.</p>\"\
+    },\
+    \"DeliveryMediumListType\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"DeliveryMediumType\"}\
     },\
     \"DeliveryMediumType\":{\
       \"type\":\"string\",\
@@ -1232,6 +2470,34 @@
         \"EMAIL\"\
       ]\
     },\
+    \"DescribeUserImportJobRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"JobId\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"JobId\":{\
+          \"shape\":\"UserImportJobIdType\",\
+          \"documentation\":\"<p>The job ID for the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to describe the user import job.</p>\"\
+    },\
+    \"DescribeUserImportJobResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserImportJob\":{\
+          \"shape\":\"UserImportJobType\",\
+          \"documentation\":\"<p>The job object that represents the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to describe the user import job.</p>\"\
+    },\
     \"DescribeUserPoolClientRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\
@@ -1239,28 +2505,141 @@
         \"ClientId\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientId\":{\"shape\":\"ClientIdType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool you want to describe.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to describe a user pool client.</p>\"\
     },\
     \"DescribeUserPoolClientResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPoolClient\":{\"shape\":\"UserPoolClientType\"}\
-      }\
+        \"UserPoolClient\":{\
+          \"shape\":\"UserPoolClientType\",\
+          \"documentation\":\"<p>The user pool client from a server response to describe the user pool client.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server from a request to describe the user pool client.</p>\"\
     },\
     \"DescribeUserPoolRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool you want to describe.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to describe the user pool.</p>\"\
     },\
     \"DescribeUserPoolResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPool\":{\"shape\":\"UserPoolType\"}\
-      }\
+        \"UserPool\":{\
+          \"shape\":\"UserPoolType\",\
+          \"documentation\":\"<p>The container of metadata returned by the server to describe the pool.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response to describe the user pool.</p>\"\
+    },\
+    \"DeviceConfigurationType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"ChallengeRequiredOnNewDevice\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Indicates whether a challenge is required on a new device. Only applicable to a new device.</p>\"\
+        },\
+        \"DeviceOnlyRememberedOnUserPrompt\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>If true, a device is only remembered on user prompt.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The type of configuration for the user pool's device tracking.</p>\"\
+    },\
+    \"DeviceKeyType\":{\
+      \"type\":\"string\",\
+      \"max\":55,\
+      \"min\":1,\
+      \"pattern\":\"[\\\\w-]+_[0-9a-f-]+\"\
+    },\
+    \"DeviceListType\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"DeviceType\"}\
+    },\
+    \"DeviceNameType\":{\
+      \"type\":\"string\",\
+      \"max\":1024,\
+      \"min\":1\
+    },\
+    \"DeviceRememberedStatusType\":{\
+      \"type\":\"string\",\
+      \"enum\":[\
+        \"remembered\",\
+        \"not_remembered\"\
+      ]\
+    },\
+    \"DeviceSecretVerifierConfigType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"PasswordVerifier\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The password verifier.</p>\"\
+        },\
+        \"Salt\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The salt.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The device verifier against which it will be authenticated.</p>\"\
+    },\
+    \"DeviceType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"DeviceAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>The device attributes.</p>\"\
+        },\
+        \"DeviceCreateDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The creation date of the device.</p>\"\
+        },\
+        \"DeviceLastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The last modified date of the device.</p>\"\
+        },\
+        \"DeviceLastAuthenticatedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date in which the device was last authenticated.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The device type.</p>\"\
+    },\
+    \"EmailAddressType\":{\
+      \"type\":\"string\",\
+      \"pattern\":\"[\\\\p{L}\\\\p{M}\\\\p{S}\\\\p{N}\\\\p{P}]+@[\\\\p{L}\\\\p{M}\\\\p{S}\\\\p{N}\\\\p{P}]+\"\
+    },\
+    \"EmailConfigurationType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"SourceArn\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>The Amazon Resource Name (ARN) of the email source.</p>\"\
+        },\
+        \"ReplyToEmailAddress\":{\
+          \"shape\":\"EmailAddressType\",\
+          \"documentation\":\"<p>The REPLY-TO email address.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The email configuration type.</p>\"\
     },\
     \"EmailVerificationMessageType\":{\
       \"type\":\"string\",\
@@ -1274,36 +2653,44 @@
       \"min\":1,\
       \"pattern\":\"[\\\\p{L}\\\\p{M}\\\\p{S}\\\\p{N}\\\\p{P}\\\\s]+\"\
     },\
-    \"EnhanceAuthRequest\":{\
-      \"type\":\"structure\",\
-      \"required\":[\
-        \"ClientId\",\
-        \"Username\",\
-        \"AuthState\",\
-        \"Code\"\
-      ],\
-      \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"AuthState\":{\"shape\":\"AuthStateType\"},\
-        \"Code\":{\"shape\":\"StringType\"}\
-      }\
-    },\
-    \"EnhanceAuthResponse\":{\
-      \"type\":\"structure\",\
-      \"members\":{\
-        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
-      }\
-    },\
     \"ExpiredCodeException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the expired code exception is thrown.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown if a code has expired.</p>\",\
       \"exception\":true\
     },\
+    \"ExplicitAuthFlowsListType\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"ExplicitAuthFlowsType\"}\
+    },\
+    \"ExplicitAuthFlowsType\":{\
+      \"type\":\"string\",\
+      \"enum\":[\
+        \"ADMIN_NO_SRP_AUTH\",\
+        \"CUSTOM_AUTH_FLOW_ONLY\"\
+      ]\
+    },\
     \"ForceAliasCreation\":{\"type\":\"boolean\"},\
+    \"ForgetDeviceRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\"DeviceKey\"],\
+      \"members\":{\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token for the forgotten device request.</p>\"\
+        },\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to forget the device.</p>\"\
+    },\
     \"ForgotPasswordRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\
@@ -1311,105 +2698,114 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"SecretHash\":{\
+          \"shape\":\"SecretHashType\",\
+          \"documentation\":\"<p>A keyed-hash message authentication code (HMAC) calculated using the secret key of a user pool client and username plus the client ID in the message.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user for whom you want to enter a code to retrieve a forgotten password.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to reset a user's password.</p>\"\
     },\
     \"ForgotPasswordResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
         \"CodeDeliveryDetails\":{\"shape\":\"CodeDeliveryDetailsType\"}\
-      }\
+      },\
+      \"documentation\":\"<p>Respresents the response from the server regarding the request to reset a password.</p>\"\
     },\
     \"GenerateSecret\":{\"type\":\"boolean\"},\
-    \"GetAuthenticationDetailsRequest\":{\
-      \"type\":\"structure\",\
-      \"required\":[\
-        \"ClientId\",\
-        \"Username\",\
-        \"SrpA\"\
-      ],\
-      \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"SrpA\":{\"shape\":\"AValueHexStringType\"},\
-        \"ValidationData\":{\"shape\":\"AttributeListType\"}\
-      }\
-    },\
-    \"GetAuthenticationDetailsResponse\":{\
-      \"type\":\"structure\",\
-      \"required\":[\
-        \"Salt\",\
-        \"SrpB\",\
-        \"SecretBlock\"\
-      ],\
-      \"members\":{\
-        \"Salt\":{\"shape\":\"HexStringType\"},\
-        \"SrpB\":{\"shape\":\"HexStringType\"},\
-        \"SecretBlock\":{\"shape\":\"BlobType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
-    },\
-    \"GetJWKSRequest\":{\
+    \"GetCSVHeaderRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
         \"UserPoolId\":{\
           \"shape\":\"UserPoolIdType\",\
-          \"location\":\"uri\",\
-          \"locationName\":\"userPoolId\"\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are to be imported into.</p>\"\
         }\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the request to get the header information for the .csv file for the user import job.</p>\"\
     },\
-    \"GetJWKSResponse\":{\
+    \"GetCSVHeaderResponse\":{\
       \"type\":\"structure\",\
-      \"members\":{\
-        \"keys\":{\"shape\":\"KeyListType\"}\
-      }\
-    },\
-    \"GetOpenIdConfigurationRequest\":{\
-      \"type\":\"structure\",\
-      \"required\":[\"UserPoolId\"],\
       \"members\":{\
         \"UserPoolId\":{\
           \"shape\":\"UserPoolIdType\",\
-          \"location\":\"uri\",\
-          \"locationName\":\"userPoolId\"\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are to be imported into.</p>\"\
+        },\
+        \"CSVHeader\":{\
+          \"shape\":\"ListOfStringTypes\",\
+          \"documentation\":\"<p>The header information for the .csv file for the user import job.</p>\"\
         }\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to get the header information for the .csv file for the user import job.</p>\"\
     },\
-    \"GetOpenIdConfigurationResponse\":{\
+    \"GetDeviceRequest\":{\
       \"type\":\"structure\",\
+      \"required\":[\"DeviceKey\"],\
       \"members\":{\
-        \"issuer\":{\"shape\":\"openIdUrlType\"},\
-        \"jwks_uri\":{\"shape\":\"openIdUrlType\"},\
-        \"authorization_endpoint\":{\"shape\":\"openIdUrlType\"},\
-        \"subject_types_supported\":{\"shape\":\"openIdListType\"},\
-        \"response_types_supported\":{\"shape\":\"openIdListType\"},\
-        \"id_token_signing_alg_values_supported\":{\"shape\":\"openIdListType\"}\
-      }\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to get the device.</p>\"\
+    },\
+    \"GetDeviceResponse\":{\
+      \"type\":\"structure\",\
+      \"required\":[\"Device\"],\
+      \"members\":{\
+        \"Device\":{\
+          \"shape\":\"DeviceType\",\
+          \"documentation\":\"<p>The device.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Gets the device response.</p>\"\
     },\
     \"GetUserAttributeVerificationCodeRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"AttributeName\"],\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"},\
-        \"AttributeName\":{\"shape\":\"AttributeNameType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token returned by the server response to get the user attribute verification code.</p>\"\
+        },\
+        \"AttributeName\":{\
+          \"shape\":\"AttributeNameType\",\
+          \"documentation\":\"<p>The attribute name returned by the server response to get the user attribute verification code.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to get user attribute verification.</p>\"\
     },\
     \"GetUserAttributeVerificationCodeResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"CodeDeliveryDetails\":{\"shape\":\"CodeDeliveryDetailsType\"}\
-      }\
+        \"CodeDeliveryDetails\":{\
+          \"shape\":\"CodeDeliveryDetailsType\",\
+          \"documentation\":\"<p>The code delivery details returned by the server response to get the user attribute verification code.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The verification code response returned by the server response to get the user attribute verification code.</p>\"\
     },\
     \"GetUserRequest\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token returned by the server response to get information about the user.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to get information about the user.</p>\"\
     },\
     \"GetUserResponse\":{\
       \"type\":\"structure\",\
@@ -1418,131 +2814,407 @@
         \"UserAttributes\"\
       ],\
       \"members\":{\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"UserAttributes\":{\"shape\":\"AttributeListType\"},\
-        \"MFAOptions\":{\"shape\":\"MFAOptionListType\"}\
-      }\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to retrieve from the get user request.</p>\"\
+        },\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs representing user attributes.</p>\"\
+        },\
+        \"MFAOptions\":{\
+          \"shape\":\"MFAOptionListType\",\
+          \"documentation\":\"<p>Specifies the options for MFA (e.g., email or phone number).</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server from the request to get information about the user.</p>\"\
     },\
-    \"HexStringType\":{\
-      \"type\":\"string\",\
-      \"pattern\":\"^[0-9a-fA-F]+$\"\
+    \"GlobalSignOutRequest\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to sign out all devices.</p>\"\
+    },\
+    \"GlobalSignOutResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+      },\
+      \"documentation\":\"<p>The response to the request to sign out all devices.</p>\"\
+    },\
+    \"InitiateAuthRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"AuthFlow\",\
+        \"ClientId\"\
+      ],\
+      \"members\":{\
+        \"AuthFlow\":{\
+          \"shape\":\"AuthFlowType\",\
+          \"documentation\":\"<p>The authentication flow.</p>\"\
+        },\
+        \"AuthParameters\":{\
+          \"shape\":\"AuthParametersType\",\
+          \"documentation\":\"<p>The authentication parameters.</p>\"\
+        },\
+        \"ClientMetadata\":{\
+          \"shape\":\"ClientMetadataType\",\
+          \"documentation\":\"<p>The client app's metadata.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The client ID.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Initiates the authentication request.</p>\"\
+    },\
+    \"InitiateAuthResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The name of the challenge.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        },\
+        \"ChallengeParameters\":{\
+          \"shape\":\"ChallengeParametersType\",\
+          \"documentation\":\"<p>The challenge parameters.</p>\"\
+        },\
+        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
+      },\
+      \"documentation\":\"<p>Initiates the authentication response.</p>\"\
     },\
     \"IntegerType\":{\"type\":\"integer\"},\
     \"InternalErrorException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when Amazon Cognito throws an internal error exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when Amazon Cognito encounters an internal error.</p>\",\
       \"exception\":true,\
       \"fault\":true\
+    },\
+    \"InvalidEmailRoleAccessPolicyException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when you have an unverified email address or the identity policy is not set on an email address that Amazon Cognito can access.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when Amazon Cognito is not allowed to use your email identity. HTTP status code: 400.</p>\",\
+      \"exception\":true\
     },\
     \"InvalidLambdaResponseException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service throws an invalid AWS Lambda response exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when the Amazon Cognito service encounters an invalid AWS Lambda response.</p>\",\
       \"exception\":true\
     },\
     \"InvalidParameterException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service throws an invalid parameter exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when the Amazon Cognito service encounters an invalid parameter.</p>\",\
       \"exception\":true\
     },\
     \"InvalidPasswordException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service throws an invalid user password exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when the Amazon Cognito service encounters an invalid password.</p>\",\
       \"exception\":true\
     },\
-    \"KeyListType\":{\
-      \"type\":\"list\",\
-      \"member\":{\"shape\":\"KeyType\"}\
-    },\
-    \"KeyType\":{\
+    \"InvalidSmsRoleAccessPolicyException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"kty\":{\"shape\":\"StringType\"},\
-        \"alg\":{\"shape\":\"StringType\"},\
-        \"use\":{\"shape\":\"StringType\"},\
-        \"kid\":{\"shape\":\"StringType\"},\
-        \"n\":{\"shape\":\"StringType\"},\
-        \"e\":{\"shape\":\"StringType\"}\
-      }\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message retuned when the invalid SMS role access policy exception is thrown.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is returned when the role provided for SMS configuration does not have permission to publish using Amazon SNS.</p>\",\
+      \"exception\":true\
+    },\
+    \"InvalidSmsRoleTrustRelationshipException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the role trust relationship for the SMS message is invalid.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when the trust relationship is invalid for the role provided for SMS configuration. This can happen if you do not trust <b>cognito-idp.amazonaws.com</b> or the external ID provided in the role does not match what is provided in the SMS configuration for the user pool.</p>\",\
+      \"exception\":true\
+    },\
+    \"InvalidUserPoolConfigurationException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the user pool configuration is invalid.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when the user pool configuration is invalid.</p>\",\
+      \"exception\":true\
     },\
     \"LambdaConfigType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"PreSignUp\":{\"shape\":\"ArnType\"},\
-        \"CustomMessage\":{\"shape\":\"ArnType\"},\
-        \"PostConfirmation\":{\"shape\":\"ArnType\"},\
-        \"PreAuthentication\":{\"shape\":\"ArnType\"},\
-        \"PostAuthentication\":{\"shape\":\"ArnType\"}\
-      }\
+        \"PreSignUp\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>A pre-registration AWS Lambda trigger.</p>\"\
+        },\
+        \"CustomMessage\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>A custom Message AWS Lambda trigger.</p>\"\
+        },\
+        \"PostConfirmation\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>A post-confirmation AWS Lambda trigger.</p>\"\
+        },\
+        \"PreAuthentication\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>A pre-authentication AWS Lambda trigger.</p>\"\
+        },\
+        \"PostAuthentication\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>A post-authentication AWS Lambda trigger.</p>\"\
+        },\
+        \"DefineAuthChallenge\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>Defines the authentication challenge.</p>\"\
+        },\
+        \"CreateAuthChallenge\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>Creates an authentication challenge.</p>\"\
+        },\
+        \"VerifyAuthChallengeResponse\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>Verifies the authentication challenge response.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Specifies the type of configuration for AWS Lambda triggers.</p>\"\
     },\
     \"LimitExceededException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when Amazon Cognito throws a limit exceeded exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when a user exceeds the limit for a requested AWS resource.</p>\",\
       \"exception\":true\
+    },\
+    \"ListDevicesRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\"AccessToken\"],\
+      \"members\":{\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access tokens for the request to list devices.</p>\"\
+        },\
+        \"Limit\":{\
+          \"shape\":\"QueryLimitType\",\
+          \"documentation\":\"<p>The limit of the device request.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>The pagination token for the list request.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list the devices.</p>\"\
+    },\
+    \"ListDevicesResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"Devices\":{\
+          \"shape\":\"DeviceListType\",\
+          \"documentation\":\"<p>The devices returned in the list devices response.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>The pagination token for the list device response.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response to list devices.</p>\"\
+    },\
+    \"ListOfStringTypes\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"StringType\"}\
+    },\
+    \"ListUserImportJobsRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"MaxResults\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"MaxResults\":{\
+          \"shape\":\"PoolQueryLimitType\",\
+          \"documentation\":\"<p>The maximum number of import jobs you want the request to return.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"PaginationKeyType\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to ListUserImportJobs, which can be used to return the next set of import jobs in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list the user import jobs.</p>\"\
+    },\
+    \"ListUserImportJobsResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserImportJobs\":{\
+          \"shape\":\"UserImportJobsListType\",\
+          \"documentation\":\"<p>The user import jobs.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"PaginationKeyType\",\
+          \"documentation\":\"<p>An identifier that can be used to return the next set of user import jobs in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to list the user import jobs.</p>\"\
     },\
     \"ListUserPoolClientsRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"MaxResults\":{\"shape\":\"QueryLimit\"},\
-        \"NextToken\":{\"shape\":\"PaginationKey\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to list user pool clients.</p>\"\
+        },\
+        \"MaxResults\":{\
+          \"shape\":\"QueryLimit\",\
+          \"documentation\":\"<p>The maximum number of results you want the request to return when listing the user pool clients.</p>\"\
+        },\
+        \"NextToken\":{\
+          \"shape\":\"PaginationKey\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list the user pool clients.</p>\"\
     },\
     \"ListUserPoolClientsResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPoolClients\":{\"shape\":\"UserPoolClientListType\"},\
-        \"NextToken\":{\"shape\":\"PaginationKey\"}\
-      }\
+        \"UserPoolClients\":{\
+          \"shape\":\"UserPoolClientListType\",\
+          \"documentation\":\"<p>The user pool clients in the response that lists user pool clients.</p>\"\
+        },\
+        \"NextToken\":{\
+          \"shape\":\"PaginationKey\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server that lists user pool clients.</p>\"\
     },\
     \"ListUserPoolsRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"MaxResults\"],\
       \"members\":{\
-        \"NextToken\":{\"shape\":\"PaginationKeyType\"},\
-        \"MaxResults\":{\"shape\":\"QueryLimitType\"}\
-      }\
+        \"NextToken\":{\
+          \"shape\":\"PaginationKeyType\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        },\
+        \"MaxResults\":{\
+          \"shape\":\"PoolQueryLimitType\",\
+          \"documentation\":\"<p>The maximum number of results you want the request to return when listing the user pools.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list user pools.</p>\"\
     },\
     \"ListUserPoolsResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPools\":{\"shape\":\"UserPoolListType\"},\
-        \"NextToken\":{\"shape\":\"PaginationKeyType\"}\
-      }\
+        \"UserPools\":{\
+          \"shape\":\"UserPoolListType\",\
+          \"documentation\":\"<p>The user pools from the response to list users.</p>\"\
+        },\
+        \"NextToken\":{\
+          \"shape\":\"PaginationKeyType\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response to list user pools.</p>\"\
     },\
     \"ListUsersRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"AttributesToGet\":{\"shape\":\"SearchedAttributeNamesListType\"},\
-        \"Limit\":{\"shape\":\"QueryLimitType\"},\
-        \"PaginationToken\":{\"shape\":\"SearchPaginationTokenType\"},\
-        \"UserStatus\":{\"shape\":\"UserStatusType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for which you want to list users.</p>\"\
+        },\
+        \"AttributesToGet\":{\
+          \"shape\":\"SearchedAttributeNamesListType\",\
+          \"documentation\":\"<p>The attributes to get from the request to list users.</p>\"\
+        },\
+        \"Limit\":{\
+          \"shape\":\"QueryLimitType\",\
+          \"documentation\":\"<p>The limit of the request to list users.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        },\
+        \"Filter\":{\
+          \"shape\":\"UserFilterType\",\
+          \"documentation\":\"<p>The filter for the list users request.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to list users.</p>\"\
     },\
     \"ListUsersResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Users\":{\"shape\":\"UsersListType\"},\
-        \"PaginationToken\":{\"shape\":\"SearchPaginationTokenType\"}\
-      }\
+        \"Users\":{\
+          \"shape\":\"UsersListType\",\
+          \"documentation\":\"<p>The users returned in the request to list users.</p>\"\
+        },\
+        \"PaginationToken\":{\
+          \"shape\":\"SearchPaginationTokenType\",\
+          \"documentation\":\"<p>An identifier that was returned from the previous call to this operation, which can be used to return the next set of items in the list.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The response from the request to list users.</p>\"\
     },\
+    \"LongType\":{\"type\":\"long\"},\
     \"MFAMethodNotFoundException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when Amazon Cognito throws an MFA method not found exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when Amazon Cognito cannot find a multi-factor authentication (MFA) method.</p>\",\
       \"exception\":true\
     },\
     \"MFAOptionListType\":{\
@@ -1552,24 +3224,81 @@
     \"MFAOptionType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"DeliveryMedium\":{\"shape\":\"DeliveryMediumType\"},\
-        \"AttributeName\":{\"shape\":\"AttributeNameType\"}\
-      }\
+        \"DeliveryMedium\":{\
+          \"shape\":\"DeliveryMediumType\",\
+          \"documentation\":\"<p>The delivery medium (email message or SMS message) to send the MFA code.</p>\"\
+        },\
+        \"AttributeName\":{\
+          \"shape\":\"AttributeNameType\",\
+          \"documentation\":\"<p>The attribute name of the MFA option type.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Specifies the different settings for multi-factor authentication (MFA).</p>\"\
+    },\
+    \"MessageActionType\":{\
+      \"type\":\"string\",\
+      \"enum\":[\
+        \"RESEND\",\
+        \"SUPPRESS\"\
+      ]\
+    },\
+    \"MessageTemplateType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"SMSMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>The message template for SMS messages.</p>\"\
+        },\
+        \"EmailMessage\":{\
+          \"shape\":\"EmailVerificationMessageType\",\
+          \"documentation\":\"<p>The message template for email messages.</p>\"\
+        },\
+        \"EmailSubject\":{\
+          \"shape\":\"EmailVerificationSubjectType\",\
+          \"documentation\":\"<p>The subject line for email messages.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The message template structure.</p>\"\
     },\
     \"MessageType\":{\"type\":\"string\"},\
+    \"NewDeviceMetadataType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"DeviceGroupKey\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The device group key.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The new device metadata type.</p>\"\
+    },\
     \"NotAuthorizedException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns a not authorized exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception gets thrown when a user is not authorized.</p>\",\
       \"exception\":true\
     },\
     \"NumberAttributeConstraintsType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"MinValue\":{\"shape\":\"StringType\"},\
-        \"MaxValue\":{\"shape\":\"StringType\"}\
-      }\
+        \"MinValue\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The minimum value of an attribute that is of the number data type.</p>\"\
+        },\
+        \"MaxValue\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The maximum value of an attribute that is of the number data type.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The minimum and maximum value of an attribute that is of the number data type.</p>\"\
     },\
     \"PaginationKey\":{\
       \"type\":\"string\",\
@@ -1581,14 +3310,6 @@
       \"min\":1,\
       \"pattern\":\"[\\\\S]+\"\
     },\
-    \"PasswordClaimType\":{\
-      \"type\":\"structure\",\
-      \"members\":{\
-        \"SecretBlock\":{\"shape\":\"BlobType\"},\
-        \"Signature\":{\"shape\":\"BlobType\"}\
-      },\
-      \"sensitive\":true\
-    },\
     \"PasswordPolicyMinLengthType\":{\
       \"type\":\"integer\",\
       \"max\":99,\
@@ -1597,12 +3318,39 @@
     \"PasswordPolicyType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"MinimumLength\":{\"shape\":\"PasswordPolicyMinLengthType\"},\
-        \"RequireUppercase\":{\"shape\":\"BooleanType\"},\
-        \"RequireLowercase\":{\"shape\":\"BooleanType\"},\
-        \"RequireNumbers\":{\"shape\":\"BooleanType\"},\
-        \"RequireSymbols\":{\"shape\":\"BooleanType\"}\
-      }\
+        \"MinimumLength\":{\
+          \"shape\":\"PasswordPolicyMinLengthType\",\
+          \"documentation\":\"<p>The minimum length of the password policy that you have set. Cannot be less than 6.</p>\"\
+        },\
+        \"RequireUppercase\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>In the password policy that you have set, refers to whether you have required users to use at least one uppercase letter in their password.</p>\"\
+        },\
+        \"RequireLowercase\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>In the password policy that you have set, refers to whether you have required users to use at least one lowercase letter in their password.</p>\"\
+        },\
+        \"RequireNumbers\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>In the password policy that you have set, refers to whether you have required users to use at least one number in their password.</p>\"\
+        },\
+        \"RequireSymbols\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>In the password policy that you have set, refers to whether you have required users to use at least one symbol in their password.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The password policy type.</p>\"\
+    },\
+    \"PasswordResetRequiredException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when a password reset is required.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when a password reset is required.</p>\",\
+      \"exception\":true\
     },\
     \"PasswordType\":{\
       \"type\":\"string\",\
@@ -1610,6 +3358,27 @@
       \"min\":6,\
       \"pattern\":\"[\\\\S]+\",\
       \"sensitive\":true\
+    },\
+    \"PoolQueryLimitType\":{\
+      \"type\":\"integer\",\
+      \"max\":60,\
+      \"min\":1\
+    },\
+    \"PreSignedUrlType\":{\
+      \"type\":\"string\",\
+      \"max\":2048,\
+      \"min\":0\
+    },\
+    \"PreconditionNotMetException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when a precondition is not met.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when a precondition is not met.</p>\",\
+      \"exception\":true\
     },\
     \"QueryLimit\":{\
       \"type\":\"integer\",\
@@ -1619,25 +3388,12 @@
     \"QueryLimitType\":{\
       \"type\":\"integer\",\
       \"max\":60,\
-      \"min\":1\
+      \"min\":0\
     },\
-    \"RefreshTokensRequest\":{\
-      \"type\":\"structure\",\
-      \"required\":[\
-        \"ClientId\",\
-        \"RefreshToken\"\
-      ],\
-      \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"ClientSecret\":{\"shape\":\"ClientSecretType\"},\
-        \"RefreshToken\":{\"shape\":\"TokenModelType\"}\
-      }\
-    },\
-    \"RefreshTokensResponse\":{\
-      \"type\":\"structure\",\
-      \"members\":{\
-        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
-      }\
+    \"RefreshTokenValidityType\":{\
+      \"type\":\"integer\",\
+      \"max\":3650,\
+      \"min\":0\
     },\
     \"ResendConfirmationCodeRequest\":{\
       \"type\":\"structure\",\
@@ -1646,35 +3402,117 @@
         \"Username\"\
       ],\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"SecretHash\":{\
+          \"shape\":\"SecretHashType\",\
+          \"documentation\":\"<p>A keyed-hash message authentication code (HMAC) calculated using the secret key of a user pool client and username plus the client ID in the message.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user to whom you wish to resend a confirmation code.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to resend the confirmation code.</p>\"\
     },\
     \"ResendConfirmationCodeResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
         \"CodeDeliveryDetails\":{\"shape\":\"CodeDeliveryDetailsType\"}\
-      }\
+      },\
+      \"documentation\":\"<p>The response from the server when the Amazon Cognito service makes the request to resend a confirmation code.</p>\"\
     },\
     \"ResourceNotFoundException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns a resource not found exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when the Amazon Cognito service cannot find the requested resource.</p>\",\
       \"exception\":true\
+    },\
+    \"RespondToAuthChallengeRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"ClientId\",\
+        \"ChallengeName\"\
+      ],\
+      \"members\":{\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The client ID.</p>\"\
+        },\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The name of the challenge.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        },\
+        \"ChallengeResponses\":{\
+          \"shape\":\"ChallengeResponsesType\",\
+          \"documentation\":\"<p>The responses to the authentication challenge.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request to respond to an authentication challenge.</p>\"\
+    },\
+    \"RespondToAuthChallengeResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"ChallengeName\":{\
+          \"shape\":\"ChallengeNameType\",\
+          \"documentation\":\"<p>The challenge name.</p>\"\
+        },\
+        \"Session\":{\
+          \"shape\":\"SessionType\",\
+          \"documentation\":\"<p>The session.</p>\"\
+        },\
+        \"ChallengeParameters\":{\
+          \"shape\":\"ChallengeParametersType\",\
+          \"documentation\":\"<p>The challenge parameters.</p>\"\
+        },\
+        \"AuthenticationResult\":{\"shape\":\"AuthenticationResultType\"}\
+      },\
+      \"documentation\":\"<p>The response to respond to the authentication challenge.</p>\"\
     },\
     \"SchemaAttributeType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Name\":{\"shape\":\"CustomAttributeNameType\"},\
-        \"AttributeDataType\":{\"shape\":\"AttributeDataType\"},\
-        \"DeveloperOnlyAttribute\":{\"shape\":\"BooleanType\"},\
-        \"Mutable\":{\"shape\":\"BooleanType\"},\
-        \"Required\":{\"shape\":\"BooleanType\"},\
-        \"NumberAttributeConstraints\":{\"shape\":\"NumberAttributeConstraintsType\"},\
-        \"StringAttributeConstraints\":{\"shape\":\"StringAttributeConstraintsType\"}\
-      }\
+        \"Name\":{\
+          \"shape\":\"CustomAttributeNameType\",\
+          \"documentation\":\"<p>A schema attribute of the name type.</p>\"\
+        },\
+        \"AttributeDataType\":{\
+          \"shape\":\"AttributeDataType\",\
+          \"documentation\":\"<p>The attribute data type.</p>\"\
+        },\
+        \"DeveloperOnlyAttribute\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Specifies whether the attribute type is developer only.</p>\"\
+        },\
+        \"Mutable\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Specifies whether the attribute can be changed once it has been created.</p>\"\
+        },\
+        \"Required\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Specifies whether a user pool attribute is required. If the attribute is required and the user does not provide a value, registration or sign-in will fail.</p>\"\
+        },\
+        \"NumberAttributeConstraints\":{\
+          \"shape\":\"NumberAttributeConstraintsType\",\
+          \"documentation\":\"<p>Specifies the constraints for an attribute of the number type.</p>\"\
+        },\
+        \"StringAttributeConstraints\":{\
+          \"shape\":\"StringAttributeConstraintsType\",\
+          \"documentation\":\"<p>Specifies the constraints for an attribute of the string type.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Contains information about the schema attribute.</p>\"\
     },\
     \"SchemaAttributesListType\":{\
       \"type\":\"list\",\
@@ -1698,6 +3536,11 @@
       \"pattern\":\"[\\\\w+=/]+\",\
       \"sensitive\":true\
     },\
+    \"SessionType\":{\
+      \"type\":\"string\",\
+      \"max\":2048,\
+      \"min\":20\
+    },\
     \"SetUserSettingsRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\
@@ -1705,14 +3548,22 @@
         \"MFAOptions\"\
       ],\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"},\
-        \"MFAOptions\":{\"shape\":\"MFAOptionListType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token for the set user settings request.</p>\"\
+        },\
+        \"MFAOptions\":{\
+          \"shape\":\"MFAOptionListType\",\
+          \"documentation\":\"<p>Specifies the options for MFA (e.g., email or phone number).</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to set user settings.</p>\"\
     },\
     \"SetUserSettingsResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>The response from the server for a set user settings request.</p>\"\
     },\
     \"SignUpRequest\":{\
       \"type\":\"structure\",\
@@ -1722,26 +3573,91 @@
         \"Password\"\
       ],\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"SecretHash\":{\"shape\":\"SecretHashType\"},\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"Password\":{\"shape\":\"PasswordType\"},\
-        \"UserAttributes\":{\"shape\":\"AttributeListType\"},\
-        \"ValidationData\":{\"shape\":\"AttributeListType\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"SecretHash\":{\
+          \"shape\":\"SecretHashType\",\
+          \"documentation\":\"<p>A keyed-hash message authentication code (HMAC) calculated using the secret key of a user pool client and username plus the client ID in the message.</p>\"\
+        },\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to register.</p>\"\
+        },\
+        \"Password\":{\
+          \"shape\":\"PasswordType\",\
+          \"documentation\":\"<p>The password of the user you wish to register.</p>\"\
+        },\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs representing user attributes.</p>\"\
+        },\
+        \"ValidationData\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>The validation data in the request to register a user.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to register a user.</p>\"\
     },\
     \"SignUpResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserConfirmed\":{\"shape\":\"BooleanType\"},\
+        \"UserConfirmed\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>A response from the server indicating that a user registration has been confirmed.</p>\"\
+        },\
         \"CodeDeliveryDetails\":{\"shape\":\"CodeDeliveryDetailsType\"}\
-      }\
+      },\
+      \"documentation\":\"<p>The response from the server for a registration request.</p>\"\
+    },\
+    \"SmsConfigurationType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"SnsCallerArn\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) caller.</p>\"\
+        },\
+        \"ExternalId\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The external ID.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The SMS configuratoin type.</p>\"\
     },\
     \"SmsVerificationMessageType\":{\
       \"type\":\"string\",\
       \"max\":140,\
       \"min\":6,\
       \"pattern\":\".*\\\\{####\\\\}.*\"\
+    },\
+    \"StartUserImportJobRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"JobId\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"JobId\":{\
+          \"shape\":\"UserImportJobIdType\",\
+          \"documentation\":\"<p>The job ID for the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to start the user import job.</p>\"\
+    },\
+    \"StartUserImportJobResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserImportJob\":{\
+          \"shape\":\"UserImportJobType\",\
+          \"documentation\":\"<p>The job object that represents the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to start the user import job.</p>\"\
     },\
     \"StatusType\":{\
       \"type\":\"string\",\
@@ -1750,12 +3666,47 @@
         \"Disabled\"\
       ]\
     },\
+    \"StopUserImportJobRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"UserPoolId\",\
+        \"JobId\"\
+      ],\
+      \"members\":{\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"JobId\":{\
+          \"shape\":\"UserImportJobIdType\",\
+          \"documentation\":\"<p>The job ID for the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to stop the user import job.</p>\"\
+    },\
+    \"StopUserImportJobResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"UserImportJob\":{\
+          \"shape\":\"UserImportJobType\",\
+          \"documentation\":\"<p>The job object that represents the user import job.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to stop the user import job.</p>\"\
+    },\
     \"StringAttributeConstraintsType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"MinLength\":{\"shape\":\"StringType\"},\
-        \"MaxLength\":{\"shape\":\"StringType\"}\
-      }\
+        \"MinLength\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The minimum length of an attribute value of the string type.</p>\"\
+        },\
+        \"MaxLength\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The maximum length of an attribute value of the string type.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The type of constraints associated with an attribute of the string type.</p>\"\
     },\
     \"StringType\":{\"type\":\"string\"},\
     \"TokenModelType\":{\
@@ -1766,37 +3717,99 @@
     \"TooManyFailedAttemptsException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns a too many failed attempts exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception gets thrown when the user has made too many failed attempts for a given action (e.g., sign in).</p>\",\
       \"exception\":true\
     },\
     \"TooManyRequestsException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns a too many requests exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception gets thrown when the user has made too many requests for a given operation.</p>\",\
       \"exception\":true\
     },\
     \"UnexpectedLambdaException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns an unexpected AWS Lambda exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception gets thrown when the Amazon Cognito service encounters an unexpected exception with the AWS Lambda service.</p>\",\
       \"exception\":true\
+    },\
+    \"UnsupportedUserStateException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the user is in an unsupported state.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The request failed because the user is in an unsupported state.</p>\",\
+      \"exception\":true\
+    },\
+    \"UpdateDeviceStatusRequest\":{\
+      \"type\":\"structure\",\
+      \"required\":[\
+        \"AccessToken\",\
+        \"DeviceKey\"\
+      ],\
+      \"members\":{\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token.</p>\"\
+        },\
+        \"DeviceKey\":{\
+          \"shape\":\"DeviceKeyType\",\
+          \"documentation\":\"<p>The device key.</p>\"\
+        },\
+        \"DeviceRememberedStatus\":{\
+          \"shape\":\"DeviceRememberedStatusType\",\
+          \"documentation\":\"<p>The status of whether a device is remembered.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to update the device status.</p>\"\
+    },\
+    \"UpdateDeviceStatusResponse\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+      },\
+      \"documentation\":\"<p>The response to the request to update the device status.</p>\"\
     },\
     \"UpdateUserAttributesRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserAttributes\"],\
       \"members\":{\
-        \"UserAttributes\":{\"shape\":\"AttributeListType\"},\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"}\
-      }\
+        \"UserAttributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>An array of name-value pairs representing user attributes.</p>\"\
+        },\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>The access token for the request to update user attributes.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to update user attributes.</p>\"\
     },\
     \"UpdateUserAttributesResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"CodeDeliveryDetailsList\":{\"shape\":\"CodeDeliveryDetailsListType\"}\
-      }\
+        \"CodeDeliveryDetailsList\":{\
+          \"shape\":\"CodeDeliveryDetailsListType\",\
+          \"documentation\":\"<p>The code delivery details list from the server for the request to update user attributes.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server for the request to update user attributes.</p>\"\
     },\
     \"UpdateUserPoolClientRequest\":{\
       \"type\":\"structure\",\
@@ -1805,51 +3818,266 @@
         \"ClientId\"\
       ],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"ClientName\":{\"shape\":\"ClientNameType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to update the user pool client.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"ClientName\":{\
+          \"shape\":\"ClientNameType\",\
+          \"documentation\":\"<p>The client name from the update user pool client request.</p>\"\
+        },\
+        \"RefreshTokenValidity\":{\
+          \"shape\":\"RefreshTokenValidityType\",\
+          \"documentation\":\"<p>The validity of the refresh token.</p>\"\
+        },\
+        \"ReadAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The read-only attributes of the user pool.</p>\"\
+        },\
+        \"WriteAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The writeable attributes of the user pool.</p>\"\
+        },\
+        \"ExplicitAuthFlows\":{\
+          \"shape\":\"ExplicitAuthFlowsListType\",\
+          \"documentation\":\"<p>Explicit authentication flows.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to update the user pool client.</p>\"\
     },\
     \"UpdateUserPoolClientResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPoolClient\":{\"shape\":\"UserPoolClientType\"}\
-      }\
+        \"UserPoolClient\":{\
+          \"shape\":\"UserPoolClientType\",\
+          \"documentation\":\"<p>The user pool client value from the response from the server when an update user pool client request is made.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server to the request to update the user pool client.</p>\"\
     },\
     \"UpdateUserPoolRequest\":{\
       \"type\":\"structure\",\
       \"required\":[\"UserPoolId\"],\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"Policies\":{\"shape\":\"UserPoolPolicyType\"},\
-        \"LambdaConfig\":{\"shape\":\"LambdaConfigType\"},\
-        \"AutoVerifiedAttributes\":{\"shape\":\"VerifiedAttributesListType\"},\
-        \"SmsVerificationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"EmailVerificationMessage\":{\"shape\":\"EmailVerificationMessageType\"},\
-        \"EmailVerificationSubject\":{\"shape\":\"EmailVerificationSubjectType\"},\
-        \"SmsAuthenticationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"MfaConfiguration\":{\"shape\":\"UserPoolMfaType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool you want to update.</p>\"\
+        },\
+        \"Policies\":{\
+          \"shape\":\"UserPoolPolicyType\",\
+          \"documentation\":\"<p>A container with the policies you wish to update in a user pool.</p>\"\
+        },\
+        \"LambdaConfig\":{\
+          \"shape\":\"LambdaConfigType\",\
+          \"documentation\":\"<p>The AWS Lambda configuration information from the request to update the user pool.</p>\"\
+        },\
+        \"AutoVerifiedAttributes\":{\
+          \"shape\":\"VerifiedAttributesListType\",\
+          \"documentation\":\"<p>The attributes that are automatically verified when the Amazon Cognito service makes a request to update user pools.</p>\"\
+        },\
+        \"SmsVerificationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>A container with information about the SMS verification message.</p>\"\
+        },\
+        \"EmailVerificationMessage\":{\
+          \"shape\":\"EmailVerificationMessageType\",\
+          \"documentation\":\"<p>The contents of the email verification message.</p>\"\
+        },\
+        \"EmailVerificationSubject\":{\
+          \"shape\":\"EmailVerificationSubjectType\",\
+          \"documentation\":\"<p>The subject of the email verfication message.</p>\"\
+        },\
+        \"SmsAuthenticationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>The contents of the SMS authentication message.</p>\"\
+        },\
+        \"MfaConfiguration\":{\
+          \"shape\":\"UserPoolMfaType\",\
+          \"documentation\":\"<p>Can be one of the following values:</p> <ul> <li> <p> <code>OFF</code> - MFA tokens are not required and cannot be specified during user registration.</p> </li> <li> <p> <code>ON</code> - MFA tokens are required for all user registrations. You can only specify required when you are initially creating a user pool.</p> </li> <li> <p> <code>OPTIONAL</code> - Users have the option when registering to create an MFA token.</p> </li> </ul>\"\
+        },\
+        \"DeviceConfiguration\":{\
+          \"shape\":\"DeviceConfigurationType\",\
+          \"documentation\":\"<p>Device configuration.</p>\"\
+        },\
+        \"EmailConfiguration\":{\
+          \"shape\":\"EmailConfigurationType\",\
+          \"documentation\":\"<p>Email configuration.</p>\"\
+        },\
+        \"SmsConfiguration\":{\
+          \"shape\":\"SmsConfigurationType\",\
+          \"documentation\":\"<p>SMS configuration.</p>\"\
+        },\
+        \"AdminCreateUserConfig\":{\
+          \"shape\":\"AdminCreateUserConfigType\",\
+          \"documentation\":\"<p>The configuration for AdminCreateUser requests.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to update the user pool.</p>\"\
     },\
     \"UpdateUserPoolResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
+      },\
+      \"documentation\":\"<p>Represents the response from the server when you make a request to update the user pool.</p>\"\
+    },\
+    \"UserFilterType\":{\
+      \"type\":\"string\",\
+      \"max\":256\
+    },\
+    \"UserImportInProgressException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the user pool has an import job running.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when you are trying to modify a user pool while a user import job is in progress for that pool.</p>\",\
+      \"exception\":true\
+    },\
+    \"UserImportJobIdType\":{\
+      \"type\":\"string\",\
+      \"max\":55,\
+      \"min\":1,\
+      \"pattern\":\"import-[0-9a-zA-Z-]+\"\
+    },\
+    \"UserImportJobNameType\":{\
+      \"type\":\"string\",\
+      \"max\":128,\
+      \"min\":1,\
+      \"pattern\":\"[\\\\w\\\\s+=,.@-]+\"\
+    },\
+    \"UserImportJobStatusType\":{\
+      \"type\":\"string\",\
+      \"enum\":[\
+        \"Created\",\
+        \"Pending\",\
+        \"InProgress\",\
+        \"Stopping\",\
+        \"Expired\",\
+        \"Stopped\",\
+        \"Failed\",\
+        \"Succeeded\"\
+      ]\
+    },\
+    \"UserImportJobType\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"JobName\":{\
+          \"shape\":\"UserImportJobNameType\",\
+          \"documentation\":\"<p>The job name for the user import job.</p>\"\
+        },\
+        \"JobId\":{\
+          \"shape\":\"UserImportJobIdType\",\
+          \"documentation\":\"<p>The job ID for the user import job.</p>\"\
+        },\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool that the users are being imported into.</p>\"\
+        },\
+        \"PreSignedUrl\":{\
+          \"shape\":\"PreSignedUrlType\",\
+          \"documentation\":\"<p>The pre-signed URL to be used to upload the .csv file.</p>\"\
+        },\
+        \"CreationDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date when the user import job was created.</p>\"\
+        },\
+        \"StartDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date when the user import job was started.</p>\"\
+        },\
+        \"CompletionDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The date when the user imoprt job was completed.</p>\"\
+        },\
+        \"Status\":{\
+          \"shape\":\"UserImportJobStatusType\",\
+          \"documentation\":\"<p>The status of the user import job. One of the following:</p> <ul> <li> <p>Created - The job was created but not started.</p> </li> <li> <p>Pending - A transition state. You have started the job, but it has not begun importing users yet.</p> </li> <li> <p>InProgress - The job has started, and users are being imported.</p> </li> <li> <p>Stopping - You have stopped the job, but the job has not stopped importing users yet.</p> </li> <li> <p>Stopped - You have stopped the job, and the job has stopped importing users.</p> </li> <li> <p>Succeeded - The job has completed successfully.</p> </li> <li> <p>Failed - The job has stopped due to an error.</p> </li> <li> <p>Expired - You created a job, but did not start the job within 24-48 hours. All data associated with the job was deleted, and the job cannot be started.</p> </li> </ul>\"\
+        },\
+        \"CloudWatchLogsRoleArn\":{\
+          \"shape\":\"ArnType\",\
+          \"documentation\":\"<p>The role ARN for the Amazon CloudWatch Logging role for the user import job. For more information, see \\\"Creating the CloudWatch Logs IAM Role\\\" in the Amazon Cognito Developer Guide.</p>\"\
+        },\
+        \"ImportedUsers\":{\
+          \"shape\":\"LongType\",\
+          \"documentation\":\"<p>The number of users that were successfully imported.</p>\"\
+        },\
+        \"SkippedUsers\":{\
+          \"shape\":\"LongType\",\
+          \"documentation\":\"<p>The number of users that were skipped.</p>\"\
+        },\
+        \"FailedUsers\":{\
+          \"shape\":\"LongType\",\
+          \"documentation\":\"<p>The number of users that could not be imported.</p>\"\
+        },\
+        \"CompletionMessage\":{\
+          \"shape\":\"CompletionMessageType\",\
+          \"documentation\":\"<p>The message returned when the user import job is completed.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The user import job type.</p>\"\
+    },\
+    \"UserImportJobsListType\":{\
+      \"type\":\"list\",\
+      \"member\":{\"shape\":\"UserImportJobType\"},\
+      \"max\":50,\
+      \"min\":1\
     },\
     \"UserLambdaValidationException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when the Amazon Cognito service returns a user validation exception with the AWS Lambda service.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception gets thrown when the Amazon Cognito service encounters a user validation exception with the AWS Lambda service.</p>\",\
+      \"exception\":true\
+    },\
+    \"UserNotConfirmedException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when a user is not confirmed successfully.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when a user is not confirmed successfully.</p>\",\
+      \"exception\":true\
+    },\
+    \"UserNotFoundException\":{\
+      \"type\":\"structure\",\
+      \"members\":{\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when a user is not found.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>This exception is thrown when a user is not found.</p>\",\
       \"exception\":true\
     },\
     \"UserPoolClientDescription\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientName\":{\"shape\":\"ClientNameType\"}\
-      }\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool where you want to describe the user pool client.</p>\"\
+        },\
+        \"ClientName\":{\
+          \"shape\":\"ClientNameType\",\
+          \"documentation\":\"<p>The client name from the user pool client description.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The description of the user poool client.</p>\"\
     },\
     \"UserPoolClientListType\":{\
       \"type\":\"list\",\
@@ -1858,30 +4086,84 @@
     \"UserPoolClientType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"UserPoolId\":{\"shape\":\"UserPoolIdType\"},\
-        \"ClientName\":{\"shape\":\"ClientNameType\"},\
-        \"ClientId\":{\"shape\":\"ClientIdType\"},\
-        \"ClientSecret\":{\"shape\":\"ClientSecretType\"},\
-        \"LastModifiedDate\":{\"shape\":\"DateType\"},\
-        \"CreationDate\":{\"shape\":\"DateType\"}\
-      }\
+        \"UserPoolId\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The user pool ID for the user pool client.</p>\"\
+        },\
+        \"ClientName\":{\
+          \"shape\":\"ClientNameType\",\
+          \"documentation\":\"<p>The client name from the user pool request of the client type.</p>\"\
+        },\
+        \"ClientId\":{\
+          \"shape\":\"ClientIdType\",\
+          \"documentation\":\"<p>The ID of the client associated with the user pool.</p>\"\
+        },\
+        \"ClientSecret\":{\
+          \"shape\":\"ClientSecretType\",\
+          \"documentation\":\"<p>The client secret from the user pool request of the client type.</p>\"\
+        },\
+        \"LastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The last modified date from the user pool request of the client type.</p>\"\
+        },\
+        \"CreationDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The creation date from the user pool request of the client type.</p>\"\
+        },\
+        \"RefreshTokenValidity\":{\
+          \"shape\":\"RefreshTokenValidityType\",\
+          \"documentation\":\"<p>The validity of the refresh token.</p>\"\
+        },\
+        \"ReadAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The Read-only attributes.</p>\"\
+        },\
+        \"WriteAttributes\":{\
+          \"shape\":\"ClientPermissionListType\",\
+          \"documentation\":\"<p>The writeable attributes.</p>\"\
+        },\
+        \"ExplicitAuthFlows\":{\
+          \"shape\":\"ExplicitAuthFlowsListType\",\
+          \"documentation\":\"<p>The explicit authentication flows.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>A user pool of the client type.</p>\"\
     },\
     \"UserPoolDescriptionType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Id\":{\"shape\":\"UserPoolIdType\"},\
-        \"Name\":{\"shape\":\"UserPoolNameType\"},\
-        \"LambdaConfig\":{\"shape\":\"LambdaConfigType\"},\
-        \"Status\":{\"shape\":\"StatusType\"},\
-        \"LastModifiedDate\":{\"shape\":\"DateType\"},\
-        \"CreationDate\":{\"shape\":\"DateType\"}\
-      }\
+        \"Id\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The ID in a user pool description.</p>\"\
+        },\
+        \"Name\":{\
+          \"shape\":\"UserPoolNameType\",\
+          \"documentation\":\"<p>The name in a user pool description.</p>\"\
+        },\
+        \"LambdaConfig\":{\
+          \"shape\":\"LambdaConfigType\",\
+          \"documentation\":\"<p>The AWS Lambda configuration information in a user pool description.</p>\"\
+        },\
+        \"Status\":{\
+          \"shape\":\"StatusType\",\
+          \"documentation\":\"<p>The user pool status in a user pool description.</p>\"\
+        },\
+        \"LastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The last modified date in a user pool description.</p>\"\
+        },\
+        \"CreationDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The creation date in a user pool description.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>A user pool description.</p>\"\
     },\
     \"UserPoolIdType\":{\
       \"type\":\"string\",\
       \"max\":55,\
       \"min\":1,\
-      \"pattern\":\"[\\\\w-]+.[0-9a-zA-Z-]+\"\
+      \"pattern\":\"[\\\\w-]+_[0-9a-zA-Z]+\"\
     },\
     \"UserPoolListType\":{\
       \"type\":\"list\",\
@@ -1904,29 +4186,106 @@
     \"UserPoolPolicyType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"PasswordPolicy\":{\"shape\":\"PasswordPolicyType\"}\
-      }\
+        \"PasswordPolicy\":{\
+          \"shape\":\"PasswordPolicyType\",\
+          \"documentation\":\"<p>A container with information about the user pool password policy.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The type of policy in a user pool.</p>\"\
     },\
     \"UserPoolType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Id\":{\"shape\":\"UserPoolIdType\"},\
-        \"Name\":{\"shape\":\"UserPoolNameType\"},\
-        \"Policies\":{\"shape\":\"UserPoolPolicyType\"},\
-        \"LambdaConfig\":{\"shape\":\"LambdaConfigType\"},\
-        \"Status\":{\"shape\":\"StatusType\"},\
-        \"LastModifiedDate\":{\"shape\":\"DateType\"},\
-        \"CreationDate\":{\"shape\":\"DateType\"},\
-        \"SchemaAttributes\":{\"shape\":\"SchemaAttributesListType\"},\
-        \"AutoVerifiedAttributes\":{\"shape\":\"VerifiedAttributesListType\"},\
-        \"AliasAttributes\":{\"shape\":\"AliasAttributesListType\"},\
-        \"SmsVerificationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"EmailVerificationMessage\":{\"shape\":\"EmailVerificationMessageType\"},\
-        \"EmailVerificationSubject\":{\"shape\":\"EmailVerificationSubjectType\"},\
-        \"SmsAuthenticationMessage\":{\"shape\":\"SmsVerificationMessageType\"},\
-        \"MfaConfiguration\":{\"shape\":\"UserPoolMfaType\"},\
-        \"EstimatedNumberOfUsers\":{\"shape\":\"IntegerType\"}\
-      }\
+        \"Id\":{\
+          \"shape\":\"UserPoolIdType\",\
+          \"documentation\":\"<p>The ID of the user pool.</p>\"\
+        },\
+        \"Name\":{\
+          \"shape\":\"UserPoolNameType\",\
+          \"documentation\":\"<p>The name of the user pool.</p>\"\
+        },\
+        \"Policies\":{\
+          \"shape\":\"UserPoolPolicyType\",\
+          \"documentation\":\"<p>A container describing the policies associated with a user pool.</p>\"\
+        },\
+        \"LambdaConfig\":{\
+          \"shape\":\"LambdaConfigType\",\
+          \"documentation\":\"<p>A container describing the AWS Lambda triggers associated with a user pool.</p>\"\
+        },\
+        \"Status\":{\
+          \"shape\":\"StatusType\",\
+          \"documentation\":\"<p>The status of a user pool.</p>\"\
+        },\
+        \"LastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The last modified date of a user pool.</p>\"\
+        },\
+        \"CreationDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The creation date of a user pool.</p>\"\
+        },\
+        \"SchemaAttributes\":{\
+          \"shape\":\"SchemaAttributesListType\",\
+          \"documentation\":\"<p>A container with the schema attributes of a user pool.</p>\"\
+        },\
+        \"AutoVerifiedAttributes\":{\
+          \"shape\":\"VerifiedAttributesListType\",\
+          \"documentation\":\"<p>Specifies the attributes that are auto-verified in a user pool.</p>\"\
+        },\
+        \"AliasAttributes\":{\
+          \"shape\":\"AliasAttributesListType\",\
+          \"documentation\":\"<p>Specifies the attributes that are aliased in a user pool.</p>\"\
+        },\
+        \"SmsVerificationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>The contents of the SMS verification message.</p>\"\
+        },\
+        \"EmailVerificationMessage\":{\
+          \"shape\":\"EmailVerificationMessageType\",\
+          \"documentation\":\"<p>The contents of the email verification message.</p>\"\
+        },\
+        \"EmailVerificationSubject\":{\
+          \"shape\":\"EmailVerificationSubjectType\",\
+          \"documentation\":\"<p>The subject of the email verification message.</p>\"\
+        },\
+        \"SmsAuthenticationMessage\":{\
+          \"shape\":\"SmsVerificationMessageType\",\
+          \"documentation\":\"<p>The contents of the SMS authentication message.</p>\"\
+        },\
+        \"MfaConfiguration\":{\
+          \"shape\":\"UserPoolMfaType\",\
+          \"documentation\":\"<p>Can be one of the following values:</p> <ul> <li> <p> <code>OFF</code> - MFA tokens are not required and cannot be specified during user registration.</p> </li> <li> <p> <code>ON</code> - MFA tokens are required for all user registrations. You can only specify required when you are initially creating a user pool.</p> </li> <li> <p> <code>OPTIONAL</code> - Users have the option when registering to create an MFA token.</p> </li> </ul>\"\
+        },\
+        \"DeviceConfiguration\":{\
+          \"shape\":\"DeviceConfigurationType\",\
+          \"documentation\":\"<p>The device configuration.</p>\"\
+        },\
+        \"EstimatedNumberOfUsers\":{\
+          \"shape\":\"IntegerType\",\
+          \"documentation\":\"<p>A number estimating the size of the user pool.</p>\"\
+        },\
+        \"EmailConfiguration\":{\
+          \"shape\":\"EmailConfigurationType\",\
+          \"documentation\":\"<p>The email configuration.</p>\"\
+        },\
+        \"SmsConfiguration\":{\
+          \"shape\":\"SmsConfigurationType\",\
+          \"documentation\":\"<p>The SMS configuration.</p>\"\
+        },\
+        \"SmsConfigurationFailure\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The reason why the SMS configuration cannot send the message(s) to your users.</p>\"\
+        },\
+        \"EmailConfigurationFailure\":{\
+          \"shape\":\"StringType\",\
+          \"documentation\":\"<p>The reason why the email configuration cannot send the messages to your users.</p>\"\
+        },\
+        \"AdminCreateUserConfig\":{\
+          \"shape\":\"AdminCreateUserConfigType\",\
+          \"documentation\":\"<p>The configuration for AdminCreateUser requests.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>A container with information about the user pool type.</p>\"\
     },\
     \"UserStatusType\":{\
       \"type\":\"string\",\
@@ -1935,25 +4294,54 @@
         \"CONFIRMED\",\
         \"ARCHIVED\",\
         \"COMPROMISED\",\
-        \"UNKNOWN\"\
+        \"UNKNOWN\",\
+        \"RESET_REQUIRED\",\
+        \"FORCE_CHANGE_PASSWORD\"\
       ]\
     },\
     \"UserType\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"Username\":{\"shape\":\"UsernameType\"},\
-        \"Attributes\":{\"shape\":\"AttributeListType\"},\
-        \"UserCreateDate\":{\"shape\":\"DateType\"},\
-        \"UserLastModifiedDate\":{\"shape\":\"DateType\"},\
-        \"Enabled\":{\"shape\":\"BooleanType\"},\
-        \"UserStatus\":{\"shape\":\"UserStatusType\"}\
-      }\
+        \"Username\":{\
+          \"shape\":\"UsernameType\",\
+          \"documentation\":\"<p>The user name of the user you wish to describe.</p>\"\
+        },\
+        \"Attributes\":{\
+          \"shape\":\"AttributeListType\",\
+          \"documentation\":\"<p>A container with information about the user type attributes.</p>\"\
+        },\
+        \"UserCreateDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The creation date of the user.</p>\"\
+        },\
+        \"UserLastModifiedDate\":{\
+          \"shape\":\"DateType\",\
+          \"documentation\":\"<p>The last modified date of the user.</p>\"\
+        },\
+        \"Enabled\":{\
+          \"shape\":\"BooleanType\",\
+          \"documentation\":\"<p>Specifies whether the user is enabled.</p>\"\
+        },\
+        \"UserStatus\":{\
+          \"shape\":\"UserStatusType\",\
+          \"documentation\":\"<p>The user status. Can be one of the following:</p> <ul> <li> <p>UNCONFIRMED - User has been created but not confirmed.</p> </li> <li> <p>CONFIRMED - User has been confirmed.</p> </li> <li> <p>ARCHIVED - User is no longer active.</p> </li> <li> <p>COMPROMISED - User is disabled due to a potential security threat.</p> </li> <li> <p>UNKNOWN - User status is not known.</p> </li> </ul>\"\
+        },\
+        \"MFAOptions\":{\
+          \"shape\":\"MFAOptionListType\",\
+          \"documentation\":\"<p>The MFA options for the user.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>The user type.</p>\"\
     },\
     \"UsernameExistsException\":{\
       \"type\":\"structure\",\
       \"members\":{\
-        \"message\":{\"shape\":\"MessageType\"}\
+        \"message\":{\
+          \"shape\":\"MessageType\",\
+          \"documentation\":\"<p>The message returned when Amazon Cognito throws a user name exists exception.</p>\"\
+        }\
       },\
+      \"documentation\":\"<p>This exception is thrown when Amazon Cognito encounters a user name that already exists in the user pool.</p>\",\
       \"exception\":true\
     },\
     \"UsernameType\":{\
@@ -1985,29 +4373,30 @@
         \"Code\"\
       ],\
       \"members\":{\
-        \"AccessToken\":{\"shape\":\"TokenModelType\"},\
-        \"AttributeName\":{\"shape\":\"AttributeNameType\"},\
-        \"Code\":{\"shape\":\"ConfirmationCodeType\"}\
-      }\
+        \"AccessToken\":{\
+          \"shape\":\"TokenModelType\",\
+          \"documentation\":\"<p>Represents the access token of the request to verify user attributes.</p>\"\
+        },\
+        \"AttributeName\":{\
+          \"shape\":\"AttributeNameType\",\
+          \"documentation\":\"<p>The attribute name in the request to verify user attributes.</p>\"\
+        },\
+        \"Code\":{\
+          \"shape\":\"ConfirmationCodeType\",\
+          \"documentation\":\"<p>The verification code in the request to verify user attributes.</p>\"\
+        }\
+      },\
+      \"documentation\":\"<p>Represents the request to verify user attributes.</p>\"\
     },\
     \"VerifyUserAttributeResponse\":{\
       \"type\":\"structure\",\
       \"members\":{\
-      }\
-    },\
-    \"openIdListType\":{\
-      \"type\":\"list\",\
-      \"member\":{\"shape\":\"StringType\"}\
-    },\
-    \"openIdUrlType\":{\
-      \"type\":\"string\",\
-      \"max\":150,\
-      \"min\":1,\
-      \"pattern\":\"https://cognito-idp\\\\.amazonaws\\\\.com/[\\\\w\\\\._/-]\"\
+      },\
+      \"documentation\":\"<p>A container representing the response from the server from the request to verify user attributes.</p>\"\
     }\
-  }\
-}\
-";
+  },\
+  \"documentation\":\"<p>Using the Amazon Cognito Your User Pools API, you can create a user pool to manage directories and users. You can authenticate a user to obtain tokens related to user identity and access policies.</p> <p>This API reference provides information about user pools in Amazon Cognito Your User Pools.</p> <p>For more information, see the Amazon Cognito Documentation.</p>\"\
+}";
 }
 
 @end

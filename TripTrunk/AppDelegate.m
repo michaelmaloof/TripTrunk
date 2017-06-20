@@ -23,6 +23,7 @@
 #import <AWSSNS/AWSSNS.h>
 #import "AWSMobileClient.h"
 @import GooglePlaces;
+#import <GoogleMaps/GoogleMaps.h>
 #define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 #import "TTAnalytics.h"
 #import "TTUtility.h"
@@ -62,12 +63,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self handleDatabaseAndConsoleLog];
-    [self setNavbarAndTabbarColors];
-    [self checkForShortCutItems:launchOptions];
+//    [self setNavbarAndTabbarColors];
+//    [self checkForShortCutItems:launchOptions];
     [self handleFontOutput];
     
     // Initialize Google Places for the Location Search
     [GMSPlacesClient provideAPIKey:kGOOGLE_API_KEY];
+    NSString *GoogleMapsAPI = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"GoogleMapsAPIKey"];
+    [GMSServices provideAPIKey:GoogleMapsAPI];
     
     //Intiate google analytics for all non-dev users
     if(![[PFUser currentUser].objectId isEqualToString:@"B6xgcsV7lL"] && //Austin
@@ -90,14 +93,15 @@
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+//REPAIR: This needs to be fixed for new design
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
-    [self setupSearchTabBar];
-    [self setupActivityTabBar];
-    [self setupProfileTabBar];
+//    [self setupSearchTabBar];
+//    [self setupActivityTabBar];
+//    [self setupProfileTabBar];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -269,7 +273,8 @@
         UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:render tag:3];
         [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
         searchItem.badgeValue = [NSString stringWithFormat:@"%ld",(long)internalBadge];
-        [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
+//REPAIR: This needs to be fixed for new design
+//        [[[(UITabBarController*)(UINavigationController*)self.window.rootViewController viewControllers]objectAtIndex:3] setTabBarItem:searchItem];
         
     }
 }
@@ -373,8 +378,9 @@
     [PFImageView class];
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+//REPAIR: This needs to be fixed for new design
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     
     [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload

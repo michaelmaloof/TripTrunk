@@ -1,5 +1,5 @@
-//
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+        //
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #import "AWSIoTMQTTClient.h"
 #import "AWSSynchronizedMutableDictionary.h"
 #import "AWSIoTModel.h"
-#import "AWSLogging.h"
+#import "AWSCocoaLumberjack.h"
 
 
 @interface AWSIoTDataShadowModel : AWSMTLModel <AWSMTLJSONSerializing>
@@ -92,6 +92,7 @@
         _clientToken = nil;
         _operation = AWSIoTShadowOperationTypeNone;
     }
+
     return self;
 }
 
@@ -151,6 +152,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 + (instancetype)defaultIoTDataManager {
     static AWSIoTDataManager *_defaultIoTDataManager = nil;
     static dispatch_once_t onceToken;
+
     dispatch_once(&onceToken, ^{
         AWSServiceConfiguration *serviceConfiguration = nil;
         AWSServiceInfo *serviceInfo = [[AWSInfo defaultAWSInfo] defaultServiceInfo:AWSInfoIoTDataManager];
@@ -180,6 +182,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     dispatch_once(&onceToken, ^{
         _serviceClients = [AWSSynchronizedMutableDictionary new];
     });
+    if( !configuration.endpoint){
+        AWSDDLogWarn(@"The endpoint is not set. You should use custom endpoint when initializing AWSServiceConfiguration");
+    }
     [_serviceClients setObject:[[AWSIoTDataManager alloc] initWithConfiguration:configuration]
                         forKey:key];
 }
@@ -194,8 +199,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
         AWSServiceInfo *serviceInfo = [[AWSInfo defaultAWSInfo] serviceInfo:AWSInfoIoTDataManager
                                                                      forKey:key];
         if (serviceInfo) {
-            AWSServiceConfiguration *serviceConfiguration = [[AWSServiceConfiguration alloc] initWithRegion:serviceInfo.region
-                                                                                        credentialsProvider:serviceInfo.cognitoCredentialsProvider];
+            AWSServiceConfiguration *serviceConfiguration =
+                [[AWSServiceConfiguration alloc] initWithRegion:serviceInfo.region
+                                            credentialsProvider:serviceInfo.cognitoCredentialsProvider];
             [AWSIoTDataManager registerIoTDataManagerWithConfiguration:serviceConfiguration
                                                                 forKey:key];
         }
@@ -241,8 +247,8 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
                 certificateId:(NSString *)certificateId
              statusCallback:(void (^)(AWSIoTMQTTStatus status))callback
 {
-    AWSLogInfo(@"hostName: %@", self.IoTData.configuration.endpoint.hostName);
-    AWSLogInfo(@"URL: %@", self.IoTData.configuration.endpoint.URL);
+    AWSDDLogInfo(@"hostName: %@", self.IoTData.configuration.endpoint.hostName);
+    AWSDDLogInfo(@"URL: %@", self.IoTData.configuration.endpoint.URL);
 
     if (clientId == nil || [clientId  isEqualToString: @""]) {
         return false;
@@ -283,7 +289,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     if (clientId == nil || [clientId  isEqualToString: @""]) {
         return false;
     }
-    
+    AWSDDLogInfo(@"Connecting to IoT using websocket, client id: %@", clientId);
     [self.mqttClient setBaseReconnectTime:self.mqttConfiguration.baseReconnectTimeInterval];
     [self.mqttClient setMinimumConnectionTime:self.mqttConfiguration.minimumConnectionTimeInterval];
     [self.mqttClient setMaximumReconnectTime:self.mqttConfiguration.maximumReconnectTimeInterval];
@@ -304,21 +310,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 - (void)disconnect{
     [self.mqttClient disconnect];
 }
-//
-// Deprecated method
-//
-- (void)publishString:(NSString *)str
-              onTopic:(NSString *)topic {
-    (void)[self publishString:str onTopic:topic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-}
-//
-// Deprecated method
-//
-- (void)publishString:(NSString *)str
-                  qos:(UInt8)qos
-              onTopic:(NSString *)topic {
-    (void)[self publishString:str onTopic:topic QoS:(AWSIoTMQTTQoS)qos];
-}
+
 
 - (BOOL)publishString:(NSString *)string
               onTopic:(NSString *)topic
@@ -335,22 +327,6 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     return YES;
 }
 
-//
-// Deprecated method
-//
-- (void)publishData:(NSData *)data
-            onTopic:(NSString *)topic {
-    (void)[self publishData:data onTopic:topic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-}
-
-//
-// Deprecated method
-//
-- (void)publishData:(NSData *)data
-                qos:(UInt8)qos
-            onTopic:(NSString *)topic {
-    (void)[self publishData:data onTopic:topic QoS:(AWSIoTMQTTQoS)qos];
-}
 
 - (BOOL)publishData:(NSData *)data
             onTopic:(NSString *)topic
@@ -366,14 +342,6 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     return YES;
 }
 
-//
-// Deprecated method
-//
-- (void)subscribeToTopic:(NSString *)topic
-                     qos:(UInt8)qos
-         messageCallback:(AWSIoTMQTTNewMessageBlock)callback {
-    (void)[self subscribeToTopic:topic QoS:(AWSIoTMQTTQoS)qos messageCallback:callback];
-}
 
 - (BOOL)subscribeToTopic:(NSString *)topic
                      QoS:(AWSIoTMQTTQoS)qos
@@ -525,13 +493,13 @@ static NSString * const AWSIoTShadowOperationStatusTypeStrings[] = {
         for (i = 0; i < [shadow.topics count]; i++) {
             if (callback != nil) {
                 if (shadow.enableDebugging == YES) {
-                    AWSLogInfo("subscribing on %@", (NSString *)shadow.topics[i]);
+                    AWSDDLogInfo(@"subscribing on %@", (NSString *)shadow.topics[i]);
                 }
                 [self subscribeToTopic:shadow.topics[i] QoS:shadow.qos extendedCallback:callback];
             }
             else {
                 if (shadow.enableDebugging == YES) {
-                    AWSLogInfo("unsubscribing from %@", (NSString *)shadow.topics[i]);
+                    AWSDDLogInfo(@"unsubscribing from %@", (NSString *)shadow.topics[i]);
                 }
                 [self unsubscribeTopic:shadow.topics[i]];
             }
@@ -539,7 +507,7 @@ static NSString * const AWSIoTShadowOperationStatusTypeStrings[] = {
         rc = YES;
     }
     else {
-        AWSLogError(@"no shadow named: %@", name);
+        AWSDDLogError(@"no shadow named: %@", name);
     }
     return rc;
 }
@@ -588,7 +556,7 @@ static NSString * const AWSIoTShadowOperationStatusTypeStrings[] = {
                     //
                     if (operation != AWSIoTShadowOperationTypeDelete && shadow.enableStaleDiscards == YES) {
                         if (shadow.enableDebugging == YES) {
-                            AWSLogInfo("out-of-date version '%u' on '%@' (local version '%u')", (unsigned int)versionNumber, name, (unsigned int)shadow.version);
+                            AWSDDLogInfo(@"out-of-date version '%u' on '%@' (local version '%u')", (unsigned int)versionNumber, name, (unsigned int)shadow.version);
                         }
                         rc = NO;
                     }
@@ -637,7 +605,7 @@ static NSString * const AWSIoTShadowOperationStatusTypeStrings[] = {
             }
         }
         else {
-            AWSLogError("error serializing json for shadow (%@): %@", name, error.localizedDescription);
+            AWSDDLogError(@"error serializing json for shadow (%@): %@", name, error.localizedDescription);
         }
     }
     return rc;
@@ -664,15 +632,15 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
             //
             if (operation != NSNotFound && status != NSNotFound) {
                 if ([iotDataManager handleMessagesForShadow:shadow.name operation:operation status:status payload:data] != YES) {
-                    AWSLogError("error handling shadow operation (%@) with status (%@)", topicTokens[4], topicTokens[5]);
+                    AWSDDLogError(@"error handling shadow operation (%@) with status (%@)", topicTokens[4], topicTokens[5]);
                 }
             }
             else {
-                AWSLogError("unknown shadow operation (%@) or status (%@)", topicTokens[4], topicTokens[5]);
+                AWSDDLogError(@"unknown shadow operation (%@) or status (%@)", topicTokens[4], topicTokens[5]);
             }
         }
         else {
-            AWSLogInfo("unknown shadow (%@): operation (%@) or status (%@)", topicTokens[2], topicTokens[4], topicTokens[5]);
+            AWSDDLogInfo(@"unknown shadow (%@): operation (%@) or status (%@)", topicTokens[2], topicTokens[4], topicTokens[5]);
         }
     }
 };
@@ -704,7 +672,10 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
     //
     // Notify the user's application of the timeout.
     //
-    shadow.callback( shadow.name, shadow.operation, AWSIoTShadowOperationStatusTypeTimeout, shadow.clientToken, nil );
+    NSString* str = @"timeout";
+    NSData* payloadData = [str dataUsingEncoding:NSUTF8StringEncoding];
+    
+    shadow.callback( shadow.name, shadow.operation, AWSIoTShadowOperationStatusTypeTimeout, shadow.clientToken, payloadData );
     //
     // Indicate that no operation is currently active.
     //
@@ -751,7 +722,7 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
             // Start the shadow operation timer.
             //
             shadow.timer = [NSTimer timerWithTimeInterval:shadow.operationTimeout target:self selector: @selector(shadowOperationTimeoutOnTimer:) userInfo:name repeats:NO];
-            
+            [[NSRunLoop mainRunLoop] addTimer:shadow.timer forMode:NSRunLoopCommonModes];
             //
             // Add the version number (if known and versioning is enabled) and
             // client token properties to the state dictionary.
@@ -765,24 +736,18 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
             
             [self publishData:publishData onTopic:publishTopic QoS:shadow.qos];
             if (shadow.enableDebugging == YES) {
-                AWSLogInfo("published (%@) on topic (%@)", [[NSString alloc] initWithData:publishData encoding:NSUTF8StringEncoding], publishTopic);
+                AWSDDLogInfo(@"published (%@) on topic (%@)", [[NSString alloc] initWithData:publishData encoding:NSUTF8StringEncoding], publishTopic);
             }
             rc = shadow.clientToken != nil;      // return the client token to the caller
         }
         else {
-            AWSLogInfo("operation still in progress on shadow (%@)", name);
+            AWSDDLogInfo(@"operation still in progress on shadow (%@)", name);
         }
     }
     else {
-        AWSLogError("attempting to (%@) unknown shadow (%@)", [[self.class operationTypeStrings] objectAtIndex:operation], name);
+        AWSDDLogError(@"attempting to (%@) unknown shadow (%@)", [[self.class operationTypeStrings] objectAtIndex:operation], name);
     }
     return rc;
-}
-
-
-- (BOOL) registerWithShadow:(NSString *)name
-              eventCallback:(void(^)(NSString *name, AWSIoTShadowOperationType operation, AWSIoTShadowOperationStatusType status, NSString *clientToken, NSData *payload))callback {
-    return [self registerWithShadow:name options:nil eventCallback:callback];
 }
 
 - (BOOL) registerWithShadow:(NSString *)name
@@ -848,15 +813,15 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
                 rc = [self handleSubscriptionsForShadow:shadow.name operations:[NSArray arrayWithObjects:[NSNumber numberWithInteger:AWSIoTShadowOperationTypeUpdate], [NSNumber numberWithInteger:AWSIoTShadowOperationTypeGet], [NSNumber numberWithInteger:AWSIoTShadowOperationTypeDelete], nil] statii:[NSArray arrayWithObjects:[NSNumber numberWithInteger:AWSIoTShadowOperationStatusTypeAccepted], [NSNumber numberWithInteger:AWSIoTShadowOperationStatusTypeRejected], nil] callback:shadowMqttMessageHandler];
             }
             else {
-                AWSLogError("unable to subscribe to delta topic for (%@)", name);
+                AWSDDLogError(@"unable to subscribe to delta topic for (%@)", name);
             }
         }
         else {
-            AWSLogError("error creating shadow for (%@)", name);
+            AWSDDLogError(@"error creating shadow for (%@)", name);
         }
     }
     else {
-        AWSLogError("(%@) is already registered", name);
+        AWSDDLogError(@"(%@) is already registered", name);
     }
     return rc;
 }
@@ -878,14 +843,17 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
         // Unsubscribe to the special topics for this shadow.
         //
         rc |= [self handleSubscriptionsForShadow:shadow.name operations:[NSArray arrayWithObjects:[NSString stringWithFormat:@"update"], [NSString stringWithFormat:@"get"], [NSString stringWithFormat:@"delete"], nil] statii:[NSArray arrayWithObjects:[NSString stringWithFormat:@"accepted"], [NSString stringWithFormat:@"rejected"], nil] callback:nil];
-
+ 
+        //invalidate the timer as the shadow is being unregistered.
+        [shadow.timer invalidate];
+        shadow.timer = nil;
         //
         // Remove the shadow from the dictionary
         //
         [self.shadows removeObjectForKey:name];
     }
     else {
-        AWSLogError("(%@) is not registered", name);
+        AWSDDLogError(@"(%@) is not registered", name);
     }
     return rc;
 }
@@ -922,11 +890,11 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
             rc = [self operationWithShadow:name operation:AWSIoTShadowOperationTypeUpdate stateDictionary:jsonDictionary];
         }
         else {
-            AWSLogError("json for (%@) cannot contain a version property", name);
+            AWSDDLogError(@"json for (%@) cannot contain a version property", name);
         }
     }
     else {
-        AWSLogError("error serializing json for shadow (%@): %@", name, error.localizedDescription);
+        AWSDDLogError(@"error serializing json for shadow (%@): %@", name, error.localizedDescription);
     }
     return rc;
 }
@@ -954,7 +922,7 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
         rc = [self operationWithShadow:name operation:AWSIoTShadowOperationTypeGet stateDictionary:jsonDictionary];
     }
     else {
-        AWSLogError("can't initialize json dictionary for shadow (%@)", name);
+        AWSDDLogError(@"can't initialize json dictionary for shadow (%@)", name);
     }
     return rc;
 }
@@ -982,7 +950,7 @@ static void (^shadowMqttMessageHandler)(NSObject *mqttClient, NSString *topic, N
         rc = [self operationWithShadow:name operation:AWSIoTShadowOperationTypeDelete stateDictionary:jsonDictionary];
     }
     else {
-        AWSLogError("can't initialize json dictionary for shadow (%@)", name);
+        AWSDDLogError(@"can't initialize json dictionary for shadow (%@)", name);
     }
     return rc;
 }

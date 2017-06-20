@@ -20,4 +20,5 @@ target :'TripTrunk' do
     pod 'AWSSQS'
     pod 'GooglePlaces'
     pod 'GMImagePicker', '~> 0.0.2'
+    pod 'GoogleMaps'
 end

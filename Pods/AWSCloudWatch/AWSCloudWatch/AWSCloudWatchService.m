@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
 // permissions and limitations under the License.
 //
 
-#import "AWSCloudWatch.h"
-
-#import "AWSNetworking.h"
-#import "AWSCategory.h"
-#import "AWSSignature.h"
-#import "AWSService.h"
-#import "AWSNetworking.h"
-#import "AWSURLRequestSerialization.h"
-#import "AWSURLResponseSerialization.h"
-#import "AWSURLRequestRetryHandler.h"
-#import "AWSSynchronizedMutableDictionary.h"
+#import "AWSCloudWatchService.h"
+#import <AWSCore/AWSNetworking.h>
+#import <AWSCore/AWSCategory.h>
+#import <AWSCore/AWSNetworking.h>
+#import <AWSCore/AWSSignature.h>
+#import <AWSCore/AWSService.h>
+#import <AWSCore/AWSURLRequestSerialization.h>
+#import <AWSCore/AWSURLResponseSerialization.h>
+#import <AWSCore/AWSURLRequestRetryHandler.h>
+#import <AWSCore/AWSSynchronizedMutableDictionary.h>
 #import "AWSCloudWatchResources.h"
 
 static NSString *const AWSInfoCloudWatch = @"CloudWatch";
-static NSString *const AWSCloudWatchSDKVersion = @"2.4.5";
+static NSString *const AWSCloudWatchSDKVersion = @"2.5.8";
+
 
 @interface AWSCloudWatchResponseSerializer : AWSXMLResponseSerializer
 
@@ -64,13 +64,14 @@ static NSDictionary *errorCodeDictionary = nil;
                                                     data:data
                                                    error:error];
     if (!*error && [responseObject isKindOfClass:[NSDictionary class]]) {
+
         NSDictionary *errorInfo = responseObject[@"Error"];
         if (errorInfo[@"Code"] && errorCodeDictionary[errorInfo[@"Code"]]) {
             if (error) {
                 *error = [NSError errorWithDomain:AWSCloudWatchErrorDomain
                                              code:[errorCodeDictionary[errorInfo[@"Code"]] integerValue]
                                          userInfo:errorInfo
-                          ];
+                         ];
                 return responseObject;
             }
         } else if (errorInfo) {
@@ -80,7 +81,6 @@ static NSDictionary *errorCodeDictionary = nil;
                                          userInfo:errorInfo];
                 return responseObject;
             }
-
         }
     }
 
@@ -127,6 +127,12 @@ static NSDictionary *errorCodeDictionary = nil;
 @interface AWSServiceConfiguration()
 
 @property (nonatomic, strong) AWSEndpoint *endpoint;
+
+@end
+
+@interface AWSEndpoint()
+
+- (void) setRegion:(AWSRegionType)regionType service:(AWSServiceType)serviceType;
 
 @end
 
@@ -194,7 +200,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
             AWSServiceConfiguration *serviceConfiguration = [[AWSServiceConfiguration alloc] initWithRegion:serviceInfo.region
                                                                                         credentialsProvider:serviceInfo.cognitoCredentialsProvider];
             [AWSCloudWatch registerCloudWatchWithConfiguration:serviceConfiguration
-                                                        forKey:key];
+                                                                forKey:key];
         }
 
         return [_serviceClients objectForKey:key];
@@ -217,11 +223,16 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 - (instancetype)initWithConfiguration:(AWSServiceConfiguration *)configuration {
     if (self = [super init]) {
         _configuration = [configuration copy];
-
-        _configuration.endpoint = [[AWSEndpoint alloc] initWithRegion:_configuration.regionType
+       	
+        if(!configuration.endpoint){
+            _configuration.endpoint = [[AWSEndpoint alloc] initWithRegion:_configuration.regionType
                                                               service:AWSServiceCloudWatch
                                                          useUnsafeURL:NO];
-
+        }else{
+            [_configuration.endpoint setRegion:_configuration.regionType
+                                      service:AWSServiceCloudWatch];
+        }
+       	
         AWSSignatureV4Signer *signer = [[AWSSignatureV4Signer alloc] initWithCredentialsProvider:_configuration.credentialsProvider
                                                                                         endpoint:_configuration.endpoint];
         AWSNetworkingRequestInterceptor *baseInterceptor = [[AWSNetworkingRequestInterceptor alloc] initWithUserAgent:_configuration.userAgent];
@@ -229,10 +240,11 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 
         _configuration.baseURL = _configuration.endpoint.URL;
         _configuration.retryHandler = [[AWSCloudWatchRequestRetryHandler alloc] initWithMaximumRetryCount:_configuration.maxRetryCount];
-
+         
+		
         _networking = [[AWSNetworking alloc] initWithConfiguration:_configuration];
     }
-
+    
     return self;
 }
 
@@ -247,19 +259,21 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
         if (!request) {
             request = [AWSRequest new];
         }
-        
+
         AWSNetworkingRequest *networkingRequest = request.internalRequest;
         if (request) {
             networkingRequest.parameters = [[AWSMTLJSONAdapter JSONDictionaryFromModel:request] aws_removeNullValues];
         } else {
             networkingRequest.parameters = @{};
         }
+
         networkingRequest.HTTPMethod = HTTPMethod;
         networkingRequest.requestSerializer = [[AWSQueryStringRequestSerializer alloc] initWithJSONDefinition:[[AWSCloudWatchResources sharedInstance] JSONObject]
                                                                                                    actionName:operationName];
         networkingRequest.responseSerializer = [[AWSCloudWatchResponseSerializer alloc] initWithJSONDefinition:[[AWSCloudWatchResources sharedInstance] JSONObject]
-                                                                                                    actionName:operationName
-                                                                                                   outputClass:outputClass];
+                                                                                             actionName:operationName
+                                                                                            outputClass:outputClass];
+        
         return [self.networking sendRequest:networkingRequest];
     }
 }
@@ -276,14 +290,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)deleteAlarms:(AWSCloudWatchDeleteAlarmsInput *)request
-   completionHandler:(void (^)(NSError *error))completionHandler {
+     completionHandler:(void (^)(NSError *error))completionHandler {
     [[self deleteAlarms:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(error);
@@ -303,15 +312,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)describeAlarmHistory:(AWSCloudWatchDescribeAlarmHistoryInput *)request
-           completionHandler:(void (^)(AWSCloudWatchDescribeAlarmHistoryOutput *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSCloudWatchDescribeAlarmHistoryOutput *response, NSError *error))completionHandler {
     [[self describeAlarmHistory:request] continueWithBlock:^id _Nullable(AWSTask<AWSCloudWatchDescribeAlarmHistoryOutput *> * _Nonnull task) {
         AWSCloudWatchDescribeAlarmHistoryOutput *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -336,11 +340,6 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
         AWSCloudWatchDescribeAlarmsOutput *result = task.result;
         NSError *error = task.error;
 
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
-
         if (completionHandler) {
             completionHandler(result, error);
         }
@@ -359,15 +358,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)describeAlarmsForMetric:(AWSCloudWatchDescribeAlarmsForMetricInput *)request
-              completionHandler:(void (^)(AWSCloudWatchDescribeAlarmsForMetricOutput *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSCloudWatchDescribeAlarmsForMetricOutput *response, NSError *error))completionHandler {
     [[self describeAlarmsForMetric:request] continueWithBlock:^id _Nullable(AWSTask<AWSCloudWatchDescribeAlarmsForMetricOutput *> * _Nonnull task) {
         AWSCloudWatchDescribeAlarmsForMetricOutput *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -387,14 +381,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)disableAlarmActions:(AWSCloudWatchDisableAlarmActionsInput *)request
-          completionHandler:(void (^)(NSError *error))completionHandler {
+     completionHandler:(void (^)(NSError *error))completionHandler {
     [[self disableAlarmActions:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(error);
@@ -414,14 +403,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)enableAlarmActions:(AWSCloudWatchEnableAlarmActionsInput *)request
-         completionHandler:(void (^)(NSError *error))completionHandler {
+     completionHandler:(void (^)(NSError *error))completionHandler {
     [[self enableAlarmActions:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(error);
@@ -441,15 +425,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)getMetricStatistics:(AWSCloudWatchGetMetricStatisticsInput *)request
-          completionHandler:(void (^)(AWSCloudWatchGetMetricStatisticsOutput *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSCloudWatchGetMetricStatisticsOutput *response, NSError *error))completionHandler {
     [[self getMetricStatistics:request] continueWithBlock:^id _Nullable(AWSTask<AWSCloudWatchGetMetricStatisticsOutput *> * _Nonnull task) {
         AWSCloudWatchGetMetricStatisticsOutput *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -469,15 +448,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)listMetrics:(AWSCloudWatchListMetricsInput *)request
-  completionHandler:(void (^)(AWSCloudWatchListMetricsOutput *response, NSError *error))completionHandler {
+     completionHandler:(void (^)(AWSCloudWatchListMetricsOutput *response, NSError *error))completionHandler {
     [[self listMetrics:request] continueWithBlock:^id _Nullable(AWSTask<AWSCloudWatchListMetricsOutput *> * _Nonnull task) {
         AWSCloudWatchListMetricsOutput *result = task.result;
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(result, error);
@@ -501,11 +475,6 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     [[self putMetricAlarm:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
 
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
-
         if (completionHandler) {
             completionHandler(error);
         }
@@ -524,14 +493,9 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)putMetricData:(AWSCloudWatchPutMetricDataInput *)request
-    completionHandler:(void (^)(NSError *error))completionHandler {
+     completionHandler:(void (^)(NSError *error))completionHandler {
     [[self putMetricData:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
-
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
 
         if (completionHandler) {
             completionHandler(error);
@@ -551,19 +515,14 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 }
 
 - (void)setAlarmState:(AWSCloudWatchSetAlarmStateInput *)request
-    completionHandler:(void (^)(NSError *error))completionHandler {
+     completionHandler:(void (^)(NSError *error))completionHandler {
     [[self setAlarmState:request] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         NSError *error = task.error;
 
-        if (task.exception) {
-            AWSLogError(@"Fatal exception: [%@]", task.exception);
-            kill(getpid(), SIGKILL);
-        }
-        
         if (completionHandler) {
             completionHandler(error);
         }
-        
+
         return nil;
     }];
 }

@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 //
 
 #import "AWSMobileAnalyticsAppleMonetizationEventBuilder.h"
-#import "AWSLogging.h"
+#import "AWSCocoaLumberjack.h"
 
 static NSString* const AWSMobileAnalyticsAppleStore = @"Apple";
 
@@ -64,22 +64,22 @@ static NSString* const AWSMobileAnalyticsAppleStore = @"Apple";
 
 -(BOOL)isValid{
     if([self productId] == nil){
-        AWSLogError(@"Apple Monetization event is not valid: it requires the product id");
+        AWSDDLogError(@"Apple Monetization event is not valid: it requires the product id");
         return false;
     }
     
     if([self transactionId] == nil){
-        AWSLogError(@"Apple Monetization event is not valid: it requires the transaction id");
+        AWSDDLogError(@"Apple Monetization event is not valid: it requires the transaction id");
         return false;
     }
     
     if(self.isItemPriceSet != YES){
-        AWSLogError(@"Apple Monetization event is not valid: it requires the item price and locale");
+        AWSDDLogError(@"Apple Monetization event is not valid: it requires the item price and locale");
         return false;
     }
     
     if(self.isQuantitySet != YES){
-        AWSLogError(@"Apple Monetization event is not valid: it requires the quantity");
+        AWSDDLogError(@"Apple Monetization event is not valid: it requires the quantity");
         return false;
     }
     

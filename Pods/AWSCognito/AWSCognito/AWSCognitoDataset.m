@@ -22,7 +22,7 @@
 #import "AWSCognitoRecord_Internal.h"
 #import "AWSCognitoSQLiteManager.h"
 #import "AWSCognitoConflict_Internal.h"
-#import <AWSCore/AWSLogging.h>
+#import <AWSCore/AWSCocoaLumberjack.h>
 #import "AWSCognitoRecord.h"
 #import "AWSKSReachability.h"
 
@@ -105,7 +105,7 @@
     AWSCognitoRecord *record = [self getRecordById:aKey error:&error];
     if(error || (!record.data.string))
     {
-        AWSLogDebug(@"Error: %@", error);
+        AWSDDLogDebug(@"Error: %@", error);
     }
     
     if (record != nil && ![record isDeleted]) {
@@ -128,23 +128,23 @@
     
     //do some limit checks
     if([self sizeForRecord:record] > AWSCognitoMaxDatasetSize){
-        AWSLogDebug(@"Error: Record would exceed max dataset size");
+        AWSDDLogDebug(@"Error: Record would exceed max dataset size");
         return;
     }
     
     if([self sizeForString:aKey] > AWSCognitoMaxKeySize){
-        AWSLogDebug(@"Error: Key size too large, max is %d bytes", AWSCognitoMaxKeySize);
+        AWSDDLogDebug(@"Error: Key size too large, max is %d bytes", AWSCognitoMaxKeySize);
         return;
     }
     
     if([self sizeForString:aKey] < AWSCognitoMinKeySize){
-        AWSLogDebug(@"Error: Key size too small, min is %d byte", AWSCognitoMinKeySize);
+        AWSDDLogDebug(@"Error: Key size too small, min is %d byte", AWSCognitoMinKeySize);
         return;
     }
 
     
     if([self sizeForString:aString] > AWSCognitoMaxDatasetSize){
-        AWSLogDebug(@"Error: Value size too large, max is %d bytes", AWSCognitoMaxRecordValueSize);
+        AWSDDLogDebug(@"Error: Value size too large, max is %d bytes", AWSCognitoMaxRecordValueSize);
         return;
     }
     
@@ -152,14 +152,14 @@
     
     //if you have the max # of records and you aren't replacing an existing one
     if(numRecords == AWSCognitoMaxNumRecords && !([self recordForKey:aKey] == nil)){
-        AWSLogDebug(@"Error: Too many records, max is %d", AWSCognitoMaxNumRecords);
+        AWSDDLogDebug(@"Error: Too many records, max is %d", AWSCognitoMaxNumRecords);
         return;
     }
    
     NSError *error = nil;
     if(![self putRecord:record error:&error])
     {
-        AWSLogDebug(@"Error: %@", error);
+        AWSDDLogDebug(@"Error: %@", error);
     }
 }
 
@@ -190,7 +190,7 @@
     AWSCognitoRecord * result = [self getRecordById:aKey error:&error];
     if(!result)
     {
-        AWSLogDebug(@"Error: %@", error);
+        AWSDDLogDebug(@"Error: %@", error);
     }
     return result;
 }
@@ -235,7 +235,7 @@
     return result;
 }
 
-- (NSArray *)getAllRecords
+- (NSArray<AWSCognitoRecord *> *)getAllRecords
 {
     NSArray *allRecords = nil;
     
@@ -244,7 +244,7 @@
     return allRecords;
 }
 
-- (NSDictionary *)getAll
+- (NSDictionary<NSString *, NSString *> *)getAll
 {
     NSArray *allRecords = nil;
     NSMutableDictionary *recordsAsDictionary = [NSMutableDictionary dictionary];
@@ -265,7 +265,7 @@
     NSError *error = nil;
     if(![self removeRecordById:aKey error:&error])
     {
-        AWSLogDebug(@"Error: %@", error);
+        AWSDDLogDebug(@"Error: %@", error);
     }
 }
 
@@ -274,7 +274,7 @@
     NSError *error = nil;
     if(![self.sqliteManager deleteDataset:self.name error:&error])
     {
-        AWSLogDebug(@"Error: %@", error);
+        AWSDDLogDebug(@"Error: %@", error);
     }
     else {
         self.lastSyncCount = [NSNumber numberWithInt:-1];
@@ -349,8 +349,15 @@
             [self postDidFailToSynchronizeNotification:error];
             return [AWSTask taskWithError:error];
         }else if(task.error){
-            AWSLogError(@"Unable to list records: %@", task.error);
-            return task;
+            AWSDDLogError(@"Unable to list records: %@", task.error);
+            //decrement sync counts that exceed the service sync count and try again
+            if(task.error.code == AWSCognitoSyncErrorInvalidParameter && self.currentSyncCount.longLongValue > 0
+               && task.error.userInfo[@"NSLocalizedDescription"] && [task.error.userInfo[@"NSLocalizedDescription"] hasPrefix:@"No such SyncCount:"]){
+                self.currentSyncCount = [NSNumber numberWithLongLong:self.currentSyncCount.longLongValue - 1];
+                return [self syncPull:remainingAttempts-1];
+            } else {
+                return task;
+            }
         }else {
             NSError *error = nil;
             NSMutableArray *conflicts = [NSMutableArray new];
@@ -423,7 +430,7 @@
                     }
                     else{
                         //conflict resolution
-                        AWSLogInfo(@"Record %@ is dirty with value: %@ and can't be overwritten, flagging for conflict resolution",existing.recordId,existing.data.string);
+                        AWSDDLogInfo(@"Record %@ is dirty with value: %@ and can't be overwritten, flagging for conflict resolution",existing.recordId,existing.data.string);
                         [conflicts addObject: [[AWSCognitoConflict alloc] initWithLocalRecord:existing remoteRecord:newRecord]];
                     }
                 }
@@ -528,7 +535,7 @@
                 return [AWSTask taskWithError:error];
             }else if(task.error){
                 if(task.error.code == AWSCognitoSyncErrorResourceConflict){
-                    AWSLogInfo("Conflicts existed on update, restarting synchronize.");
+                    AWSDDLogInfo(@"Conflicts existed on update, restarting synchronize.");
                     if(currentSyncCount > maxPatchSyncCount) {
                         //it's possible there is a local dirty record with a stale sync count
                         //this will fix it
@@ -537,7 +544,7 @@
                     return [self synchronizeInternal:remainingAttempts-1];
                 }
                 else {
-                    AWSLogError(@"An error occured attempting to update records: %@",task.error);
+                    AWSDDLogError(@"An error occured attempting to update records: %@",task.error);
                 }
                 return task;
             }else{
@@ -545,6 +552,7 @@
                 if(response.records) {
                     NSMutableArray *changedRecords = [NSMutableArray new];
                     NSMutableArray *changedRecordsNames = [NSMutableArray new];
+                    NSNumber *maxSyncCount = [NSNumber numberWithLong:0];
                     for (AWSCognitoSyncRecord * record in response.records) {
                         [changedRecordsNames addObject:record.key];
                         AWSCognitoRecordValueType recordType = AWSCognitoRecordValueTypeString;
@@ -560,6 +568,12 @@
                         if(record.syncCount.longLongValue > currentSyncCount.longLongValue + 1){
                             okToUpdateSyncCount = NO;
                         }
+                        
+                        // keep track of the max sync count returned by the service
+                        if(record.syncCount.longLongValue > maxSyncCount.longLongValue) {
+                            maxSyncCount = record.syncCount;
+                        }
+                        
                         newRecord.syncCount = [record.syncCount longLongValue];
                         newRecord.dirtyCount = 0;
                         newRecord.lastModifiedBy = record.lastModifiedBy;
@@ -587,7 +601,7 @@
                         [self postDidChangeRemoteValueNotification:changedRecordsNames];
                         if(okToUpdateSyncCount){
                             //if we only increased the sync count by 1, fast forward the last sync count to our update sync count
-                            [self.sqliteManager updateLastSyncCount:self.name syncCount:[NSNumber numberWithLongLong:currentSyncCount.longLongValue+1] lastModifiedBy:nil];
+                            [self.sqliteManager updateLastSyncCount:self.name syncCount:maxSyncCount lastModifiedBy:nil];
                         }
                     } else {
                         [self postDidFailToSynchronizeNotification:error];
@@ -614,24 +628,35 @@
     [self checkForLocalMergedDatasets];
     
     AWSCognitoCredentialsProvider *cognitoCredentials = self.cognitoService.configuration.credentialsProvider;
-    return [[[cognitoCredentials getIdentityId] continueWithBlock:^id(AWSTask *task) {
+    return [[[cognitoCredentials credentials] continueWithBlock:^id(AWSTask *task) {
         NSError * error = nil;
         if (task.error) {
             error = [NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoAuthenticationFailed userInfo:nil];
-         //only allow one sync to be pending and one in flight at a time
-        }else if(!dispatch_semaphore_wait(self.synchronizeQueue, DISPATCH_TIME_NOW)){
-            //only allow one thread to sychronize data at a time, wait a max of 5 minutes for the in flight
-            //sync to complete
-            if(!dispatch_semaphore_wait(self.serializer, dispatch_time(DISPATCH_TIME_NOW, 300 * NSEC_PER_SEC))){
-                self.syncSessionToken = nil;
-                return [[self synchronizeInternal:self.synchronizeRetries] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
-                    dispatch_semaphore_signal(self.serializer);
+        }
+        //only allow one sync to be pending and one in flight at a time
+        else if(!dispatch_semaphore_wait(self.synchronizeQueue, DISPATCH_TIME_NOW)){
+            //only allow one thread to synchronize data at a time, wait a max of 5 minutes for the in flight
+            //sync to complete. Because this may block the main thread, run on a background thread
+            AWSTaskCompletionSource<AWSTask *> *completion = [AWSTaskCompletionSource new];
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+                if(!dispatch_semaphore_wait(self.serializer, dispatch_time(DISPATCH_TIME_NOW, 300 * NSEC_PER_SEC))){
+                    self.syncSessionToken = nil;
+                    [[self synchronizeInternal:self.synchronizeRetries] continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
+                        dispatch_semaphore_signal(self.serializer);
+                        dispatch_semaphore_signal(self.synchronizeQueue);
+                        if(task.error){
+                            completion.error = task.error;
+                        }else {
+                            completion.result = task.result;
+                        }
+                        return task;
+                    }];
+                }else {
                     dispatch_semaphore_signal(self.synchronizeQueue);
-                    return task;
-                }];
-            }else {
-                error = [NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorTimedOutWaitingForInFlightSync userInfo:nil];
-            }
+                    completion.error = [NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorTimedOutWaitingForInFlightSync userInfo:nil];
+                }
+            });
+            return completion.task;
         }else {
             error = [NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorSyncAlreadyPending userInfo:nil];
         }
@@ -646,7 +671,7 @@
 
 - (AWSTask *)synchronizeInternal:(uint32_t)remainingAttempts {
     if(remainingAttempts == 0){
-        AWSLogError(@"Conflict retries exhausted");
+        AWSDDLogError(@"Conflict retries exhausted");
         NSError *error = [NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorConflictRetriesExhausted userInfo:nil];
         [self postDidFailToSynchronizeNotification:error];
         return [AWSTask taskWithError:error];
@@ -667,7 +692,7 @@
                 [self postDidFailToSynchronizeNotification:error];
                 return [AWSTask taskWithError:error];
             } else if(task.error && task.error.code != AWSCognitoSyncErrorResourceNotFound){
-                AWSLogError(@"Unable to delete dataset: %@", task.error);
+                AWSDDLogError(@"Unable to delete dataset: %@", task.error);
                 return task;
             } else {
                 [self.sqliteManager deleteMetadata:self.name error:nil];
@@ -717,7 +742,7 @@
         if(task.isCancelled){
             return [AWSTask taskWithError:[NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorTaskCanceled userInfo:nil]];
         }else if(task.error){
-            AWSLogError(@"Unable to subscribe dataset: %@", task.error);
+            AWSDDLogError(@"Unable to subscribe dataset: %@", task.error);
             return task;
         }else {
             return [AWSTask taskWithResult:task.result];
@@ -741,7 +766,7 @@
         if(task.isCancelled){
             return [AWSTask taskWithError:[NSError errorWithDomain:AWSCognitoErrorDomain code:AWSCognitoErrorTaskCanceled userInfo:nil]];
         }else if(task.error){
-            AWSLogError(@"Unable to unsubscribe dataset: %@", task.error);
+            AWSDDLogError(@"Unable to unsubscribe dataset: %@", task.error);
             return task;
         }else {
             return [AWSTask taskWithResult:task.result];
@@ -752,7 +777,7 @@
 #pragma mark IdentityMerge
 
 - (void)identityChanged:(NSNotification *)notification {
-    AWSLogDebug(@"IdentityChanged");
+    AWSDDLogDebug(@"IdentityChanged");
     
     // by the point we are called, all datasets will have been reparented
     [self checkForLocalMergedDatasets];

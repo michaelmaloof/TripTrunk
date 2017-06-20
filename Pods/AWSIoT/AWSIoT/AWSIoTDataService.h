@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -39,13 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
  
  *Swift*
 
-     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
-         let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialProvider)
-         AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = configuration
-
-         return true
-     }
+     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
+        let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialProvider)
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
+ 
+        return true
+    }
 
  *Objective-C*
 
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     let IoTData = AWSIoTData.defaultIoTData()
+     let IoTData = AWSIoTData.default()
 
  *Objective-C*
 
@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @return The default service client.
  */
-+ (instancetype)defaultIoTData;
++ (instancetype)defaultIoTData __attribute__ ((deprecated("Use `registerIoTDataManagerWithConfiguration:forKey:` with custom endpoint to initialize AWSIoTData")));
 
 /**
  Creates a service client with the given service configuration and registers it for the key.
@@ -80,13 +80,13 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
-         let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-         AWSIoTData.registerIoTDataWithConfiguration(configuration, forKey: "USWest2IoTData")
-
-         return true
-     }
+     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
+        let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
+        AWSIoTData.register(with: configuration!, forKey: "USWest2IoTData")
+ 
+        return true
+    }
 
  *Objective-C*
 
@@ -125,13 +125,13 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
-         let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-         AWSIoTData.registerIoTDataWithConfiguration(configuration, forKey: "USWest2IoTData")
-
-         return true
-     }
+     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
+        let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
+        AWSIoTData.register(with: configuration!, forKey: "USWest2IoTData")
+ 
+        return true
+    }
 
  *Objective-C*
 

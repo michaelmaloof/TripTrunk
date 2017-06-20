@@ -74,6 +74,8 @@
 	<string>339286769601593</string>
 	<key>FacebookDisplayName</key>
 	<string>TripTrunk</string>
+	<key>GoogleMapsAPIKey</key>
+	<string>AIzaSyA8eRGAwhGC8QoDmal-_msQadLJ43ZwCTo</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -82,6 +84,8 @@
 		<string>fb-messenger-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
+		<string>googlechromes</string>
+		<string>comgooglemaps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -146,6 +150,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your permission to access your location when you upload your photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need your permission to access your photos so that you are able to upload to your trunks on TripTrunk!</string>
 	<key>UIAppFonts</key>
@@ -197,7 +203,7 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+	<string>Home</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -215,7 +221,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your permission to access your location when you upload your photos.</string>
 </dict>
 </plist>

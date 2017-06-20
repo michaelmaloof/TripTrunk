@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -247,14 +247,14 @@ typedef NS_ENUM(NSInteger, AWSDynamoDBTableStatus) {
 @property (nonatomic, strong) NSString * _Nullable N;
 
 /**
- <p>A Null data type.</p>
- */
-@property (nonatomic, strong) NSNumber * _Nullable NIL;
-
-/**
  <p>A Number Set data type.</p>
  */
 @property (nonatomic, strong) NSArray<NSString *> * _Nullable NS;
+
+/**
+ <p>A Null data type.</p>
+ */
+@property (nonatomic, strong) NSNumber * _Nullable NIL;
 
 /**
  <p>A String data type.</p>

@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ NSString *const AWSMobileAnalyticsERSErrorDomain = @"com.amazonaws.AWSMobileAnal
 }
 
 + (NSValueTransformer *)sessionJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSMobileAnalyticsERSSession class]];
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[AWSMobileAnalyticsERSSession class]];
 }
 
 @end
@@ -47,7 +47,7 @@ NSString *const AWSMobileAnalyticsERSErrorDomain = @"com.amazonaws.AWSMobileAnal
 }
 
 + (NSValueTransformer *)eventsJSONTransformer {
-	return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSMobileAnalyticsERSEvent class]];
+    return [NSValueTransformer awsmtl_JSONArrayTransformerWithModelClass:[AWSMobileAnalyticsERSEvent class]];
 }
 
 @end
