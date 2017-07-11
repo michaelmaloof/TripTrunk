@@ -13,9 +13,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *trunkDates;
 @property (strong, nonatomic) IBOutlet UILabel *trunkLocation;
 @property (strong, nonatomic) IBOutlet UILabel *trunkMemberInfo;
-@property (strong, nonatomic) IBOutlet UIButton *spotlightTrunkImage;
-@property (strong, nonatomic) IBOutlet UIButton *secondaryTrunkImage;
-@property (strong, nonatomic) IBOutlet UIButton *tertiaryTrunkImage;
-@property (strong, nonatomic) IBOutlet UIButton *quaternaryTrunkImage;
+@property (strong, nonatomic) IBOutlet UIImageView *spotlightTrunkImage;
+@property (strong, nonatomic) IBOutlet UIImageView *secondaryTrunkImage;
+@property (strong, nonatomic) IBOutlet UIImageView *tertiaryTrunkImage;
+@property (strong, nonatomic) IBOutlet UIImageView *quaternaryTrunkImage;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *lowerInfoConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *spotlightImageHeightConstraint;
 
 @end

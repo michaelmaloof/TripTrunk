@@ -15,7 +15,7 @@
 -(void)layoutSubviews{
     [super layoutSubviews];
     
-    [self.layer setCornerRadius:10.0f];
+    [self.layer setCornerRadius:18.0f];
     [self.layer setMasksToBounds:NO];
     [self.layer setShadowColor:[[TTColor tripTrunkGray] CGColor]];
     [self.layer setShadowOffset:CGSizeMake(2.0f,2.0f)];

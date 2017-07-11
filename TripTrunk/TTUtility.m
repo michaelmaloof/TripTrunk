@@ -1368,23 +1368,32 @@ CLCloudinary *cloudinary;
 }
 
 +(BOOL) checkForUpdate{
-    NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    NSString* appID = infoDictionary[@"CFBundleIdentifier"];
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?bundleId=%@", appID]];
-    NSData* data = [NSData dataWithContentsOfURL:url];
-    NSDictionary* lookup = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    
-    if ([lookup[@"resultCount"] integerValue] == 1){
-        NSString* appStoreVersion = lookup[@"results"][0][@"version"];
-        NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
-        NSString *condAppStoreVersion = [appStoreVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
-        NSString *condCurrentVersion = [currentVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
+    @try{
+        NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString* appID = infoDictionary[@"CFBundleIdentifier"];
+        NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?bundleId=%@", appID]];
+        NSData* data = [NSData dataWithContentsOfURL:url];
+        NSDictionary* lookup = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
-        if([condAppStoreVersion intValue] > [condCurrentVersion intValue]){
-            //NSLog(@"Version %@ should be upgraded to %@",currentVersion,appStoreVersion);
-            return YES;
+        if ([lookup[@"resultCount"] integerValue] == 1){
+            NSString* appStoreVersion = lookup[@"results"][0][@"version"];
+            NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
+            NSString *condAppStoreVersion = [appStoreVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
+            NSString *condCurrentVersion = [currentVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
+            
+            if([condAppStoreVersion intValue] > [condCurrentVersion intValue]){
+                //NSLog(@"Version %@ should be upgraded to %@",currentVersion,appStoreVersion);
+                return YES;
+            }
         }
     }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception.reason);
+    }
+    @finally {
+        NSLog(@"Has user lost internet connection?");
+    }
+    
     return NO;
 }
 

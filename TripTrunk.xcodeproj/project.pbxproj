@@ -75,6 +75,7 @@
 		27444E601EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E5F1EF893DA0021DC7A /* TTHomeMapViewFlowLayout.m */; };
 		27444E621EF9AD210021DC7A /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = 27444E611EF9AD210021DC7A /* style.json */; };
 		27444E651EF9CEB10021DC7A /* TTRoundedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27444E641EF9CEB10021DC7A /* TTRoundedButton.m */; };
+		27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27444E681F0AE1270021DC7A /* ImageIO.framework */; };
 		276718CB1CF4D1030064F784 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */; };
 		276718CC1CF4D1030064F784 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */; };
 		276718CD1CF4D1030064F784 /* Montserrat-UltraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */; };
@@ -327,6 +328,7 @@
 		27444E611EF9AD210021DC7A /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
 		27444E631EF9CEB10021DC7A /* TTRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTRoundedButton.h; sourceTree = "<group>"; };
 		27444E641EF9CEB10021DC7A /* TTRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedButton.m; sourceTree = "<group>"; };
+		27444E681F0AE1270021DC7A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
 		276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
 		276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-UltraLight.otf"; sourceTree = "<group>"; };
@@ -544,6 +546,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */,
 				271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */,
 				C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */,
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
@@ -1032,6 +1035,7 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27444E681F0AE1270021DC7A /* ImageIO.framework */,
 				271D8BBD1D91AF000054741F /* CoreData.framework */,
 				27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */,
 				C9CA64591BE523A500A25EBC /* PhotosUI.framework */,
@@ -1626,6 +1630,8 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 					"$(PROJECT_DIR)/FacebookSDK",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/PINCache",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/PINRemoteImage",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1671,6 +1677,8 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 					"$(PROJECT_DIR)/FacebookSDK",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/PINCache",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/PINRemoteImage",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

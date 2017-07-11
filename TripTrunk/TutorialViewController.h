@@ -7,7 +7,7 @@
 //
 
 #import <Parse/Parse.h>
-#import "TTBAseViewController.h"
+#import "TTBaseViewController.h"
 
 @protocol TutorialViewDelegate
 
