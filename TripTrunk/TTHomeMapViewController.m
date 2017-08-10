@@ -22,7 +22,7 @@
 @property (strong, nonatomic) NSArray *trunks;
 @property (strong, nonatomic) NSMutableArray *filteredArray;
 @property (strong, nonatomic) NSMutableArray *imageSet;
-@property (strong, nonatomic) NSArray *sortedArray;
+@property (strong, nonatomic) NSMutableArray *sortedArray;
 @end
 
 @implementation TTHomeMapViewController
@@ -30,18 +30,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.user = [PFUser currentUser];
-    // Do any additional setup after loading the view.
     
+    //init the arrays
     self.filteredArray = [[NSMutableArray alloc] init];
     self.sortedArray = [[NSMutableArray alloc] init];
+    self.imageSet = [[NSMutableArray alloc] init];
     
+    //setup the view controller
     [self initMap];
-    [self initExcursion];
+//    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
+    [self initTrips]; //not sure how we're doing this yet so may not do this at all
     
 }
 
 #pragma mark - UICollectionView
 -(void)initExcursion{
+    
+    //Load all the Excursions from the current user and sort by descending based on start date
     PFQuery *query = [PFQuery queryWithClassName:@"Excursion"];
     [query whereKey:@"creator" equalTo:self.user];
     [query includeKey:@"trunk"];
@@ -63,7 +68,7 @@
             [self.filteredArray addObject:filter];
         }
             
-            [self initSpotlightImages];
+            [self initTrips];
             
         }else{
             //FIXME: Add google error event
@@ -73,126 +78,134 @@
     }];
 }
 
--(void)initSpotlightImages{
-//    for(NSArray *array in self.filteredArray){
-//        for(id excursion in array){
-//            Trip *trunk = excursion[@"trunk"];
-//            PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-//            [photoQuery whereKey:@"trip" equalTo:trunk];
-//            [photoQuery whereKey:@"user" equalTo:self.user];
-//            [photoQuery setLimit:4];
-//            [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//                if(!error){
-//                    NSLog(@"");
-//                }
-//            }];
-//        }
-//    }
+-(void)initTrips{
     
-            PFQuery *tripQuery = [PFQuery queryWithClassName:@"Trip"];
-            [tripQuery whereKey:@"creator" equalTo:self.user];
-            [tripQuery orderByDescending:@"start"];
-            [tripQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                if(!error){
-                    NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
-                    NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
-                    self.sortedArray = [objects sortedArrayUsingDescriptors:descriptors];
+    //Load all the trips from the current user and sort by descending based on start date
+    PFQuery *tripQuery = [PFQuery queryWithClassName:@"Trip"];
+    [tripQuery whereKey:@"creator" equalTo:self.user];
+    [tripQuery orderByDescending:@"start"];
+    [tripQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if(!error){
+            //sort the array by start... Why am I doing this? Was "orderByDescending" not working?
+            NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
+            NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+            self.sortedArray = [NSMutableArray arrayWithArray:[objects sortedArrayUsingDescriptors:descriptors]];
+
+            //Call image URL download and wait
+            [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+                
+                //the block is done so reload the cells or there's an error
+                if(succeeded){
                     [self.collectionView reloadData];
+                }else{
+                    //There's an error. Handle this and add the Google tracking
+                    NSLog(@"initSpotlightImagesWithBlock failed");
                 }
+                
             }];
+        }else{
+            //There's an error. Handle this and add the Google tracking
+            NSLog(@"error initializing trips");
+        }
+    }];
 }
 
+-(void)initSpotlightImagesWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
+    
+    //Weed out Trips that don't have any images in them
+    NSMutableArray *deleteObjects = [[NSMutableArray alloc] init];
+    
+    //Set up a last record check
+    __block NSUInteger objectCount = self.sortedArray.count;
+    __block NSUInteger count = 0;
+    
+    //Loop though the array and get each trunks 4 newest photo URLs
+    for(Trip *trunk in self.sortedArray){
+        PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+        [photoQuery whereKey:@"trip" equalTo:trunk];
+        [photoQuery whereKey:@"user" equalTo:self.user];
+        [photoQuery setLimit:4];
+        [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            if(!error){
+                NSMutableArray *images = [[NSMutableArray alloc] init];
+                
+                //Loop though retrieved objects and extract photo's URL
+                for(Photo* object in objects){
+                    [images addObject:object.imageUrl];
+                }
+                
+                //Add the images to the imageSet, or
+                //If the search doesn't return any photos, remove the trunk from the sorted Array
+                if(objects.count != 0){
+                    //add the images array to the imageSet Array
+                    [self.imageSet addObject:images];
+                }else{
+                    //no images found, flag for removal from sorted array
+                    [deleteObjects addObject:trunk];
+                }
+                
+                //increment the count for the last record check
+                count++;
+                
+                //check if this is the last record
+                if(count == objectCount){
+                    //remove the trunks that have no images in them
+                    [self.sortedArray removeObjectsInArray:deleteObjects];
+                    //finish the block and notify the caller
+                    completionBlock(YES,nil);
+                }
 
+            }else{
+                //There's an error. Handle this and add the Google tracking
+                NSLog(@"error getting images");
+            }
+            
+        }];
+        
+    }
+    
+}
 
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.sortedArray.count;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (TTHomeMapCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     __block TTHomeMapCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-//    NSArray *array = self.filteredArray[indexPath.row];
-//
-//    for(id excursion in array){
-//        Trip *trunk = excursion[@"trunk"];
-//        cell.trunkTitle.text = trunk.name;
-//        cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
-//        cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
-//        cell.trunkMemberInfo.text = @"Some info here";
-//        
-//        PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-//        [photoQuery whereKey:@"trip" equalTo:trunk];
-//        [photoQuery whereKey:@"user" equalTo:self.user];
-//        [photoQuery setLimit:4];
-//        [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//            if(!error){
-//                Photo *photo;
-//                if(objects.count>0){
-//                    photo = objects[0];
-//                    [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//                
-//                    if(objects.count>3){
-//                        photo = objects[1];
-//                        [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//                        
-//                        photo = objects[2];
-//                        [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//                        
-//
-//                        photo = objects[3];
-//                        [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//                    }else{
-//                        
-////                        CGFloat x = cell.spotlightTrunkImage.frame.origin.x;
-////                        CGFloat y = cell.spotlightTrunkImage.frame.origin.y;
-////                        CGFloat width = cell.spotlightTrunkImage.frame.size.width;
-////                        cell.spotlightTrunkImage.frame = CGRectMake(x, y, width, 350);
-//                    }
-//                    
-//                }
-//            }
-//        }];
-//
-//    }
-    
+    //Load the current trunk details and display them in the cell, obviously
     Trip *trunk = self.sortedArray[indexPath.row];
     cell.trunkTitle.text = trunk.name;
     cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
     cell.trunkMemberInfo.text = @"Some info here";
     
-            PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-            [photoQuery whereKey:@"trip" equalTo:trunk];
-            [photoQuery whereKey:@"user" equalTo:self.user];
-            [photoQuery setLimit:4];
-            [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                if(!error){
-                    Photo *photo;
-                    if(objects.count>0){
-                        photo = objects[0];
-                        [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-    
-                        if(objects.count>3){
-                            photo = objects[1];
-                            [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-    
-                            photo = objects[2];
-                            [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-    
-    
-                            photo = objects[3];
-                            [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-                        }else{
-                            
-                            cell.lowerInfoConstraint.constant = 248;
-                            cell.spotlightImageHeightConstraint.constant = 350;
-                        }
-                        
-                    }
-                }
-            }];
+    //Load images from Array of image URLs
+    NSArray* photos = self.imageSet[indexPath.row];
+    NSString *photoUrl;
+    if(photos.count>0){
+        photoUrl = photos[0];
+        [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+        
+        //If there are 4 photos then load all of them into the cell, otherwise, only load 1 photo and enlarge the imageView
+        if(photos.count>3){
+            photoUrl = photos[1];
+            [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+            
+            photoUrl = photos[2];
+            [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+            
+            
+            photoUrl = photos[3];
+            [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+        }else{
+            //only 1 photo is being used so enlarge the imageView
+            cell.lowerInfoConstraint.constant = 248;
+            cell.spotlightImageHeightConstraint.constant = 350;
+        }
+        
+    }
     
     return cell;
 }
@@ -231,7 +244,6 @@
             Trip *trunk = self.sortedArray[indexPath.row];
             PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
             [self updateMap:geoPoint];
-            NSLog(@"Updating map!");
         }
     }
 }

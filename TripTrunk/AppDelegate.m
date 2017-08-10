@@ -94,7 +94,7 @@
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
 //REPAIR: This needs to be fixed for new design
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     
@@ -379,7 +379,7 @@
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
 //REPAIR: This needs to be fixed for new design
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
     UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
     [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
     

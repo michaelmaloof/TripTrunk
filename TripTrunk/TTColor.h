@@ -34,4 +34,5 @@
 + (UIColor *)tripTrunkBackgroundLightBlue;
 //+ (UIColor *)tripTrunkCoral;
 + (UIColor *)tripTrunkWhiteTransparent;
++ (UIColor *)tripTrunkBlueMapLine;
 @end

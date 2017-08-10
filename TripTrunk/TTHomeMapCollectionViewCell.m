@@ -17,6 +17,7 @@
 }
 
 -(void)prepareForReuse{
+    [super prepareForReuse];
     self.trunkTitle.text = @"";
     self.trunkDates.text = @"";
     self.trunkLocation.text = @"";
