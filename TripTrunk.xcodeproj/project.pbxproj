@@ -52,6 +52,7 @@
 		22CBFDDF1BE2D4BB00D38E8D /* EditCaptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBFDDE1BE2D4BB00D38E8D /* EditCaptionViewController.m */; };
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
+		2709AF271F72F7A600F83729 /* TTProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2709AF261F72F7A600F83729 /* TTProfileViewController.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
 		271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BB71D91A43D0054741F /* libAdIdAccess.a */; };
@@ -77,6 +78,7 @@
 		27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27444E681F0AE1270021DC7A /* ImageIO.framework */; };
 		2750D1EA1F2FE09100CBF4DE /* TTRoundedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2750D1E91F2FE09100CBF4DE /* TTRoundedView.m */; };
 		2750D1ED1F30FC3200CBF4DE /* TTRoundedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2750D1EC1F30FC3200CBF4DE /* TTRoundedImage.m */; };
+		2760696A1F3E39EE00C77A30 /* Excursion.m in Sources */ = {isa = PBXBuildFile; fileRef = 276069691F3E39EE00C77A30 /* Excursion.m */; };
 		2762BD811F2BD4C9003508EB /* TTTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2762BD801F2BD4C9003508EB /* TTTimelineViewController.m */; };
 		2762BD851F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2762BD841F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m */; };
 		2762BD8B1F2BDDBB003508EB /* TTTimelineCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2762BD8A1F2BDDBB003508EB /* TTTimelineCollectionView.m */; };
@@ -102,6 +104,9 @@
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */; };
 		27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */; };
+		27B69F0E1F5F243300905B51 /* TTTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */; };
+		27B69F101F5F247A00905B51 /* Trunk.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B69F0F1F5F247A00905B51 /* Trunk.storyboard */; };
+		27B69F1A1F5F305C00905B51 /* TTTrunkViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B69F191F5F305C00905B51 /* TTTrunkViewCell.m */; };
 		27BFA4931EBB8DA100A6CFB4 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27BFA4911EBB8DA100A6CFB4 /* Login.storyboard */; };
 		27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */; };
 		27BFA49A1EBBC79F00A6CFB4 /* TTBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BFA4991EBBC79F00A6CFB4 /* TTBaseLoginViewController.m */; };
@@ -288,6 +293,8 @@
 		22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTForgotPasswordViewController.m; sourceTree = "<group>"; };
 		22FEABC11CB159BD0001AE18 /* ReportedBug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportedBug.h; sourceTree = "<group>"; };
 		22FEABC21CB159BD0001AE18 /* ReportedBug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportedBug.m; sourceTree = "<group>"; };
+		2709AF251F72F7A600F83729 /* TTProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTProfileViewController.h; sourceTree = "<group>"; };
+		2709AF261F72F7A600F83729 /* TTProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTProfileViewController.m; sourceTree = "<group>"; };
 		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
@@ -338,6 +345,8 @@
 		2750D1E91F2FE09100CBF4DE /* TTRoundedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedView.m; sourceTree = "<group>"; };
 		2750D1EB1F30FC3200CBF4DE /* TTRoundedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTRoundedImage.h; sourceTree = "<group>"; };
 		2750D1EC1F30FC3200CBF4DE /* TTRoundedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedImage.m; sourceTree = "<group>"; };
+		276069681F3E39EE00C77A30 /* Excursion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Excursion.h; sourceTree = "<group>"; };
+		276069691F3E39EE00C77A30 /* Excursion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Excursion.m; sourceTree = "<group>"; };
 		2762BD7F1F2BD4C9003508EB /* TTTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimelineViewController.h; sourceTree = "<group>"; };
 		2762BD801F2BD4C9003508EB /* TTTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimelineViewController.m; sourceTree = "<group>"; };
 		2762BD831F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimelinePhotoCellCollectionViewCell.h; sourceTree = "<group>"; };
@@ -373,6 +382,11 @@
 		27AF315B1D2C0E8B00D93963 /* AWSMobileClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWSMobileClient.h; sourceTree = "<group>"; };
 		27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWSMobileClient.m; sourceTree = "<group>"; };
 		27AF315D1D2C0E8B00D93963 /* AWSMobileHubHelper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSMobileHubHelper.framework; path = TripTrunk/AmazonAws/AWSMobileHubHelper.framework; sourceTree = "<group>"; };
+		27B69F0C1F5F243000905B51 /* TTTrunkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrunkViewController.h; sourceTree = "<group>"; };
+		27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrunkViewController.m; sourceTree = "<group>"; };
+		27B69F0F1F5F247A00905B51 /* Trunk.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Trunk.storyboard; sourceTree = "<group>"; };
+		27B69F181F5F305C00905B51 /* TTTrunkViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrunkViewCell.h; sourceTree = "<group>"; };
+		27B69F191F5F305C00905B51 /* TTTrunkViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrunkViewCell.m; sourceTree = "<group>"; };
 		27BFA4921EBB8DA100A6CFB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Login.storyboard; sourceTree = "<group>"; };
 		27BFA4941EBBC06500A6CFB4 /* TTOnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingViewController.h; sourceTree = "<group>"; };
 		27BFA4951EBBC06500A6CFB4 /* TTOnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingViewController.m; sourceTree = "<group>"; };
@@ -622,6 +636,8 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				2709AF241F72F78200F83729 /* Profile */,
+				27B69F0B1F5F23C000905B51 /* Trunk */,
 				27444E4F1EDDECB70021DC7A /* GoolgeCitySearch */,
 				27BFA4971EBBC6DB00A6CFB4 /* Login */,
 				27444E521EF1D6500021DC7A /* Home */,
@@ -753,6 +769,8 @@
 		220408E11AED564A009DB060 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				276069681F3E39EE00C77A30 /* Excursion.h */,
+				276069691F3E39EE00C77A30 /* Excursion.m */,
 				22560FD11BFCE459005D81E2 /* PublicTripDetail.h */,
 				22560FD21BFCE459005D81E2 /* PublicTripDetail.m */,
 				22FEABC11CB159BD0001AE18 /* ReportedBug.h */,
@@ -895,6 +913,15 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		2709AF241F72F78200F83729 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2709AF251F72F7A600F83729 /* TTProfileViewController.h */,
+				2709AF261F72F7A600F83729 /* TTProfileViewController.m */,
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
 		271D8BAC1D91A43D0054741F /* GoogleAnalytics */ = {
 			isa = PBXGroup;
 			children = (
@@ -971,11 +998,11 @@
 		2762BB941F2BD36A003508EB /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
+				2762BD821F2BD9F9003508EB /* View Cells */,
 				2762BD7F1F2BD4C9003508EB /* TTTimelineViewController.h */,
 				2762BD801F2BD4C9003508EB /* TTTimelineViewController.m */,
 				2762BD891F2BDDBB003508EB /* TTTimelineCollectionView.h */,
 				2762BD8A1F2BDDBB003508EB /* TTTimelineCollectionView.m */,
-				2762BD821F2BD9F9003508EB /* View Cells */,
 				2750D1E81F2FE09100CBF4DE /* TTRoundedView.h */,
 				2750D1E91F2FE09100CBF4DE /* TTRoundedView.m */,
 				2750D1EB1F30FC3200CBF4DE /* TTRoundedImage.h */,
@@ -1002,6 +1029,25 @@
 			path = AmazonAws;
 			sourceTree = "<group>";
 		};
+		27B69F0B1F5F23C000905B51 /* Trunk */ = {
+			isa = PBXGroup;
+			children = (
+				27B69F111F5F2F7700905B51 /* View Cells */,
+				27B69F0C1F5F243000905B51 /* TTTrunkViewController.h */,
+				27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */,
+			);
+			name = Trunk;
+			sourceTree = "<group>";
+		};
+		27B69F111F5F2F7700905B51 /* View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				27B69F181F5F305C00905B51 /* TTTrunkViewCell.h */,
+				27B69F191F5F305C00905B51 /* TTTrunkViewCell.m */,
+			);
+			name = "View Cells";
+			sourceTree = "<group>";
+		};
 		27BFA4901EBB8D3A00A6CFB4 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -1011,6 +1057,7 @@
 				2772FCE11F266F5300A97B5D /* Activity.storyboard */,
 				2772FCE31F27C00700A97B5D /* Timeline.storyboard */,
 				2772FCE51F27DC9500A97B5D /* Profile.storyboard */,
+				27B69F0F1F5F247A00905B51 /* Trunk.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -1318,6 +1365,7 @@
 				27340DF11E3FBFED0070F051 /* mute.caf in Resources */,
 				276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */,
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
+				27B69F101F5F247A00905B51 /* Trunk.storyboard in Resources */,
 				271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */,
 				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 				276718CF1CF4D1030064F784 /* Montserrat-Bold.otf in Resources */,
@@ -1439,6 +1487,7 @@
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */,
+				27B69F1A1F5F305C00905B51 /* TTTrunkViewCell.m in Sources */,
 				2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */,
 				27444E551EF1E3B30021DC7A /* TTHomeMapViewController.m in Sources */,
 				223547F11AE320FF001FE916 /* AddTripViewController.m in Sources */,
@@ -1454,6 +1503,7 @@
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */,
 				2762BD8B1F2BDDBB003508EB /* TTTimelineCollectionView.m in Sources */,
+				2709AF271F72F7A600F83729 /* TTProfileViewController.m in Sources */,
 				27BFA4AA1EBBC7D000A6CFB4 /* TTNameViewController.m in Sources */,
 				27BFA4B21EC3BAE400A6CFB4 /* TTOnboardingTextField.m in Sources */,
 				27BFA4961EBBC06500A6CFB4 /* TTOnboardingViewController.m in Sources */,
@@ -1476,6 +1526,7 @@
 				C9EC0F621B2A68F8004FFDC3 /* MSTextField.m in Sources */,
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
+				2760696A1F3E39EE00C77A30 /* Excursion.m in Sources */,
 				27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */,
 				27F3E3831D3D778600634B75 /* DLFMasterViewController.m in Sources */,
 				27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */,
@@ -1505,6 +1556,7 @@
 				C9D893391BB596FB00259AB4 /* NSObject+Properties.m in Sources */,
 				224F3F951AE1D35E003A1DEB /* AppDelegate.m in Sources */,
 				C9FC5A221BC49CE200EB5158 /* EULAViewController.m in Sources */,
+				27B69F0E1F5F243300905B51 /* TTTrunkViewController.m in Sources */,
 				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				C90C3D0F1B04FC2200CABBC9 /* AFHTTPRequestOperation.m in Sources */,
 				27444E5A1EF325980021DC7A /* TTHomeMapCollectionViewCell.m in Sources */,

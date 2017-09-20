@@ -70,4 +70,8 @@
     return [UIFont fontWithName:@"Montserrat-Light" size:12];
 }
 
++ (UIFont *)tripTrunkFont56 {
+    return [UIFont fontWithName:@"Montserrat-Light" size:56];
+}
+
 @end
