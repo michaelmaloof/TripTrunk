@@ -53,6 +53,7 @@
 		22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DDB3501BD5E21D00FBEAAC /* TTForgotPasswordViewController.m */; };
 		22FEABC31CB159BD0001AE18 /* ReportedBug.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEABC21CB159BD0001AE18 /* ReportedBug.m */; };
 		2709AF271F72F7A600F83729 /* TTProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2709AF261F72F7A600F83729 /* TTProfileViewController.m */; };
+		2709AF2A1F74423E00F83729 /* TTPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2709AF291F74423E00F83729 /* TTPhotoViewController.m */; };
 		2715140D1C99D8AF0054E43F /* TTColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140C1C99D8AF0054E43F /* TTColor.m */; };
 		271514101C99E0F80054E43F /* TTFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 2715140F1C99E0F80054E43F /* TTFont.m */; };
 		271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BB71D91A43D0054741F /* libAdIdAccess.a */; };
@@ -295,6 +296,8 @@
 		22FEABC21CB159BD0001AE18 /* ReportedBug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportedBug.m; sourceTree = "<group>"; };
 		2709AF251F72F7A600F83729 /* TTProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTProfileViewController.h; sourceTree = "<group>"; };
 		2709AF261F72F7A600F83729 /* TTProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTProfileViewController.m; sourceTree = "<group>"; };
+		2709AF281F74423E00F83729 /* TTPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPhotoViewController.h; sourceTree = "<group>"; };
+		2709AF291F74423E00F83729 /* TTPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPhotoViewController.m; sourceTree = "<group>"; };
 		2715140B1C99D8AF0054E43F /* TTColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTColor.h; sourceTree = "<group>"; };
 		2715140C1C99D8AF0054E43F /* TTColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTColor.m; sourceTree = "<group>"; };
 		2715140E1C99E0F80054E43F /* TTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFont.h; sourceTree = "<group>"; };
@@ -1035,6 +1038,8 @@
 				27B69F111F5F2F7700905B51 /* View Cells */,
 				27B69F0C1F5F243000905B51 /* TTTrunkViewController.h */,
 				27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */,
+				2709AF281F74423E00F83729 /* TTPhotoViewController.h */,
+				2709AF291F74423E00F83729 /* TTPhotoViewController.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1542,6 +1547,7 @@
 				27444E651EF9CEB10021DC7A /* TTRoundedButton.m in Sources */,
 				C90C3CFA1B04F9C400CABBC9 /* UIImageView+AFNetworking.m in Sources */,
 				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
+				2709AF2A1F74423E00F83729 /* TTPhotoViewController.m in Sources */,
 				27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */,
 				C90C3D131B04FC2200CABBC9 /* AFSecurityPolicy.m in Sources */,
 				C95702731D942496009DE079 /* Activity.m in Sources */,

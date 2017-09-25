@@ -13,8 +13,9 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import "TTFont.h"
 #import "TTColor.h"
+#import "TTPhotoViewController.h"
 
-@interface TTProfileViewController ()
+@interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource>
 @property (strong, nonatomic) IBOutlet UIImageView *userProfilePictureSmall;
 @property (strong, nonatomic) IBOutlet UILabel *userFirstLastNameSmall;
 @property (strong, nonatomic) IBOutlet UILabel *usernameSmall;
@@ -27,6 +28,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *followingCount;
 @property (strong, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
+@property (strong, nonatomic) IBOutlet UIView *miniUserDetails;
+@property (strong, nonatomic) IBOutlet UIView *userDetails;
 
 
 @end
@@ -35,9 +38,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.userProfilePictureSmall.hidden = YES;
-    self.userFirstLastNameSmall.hidden = YES;
-    self.usernameSmall.hidden = YES;
+//    self.userProfilePictureSmall.hidden = YES;
+//    self.userFirstLastNameSmall.hidden = YES;
+//    self.usernameSmall.hidden = YES;
     
     [self.userProfilePictureSmall setImageWithURL:[NSURL URLWithString:self.user[@"profilePicUrl"]]];
     self.userFirstLastNameSmall.text = self.user[@"name"];
@@ -55,6 +58,7 @@
     [self initMap];
     if(!self.user[@"profilePicUrl"])
         [self handleMissingProfilePicture];
+    
 }
 
 -(void)handleMissingProfilePicture{
@@ -66,7 +70,7 @@
     initialsLabel.numberOfLines = 1;
     initialsLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
     initialsLabel.adjustsFontSizeToFitWidth = YES;
-    initialsLabel.adjustsLetterSpacingToFitWidth = YES;
+//    initialsLabel.adjustsLetterSpacingToFitWidth = YES;
     initialsLabel.minimumScaleFactor = 10.0f/12.0f;
     initialsLabel.clipsToBounds = YES;
     initialsLabel.backgroundColor = [UIColor clearColor];
@@ -82,13 +86,17 @@
 
 
 #pragma mark - UICollectionViewDelegate
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 0;
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(0, 0);
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 1;
 }
+
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    return CGSizeMake(0, 0);
+//}
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
@@ -97,10 +105,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
 }
 
 //- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
@@ -215,6 +219,13 @@
 
 - (IBAction)followButtonAction:(TTOnboardingButton *)sender {
     NSLog(@"button 2 pressed");
+}
+
+- (IBAction)profileImageTapAction:(UITapGestureRecognizer*)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
+    TTPhotoViewController *photoViewController = (TTPhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTPhotoViewController"];
+    photoViewController.photo = self.userProfilePictureMain.image;
+    [self.navigationController pushViewController:photoViewController animated:YES];
 }
 
 @end

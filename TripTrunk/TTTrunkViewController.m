@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "TTProfileViewController.h"
 #import "TTRoundedImage.h"
+#import "TTPhotoViewController.h"
 
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) GMSMapView *googleMapView;
 @property (strong, nonatomic) NSMutableArray *imageSet;
 @property (strong, nonatomic) NSArray *trunkMembers;
+@property (strong, nonatomic) UIImage *photo;
 @end
 
 @implementation TTTrunkViewController
@@ -200,7 +202,7 @@
             initialsLabel.numberOfLines = 1;
             initialsLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
             initialsLabel.adjustsFontSizeToFitWidth = YES;
-            initialsLabel.adjustsLetterSpacingToFitWidth = YES;
+//            initialsLabel.adjustsLetterSpacingToFitWidth = YES;
             initialsLabel.minimumScaleFactor = 10.0f/12.0f;
             initialsLabel.clipsToBounds = YES;
             initialsLabel.backgroundColor = [UIColor clearColor];
@@ -220,11 +222,16 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if(collectionView == self.mainCollectionView){
-        NSLog(@"Main cell selected: %ld",(long)indexPath.row);
+    if(collectionView == self.mainCollectionView && indexPath.section == 1){
+        TTTrunkViewCell *cell = (TTTrunkViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
+        for (UIImageView *subview in cell.subviews){
+            if([subview isKindOfClass:[UIImageView class]]){
+                self.photo = subview.image;
+                break;
+            }
+        }
+        [self performSegueWithIdentifier:@"pushToPhoto" sender:self];
     }else{
-        NSLog(@"Member cell selected: %ld",(long)indexPath.row);
-        NSLog(@"Member: %@",self.trunkMembers[indexPath.row]);
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
         TTProfileViewController *profileViewController = (TTProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTProfileViewController"];
         profileViewController.user = self.trunkMembers[indexPath.row];
@@ -340,6 +347,11 @@
 }
 
 - (IBAction)addToTrunkButtonAction:(id)sender {
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    TTPhotoViewController *photoViewController = segue.destinationViewController;
+    photoViewController.photo = self.photo;
 }
 
 @end

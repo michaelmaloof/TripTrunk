@@ -165,14 +165,109 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="mainCollectionView" destination="Mx5-aZ-uNg" id="pqX-14-q8O"/>
+                        <segue destination="Zxw-qr-NhS" kind="show" identifier="pushToPhoto" id="sro-kB-keX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ZI-9y-AqT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="703.20000000000005" y="149.77511244377811"/>
         </scene>
+        <!--Photo View Controller-->
+        <scene sceneID="o0x-Dn-wmJ">
+            <objects>
+                <viewController storyboardIdentifier="TTPhotoViewController" id="Zxw-qr-NhS" customClass="TTPhotoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fla-F5-Bzr"/>
+                        <viewControllerLayoutGuide type="bottom" id="2pt-0r-diH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tus-5y-BRu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.45000000000000001" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cyb-zs-Jqw" userLabel="Background Image View">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWu-yB-O8i">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rLK-T7-TAN" userLabel="Foreground Image View">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <gestureRecognizers/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="centerY" secondItem="BWu-yB-O8i" secondAttribute="centerY" id="5bD-EC-JBp"/>
+                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="centerX" secondItem="BWu-yB-O8i" secondAttribute="centerX" id="FIR-zX-dGv"/>
+                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="top" secondItem="BWu-yB-O8i" secondAttribute="top" id="JYO-Aj-dhw"/>
+                                    <constraint firstAttribute="trailing" secondItem="rLK-T7-TAN" secondAttribute="trailing" id="oP3-jt-Slz"/>
+                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="leading" secondItem="BWu-yB-O8i" secondAttribute="leading" id="sv4-Hd-RfX"/>
+                                    <constraint firstAttribute="bottom" secondItem="rLK-T7-TAN" secondAttribute="bottom" id="zag-5x-RfZ"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="Zxw-qr-NhS" id="0fR-Xm-nkG"/>
+                                </connections>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTu-3B-mm5" customClass="TTOnboardingButton">
+                                <rect key="frame" x="34" y="591" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Ufa-bF-sFZ"/>
+                                    <constraint firstAttribute="width" constant="50" id="xag-J5-nia"/>
+                                </constraints>
+                                <state key="normal" image="tt_Blue_Back_Arrow"/>
+                                <connections>
+                                    <action selector="backActionButton:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="Vbc-4C-fMJ"/>
+                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="fFw-KC-OAo"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gnA-0o-EiH" customClass="TTOnboardingButton">
+                                <rect key="frame" x="291" y="591" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="dp6-q3-ANW"/>
+                                    <constraint firstAttribute="width" constant="50" id="uCB-y3-FFk"/>
+                                </constraints>
+                                <state key="normal" image="tt_heart_unliked"/>
+                                <connections>
+                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="ghX-xN-3mp"/>
+                                    <action selector="heartActionButton:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="K8S-JT-g7Y"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="VTu-3B-mm5" secondAttribute="bottom" constant="26" id="0df-sl-oT1"/>
+                            <constraint firstAttribute="topMargin" secondItem="Cyb-zs-Jqw" secondAttribute="top" id="1dC-sS-i2e"/>
+                            <constraint firstAttribute="trailing" secondItem="Cyb-zs-Jqw" secondAttribute="trailing" id="46g-Ay-HdX"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="gnA-0o-EiH" secondAttribute="bottom" constant="26" id="4tb-x6-NEd"/>
+                            <constraint firstAttribute="trailing" secondItem="gnA-0o-EiH" secondAttribute="trailing" constant="34" id="8Nu-iw-3Hz"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Cyb-zs-Jqw" secondAttribute="bottom" id="A20-ps-K7b"/>
+                            <constraint firstAttribute="trailing" secondItem="BWu-yB-O8i" secondAttribute="trailing" id="F8f-X1-ONH"/>
+                            <constraint firstItem="BWu-yB-O8i" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" id="PZX-6g-xEY"/>
+                            <constraint firstItem="VTu-3B-mm5" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="34" id="SRM-M5-Rio"/>
+                            <constraint firstItem="Cyb-zs-Jqw" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" id="X44-NQ-32h"/>
+                            <constraint firstItem="Cyb-zs-Jqw" firstAttribute="width" secondItem="BWu-yB-O8i" secondAttribute="width" id="j5q-bP-0gr"/>
+                            <constraint firstAttribute="topMargin" secondItem="BWu-yB-O8i" secondAttribute="top" id="qqR-gu-efj"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="BWu-yB-O8i" secondAttribute="bottom" id="tV6-3H-wBM"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="backgroundView" destination="Cyb-zs-Jqw" id="jPe-eb-n6Q"/>
+                        <outlet property="foregroundView" destination="rLK-T7-TAN" id="3uW-Wx-cZO"/>
+                        <outlet property="heartButton" destination="gnA-0o-EiH" id="fgS-32-u0Z"/>
+                        <outlet property="scrollView" destination="BWu-yB-O8i" id="AwP-YQ-mtr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LH4-gX-Zhk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1492" y="149.77511244377811"/>
+        </scene>
     </scenes>
     <resources>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
+        <image name="tt_heart_unliked" width="30" height="28"/>
     </resources>
 </document>
