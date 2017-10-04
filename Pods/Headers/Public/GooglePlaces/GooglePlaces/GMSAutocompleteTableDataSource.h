@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSAutocompleteTableDataSource.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSAutocompleteTableDataSource.h

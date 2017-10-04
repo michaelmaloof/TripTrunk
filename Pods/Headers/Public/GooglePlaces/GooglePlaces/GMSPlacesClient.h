@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSPlacesClient.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSPlacesClient.h

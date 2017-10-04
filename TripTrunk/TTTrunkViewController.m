@@ -17,14 +17,15 @@
 #import "TTRoundedImage.h"
 #import "TTPhotoViewController.h"
 
+
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
-//@property (strong, nonatomic) UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
 @property (strong, nonatomic) NSMutableArray *imageSet;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) UIImage *photo;
+
 @end
 
 @implementation TTTrunkViewController
@@ -32,6 +33,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    Trip *trunk;
+    PFUser *creator;
+    if(self.excursion){
+        trunk = self.excursion.trunk;
+        creator = self.excursion.creator;
+    }else{
+        trunk = self.trip;
+        creator = self.trip.creator;
+    }
 
     [self.mainCollectionView registerClass:[TTTrunkViewCell class] forCellWithReuseIdentifier:@"cell"];
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -46,8 +57,8 @@
     self.imageSet = [[NSMutableArray alloc] init];
     
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-    [photoQuery whereKey:@"trip" equalTo:self.excursion.trunk];
-    [photoQuery whereKey:@"user" equalTo:self.excursion.creator];
+    [photoQuery whereKey:@"trip" equalTo:trunk];
+    [photoQuery whereKey:@"user" equalTo:creator];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(!error){
             //Loop though retrieved objects and extract photo's URL
@@ -58,14 +69,12 @@
         }else{
             //There's an error. Handle this and add the Google tracking
             NSLog(@"error getting image");
-            NSLog(@"%@",self.excursion);
-            NSLog(@"%@",self.excursion.trunk);
         }
     }];
     
 
     self.trunkMembers = [[NSArray alloc] init];
-    [SocialUtility trunkMembers:self.excursion.trunk block:^(NSArray *users, NSError *error) {
+    [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
         self.trunkMembers = users;
         [self.membersCollectionView reloadData];
     }];
@@ -100,10 +109,13 @@
     
     if(collectionView == self.mainCollectionView){
         if(indexPath.section == 0)
-            size = CGSizeMake(375, 200);
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.width, 200);
         
-        if(indexPath.section == 1)
-            size = CGSizeMake(124, 124);
+        if(indexPath.section == 1){
+            if(indexPath.row == 0)
+                size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
+            else size = CGSizeMake(([UIScreen mainScreen].bounds.size.width/3)-1, ([UIScreen mainScreen].bounds.size.width/3)-1);
+        }
     }
     
     if(collectionView == self.membersCollectionView){
@@ -123,7 +135,7 @@
             double mapOffset = .4; //<------determine if the map should offset because a point is below the photos
             
             //Map View of trunk location
-            self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, 375, 200)];
+            self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200)];
             PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:self.excursion.trunk.lat longitude:self.excursion.trunk.longitude];
             GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude+mapOffset
                                                                     longitude:geoPoint.longitude
@@ -150,7 +162,7 @@
             
             //Members Collection View
             UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
-            CGRect frame = CGRectMake(0, 28, 375, 60);
+            CGRect frame = CGRectMake(0, 28, [UIScreen mainScreen].bounds.size.width, 60);
             layout.minimumInteritemSpacing = 3;
             layout.minimumLineSpacing = 3;
             layout.itemSize = CGSizeMake(60, 60);
@@ -170,21 +182,24 @@
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             [button addTarget:self action:@selector(viewTrunkMembers) forControlEvents:UIControlEventTouchUpInside];
             [button setImage:[UIImage imageNamed:@"tt_members_button"] forState:UIControlStateNormal];
-            button.frame = CGRectMake(315, 35, 45, 45); //<--- Determine placement depending on number of members
+            button.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-60, 35, 45, 45); //<--- Determine placement depending on number of members
             button.clipsToBounds = YES;
             button.layer.masksToBounds = YES;
             button.layer.cornerRadius = 5;
             button.imageView.contentMode = UIViewContentModeScaleAspectFill;
             [collectionView addSubview:button];
         }else{
-            
-            CGRect frame = CGRectMake(0, 0, 124, 124);
+            CGRect frame;
+            if(indexPath.row == 0)
+               frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
+            else frame = CGRectMake(0, 0, ([UIScreen mainScreen].bounds.size.width/3)-1, ([UIScreen mainScreen].bounds.size.width/3)-1);
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
             [imageView setImageWithURL:[NSURL URLWithString:self.imageSet[indexPath.row]]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.clipsToBounds = YES;
+            imageView.tag = indexPath.row;
             [cell addSubview:imageView];
-            cell.videoIcon.hidden = YES;
+            cell.videoIcon.hidden = YES; //<--this needs to be determined
         }
         
     }else if(collectionView == self.membersCollectionView){
@@ -214,10 +229,6 @@
         imageView.clipsToBounds = YES;
         [cell addSubview:imageView];
     }
-    
-    
-    
-    
     return cell;
 }
 
@@ -225,7 +236,7 @@
     if(collectionView == self.mainCollectionView && indexPath.section == 1){
         TTTrunkViewCell *cell = (TTTrunkViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
         for (UIImageView *subview in cell.subviews){
-            if([subview isKindOfClass:[UIImageView class]]){
+            if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
                 self.photo = subview.image;
                 break;
             }
@@ -240,17 +251,14 @@
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    
     if(collectionView == self.mainCollectionView)
         return 2;
     
     return 1;
-    
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-
     UICollectionReusableView *theView;
         if(collectionView == self.mainCollectionView){
         
@@ -262,8 +270,6 @@
     }
     
     return theView;
-
-
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{

@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSPlaceLikelihood.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSPlaceLikelihood.h

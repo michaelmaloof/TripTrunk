@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSAddressComponent.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSAddressComponent.h

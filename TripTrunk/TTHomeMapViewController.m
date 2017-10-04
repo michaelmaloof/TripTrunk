@@ -121,6 +121,7 @@
     
     //Loop though the array and get each trunks 4 newest photo URLs
     for(Trip *trunk in self.sortedArray){
+        //FIXME: This needs to move to Utility <------------------------------------
         PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
         [photoQuery whereKey:@"trip" equalTo:trunk];
         [photoQuery whereKey:@"user" equalTo:self.user];

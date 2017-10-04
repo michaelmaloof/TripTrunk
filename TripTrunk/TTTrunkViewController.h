@@ -8,7 +8,9 @@
 
 #import "TTBaseViewController.h"
 #import "Excursion.h"
+#import "Trip.h"
 
 @interface TTTrunkViewController : TTBaseViewController
 @property(strong, nonatomic) Excursion *excursion;
+@property(strong, nonatomic) Trip *trip;
 @end

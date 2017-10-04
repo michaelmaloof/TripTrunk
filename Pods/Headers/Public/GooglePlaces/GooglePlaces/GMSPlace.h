@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSPlace.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSPlace.h

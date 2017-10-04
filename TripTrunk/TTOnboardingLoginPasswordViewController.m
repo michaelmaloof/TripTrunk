@@ -71,7 +71,7 @@
             [alert show];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self dismissViewControllerAnimated:YES completion:nil];
+                [self dismissViewControllerAnimated:YES completion:nil]; //FIXME: This doesn't work on ios11
             });
         }
         

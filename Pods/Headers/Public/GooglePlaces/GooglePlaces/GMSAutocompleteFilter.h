@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSAutocompleteFilter.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSAutocompleteFilter.h

@@ -1,1 +1,1 @@
-../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Headers/GMSAutocompleteFetcher.h
+../../../../GooglePlaces/Frameworks/GooglePlaces.framework/Headers/GMSAutocompleteFetcher.h
