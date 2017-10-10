@@ -79,6 +79,8 @@
                 env = NO;
             [TTAnalytics initAnalyticsOnStart:env];
     }
+    
+    NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
 
     return YES;
 }

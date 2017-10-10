@@ -26,18 +26,18 @@
 #import "TTAnalytics.h"
 #import "SharkfoodMuteSwitchDetector.h"
 
-@interface TTNewsFeedViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate>
+@interface TTNewsFeedViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, PhotoDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property NSMutableArray *following;
+@property (strong, nonatomic) NSMutableArray *following;
 @property TTTTimeIntervalFormatter *timeFormatter;
-@property NSMutableArray *objid;
+@property (strong, nonatomic) NSMutableArray *objid;
 @property BOOL isLoading;
-@property NSMutableArray *mainPhotos;
-@property NSMutableDictionary *subPhotos;
-@property NSMutableArray *userTrips;
+//@property (strong, nonatomic) NSMutableArray *mainPhotos;
+@property (strong, nonatomic) NSMutableDictionary *subPhotos;
+@property (strong, nonatomic) NSMutableArray *userTrips;
 @property BOOL reachedBottom;
 @property (strong, nonatomic) NSMutableArray *trips;
-@property NSMutableArray *photoUsers;
+@property (strong, nonatomic) NSMutableArray *photoUsers;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) SharkfoodMuteSwitchDetector* detector;
 @property BOOL phoneMuted; ///<--Maloof would be so proud
@@ -105,12 +105,30 @@
     [self setTitleImage];
     [self createLeftButtons];
     self.trips = [[NSMutableArray alloc] init];
-    self.mainPhotos = [[NSMutableArray alloc] init];
+    if(self.mainPhotos == nil)
+        self.mainPhotos = [[NSMutableArray alloc] init];
     self.subPhotos = [[NSMutableDictionary alloc] init];
     self.photoUsers = [[NSMutableArray alloc] init];
     self.userTrips = [[NSMutableArray alloc] init];
     self.objid = [[NSMutableArray alloc] init];
     
+    
+//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+//        if (!error)
+//        {
+//            self.following = [[NSMutableArray alloc]init];
+//            for (PFUser *user in users)
+//            {
+//                [self.following addObject:user];
+//            }
+//        }
+//        if(self.mainPhotos == nil || self.mainPhotos.count == 0)
+//            [self loadNewsFeed:NO refresh:nil];
+//    }];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:YES];
     
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error)
@@ -121,12 +139,9 @@
                 [self.following addObject:user];
             }
         }
-        [self loadNewsFeed:NO refresh:nil];
+        if(self.mainPhotos == nil || self.mainPhotos.count == 0)
+            [self loadNewsFeed:NO refresh:nil];
     }];
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:YES];
     
     self.videoId = @"";
     
@@ -149,11 +164,12 @@
 
 -(void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    [self performSelector:@selector(checkWhichVideoToEnable:) withObject:nil afterDelay:2.0];
+    if(self.mainPhotos.count > 0)
+        [self performSelector:@selector(checkWhichVideoToEnable:) withObject:nil afterDelay:2.0];
 }
 
 -(void)loadNewsFeed:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
-    
+    NSLog(@"LOADING");
     self.videoId = @"";
     
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
@@ -437,6 +453,7 @@
         photoViewController.arrayInt = [[sender valueForKey:@"subPhotoIndex"] intValue];
         photoViewController.fromTimeline = YES;
         photoViewController.photos = [self returnPhotosForView:mainPhoto];
+        photoViewController.delegate = self;
         [self.navigationController showViewController:photoViewController sender:self];
     }else{
         Trip *trip = mainPhoto.trip;
@@ -481,6 +498,8 @@
     photoViewController.arrayInt = 0;
      photoViewController.fromTimeline = YES;
     photoViewController.trip = mainPhoto.trip;
+    photoViewController.mainPhotos = self.mainPhotos;
+    photoViewController.delegate = self;
     [self.navigationController showViewController:photoViewController sender:self];
 }
 
@@ -515,6 +534,10 @@
 -(TTTimeLineCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     __weak TTTimeLineCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"NewsFeedCell" forIndexPath:indexPath];
+    
+    if(!self.mainPhotos.count)
+        return cell;
+
     [cell.username.titleLabel setText:nil];
     [cell.tripName.titleLabel setText:nil];
     [cell.location.titleLabel setText:nil];
@@ -748,6 +771,10 @@
     return CGSizeMake(self.view.frame.size.width, 406.5);
 }
 
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+
+}
+
 
 #pragma mark - UIScrollViewDelegate
 -(void)scrollViewDidScroll:(UIScrollView *)sender{
@@ -785,33 +812,34 @@
 -(void)checkWhichVideoToEnable:(BOOL)reset{
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
-    
-    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
-        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
-        int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
-        int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
-        amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
-        
-        TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
-        Photo *photo = self.mainPhotos[indexPath.row];
-        if(photo.video){
-            if(amountVisible>screenHeight/2.1){
-                if(![self.videoId isEqualToString:photo.objectId]){
-                    if(videoCell.avPlayer != self.currentVideo){
-                        [self incrementViewInDictionaryForVideo:photo.objectId];
-                        self.currentVideo = videoCell.avPlayer;
-                    
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [videoCell.avPlayer play];
-                            //videoCell.newsfeedPhoto.hidden = YES;
-                            NSLog(@"Now playing video (check): %@",photo.objectId);
-                        });
-                        self.videoId = photo.objectId;
+    if(self.mainPhotos.count > 0){
+        for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+            NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+            CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
+            int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
+            int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
+            amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
+            
+            TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+            Photo *photo = self.mainPhotos[indexPath.row];
+            if(photo.video){
+                if(amountVisible>screenHeight/2.1){
+                    if(![self.videoId isEqualToString:photo.objectId]){
+                        if(videoCell.avPlayer != self.currentVideo){
+                            [self incrementViewInDictionaryForVideo:photo.objectId];
+                            self.currentVideo = videoCell.avPlayer;
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [videoCell.avPlayer play];
+                                //videoCell.newsfeedPhoto.hidden = YES;
+                                NSLog(@"Now playing video (check): %@",photo.objectId);
+                            });
+                            self.videoId = photo.objectId;
+                        }
                     }
+                }else{
+                    [videoCell.avPlayer pause];
                 }
-            }else{
-                [videoCell.avPlayer pause];
             }
         }
     }
@@ -822,24 +850,26 @@
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
     
-    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
-        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
-        int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
-        int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
-        amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
-        
-        Photo *photo = self.mainPhotos[indexPath.row];
-        TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
+    if(self.mainPhotos.count > 0){
+        for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+            NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+            CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
+            int topBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
+            int amountVisible = convertedPoint.y + cell.frame.size.height - topBarHeight < cell.frame.size.height ? convertedPoint.y + cell.frame.size.height - topBarHeight : cell.frame.size.height;
+            amountVisible = screenHeight-convertedPoint.y < amountVisible ? screenHeight-convertedPoint.y : amountVisible;
+            
+            Photo *photo = self.mainPhotos[indexPath.row];
+            TTTimeLineCollectionViewCell *videoCell = (TTTimeLineCollectionViewCell*)cell;
 
-        if(amountVisible>screenHeight/2.1){
-            self.viewCount++;
-            photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
-            [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
-            //[videoCell.avPlayer play];
-            [self incrementViewInDictionaryForVideo:photo.objectId];
-            videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
-            NSLog(@"Now playing video (loop): %@",photo.objectId);
+            if(amountVisible>screenHeight/2.1){
+                self.viewCount++;
+                photo.viewCount=[NSNumber numberWithInt:[photo.viewCount intValue]+1];
+                [videoCell.avPlayer.currentItem seekToTime:kCMTimeZero];
+                //[videoCell.avPlayer play];
+                [self incrementViewInDictionaryForVideo:photo.objectId];
+                videoCell.viewCountLabel.text = [NSString stringWithFormat:@"%@",photo.viewCount];
+                NSLog(@"Now playing video (loop): %@",photo.objectId);
+            }
         }
     }
 }
@@ -935,6 +965,11 @@
     }
     
     [self.viewsDictionary removeAllObjects];
+}
+
+#pragma mark - PhotoDelegate
+-(void)dissmissWasTapped:(NSArray *)mainPhotos{
+    self.mainPhotos = [NSMutableArray arrayWithArray:mainPhotos];
 }
 
 

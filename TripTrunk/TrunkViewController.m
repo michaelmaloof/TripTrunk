@@ -30,6 +30,8 @@
 
 @interface TrunkViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UICollectionViewDelegateFlowLayout, MemberListDelegate, UITextViewDelegate, PhotoDelegate,UIActionSheetDelegate>
 
+#define IS_IOS11orHIGHER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0)
+
 /**
  *  Array holding Photo objects for the photos in this trunk
  */
@@ -58,6 +60,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIButton *addPhotoButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewMargain;
 @end
 
 @implementation TrunkViewController
@@ -160,6 +163,10 @@
             }
         }
     }
+    
+    //check for IOS11 and fix spacing
+    if (IS_IOS11orHIGHER)
+        self.scrollViewMargain.constant = 0;
     
     //The following code refactors the 3 loops above into 1 loop.
     //Will have to be fully tested.
