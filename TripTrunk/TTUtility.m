@@ -255,7 +255,7 @@ CLCloudinary *cloudinary;
                         }
                         else {
                             // Error uploading photo
-                            NSLog(@"Error uploading photo...");
+                            NSLog(@"Error uploading photo (upload photo)...");
                             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
                             completionBlock(nil);
                         }
@@ -754,8 +754,8 @@ CLCloudinary *cloudinary;
                     }
                     else {
                         // Error uploading photo
-                        NSLog(@"Error uploading video...");
-                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideo:"];
+                        NSLog(@"Error uploading video (upload video)...");
+//                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideo:"];
                         completionBlock(nil);
                     }
                 }];
@@ -826,8 +826,20 @@ CLCloudinary *cloudinary;
               [videoObject saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
                   
                   if (error) {
-                      NSLog(@"Error saving video: %@", error);
+                      NSLog(@"Error saving video (uploadVideoToCloudinary): %@", error);
+                      NSLog(@"Block upload error (uploadVideoToCloudinary): %@, %li", errorResult, (long)code);
+                      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                      bgTask = UIBackgroundTaskInvalid;
+                      completionBlock(nil, [NSError new], video); // TODO: Add a descriptive error
                       [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadVideoToCloudinary:"];
+                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                      message:NSLocalizedString(@"Error uploading photo/video. Please try again.",@"Error uploading photo/video. Please try again.")
+                                                                     delegate:self
+                                                            cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                            otherButtonTitles:nil, nil];
+                      
+                      //Show alert view
+                      [alert show];
                   }
                   
                   if (completionBlock) {
@@ -838,9 +850,17 @@ CLCloudinary *cloudinary;
           else {
               // Error Uploading Video
               [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",errorResult] method:@"uploadVideoToCloudinary:"];
-              NSLog(@"Block upload error: %@, %li", errorResult, (long)code);
+              NSLog(@"Block upload error (uploadVideoToCloudinary): %@, %li", errorResult, (long)code);
               [[UIApplication sharedApplication] endBackgroundTask:bgTask];
               bgTask = UIBackgroundTaskInvalid;
+              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                              message:NSLocalizedString(@"Error uploading video. Please try again.",@"Error uploading video. Please try again.")
+                                                             delegate:self
+                                                    cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                    otherButtonTitles:nil, nil];
+              
+              //Show alert view
+              [alert show];
               completionBlock(nil, [NSError new], video); // TODO: Add a descriptive error
           }
       } andProgress:nil];
