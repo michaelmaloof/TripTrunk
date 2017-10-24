@@ -17,6 +17,7 @@
 #import "TTUsernameSort.h"
 
 #define USER_CELL @"user_table_view_cell"
+#define IS_IOS11orHIGHER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0)
 
 @interface TTEditTripFriendsViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -38,6 +39,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *searchBarHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *viewHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewMargainHeight;
 
 
 @end
@@ -100,6 +102,10 @@
     
     if(self.existingMembers.count < 5)
         self.membersCollectionView.scrollEnabled = NO;
+    
+    //check for IOS11 and fix spacing
+    if (IS_IOS11orHIGHER)
+        self.scrollViewMargainHeight.constant = 0;
 }
 
 - (void)didReceiveMemoryWarning {

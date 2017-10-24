@@ -79,6 +79,8 @@
 		27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27444E681F0AE1270021DC7A /* ImageIO.framework */; };
 		2750D1EA1F2FE09100CBF4DE /* TTRoundedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2750D1E91F2FE09100CBF4DE /* TTRoundedView.m */; };
 		2750D1ED1F30FC3200CBF4DE /* TTRoundedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2750D1EC1F30FC3200CBF4DE /* TTRoundedImage.m */; };
+		276029121F915BDC007627ED /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276029111F915B6A007627ED /* Bolts.framework */; };
+		276029131F915BDC007627ED /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276029101F915B6A007627ED /* Parse.framework */; };
 		2760696A1F3E39EE00C77A30 /* Excursion.m in Sources */ = {isa = PBXBuildFile; fileRef = 276069691F3E39EE00C77A30 /* Excursion.m */; };
 		2762BD811F2BD4C9003508EB /* TTTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2762BD801F2BD4C9003508EB /* TTTimelineViewController.m */; };
 		2762BD851F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2762BD841F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m */; };
@@ -91,8 +93,6 @@
 		276718D01CF4D1030064F784 /* Montserrat-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */; };
 		276718D11CF4D1030064F784 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718C91CF4D1030064F784 /* Montserrat-Light.otf */; };
 		276718D21CF4D1030064F784 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */; };
-		27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F421DECEF9A009F3648 /* Bolts.framework */; };
-		27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27677F431DECEF9A009F3648 /* Parse.framework */; };
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
 		2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */; };
@@ -348,6 +348,8 @@
 		2750D1E91F2FE09100CBF4DE /* TTRoundedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedView.m; sourceTree = "<group>"; };
 		2750D1EB1F30FC3200CBF4DE /* TTRoundedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTRoundedImage.h; sourceTree = "<group>"; };
 		2750D1EC1F30FC3200CBF4DE /* TTRoundedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRoundedImage.m; sourceTree = "<group>"; };
+		276029101F915B6A007627ED /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		276029111F915B6A007627ED /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		276069681F3E39EE00C77A30 /* Excursion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Excursion.h; sourceTree = "<group>"; };
 		276069691F3E39EE00C77A30 /* Excursion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Excursion.m; sourceTree = "<group>"; };
 		2762BD7F1F2BD4C9003508EB /* TTTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimelineViewController.h; sourceTree = "<group>"; };
@@ -364,8 +366,6 @@
 		276718C81CF4D1030064F784 /* Montserrat-Hairline.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Hairline.otf"; sourceTree = "<group>"; };
 		276718C91CF4D1030064F784 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.otf"; sourceTree = "<group>"; };
 		276718CA1CF4D1030064F784 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
-		27677F421DECEF9A009F3648 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		27677F431DECEF9A009F3648 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		2768C9221CCFE2A000CFA89E /* TTUserProfileCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileCollectionView.h; sourceTree = "<group>"; };
 		2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileCollectionView.m; sourceTree = "<group>"; };
 		2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileViewCell.h; sourceTree = "<group>"; };
@@ -582,6 +582,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */,
+				276029121F915BDC007627ED /* Bolts.framework in Frameworks */,
+				276029131F915BDC007627ED /* Parse.framework in Frameworks */,
 				271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */,
 				C9CA645A1BE523A500A25EBC /* PhotosUI.framework in Frameworks */,
 				C9ABA4DA1B4EAC4D006F0625 /* Photos.framework in Frameworks */,
@@ -594,7 +596,6 @@
 				224F3FFA1AE1E5BE003A1DEB /* UIKit.framework in Frameworks */,
 				224F3FF81AE1E5B8003A1DEB /* libsqlite3.dylib in Frameworks */,
 				C9026A101AF955FD00A617F0 /* FBSDKCoreKit.framework in Frameworks */,
-				27677F451DECEF9A009F3648 /* Parse.framework in Frameworks */,
 				224F3FF61AE1E5AE003A1DEB /* libz.dylib in Frameworks */,
 				272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */,
 				271D8BB91D91A43D0054741F /* libAdIdAccess.a in Frameworks */,
@@ -610,7 +611,6 @@
 				29ECA46ACCB191A513316C9E /* libPods-TripTrunk.a in Frameworks */,
 				27AF315F1D2C0E8B00D93963 /* AWSMobileHubHelper.framework in Frameworks */,
 				272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */,
-				27677F441DECEF9A009F3648 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -888,8 +888,8 @@
 		224F3FDA1AE1DB64003A1DEB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				27677F421DECEF9A009F3648 /* Bolts.framework */,
-				27677F431DECEF9A009F3648 /* Parse.framework */,
+				276029111F915B6A007627ED /* Bolts.framework */,
+				276029101F915B6A007627ED /* Parse.framework */,
 				272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */,
 				272ACA031D2C5CA700329B28 /* ParseUI.framework */,
 				223547E71AE2BBAE001FE916 /* Accounts.framework */,
@@ -1409,6 +1409,8 @@
 				"${PODS_ROOT}/GMImagePicker/GMImagePicker/fr.lproj",
 				"${PODS_ROOT}/GMImagePicker/GMImagePicker/it.lproj",
 				"${PODS_ROOT}/GMImagePicker/GMImagePicker/pt.lproj",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1760,8 +1762,6 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 					"$(PROJECT_DIR)/FacebookSDK",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/PINCache",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/PINRemoteImage",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1808,8 +1808,6 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/TripTrunk/GoogleAnalytics",
 					"$(PROJECT_DIR)/FacebookSDK",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/PINCache",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/PINRemoteImage",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

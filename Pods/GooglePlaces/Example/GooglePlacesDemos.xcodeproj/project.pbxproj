@@ -14,12 +14,12 @@
 		2A5A993302F4E6E15EA9BCD2 /* PlacesDemoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85EDEFE42680FF093454D1AB /* PlacesDemoAssets.xcassets */; };
 		2EC566C0AE2182DE0FEBA86B /* DemoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B81B9326DD5B37C08B8CCAA /* DemoAppDelegate.m */; };
 		3439DA691B81CBDA5BE552BD /* AutocompleteBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E6E2A1285D9A0BEBDCD503 /* AutocompleteBaseViewController.m */; };
-		42128D6A32D50325383D28DD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97ADBE3D50D731A88C24F3F0 /* UIKit.framework */; };
 		5B89B9BA327B31EC08E64538 /* BaseDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D4BD9841268F97FD23E770 /* BaseDemoViewController.m */; };
 		60B690F521E7F65388320B08 /* AutocompletePushViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAEA89ED8C397E73E2E9730 /* AutocompletePushViewController.m */; };
 		66310EE76B375B01262F52A1 /* DemoData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F2203BCCE0CFC3DC4F38B30 /* DemoData.m */; };
 		6E4B65E8726D60B6659FC6EE /* AutocompleteWithSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 243C9279E0BF845B23337398 /* AutocompleteWithSearchDisplayController.m */; };
 		91123AFDEB15F27812A8FCFF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D344C64A66F10D55590797E /* Localizable.strings */; };
+		A5154B6A9CB2C3A126703D9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97ADBE3D50D731A88C24F3F0 /* UIKit.framework */; };
 		AA96A2641C8281A831381AA2 /* AutocompleteWithSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F7419DDC82CA074FF0A508C /* AutocompleteWithSearchViewController.m */; };
 		C54FD416450638D80BD9A3C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F65D01DD8887E3B1B9731DAE /* LaunchScreen.storyboard */; };
 		D064B1789A04566EA32E30E1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0589812EE1F702A7BBA34D /* main.m */; };
@@ -115,7 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42128D6A32D50325383D28DD /* UIKit.framework in Frameworks */,
+				A5154B6A9CB2C3A126703D9E /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,14 +142,6 @@
 				E437630B6C8A8B3D1C7679DE /* GooglePlacesDemos */,
 			);
 			name = Source;
-			sourceTree = "<group>";
-		};
-		385B9B480DD2892194F01AC1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				97ADBE3D50D731A88C24F3F0 /* UIKit.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5451EE1805656445BDA54845 /* Resources */ = {
@@ -187,7 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				272C787B5065093A74F813D3 /* Source */,
-				385B9B480DD2892194F01AC1 /* Frameworks */,
+				B8B0BC3E953F50BF23A2F9F8 /* Frameworks */,
 				87ED31F365F5BCA83FBDE8E8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -209,6 +201,14 @@
 				818B68D04D9AD33F4EBC54D2 /* MainSplitViewControllerBehaviorManager.m */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		B8B0BC3E953F50BF23A2F9F8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				97ADBE3D50D731A88C24F3F0 /* UIKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		E437630B6C8A8B3D1C7679DE /* GooglePlacesDemos */ = {
@@ -256,11 +256,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 			};
 			buildConfigurationList = 63964CA36C9733EFF27C66CD /* Build configuration list for PBXProject "GooglePlacesDemos" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,

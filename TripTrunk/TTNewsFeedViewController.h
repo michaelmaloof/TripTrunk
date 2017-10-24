@@ -11,13 +11,10 @@
 
 @protocol NewsDelegate
 -(void)backWasTapped:(id)sender;
-
-
-
 @end
 
 @interface TTNewsFeedViewController : TTBaseViewController
 @property id<NewsDelegate> delegate;
-
+@property (strong, nonatomic) NSMutableArray *mainPhotos;
 
 @end

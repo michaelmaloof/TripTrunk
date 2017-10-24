@@ -69,7 +69,8 @@
         [followACL setWriteAccess:true forUser:user];
         followActivity.ACL = followACL;
         
-        [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//        [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             
             [self removeUserFromTemporaryFollowing:user];
             
@@ -106,7 +107,8 @@
     [followACL setWriteAccess:YES forUser:user];
     followActivity.ACL = followACL;
     
-    [followActivity saveEventually:^(BOOL succeeded, NSError *error) {
+//  [followActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+    [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         
         if(error)
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"requestToFollowUserInBackground:"];
@@ -218,7 +220,8 @@
     [followACL setWriteAccess:YES forUser:trip.creator];
     addToTripActivity.ACL = followACL;
     
-    [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
+//    [addToTripActivity saveEventually:^(BOOL succeeded, NSError *error) {
+        [addToTripActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         if(error)
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addUser:"];
         
@@ -519,7 +522,8 @@
         [commentACL setWriteAccess:YES forUser:photo.user];
         commentActivity.ACL = commentACL;
         
-        [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//        [commentActivity saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+            [commentActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
                 [ParseErrorHandlingController handleError:error];
                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addComment:"];
@@ -660,7 +664,8 @@
                     } else {
                         [[TTUtility sharedInstance] internetConnectionFound];
                         [object setObject:@"" forKey:@"caption"];
-                        [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//                        [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                            [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                             [TTAnalytics deleteComment];
                             completionBlock(succeeded, error);
                         }];

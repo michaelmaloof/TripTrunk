@@ -56,7 +56,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.2.2</string>
+	<string>3.2.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -69,7 +69,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>37</string>
+	<string>43</string>
 	<key>FacebookAppID</key>
 	<string>339286769601593</string>
 	<key>FacebookDisplayName</key>
@@ -152,6 +152,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your permission to access your location when you upload your photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need your permission to access your Camera Roll so that you can save photo from TripTrunk!</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need your permission to access your photos so that you are able to upload to your trunks on TripTrunk!</string>
 	<key>UIAppFonts</key>

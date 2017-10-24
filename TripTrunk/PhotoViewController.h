@@ -17,11 +17,13 @@
 -(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
 -(void)photoWasViewed:(Photo*)photo;
 -(void)captionWasAdded:(NSString*)caption;
+-(void)dissmissWasTapped:(NSArray*)mainPhotos;
 @end
 
 @interface PhotoViewController : TTBaseViewController
 @property Photo *photo; //mattschoch 6/10 - added so that we can pass in the image directly instead of downloading it again
 @property (strong, nonatomic) NSArray *trunkMembers;
+@property (strong, nonatomic) NSArray *mainPhotos;
 @property Trip *trip;
 @property NSArray *photos;
 @property NSArray *trunkAlbum;
@@ -31,6 +33,7 @@
 @property BOOL fromTimeline;
 @property BOOL fromProfile;
 @property BOOL fromAddPhotosViewController;
+
 
 -(void)captionButtonTapped:(int)button caption:(NSString*)text;
 //-(void)canRotate;

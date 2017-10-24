@@ -98,6 +98,8 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/fr.lproj"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/it.lproj"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/pt.lproj"
+  install_resource "${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle"
+  install_resource "${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMEmptyFolder@1x.png"
@@ -114,6 +116,8 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/fr.lproj"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/it.lproj"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/pt.lproj"
+  install_resource "${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle"
+  install_resource "${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

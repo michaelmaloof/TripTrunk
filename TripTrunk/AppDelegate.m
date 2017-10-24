@@ -81,6 +81,8 @@
                 env = NO;
             [TTAnalytics initAnalyticsOnStart:env];
     }    
+    
+    NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
 
     return YES;
 }
@@ -121,7 +123,10 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
         currentInstallation.badge = 0;
-        [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//        [currentInstallation saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+//            NSLog(@"Red Badge Cleared");
+//        }];
+        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"Red Badge Cleared");
         }];
         //tabbar number here

@@ -83,7 +83,8 @@
                                   toItem:self.topLayoutGuide
                                attribute:NSLayoutAttributeBottom
                               multiplier:1
-                                constant:8].active = YES;
+                                constant:8]
+      .active = YES;
 
   [self addResultViewBelow:_searchField];
 }

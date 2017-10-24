@@ -193,7 +193,8 @@
                         
                         [view.viewedPhotos addObject:self.photo.objectId];
                         [TTAnalytics photoViewed:self.photo.objectId];
-                        [self.delegate photoWasViewed:self.photo];
+                        if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasViewed:)])
+                            [self.delegate photoWasViewed:self.photo];
                     }
                 }
             }
@@ -1265,7 +1266,8 @@
                 [self updateLikesLabel];
                 [self refreshPhotoActivitiesWithUpdateNow:YES forPhotoStatus:YES];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasLiked:NO];
+                    if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasLiked:)])
+                        [self.delegate photoWasLiked:NO];
                 }
             }else {
                 [self.likeButton setSelected:NO];
@@ -1301,7 +1303,8 @@
                 [[TTCache sharedCache] setPhotoIsLikedByCurrentUser:self.photo liked:self.likeButton.selected];
                 [self updateLikesLabel];
                 if (self.photo.trip.publicTripDetail){
-                    [self.delegate photoWasLiked:YES];
+                    if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasLiked:)])
+                        [self.delegate photoWasLiked:YES];
                 }
                 self.likeButton.alpha = 1;
                 self.likeButton.userInteractionEnabled = YES;
@@ -1426,7 +1429,8 @@
                         }
                         else{
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
+                                if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasDeleted:)])
+                                    [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
                                 NSDate *today = [NSDate date];
                                 NSTimeInterval tripInterval = [today timeIntervalSinceDate:self.photo.trip.publicTripDetail.mostRecentPhoto];
                                 
@@ -1510,6 +1514,8 @@
 //    [self dismissViewControllerAnimated:YES completion:nil];
     [self clearVideo];
     [self deallocateVideo];
+    if ([(NSObject*)self.delegate respondsToSelector:@selector(dissmissWasTapped:)])
+        [self.delegate dissmissWasTapped:self.mainPhotos];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

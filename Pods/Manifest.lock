@@ -1,47 +1,47 @@
 PODS:
-  - AWSAutoScaling (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSCloudWatch (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSCognito (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSCognitoIdentityProvider (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSCore (2.5.8)
-  - AWSDynamoDB (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSEC2 (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSElasticLoadBalancing (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSIoT (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSKinesis (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSLambda (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSMachineLearning (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSMobileAnalytics (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSS3 (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSSES (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSSimpleDB (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSSNS (2.5.8):
-    - AWSCore (= 2.5.8)
-  - AWSSQS (2.5.8):
-    - AWSCore (= 2.5.8)
+  - AWSAutoScaling (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSCloudWatch (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSCognito (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSCognitoIdentityProvider (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSCore (2.6.4)
+  - AWSDynamoDB (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSEC2 (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSElasticLoadBalancing (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSIoT (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSKinesis (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSLambda (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSMachineLearning (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSMobileAnalytics (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSS3 (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSSES (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSSimpleDB (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSSNS (2.6.4):
+    - AWSCore (= 2.6.4)
+  - AWSSQS (2.6.4):
+    - AWSCore (= 2.6.4)
   - GMImagePicker (0.0.2)
-  - GoogleMaps (2.3.1):
-    - GoogleMaps/Maps (= 2.3.1)
-  - GoogleMaps/Base (2.3.1)
-  - GoogleMaps/Maps (2.3.1):
+  - GoogleMaps (2.5.0):
+    - GoogleMaps/Maps (= 2.5.0)
+  - GoogleMaps/Base (2.5.0)
+  - GoogleMaps/Maps (2.5.0):
     - GoogleMaps/Base
-  - GooglePlaces (2.3.1):
-    - GoogleMaps/Base (= 2.3.1)
+  - GooglePlaces (2.5.0):
+    - GoogleMaps/Base (= 2.5.0)
 
 DEPENDENCIES:
   - AWSAutoScaling
@@ -66,27 +66,27 @@ DEPENDENCIES:
   - GooglePlaces
 
 SPEC CHECKSUMS:
-  AWSAutoScaling: b0ca14740f9f26282d6ccd00a7b2f5a499506c28
-  AWSCloudWatch: 9813ebc6104bc61599b12fa448047c69d4a0115c
-  AWSCognito: 8eb74039f4dc5f2d929999c4f531eeb4bd83e6cb
-  AWSCognitoIdentityProvider: 6c0c276a16b622914563350c64d723bcecaa9e75
-  AWSCore: cf101c44d2cc5da32abc27d5529cddc63c010415
-  AWSDynamoDB: 53ead656801e1a40b415fc0bebd85f1dc0dc0ead
-  AWSEC2: d2817357186d4cc18c23ec0b9deb136bfea88b3a
-  AWSElasticLoadBalancing: 9fd9f162b87bded22a5d0406173d8b128eabc379
-  AWSIoT: 209ae36ea1e48a9b8bcb65a94e8267265b4ff2b3
-  AWSKinesis: d4badcaa538424fad79aa86bc35626aa0b7019c9
-  AWSLambda: d83a31bca72ce8e6a6b81a5a3a03e7ea2a44ec3d
-  AWSMachineLearning: bc8860ad5c2651616f6482e7d70842ba89eaf7a8
-  AWSMobileAnalytics: d0eefb1dbcab87cb97f78961bb847f61396380bb
-  AWSS3: addf558f9cf2368e7fb520440867fea5596db0fb
-  AWSSES: 4b81522e24a8e4095d8d6c0511397ab1d51fc06f
-  AWSSimpleDB: d25964f8ec8e5d20af3755667fe0c2924e28925c
-  AWSSNS: 812baa3f5dd5e53da69c37fb8b451e52d0735821
-  AWSSQS: bea4c7b93c011c7765a071b01ad74949d62c1d76
+  AWSAutoScaling: 995044eaf4e875754b8dbae658cd9cbb7ce78686
+  AWSCloudWatch: 2314192f2f5ecdd18a89322c628d9cd22a7b2e5c
+  AWSCognito: 730f6795c78817ff86701844fb22ca40d129494b
+  AWSCognitoIdentityProvider: 20106092269dc86ae8b2070840bb568aa9097787
+  AWSCore: f5611be1c3edc38dbf9d6da0a5d2b6c4841d1c05
+  AWSDynamoDB: 3edc327d45883810fc0d7881398c97add2577f89
+  AWSEC2: f471d78e0c827422e30684111d6d993517a58f30
+  AWSElasticLoadBalancing: 4d4526a42534a8ca549000eca785d1e685625be1
+  AWSIoT: ac3bdb11b36a0c3b9eaeb69560a84abf934010a4
+  AWSKinesis: 5c18f0f55d8d427f8280c2ac44fac4269a66d4b9
+  AWSLambda: 3b03618ac0d025437b29eb03ee08bbf562e27216
+  AWSMachineLearning: 525d5212a6a51c0c81f85c2fdd7302753dcd714a
+  AWSMobileAnalytics: 22df32c0eb374f8aa33e700b93f1c384968e9ca8
+  AWSS3: f7a10f4c6bae46efc9a4588a1480a6761edcbc45
+  AWSSES: c04aaa4976c32a58f2f7f7447e7e1c028bcfe33e
+  AWSSimpleDB: daddcc1bd529a2426cebcf11267281d771f3cda2
+  AWSSNS: 0eace54987b5a3ac44c060776691d14ce841fc6a
+  AWSSQS: e0ec0264fe85cae61b42984092edde8a6d18829f
   GMImagePicker: 6438a6764d6280b1dbf19b59140313f5a73daeeb
-  GoogleMaps: c66a71058b9b1294bcdd5463a68e357fa50c079f
-  GooglePlaces: 4a7b22debfa1af65017b82943431822607e45201
+  GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
+  GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
 
 PODFILE CHECKSUM: 681aa5a01e32c26326c7c3d8173a96ac6c02af8d
 
