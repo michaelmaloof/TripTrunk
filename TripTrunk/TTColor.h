@@ -35,4 +35,5 @@
 //+ (UIColor *)tripTrunkCoral;
 + (UIColor *)tripTrunkWhiteTransparent;
 + (UIColor *)tripTrunkBlueMapLine;
++ (UIColor *)onboardingButtonColorBlue;
 @end

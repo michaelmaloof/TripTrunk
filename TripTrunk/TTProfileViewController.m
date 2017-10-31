@@ -20,8 +20,10 @@
 #import "TTHomeMapCollectionViewCell.h"
 #import "UIImageView+AFNetworking.h"
 #import "TTTrunkViewController.h"
+#import "SocialUtility.h"
+#import "TTCache.h"
 
-@interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource>
+@interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
 @property (strong, nonatomic) IBOutlet UIImageView *userProfilePictureSmall;
 @property (strong, nonatomic) IBOutlet UILabel *userFirstLastNameSmall;
@@ -36,8 +38,10 @@
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
 @property (strong, nonatomic) IBOutlet UIView *miniUserDetails;
 @property (strong, nonatomic) IBOutlet UIView *userDetails;
+@property (strong, nonatomic) IBOutlet TTOnboardingButton *followButton;
 @property (strong, nonatomic) NSMutableArray *trunkArray;
 @property (strong, nonatomic) NSMutableArray *imageSet;
+@property (strong, nonatomic) NSNumber *followStatus;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
 @property NSMutableArray *parseLocations;
@@ -61,13 +65,21 @@
 @end
 
 @implementation TTProfileViewController
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    
+    self.followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
+    [self setFollowButtonState];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.userProfilePictureSmall.hidden = YES;
-//    self.userFirstLastNameSmall.hidden = YES;
-//    self.usernameSmall.hidden = YES;
     
+    //set user details to main details
+    self.miniUserDetails.alpha = 0;
+    self.userDetails.alpha = 1;
+    
+    //setup profile information
     [self.userProfilePictureSmall setImageWithURL:[NSURL URLWithString:self.user[@"profilePicUrl"]]];
     self.userFirstLastNameSmall.text = self.user[@"name"];
     self.usernameSmall.text = [NSString stringWithFormat:@"@%@",self.user.username];
@@ -75,19 +87,25 @@
     self.userFirstLastNameMain.text = self.user[@"name"];
     self.usernameMain.text = [NSString stringWithFormat:@"@%@",self.user.username];
     self.userBio.text = self.user[@"bio"];
-    self.followersCount.text = @"0";
-    self.trunksCount.text = @"0";
-    self.followingCount.text = @"0";
+    self.followersCount.text = @"";
+    self.trunksCount.text = @"";
+    self.followingCount.text = @"";
     
     self.trunkArray = [[NSMutableArray alloc] init];
     self.imageSet = [[NSMutableArray alloc] init];
     
+    //initialize the map and move to user's home location
     [self initMap];
+    
+    //If the user doesn't have a profile image, set it to User's initials
     if(!self.user[@"profilePicUrl"])
         [self handleMissingProfilePicture];
     
-    [self loadTrunkList];
+    //update the user's social stats
+    [self refreshSocialStatCounts];
     
+    //get the trunk list
+    [self loadTrunkList];
 }
 
 -(void)handleMissingProfilePicture{
@@ -106,6 +124,80 @@
     initialsLabel.textColor = [UIColor darkGrayColor];
     initialsLabel.textAlignment = NSTextAlignmentCenter;
     [self.userProfilePictureMain addSubview:initialsLabel];
+}
+
+-(void)setUserProfileState:(BOOL)minimum{
+    if(minimum){
+        //show top profile info, hide center info
+        [UIView animateWithDuration:0.25
+                              delay:1.0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{ self.miniUserDetails.alpha = 1; }
+                         completion:^(BOOL finished){}
+         ];
+        
+        [UIView animateWithDuration:0.25
+                              delay:1.0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{ self.userDetails.alpha = 0; }
+                         completion:^(BOOL finished){}
+         ];
+        
+    }else{
+        //show center profile info, hide top info
+        [UIView animateWithDuration:0.25
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{ self.miniUserDetails.alpha = 0; }
+                         completion:^(BOOL finished){}
+         ];
+        
+        [UIView animateWithDuration:0.25
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{ self.userDetails.alpha = 1; }
+                         completion:^(BOOL finished){}
+         ];
+    }
+}
+
+-(void)setFollowButtonState{
+    self.followButton.hidden = YES;
+    NSString *followText = NSLocalizedString(@"FOLLOW", @"FOLLOW");
+    NSString *followingText = NSLocalizedString(@"FOLLOWING", @"FOLLOWING");
+    
+    if(![[PFUser currentUser].objectId isEqualToString:self.user.objectId]){
+        if(!self.followStatus){
+            [SocialUtility followingStatusFromUser:[PFUser currentUser] toUser:self.user block:^(NSNumber *followingStatus, NSError *error){
+                if (!error)
+                    [[TTCache sharedCache] setFollowStatus:followingStatus user:self.user];
+                else [ParseErrorHandlingController handleError:error];
+                self.followStatus = followingStatus;
+                
+                if([followingStatus intValue] > 0){
+                    [self.followButton setTitle:followingText forState:UIControlStateNormal];
+                    self.followButton.backgroundColor = [TTColor tripTrunkWhite];
+                    [self.followButton setTitleColor:[TTColor onboardingButtonColorBlue] forState:UIControlStateNormal];
+                }else{
+                    [self.followButton setTitle:followText forState:UIControlStateNormal];
+                    self.followButton.backgroundColor = [TTColor onboardingButtonColorBlue];
+                    [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+                }
+                self.followButton.hidden = NO;
+            }];
+        }else{
+            if([self.followStatus intValue] > 0){
+                [self.followButton setTitle:followingText forState:UIControlStateNormal];
+                self.followButton.backgroundColor = [TTColor tripTrunkWhite];
+                [self.followButton setTitleColor:[TTColor onboardingButtonColorBlue] forState:UIControlStateNormal];
+            }else{
+                [self.followButton setTitle:followText forState:UIControlStateNormal];
+                self.followButton.backgroundColor = [TTColor onboardingButtonColorBlue];
+                [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+            }
+            self.followButton.hidden = NO;
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -305,11 +397,47 @@
             for(id activity in response){
                 [self.trunkArray addObject:activity[@"trip"]];
             }
-            [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
-                [self.trunkCollectionView reloadData];
-            }];
+            if(self.trunkArray.count > 0){
+                [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+                    [self.trunkCollectionView reloadData];
+                    self.trunkCollectionView.hidden = NO;
+                }];
+            }
         }
     
+    }];
+}
+
+-(void)refreshSocialStatCounts{
+    //FIXME: CACHE THESE
+    [SocialUtility followerCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+//            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
+            self.followersCount.text = [NSString stringWithFormat:@"%i",count];
+        });
+    }];
+    
+    [SocialUtility followingCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+//            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
+            self.followingCount.text = [NSString stringWithFormat:@"%i",count];
+        });
+    }];
+    
+    [SocialUtility trunkCount:_user block:^(int count, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.trunkCount= count;
+            
+            if (count == 0){
+//                [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
+                self.trunksCount.text = @"0";
+            }else {
+//                [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+                self.trunksCount.text = [NSString stringWithFormat:@"%i",count];
+            }
+        });
     }];
 }
 
@@ -420,7 +548,7 @@
     
     //Loop though the array and get each trunks 4 newest photo URLs
     for(Trip *trunk in self.trunkArray){
-        //FIXME: This needs to move to Utility <------------------------------------
+        //FIXME: This needs to move to Utility <---------------------------------------------------------------------
         PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
         [photoQuery whereKey:@"trip" equalTo:trunk];
         [photoQuery whereKey:@"user" equalTo:self.user];
@@ -466,8 +594,36 @@
     
 }
 
+#pragma mark - UIScrollViewDelegate
+//Switch between larger main social details and smaller details on top of view
+-(void)scrollViewDidScroll:(UIScrollView *)sender{
+    UICollectionViewCell *firstCell = [[self.trunkCollectionView visibleCells] firstObject];
+    NSIndexPath *firstIndexPath = [self.trunkCollectionView indexPathForCell: firstCell];
+    CGRect frame = [self.trunkCollectionView convertRect:firstCell.frame toView:self.view];
+
+    if(self.miniUserDetails.alpha == 0 && firstCell != nil){
+        if(firstIndexPath.row == 0){
+            //check if it is blocking the userDetails
+            if(frame.origin.x < 130)
+                [self setUserProfileState:YES];
+            else [self setUserProfileState:NO];
+        }else{
+            //switch to mini details
+            [self setUserProfileState:YES];
+        }
+    }
+    
+    if(self.userDetails.alpha == 0){
+        if(firstIndexPath.row == 0){
+            if(frame.origin.x > 130)
+                [self setUserProfileState:NO];
+        }
+    }
+}
+
 #pragma mark - UIButton Actions
 - (IBAction)backButtonAction:(TTOnboardingButton *)sender {
+    self.trunkCollectionView.hidden = YES;
     [self.navigationController popViewControllerAnimated:YES];
 }
 

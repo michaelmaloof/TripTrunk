@@ -53,6 +53,8 @@
 - (IBAction)swipeRight:(UISwipeGestureRecognizer *)sender {
 }
 
+
+//MONDAY!!!! FINISH SWIPING THROUGH IMAGES!! <------------------------------------------------------------------------
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)sender {
     UIImageView *bI = (UIImageView *)[self.view viewWithTag:1000];
     UIImageView *fI = (UIImageView *)[self.view viewWithTag:1001];

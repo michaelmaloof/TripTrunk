@@ -125,6 +125,7 @@
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
+		27E388231FA3D40300A9F733 /* TTPassthroughCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */; };
 		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
 		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
 		27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */; };
@@ -429,6 +430,8 @@
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
+		27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPassthroughCollectionView.h; sourceTree = "<group>"; };
+		27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPassthroughCollectionView.m; sourceTree = "<group>"; };
 		27ED88221ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingLoginUsernameViewController.h; sourceTree = "<group>"; };
 		27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOnboardingLoginUsernameViewController.m; sourceTree = "<group>"; };
 		27ED88251ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOnboardingLoginPasswordViewController.h; sourceTree = "<group>"; };
@@ -921,6 +924,8 @@
 			children = (
 				2709AF251F72F7A600F83729 /* TTProfileViewController.h */,
 				2709AF261F72F7A600F83729 /* TTProfileViewController.m */,
+				27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */,
+				27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1470,6 +1475,7 @@
 				C90C3D1C1B053F4B00CABBC9 /* UserProfileViewController.m in Sources */,
 				2750D1ED1F30FC3200CBF4DE /* TTRoundedImage.m in Sources */,
 				C903F7141B98885500F56FE1 /* CommentListViewController.m in Sources */,
+				27E388231FA3D40300A9F733 /* TTPassthroughCollectionView.m in Sources */,
 				229D42861AE850C700458244 /* TripImageView.m in Sources */,
 				C957026B1D91B1DE009DE079 /* Underscore+Functional.m in Sources */,
 				27F3E3851D3D778600634B75 /* DLFPhotosLibrary.m in Sources */,

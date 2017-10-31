@@ -106,6 +106,10 @@
     return [UIColor colorWithRed:1.0/255.0 green:148.0/255.0 blue:254.0/255.0 alpha:1.0];
 }
 
++ (UIColor *)onboardingButtonColorBlue{
+    return [UIColor colorWithRed:82.0/255.0 green:183.0/255.0 blue:255.0/255.0 alpha:1.0];
+}
+
 //+ (UIColor *)tripTrunkCoral {
 //    return [UIColor colorWithRed:217.0/255.0 green:135.0/255.0 blue:135.0/255.0 alpha:1.0];
 //}
