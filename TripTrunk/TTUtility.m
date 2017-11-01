@@ -391,10 +391,8 @@ CLCloudinary *cloudinary;
         bgTask = UIBackgroundTaskInvalid;
     }];
     
-    
-    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
-    [request setResponseSerializer: [AFImageResponseSerializer serializer]];
-    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:[NSURL URLWithString:photo.imageUrl].absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         if (responseObject) {
             UIImage *image = (UIImage *)responseObject;
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
@@ -409,16 +407,43 @@ CLCloudinary *cloudinary;
                 [[UIApplication sharedApplication] endBackgroundTask:bgTask];
                 bgTask = UIBackgroundTaskInvalid;
             });
-
+            
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"Error downloading photo");
         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhoto:"];
         
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
-    [request start];
+    
+//    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+//    [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+//    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        if (responseObject) {
+//            UIImage *image = (UIImage *)responseObject;
+//            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+//            [TTAnalytics downloadPhoto];
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//
+//                // Hide HUD spinner
+//                HUD.labelText = NSLocalizedString(@"Complete!", @"Complete!");
+//                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+//
+//                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//                bgTask = UIBackgroundTaskInvalid;
+//            });
+//
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error downloading photo");
+//        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhoto:"];
+//
+//        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//        bgTask = UIBackgroundTaskInvalid;
+//    }];
+//    [request start];
 }
 
 //- (void)downloadPhotos:(NSArray *)photos;
@@ -527,10 +552,8 @@ CLCloudinary *cloudinary;
             }];
             
         }else{
-    
-            AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
-            [request setResponseSerializer: [AFImageResponseSerializer serializer]];
-            [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+            [manager GET:[NSURL URLWithString:photo.imageUrl].absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
                 if (responseObject) {
                     NSLog(@"Downloading photo: %@",photo.imageUrl);
                     // Save image to phone
@@ -558,13 +581,50 @@ CLCloudinary *cloudinary;
                     bgTask = UIBackgroundTaskInvalid;
                     
                 }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            } failure:^(NSURLSessionTask *operation, NSError *error) {
                 NSLog(@"Error downloading photo");
                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
                 [[UIApplication sharedApplication] endBackgroundTask:bgTask];
                 bgTask = UIBackgroundTaskInvalid;
             }];
-            [request start];
+            
+//            AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:photo.imageUrl]]];
+//            [request setResponseSerializer: [AFImageResponseSerializer serializer]];
+//            [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//                if (responseObject) {
+//                    NSLog(@"Downloading photo: %@",photo.imageUrl);
+//                    // Save image to phone
+//                    UIImageWriteToSavedPhotosAlbum((UIImage *)responseObject, nil, nil, nil);
+//                    [TTAnalytics downloadPhoto];
+//
+//                    // Increment counter so we know when to hide the HUD
+//                    completedDownloads++;
+//                    if (completedDownloads == photos.count) {
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            // Hide HUD spinner
+//                            HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
+//                            [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+//                        });
+//                    }
+//                    else {
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
+//                            NSString *of = NSLocalizedString(@"of", "of");
+//                            HUD.labelText = [NSString stringWithFormat:@"%@ %i %@ %lu", downloading, completedDownloads + 1, of, (unsigned long)photos.count];
+//                        });
+//                    }
+//
+//                    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//                    bgTask = UIBackgroundTaskInvalid;
+//
+//                }
+//            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                NSLog(@"Error downloading photo");
+//                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhotos:"];
+//                [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//                bgTask = UIBackgroundTaskInvalid;
+//            }];
+//            [request start];
         }
     }
     
@@ -1172,11 +1232,8 @@ CLCloudinary *cloudinary;
     NSString *urlString = [NSString stringWithFormat:@"http://gd.geobytes.com/AutoCompleteCity?&q=%@", str];
     NSString *encodedString = [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     
-    
-    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
-    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
-    
-    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:[NSURL URLWithString:encodedString].absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         if (responseObject) {
             NSArray *responseArray = (NSArray *)responseObject;
             
@@ -1190,14 +1247,38 @@ CLCloudinary *cloudinary;
             return completionBlock(response, nil);
         }
         return completionBlock(nil, nil);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"error searching for location");
         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationsForSearch:"];
         return completionBlock(nil, error);
     }];
     
-    [request start];
+    
+//    AFHTTPRequestOperation *request = [[AFHTTPRequestOperation alloc] initWithRequest: [NSURLRequest requestWithURL:[NSURL URLWithString:encodedString]]];
+//    [request setResponseSerializer: [AFJSONResponseSerializer serializer]];
+//    
+//    [request setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        if (responseObject) {
+//            NSArray *responseArray = (NSArray *)responseObject;
+//            
+//            /*
+//             * THIS IS A HACK
+//             * Matt Schoch 9/8/2016
+//             * We shouldn't be filtering this result list at all, but we're manually removing stuff (i.e. Lake Tahoe) that doesn't have a valid City/State.
+//             * When Location API gets switched, remove this arrayWithoutProblemLocations call.
+//             */
+//            NSArray *response = [self arrayWithoutProblemLocations:responseArray];
+//            return completionBlock(response, nil);
+//        }
+//        return completionBlock(nil, nil);
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"error searching for location");
+//        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationsForSearch:"];
+//        return completionBlock(nil, error);
+//    }];
+//    
+//    [request start];
 }
 
 - (void)locationsForSearch:(NSString *)str block:(void (^)(NSArray *objects, NSError *error))completionBlock {
