@@ -146,6 +146,8 @@
 		27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88291ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m */; };
 		27ED882D1ECF8AE100373F72 /* TTEmailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */; };
 		27EF96C31FB24DD2008F427F /* GoogleMapsBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EF96C21FB24DD1008F427F /* GoogleMapsBase.framework */; };
+		27EF96C61FB24E8B008F427F /* GoogleMapsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EF96C41FB24E8A008F427F /* GoogleMapsCore.framework */; };
+		27EF96C71FB24E8B008F427F /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EF96C51FB24E8B008F427F /* GoogleMaps.framework */; };
 		27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */; };
 		27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3731D3D778600634B75 /* DLFAssetsLayout.m */; };
 		27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3E3761D3D778600634B75 /* DLFDetailViewController.m */; };
@@ -479,6 +481,8 @@
 		27ED882B1ECF8AE100373F72 /* TTEmailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEmailValidation.h; sourceTree = "<group>"; };
 		27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEmailValidation.m; sourceTree = "<group>"; };
 		27EF96C21FB24DD1008F427F /* GoogleMapsBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsBase.framework; path = Pods/GoogleMaps/Base/Frameworks/GoogleMapsBase.framework; sourceTree = "<group>"; };
+		27EF96C41FB24E8A008F427F /* GoogleMapsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsCore.framework; path = Pods/GoogleMaps/Maps/Frameworks/GoogleMapsCore.framework; sourceTree = "<group>"; };
+		27EF96C51FB24E8B008F427F /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMaps.framework; path = Pods/GoogleMaps/Maps/Frameworks/GoogleMaps.framework; sourceTree = "<group>"; };
 		27F240E21D01F48300155539 /* TTTrunkMemberViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTrunkMemberViewCell.h; sourceTree = "<group>"; };
 		27F240E31D01F48300155539 /* TTTrunkMemberViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTrunkMemberViewCell.m; sourceTree = "<group>"; };
 		27F3E3721D3D778600634B75 /* DLFAssetsLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLFAssetsLayout.h; sourceTree = "<group>"; };
@@ -600,6 +604,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27EF96C61FB24E8B008F427F /* GoogleMapsCore.framework in Frameworks */,
+				27EF96C71FB24E8B008F427F /* GoogleMaps.framework in Frameworks */,
 				27EF96C31FB24DD2008F427F /* GoogleMapsBase.framework in Frameworks */,
 				275842671FAA651A00FD58E5 /* Security.framework in Frameworks */,
 				27444E691F0AE1280021DC7A /* ImageIO.framework in Frameworks */,
@@ -1203,6 +1209,8 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27EF96C51FB24E8B008F427F /* GoogleMaps.framework */,
+				27EF96C41FB24E8A008F427F /* GoogleMapsCore.framework */,
 				27EF96C21FB24DD1008F427F /* GoogleMapsBase.framework */,
 				27444E681F0AE1270021DC7A /* ImageIO.framework */,
 				271D8BBD1D91AF000054741F /* CoreData.framework */,
@@ -1801,6 +1809,7 @@
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 					"$(PROJECT_DIR)/TripTrunk",
 					"$(PROJECT_DIR)/Pods/GoogleMaps/Base/Frameworks",
+					"$(PROJECT_DIR)/Pods/GoogleMaps/Maps/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "TripTrunk/SoundSwitch-Prefix.pch";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
@@ -1850,6 +1859,7 @@
 					"$(PROJECT_DIR)/TripTrunk/AmazonAws",
 					"$(PROJECT_DIR)/TripTrunk",
 					"$(PROJECT_DIR)/Pods/GoogleMaps/Base/Frameworks",
+					"$(PROJECT_DIR)/Pods/GoogleMaps/Maps/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "TripTrunk/SoundSwitch-Prefix.pch";
 				INFOPLIST_FILE = TripTrunk/Info.plist;
