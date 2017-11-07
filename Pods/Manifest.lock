@@ -1,39 +1,39 @@
 PODS:
-  - AWSAutoScaling (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSCloudWatch (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSCognito (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSCognitoIdentityProvider (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSCore (2.6.4)
-  - AWSDynamoDB (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSEC2 (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSElasticLoadBalancing (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSIoT (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSKinesis (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSLambda (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSMachineLearning (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSMobileAnalytics (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSS3 (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSSES (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSSimpleDB (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSSNS (2.6.4):
-    - AWSCore (= 2.6.4)
-  - AWSSQS (2.6.4):
-    - AWSCore (= 2.6.4)
+  - AWSAutoScaling (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSCloudWatch (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSCognito (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSCognitoIdentityProvider (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSCore (2.6.5)
+  - AWSDynamoDB (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSEC2 (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSElasticLoadBalancing (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSIoT (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSKinesis (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSLambda (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSMachineLearning (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSMobileAnalytics (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSS3 (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSSES (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSSimpleDB (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSSNS (2.6.5):
+    - AWSCore (= 2.6.5)
+  - AWSSQS (2.6.5):
+    - AWSCore (= 2.6.5)
   - GMImagePicker (0.0.2)
   - GoogleMaps (2.5.0):
     - GoogleMaps/Maps (= 2.5.0)
@@ -66,24 +66,24 @@ DEPENDENCIES:
   - GooglePlaces
 
 SPEC CHECKSUMS:
-  AWSAutoScaling: 995044eaf4e875754b8dbae658cd9cbb7ce78686
-  AWSCloudWatch: 2314192f2f5ecdd18a89322c628d9cd22a7b2e5c
-  AWSCognito: 730f6795c78817ff86701844fb22ca40d129494b
-  AWSCognitoIdentityProvider: 20106092269dc86ae8b2070840bb568aa9097787
-  AWSCore: f5611be1c3edc38dbf9d6da0a5d2b6c4841d1c05
-  AWSDynamoDB: 3edc327d45883810fc0d7881398c97add2577f89
-  AWSEC2: f471d78e0c827422e30684111d6d993517a58f30
-  AWSElasticLoadBalancing: 4d4526a42534a8ca549000eca785d1e685625be1
-  AWSIoT: ac3bdb11b36a0c3b9eaeb69560a84abf934010a4
-  AWSKinesis: 5c18f0f55d8d427f8280c2ac44fac4269a66d4b9
-  AWSLambda: 3b03618ac0d025437b29eb03ee08bbf562e27216
-  AWSMachineLearning: 525d5212a6a51c0c81f85c2fdd7302753dcd714a
-  AWSMobileAnalytics: 22df32c0eb374f8aa33e700b93f1c384968e9ca8
-  AWSS3: f7a10f4c6bae46efc9a4588a1480a6761edcbc45
-  AWSSES: c04aaa4976c32a58f2f7f7447e7e1c028bcfe33e
-  AWSSimpleDB: daddcc1bd529a2426cebcf11267281d771f3cda2
-  AWSSNS: 0eace54987b5a3ac44c060776691d14ce841fc6a
-  AWSSQS: e0ec0264fe85cae61b42984092edde8a6d18829f
+  AWSAutoScaling: 6f0d87927328c518adbd3374ee7b73f03b6241ba
+  AWSCloudWatch: b9698d157220ca9fb121263f98c2143405eec4e3
+  AWSCognito: 763ef7a193e6eaeddff382db4daa7608ec61be69
+  AWSCognitoIdentityProvider: 7d55b4511ece28c22debeb8f2ab8bc82ed5f6705
+  AWSCore: b4895b4a5256d0040f8825ad31f3477d081f508f
+  AWSDynamoDB: 8723495e4f010b65e7012fdc59f813c3a0a30006
+  AWSEC2: 80423292bf108659a4ca5a3ef84083fea6279647
+  AWSElasticLoadBalancing: fc81f1d2699a213998513464b0d28029869a4a80
+  AWSIoT: 0531cc2f672403e65ecc722f9a327eae2b346292
+  AWSKinesis: 7560a93bccba3bdd5a226b82ee9524af1e7d5c20
+  AWSLambda: add862724ccb76dfe769df566e2989c7e8ce6cf4
+  AWSMachineLearning: 58aa592ba97e8a7fe2d5de2738a3c37adcf666be
+  AWSMobileAnalytics: 6de01f106b78b30e0724395fd7a2575d78a4e7c7
+  AWSS3: a92df2b4625488b5aae142f4311379fcd6bae3a7
+  AWSSES: d13ccd5cc0412335b3f8c703134e14c8309ed31c
+  AWSSimpleDB: f6ba011ad8006c027640a7a80f7a10b922200c05
+  AWSSNS: 8f29af433238455d0dbaa455a18da948e0856ed5
+  AWSSQS: 631a59b6cc783271cbd7244224d5a0a924796111
   GMImagePicker: 6438a6764d6280b1dbf19b59140313f5a73daeeb
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
