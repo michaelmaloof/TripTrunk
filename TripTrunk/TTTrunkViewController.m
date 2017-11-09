@@ -23,8 +23,10 @@
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
 @property (strong, nonatomic) NSMutableArray *imageSet;
+@property (strong, nonatomic) NSMutableArray *photos;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) UIImage *photo;
+@property NSInteger index;
 
 @end
 
@@ -55,6 +57,7 @@
     
     //Get imageURLs of all images in the trunk
     self.imageSet = [[NSMutableArray alloc] init];
+    self.photos = [[NSMutableArray alloc] init];
     
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
     [photoQuery whereKey:@"trip" equalTo:trunk];
@@ -238,6 +241,7 @@
         for (UIImageView *subview in cell.subviews){
             if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
                 self.photo = subview.image;
+                self.index = indexPath.row;
                 break;
             }
         }
@@ -357,6 +361,8 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     TTPhotoViewController *photoViewController = segue.destinationViewController;
+    photoViewController.photos = self.imageSet;
+    photoViewController.index = (int)self.index;
     photoViewController.photo = self.photo;
 }
 

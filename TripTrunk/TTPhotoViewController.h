@@ -10,4 +10,6 @@
 
 @interface TTPhotoViewController : UIViewController
 @property (strong, nonatomic) UIImage *photo;
+@property int index;
+@property (strong, nonatomic) NSArray *photos;
 @end

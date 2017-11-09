@@ -665,6 +665,7 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				27D41FB41FB25D31001B6CD5 /* Photo */,
 				2709AF241F72F78200F83729 /* Profile */,
 				27B69F0B1F5F23C000905B51 /* Trunk */,
 				27444E4F1EDDECB70021DC7A /* GoolgeCitySearch */,
@@ -1066,8 +1067,6 @@
 				27B69F111F5F2F7700905B51 /* View Cells */,
 				27B69F0C1F5F243000905B51 /* TTTrunkViewController.h */,
 				27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */,
-				2709AF281F74423E00F83729 /* TTPhotoViewController.h */,
-				2709AF291F74423E00F83729 /* TTPhotoViewController.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1133,6 +1132,15 @@
 				27ED882C1ECF8AE100373F72 /* TTEmailValidation.m */,
 			);
 			name = Login;
+			sourceTree = "<group>";
+		};
+		27D41FB41FB25D31001B6CD5 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				2709AF281F74423E00F83729 /* TTPhotoViewController.h */,
+				2709AF291F74423E00F83729 /* TTPhotoViewController.m */,
+			);
+			name = Photo;
 			sourceTree = "<group>";
 		};
 		27E388241FAA58C100A9F733 /* AFNetworking */ = {
