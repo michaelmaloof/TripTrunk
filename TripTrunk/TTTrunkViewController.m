@@ -16,16 +16,16 @@
 #import "TTProfileViewController.h"
 #import "TTRoundedImage.h"
 #import "TTPhotoViewController.h"
-
+#import "Photo.h"
 
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
 @property (strong, nonatomic) NSMutableArray *imageSet;
-@property (strong, nonatomic) NSMutableArray *photos;
+@property (strong, nonatomic) NSArray *photos;
 @property (strong, nonatomic) NSArray *trunkMembers;
-@property (strong, nonatomic) UIImage *photo;
+@property (strong, nonatomic) Photo *photo;
 @property NSInteger index;
 
 @end
@@ -58,6 +58,7 @@
     //Get imageURLs of all images in the trunk
     self.imageSet = [[NSMutableArray alloc] init];
     self.photos = [[NSMutableArray alloc] init];
+    self.photo = [[Photo alloc] init];
     
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
     [photoQuery whereKey:@"trip" equalTo:trunk];
@@ -68,6 +69,7 @@
             for(Photo* object in objects){
                 [self.imageSet addObject:object.imageUrl];
             }
+            self.photos = objects;
             [self.mainCollectionView reloadData];
         }else{
             //There's an error. Handle this and add the Google tracking
@@ -240,7 +242,8 @@
         TTTrunkViewCell *cell = (TTTrunkViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
         for (UIImageView *subview in cell.subviews){
             if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
-                self.photo = subview.image;
+                self.photo = self.photos[indexPath.row];
+                self.photo.image = subview.image;
                 self.index = indexPath.row;
                 break;
             }
@@ -361,7 +364,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     TTPhotoViewController *photoViewController = segue.destinationViewController;
-    photoViewController.photos = self.imageSet;
+    photoViewController.photos = self.photos;
     photoViewController.index = (int)self.index;
     photoViewController.photo = self.photo;
 }

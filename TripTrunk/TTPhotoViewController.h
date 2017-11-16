@@ -7,9 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Photo.h"
+
+@protocol PhotoDelegate
+@optional
+-(void)photoWasLiked:(BOOL)isFromError;
+//-(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
+-(void)photoWasViewed:(Photo*)photo;
+//-(void)captionWasAdded:(NSString*)caption;
+//-(void)dissmissWasTapped:(NSArray*)mainPhotos;
+@end
 
 @interface TTPhotoViewController : UIViewController
-@property (strong, nonatomic) UIImage *photo;
+@property id<PhotoDelegate> delegate;
+@property (strong, nonatomic) Photo *photo;
 @property int index;
 @property (strong, nonatomic) NSArray *photos;
 @end

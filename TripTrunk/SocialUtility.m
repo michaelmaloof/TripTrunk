@@ -574,21 +574,23 @@
         [mentionACL setWriteAccess:YES forUser:photo.trip.creator];
         [mentionACL setPublicReadAccess:YES];
         mentionActivity.ACL = mentionACL;
-        if(![photo.user.objectId isEqual:user.objectId]){
-            [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [[TTUtility sharedInstance] internetConnectionFound];
-                    if (completionBlock) {
-                        NSLog(@"Comment added");
-                        completionBlock(succeeded, error);
+        [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            if(![photo.user.objectId isEqual:user.objectId]){
+                [mentionActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        [[TTUtility sharedInstance] internetConnectionFound];
+                        if (completionBlock) {
+                            NSLog(@"Comment added");
+                            completionBlock(succeeded, error);
+                        }
+                    } else if (!error){
+                        [ParseErrorHandlingController handleError:error];
+                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addMention:"];
+                        NSLog(@"Comment NOT added");
                     }
-                } else if (!error){
-                    [ParseErrorHandlingController handleError:error];
-                    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addMention:"];
-                    NSLog(@"Comment NOT added");
-                }
-            }];
-        }
+                }];
+            }
+        }];
     }];
 }
 
@@ -681,56 +683,60 @@
 
 + (void)likePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
-    [TTAnalytics photoLiked:photo.user];
-    NSDictionary *params = @{
-                                @"photoId" : photo.objectId
-                             };
-    [PFCloud callFunctionInBackground:@"Activity.Like" withParameters:params block:^(PFObject *response, NSError *error) {
-        if (error) {
-            [ParseErrorHandlingController handleError:error];
-            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"likePhoto:"];
-            completionBlock(false, error);
-        }
-        else {
-            [[TTUtility sharedInstance] internetConnectionFound];
+    [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [TTAnalytics photoLiked:photo.user];
+        NSDictionary *params = @{
+                                 @"photoId" : photo.objectId
+                                 };
+        [PFCloud callFunctionInBackground:@"Activity.Like" withParameters:params block:^(PFObject *response, NSError *error) {
+            if (error) {
+                [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"likePhoto:"];
+                completionBlock(false, error);
+            }
+            else {
+                [[TTUtility sharedInstance] internetConnectionFound];
+                
+                completionBlock(true, nil);
+            }
             
-            completionBlock(true, nil);
-        }
- 
+        }];
     }];
 
 }
 
 + (void)unlikePhoto:(Photo *)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 {
-    [TTAnalytics photoUnliked:photo.user];
-    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
-    [queryExistingLikes whereKey:@"photo" equalTo:photo];
-    [queryExistingLikes whereKey:@"type" equalTo:@"like"];
-    [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
-    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
-    [queryExistingLikes setLimit:1000];
-    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
-        if (!error) {
-            [[TTUtility sharedInstance] internetConnectionFound];
-            for (PFObject *activity in activities) {
-                [activity deleteEventually];
+    [photo.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [TTAnalytics photoUnliked:photo.user];
+        PFQuery *queryExistingLikes = [PFQuery queryWithClassName:@"Activity"];
+        [queryExistingLikes whereKey:@"photo" equalTo:photo];
+        [queryExistingLikes whereKey:@"type" equalTo:@"like"];
+        [queryExistingLikes whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+        [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+        [queryExistingLikes setLimit:1000];
+        [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+            if (!error) {
+                [[TTUtility sharedInstance] internetConnectionFound];
+                for (PFObject *activity in activities) {
+                    [activity deleteEventually];
+                }
+                
+                if (completionBlock) {
+                    completionBlock(YES,nil);
+                }
             }
             
-            if (completionBlock) {
-                completionBlock(YES,nil);
+            else if (error){
+                [ParseErrorHandlingController handleError:error];
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"unlikePhoto:"];
+                [ParseErrorHandlingController errorUnlikingPhoto:photo];
+                
+                if (completionBlock) {
+                    completionBlock(NO,error);
+                }
             }
-        }
-        
-        else if (error){
-            [ParseErrorHandlingController handleError:error];
-            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"unlikePhoto:"];
-            [ParseErrorHandlingController errorUnlikingPhoto:photo];
-            
-            if (completionBlock) {
-                completionBlock(NO,error);
-            }
-        }
+        }];
     }];
 }
 

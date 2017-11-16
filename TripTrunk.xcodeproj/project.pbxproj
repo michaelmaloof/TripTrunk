@@ -140,6 +140,7 @@
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
+		27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */; };
 		27E388231FA3D40300A9F733 /* TTPassthroughCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */; };
 		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
 		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
@@ -437,6 +438,8 @@
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
+		27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLikeButton.h; sourceTree = "<group>"; };
+		27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTLikeButton.m; sourceTree = "<group>"; };
 		27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPassthroughCollectionView.h; sourceTree = "<group>"; };
 		27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPassthroughCollectionView.m; sourceTree = "<group>"; };
 		27E388251FAA58C100A9F733 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -1139,6 +1142,8 @@
 			children = (
 				2709AF281F74423E00F83729 /* TTPhotoViewController.h */,
 				2709AF291F74423E00F83729 /* TTPhotoViewController.m */,
+				27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */,
+				27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */,
 			);
 			name = Photo;
 			sourceTree = "<group>";
@@ -1522,6 +1527,7 @@
 			files = (
 				275842781FAA6C0600FD58E5 /* AFNetworkReachabilityManager.m in Sources */,
 				275842791FAA6C0600FD58E5 /* AFSecurityPolicy.m in Sources */,
+				27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */,
 				2758427A1FAA6C0600FD58E5 /* AFURLRequestSerialization.m in Sources */,
 				2758427B1FAA6C0600FD58E5 /* AFURLResponseSerialization.m in Sources */,
 				2758427C1FAA6C0600FD58E5 /* AFURLSessionManager.m in Sources */,
