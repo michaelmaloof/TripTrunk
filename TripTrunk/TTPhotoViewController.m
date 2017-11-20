@@ -6,10 +6,6 @@
 //  Copyright © 2017 Michael Maloof. All rights reserved.
 //
 
-#define kScreenWidth [[UIScreen mainScreen] applicationFrame].size.width
-#define kScreenHeight [[UIScreen mainScreen] applicationFrame].size.height
-
-
 #import "TTPhotoViewController.h"
 #import "TTOnboardingButton.h"
 #import "UIImageView+AFNetworking.h"
@@ -17,12 +13,20 @@
 #import "TTUtility.h"
 #import "TTAnalytics.h"
 #import "SocialUtility.h"
+#import "SharkfoodMuteSwitchDetector.h"
 
 @interface TTPhotoViewController () <UIGestureRecognizerDelegate,UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet UIImageView *backgroundView;
 @property (strong, nonatomic) IBOutlet UIImageView *foregroundView;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *heartButton;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, weak) AVPlayerLayer *layer;
+@property (nonatomic, weak) AVPlayer *player;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property BOOL isFetchingTrip;
+@property (nonatomic, weak) SharkfoodMuteSwitchDetector* detector;
+@property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
+@property int viewCount;
 @end
 
 @implementation TTPhotoViewController
@@ -37,6 +41,61 @@
     self.foregroundView.contentMode = UIViewContentModeScaleAspectFill;
 //    self.backgroundView.tag = 1000;
 //    self.foregroundView.tag = 1001;
+    
+    if(self.photo.video){
+        
+        [self.photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            
+            NSURL *url = [NSURL URLWithString:self.photo.video[@"videoUrl"]];
+            self.player = [AVPlayer playerWithURL:url];
+            
+            self.layer = [AVPlayerLayer layer];
+            [self.layer setPlayer:self.player];
+            [self.layer setFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+            [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
+            
+            [self.scrollView.layer addSublayer:self.layer];
+            
+            [self.player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(playerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.player currentItem]];
+            [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
+            self.viewCount = 1;
+            self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
+            self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
+            [self.player.currentItem seekToTime:kCMTimeZero];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.player play];
+                self.scrollView.scrollEnabled = NO;
+                self.scrollView.pinchGestureRecognizer.enabled = NO;
+            });
+//            self.video_sound_button.hidden = NO;
+            self.viewCountLabel.hidden = NO;
+            
+            // Declare block scope variables to avoid retention cycles
+            // from references inside the block
+            __block AVPlayer* blockPlayer = self.player;
+            __block id obs;
+            
+            // Setup boundary time observer to trigger when audio really begins,
+            // specifically after 1/3 of a second playback
+            obs = [self.player addBoundaryTimeObserverForTimes:
+                   @[[NSValue valueWithCMTime:CMTimeMake(1, 3)]]
+                                                         queue:NULL
+                                                    usingBlock:^{
+                                                        
+                                                        // Raise a notificaiton when playback has started
+                                                        [[NSNotificationCenter defaultCenter]
+                                                         postNotificationName:@"PlaybackStartedNotification"
+                                                         object:url];
+                                                        
+                                                        // Remove the boundary time observer
+                                                        [blockPlayer removeTimeObserver:obs];
+                                                    }];
+        }];
+    }
     
     self.scrollView.minimumZoomScale = 1.0;
     self.scrollView.maximumZoomScale = 6.0;
@@ -266,6 +325,52 @@
     [self.heartButton setSelected:[[TTCache sharedCache] isPhotoLikedByCurrentUser:self.photo]];
     self.heartButton.alpha = 1;
     self.heartButton.userInteractionEnabled = YES;
+}
+
+#pragma mark - Video
+-(void)deallocateVideo{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillTerminateNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIApplicationWillResignActiveNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:@"PlaybackStartedNotification"];
+    
+    @try{
+        [self.player removeObserver:self forKeyPath:@"status"];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
+}
+
+//AVPlayer Observers
+//handle the end of the video
+- (void)playerItemDidReachEnd:(NSNotification *)notification {
+    AVPlayerItem *p = [notification object];
+    [p seekToTime:kCMTimeZero];
+    self.viewCount++;
+    self.photo.viewCount=[NSNumber numberWithInt:[self.photo.viewCount intValue]+1];
+    self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.player play];
+        self.scrollView.scrollEnabled = NO;
+        self.scrollView.pinchGestureRecognizer.enabled = NO;
+    });
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == self.player && [keyPath isEqualToString:@"status"]) {
+        if (self.player.status == AVPlayerItemStatusReadyToPlay) {
+            //[self.activityIndicator stopAnimating];
+//            [self.scrollView sendSubviewToBack:self.imageView];
+        } else if (self.player.status == AVPlayerStatusFailed) {
+            NSLog(@"There was an error loading the video");
+        }
+    }
+}
+
+-(void) receivePlaybackStartedNotification:(NSNotification *) notification {
+    if ([[notification name] isEqualToString:@"PlaybackStartedNotification"]) {
+        [self.activityIndicator stopAnimating];
+    }
 }
 
 #pragma mark - Photo Activities

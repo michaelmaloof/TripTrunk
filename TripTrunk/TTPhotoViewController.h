@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Photo.h"
+#import "TTBaseViewController.h"
 
 @protocol PhotoDelegate
 @optional
@@ -18,7 +19,7 @@
 //-(void)dissmissWasTapped:(NSArray*)mainPhotos;
 @end
 
-@interface TTPhotoViewController : UIViewController
+@interface TTPhotoViewController : TTBaseViewController
 @property id<PhotoDelegate> delegate;
 @property (strong, nonatomic) Photo *photo;
 @property int index;

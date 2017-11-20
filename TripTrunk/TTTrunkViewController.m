@@ -22,7 +22,6 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
-@property (strong, nonatomic) NSMutableArray *imageSet;
 @property (strong, nonatomic) NSArray *photos;
 @property (strong, nonatomic) NSArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
@@ -55,8 +54,6 @@
     self.mainCollectionView.collectionViewLayout = layout;
     self.mainCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0);
     
-    //Get imageURLs of all images in the trunk
-    self.imageSet = [[NSMutableArray alloc] init];
     self.photos = [[NSMutableArray alloc] init];
     self.photo = [[Photo alloc] init];
     
@@ -65,10 +62,6 @@
     [photoQuery whereKey:@"user" equalTo:creator];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(!error){
-            //Loop though retrieved objects and extract photo's URL
-            for(Photo* object in objects){
-                [self.imageSet addObject:object.imageUrl];
-            }
             self.photos = objects;
             [self.mainCollectionView reloadData];
         }else{
@@ -100,7 +93,7 @@
         if(section == 0){
             numOfItems = 1;
         }else{
-            numOfItems = (int)self.imageSet.count;
+            numOfItems = (int)self.photos.count;
         }
     }else if(collectionView == self.membersCollectionView){
         numOfItems = (int)self.trunkMembers.count;
@@ -195,16 +188,23 @@
             [collectionView addSubview:button];
         }else{
             CGRect frame;
+            Photo *photo = self.photos[indexPath.row];
             if(indexPath.row == 0)
                frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
             else frame = CGRectMake(0, 0, ([UIScreen mainScreen].bounds.size.width/3)-1, ([UIScreen mainScreen].bounds.size.width/3)-1);
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-            [imageView setImageWithURL:[NSURL URLWithString:self.imageSet[indexPath.row]]];
+            [imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.clipsToBounds = YES;
             imageView.tag = indexPath.row;
             [cell addSubview:imageView];
-            cell.videoIcon.hidden = YES; //<--this needs to be determined
+            
+            if(photo.video){
+                CGRect videoFrame = CGRectMake(cell.frame.size.width-26, cell.frame.size.height-21, 16, 11);
+                UIImageView *videoImageView = [[UIImageView alloc] initWithFrame:videoFrame];
+                videoImageView.image = [UIImage imageNamed:@"video_icon"];
+                [cell addSubview:videoImageView];
+            }
         }
         
     }else if(collectionView == self.membersCollectionView){
