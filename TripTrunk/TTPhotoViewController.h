@@ -22,6 +22,7 @@
 @interface TTPhotoViewController : TTBaseViewController
 @property id<PhotoDelegate> delegate;
 @property (strong, nonatomic) Photo *photo;
+@property (strong, nonatomic) UIImage *image;
 @property int index;
 @property (strong, nonatomic) NSArray *photos;
 @end

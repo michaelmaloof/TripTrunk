@@ -14,35 +14,161 @@
 #import "TTAnalytics.h"
 #import "SocialUtility.h"
 #import "SharkfoodMuteSwitchDetector.h"
+#import "HomeMapViewController.h"
 
 @interface TTPhotoViewController () <UIGestureRecognizerDelegate,UIScrollViewDelegate>
-@property (strong, nonatomic) IBOutlet UIImageView *backgroundView;
-@property (strong, nonatomic) IBOutlet UIImageView *foregroundView;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *heartButton;
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, weak) AVPlayerLayer *layer;
 @property (nonatomic, weak) AVPlayer *player;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property BOOL isFetchingTrip;
 @property (nonatomic, weak) SharkfoodMuteSwitchDetector* detector;
 @property (strong, nonatomic) IBOutlet UILabel *viewCountLabel;
+@property (strong, nonatomic) IBOutlet UIButton *video_sound_button;
 @property int viewCount;
 @end
 
 @implementation TTPhotoViewController
 
+//Monitor Ring/Silent switch and adjust the GUI to match
+-(id)initWithCoder:(NSCoder *)aDecoder{
+    self = [super initWithCoder:aDecoder];
+    if (self){
+        self.detector = [SharkfoodMuteSwitchDetector shared];
+        __weak TTPhotoViewController* sself = self;
+        self.detector.silentNotify = ^(BOOL silent){
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+            if(silent)
+                sself.video_sound_button.selected = NO;
+            else sself.video_sound_button.selected = YES;
+        };
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.backgroundView.image = self.photo.image;
-    self.backgroundView.contentMode = UIViewContentModeScaleAspectFit;
-    self.foregroundView.image = self.photo.image;
-    self.foregroundView.contentMode = UIViewContentModeScaleAspectFill;
-//    self.backgroundView.tag = 1000;
-//    self.foregroundView.tag = 1001;
+    //Create views for image scrolling
+    UIScrollView *scrollView = [self setScrollViewForForegroundImage:0];
+    UIImageView *newImageForeground = [self createUIImageView:0];
+    UIImageView *newImageBackground = [self createUIImageView:0];
+    UIView *viewsWrapper = [[UIView alloc] initWithFrame:CGRectMake(0,0,kScreenWidth,kScreenHeight)];
+    
+    //Create gesture recognizers
+    UISwipeGestureRecognizer *swipeleft=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
+    UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    
+    //Image view settings
+    newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
+    newImageBackground.alpha = 0.45;
+    newImageBackground.tag = 1000;
+    newImageForeground.tag = 1001;
+    newImageForeground.userInteractionEnabled = YES;
+    self.photo.image = newImageForeground.image;
+    [scrollView addSubview:newImageForeground];
+    scrollView.minimumZoomScale = 1.0;
+    scrollView.maximumZoomScale = 6.0;
+    scrollView.scrollEnabled = NO;
+    scrollView.contentSize = newImageForeground.frame.size;
+    
+    //viewsWrapper settings
+    viewsWrapper.userInteractionEnabled = YES;
+    if(self.photos.count > 1){
+        [viewsWrapper addGestureRecognizer:swiperight];
+        [viewsWrapper addGestureRecognizer:swipeleft];
+    }
+    viewsWrapper.tag = 998;
+    [viewsWrapper addSubview:newImageBackground];
+    [viewsWrapper addSubview:scrollView];
+    [self.view insertSubview:viewsWrapper atIndex:0];
+    
+    [self setupNotificationCenter];
+    [self setupViewForVideo];
+    
+    [self refreshPhotoActivities];
+    [self updateLikeStatusForCurrentPhoto];
+    
+    [self markPhotoAsViewed];
+    
+    [self preloadPreviousImage];
+    [self preloadNextImage];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    __weak TTPhotoViewController* sself = self;
+    self.detector.silentNotify = ^(BOOL silent){
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        if(silent)
+            sself.video_sound_button.selected = NO;
+        else sself.video_sound_button.selected = YES;
+        
+    };
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
+    //prevent calling this if it's a photo
+    if(self.photo.video && self.viewCount > 0)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
+    [self.activityIndicator stopAnimating];
+    [self clearVideo];
+}
+
+//WHAT IS THIS FOR?
+-(void)markPhotoAsViewed{
+    for (UINavigationController *controller in self.tabBarController.viewControllers)
+    {
+        for (HomeMapViewController *view in controller.viewControllers)
+        {
+            if ([view isKindOfClass:[HomeMapViewController class]])
+            {
+                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
+                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
+                        
+                        [view.viewedPhotos addObject:self.photo.objectId];
+                        [TTAnalytics photoViewed:self.photo.objectId];
+                        if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasViewed:)])
+                            [self.delegate photoWasViewed:self.photo];
+                    }
+                }
+            }
+        }
+    }
+}
+
+-(void)setupNotificationCenter{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveVideoViews)
+                                                 name:UIApplicationWillTerminateNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveVideoViews)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivePlaybackStartedNotification:)
+                                                 name:@"PlaybackStartedNotification"
+                                               object:nil];
+}
+
+-(void)setupViewForVideo{
+    self.video_sound_button.hidden = YES;
+    self.viewCountLabel.hidden = YES;
     
     if(self.photo.video){
+        self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        self.activityIndicator.frame = CGRectMake((kScreenWidth/2), (kScreenHeight/2), 32, 32);
+        [self.view addSubview:self.activityIndicator];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.activityIndicator startAnimating];
+        });
         
         [self.photo.video fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
             
@@ -52,9 +178,10 @@
             self.layer = [AVPlayerLayer layer];
             [self.layer setPlayer:self.player];
             [self.layer setFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-            [self.layer setVideoGravity:AVLayerVideoGravityResizeAspect];
+            [self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
             
-            [self.scrollView.layer addSublayer:self.layer];
+            UIView *v = [self.view viewWithTag:998];
+            [v.layer addSublayer:self.layer];
             
             [self.player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -68,10 +195,10 @@
             [self.player.currentItem seekToTime:kCMTimeZero];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.player play];
-                self.scrollView.scrollEnabled = NO;
-                self.scrollView.pinchGestureRecognizer.enabled = NO;
+//                view.scrollEnabled = NO;
+//                view.pinchGestureRecognizer.enabled = NO;
             });
-//            self.video_sound_button.hidden = NO;
+            self.video_sound_button.hidden = NO;
             self.viewCountLabel.hidden = NO;
             
             // Declare block scope variables to avoid retention cycles
@@ -96,17 +223,6 @@
                                                     }];
         }];
     }
-    
-    self.scrollView.minimumZoomScale = 1.0;
-    self.scrollView.maximumZoomScale = 6.0;
-    self.scrollView.contentSize = self.foregroundView.frame.size;
-    
-    [self refreshPhotoActivities];
-    [self updateLikeStatusForCurrentPhoto];
-    
-    [self preloadPreviousImage];
-    [self preloadNextImage];
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -171,103 +287,131 @@
 //    self.captionLabel.attributedText = [TTHashtagMentionColorization colorHashtagAndMentionsWithBlack:YES text:self.photo.caption];  //FIXME Why is this here?
 }
 
+- (IBAction)toggleVideoSound:(id)sender {
+    
+    if(self.video_sound_button.selected){
+        self.video_sound_button.selected = NO;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        self.player.muted = YES;
+    }else{
+        self.video_sound_button.selected = YES;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
+        self.player.muted = NO;
+    }
+}
+
 
 #pragma mark - touches
 - (IBAction)swipeRight:(UISwipeGestureRecognizer *)sender {
-
+    
+    //prevent calling this if it's a photo
+    if(self.photo.video && self.viewCount > 0)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
+        [self clearVideo];
+    
     if((int)self.index == 0)
         self.index = (int)self.photos.count-1;
     else self.index--;
     
-    UIScrollView *sV = (UIScrollView *)[self.view viewWithTag:999];
-    UIImageView *bI = (UIImageView *)[self.view viewWithTag:1000];
-    
-    UIScrollView *scrollView = [self setScrollViewForForegroundImage:0-kScreenWidth];
-    
+    //Create views for image scrolling
+    UIView *v = [self.view viewWithTag:998];
+    UIScrollView *scrollView = [self setScrollViewForForegroundImage:0];
     UIImageView *newImageForeground = [self createUIImageView:0];
-    newImageForeground.tag = 1001;
-    newImageForeground.contentMode = UIViewContentModeScaleAspectFit;
-    self.photo.image = newImageForeground.image;
+    UIImageView *newImageBackground = [self createUIImageView:0];
+    UIView *viewsWrapper = [[UIView alloc] initWithFrame:CGRectMake(0-kScreenWidth,0,kScreenWidth,kScreenHeight)];
     
+    //Create gesture recognizers
     UISwipeGestureRecognizer *swipeleft=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
-    [newImageForeground addGestureRecognizer:swipeleft];
     UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
-    [newImageForeground addGestureRecognizer:swiperight];
     
-    newImageForeground.userInteractionEnabled = YES;
-    
-    UIImageView *newImageBackground = [self createUIImageView:0-kScreenWidth];
+    //Image view settings
     newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
     newImageBackground.alpha = 0.45;
     newImageBackground.tag = 1000;
-    
+    newImageForeground.tag = 1001;
+    newImageForeground.userInteractionEnabled = YES;
+    self.photo.image = newImageForeground.image;
+    scrollView.scrollEnabled = NO;
     [scrollView addSubview:newImageForeground];
-    [self.view insertSubview:scrollView atIndex:2];
-    [self.view insertSubview:newImageBackground atIndex:0];
     
+    //viewsWrapper settings
+    viewsWrapper.userInteractionEnabled = YES;
+    [viewsWrapper addGestureRecognizer:swiperight];
+    [viewsWrapper addGestureRecognizer:swipeleft];
+    viewsWrapper.tag = 998;
+    [viewsWrapper addSubview:newImageBackground];
+    [viewsWrapper addSubview:scrollView];
+    [self.view insertSubview:viewsWrapper atIndex:0];
+    
+    //Animate the swipe
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
-        sV.frame = CGRectMake(kScreenWidth,0,kScreenWidth,kScreenHeight);
-        bI.frame = CGRectMake(kScreenWidth,0,kScreenWidth,kScreenHeight);
-        scrollView.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
-        newImageBackground.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
+        v.frame = CGRectMake(kScreenWidth,0,kScreenWidth,kScreenHeight);
+        viewsWrapper.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
+        [self setupViewForVideo];
     } completion:^(BOOL finished) {
         [self updateLikeStatusForCurrentPhoto];
-        [sV removeFromSuperview];
-        [bI removeFromSuperview];
+        [v removeFromSuperview];
     }];
     
     [self preloadPreviousImage];
 }
 
 
-//FIXME: swiping makes the first image and ONLY first image disappear instead of animate <-------------------------------------
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)sender {
-    
+
+    //prevent calling this if it's a photo
+    if(self.photo.video && self.viewCount > 0)
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
+    [self clearVideo];
+
     if((int)self.index == (int)self.photos.count-1)
         self.index = 0;
     else self.index++;
-    
-    UIScrollView *sV = (UIScrollView *)[self.view viewWithTag:999];
-    UIImageView *bI = (UIImageView *)[self.view viewWithTag:1000];
-    
-    UIScrollView *scrollView = [self setScrollViewForForegroundImage:kScreenWidth];
-    
+
+    //Create views for image scrolling
+    UIView *v = [self.view viewWithTag:998];
+    UIScrollView *scrollView = [self setScrollViewForForegroundImage:0];
     UIImageView *newImageForeground = [self createUIImageView:0];
-    newImageForeground.tag = 1001;
-    newImageForeground.contentMode = UIViewContentModeScaleAspectFit;
-    self.photo.image = newImageForeground.image;
+    UIImageView *newImageBackground = [self createUIImageView:0];
+    UIView *viewsWrapper = [[UIView alloc] initWithFrame:CGRectMake(kScreenWidth,0,kScreenWidth,kScreenHeight)];
     
+    //Create gesture recognizers
     UISwipeGestureRecognizer *swipeleft=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
-    [newImageForeground addGestureRecognizer:swipeleft];
     UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
-    [newImageForeground addGestureRecognizer:swiperight];
     
-    newImageForeground.userInteractionEnabled = YES;
-    
-    UIImageView *newImageBackground = [self createUIImageView:kScreenWidth];
+    //Image view settings
     newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
     newImageBackground.alpha = 0.45;
     newImageBackground.tag = 1000;
-    
+    newImageForeground.tag = 1001;
+    newImageForeground.userInteractionEnabled = YES;
+    self.photo.image = newImageForeground.image;
+    scrollView.scrollEnabled = NO;
     [scrollView addSubview:newImageForeground];
-    [self.view insertSubview:scrollView atIndex:2];
-    [self.view insertSubview:newImageBackground atIndex:0];
     
+    //viewsWrapper settings
+    viewsWrapper.userInteractionEnabled = YES;
+    [viewsWrapper addGestureRecognizer:swiperight];
+    [viewsWrapper addGestureRecognizer:swipeleft];
+    viewsWrapper.tag = 998;
+    [viewsWrapper addSubview:newImageBackground];
+    [viewsWrapper addSubview:scrollView];
+    [self.view insertSubview:viewsWrapper atIndex:0];
+    
+    //Animate the swipe
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
-        sV.frame = CGRectMake(0-kScreenWidth,0,kScreenWidth,kScreenHeight);
-        bI.frame = CGRectMake(0-kScreenWidth,0,kScreenWidth,kScreenHeight);
-        scrollView.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
-        newImageBackground.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
+        v.frame = CGRectMake(0-kScreenWidth,0,kScreenWidth,kScreenHeight);
+        viewsWrapper.frame = CGRectMake(0,0,kScreenWidth,kScreenHeight);
+        [self setupViewForVideo];
     } completion:^(BOOL finished) {
         [self updateLikeStatusForCurrentPhoto];
-        [sV removeFromSuperview];
-        [bI removeFromSuperview];
+        [v removeFromSuperview];
     }];
-    
+
     [self preloadNextImage];
 }
 
@@ -298,7 +442,10 @@
     Photo *newPhoto = self.photos[self.index];
     self.photo = newPhoto;
     [self updateLikeStatusForCurrentPhoto];
-    [imageView setImageWithURL:[NSURL URLWithString:newPhoto.imageUrl]];
+    if(self.image)
+        imageView.image = self.image;
+    else [imageView setImageWithURL:[NSURL URLWithString:newPhoto.imageUrl]];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.frame = CGRectMake(x, 0, kScreenWidth, kScreenHeight);
     imageView.clipsToBounds = YES;
     
@@ -341,6 +488,43 @@
     }
 }
 
+-(void)clearVideo{
+    
+    @try{
+        [self.player removeObserver:self forKeyPath:@"status"];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
+    __weak TTPhotoViewController* sself = self;
+    self.detector.silentNotify = ^(BOOL silent){
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
+        if(silent)
+            sself.video_sound_button.selected = NO;
+        else sself.video_sound_button.selected = YES;
+        
+    };
+    [self.activityIndicator stopAnimating];
+    self.video_sound_button.hidden = YES;
+    [self.player pause];
+    [self.layer removeFromSuperlayer];
+    self.player = nil;
+    self.layer = nil;
+}
+
+-(void)saveVideoViews{
+    if(self.photo.video && self.viewCount > 0){
+        [TTUtility updateVideoViewCount:self.photo.objectId withCount:self.viewCount];
+        self.viewCount = 0;
+    }
+}
+
+-(void) receivePlaybackStartedNotification:(NSNotification *) notification {
+    if ([[notification name] isEqualToString:@"PlaybackStartedNotification"]) {
+        [self.activityIndicator stopAnimating];
+        [self.player play];
+    }
+}
+
 //AVPlayer Observers
 //handle the end of the video
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
@@ -351,25 +535,19 @@
     self.viewCountLabel.text = [NSString stringWithFormat:@"%@",self.photo.viewCount];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.player play];
-        self.scrollView.scrollEnabled = NO;
-        self.scrollView.pinchGestureRecognizer.enabled = NO;
+//        self.scrollView.scrollEnabled = NO;
+//        self.scrollView.pinchGestureRecognizer.enabled = NO;
     });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == self.player && [keyPath isEqualToString:@"status"]) {
         if (self.player.status == AVPlayerItemStatusReadyToPlay) {
-            //[self.activityIndicator stopAnimating];
+            [self.activityIndicator stopAnimating];
 //            [self.scrollView sendSubviewToBack:self.imageView];
         } else if (self.player.status == AVPlayerStatusFailed) {
             NSLog(@"There was an error loading the video");
         }
-    }
-}
-
--(void) receivePlaybackStartedNotification:(NSNotification *) notification {
-    if ([[notification name] isEqualToString:@"PlaybackStartedNotification"]) {
-        [self.activityIndicator stopAnimating];
     }
 }
 

@@ -634,7 +634,15 @@
 - (IBAction)profileImageTapAction:(UITapGestureRecognizer*)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
     TTPhotoViewController *photoViewController = (TTPhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTPhotoViewController"];
-    photoViewController.photo = self.userProfilePictureMain.image;
+
+    Photo *image = [[Photo alloc] init];
+    image.image = self.userProfilePictureMain.image;
+    NSArray *array = @[image];
+    photoViewController.photos = array;
+    photoViewController.index = 0;
+    photoViewController.photo = image;
+    photoViewController.image = self.userProfilePictureMain.image;
+    
     [self.navigationController pushViewController:photoViewController animated:YES];
 }
 

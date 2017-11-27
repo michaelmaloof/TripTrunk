@@ -6,8 +6,8 @@
 //  Copyright © 2015 Michael Maloof. All rights reserved.
 //
 
-#define kScreenWidth [[UIScreen mainScreen] applicationFrame].size.width
-#define kScreenHeight [[UIScreen mainScreen] applicationFrame].size.height
+#define kScreenWidth [[UIScreen mainScreen] bounds].size.width
+#define kScreenHeight [[UIScreen mainScreen] bounds].size.height
 
 #import <UIKit/UIKit.h>
 #import "ParseErrorHandlingController.h"

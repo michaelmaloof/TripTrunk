@@ -195,33 +195,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" alpha="0.45000000000000001" tag="1000" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cyb-zs-Jqw" userLabel="Background Image View">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                            </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="999" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWu-yB-O8i">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" tag="1001" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rLK-T7-TAN" userLabel="Foreground Image View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                                        <gestureRecognizers/>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="YQ8-Wg-47n" appends="YES" id="aBk-AP-yQY"/>
-                                            <outletCollection property="gestureRecognizers" destination="w8q-x8-OgG" appends="YES" id="J5f-Pj-RFA"/>
-                                        </connections>
-                                    </imageView>
-                                </subviews>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jrv-1T-8Eu">
+                                <rect key="frame" x="8" y="28" width="359" height="21"/>
                                 <constraints>
-                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="centerY" secondItem="BWu-yB-O8i" secondAttribute="centerY" id="5bD-EC-JBp"/>
-                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="centerX" secondItem="BWu-yB-O8i" secondAttribute="centerX" id="FIR-zX-dGv"/>
-                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="top" secondItem="BWu-yB-O8i" secondAttribute="top" id="JYO-Aj-dhw"/>
-                                    <constraint firstAttribute="trailing" secondItem="rLK-T7-TAN" secondAttribute="trailing" id="oP3-jt-Slz"/>
-                                    <constraint firstItem="rLK-T7-TAN" firstAttribute="leading" secondItem="BWu-yB-O8i" secondAttribute="leading" id="sv4-Hd-RfX"/>
-                                    <constraint firstAttribute="bottom" secondItem="rLK-T7-TAN" secondAttribute="bottom" id="zag-5x-RfZ"/>
+                                    <constraint firstAttribute="height" constant="21" id="pxv-dB-skg"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdQ-Fr-Adg">
+                                <rect key="frame" x="8" y="28" width="21" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="35" id="GDj-G4-x4a"/>
+                                    <constraint firstAttribute="height" constant="34" id="IqU-0l-JGL"/>
+                                </constraints>
+                                <state key="normal" image="sound_off"/>
+                                <state key="selected" image="sound_on"/>
                                 <connections>
-                                    <outlet property="delegate" destination="Zxw-qr-NhS" id="0fR-Xm-nkG"/>
+                                    <action selector="toggleVideoSound:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="RlC-55-5AK"/>
                                 </connections>
-                            </scrollView>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTu-3B-mm5" customClass="TTOnboardingButton">
                                 <rect key="frame" x="34" y="591" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -256,28 +250,23 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="VTu-3B-mm5" secondAttribute="bottom" constant="26" id="0df-sl-oT1"/>
-                            <constraint firstAttribute="topMargin" secondItem="Cyb-zs-Jqw" secondAttribute="top" id="1dC-sS-i2e"/>
-                            <constraint firstAttribute="trailing" secondItem="Cyb-zs-Jqw" secondAttribute="trailing" id="46g-Ay-HdX"/>
                             <constraint firstAttribute="bottomMargin" secondItem="gnA-0o-EiH" secondAttribute="bottom" constant="26" id="4tb-x6-NEd"/>
                             <constraint firstAttribute="trailing" secondItem="gnA-0o-EiH" secondAttribute="trailing" constant="34" id="8Nu-iw-3Hz"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Cyb-zs-Jqw" secondAttribute="bottom" id="A20-ps-K7b"/>
-                            <constraint firstAttribute="trailing" secondItem="BWu-yB-O8i" secondAttribute="trailing" id="F8f-X1-ONH"/>
-                            <constraint firstItem="BWu-yB-O8i" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" id="PZX-6g-xEY"/>
+                            <constraint firstItem="gdQ-Fr-Adg" firstAttribute="leading" secondItem="jrv-1T-8Eu" secondAttribute="leading" id="CAq-VL-DgA"/>
                             <constraint firstItem="VTu-3B-mm5" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="34" id="SRM-M5-Rio"/>
-                            <constraint firstItem="Cyb-zs-Jqw" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" id="X44-NQ-32h"/>
-                            <constraint firstItem="Cyb-zs-Jqw" firstAttribute="width" secondItem="BWu-yB-O8i" secondAttribute="width" id="j5q-bP-0gr"/>
-                            <constraint firstAttribute="topMargin" secondItem="BWu-yB-O8i" secondAttribute="top" id="qqR-gu-efj"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="BWu-yB-O8i" secondAttribute="bottom" id="tV6-3H-wBM"/>
+                            <constraint firstItem="jrv-1T-8Eu" firstAttribute="top" secondItem="tus-5y-BRu" secondAttribute="top" constant="28" id="ShI-wb-vZr"/>
+                            <constraint firstItem="gdQ-Fr-Adg" firstAttribute="top" secondItem="jrv-1T-8Eu" secondAttribute="top" id="dA5-yT-ipo"/>
+                            <constraint firstAttribute="trailing" secondItem="jrv-1T-8Eu" secondAttribute="trailing" constant="8" id="lyP-EO-UNF"/>
+                            <constraint firstItem="jrv-1T-8Eu" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="8" id="rHy-WT-XCq"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="backgroundView" destination="Cyb-zs-Jqw" id="jPe-eb-n6Q"/>
-                        <outlet property="foregroundView" destination="rLK-T7-TAN" id="3uW-Wx-cZO"/>
                         <outlet property="heartButton" destination="gnA-0o-EiH" id="fgS-32-u0Z"/>
-                        <outlet property="scrollView" destination="BWu-yB-O8i" id="AwP-YQ-mtr"/>
+                        <outlet property="video_sound_button" destination="gdQ-Fr-Adg" id="TJl-6j-HrD"/>
+                        <outlet property="viewCountLabel" destination="jrv-1T-8Eu" id="hGn-7h-fHb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LH4-gX-Zhk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -296,6 +285,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="sound_off" width="145" height="145"/>
+        <image name="sound_on" width="145" height="145"/>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
         <image name="tt_heart_liked" width="75" height="75"/>
         <image name="tt_heart_unliked" width="75" height="75"/>
