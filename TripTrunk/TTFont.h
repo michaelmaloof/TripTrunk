@@ -25,4 +25,7 @@
 + (UIFont *)tripTrunkFontBold38;
 + (UIFont *)tripTrunkFontHuge;
 + (UIFont *)tripTrunkFont56;
++ (UIFont *)TT_AddContent_header;
++ (UIFont *)TT_AddContent_subhead;
++ (UIFont *)TT_AddContent_text;
 @end

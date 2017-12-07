@@ -74,4 +74,18 @@
     return [UIFont fontWithName:@"Montserrat-Light" size:56];
 }
 
+
+#pragma mark - v4Redesign
++ (UIFont *)TT_AddContent_header {
+    return [UIFont fontWithName:@"Avenir" size:18];
+}
+
++ (UIFont *)TT_AddContent_subhead {
+    return [UIFont fontWithName:@"Avenir" size:16];
+}
+
++ (UIFont *)TT_AddContent_text {
+    return [UIFont fontWithName:@"Avenir" size:12];
+}
+
 @end

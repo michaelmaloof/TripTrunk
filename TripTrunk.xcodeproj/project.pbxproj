@@ -141,6 +141,11 @@
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
 		27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */; };
+		27D41FBA1FCCB73C001B6CD5 /* TTAddPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */; };
+		27D41FBD1FCCB838001B6CD5 /* TTPhotoPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FBC1FCCB838001B6CD5 /* TTPhotoPicker.m */; };
+		27D41FC01FCE0940001B6CD5 /* TTAddPhotosViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FBF1FCE0940001B6CD5 /* TTAddPhotosViewCell.m */; };
+		27D41FC21FCF3E01001B6CD5 /* Avenir.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 27D41FC11FCF3E01001B6CD5 /* Avenir.ttc */; };
+		27D41FC51FCF5891001B6CD5 /* TTPhotosToAddViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */; };
 		27E388231FA3D40300A9F733 /* TTPassthroughCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */; };
 		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
 		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
@@ -440,6 +445,15 @@
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
 		27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLikeButton.h; sourceTree = "<group>"; };
 		27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTLikeButton.m; sourceTree = "<group>"; };
+		27D41FB81FCCB73B001B6CD5 /* TTAddPhotosViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAddPhotosViewController.h; sourceTree = "<group>"; };
+		27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAddPhotosViewController.m; sourceTree = "<group>"; };
+		27D41FBB1FCCB838001B6CD5 /* TTPhotoPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPhotoPicker.h; sourceTree = "<group>"; };
+		27D41FBC1FCCB838001B6CD5 /* TTPhotoPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPhotoPicker.m; sourceTree = "<group>"; };
+		27D41FBE1FCE0940001B6CD5 /* TTAddPhotosViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAddPhotosViewCell.h; sourceTree = "<group>"; };
+		27D41FBF1FCE0940001B6CD5 /* TTAddPhotosViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAddPhotosViewCell.m; sourceTree = "<group>"; };
+		27D41FC11FCF3E01001B6CD5 /* Avenir.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = Avenir.ttc; sourceTree = "<group>"; };
+		27D41FC31FCF5891001B6CD5 /* TTPhotosToAddViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPhotosToAddViewCell.h; sourceTree = "<group>"; };
+		27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPhotosToAddViewCell.m; sourceTree = "<group>"; };
 		27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPassthroughCollectionView.h; sourceTree = "<group>"; };
 		27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPassthroughCollectionView.m; sourceTree = "<group>"; };
 		27E388251FAA58C100A9F733 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -884,6 +898,7 @@
 		224F3F8F1AE1D35E003A1DEB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				27D41FC11FCF3E01001B6CD5 /* Avenir.ttc */,
 				276718C31CF4D1030064F784 /* Montserrat-ExtraBold.otf */,
 				276718C41CF4D1030064F784 /* Montserrat-SemiBold.otf */,
 				276718C51CF4D1030064F784 /* Montserrat-UltraLight.otf */,
@@ -1070,6 +1085,10 @@
 				27B69F111F5F2F7700905B51 /* View Cells */,
 				27B69F0C1F5F243000905B51 /* TTTrunkViewController.h */,
 				27B69F0D1F5F243000905B51 /* TTTrunkViewController.m */,
+				27D41FB81FCCB73B001B6CD5 /* TTAddPhotosViewController.h */,
+				27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */,
+				27D41FBB1FCCB838001B6CD5 /* TTPhotoPicker.h */,
+				27D41FBC1FCCB838001B6CD5 /* TTPhotoPicker.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1079,6 +1098,10 @@
 			children = (
 				27B69F181F5F305C00905B51 /* TTTrunkViewCell.h */,
 				27B69F191F5F305C00905B51 /* TTTrunkViewCell.m */,
+				27D41FBE1FCE0940001B6CD5 /* TTAddPhotosViewCell.h */,
+				27D41FBF1FCE0940001B6CD5 /* TTAddPhotosViewCell.m */,
+				27D41FC31FCF5891001B6CD5 /* TTPhotosToAddViewCell.h */,
+				27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */,
 			);
 			name = "View Cells";
 			sourceTree = "<group>";
@@ -1436,6 +1459,7 @@
 				C90C3CF71B04F45500CABBC9 /* UserTableViewCell.xib in Resources */,
 				27B69F101F5F247A00905B51 /* Trunk.storyboard in Resources */,
 				271D8BBC1D91A76B0054741F /* GoogleService-Info.plist in Resources */,
+				27D41FC21FCF3E01001B6CD5 /* Avenir.ttc in Resources */,
 				C9FB808C1B827CA4008B8A67 /* CommentTableViewCell.xib in Resources */,
 				276718CF1CF4D1030064F784 /* Montserrat-Bold.otf in Resources */,
 				C95702691D91B1DE009DE079 /* Times in Resources */,
@@ -1540,6 +1564,8 @@
 				275842831FAA6C0600FD58E5 /* UIProgressView+AFNetworking.m in Sources */,
 				275842841FAA6C0600FD58E5 /* UIRefreshControl+AFNetworking.m in Sources */,
 				275842851FAA6C0600FD58E5 /* UIWebView+AFNetworking.m in Sources */,
+				27D41FC51FCF5891001B6CD5 /* TTPhotosToAddViewCell.m in Sources */,
+				27D41FBA1FCCB73C001B6CD5 /* TTAddPhotosViewController.m in Sources */,
 				275842771FAA6BB700FD58E5 /* AFHTTPSessionManager.m in Sources */,
 				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
 				C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */,
@@ -1584,6 +1610,7 @@
 				C957026A1D91B1DE009DE079 /* Underscore.m in Sources */,
 				27BFA4A81EBBC7D000A6CFB4 /* TTHomeViewController.m in Sources */,
 				27F3E3841D3D778600634B75 /* DLFPhotoCell.m in Sources */,
+				27D41FBD1FCCB838001B6CD5 /* TTPhotoPicker.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
 				27BFA4A71EBBC7D000A6CFB4 /* TTEmailViewController.m in Sources */,
@@ -1644,6 +1671,7 @@
 				27444E651EF9CEB10021DC7A /* TTRoundedButton.m in Sources */,
 				C957026D1D91B1DE009DE079 /* USDictionaryWrapper.m in Sources */,
 				2709AF2A1F74423E00F83729 /* TTPhotoViewController.m in Sources */,
+				27D41FC01FCE0940001B6CD5 /* TTAddPhotosViewCell.m in Sources */,
 				27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */,
 				C95702731D942496009DE079 /* Activity.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,

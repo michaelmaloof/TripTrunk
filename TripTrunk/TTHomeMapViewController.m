@@ -12,6 +12,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import "Trip.h"
 #import "UIImageView+AFNetworking.h"
+#import "TTTrunkViewController.h"
 
 @import GoogleMaps;
 
@@ -180,6 +181,7 @@
     cell.trunkTitle.text = trunk.name;
     cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
+//FIXME: This obviously needs to be fixed
     cell.trunkMemberInfo.text = @"Some info here";
     
     //Load images from Array of image URLs
@@ -339,10 +341,10 @@
     return overlay;
 }
 
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 @end

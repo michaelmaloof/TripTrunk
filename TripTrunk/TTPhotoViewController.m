@@ -178,7 +178,7 @@
             self.layer = [AVPlayerLayer layer];
             [self.layer setPlayer:self.player];
             [self.layer setFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-            [self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+//            [self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
             
             UIView *v = [self.view viewWithTag:998];
             [v.layer addSublayer:self.layer];

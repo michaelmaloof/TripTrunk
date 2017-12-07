@@ -17,13 +17,14 @@
 #import "TTRoundedImage.h"
 #import "TTPhotoViewController.h"
 #import "Photo.h"
+#import "TTAddPhotosViewController.h"
 
-@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
-@property (strong, nonatomic) NSArray *photos;
-@property (strong, nonatomic) NSArray *trunkMembers;
+@property (strong, nonatomic) NSMutableArray *photos;
+@property (strong, nonatomic) NSMutableArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
 @property NSInteger index;
 
@@ -62,7 +63,7 @@
     [photoQuery whereKey:@"user" equalTo:creator];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(!error){
-            self.photos = objects;
+            [self.photos addObjectsFromArray:objects];
             [self.mainCollectionView reloadData];
         }else{
             //There's an error. Handle this and add the Google tracking
@@ -71,9 +72,9 @@
     }];
     
 
-    self.trunkMembers = [[NSArray alloc] init];
+    self.trunkMembers = [[NSMutableArray alloc] init];
     [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
-        self.trunkMembers = users;
+        [self.trunkMembers addObjectsFromArray:users];
         [self.membersCollectionView reloadData];
     }];
     
@@ -200,7 +201,7 @@
             [cell addSubview:imageView];
             
             if(photo.video){
-                CGRect videoFrame = CGRectMake(cell.frame.size.width-26, cell.frame.size.height-21, 16, 11);
+                CGRect videoFrame = CGRectMake(cell.frame.size.width-26, 8, 16, 11);
                 UIImageView *videoImageView = [[UIImageView alloc] initWithFrame:videoFrame];
                 videoImageView.image = [UIImage imageNamed:@"video_icon"];
                 [cell addSubview:videoImageView];
@@ -363,10 +364,31 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    TTPhotoViewController *photoViewController = segue.destinationViewController;
-    photoViewController.photos = self.photos;
-    photoViewController.index = (int)self.index;
-    photoViewController.photo = self.photo;
+    if([segue.identifier isEqualToString:@"pushToPhoto"]){
+        TTPhotoViewController *photoViewController = segue.destinationViewController;
+        photoViewController.photos = self.photos;
+        photoViewController.index = (int)self.index;
+        photoViewController.photo = self.photo;
+    }
+    
+    if([segue.identifier isEqualToString:@"pushToAddPhotosToTrunk"]){
+        TTAddPhotosViewController *addPhotos = segue.destinationViewController;
+        addPhotos.trunkMembers = self.trunkMembers;
+        addPhotos.delegate = self;
+        if(self.excursion)
+            addPhotos.trip = self.excursion.trunk;
+        else addPhotos.trip = self.trip;
+        
+    }
+    
+}
+
+#pragma mark - AddPhotosDelegate
+-(void)photoUploadCompleted:(NSArray*)photos{
+    for(Photo *photo in [photos reverseObjectEnumerator]){
+        [self.photos insertObject:photo atIndex:0];
+    }
+    [self.mainCollectionView reloadData];
 }
 
 @end

@@ -129,6 +129,7 @@
                                 </constraints>
                                 <state key="normal" image="tt_Blue_Back_Arrow"/>
                                 <connections>
+                                    <action selector="backButton:" destination="hfh-MP-wGC" eventType="touchUpInside" id="gUd-FQ-wUP"/>
                                     <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="Po8-oK-m65"/>
                                 </connections>
                             </button>
@@ -148,6 +149,7 @@
                                 </state>
                                 <connections>
                                     <action selector="addToTrunkButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="rEp-Pr-4II"/>
+                                    <segue destination="uIX-Bs-F7Z" kind="show" identifier="pushToAddPhotosToTrunk" id="BnV-lK-4U8"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DFW-fR-sLU">
@@ -180,8 +182,192 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ZI-9y-AqT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="hfh-MP-wGC" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="703.20000000000005" y="149.77511244377811"/>
+        </scene>
+        <!--Add Photos View Controller-->
+        <scene sceneID="hmL-gH-K24">
+            <objects>
+                <viewController id="uIX-Bs-F7Z" customClass="TTAddPhotosViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AWe-6K-bVr"/>
+                        <viewControllerLayoutGuide type="bottom" id="DOr-jj-Kfg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xSI-v5-ewj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CdM-zO-90e" customClass="TTPhotoPicker">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="OYe-BB-UgA">
+                                    <size key="itemSize" width="124" height="124"/>
+                                    <size key="headerReferenceSize" width="50" height="50"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="gXP-0L-oaD" customClass="TTAddPhotosViewCell">
+                                        <rect key="frame" x="0.0" y="50" width="124" height="124"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S0z-gv-DaY">
+                                                    <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
+                                                </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Yy7-7A-VRE">
+                                                    <rect key="frame" x="99" y="9" width="16" height="11"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="11" id="Bqy-P4-xS9"/>
+                                                        <constraint firstAttribute="width" constant="16" id="RLR-Zj-IwL"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="Bqy-P4-xS9"/>
+                                                            <exclude reference="RLR-Zj-IwL"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="Bqy-P4-xS9"/>
+                                                            <include reference="RLR-Zj-IwL"/>
+                                                        </mask>
+                                                    </variation>
+                                                </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_addphotocheckmark" translatesAutoresizingMaskIntoConstraints="NO" id="i3r-GY-Q0A">
+                                                    <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="i3r-GY-Q0A" firstAttribute="top" secondItem="gXP-0L-oaD" secondAttribute="top" id="387-bp-ndk"/>
+                                            <constraint firstAttribute="bottom" secondItem="S0z-gv-DaY" secondAttribute="bottom" id="Avx-Nc-xUY"/>
+                                            <constraint firstItem="S0z-gv-DaY" firstAttribute="top" secondItem="gXP-0L-oaD" secondAttribute="top" id="PMf-eK-5FP"/>
+                                            <constraint firstItem="S0z-gv-DaY" firstAttribute="leading" secondItem="gXP-0L-oaD" secondAttribute="leading" id="U2a-hc-0dR"/>
+                                            <constraint firstAttribute="trailing" secondItem="i3r-GY-Q0A" secondAttribute="trailing" id="ZdP-k9-2Bw"/>
+                                            <constraint firstAttribute="bottom" secondItem="i3r-GY-Q0A" secondAttribute="bottom" id="ctL-JL-mAk"/>
+                                            <constraint firstItem="Yy7-7A-VRE" firstAttribute="top" secondItem="gXP-0L-oaD" secondAttribute="top" constant="9" id="gOl-AL-eut"/>
+                                            <constraint firstAttribute="trailing" secondItem="S0z-gv-DaY" secondAttribute="trailing" id="nId-NO-byq"/>
+                                            <constraint firstItem="i3r-GY-Q0A" firstAttribute="leading" secondItem="gXP-0L-oaD" secondAttribute="leading" id="sIO-E0-VKl"/>
+                                            <constraint firstAttribute="trailing" secondItem="Yy7-7A-VRE" secondAttribute="trailing" constant="9" id="vV7-84-cDR"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="checkmark" destination="i3r-GY-Q0A" id="Dru-J8-1cV"/>
+                                            <outlet property="image" destination="S0z-gv-DaY" id="lrv-fZ-ndS"/>
+                                            <outlet property="videoIcon" destination="Yy7-7A-VRE" id="cwz-QL-Ffh"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="HeaderView" id="2MM-TW-UUl">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="uIX-Bs-F7Z" id="6JA-gf-zuG"/>
+                                    <outlet property="delegate" destination="uIX-Bs-F7Z" id="TiM-Sy-x2i"/>
+                                </connections>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WBh-E9-lUO" customClass="TTOnboardingButton">
+                                <rect key="frame" x="34" y="597" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="Ddd-Y9-eEz"/>
+                                    <constraint firstAttribute="height" constant="50" id="ksr-Q5-3ep"/>
+                                </constraints>
+                                <state key="normal" image="tt_Blue_Back_Arrow"/>
+                                <connections>
+                                    <action selector="backButtonPressed:" destination="uIX-Bs-F7Z" eventType="touchUpInside" id="v78-Cj-xx0"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12P-5A-WH8" customClass="TTOnboardingButton">
+                                <rect key="frame" x="177" y="597" width="164" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="164" id="cmu-hy-Cdx"/>
+                                    <constraint firstAttribute="height" constant="50" id="g21-8F-HEy"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
+                                <state key="normal" title="UPLOAD">
+                                    <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addSelectedPhototsToTrunk:" destination="uIX-Bs-F7Z" eventType="touchUpInside" id="IFI-2D-j3W"/>
+                                </connections>
+                            </button>
+                            <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Fw-qQ-gM2">
+                                <rect key="frame" x="0.0" y="20" width="375" height="60"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="jwR-Jf-JpN"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="2" minimumInteritemSpacing="2" id="bVH-wb-Qr9">
+                                    <size key="itemSize" width="60" height="60"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="oNR-ud-Hly" customClass="TTPhotosToAddViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WHV-Kc-yZo">
+                                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="WHV-Kc-yZo" firstAttribute="top" secondItem="oNR-ud-Hly" secondAttribute="top" id="7l9-MK-S3G"/>
+                                            <constraint firstItem="WHV-Kc-yZo" firstAttribute="leading" secondItem="oNR-ud-Hly" secondAttribute="leading" id="CM3-Pm-NgB"/>
+                                            <constraint firstAttribute="trailing" secondItem="WHV-Kc-yZo" secondAttribute="trailing" id="RQm-B5-Gzt"/>
+                                            <constraint firstAttribute="bottom" secondItem="WHV-Kc-yZo" secondAttribute="bottom" id="tuI-YB-BpD"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="image" destination="WHV-Kc-yZo" id="8k4-3y-yt4"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="uIX-Bs-F7Z" id="5fm-Dk-UM0"/>
+                                    <outlet property="delegate" destination="uIX-Bs-F7Z" id="LFZ-TK-ljo"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="WBh-E9-lUO" secondAttribute="bottom" constant="20" id="Dx5-4Z-OzV"/>
+                            <constraint firstItem="5Fw-qQ-gM2" firstAttribute="top" secondItem="xSI-v5-ewj" secondAttribute="top" constant="20" id="FR5-N5-jXV"/>
+                            <constraint firstItem="CdM-zO-90e" firstAttribute="leading" secondItem="xSI-v5-ewj" secondAttribute="leading" id="JOe-RS-rBe"/>
+                            <constraint firstItem="5Fw-qQ-gM2" firstAttribute="leading" secondItem="xSI-v5-ewj" secondAttribute="leading" id="Mmr-zn-fpO"/>
+                            <constraint firstAttribute="trailing" secondItem="5Fw-qQ-gM2" secondAttribute="trailing" id="Ogf-d6-wzB"/>
+                            <constraint firstAttribute="bottom" secondItem="12P-5A-WH8" secondAttribute="bottom" constant="20" id="V2n-qZ-XcU"/>
+                            <constraint firstItem="WBh-E9-lUO" firstAttribute="leading" secondItem="xSI-v5-ewj" secondAttribute="leading" constant="34" id="a7T-bR-92P"/>
+                            <constraint firstAttribute="bottom" secondItem="CdM-zO-90e" secondAttribute="bottom" id="be0-4n-QSU"/>
+                            <constraint firstAttribute="trailing" secondItem="CdM-zO-90e" secondAttribute="trailing" id="c9d-gD-Al8"/>
+                            <constraint firstItem="CdM-zO-90e" firstAttribute="top" secondItem="xSI-v5-ewj" secondAttribute="top" constant="20" id="lTP-4h-DLX"/>
+                            <constraint firstAttribute="trailing" secondItem="12P-5A-WH8" secondAttribute="trailing" constant="34" id="lzp-33-sbQ"/>
+                            <constraint firstItem="WBh-E9-lUO" firstAttribute="centerY" secondItem="12P-5A-WH8" secondAttribute="centerY" id="w0d-fp-jNr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addButton" destination="12P-5A-WH8" id="Ssg-o4-1FD"/>
+                        <outlet property="backButton" destination="WBh-E9-lUO" id="SLp-s7-OAV"/>
+                        <outlet property="collectionView" destination="CdM-zO-90e" id="DKb-SB-AMg"/>
+                        <outlet property="photosToAddCollectionView" destination="5Fw-qQ-gM2" id="8gA-27-ktB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EGP-BM-KgW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="701.60000000000002" y="919.79010494752629"/>
         </scene>
         <!--Photo View Controller-->
         <scene sceneID="o0x-Dn-wmJ">
@@ -288,7 +474,9 @@
         <image name="sound_off" width="145" height="145"/>
         <image name="sound_on" width="145" height="145"/>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
+        <image name="tt_addphotocheckmark" width="99" height="99"/>
         <image name="tt_heart_liked" width="75" height="75"/>
         <image name="tt_heart_unliked" width="75" height="75"/>
+        <image name="video_icon" width="16" height="11"/>
     </resources>
 </document>

@@ -35,6 +35,19 @@
 
 @implementation TTTimelineViewController
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    
+    self.filteredArray = [[NSMutableArray alloc] init];
+    self.sortedArray = [[NSMutableArray alloc] init];
+    self.excursionGroups = [[NSMutableArray alloc] init];
+    self.cellWidths = [[NSMutableArray alloc] init];
+    
+    self.user = [PFUser currentUser];
+    
+    [self loadTimelineData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -46,14 +59,6 @@
     if (!style)
         NSLog(@"The style definition could not be loaded: %@", error);
     self.googleMapView.mapStyle = style;
-    
-    self.filteredArray = [[NSMutableArray alloc] init];
-    self.sortedArray = [[NSMutableArray alloc] init];
-    self.excursionGroups = [[NSMutableArray alloc] init];
-    self.cellWidths = [[NSMutableArray alloc] init];
-    
-    self.user = [PFUser currentUser];
-    [self loadTimelineData];
     
 }
 
@@ -479,5 +484,6 @@
     trunkViewController.excursion = self.sortedArray[indexPath.row];
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
+
 
 @end
