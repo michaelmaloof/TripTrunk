@@ -208,7 +208,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="gXP-0L-oaD" customClass="TTAddPhotosViewCell">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" reuseIdentifier="cell" id="gXP-0L-oaD" customClass="TTAddPhotosViewCell">
                                         <rect key="frame" x="0.0" y="50" width="124" height="124"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -237,7 +237,7 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_addphotocheckmark" translatesAutoresizingMaskIntoConstraints="NO" id="i3r-GY-Q0A">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_addphotocheckmark" translatesAutoresizingMaskIntoConstraints="NO" id="i3r-GY-Q0A">
                                                     <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
                                                 </imageView>
                                             </subviews>
@@ -313,14 +313,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="oNR-ud-Hly" customClass="TTPhotosToAddViewCell">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" reuseIdentifier="cell" id="oNR-ud-Hly" customClass="TTPhotosToAddViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WHV-Kc-yZo">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WHV-Kc-yZo">
                                                     <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                 </imageView>
                                             </subviews>

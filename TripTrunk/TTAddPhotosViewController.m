@@ -20,7 +20,7 @@
 #import "SocialUtility.h"
 #import "TTAnalytics.h"
 
-@interface TTAddPhotosViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIVideoEditorControllerDelegate>
+@interface TTAddPhotosViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
 @property (strong, nonatomic) PHFetchResult *assets;
 @property (strong, nonatomic) NSMutableArray *filteredAssets;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -33,7 +33,9 @@
 @property (strong, nonatomic) NSMutableArray *photos;
 @property BOOL publishToFacebook;
 @property NSInteger editingVideoAtIndex;
+@property NSInteger path;
 @property NSUInteger taskCount;
+//@property (nonatomic,assign) id<UIVideoEditorControllerDelegate> delegate;
 @end
 
 @implementation TTAddPhotosViewController
@@ -157,6 +159,7 @@
             TTAddPhotosViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(num, num) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 cell.image.image = result;
+                cell.image.contentMode = UIViewContentModeScaleAspectFill;
             }];
             
             if(asset.mediaType == PHAssetMediaTypeVideo)
@@ -167,15 +170,25 @@
             TTAddPhotosViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(num, num) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 cell.image.image = result;
+                cell.image.contentMode = UIViewContentModeScaleAspectFill;
             }];
             return cell;
         }
     }else{
         TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-        PHAsset *asset = self.photosToAdd[indexPath.row];
-        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(60, 60) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            cell.image.image = result;
-        }];
+        if([self.photosToAdd[indexPath.row] isKindOfClass:[PHAsset class]]){
+            PHAsset *asset = self.photosToAdd[indexPath.row];
+            [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(60, 60) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                cell.image.image = result;
+                cell.image.contentMode = UIViewContentModeScaleAspectFill;
+            }];
+        }else{
+            AVURLAsset *asset = self.photosToAdd[indexPath.row];
+            AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+            imageGenerator.appliesPreferredTrackTransform = YES;
+            CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
+            cell.image.image = [UIImage imageWithCGImage:cgImage];
+        }
         return cell;
     }
 }
@@ -187,11 +200,29 @@
         if(cell.checkmark.hidden){
             cell.checkmark.hidden = NO;
             if(indexPath.section==0){
-                [self.photosToAdd addObject:self.filteredAssets[indexPath.row]];
-                [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
+                Photo *media = [[Photo alloc] init];
+                media.imageAsset = self.filteredAssets[indexPath.row];
+                if(media.imageAsset.mediaType == 1){
+                    [self.photosToAdd addObject:self.filteredAssets[indexPath.row]];
+                    [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
+                }else{
+                    [self beginVideoTruncation:media andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+//                        [self.photosToAdd addObject:self.filteredAssets[indexPath.row]];
+                        [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
+                    }];
+                }
             }else{
-                [self.photosToAdd addObject:self.assets[indexPath.row]];
-                [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                Photo *media = [[Photo alloc] init];
+                media.imageAsset = self.assets[indexPath.row];
+                if(media.imageAsset.mediaType == 1){
+                    [self.photosToAdd addObject:self.assets[indexPath.row]];
+                    [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                }else{
+                    [self beginVideoTruncation:media andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+//                        [self.photosToAdd addObject:self.assets[indexPath.row]];
+                        [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                    }];
+                }
             }
         }else{
             cell.checkmark.hidden = YES;
@@ -608,26 +639,112 @@
 #pragma mark - VideoEditorController delegate
 - (void)videoEditorController:(UIVideoEditorController *)editor didSaveEditedVideoToPath:(NSString *)editedVideoPath{
     NSLog(@"video edited: %@",editedVideoPath);
-    //    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",editedVideoPath]];
+    NSURL *fileUrl = [NSURL fileURLWithPath:editedVideoPath];
+    AVAsset *videoAsset = [AVAsset assetWithURL:fileUrl];
+    PHAsset *newAsset = [[PHAsset alloc] init];
+    newAsset = (PHAsset*)videoAsset;
     
-    Photo *photo = [self.photos objectAtIndex:self.editingVideoAtIndex];
-    photo.editedPath = editedVideoPath;
     
+    
+//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",editedVideoPath]];
+    
+//    Photo *photo = [self.photos objectAtIndex:self.editingVideoAtIndex];
+//    photo.editedPath = editedVideoPath;
+    
+//    NSURL *fileUrl = [NSURL fileURLWithPath:editedVideoPath];
+//    NSArray *assetUrl = @[fileUrl];
+//    PHFetchResult *asset = [PHAsset fetchAssetsWithALAssetURLs:assetUrl options:nil];
+//    AVAsset *videoAsset = [AVAsset assetWithURL:fileUrl];
+//    [[PHImageManager defaultManager] requestAVAssetForVideo:(PHAsset *)videoAsset options:nil resultHandler:^(AVAsset * avasset, AVAudioMix * audioMix, NSDictionary * info) {
+////        resultAsset = avasset;
+//        [self.photosToAdd addObject:avasset];
+//
+//
+//    }];
+    
+    
+    [self.photosToAdd addObject:newAsset];
     [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
-//        [self enableUploadButton];
-        [self.collectionView reloadData];
+        //        [self enableUploadButton];
+        //        [self.collectionView reloadData];
+        
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [self.photosToAddCollectionView reloadData]; //<--------------THIS IS CRASHING BECAUSE OF AN UNFOUND VIDEO PATH
+        });
+        
+        if(self.photosToAdd.count > 0){
+            self.photosToAddCollectionView.hidden = NO;
+            self.addButton.hidden = NO;
+        }
     }];
 }
 
 - (void)videoEditorController:(UIVideoEditorController *)editor didFailWithError:(NSError *)error{
     NSLog(@"Error trimming video");
     [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
-        [self.collectionView reloadData];
+//        [self.collectionView reloadData];
+        if(self.photosToAdd.count == 0){
+            self.photosToAddCollectionView.hidden = YES;
+            self.addButton.hidden = YES;
+        }
+        
+//FIXME: WE HAVE TO UNCHECK THE BOX <-----------------------------------------------
     }];
 }
 
 - (void)videoEditorControllerDidCancel:(UIVideoEditorController *)editor{
     NSLog(@"User canceled video truncation.");
+}
+
+-(void)beginVideoTruncation:(Photo*)video andIndex:(NSInteger)index withCompletion:(void(^)(BOOL success))completion{
+//    NSString *message = NSLocalizedString(@"Would you like to Trim this video or set the caption?","Would you like to Trim this video or set the caption?");
+//    NSString *trimActionString = NSLocalizedString(@"Trim Video", @"Trim Video");
+//    NSString *setCaptionActionString = NSLocalizedString(@"Set Caption", @"Set Caption");
+//    NSString *cancelActionString = NSLocalizedString(@"Cancel", @"Cancel");
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleActionSheet];
+//    UIAlertAction *trimAction = [UIAlertAction actionWithTitle:trimActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        UIVideoEditorController* videoEditor = [[UIVideoEditorController alloc] init];
+        videoEditor.delegate = self;
+        
+        PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+        [options setVersion:PHVideoRequestOptionsVersionCurrent];
+        [options setDeliveryMode:PHVideoRequestOptionsDeliveryModeHighQualityFormat];
+        [options setNetworkAccessAllowed:YES];
+        
+        
+        [[PHImageManager defaultManager] requestAVAssetForVideo:video.imageAsset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+            
+            NSString *pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
+            pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+            
+            if ([UIVideoEditorController canEditVideoAtPath:pathToVideo]){
+                videoEditor.videoPath = pathToVideo;
+                videoEditor.videoMaximumDuration = 15.0;
+                self.editingVideoAtIndex = index;
+                
+                [self presentViewController:videoEditor animated:YES completion:^{
+                    completion(YES);
+                }];
+            }else{
+                NSLog( @"can't edit video at %@", pathToVideo );
+                completion(NO);
+            }
+            
+            
+        }];
+//    }];
+//    UIAlertAction *captionAction = [UIAlertAction actionWithTitle:setCaptionActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+//        self.path = index;
+//        [self performSegueWithIdentifier:@"addPhotoCaption" sender:self];
+//    }];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+//        
+//    }];
+//    
+//    [alert addAction:trimAction];
+//    [alert addAction:captionAction];
+//    [alert addAction:cancelAction];
+//    [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)uploadTasksCompleted{
