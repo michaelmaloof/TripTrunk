@@ -7,6 +7,7 @@
 //
 
 #define distanceThreshold 25
+#define timeframeThresholdInDays 7
 
 #import "TTAddPhotosViewController.h"
 #import <Photos/Photos.h>
@@ -30,12 +31,14 @@
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 @property (strong, nonatomic) NSMutableArray *photosToAdd;
 @property (strong, nonatomic) CLLocation *location;
-@property (strong, nonatomic) NSMutableArray *photos;
+//@property (strong, nonatomic) NSMutableArray *photos;
+@property (strong, nonatomic) NSMutableDictionary *editedVideoToCellCrossReference;
 @property BOOL publishToFacebook;
+@property NSInteger editingVideoInSection;
 @property NSInteger editingVideoAtIndex;
 @property NSInteger path;
 @property NSUInteger taskCount;
-//@property (nonatomic,assign) id<UIVideoEditorControllerDelegate> delegate;
+@property BOOL isNewAsset;
 @end
 
 @implementation TTAddPhotosViewController
@@ -44,7 +47,8 @@
     [super viewDidLoad];
     self.photosToAdd = [[NSMutableArray alloc] init];
     self.filteredAssets = [[NSMutableArray alloc] init];
-    self.photos = [[NSMutableArray alloc] init];
+//    self.photos = [[NSMutableArray alloc] init];
+    self.editedVideoToCellCrossReference = [[NSMutableDictionary alloc] init];
     self.publishToFacebook = NO; //<------------------------------------------------------------------- ?
     self.taskCount = 0;
     self.location = [[CLLocation alloc] initWithLatitude:self.trip.lat longitude:self.trip.longitude];
@@ -63,21 +67,36 @@
 }
 
 -(void)reloadAssets{
-    [self.activityIndicator startAnimating];
+//    [self.activityIndicator startAnimating];
     self.assets = nil;
 //    [self.collectionView reloadData]; //<---?
-    self.assets = [PHAsset fetchAssetsWithOptions:nil];
+    PHFetchOptions *fetchOptions = [PHFetchOptions new];
+    fetchOptions.sortDescriptors = @[
+                                     [NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],
+                                     ];
+    self.assets = [PHAsset fetchAssetsWithOptions:fetchOptions];
+    
     [self filterAssetsBasedOnLocation];
     [self.collectionView reloadData];
-    [self.activityIndicator stopAnimating];
+//    [self.activityIndicator stopAnimating];
 }
 
 -(void)filterAssetsBasedOnLocation{
     for(PHAsset *asset in self.assets){
-        CLLocationDistance distance = [self.location distanceFromLocation:asset.location];
-        if((distance/1609.344) <= distanceThreshold)
-           [self.filteredAssets addObject:asset];
+        if(asset.location != nil){
+            CLLocationDistance distance = [self.location distanceFromLocation:asset.location];
+            if((distance/1609.344) <= distanceThreshold && [self timeIntervalIsBelowThreshold:asset.creationDate])
+               [self.filteredAssets addObject:asset];
+        }
     }
+}
+
+-(BOOL)timeIntervalIsBelowThreshold:(NSDate*)creationDate{
+    NSDate* date = [NSDate date];
+    NSTimeInterval distanceBetweenDates = [date timeIntervalSinceDate:creationDate];
+    NSInteger daysBetweenDates = distanceBetweenDates / 86400;
+    
+    return daysBetweenDates<=timeframeThresholdInDays;
 }
 
 -(void)syncCellSelectionWithFilteredAsset:(PHAsset*)asset withState:(BOOL)state{
@@ -157,6 +176,8 @@
         if(indexPath.section == 0){
             PHAsset *asset = self.filteredAssets[indexPath.row];
             TTAddPhotosViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+            cell.videoIcon.hidden = YES;
+            
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(num, num) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 cell.image.image = result;
                 cell.image.contentMode = UIViewContentModeScaleAspectFill;
@@ -164,30 +185,48 @@
             
             if(asset.mediaType == PHAssetMediaTypeVideo)
                 cell.videoIcon.hidden = NO;
+
+            cell.checkmark.hidden = [self checkCellForCheckMarkState:asset andIndexPath:indexPath];
             return cell;
         }else{
             PHAsset *asset = self.assets[indexPath.row];
             TTAddPhotosViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+            cell.videoIcon.hidden = YES;
+            
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(num, num) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 cell.image.image = result;
                 cell.image.contentMode = UIViewContentModeScaleAspectFill;
             }];
+            
+            cell.checkmark.hidden = [self checkCellForCheckMarkState:asset andIndexPath:indexPath];
             return cell;
         }
     }else{
         TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-        if([self.photosToAdd[indexPath.row] isKindOfClass:[PHAsset class]]){
-            PHAsset *asset = self.photosToAdd[indexPath.row];
-            [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(60, 60) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                cell.image.image = result;
-                cell.image.contentMode = UIViewContentModeScaleAspectFill;
-            }];
+        Photo *media = self.photosToAdd[indexPath.row];
+        if(media.editedPath){
+            if(media.image){
+                cell.image.image = media.image;
+            }else{
+                NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:media.editedPath];
+                AVURLAsset *asset = [AVURLAsset assetWithURL:fileURL];
+                AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+                imageGenerator.appliesPreferredTrackTransform = YES;
+                CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
+                cell.image.image = [UIImage imageWithCGImage:cgImage];
+                media.image = [UIImage imageWithCGImage:cgImage];
+            }
         }else{
-            AVURLAsset *asset = self.photosToAdd[indexPath.row];
-            AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
-            imageGenerator.appliesPreferredTrackTransform = YES;
-            CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
-            cell.image.image = [UIImage imageWithCGImage:cgImage];
+            if(media.image){
+                cell.image.image = media.image;
+                cell.image.contentMode = UIViewContentModeScaleAspectFill;
+            }else{
+                [[PHImageManager defaultManager] requestImageForAsset:media.imageAsset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                    cell.image.image = result;
+                    cell.image.contentMode = UIViewContentModeScaleAspectFill;
+                    media.image = result;
+                }];
+            }
         }
         return cell;
     }
@@ -195,42 +234,80 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == self.collectionView){
-
+        self.isNewAsset = YES;
         TTAddPhotosViewCell *cell = (TTAddPhotosViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
-        if(cell.checkmark.hidden){
+        if(cell.checkmark.hidden){ //<----------- SELECT PHOTO ----------------
             cell.checkmark.hidden = NO;
             if(indexPath.section==0){
                 Photo *media = [[Photo alloc] init];
                 media.imageAsset = self.filteredAssets[indexPath.row];
-                if(media.imageAsset.mediaType == 1){
-                    [self.photosToAdd addObject:self.filteredAssets[indexPath.row]];
+                if(media.imageAsset.mediaType == PHAssetMediaTypeImage){
+                    [self.photosToAdd addObject:media];
                     [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
                 }else{
-                    [self beginVideoTruncation:media andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
-//                        [self.photosToAdd addObject:self.filteredAssets[indexPath.row]];
+                    [self beginVideoTruncation:media inSection:0 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
                         [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
                     }];
                 }
             }else{
                 Photo *media = [[Photo alloc] init];
                 media.imageAsset = self.assets[indexPath.row];
-                if(media.imageAsset.mediaType == 1){
-                    [self.photosToAdd addObject:self.assets[indexPath.row]];
-                    [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
-                }else{
-                    [self beginVideoTruncation:media andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
-//                        [self.photosToAdd addObject:self.assets[indexPath.row]];
+                if(media.imageAsset.mediaType == PHAssetMediaTypeImage){
+                    [self.photosToAdd addObject:media];
+                    if([self.collectionView numberOfItemsInSection:0]>0)
                         [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                }else{
+                    [self beginVideoTruncation:media inSection:1 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+                        if([self.collectionView numberOfItemsInSection:0]>0)
+                            [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
                     }];
                 }
             }
-        }else{
+        }else{ //<----------- DESELECT PHOTO ----------------
             cell.checkmark.hidden = YES;
             if(indexPath.section==0){
-                [self.photosToAdd removeObject:self.filteredAssets[indexPath.row]];
+                if([self.photosToAdd containsObject:self.filteredAssets[indexPath.row]]){
+                    [self.photosToAdd removeObject:self.filteredAssets[indexPath.row]];
+                }else{
+                    //We need to check for an edited video
+                    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
+                    AVURLAsset *asset = [self.editedVideoToCellCrossReference objectForKey:key];
+                    [self.photosToAdd removeObject:asset];
+                    
+                    @try{
+                        NSString *deletePath = [asset.URL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+                        NSError *error;
+                        NSFileManager *fileManager = [NSFileManager defaultManager];
+                        BOOL success = [fileManager removeItemAtPath:deletePath error:&error];
+                        if(success)
+                            NSLog(@"Edited video deleted");
+                        else NSLog(@"Error editing video ((%@)). Leaving it, unfortunately. Here's why; %@",asset.URL.absoluteString,error);
+                    }@catch(id anException){
+                        NSLog(@"Exception trying to delete edited video.");
+                    }
+                }
                 [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:YES];
             }else{
-                [self.photosToAdd removeObject:self.assets[indexPath.row]];
+                if([self.photosToAdd containsObject:self.assets[indexPath.row]]){
+                    [self.photosToAdd removeObject:self.assets[indexPath.row]];
+                }else{
+                    //We need to check for an edited video
+                    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
+                    AVURLAsset *asset = [self.editedVideoToCellCrossReference objectForKey:key];
+                    [self.photosToAdd removeObject:asset];
+        
+                    @try{
+                        NSString *deletePath = [asset.URL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+                        NSError *error;
+                        NSFileManager *fileManager = [NSFileManager defaultManager];
+                        BOOL success = [fileManager removeItemAtPath:deletePath error:&error];
+                        if(success)
+                            NSLog(@"Edited video deleted");
+                        else NSLog(@"Error editing video ((%@)). Leaving it, unfortunately. Here's why; %@",asset.URL.absoluteString,error);
+                    }@catch(id anException){
+                        NSLog(@"Exception trying to delete edited video.");
+                    }
+                }
                 [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:YES];
             }
         }
@@ -292,6 +369,20 @@
     return CGSizeMake(0,0);
 }
 
+-(BOOL)checkCellForCheckMarkState:(PHAsset*)asset andIndexPath:(NSIndexPath*)indexPath{
+    BOOL status = YES;
+    if([self.photosToAdd containsObject:asset])
+        status = NO;
+    
+    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
+    AVURLAsset *avasset = [self.editedVideoToCellCrossReference objectForKey:key];
+    
+    if([self.photosToAdd containsObject:avasset])
+        status = NO;
+    
+    return status;
+}
+
 #pragma mark - UICollectionView Header Content
 -(UILabel*)headerLabel:(NSString*)text{
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 21, kScreenWidth, 21)];
@@ -344,8 +435,9 @@
         NSUserDefaults *uploadError = [NSUserDefaults standardUserDefaults];
         NSMutableArray *localIdentifiers = [[NSMutableArray alloc] init];
         
-        for(Photo *photo in self.photos){
-            [localIdentifiers addObject:photo.imageAsset.localIdentifier];
+        for(Photo *photo in self.photosToAdd){
+            if(photo.imageAsset.localIdentifier != nil)
+                [localIdentifiers addObject:photo.imageAsset.localIdentifier];
 //FIXME: Are we doing captions? <-----------------------------------------------------
 //            if(photo.caption)
 //                [self.photoCaptions addObject:photo.caption];
@@ -364,12 +456,12 @@
         [uploadError synchronize];
         int originalCount = self.trip.publicTripDetail.photoCount;
         
-        if (self.photos.count > 0){
+        if (self.photosToAdd.count > 0){
             if (!self.trip.publicTripDetail){
                 self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
             }
             self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
-            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photos.count;
+            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photosToAdd.count;
         }
         
         if (![[PFUser currentUser].objectId isEqualToString:self.trip.creator.objectId]){
@@ -382,6 +474,7 @@
                 }
                 
             }];
+            
             [self savePhotosToParse];
             
         } else {
@@ -413,7 +506,7 @@
     // TODO: pass the whole array into the utility
     // Then recursively upload each photo so it's one at a time instead of all in a row.
     
-    for (Photo *photo in self.photos)
+    for (Photo *photo in self.photosToAdd)
     {
         // Set all the trip info on the Photo object
         photo.user = [PFUser currentUser];
@@ -425,7 +518,7 @@
         photo.city = self.trip.city;
         
         // Upload the photo - this method will also handle publish to facebook if needed
-        if(photo.imageAsset.mediaType == 2){
+        if(photo.imageAsset.mediaType == PHAssetMediaTypeVideo){
             
             PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
             [options setVersion:PHVideoRequestOptionsVersionCurrent];
@@ -439,7 +532,7 @@
                 if(photo.editedPath)
                     pathToVideo = photo.editedPath;
                 else pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
-                
+//                __block NSString *path = photo.editedPath;
                 
                 NSURL *videoURL = [NSURL URLWithString:pathToVideo];
                 NSString *randString = [NSString stringWithFormat:@"video-%f.mov",[[NSDate date] timeIntervalSince1970]];
@@ -449,7 +542,7 @@
                      if (exportSession.status == AVAssetExportSessionStatusCompleted){
                          NSLog(@"completed\n");
                          photo.editedPath = outputURL.absoluteString;
-                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(PFObject *video) {
+                         [[TTUtility sharedInstance] uploadVideo:photo photosCount:(int)self.photosToAdd.count toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
                              
                              //remove compressed or trimmed video from temp directory
@@ -457,7 +550,7 @@
                              NSString *deletePath = [photo.editedPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
                              [manager removeItemAtPath:deletePath error:nil];
                              photo.editedPath = nil;
-                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:NO block:^(Photo *photo) {
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photosToAdd.count toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                                  [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
                                  [countIncrement save];
@@ -488,7 +581,7 @@
                                      // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
                                      [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                          if (!error && commentObject) {
-                                             [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                                             [TTAnalytics trunkCreated:self.photosToAdd.count numOfMembers:self.trunkMembers.count];
 //FIXME: Are we doing mentions? <-----------------------------------------------------
 //                                             [self updateMentionsInDatabase:commentObject];
                                          }
@@ -505,7 +598,7 @@
                          [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
                              photo.editedPath = nil;
-                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:NO block:^(Photo *photo) {
+                             [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photosToAdd.count toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                                  [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
                                  [countIncrement save];
@@ -535,7 +628,7 @@
                                      // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
                                      [SocialUtility addComment:photo.caption forPhoto:photo isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                                          if (!error && commentObject) {
-                                             [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                                             [TTAnalytics trunkCreated:self.photosToAdd.count numOfMembers:self.trunkMembers.count];
 //FIXME: Are we doing mentions? <-----------------------------------------------------
 //                                             [self updateMentionsInDatabase:commentObject];
                                          }
@@ -549,7 +642,7 @@
             }];
             
         }else{
-            [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photos.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
+            [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photosToAdd.count toFacebook:self.publishToFacebook block:^(Photo *savedPhoto) {
                 PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
                 [countIncrement incrementKey:@"photoCount" byAmount:[NSNumber numberWithInt:1]];
                 [countIncrement save];
@@ -580,7 +673,7 @@
                     // This photo has a caption, so we need to deal with creating a comment object & checking for mentions.
                     [SocialUtility addComment:savedPhoto.caption forPhoto:savedPhoto isCaption:YES block:^(BOOL succeeded, PFObject *object, PFObject *commentObject, NSError *error) {
                         if (!error && commentObject) {
-                            [TTAnalytics trunkCreated:self.photos.count numOfMembers:self.trunkMembers.count];
+                            [TTAnalytics trunkCreated:self.photosToAdd.count numOfMembers:self.trunkMembers.count];
 //FIXME: Are we doing mentions? <-----------------------------------------------------
 //                            [self updateMentionsInDatabase:commentObject];
                         }
@@ -617,12 +710,12 @@
 -(void)updateTripDetailForUploadingError:(int)errorCount{
     [self.trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         
-        if (self.photos.count > 0){
+        if (self.photosToAdd.count > 0){
             if (!self.trip.publicTripDetail){
                 self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
             }
             self.trip.publicTripDetail.mostRecentPhoto = [NSDate date];
-            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photos.count -errorCount;
+            self.trip.publicTripDetail.photoCount = self.trip.publicTripDetail.photoCount + (int)self.photosToAdd.count -errorCount;
         }
         [self.trip.publicTripDetail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error){
@@ -639,37 +732,25 @@
 #pragma mark - VideoEditorController delegate
 - (void)videoEditorController:(UIVideoEditorController *)editor didSaveEditedVideoToPath:(NSString *)editedVideoPath{
     NSLog(@"video edited: %@",editedVideoPath);
-    NSURL *fileUrl = [NSURL fileURLWithPath:editedVideoPath];
-    AVAsset *videoAsset = [AVAsset assetWithURL:fileUrl];
-    PHAsset *newAsset = [[PHAsset alloc] init];
-    newAsset = (PHAsset*)videoAsset;
-    
-    
-    
-//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",editedVideoPath]];
-    
-//    Photo *photo = [self.photos objectAtIndex:self.editingVideoAtIndex];
-//    photo.editedPath = editedVideoPath;
-    
-//    NSURL *fileUrl = [NSURL fileURLWithPath:editedVideoPath];
-//    NSArray *assetUrl = @[fileUrl];
-//    PHFetchResult *asset = [PHAsset fetchAssetsWithALAssetURLs:assetUrl options:nil];
-//    AVAsset *videoAsset = [AVAsset assetWithURL:fileUrl];
-//    [[PHImageManager defaultManager] requestAVAssetForVideo:(PHAsset *)videoAsset options:nil resultHandler:^(AVAsset * avasset, AVAudioMix * audioMix, NSDictionary * info) {
-////        resultAsset = avasset;
-//        [self.photosToAdd addObject:avasset];
-//
-//
-//    }];
-    
-    
-    [self.photosToAdd addObject:newAsset];
-    [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
-        //        [self enableUploadButton];
-        //        [self.collectionView reloadData];
+
+    //<------------ STUPID HACK ---------------------------------
+    if(self.isNewAsset){
+        PHAsset *originalAsset;
+        if(self.editingVideoInSection == 0)
+            originalAsset = self.filteredAssets[self.editingVideoAtIndex];
+        else originalAsset = self.assets[self.editingVideoAtIndex];
+        Photo *media = [[Photo alloc] init];
+        media.editedPath = editedVideoPath;
+        media.imageAsset = originalAsset;
         
+        [self.photosToAdd addObject:media];
+        self.isNewAsset = NO;
+    }
+    //<------------ STUPID HACK ---------------------------------
+    
+    [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
         dispatch_async(dispatch_get_main_queue(), ^ {
-            [self.photosToAddCollectionView reloadData]; //<--------------THIS IS CRASHING BECAUSE OF AN UNFOUND VIDEO PATH
+            [self.photosToAddCollectionView reloadData];
         });
         
         if(self.photosToAdd.count > 0){
@@ -694,9 +775,18 @@
 
 - (void)videoEditorControllerDidCancel:(UIVideoEditorController *)editor{
     NSLog(@"User canceled video truncation.");
+    [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        //        [self.collectionView reloadData];
+        if(self.photosToAdd.count == 0){
+            self.photosToAddCollectionView.hidden = YES;
+            self.addButton.hidden = YES;
+        }
+        
+//FIXME: WE HAVE TO UNCHECK THE BOX <-----------------------------------------------
+    }];
 }
 
--(void)beginVideoTruncation:(Photo*)video andIndex:(NSInteger)index withCompletion:(void(^)(BOOL success))completion{
+-(void)beginVideoTruncation:(Photo*)video inSection:(NSInteger)section andIndex:(NSInteger)index withCompletion:(void(^)(BOOL success))completion{
 //    NSString *message = NSLocalizedString(@"Would you like to Trim this video or set the caption?","Would you like to Trim this video or set the caption?");
 //    NSString *trimActionString = NSLocalizedString(@"Trim Video", @"Trim Video");
 //    NSString *setCaptionActionString = NSLocalizedString(@"Set Caption", @"Set Caption");
@@ -721,6 +811,7 @@
                 videoEditor.videoPath = pathToVideo;
                 videoEditor.videoMaximumDuration = 15.0;
                 self.editingVideoAtIndex = index;
+                self.editingVideoInSection = section;
                 
                 [self presentViewController:videoEditor animated:YES completion:^{
                     completion(YES);
@@ -751,9 +842,9 @@
     
     self.taskCount++;
     
-    if(self.photos.count == self.taskCount){
+    if(self.photosToAdd.count == self.taskCount){
         if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)])
-            [self.delegate photoUploadCompleted:self.photos];
+            [self.delegate photoUploadCompleted:self.photosToAdd];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -762,13 +853,6 @@
 #pragma mark - UIButton Actions
 - (IBAction)addSelectedPhototsToTrunk:(id)sender {
     [self disableUploadButton];
-    
-    for (PHAsset *asset in self.photosToAdd){
-        Photo *photo = [[Photo alloc] init];
-        photo.imageAsset = asset;
-        [self.photos addObject:photo];
-    }
-    
     [self uploadAllPhotos];
 }
 

@@ -223,49 +223,142 @@ CLCloudinary *cloudinary;
     [options setDeliveryMode:PHImageRequestOptionsDeliveryModeHighQualityFormat];
     [options setNetworkAccessAllowed:YES];
     
-    [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
-                                                resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
-                                                    
-                UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
-
-                    [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
-                        if (succeeded) {
-                            
-                            // Add photo to the local cache
-                            [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
-                            
-                            // post the notification so that the TrunkViewController can know to reload the data
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
-                            
-                            // Photo saved successfully, so we can unpin it from the local datastore.
-                            // TODO: Uncomment this once pinning is actually implemented.
-                            //  [photo unpin];
-                            
-                            // Upload Photo to Facebook also if needed
-                            if (publishToFacebook) {
-                                // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
-                                [self initFacebookUpload:savedPhoto];
-                            }
-                            
-                            // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
-                            queueCompletionHandler();
-                            
-                            // Tell the calling-method this whole upload is complete
-                            completionBlock(savedPhoto);
-                        }
-                        else {
-                            // Error uploading photo
-                            NSLog(@"Error uploading photo (upload photo)...");
-                            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
-                            completionBlock(nil);
-                        }
-                    }];
-                }];
+    NSData *imageData = UIImagePNGRepresentation(photo.image);
+    UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+        
+        [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
+            if (succeeded) {
                 
-                // Add the upload operation to the OperationQueue
-                [operationQueue addOperation: operation];
+                // Add photo to the local cache
+                [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
                 
-            }];
+                // post the notification so that the TrunkViewController can know to reload the data
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+                
+                // Photo saved successfully, so we can unpin it from the local datastore.
+                // TODO: Uncomment this once pinning is actually implemented.
+                //  [photo unpin];
+                
+                // Upload Photo to Facebook also if needed
+                if (publishToFacebook) {
+                    // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+                    [self initFacebookUpload:savedPhoto];
+                }
+                
+                // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+                queueCompletionHandler();
+                
+                // Tell the calling-method this whole upload is complete
+                completionBlock(savedPhoto);
+            }
+            else {
+                // Error uploading photo
+                NSLog(@"Error uploading photo (upload photo)...");
+                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
+                completionBlock(nil);
+            }
+        }];
+    }];
+    
+    // Add the upload operation to the OperationQueue
+    [operationQueue addOperation: operation];
+    
+    
+    
+    
+//    if(photo.editedPath){
+//        NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:photo.editedPath];
+//        AVURLAsset *asset = [AVURLAsset assetWithURL:fileURL];
+//        AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+//        imageGenerator.appliesPreferredTrackTransform = YES;
+//        CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
+//        NSData *imageData = UIImageJPEGRepresentation([[UIImage alloc] initWithCGImage:cgImage], 1);
+//
+//                UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+//
+//                [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
+//                    if (succeeded) {
+//
+//                        // Add photo to the local cache
+//                        [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+//
+//                        // post the notification so that the TrunkViewController can know to reload the data
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+//
+//                        // Photo saved successfully, so we can unpin it from the local datastore.
+//                        // TODO: Uncomment this once pinning is actually implemented.
+//                        //  [photo unpin];
+//
+//                        // Upload Photo to Facebook also if needed
+//                        if (publishToFacebook) {
+//                            // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+//                            [self initFacebookUpload:savedPhoto];
+//                        }
+//
+//                        // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+//                        queueCompletionHandler();
+//
+//                        // Tell the calling-method this whole upload is complete
+//                        completionBlock(savedPhoto);
+//                    }
+//                    else {
+//                        // Error uploading photo
+//                        NSLog(@"Error uploading photo (upload photo)...");
+//                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
+//                        completionBlock(nil);
+//                    }
+//                }];
+//            }];
+//
+//            // Add the upload operation to the OperationQueue
+//            [operationQueue addOperation: operation];
+//
+//    }else{
+//
+//    [[PHImageManager defaultManager] requestImageDataForAsset:photo.imageAsset options:options
+//                                                resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+//
+//                UploadOperation *operation = [UploadOperation asyncBlockOperationWithBlock:^(dispatch_block_t queueCompletionHandler) {
+//
+//                    [self uploadPhotoToCloudinary:photo withImageData:imageData block:^(BOOL succeeded, NSError *error, Photo *savedPhoto) {
+//                        if (succeeded) {
+//
+//                            // Add photo to the local cache
+//                            [[TTCache sharedCache] setAttributesForPhoto:photo likers:[NSArray array] commenters:[NSArray array] likedByCurrentUser:NO];
+//
+//                            // post the notification so that the TrunkViewController can know to reload the data
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"parsePhotosUpdatedNotification" object:nil];
+//
+//                            // Photo saved successfully, so we can unpin it from the local datastore.
+//                            // TODO: Uncomment this once pinning is actually implemented.
+//                            //  [photo unpin];
+//
+//                            // Upload Photo to Facebook also if needed
+//                            if (publishToFacebook) {
+//                                // TODO: Actually wait for the Facebook Upload to finish before moving on - have the method return a callback.
+//                                [self initFacebookUpload:savedPhoto];
+//                            }
+//
+//                            // queueCompletionHandler tells the NSOperationQueue that the operation is finished and it can move on.
+//                            queueCompletionHandler();
+//
+//                            // Tell the calling-method this whole upload is complete
+//                            completionBlock(savedPhoto);
+//                        }
+//                        else {
+//                            // Error uploading photo
+//                            NSLog(@"Error uploading photo (upload photo)...");
+//                            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadPhoto:"];
+//                            completionBlock(nil);
+//                        }
+//                    }];
+//                }];
+//
+//                // Add the upload operation to the OperationQueue
+//                [operationQueue addOperation: operation];
+//
+//            }];
+//    }
 }
 
 
@@ -861,8 +954,11 @@ CLCloudinary *cloudinary;
         pathToVideo = video.editedPath;
     else pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
     
-    pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    NSData *fileData = [NSData dataWithContentsOfFile:pathToVideo];
+    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:pathToVideo];
+    NSError* error = nil;
+    NSData *fileData = [NSData dataWithContentsOfFile:[fileURL path] options:0 error:&error];
+    if (fileData == nil)
+        NSLog(@"Failed to read file, error %@", error);
     self.videoFileData = fileData;
     [uploader upload:fileData
              options:@{@"type":@"upload",@"resource_type":@"video"}
