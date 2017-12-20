@@ -8,6 +8,7 @@
 
 #define distanceThreshold 25
 #define timeframeThresholdInDays 7
+#define maximumVideoLengthAllowedBeforeForcedEdit 15.0
 
 #import "TTAddPhotosViewController.h"
 #import <Photos/Photos.h>
@@ -31,14 +32,14 @@
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 @property (strong, nonatomic) NSMutableArray *photosToAdd;
 @property (strong, nonatomic) CLLocation *location;
-//@property (strong, nonatomic) NSMutableArray *photos;
 @property (strong, nonatomic) NSMutableDictionary *editedVideoToCellCrossReference;
 @property BOOL publishToFacebook;
-@property NSInteger editingVideoInSection;
-@property NSInteger editingVideoAtIndex;
+//@property NSInteger editingVideoInSection;
+//@property NSInteger editingVideoAtIndex;
+@property NSIndexPath *editingVideoAtIndexPath;
 @property NSInteger path;
 @property NSUInteger taskCount;
-@property BOOL isNewAsset;
+@property BOOL isNewAsset; //<-------- or figure out why didSaveEditedVideoToPath: is being called twice
 @end
 
 @implementation TTAddPhotosViewController
@@ -47,7 +48,6 @@
     [super viewDidLoad];
     self.photosToAdd = [[NSMutableArray alloc] init];
     self.filteredAssets = [[NSMutableArray alloc] init];
-//    self.photos = [[NSMutableArray alloc] init];
     self.editedVideoToCellCrossReference = [[NSMutableDictionary alloc] init];
     self.publishToFacebook = NO; //<------------------------------------------------------------------- ?
     self.taskCount = 0;
@@ -198,11 +198,15 @@
                 cell.image.contentMode = UIViewContentModeScaleAspectFill;
             }];
             
+            if(asset.mediaType == PHAssetMediaTypeVideo)
+                cell.videoIcon.hidden = NO;
+            
             cell.checkmark.hidden = [self checkCellForCheckMarkState:asset andIndexPath:indexPath];
             return cell;
         }
-    }else{
+    }else{ //<-----photosToAddCollectionView
         TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+        cell.video_icon.hidden = YES;
         Photo *media = self.photosToAdd[indexPath.row];
         if(media.editedPath){
             if(media.image){
@@ -215,6 +219,7 @@
                 CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
                 cell.image.image = [UIImage imageWithCGImage:cgImage];
                 media.image = [UIImage imageWithCGImage:cgImage];
+                cell.video_icon.hidden = NO;
             }
         }else{
             if(media.image){
@@ -245,9 +250,20 @@
                     [self.photosToAdd addObject:media];
                     [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
                 }else{
-                    [self beginVideoTruncation:media inSection:0 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+                    if(media.imageAsset.duration > maximumVideoLengthAllowedBeforeForcedEdit){
+                        [self beginVideoTruncation:media inSection:0 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+                            if(success){
+                                [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
+                            }else{
+                                cell.checkmark.hidden = YES;
+                                NSString *text = NSLocalizedString(@"Unable to edit this video. Sorry for the inconvenience.", @"Unable to edit this video. Sorry for the inconvenience.");
+                                [self simpleErrorNotificationWithText:text];
+                            }
+                        }];
+                    }else{
+                        [self.photosToAdd addObject:media];
                         [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:NO];
-                    }];
+                    }
                 }
             }else{
                 Photo *media = [[Photo alloc] init];
@@ -257,10 +273,21 @@
                     if([self.collectionView numberOfItemsInSection:0]>0)
                         [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
                 }else{
-                    [self beginVideoTruncation:media inSection:1 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
-                        if([self.collectionView numberOfItemsInSection:0]>0)
-                            [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
-                    }];
+                    if(media.imageAsset.duration > maximumVideoLengthAllowedBeforeForcedEdit){
+                        [self beginVideoTruncation:media inSection:1 andIndex:(NSInteger)indexPath.row withCompletion:^(BOOL success) {
+                            if(success){
+                                if([self.collectionView numberOfItemsInSection:0]>0)
+                                    [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                            }else{
+                                cell.checkmark.hidden = YES;
+                                NSString *text = NSLocalizedString(@"Unable to edit this video. Sorry for the inconvenience.", @"Unable to edit this video. Sorry for the inconvenience.");
+                                [self simpleErrorNotificationWithText:text];
+                            }
+                        }];
+                    }else{
+                        [self.photosToAdd addObject:media];
+                        [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:NO];
+                    }
                 }
             }
         }else{ //<----------- DESELECT PHOTO ----------------
@@ -371,15 +398,12 @@
 
 -(BOOL)checkCellForCheckMarkState:(PHAsset*)asset andIndexPath:(NSIndexPath*)indexPath{
     BOOL status = YES;
-    if([self.photosToAdd containsObject:asset])
-        status = NO;
-    
-    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
-    AVURLAsset *avasset = [self.editedVideoToCellCrossReference objectForKey:key];
-    
-    if([self.photosToAdd containsObject:avasset])
-        status = NO;
-    
+    for(Photo *a in self.photosToAdd){
+        if(a.imageAsset == asset){
+            status = NO;
+            break;
+        }
+    }
     return status;
 }
 
@@ -484,12 +508,8 @@
                     [ParseErrorHandlingController handleError:error];
                     self.trip.publicTripDetail.photoCount = originalCount;
                     self.navigationItem.rightBarButtonItem.enabled = YES;
-                    UIAlertView *alertView = [[UIAlertView alloc] init];
-                    alertView.delegate = self;
-                    alertView.title = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
-                    alertView.backgroundColor = [TTColor tripTrunkLightBlue];
-                    [alertView addButtonWithTitle:NSLocalizedString(@"OK",@"OK")];
-                    [alertView show];
+                    NSString *text = NSLocalizedString(@"Something went wrong. Please try again.",@"Something went wrong. Please try again.");
+                    [self simpleErrorNotificationWithText:text];
                 } else {
                     [[TTUtility sharedInstance] internetConnectionFound];
                     [self savePhotosToParse];
@@ -547,8 +567,8 @@
                              
                              //remove compressed or trimmed video from temp directory
                              NSFileManager *manager = [NSFileManager defaultManager];
-                             NSString *deletePath = [photo.editedPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-                             [manager removeItemAtPath:deletePath error:nil];
+                             NSURL *deletePath = [NSURL URLWithString:photo.editedPath];
+                             [manager removeItemAtPath:[deletePath path] error:nil];
                              photo.editedPath = nil;
                              [[TTUtility sharedInstance] uploadPhoto:photo photosCount:(int)self.photosToAdd.count toFacebook:NO block:^(Photo *photo) {
                                  PFObject *countIncrement = [PFObject objectWithClassName:@"PublicTripDetail"];
@@ -593,8 +613,8 @@
                              }];
                          }];
                      }else{
-                         NSLog(@"Video compression error\n");
-                         //Upload uncompressed video
+                         NSLog(@"Video compression error: %@",exportSession.error);
+                         //Upload uncompressed video, This could be large
                          [[TTUtility sharedInstance] uploadVideo:photo photosCount:0 toFacebook:self.publishToFacebook block:^(PFObject *video) {
                              photo.video = video;
                              photo.editedPath = nil;
@@ -634,6 +654,8 @@
                                          }
                                      }];
                                  }
+                                 
+                                 [self uploadTasksCompleted];
                              }];
                          }];
                      }
@@ -733,12 +755,12 @@
 - (void)videoEditorController:(UIVideoEditorController *)editor didSaveEditedVideoToPath:(NSString *)editedVideoPath{
     NSLog(@"video edited: %@",editedVideoPath);
 
-    //<------------ STUPID HACK ---------------------------------
+    //<------------ STUPID HACK (isNewAsset)---------------------------------
     if(self.isNewAsset){
         PHAsset *originalAsset;
-        if(self.editingVideoInSection == 0)
-            originalAsset = self.filteredAssets[self.editingVideoAtIndex];
-        else originalAsset = self.assets[self.editingVideoAtIndex];
+        if(self.editingVideoAtIndexPath.section == 0)
+            originalAsset = self.filteredAssets[self.editingVideoAtIndexPath.row];
+        else originalAsset = self.assets[self.editingVideoAtIndexPath.row];
         Photo *media = [[Photo alloc] init];
         media.editedPath = editedVideoPath;
         media.imageAsset = originalAsset;
@@ -746,7 +768,7 @@
         [self.photosToAdd addObject:media];
         self.isNewAsset = NO;
     }
-    //<------------ STUPID HACK ---------------------------------
+    //<------------ STUPID HACK (isNewAsset)---------------------------------
     
     [editor.presentingViewController dismissViewControllerAnimated:YES completion:^{
         dispatch_async(dispatch_get_main_queue(), ^ {
@@ -806,12 +828,13 @@
             
             NSString *pathToVideo = [(AVURLAsset *)asset URL].absoluteString;
             pathToVideo = [pathToVideo stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-            
             if ([UIVideoEditorController canEditVideoAtPath:pathToVideo]){
                 videoEditor.videoPath = pathToVideo;
-                videoEditor.videoMaximumDuration = 15.0;
-                self.editingVideoAtIndex = index;
-                self.editingVideoInSection = section;
+                videoEditor.videoMaximumDuration = maximumVideoLengthAllowedBeforeForcedEdit;
+//                self.editingVideoAtIndex = index;
+//                self.editingVideoInSection = section;
+                NSIndexPath *setIndexPath = [NSIndexPath indexPathForRow:index inSection:section];
+                self.editingVideoAtIndexPath = setIndexPath;
                 
                 [self presentViewController:videoEditor animated:YES completion:^{
                     completion(YES);
@@ -836,6 +859,17 @@
 //    [alert addAction:captionAction];
 //    [alert addAction:cancelAction];
 //    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)simpleErrorNotificationWithText:(NSString*)text{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:text preferredStyle:UIAlertControllerStyleAlert];
+    NSString *cancelActionString = NSLocalizedString(@"Okay", @"Okay");
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+    
+        }];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)uploadTasksCompleted{

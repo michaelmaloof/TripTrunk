@@ -10,5 +10,6 @@
 
 @interface TTPhotosToAddViewCell : UICollectionViewCell
 @property (strong, nonatomic) IBOutlet UIImageView *image;
+@property (strong, nonatomic) IBOutlet UIImageView *video_icon;
 
 @end
