@@ -25,20 +25,17 @@
 @interface TTAddPhotosViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
 @property (strong, nonatomic) PHFetchResult *assets;
 @property (strong, nonatomic) NSMutableArray *filteredAssets;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator; //<---------------------------------
 @property (strong, nonatomic) IBOutlet TTPhotoPicker *collectionView;
 @property (strong, nonatomic) IBOutlet UICollectionView *photosToAddCollectionView;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *addButton;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 @property (strong, nonatomic) NSMutableArray *photosToAdd;
 @property (strong, nonatomic) CLLocation *location;
-@property (strong, nonatomic) NSMutableDictionary *editedVideoToCellCrossReference;
-@property BOOL publishToFacebook;
-//@property NSInteger editingVideoInSection;
-//@property NSInteger editingVideoAtIndex;
 @property NSIndexPath *editingVideoAtIndexPath;
-@property NSInteger path;
+//@property NSInteger path;
 @property NSUInteger taskCount;
+@property BOOL publishToFacebook; //<---------------------------------
 @property BOOL isNewAsset; //<-------- or figure out why didSaveEditedVideoToPath: is being called twice
 @end
 
@@ -48,7 +45,6 @@
     [super viewDidLoad];
     self.photosToAdd = [[NSMutableArray alloc] init];
     self.filteredAssets = [[NSMutableArray alloc] init];
-    self.editedVideoToCellCrossReference = [[NSMutableDictionary alloc] init];
     self.publishToFacebook = NO; //<------------------------------------------------------------------- ?
     self.taskCount = 0;
     self.location = [[CLLocation alloc] initWithLatitude:self.trip.lat longitude:self.trip.longitude];
@@ -69,7 +65,6 @@
 -(void)reloadAssets{
 //    [self.activityIndicator startAnimating];
     self.assets = nil;
-//    [self.collectionView reloadData]; //<---?
     PHFetchOptions *fetchOptions = [PHFetchOptions new];
     fetchOptions.sortDescriptors = @[
                                      [NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],
@@ -126,7 +121,7 @@
 }
 
 #pragma mark - UIAlertView
--(void)showNeedAccessMessage{
+-(void)showNeedAccessMessage{ //<-------------- need this?
     
     UIAlertController * alert=[UIAlertController alertControllerWithTitle:@"Image picker"
                                                                   message:@"App need get access to photos"
@@ -135,9 +130,7 @@
     UIAlertAction* yesButton = [UIAlertAction actionWithTitle:@"OK"
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * action){
-        NSLog(@"you pressed Yes, please button");
-        
-        // call method whatever u need
+        NSLog(@"you pressed the Yes button");
     }];
     
     UIAlertAction* noButton = [UIAlertAction actionWithTitle:@"Cancel"
@@ -206,8 +199,11 @@
         }
     }else{ //<-----photosToAddCollectionView
         TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-        cell.video_icon.hidden = YES;
         Photo *media = self.photosToAdd[indexPath.row];
+        if(media.imageAsset.mediaType == PHAssetMediaTypeVideo)
+            cell.video_icon.hidden = NO;
+        else cell.video_icon.hidden = YES;
+        
         if(media.editedPath){
             if(media.image){
                 cell.image.image = media.image;
@@ -219,7 +215,6 @@
                 CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
                 cell.image.image = [UIImage imageWithCGImage:cgImage];
                 media.image = [UIImage imageWithCGImage:cgImage];
-                cell.video_icon.hidden = NO;
             }
         }else{
             if(media.image){
@@ -293,50 +288,22 @@
         }else{ //<----------- DESELECT PHOTO ----------------
             cell.checkmark.hidden = YES;
             if(indexPath.section==0){
-                if([self.photosToAdd containsObject:self.filteredAssets[indexPath.row]]){
-                    [self.photosToAdd removeObject:self.filteredAssets[indexPath.row]];
-                }else{
-                    //We need to check for an edited video
-                    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
-                    AVURLAsset *asset = [self.editedVideoToCellCrossReference objectForKey:key];
-                    [self.photosToAdd removeObject:asset];
-                    
-                    @try{
-                        NSString *deletePath = [asset.URL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-                        NSError *error;
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        BOOL success = [fileManager removeItemAtPath:deletePath error:&error];
-                        if(success)
-                            NSLog(@"Edited video deleted");
-                        else NSLog(@"Error editing video ((%@)). Leaving it, unfortunately. Here's why; %@",asset.URL.absoluteString,error);
-                    }@catch(id anException){
-                        NSLog(@"Exception trying to delete edited video.");
+                for(Photo *p in self.photosToAdd){
+                    if(p.imageAsset == self.filteredAssets[indexPath.row]){
+                        [self.photosToAdd removeObject:p];
+                        break;
                     }
                 }
-                [self syncCellSelectionWithUnfilteredAsset:self.filteredAssets[indexPath.row] withState:YES];
             }else{
-                if([self.photosToAdd containsObject:self.assets[indexPath.row]]){
-                    [self.photosToAdd removeObject:self.assets[indexPath.row]];
-                }else{
-                    //We need to check for an edited video
-                    NSNumber *key = [NSNumber numberWithInteger:indexPath.row];
-                    AVURLAsset *asset = [self.editedVideoToCellCrossReference objectForKey:key];
-                    [self.photosToAdd removeObject:asset];
-        
-                    @try{
-                        NSString *deletePath = [asset.URL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-                        NSError *error;
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        BOOL success = [fileManager removeItemAtPath:deletePath error:&error];
-                        if(success)
-                            NSLog(@"Edited video deleted");
-                        else NSLog(@"Error editing video ((%@)). Leaving it, unfortunately. Here's why; %@",asset.URL.absoluteString,error);
-                    }@catch(id anException){
-                        NSLog(@"Exception trying to delete edited video.");
+                for(Photo *p in self.photosToAdd){
+                    if(p.imageAsset == self.assets[indexPath.row]){
+                        [self.photosToAdd removeObject:p];
+                        break;
                     }
                 }
-                [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:YES];
             }
+            
+            [self syncCellSelectionWithFilteredAsset:self.assets[indexPath.row] withState:YES];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^ {
