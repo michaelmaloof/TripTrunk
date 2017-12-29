@@ -19,7 +19,7 @@
 #import "Photo.h"
 #import "TTAddPhotosViewController.h"
 
-@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate>
+@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
@@ -369,6 +369,7 @@
         photoViewController.photos = self.photos;
         photoViewController.index = (int)self.index;
         photoViewController.photo = self.photo;
+        photoViewController.delegate = self;
     }
     
     if([segue.identifier isEqualToString:@"pushToAddPhotosToTrunk"]){
@@ -381,6 +382,12 @@
         
     }
     
+}
+
+#pragma mark - PhotoDelegate
+-(void)photoWasDeleted:(NSNumber *)likes photo:(Photo *)photo{
+    [self.photos removeObject:photo];
+    [self.mainCollectionView reloadData];
 }
 
 #pragma mark - AddPhotosDelegate

@@ -146,6 +146,7 @@
 		27D41FC01FCE0940001B6CD5 /* TTAddPhotosViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FBF1FCE0940001B6CD5 /* TTAddPhotosViewCell.m */; };
 		27D41FC21FCF3E01001B6CD5 /* Avenir.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 27D41FC11FCF3E01001B6CD5 /* Avenir.ttc */; };
 		27D41FC51FCF5891001B6CD5 /* TTPhotosToAddViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */; };
+		27D41FC81FF43D58001B6CD5 /* TTAddMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FC71FF43D51001B6CD5 /* TTAddMembersViewController.m */; };
 		27E388231FA3D40300A9F733 /* TTPassthroughCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */; };
 		27ED88241ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88231ECCCF5200373F72 /* TTOnboardingLoginUsernameViewController.m */; };
 		27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ED88261ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m */; };
@@ -454,6 +455,8 @@
 		27D41FC11FCF3E01001B6CD5 /* Avenir.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = Avenir.ttc; sourceTree = "<group>"; };
 		27D41FC31FCF5891001B6CD5 /* TTPhotosToAddViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPhotosToAddViewCell.h; sourceTree = "<group>"; };
 		27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPhotosToAddViewCell.m; sourceTree = "<group>"; };
+		27D41FC61FF43D50001B6CD5 /* TTAddMembersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAddMembersViewController.h; sourceTree = "<group>"; };
+		27D41FC71FF43D51001B6CD5 /* TTAddMembersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAddMembersViewController.m; sourceTree = "<group>"; };
 		27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPassthroughCollectionView.h; sourceTree = "<group>"; };
 		27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPassthroughCollectionView.m; sourceTree = "<group>"; };
 		27E388251FAA58C100A9F733 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -1089,6 +1092,8 @@
 				27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */,
 				27D41FBB1FCCB838001B6CD5 /* TTPhotoPicker.h */,
 				27D41FBC1FCCB838001B6CD5 /* TTPhotoPicker.m */,
+				27D41FC61FF43D50001B6CD5 /* TTAddMembersViewController.h */,
+				27D41FC71FF43D51001B6CD5 /* TTAddMembersViewController.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1631,6 +1636,7 @@
 				22343AE71BC9A42C00F0B2E5 /* TTBaseViewController.m in Sources */,
 				C9525A3E1B25218800185713 /* TTUtility.m in Sources */,
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
+				27D41FC81FF43D58001B6CD5 /* TTAddMembersViewController.m in Sources */,
 				27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */,
 				2762BD8B1F2BDDBB003508EB /* TTTimelineCollectionView.m in Sources */,
 				2709AF271F72F7A600F83729 /* TTProfileViewController.m in Sources */,

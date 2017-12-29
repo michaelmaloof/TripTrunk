@@ -403,7 +403,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jrv-1T-8Eu">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jrv-1T-8Eu">
                                 <rect key="frame" x="8" y="28" width="359" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="pxv-dB-skg"/>
@@ -412,11 +412,11 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdQ-Fr-Adg">
-                                <rect key="frame" x="8" y="28" width="21" height="20"/>
+                            <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdQ-Fr-Adg">
+                                <rect key="frame" x="8" y="639" width="21" height="20"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="35" id="GDj-G4-x4a"/>
-                                    <constraint firstAttribute="height" constant="34" id="IqU-0l-JGL"/>
+                                    <constraint firstAttribute="width" constant="21" id="GDj-G4-x4a"/>
+                                    <constraint firstAttribute="height" constant="20" id="IqU-0l-JGL"/>
                                 </constraints>
                                 <state key="normal" image="sound_off"/>
                                 <state key="selected" image="sound_on"/>
@@ -454,6 +454,20 @@
                                     <action selector="heartActionButton:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="K8S-JT-g7Y"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eJQ-yg-WKy">
+                                <rect key="frame" x="319" y="23" width="48" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="3pV-Ug-2De"/>
+                                    <constraint firstAttribute="height" constant="30" id="WEB-A0-7wh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="• • •">
+                                    <color key="titleColor" red="0.90578371290000004" green="0.9059391618" blue="0.90577393770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="photoActionButtonWasTapped:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="gAU-Ux-ULf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -463,9 +477,11 @@
                             <constraint firstItem="gdQ-Fr-Adg" firstAttribute="leading" secondItem="jrv-1T-8Eu" secondAttribute="leading" id="CAq-VL-DgA"/>
                             <constraint firstItem="VTu-3B-mm5" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="34" id="SRM-M5-Rio"/>
                             <constraint firstItem="jrv-1T-8Eu" firstAttribute="top" secondItem="tus-5y-BRu" secondAttribute="top" constant="28" id="ShI-wb-vZr"/>
-                            <constraint firstItem="gdQ-Fr-Adg" firstAttribute="top" secondItem="jrv-1T-8Eu" secondAttribute="top" id="dA5-yT-ipo"/>
+                            <constraint firstItem="gdQ-Fr-Adg" firstAttribute="top" secondItem="jrv-1T-8Eu" secondAttribute="top" constant="611" id="dA5-yT-ipo"/>
+                            <constraint firstItem="eJQ-yg-WKy" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="319" id="dIn-2R-Ww5"/>
                             <constraint firstAttribute="trailing" secondItem="jrv-1T-8Eu" secondAttribute="trailing" constant="8" id="lyP-EO-UNF"/>
                             <constraint firstItem="jrv-1T-8Eu" firstAttribute="leading" secondItem="tus-5y-BRu" secondAttribute="leading" constant="8" id="rHy-WT-XCq"/>
+                            <constraint firstItem="eJQ-yg-WKy" firstAttribute="top" secondItem="tus-5y-BRu" secondAttribute="top" constant="23" id="y3N-Py-H8P"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>

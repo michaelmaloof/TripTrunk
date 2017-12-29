@@ -33,8 +33,6 @@
 @property BOOL didTapCreated;
 @property (strong, nonatomic) IBOutlet UITableView *followingTableView;
 @property (strong, nonatomic) IBOutlet UICollectionView *membersCollectionView;
-
-
 @end
 
 @implementation AddTripFriendsViewController

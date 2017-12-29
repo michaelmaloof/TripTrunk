@@ -13,7 +13,7 @@
 @protocol PhotoDelegate
 @optional
 -(void)photoWasLiked:(BOOL)isFromError;
-//-(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
+-(void)photoWasDeleted:(NSNumber*)likes photo:(Photo*)photo;
 -(void)photoWasViewed:(Photo*)photo;
 //-(void)captionWasAdded:(NSString*)caption;
 //-(void)dissmissWasTapped:(NSArray*)mainPhotos;

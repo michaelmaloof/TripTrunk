@@ -15,6 +15,7 @@
 #import "SocialUtility.h"
 #import "SharkfoodMuteSwitchDetector.h"
 #import "HomeMapViewController.h"
+#import "MBProgressHUD.h"
 
 @interface TTPhotoViewController () <UIGestureRecognizerDelegate,UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *heartButton;
@@ -61,6 +62,8 @@
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    UITapGestureRecognizer *tapMute=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoSound:)];
+    tapMute.numberOfTapsRequired=1;
     
     //Image view settings
     newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
@@ -69,6 +72,7 @@
     newImageForeground.tag = 1001;
     newImageForeground.userInteractionEnabled = YES;
     self.photo.image = newImageForeground.image;
+    [newImageForeground addGestureRecognizer:tapMute];
     [scrollView addSubview:newImageForeground];
     scrollView.minimumZoomScale = 1.0;
     scrollView.maximumZoomScale = 6.0;
@@ -300,6 +304,56 @@
     }
 }
 
+- (IBAction)photoActionButtonWasTapped:(UIButton *)sender {
+//    NSString *message = NSLocalizedString(@"Photo/Video options","Photo/Video options");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    NSString *downloadString = NSLocalizedString(@"Download", @"Download");
+    UIAlertAction *downloadAction = [UIAlertAction actionWithTitle:downloadString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        if(self.photo.video){
+            [[TTUtility sharedInstance] downloadPhotoVideo:[NSURL URLWithString:self.photo.video[@"videoUrl"]]];
+        }else{
+            UIImageWriteToSavedPhotosAlbum(self.photo.image, nil, nil, nil);
+            [TTAnalytics downloadPhoto];
+        }
+    }];
+    [alert addAction:downloadAction];
+    
+    PFUser *theuser = [PFUser currentUser];
+    if([self.photo.user.objectId isEqualToString:theuser.objectId]){
+        NSString *deleteString = NSLocalizedString(@"Delete", @"Delete");
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.labelText = NSLocalizedString(@"Deleting...",@"Deleting...");
+            [[TTUtility sharedInstance] deletePhoto:self.photo withblock:^(BOOL succeeded, NSError *error) {
+                if (error) {
+//                    self.photo.trip.publicTripDetail.photoCount = self.photo.trip.publicTripDetail.photoCount +1;
+                    UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:[NSString stringWithFormat: @"Sorry, photo/video was not deleted with following error \n %@",error.localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+                    [errorAlert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }]];
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [self presentViewController:errorAlert animated:YES completion:nil];
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasDeleted:photo:)])
+                            [self.delegate photoWasDeleted:[[TTCache sharedCache] likeCountForPhoto:self.photo] photo:self.photo];
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                }
+            }];
+        }];
+        [alert addAction:deleteAction];
+    }
+    
+    NSString *cancelActionString = NSLocalizedString(@"Cancel", @"Cancel");
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelActionString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+        
+    }];
+    [alert addAction:cancelAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 #pragma mark - touches
 - (IBAction)swipeRight:(UISwipeGestureRecognizer *)sender {
@@ -325,6 +379,8 @@
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    UITapGestureRecognizer *tapMute=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoSound:)];
+    tapMute.numberOfTapsRequired=1;
     
     //Image view settings
     newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
@@ -333,6 +389,7 @@
     newImageForeground.tag = 1001;
     newImageForeground.userInteractionEnabled = YES;
     self.photo.image = newImageForeground.image;
+    [newImageForeground addGestureRecognizer:tapMute];
     scrollView.scrollEnabled = NO;
     [scrollView addSubview:newImageForeground];
     
@@ -382,6 +439,8 @@
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     UISwipeGestureRecognizer *swiperight=[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    UITapGestureRecognizer *tapMute=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoSound:)];
+    tapMute.numberOfTapsRequired=1;
     
     //Image view settings
     newImageBackground.contentMode = UIViewContentModeScaleAspectFill;
@@ -390,6 +449,7 @@
     newImageForeground.tag = 1001;
     newImageForeground.userInteractionEnabled = YES;
     self.photo.image = newImageForeground.image;
+    [newImageForeground addGestureRecognizer:tapMute];
     scrollView.scrollEnabled = NO;
     [scrollView addSubview:newImageForeground];
     
