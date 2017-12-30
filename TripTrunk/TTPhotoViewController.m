@@ -306,7 +306,7 @@
 
 - (IBAction)photoActionButtonWasTapped:(UIButton *)sender {
 //    NSString *message = NSLocalizedString(@"Photo/Video options","Photo/Video options");
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Media Options" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     NSString *downloadString = NSLocalizedString(@"Download", @"Download");
     UIAlertAction *downloadAction = [UIAlertAction actionWithTitle:downloadString style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){

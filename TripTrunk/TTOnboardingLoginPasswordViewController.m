@@ -9,6 +9,7 @@
 #import "TTOnboardingLoginPasswordViewController.h"
 #import "TTOnboardingTextField.h"
 #import "TTOnboardingButton.h"
+#import "TTTimelineViewController.h"
 
 @interface TTOnboardingLoginPasswordViewController ()
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *passwordTextField;
@@ -71,7 +72,13 @@
             [alert show];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self dismissViewControllerAnimated:YES completion:nil]; //FIXME: This doesn't work on ios11
+                //FIXME: This doesn't work on ios11
+//                [self dismissViewControllerAnimated:YES completion:^{}];
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
+                TTTimelineViewController *timelineViewController = (TTTimelineViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTimelineViewController"];
+                [self presentViewController:timelineViewController animated:(BOOL)YES completion:^{
+                    
+                }];
             });
         }
         

@@ -13,6 +13,7 @@
         <array key="Avenir.ttc">
             <string>Avenir-Book</string>
             <string>Avenir-Heavy</string>
+            <string>Avenir-HeavyOblique</string>
         </array>
     </customFonts>
     <scenes>
@@ -179,6 +180,7 @@
                     <connections>
                         <outlet property="mainCollectionView" destination="Mx5-aZ-uNg" id="pqX-14-q8O"/>
                         <segue destination="Zxw-qr-NhS" kind="show" identifier="pushToPhoto" id="sro-kB-keX"/>
+                        <segue destination="Wbr-Qa-LUd" kind="show" identifier="pushToAddMembersToTrunk" id="8k2-t2-dta"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ZI-9y-AqT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -391,6 +393,129 @@
             </objects>
             <point key="canvasLocation" x="701.60000000000002" y="919.79010494752629"/>
         </scene>
+        <!--Add Trunk Members View Controller-->
+        <scene sceneID="hkR-jQ-TV3">
+            <objects>
+                <viewController title="Add Trunk Members View Controller" id="Wbr-Qa-LUd" customClass="TTAddMembersViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="n6q-tb-8Bb"/>
+                        <viewControllerLayoutGuide type="bottom" id="Kpv-Hn-koD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HOW-HN-JgL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="fwe-H7-E5J">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="XME-NG-Uli"/>
+                                    <constraint firstAttribute="height" constant="200" id="Z1E-jh-yhd"/>
+                                </constraints>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Invite friends to let them add photos" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="olh-wM-fd2">
+                                <rect key="frame" x="34" y="133" width="307" height="67"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="307" id="79O-rf-xJB"/>
+                                    <constraint firstAttribute="height" constant="67" id="MMk-Pi-a9P"/>
+                                </constraints>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Trunk name" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pz5-DI-W2p">
+                                <rect key="frame" x="34" y="9" width="307" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="307" id="dtl-QK-Opp"/>
+                                    <constraint firstAttribute="height" constant="42" id="jpS-fV-3GJ"/>
+                                </constraints>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add People to Trunk" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YdM-cf-UEZ">
+                                <rect key="frame" x="36" y="117" width="303" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="303" id="QDa-ht-pbR"/>
+                                    <constraint firstAttribute="height" constant="21" id="erF-UW-GJK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-HeavyOblique" family="Avenir" pointSize="26"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="I2p-xh-YRy">
+                                <rect key="frame" x="0.0" y="199" width="375" height="468"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Wbr-Qa-LUd" id="gZE-CI-LoP"/>
+                                    <outlet property="delegate" destination="Wbr-Qa-LUd" id="UBg-wh-rWj"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YB3-dF-sQl" customClass="TTOnboardingButton">
+                                <rect key="frame" x="34" y="597" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="Ehz-IV-cVd"/>
+                                    <constraint firstAttribute="height" constant="50" id="XOY-kD-eX4"/>
+                                </constraints>
+                                <state key="normal" image="tt_Blue_Back_Arrow"/>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rtz-vt-nHW" customClass="TTOnboardingButton">
+                                <rect key="frame" x="177" y="597" width="164" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="7HH-3S-y9w"/>
+                                    <constraint firstAttribute="width" constant="164" id="FTr-HL-AUf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
+                                <state key="normal" title="SKIP">
+                                    <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search for people" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TdL-cm-9Of" customClass="TTOnboardingTextField">
+                                <rect key="frame" x="36" y="179" width="303" height="48"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="vPs-co-WSo"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="15"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" secureTextEntry="YES"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pz5-DI-W2p" firstAttribute="centerX" secondItem="fwe-H7-E5J" secondAttribute="centerX" id="3PZ-Sv-NX0"/>
+                            <constraint firstItem="olh-wM-fd2" firstAttribute="centerX" secondItem="HOW-HN-JgL" secondAttribute="centerX" id="7nb-Li-tV5"/>
+                            <constraint firstItem="TdL-cm-9Of" firstAttribute="trailing" secondItem="YdM-cf-UEZ" secondAttribute="trailing" id="9lH-SN-bn5"/>
+                            <constraint firstItem="TdL-cm-9Of" firstAttribute="leading" secondItem="YdM-cf-UEZ" secondAttribute="leading" id="CNf-f0-yvw"/>
+                            <constraint firstItem="YdM-cf-UEZ" firstAttribute="centerX" secondItem="HOW-HN-JgL" secondAttribute="centerX" id="GC6-TM-gMy"/>
+                            <constraint firstAttribute="trailing" secondItem="I2p-xh-YRy" secondAttribute="trailing" id="JAa-pz-Go4"/>
+                            <constraint firstItem="fwe-H7-E5J" firstAttribute="leading" secondItem="HOW-HN-JgL" secondAttribute="leading" id="NMx-1k-VvI"/>
+                            <constraint firstAttribute="bottom" secondItem="I2p-xh-YRy" secondAttribute="bottom" id="S6m-xJ-fbD"/>
+                            <constraint firstItem="YB3-dF-sQl" firstAttribute="centerY" secondItem="Rtz-vt-nHW" secondAttribute="centerY" id="XeL-zV-wT1"/>
+                            <constraint firstItem="TdL-cm-9Of" firstAttribute="top" secondItem="fwe-H7-E5J" secondAttribute="bottom" constant="-21" id="Yjl-gs-5gv"/>
+                            <constraint firstItem="fwe-H7-E5J" firstAttribute="top" secondItem="HOW-HN-JgL" secondAttribute="top" id="ak8-nb-1sg"/>
+                            <constraint firstItem="fwe-H7-E5J" firstAttribute="top" secondItem="pz5-DI-W2p" secondAttribute="bottom" constant="-51" id="cGd-1k-sU5"/>
+                            <constraint firstAttribute="bottom" secondItem="YB3-dF-sQl" secondAttribute="bottom" constant="20" id="d7R-CP-2AL"/>
+                            <constraint firstAttribute="bottom" secondItem="Rtz-vt-nHW" secondAttribute="bottom" constant="20" id="fXj-nS-E6C"/>
+                            <constraint firstItem="olh-wM-fd2" firstAttribute="top" secondItem="YdM-cf-UEZ" secondAttribute="bottom" constant="-5" id="h8r-QN-m8g"/>
+                            <constraint firstItem="I2p-xh-YRy" firstAttribute="top" secondItem="fwe-H7-E5J" secondAttribute="bottom" constant="-1" id="jU3-GR-reu"/>
+                            <constraint firstItem="YdM-cf-UEZ" firstAttribute="top" secondItem="pz5-DI-W2p" secondAttribute="bottom" constant="66" id="kHa-e1-1ym"/>
+                            <constraint firstAttribute="trailing" secondItem="fwe-H7-E5J" secondAttribute="trailing" id="kfm-1t-RNW"/>
+                            <constraint firstAttribute="trailing" secondItem="Rtz-vt-nHW" secondAttribute="trailing" constant="34" id="oex-Qq-sev"/>
+                            <constraint firstItem="I2p-xh-YRy" firstAttribute="leading" secondItem="HOW-HN-JgL" secondAttribute="leading" id="oiM-j1-40y"/>
+                            <constraint firstItem="TdL-cm-9Of" firstAttribute="top" secondItem="olh-wM-fd2" secondAttribute="bottom" constant="-21" id="rKF-JL-RTG"/>
+                            <constraint firstItem="YB3-dF-sQl" firstAttribute="leading" secondItem="HOW-HN-JgL" secondAttribute="leading" constant="34" id="s3f-e5-sbV"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iqT-JO-WbI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1418.4000000000001" y="919.79010494752629"/>
+        </scene>
         <!--Photo View Controller-->
         <scene sceneID="o0x-Dn-wmJ">
             <objects>
@@ -512,6 +637,7 @@
         <image name="sound_off" width="145" height="145"/>
         <image name="sound_on" width="145" height="145"/>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
+        <image name="tt_Onboarding_CliffsRoad" width="375" height="258"/>
         <image name="tt_addphotocheckmark" width="99" height="99"/>
         <image name="tt_heart_liked" width="75" height="75"/>
         <image name="tt_heart_unliked" width="75" height="75"/>
