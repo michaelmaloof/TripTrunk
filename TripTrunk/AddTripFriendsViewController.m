@@ -522,7 +522,6 @@
 
 
 #pragma mark - Search Stuff
-
 - (void)filterResults:(NSString *)searchTerm {
     if (![searchTerm isEqualToString:@""]){
         //[self.searchResults removeAllObjects];

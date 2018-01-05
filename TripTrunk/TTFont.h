@@ -28,4 +28,5 @@
 + (UIFont *)TT_AddContent_header;
 + (UIFont *)TT_AddContent_subhead;
 + (UIFont *)TT_AddContent_text;
++ (UIFont *)TT_AddMembers_header;
 @end

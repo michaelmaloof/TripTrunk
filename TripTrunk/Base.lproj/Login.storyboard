@@ -102,7 +102,7 @@ forget your epic adventures.</string>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.90196078431372551" green="0.95686274509803915" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.92016392946243286" green="0.96426218748092651" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="19x-Ml-UAb" firstAttribute="centerX" secondItem="bOZ-fU-Ae0" secondAttribute="centerX" id="55C-Lt-10z"/>
                             <constraint firstItem="19x-Ml-UAb" firstAttribute="top" secondItem="dgP-N0-iGV" secondAttribute="bottom" constant="18" id="6ls-sb-0dv"/>

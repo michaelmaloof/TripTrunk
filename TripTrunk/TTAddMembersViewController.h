@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Trip.h"
+#import "TTBaseViewController.h"
 
-@interface TTAddMembersViewController : UIViewController
-
+@interface TTAddMembersViewController : TTBaseViewController
+@property (strong,nonatomic) Trip *trip;
 @end

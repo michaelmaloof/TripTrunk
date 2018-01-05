@@ -76,6 +76,10 @@
 
 
 #pragma mark - v4Redesign
++ (UIFont *)TT_AddMembers_header {
+    return [UIFont fontWithName:@"Avenir" size:24];
+}
+
 + (UIFont *)TT_AddContent_header {
     return [UIFont fontWithName:@"Avenir" size:18];
 }

@@ -18,6 +18,7 @@
 #import "TTPhotoViewController.h"
 #import "Photo.h"
 #import "TTAddPhotosViewController.h"
+#import "TTAddMembersViewController.h"
 
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
@@ -341,7 +342,7 @@
 
 #pragma mark - UIButtons
 -(void)viewTrunkMembers{
-    
+    [self performSegueWithIdentifier:@"pushToAddMembersToTrunk" sender:self];
 }
 
 -(void)buttonOneAction{
@@ -361,6 +362,7 @@
 }
 
 - (IBAction)addToTrunkButtonAction:(id)sender {
+    [self performSegueWithIdentifier:@"pushToAddMembersToTrunk" sender:self];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
@@ -379,7 +381,11 @@
         if(self.excursion)
             addPhotos.trip = self.excursion.trunk;
         else addPhotos.trip = self.trip;
-        
+    }
+    
+    if([segue.identifier isEqualToString:@"pushToAddMembersToTrunk"]){
+        TTAddMembersViewController *addMembers = segue.destinationViewController;
+        addMembers.trip = self.trip;
     }
     
 }

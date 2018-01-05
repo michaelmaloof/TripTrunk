@@ -27,6 +27,8 @@
 #define kGOOGLE_API_KEY @"AIzaSyAgAXkTYFHm3MPQKJSoEYup17iUwi_OC4M"
 #import "TTAnalytics.h"
 #import "TTUtility.h"
+#import "TTOnboardingViewController.h"
+
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -83,6 +85,15 @@
     }    
     
     NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
+    
+    if(![PFUser currentUser]){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+        TTOnboardingViewController *viewController = (TTOnboardingViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LoginNavigationController"];
+        [self.window makeKeyAndVisible];
+        [self.window.rootViewController presentViewController:viewController
+                                                     animated:YES
+                                                   completion:nil];
+    }
 
     return YES;
 }
@@ -96,11 +107,11 @@
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
 //REPAIR: This needs to be fixed for new design
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
-    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
-    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
-    
-    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
+//    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
+//    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
+//
+//    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
 //    [self setupSearchTabBar];
 //    [self setupActivityTabBar];
 //    [self setupProfileTabBar];

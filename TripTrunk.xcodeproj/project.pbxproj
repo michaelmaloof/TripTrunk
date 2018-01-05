@@ -139,6 +139,7 @@
 		27C531E21C7F832C00F8B974 /* TTSuggestionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E11C7F832C00F8B974 /* TTSuggestionViewCell.m */; };
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
+		27C799911FFACE5B00FD5C8C /* TTAddMembersViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C799901FFACE5B00FD5C8C /* TTAddMembersViewCell.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
 		27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */; };
 		27D41FBA1FCCB73C001B6CD5 /* TTAddPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */; };
@@ -442,6 +443,8 @@
 		27C715BA1CEBA75600A67C5D /* Cloudinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
 		27C715BB1CEBA75600A67C5D /* CLTransformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
+		27C7998F1FFACE5B00FD5C8C /* TTAddMembersViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAddMembersViewCell.h; sourceTree = "<group>"; };
+		27C799901FFACE5B00FD5C8C /* TTAddMembersViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAddMembersViewCell.m; sourceTree = "<group>"; };
 		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
 		27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLikeButton.h; sourceTree = "<group>"; };
@@ -1107,6 +1110,8 @@
 				27D41FBF1FCE0940001B6CD5 /* TTAddPhotosViewCell.m */,
 				27D41FC31FCF5891001B6CD5 /* TTPhotosToAddViewCell.h */,
 				27D41FC41FCF5891001B6CD5 /* TTPhotosToAddViewCell.m */,
+				27C7998F1FFACE5B00FD5C8C /* TTAddMembersViewCell.h */,
+				27C799901FFACE5B00FD5C8C /* TTAddMembersViewCell.m */,
 			);
 			name = "View Cells";
 			sourceTree = "<group>";
@@ -1629,6 +1634,7 @@
 				27F3E3821D3D778600634B75 /* DLFDetailViewController.m in Sources */,
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */,
+				27C799911FFACE5B00FD5C8C /* TTAddMembersViewCell.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				27BFA4AF1EC3915700A6CFB4 /* TTOnboardingButton.m in Sources */,
 				27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */,

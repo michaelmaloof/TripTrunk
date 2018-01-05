@@ -72,8 +72,6 @@
             [alert show];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                //FIXME: This doesn't work on ios11
-//                [self dismissViewControllerAnimated:YES completion:^{}];
                 UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
                 TTTimelineViewController *timelineViewController = (TTTimelineViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTimelineViewController"];
                 [self presentViewController:timelineViewController animated:(BOOL)YES completion:^{
