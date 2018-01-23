@@ -61,6 +61,9 @@
 		271D8BBE1D91AF010054741F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271D8BBD1D91AF000054741F /* CoreData.framework */; };
 		271D8BC11D91C3540054741F /* TTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8BC01D91C3540054741F /* TTAnalytics.m */; };
 		271EE31A1D9DA15E00A3911C /* TTUsernameSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 271EE3191D9DA15E00A3911C /* TTUsernameSort.m */; };
+		272335C62006B634005E50AE /* TTPopoverProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272335C52006B634005E50AE /* TTPopoverProfileViewController.m */; };
+		272335CA2006BE64005E50AE /* TTPopoverProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 272335C92006BE64005E50AE /* TTPopoverProfileViewCell.m */; };
+		272335CD200FDFAC005E50AE /* TTPreviewPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272335CC200FDFAB005E50AE /* TTPreviewPhotoViewController.m */; };
 		272A4AE81C77CF5400700DCA /* TTSuggestionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */; };
 		272ACA051D2C5CA700329B28 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */; };
 		272ACA061D2C5CA700329B28 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272ACA031D2C5CA700329B28 /* ParseUI.framework */; };
@@ -336,6 +339,12 @@
 		271D8BC01D91C3540054741F /* TTAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAnalytics.m; sourceTree = "<group>"; };
 		271EE3181D9DA15E00A3911C /* TTUsernameSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUsernameSort.h; sourceTree = "<group>"; };
 		271EE3191D9DA15E00A3911C /* TTUsernameSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUsernameSort.m; sourceTree = "<group>"; };
+		272335C42006B634005E50AE /* TTPopoverProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPopoverProfileViewController.h; sourceTree = "<group>"; };
+		272335C52006B634005E50AE /* TTPopoverProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPopoverProfileViewController.m; sourceTree = "<group>"; };
+		272335C82006BE64005E50AE /* TTPopoverProfileViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPopoverProfileViewCell.h; sourceTree = "<group>"; };
+		272335C92006BE64005E50AE /* TTPopoverProfileViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPopoverProfileViewCell.m; sourceTree = "<group>"; };
+		272335CB200FDFAB005E50AE /* TTPreviewPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTPreviewPhotoViewController.h; sourceTree = "<group>"; };
+		272335CC200FDFAB005E50AE /* TTPreviewPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTPreviewPhotoViewController.m; sourceTree = "<group>"; };
 		272A4AE61C77CF5400700DCA /* TTSuggestionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSuggestionTableViewController.h; sourceTree = "<group>"; };
 		272A4AE71C77CF5400700DCA /* TTSuggestionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSuggestionTableViewController.m; sourceTree = "<group>"; };
 		272ACA021D2C5CA700329B28 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
@@ -970,10 +979,13 @@
 		2709AF241F72F78200F83729 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				272335C72006B63B005E50AE /* ViewCells */,
 				2709AF251F72F7A600F83729 /* TTProfileViewController.h */,
 				2709AF261F72F7A600F83729 /* TTProfileViewController.m */,
 				27E388211FA3D40300A9F733 /* TTPassthroughCollectionView.h */,
 				27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */,
+				272335C42006B634005E50AE /* TTPopoverProfileViewController.h */,
+				272335C52006B634005E50AE /* TTPopoverProfileViewController.m */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -996,6 +1008,15 @@
 				271D8BB81D91A43D0054741F /* libGoogleAnalyticsServices.a */,
 			);
 			path = GoogleAnalytics;
+			sourceTree = "<group>";
+		};
+		272335C72006B63B005E50AE /* ViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				272335C82006BE64005E50AE /* TTPopoverProfileViewCell.h */,
+				272335C92006BE64005E50AE /* TTPopoverProfileViewCell.m */,
+			);
+			name = ViewCells;
 			sourceTree = "<group>";
 		};
 		27340DED1E3FBFD50070F051 /* Sharkfood */ = {
@@ -1175,6 +1196,8 @@
 			children = (
 				2709AF281F74423E00F83729 /* TTPhotoViewController.h */,
 				2709AF291F74423E00F83729 /* TTPhotoViewController.m */,
+				272335CB200FDFAB005E50AE /* TTPreviewPhotoViewController.h */,
+				272335CC200FDFAB005E50AE /* TTPreviewPhotoViewController.m */,
 				27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */,
 				27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */,
 			);
@@ -1559,6 +1582,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				272335CD200FDFAC005E50AE /* TTPreviewPhotoViewController.m in Sources */,
 				275842781FAA6C0600FD58E5 /* AFNetworkReachabilityManager.m in Sources */,
 				275842791FAA6C0600FD58E5 /* AFSecurityPolicy.m in Sources */,
 				27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */,
@@ -1635,6 +1659,7 @@
 				C95493891B7CD2FA00BD8CB6 /* UIScrollView+EmptyDataSet.m in Sources */,
 				27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */,
 				27C799911FFACE5B00FD5C8C /* TTAddMembersViewCell.m in Sources */,
+				272335C62006B634005E50AE /* TTPopoverProfileViewController.m in Sources */,
 				C9D8933A1BB596FB00259AB4 /* PFObject+NSCoding.m in Sources */,
 				27BFA4AF1EC3915700A6CFB4 /* TTOnboardingButton.m in Sources */,
 				27F240E41D01F48300155539 /* TTTrunkMemberViewCell.m in Sources */,
@@ -1688,6 +1713,7 @@
 				C95702731D942496009DE079 /* Activity.m in Sources */,
 				27F3E3861D3D778600634B75 /* DLFPhotosPickerViewController.m in Sources */,
 				27BFA4BB1ECB7C3000A6CFB4 /* TTOnboardingFinishedViewController.m in Sources */,
+				272335CA2006BE64005E50AE /* TTPopoverProfileViewCell.m in Sources */,
 				C910B1941B66B97700788BE0 /* ActivityListViewController.m in Sources */,
 				27444E4B1ED4D9BB0021DC7A /* TTCitySearchResultsTableViewController.m in Sources */,
 				27BFA4B71ECA4FCA00A6CFB4 /* TTLastNameViewController.m in Sources */,

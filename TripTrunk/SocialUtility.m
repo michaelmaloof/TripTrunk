@@ -1288,4 +1288,24 @@
     }
 }
 
++(void)loadUserImages:(PFUser*)user withLimit:(int)limit block:(void (^)(NSArray *objects, NSError *error))completionBlock{
+    PFQuery *findPhotosUser = [PFQuery queryWithClassName:@"Photo"];
+    [findPhotosUser whereKey:@"user" equalTo:user];
+    [findPhotosUser orderByDescending:@"createdAt"];
+    [findPhotosUser includeKey:@"trip.creator"];
+    [findPhotosUser includeKey:@"trip"];
+    [findPhotosUser includeKey:@"user"];
+    [findPhotosUser setLimit:limit];
+    [findPhotosUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error){
+            [[TTUtility sharedInstance] internetConnectionFound];
+            completionBlock(objects,nil);
+        } else {
+            [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadUserImages:withLimit:"];
+            completionBlock(nil,error);
+        }
+    }];
+}
+
 @end

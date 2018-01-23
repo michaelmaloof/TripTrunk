@@ -267,4 +267,11 @@
  */
 + (void)memberStatusOfTrunk:(Trip*)trip user:(PFUser*)user block:(void (^)(BOOL followingStatus, NSError *error))completionBlock;
 
+/**
+ *  load most recent photos from a specific user
+ *
+ *  @param user            The User whose photos you want
+ *  @param limit           The maximum number of images to return
+ */
++(void)loadUserImages:(PFUser*)user withLimit:(int)limit block:(void (^)(NSArray *objects, NSError *error))completionBlock;
 @end

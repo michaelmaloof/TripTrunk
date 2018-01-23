@@ -19,8 +19,10 @@
 #import "Photo.h"
 #import "TTAddPhotosViewController.h"
 #import "TTAddMembersViewController.h"
+#import "TTPopoverProfileViewController.h"
+#import "TTPreviewPhotoViewController.h"
 
-@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate>
+@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
@@ -28,7 +30,8 @@
 @property (strong, nonatomic) NSMutableArray *trunkMembers;
 @property (strong, nonatomic) Photo *photo;
 @property NSInteger index;
-
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
+@property (strong, nonatomic) TTPreviewPhotoViewController *popoverPreviewPhotoViewController;
 @end
 
 @implementation TTTrunkViewController
@@ -128,7 +131,7 @@
 - (TTTrunkViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     TTTrunkViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    
+
     if(collectionView == self.mainCollectionView){
         
         if(indexPath.section == 0){
@@ -198,7 +201,9 @@
             [imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.clipsToBounds = YES;
-            imageView.tag = indexPath.row;
+            cell.tag = indexPath.row;
+            if(!cell.tag)
+                cell.tag = -1;
             [cell addSubview:imageView];
             
             if(photo.video){
@@ -242,14 +247,14 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == self.mainCollectionView && indexPath.section == 1){
         TTTrunkViewCell *cell = (TTTrunkViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
-        for (UIImageView *subview in cell.subviews){
-            if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
-                self.photo = self.photos[indexPath.row];
-                self.photo.image = subview.image;
-                self.index = indexPath.row;
-                break;
-            }
-        }
+//        for (UIImageView *subview in cell.subviews){
+//            if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
+                self.photo = cell.tag==-1 ? self.photos[0] : self.photos[cell.tag];
+                self.photo.image = cell.imageView.image;
+                self.index = cell.tag==-1 ? 0 : cell.tag;
+//                break;
+//            }
+//        }
         [self performSegueWithIdentifier:@"pushToPhoto" sender:self];
     }else{
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
@@ -363,6 +368,55 @@
 
 - (IBAction)addToTrunkButtonAction:(id)sender {
     [self performSegueWithIdentifier:@"pushToAddMembersToTrunk" sender:self];
+}
+
+- (IBAction)longPressToViewProfileAsPreview:(UILongPressGestureRecognizer*)gesture {
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
+        self.popoverPreviewPhotoViewController = (TTPreviewPhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PreviewPhotoViewController"];
+        CGPoint touchPoint = [gesture locationInView:self.view];
+        UIView *touchedView = [[UIView alloc] init];
+        for(TTTrunkViewCell* cell in [self.mainCollectionView visibleCells]){
+            CGRect cellFrameInSuperview = [self.mainCollectionView convertRect:cell.frame toView:[self.mainCollectionView superview]];
+            if(CGRectContainsPoint(cellFrameInSuperview, touchPoint)){
+                touchedView.tag = cell.tag;
+                break;
+            }
+        }
+        if(touchedView.tag){
+            self.popoverPreviewPhotoViewController.photo = touchedView.tag==-1 ? self.photos[0] : self.photos[touchedView.tag];
+            self.popoverPreviewPhotoViewController.modalPresentationStyle = UIModalPresentationPopover;
+            self.popoverPreviewPhotoViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.popoverPreviewPhotoViewController.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.view;
+            self.popover.sourceRect = CGRectMake(27,140,320,410);
+            self.popover.permittedArrowDirections = 0;
+            
+            self.popoverPreviewPhotoViewController.preferredContentSize = CGSizeMake(320,410);
+            self.popoverPreviewPhotoViewController.popoverPresentationController.sourceView = self.view;
+            self.popoverPreviewPhotoViewController.popoverPresentationController.sourceRect = CGRectMake(27,140,320,410);
+            
+            //HACK because modalTransitionStyle doesn't work on fade in
+            CATransition* transition = [CATransition animation];
+            transition.duration = 0.5;
+            transition.type = kCATransitionFade;
+            [self.view.window.layer addAnimation:transition forKey:kCATransition];
+            
+            [self presentViewController:self.popoverPreviewPhotoViewController animated:NO completion:nil];
+        }
+    }
+    
+    if(gesture.state == UIGestureRecognizerStateEnded){
+        [self.popoverPreviewPhotoViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+#pragma mark - UIModalPopoverDelegate
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
+    return UIModalPresentationNone;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

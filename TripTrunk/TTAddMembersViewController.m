@@ -16,8 +16,10 @@
 #import "TTUsernameSort.h"
 #import "TTOnboardingTextField.h"
 #import "TTPhotosToAddViewCell.h"
+#import "TTPopoverProfileViewController.h"
+#import "TTRoundedImage.h"
 
-@interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property BOOL isSearching;
 @property (strong,nonatomic) NSArray *friends;
@@ -28,6 +30,8 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewTopConstraint;
 @property (strong, nonatomic) IBOutlet UITextView *trunkName;
 @property (strong, nonatomic) IBOutlet UICollectionView *membersCollectionView;
+@property (strong, nonatomic) UIPopoverPresentationController *popover;
+@property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
 @end
 
 @implementation TTAddMembersViewController
@@ -99,14 +103,33 @@
 }
 
 - (TTAddMembersViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    TTAddMembersViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    __weak TTAddMembersViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.profileImage.image = [UIImage imageNamed:@"tt_square_placeholder"];
     cell.name.text = @"";
     cell.checkmark.hidden = YES;
+    cell.initialsLabel.hidden = YES;
     cell.backgroundColor = [TTColor tripTrunkBackgroundLightBlue];
+    
     PFUser *user = self.friends[indexPath.row];
     cell.name.text = user[@"name"];
-    [cell.profileImage setImageWithURL:[NSURL URLWithString:user[@"profilePicUrl"]]];
+    if([self.membersToAdd containsObject:user])
+        cell.checkmark.hidden = NO;
+    cell.checkmark.tag = indexPath.row;
+    cell.profileImage.tag = indexPath.row;
+    if(user[@"profilePicUrl"]){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:user[@"profilePicUrl"]]];
+        [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        [cell.profileImage setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+            cell.profileImage.image = image;
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            cell.initialsLabel.text = [self getInitialsForMissingProfilePictureFromUser:user];
+            cell.initialsLabel.hidden = NO;
+        }];
+    }else{
+        cell.initialsLabel.text = [self getInitialsForMissingProfilePictureFromUser:user];
+        cell.initialsLabel.hidden = NO;
+    }
+    
     return cell;
 }
 
@@ -119,12 +142,18 @@
         [self.membersCollectionView reloadData];
     }else{
         cell.checkmark.hidden = YES;
-        if(self.membersToAdd.count ==0)
+        [self.membersToAdd removeObject:self.friends[indexPath.row]];
+        [self.membersCollectionView reloadData];
+        if(self.membersToAdd.count == 0)
             self.membersCollectionView.hidden = YES;
     }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+}
+
+-(NSString*)getInitialsForMissingProfilePictureFromUser:(PFUser*)user{
+    return [NSString stringWithFormat:@"%@%@",[user[@"firstName"] substringToIndex:1],[user[@"lastName"] substringToIndex:1]];;
 }
 
 #pragma mark - Friend Search
@@ -206,6 +235,10 @@
     }
 }
 
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touch ended");
+}
+
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     [self filterResults:[textField.text stringByAppendingString:string]];
@@ -213,32 +246,24 @@
 }
 
 - (TTPhotosToAddViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.image.image = [UIImage imageNamed:@"square_placeholder"];
-    PFUser *member = self.membersToAdd[indexPath.row];
-    UIImageView *imageView;
-    if(member[@"profilePicUrl"]){
-        [cell.image setImageWithURL:[NSURL URLWithString:member[@"profilePicUrl"]]];
+    __weak TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.image.image = [UIImage imageNamed:@"tt_square_placeholder"];
+    cell.initialsLabel.hidden = YES;
+    
+    PFUser *user = self.membersToAdd[indexPath.row];
+    if(user[@"profilePicUrl"]){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:user[@"profilePicUrl"]]];
+        [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        [cell.image setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+            cell.image.image = image;
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+            cell.initialsLabel.text = [self getInitialsForMissingProfilePictureFromUser:user];
+            cell.initialsLabel.hidden = NO;
+        }];
     }else{
-        imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
-        CGRect labelFrame = CGRectMake(10, 10, 40, 40);
-        UILabel *initialsLabel = [[UILabel alloc] initWithFrame:labelFrame];
-        initialsLabel.text = [NSString stringWithFormat:@"%@%@",[member[@"firstName"] substringToIndex:1],[member[@"lastName"] substringToIndex:1]];
-        initialsLabel.font = [TTFont tripTrunkFont28];
-        initialsLabel.numberOfLines = 1;
-        initialsLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
-        initialsLabel.adjustsFontSizeToFitWidth = YES;
-        //            initialsLabel.adjustsLetterSpacingToFitWidth = YES;
-        initialsLabel.minimumScaleFactor = 10.0f/12.0f;
-        initialsLabel.clipsToBounds = YES;
-        initialsLabel.backgroundColor = [UIColor clearColor];
-        initialsLabel.textColor = [UIColor darkGrayColor];
-        initialsLabel.textAlignment = NSTextAlignmentCenter;
-        [imageView addSubview:initialsLabel];
+        cell.initialsLabel.text = [self getInitialsForMissingProfilePictureFromUser:user];
+        cell.initialsLabel.hidden = NO;
     }
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.clipsToBounds = YES;
-    [cell addSubview:imageView];
     return cell;
 }
 
@@ -246,6 +271,54 @@
     return self.membersToAdd.count;
 }
 
+#pragma mark - UIButtons
+- (IBAction)backButtonWasPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
+- (IBAction)skipWasPressed:(id)sender {
+}
+
+- (IBAction)longPressToViewProfileAsPreview:(UILongPressGestureRecognizer*)gesture {
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+        self.popoverProfileViewController = (TTPopoverProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ProfilePopoverView"];
+        CGPoint touchPoint = [gesture locationInView:self.view];
+        UIView* touchedView = [self.view hitTest:touchPoint withEvent:nil];
+        if([touchedView isKindOfClass:[TTRoundedImage class]] || [touchedView isKindOfClass:[UIImageView class]]){
+            self.popoverProfileViewController.user = self.friends[touchedView.tag];
+            self.popoverProfileViewController.modalPresentationStyle = UIModalPresentationPopover;
+            self.popoverProfileViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.popoverProfileViewController.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.view;
+            self.popover.sourceRect = CGRectMake(27,140,320,380);
+            self.popover.permittedArrowDirections = 0;
+            
+            self.popoverProfileViewController.preferredContentSize = CGSizeMake(320,380);
+            self.popoverProfileViewController.popoverPresentationController.sourceView = self.view;
+            self.popoverProfileViewController.popoverPresentationController.sourceRect = CGRectMake(27,140,320,380);
+            
+            //HACK because modalTransitionStyle doesn't work on fade in
+            CATransition* transition = [CATransition animation];
+            transition.duration = 0.5;
+            transition.type = kCATransitionFade;
+            [self.view.window.layer addAnimation:transition forKey:kCATransition];
+            
+            [self presentViewController:self.popoverProfileViewController animated:NO completion:nil];
+        }
+    }
+    
+    if(gesture.state == UIGestureRecognizerStateEnded){
+        [self.popoverProfileViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+#pragma mark - UIModalPopoverDelegate
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
+    return UIModalPresentationNone;
+}
 
 @end

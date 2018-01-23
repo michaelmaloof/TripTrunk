@@ -12,5 +12,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UILabel *name;
 @property (strong, nonatomic) IBOutlet UIImageView *checkmark;
+@property (strong, nonatomic) IBOutlet UILabel *initialsLabel;
 
 @end
