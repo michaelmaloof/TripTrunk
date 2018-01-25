@@ -136,7 +136,7 @@
                                 <state key="normal" image="tt_Blue_Back_Arrow"/>
                                 <connections>
                                     <action selector="backButton:" destination="hfh-MP-wGC" eventType="touchUpInside" id="gUd-FQ-wUP"/>
-                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="Po8-oK-m65"/>
+                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="Bj8-gd-jK1"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="za4-pP-meQ" customClass="TTOnboardingButton">
@@ -154,7 +154,6 @@
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="addToTrunkButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="rEp-Pr-4II"/>
                                     <segue destination="uIX-Bs-F7Z" kind="show" identifier="pushToAddPhotosToTrunk" id="BnV-lK-4U8"/>
                                 </connections>
                             </button>
@@ -193,7 +192,7 @@
                 <exit id="hfh-MP-wGC" userLabel="Exit" sceneMemberID="exit"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="ovt-RA-fkt">
                     <connections>
-                        <action selector="longPressToViewProfileAsPreview:" destination="A5E-xf-hD0" id="Kcu-h0-ADk"/>
+                        <action selector="longPressToViewPhotoAsPreview:" destination="A5E-xf-hD0" id="SDw-ml-pRo"/>
                         <outlet property="delegate" destination="A5E-xf-hD0" id="c0n-6h-byo"/>
                     </connections>
                 </pongPressGestureRecognizer>
@@ -720,7 +719,6 @@
                                 <state key="normal" image="tt_Blue_Back_Arrow"/>
                                 <connections>
                                     <action selector="backActionButton:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="Vbc-4C-fMJ"/>
-                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="fFw-KC-OAo"/>
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gnA-0o-EiH" customClass="TTLikeButton">
@@ -736,7 +734,6 @@
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="backButtonAction:" destination="A5E-xf-hD0" eventType="touchUpInside" id="ghX-xN-3mp"/>
                                     <action selector="heartActionButton:" destination="Zxw-qr-NhS" eventType="touchUpInside" id="K8S-JT-g7Y"/>
                                 </connections>
                             </button>
@@ -839,8 +836,16 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bRT-gV-8CT">
+                                <rect key="frame" x="0.0" y="45" width="320" height="368"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="VWF-Be-9TC"/>
+                                    <constraint firstAttribute="height" constant="368" id="esL-ir-AQx"/>
+                                </constraints>
+                            </view>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="lNv-7P-0sk">
-                                <rect key="frame" x="276" y="57" width="16" height="11"/>
+                                <rect key="frame" x="296" y="57" width="16" height="11"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="11" id="Hca-BA-xtq"/>
                                     <constraint firstAttribute="width" constant="16" id="KTm-WF-pLk"/>
@@ -865,11 +870,14 @@
                             <constraint firstItem="IQJ-xT-TfH" firstAttribute="leading" secondItem="gcR-mA-xgR" secondAttribute="trailing" constant="8" id="3N9-pV-rBh"/>
                             <constraint firstItem="6qO-BU-aNd" firstAttribute="top" secondItem="lNv-7P-0sk" secondAttribute="bottom" constant="-22" id="Add-YM-08b"/>
                             <constraint firstItem="6qO-BU-aNd" firstAttribute="top" secondItem="q1H-F3-eyS" secondAttribute="top" constant="46" id="AyO-dg-fgr"/>
+                            <constraint firstItem="bRT-gV-8CT" firstAttribute="top" secondItem="IQJ-xT-TfH" secondAttribute="bottom" constant="8" symbolic="YES" id="CIO-Ms-jAO"/>
+                            <constraint firstItem="IQJ-xT-TfH" firstAttribute="leading" secondItem="bRT-gV-8CT" secondAttribute="trailing" constant="-273" id="Cg2-vh-c95"/>
                             <constraint firstItem="gcR-mA-xgR" firstAttribute="leading" secondItem="q1H-F3-eyS" secondAttribute="leading" constant="7" id="GJD-4G-7ep"/>
+                            <constraint firstItem="bRT-gV-8CT" firstAttribute="leading" secondItem="q1H-F3-eyS" secondAttribute="leading" id="GPs-pO-aYf"/>
                             <constraint firstItem="TLu-kv-Gru" firstAttribute="leading" secondItem="gcR-mA-xgR" secondAttribute="trailing" constant="8" id="TRt-sr-3YH"/>
                             <constraint firstItem="6qO-BU-aNd" firstAttribute="leading" secondItem="q1H-F3-eyS" secondAttribute="leading" id="WOK-J2-bX6"/>
                             <constraint firstItem="IQJ-xT-TfH" firstAttribute="top" secondItem="TLu-kv-Gru" secondAttribute="bottom" constant="-1" id="YB2-l4-6xg"/>
-                            <constraint firstItem="lNv-7P-0sk" firstAttribute="leading" secondItem="6qO-BU-aNd" secondAttribute="trailing" constant="-44" id="j15-gk-5sS"/>
+                            <constraint firstItem="lNv-7P-0sk" firstAttribute="leading" secondItem="6qO-BU-aNd" secondAttribute="trailing" constant="-24" id="j15-gk-5sS"/>
                             <constraint firstItem="gcR-mA-xgR" firstAttribute="top" secondItem="q1H-F3-eyS" secondAttribute="top" constant="8" id="yCH-a5-slm"/>
                         </constraints>
                     </view>
@@ -878,6 +886,7 @@
                         <outlet property="firstLastName" destination="TLu-kv-Gru" id="JVc-Ln-drd"/>
                         <outlet property="photoPreview" destination="6qO-BU-aNd" id="Q4h-Cb-ygF"/>
                         <outlet property="username" destination="IQJ-xT-TfH" id="FVq-YS-WWX"/>
+                        <outlet property="videoPlayerView" destination="bRT-gV-8CT" id="YzR-Vt-zdc"/>
                         <outlet property="video_icon" destination="lNv-7P-0sk" id="F8F-67-oZA"/>
                     </connections>
                 </viewController>

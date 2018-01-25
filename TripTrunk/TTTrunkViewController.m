@@ -11,6 +11,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import <QuartzCore/QuartzCore.h>
 #import "TTTrunkViewCell.h"
+#import "TTAddMembersViewCell.h"
 #import "UIImageView+AFNetworking.h"
 #import "SocialUtility.h"
 #import "TTProfileViewController.h"
@@ -32,6 +33,7 @@
 @property NSInteger index;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPreviewPhotoViewController *popoverPreviewPhotoViewController;
+@property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
 @end
 
 @implementation TTTrunkViewController
@@ -181,6 +183,12 @@
             [self.membersCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
             [collectionView addSubview:self.membersCollectionView];
             
+            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                                       initWithTarget:self action:@selector(longPressToViewProfileAsPreview:)];
+            longPress.minimumPressDuration = 0.5; //seconds
+            longPress.delegate = self;
+            [self.membersCollectionView addGestureRecognizer:longPress];
+            
             //Members button
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             [button addTarget:self action:@selector(viewTrunkMembers) forControlEvents:UIControlEventTouchUpInside];
@@ -239,6 +247,9 @@
         }
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
+        cell.tag = indexPath.row;
+        if(!cell.tag)
+            cell.tag = -1;
         [cell addSubview:imageView];
     }
     return cell;
@@ -247,14 +258,9 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == self.mainCollectionView && indexPath.section == 1){
         TTTrunkViewCell *cell = (TTTrunkViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
-//        for (UIImageView *subview in cell.subviews){
-//            if([subview isKindOfClass:[UIImageView class]] && subview.tag == indexPath.row){
                 self.photo = cell.tag==-1 ? self.photos[0] : self.photos[cell.tag];
                 self.photo.image = cell.imageView.image;
                 self.index = cell.tag==-1 ? 0 : cell.tag;
-//                break;
-//            }
-//        }
         [self performSegueWithIdentifier:@"pushToPhoto" sender:self];
     }else{
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
@@ -366,11 +372,7 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)addToTrunkButtonAction:(id)sender {
-    [self performSegueWithIdentifier:@"pushToAddMembersToTrunk" sender:self];
-}
-
-- (IBAction)longPressToViewProfileAsPreview:(UILongPressGestureRecognizer*)gesture {
+- (IBAction)longPressToViewPhotoAsPreview:(UILongPressGestureRecognizer*)gesture {
     if(gesture.state == UIGestureRecognizerStateBegan){
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
         self.popoverPreviewPhotoViewController = (TTPreviewPhotoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PreviewPhotoViewController"];
@@ -411,6 +413,51 @@
     
     if(gesture.state == UIGestureRecognizerStateEnded){
         [self.popoverPreviewPhotoViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+-(void)longPressToViewProfileAsPreview:(UILongPressGestureRecognizer*)gesture {
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+        self.popoverProfileViewController = (TTPopoverProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ProfilePopoverView"];
+        CGPoint touchPoint = [gesture locationInView:self.view];
+        UIView *touchedView = [[UIView alloc] init];
+        for(TTAddMembersViewCell* cell in [self.membersCollectionView visibleCells]){
+            CGRect cellFrameInSuperview = [self.membersCollectionView convertRect:cell.frame toView:[self.membersCollectionView superview]];
+            if(CGRectContainsPoint(cellFrameInSuperview, touchPoint)){
+                touchedView.tag = cell.tag;
+                break;
+            }
+        }
+        if(touchedView.tag){
+            self.popoverProfileViewController.user = touchedView.tag==-1 ? self.trunkMembers[0] : self.trunkMembers[touchedView.tag];
+            self.popoverProfileViewController.modalPresentationStyle = UIModalPresentationPopover;
+            self.popoverProfileViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.popoverProfileViewController.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.view;
+            self.popover.sourceRect = CGRectMake(27,140,320,380);
+            self.popover.permittedArrowDirections = 0;
+            
+            self.popoverProfileViewController.preferredContentSize = CGSizeMake(320,380);
+            self.popoverProfileViewController.popoverPresentationController.sourceView = self.view;
+            self.popoverProfileViewController.popoverPresentationController.sourceRect = CGRectMake(27,140,320,380);
+            
+            //HACK because modalTransitionStyle doesn't work on fade in
+            CATransition* transition = [CATransition animation];
+            transition.duration = 0.5;
+            transition.type = kCATransitionFade;
+            [self.view.window.layer addAnimation:transition forKey:kCATransition];
+            
+            [self presentViewController:self.popoverProfileViewController animated:NO completion:nil];
+        }
+        
+    }
+    
+    if(gesture.state == UIGestureRecognizerStateEnded){
+        [self.popoverProfileViewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
