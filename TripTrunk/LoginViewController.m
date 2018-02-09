@@ -124,7 +124,7 @@
     [logMeOut logOut];
 
     // Set permissions required from the facebook user account
-    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
     
     // Login PFUser using Facebook
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error)

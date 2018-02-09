@@ -317,7 +317,7 @@
 
 - (IBAction)addFacebook:(id)sender{
     //List of permissions we want from the user's facebook to link tp the parse user. We don't need the email since we won't be changing their current email to their facebook email.
-    NSArray *permissionsArray = @[@"public_profile", @"user_friends"];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
     
     //Make sure the user isnt already linked with facebook
     if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]){
@@ -361,7 +361,7 @@
 
 -(void)loginWithFacebook{
     // Set permissions required from the facebook user account
-    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
     
     // Login PFUser using Facebook
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error){

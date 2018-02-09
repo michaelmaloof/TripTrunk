@@ -143,6 +143,11 @@
 		27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C531E41C7F8F9C00F8B974 /* TTUserProfileImage.m */; };
 		27C7159F1CE6834100A67C5D /* TTSubPhotoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7159E1CE6834100A67C5D /* TTSubPhotoButton.m */; };
 		27C799911FFACE5B00FD5C8C /* TTAddMembersViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C799901FFACE5B00FD5C8C /* TTAddMembersViewCell.m */; };
+		27CDB50E201FD14700E71E61 /* TTActivityNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CDB50D201FD14700E71E61 /* TTActivityNotificationsViewController.m */; };
+		27CDB512201FD2A000E71E61 /* TTActivityNotificationViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CDB511201FD2A000E71E61 /* TTActivityNotificationViewCell.m */; };
+		27CDB515202A587400E71E61 /* TTActivitySectionsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CDB514202A587400E71E61 /* TTActivitySectionsViewCell.m */; };
+		27CDB518202BA28500E71E61 /* TTFindFriendsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CDB517202BA28500E71E61 /* TTFindFriendsViewCell.m */; };
+		27CDB51B202CFB7700E71E61 /* TTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CDB51A202CFB7700E71E61 /* TTSettingsViewController.m */; };
 		27CFE6EF1D0092E600E778BE /* TTEditTripFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */; };
 		27D41FB71FBB9F7B001B6CD5 /* TTLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB61FBB9F7B001B6CD5 /* TTLikeButton.m */; };
 		27D41FBA1FCCB73C001B6CD5 /* TTAddPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D41FB91FCCB73B001B6CD5 /* TTAddPhotosViewController.m */; };
@@ -454,6 +459,16 @@
 		27C715BC1CEBA75600A67C5D /* CLUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
 		27C7998F1FFACE5B00FD5C8C /* TTAddMembersViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAddMembersViewCell.h; sourceTree = "<group>"; };
 		27C799901FFACE5B00FD5C8C /* TTAddMembersViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAddMembersViewCell.m; sourceTree = "<group>"; };
+		27CDB50C201FD14700E71E61 /* TTActivityNotificationsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTActivityNotificationsViewController.h; sourceTree = "<group>"; };
+		27CDB50D201FD14700E71E61 /* TTActivityNotificationsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTActivityNotificationsViewController.m; sourceTree = "<group>"; };
+		27CDB510201FD2A000E71E61 /* TTActivityNotificationViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTActivityNotificationViewCell.h; sourceTree = "<group>"; };
+		27CDB511201FD2A000E71E61 /* TTActivityNotificationViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTActivityNotificationViewCell.m; sourceTree = "<group>"; };
+		27CDB513202A587400E71E61 /* TTActivitySectionsViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTActivitySectionsViewCell.h; sourceTree = "<group>"; };
+		27CDB514202A587400E71E61 /* TTActivitySectionsViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTActivitySectionsViewCell.m; sourceTree = "<group>"; };
+		27CDB516202BA28500E71E61 /* TTFindFriendsViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTFindFriendsViewCell.h; sourceTree = "<group>"; };
+		27CDB517202BA28500E71E61 /* TTFindFriendsViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTFindFriendsViewCell.m; sourceTree = "<group>"; };
+		27CDB519202CFB7700E71E61 /* TTSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTSettingsViewController.h; sourceTree = "<group>"; };
+		27CDB51A202CFB7700E71E61 /* TTSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTSettingsViewController.m; sourceTree = "<group>"; };
 		27CFE6ED1D0092E600E778BE /* TTEditTripFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTEditTripFriendsViewController.h; sourceTree = "<group>"; };
 		27CFE6EE1D0092E600E778BE /* TTEditTripFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTEditTripFriendsViewController.m; sourceTree = "<group>"; };
 		27D41FB51FBB9F7B001B6CD5 /* TTLikeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLikeButton.h; sourceTree = "<group>"; };
@@ -697,6 +712,7 @@
 		220408DE1AED55C1009DB060 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				27CDB50B201FD10E00E71E61 /* Activity */,
 				27D41FB41FB25D31001B6CD5 /* Photo */,
 				2709AF241F72F78200F83729 /* Profile */,
 				27B69F0B1F5F23C000905B51 /* Trunk */,
@@ -1191,6 +1207,31 @@
 			name = Login;
 			sourceTree = "<group>";
 		};
+		27CDB50B201FD10E00E71E61 /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				27CDB50F201FD24100E71E61 /* viewCells */,
+				27CDB50C201FD14700E71E61 /* TTActivityNotificationsViewController.h */,
+				27CDB50D201FD14700E71E61 /* TTActivityNotificationsViewController.m */,
+				27CDB519202CFB7700E71E61 /* TTSettingsViewController.h */,
+				27CDB51A202CFB7700E71E61 /* TTSettingsViewController.m */,
+			);
+			name = Activity;
+			sourceTree = "<group>";
+		};
+		27CDB50F201FD24100E71E61 /* viewCells */ = {
+			isa = PBXGroup;
+			children = (
+				27CDB510201FD2A000E71E61 /* TTActivityNotificationViewCell.h */,
+				27CDB511201FD2A000E71E61 /* TTActivityNotificationViewCell.m */,
+				27CDB513202A587400E71E61 /* TTActivitySectionsViewCell.h */,
+				27CDB514202A587400E71E61 /* TTActivitySectionsViewCell.m */,
+				27CDB516202BA28500E71E61 /* TTFindFriendsViewCell.h */,
+				27CDB517202BA28500E71E61 /* TTFindFriendsViewCell.m */,
+			);
+			name = viewCells;
+			sourceTree = "<group>";
+		};
 		27D41FB41FB25D31001B6CD5 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
@@ -1614,6 +1655,7 @@
 				C957026B1D91B1DE009DE079 /* Underscore+Functional.m in Sources */,
 				27F3E3851D3D778600634B75 /* DLFPhotosLibrary.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
+				27CDB51B202CFB7700E71E61 /* TTSettingsViewController.m in Sources */,
 				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
 				27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
@@ -1647,6 +1689,7 @@
 				27D41FBD1FCCB838001B6CD5 /* TTPhotoPicker.m in Sources */,
 				22343AEA1BC9A85F00F0B2E5 /* TTBaseTableViewController.m in Sources */,
 				C90C3CF11B04F40000CABBC9 /* FriendsListViewController.m in Sources */,
+				27CDB518202BA28500E71E61 /* TTFindFriendsViewCell.m in Sources */,
 				27BFA4A71EBBC7D000A6CFB4 /* TTEmailViewController.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
@@ -1678,7 +1721,9 @@
 				C93913271D89D8DE00BB7251 /* UploadOperation.m in Sources */,
 				220408D91AEC5475009DB060 /* TrunkListViewController.m in Sources */,
 				27444E481ED4BA7C0021DC7A /* TTCitySearchTextField.m in Sources */,
+				27CDB50E201FD14700E71E61 /* TTActivityNotificationsViewController.m in Sources */,
 				2232F9C61C6E241D00D9A2D3 /* TTNewsFeedViewController.m in Sources */,
+				27CDB512201FD2A000E71E61 /* TTActivityNotificationViewCell.m in Sources */,
 				C90ADEAD1BA21F1A000809D0 /* EditProfileViewController.m in Sources */,
 				220408F41AF311D6009DB060 /* Comment.m in Sources */,
 				220408E71AEDB23F009DB060 /* TrunkCollectionViewCell.m in Sources */,
@@ -1693,6 +1738,7 @@
 				220408E41AED58C0009DB060 /* TrunkViewController.m in Sources */,
 				C9FAB7A01B18D7C200282EA3 /* AddTripFriendsViewController.m in Sources */,
 				2760696A1F3E39EE00C77A30 /* Excursion.m in Sources */,
+				27CDB515202A587400E71E61 /* TTActivitySectionsViewCell.m in Sources */,
 				27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */,
 				27F3E3831D3D778600634B75 /* DLFMasterViewController.m in Sources */,
 				27C531E51C7F8F9C00F8B974 /* TTUserProfileImage.m in Sources */,

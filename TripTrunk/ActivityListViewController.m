@@ -77,7 +77,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.trips = [[NSMutableArray alloc]init];
+    self.trips = [[NSMutableArray alloc] init];
     [self loadTrips];
 }
 
@@ -85,8 +85,8 @@ enum TTActivityViewType : NSUInteger {
     // Initialize the view, tableview, and refresh controller
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [self.view setBackgroundColor:[TTColor tripTrunkWhite]];
-    [self setUpTableView];
-    if (_viewType == TTActivityViewAllActivities) {
+//    [self setUpTableView];
+    if (self.viewType == TTActivityViewAllActivities) {
         self.friends= [[NSMutableArray alloc]init];
         self.followingActivities = [[NSMutableArray alloc]init];
         [self setUpFilter];
@@ -96,7 +96,7 @@ enum TTActivityViewType : NSUInteger {
 
 - (void)viewDidAppear:(BOOL)animated {
     // reload the table every time it appears or we get weird results
-    self.tabBarController.tabBar.hidden = NO;
+//    self.tabBarController.tabBar.hidden = NO;
     self.refreshController.backgroundColor = [TTColor tripTrunkBlue];
     self.colorTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
                                                      selector:@selector(rotateColors) userInfo:nil repeats:YES];
@@ -114,29 +114,29 @@ enum TTActivityViewType : NSUInteger {
     if (_viewType == TTActivityViewAllActivities){
         
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"internalBadge"];
-        UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
-        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
-        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-        [self.navigationController setTabBarItem:searchItem];
+//        UIImage *image = [UIImage imageNamed:@"comment_tabIcon"];
+//        UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:image tag:3];
+//        [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//        [self.navigationController setTabBarItem:searchItem];
         
     }
 }
 
--(void)setUpTableView{
-    self.tableView = [[UITableView alloc] init];
-    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
-    [self.view addSubview:self.tableView];
-    [self setupTableViewConstraints];
-    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
-    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
-    // Setup tableview delegate/datasource
-    [self.tableView setDelegate:self];
-    [self.tableView setDataSource:self];
-    // Setup Empty Datasets
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.emptyDataSetSource = self;
-}
+//-(void)setUpTableView{
+//    self.tableView = [[UITableView alloc] init];
+//    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    self.tableView.tableFooterView = [UIView new]; // to hide the cell seperators for empty cells
+//    [self.view addSubview:self.tableView];
+//    [self setupTableViewConstraints];
+//    [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:USER_CELL];
+//    [self.tableView registerNib:[UINib nibWithNibName:@"ActivityTableViewCell" bundle:nil] forCellReuseIdentifier:ACTIVITY_CELL];
+//    // Setup tableview delegate/datasource
+//    [self.tableView setDelegate:self];
+//    [self.tableView setDataSource:self];
+//    // Setup Empty Datasets
+//    self.tableView.emptyDataSetDelegate = self;
+//    self.tableView.emptyDataSetSource = self;
+//}
 
 -(void)setUpRefreshController{
     self.refreshController = [[UIRefreshControl alloc] init];
@@ -257,14 +257,14 @@ enum TTActivityViewType : NSUInteger {
                      [self.trips addObject:trip];
                  }
              }
-             if (_activities.count == 0 && _viewType == TTActivityViewAllActivities) {
+             if ((!self.activities || self.activities.count == 0) && self.viewType == TTActivityViewAllActivities) {
                  // Query for activities for user
                  if (self.isLoading == NO){
                      self.isLoading = YES;
                      [SocialUtility queryForAllActivities:0 trips:self.trips activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
                          
                          if (error){
-                             self.navigationItem.rightBarButtonItem.enabled = YES;
+//                             self.navigationItem.rightBarButtonItem.enabled = YES;
                              self.isLoading = NO;
                              [ParseErrorHandlingController handleError:error];
                              self.activitySearchComplete = YES;
@@ -985,6 +985,7 @@ enum TTActivityViewType : NSUInteger {
         }
     }
 }
+
 
 
 @end

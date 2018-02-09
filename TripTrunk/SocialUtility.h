@@ -274,4 +274,19 @@
  *  @param limit           The maximum number of images to return
  */
 +(void)loadUserImages:(PFUser*)user withLimit:(int)limit block:(void (^)(NSArray *objects, NSError *error))completionBlock;
+
+/**
+ *  load profilepicurl for a user when you only have the user's facebook id
+ *
+ *  @param fbid            The facebook id passed as a parameter
+ */
++ (void)queryForProfilePicUrlFromFBID:(id)fbid  block:(void (^)(NSString* result, NSError *error))completionBlock;
+
+/**
+ *  load user you only have the user's facebook id
+ *
+ *  @param fbid            The facebook id passed as a parameter
+ */
++ (void)queryForUserFromFBID:(id)fbid  block:(void (^)(PFUser* user, NSError *error))completionBlock;
+
 @end

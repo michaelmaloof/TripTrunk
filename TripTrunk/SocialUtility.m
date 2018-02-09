@@ -954,6 +954,34 @@
     }];
 }
 
++ (void)queryForProfilePicUrlFromFBID:(id)fbid  block:(void (^)(NSString* result, NSError *error))completionBlock {
+    PFQuery *user = [PFQuery queryWithClassName:@"User"];
+    [user whereKey:@"fbid" equalTo:fbid];
+    
+    [user findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if(error){
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForProfilePicUrlFromFBID:"];
+            return completionBlock (nil, error);
+        }else{
+            PFUser *foundUser = objects[0];
+            return completionBlock(foundUser[@"fbid"], error);
+        }
+    }];
+}
+
++ (void)queryForUserFromFBID:(id)fbid  block:(void (^)(PFUser* user, NSError *error))completionBlock {
+    PFQuery *user = [PFUser query];
+    [user whereKey:@"fbid" equalTo:fbid];
+    [user getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if(error){
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForUserFromFBID:"];
+            return completionBlock (nil, error);
+        }else{
+            return completionBlock((PFUser*)object, error);
+        }
+    }];
+}
+
 
 
 + (void)followingStatusFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser block:(void (^)(NSNumber* followingStatus, NSError *error))completionBlock; {

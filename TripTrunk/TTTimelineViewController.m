@@ -18,6 +18,7 @@
 #import "Excursion.h"
 #import "math.h"
 #import "TTTrunkViewController.h"
+#import "TTActivityNotificationsViewController.h"
 
 @interface TTTimelineViewController () <UICollectionViewDelegate>
 
@@ -485,5 +486,13 @@
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
+
+//NOTE: THIS IS TEMPORARY
+- (IBAction)goToActivity:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Activity" bundle:nil];
+    TTActivityNotificationsViewController *activityViewController = (TTActivityNotificationsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTActivityNotificationsViewController"];
+//    activityViewController.trip
+    [self.navigationController pushViewController:activityViewController animated:YES];
+}
 
 @end

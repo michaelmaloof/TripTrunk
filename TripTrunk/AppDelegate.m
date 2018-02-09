@@ -94,6 +94,8 @@
                                                      animated:YES
                                                    completion:nil];
     }
+    
+    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
 
     return YES;
 }
