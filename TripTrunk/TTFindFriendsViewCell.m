@@ -7,6 +7,8 @@
 //
 
 #import "TTFindFriendsViewCell.h"
+#import "SocialUtility.h"
+#import "TTActivityNotificationsViewController.h"
 
 @implementation TTFindFriendsViewCell
 
@@ -21,6 +23,5 @@
     // Configure the view for the selected state
 }
 
-- (IBAction)followButtonTapped:(UIButton *)sender {
-}
+
 @end

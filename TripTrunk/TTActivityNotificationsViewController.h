@@ -12,6 +12,7 @@
 -(void)trunkWasDeleted:(Trip*)trip;   //?
 -(void)photoWasDeleted:(Photo*)photo; //?
 
-- (id)initWithLikes:(NSArray *)likes;
-- (id)initWithActivities:(NSArray *)activities;
+
+-(id)initWithLikes:(NSArray *)likes;
+-(id)initWithActivities:(NSArray *)activities;
 @end

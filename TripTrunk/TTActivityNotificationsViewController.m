@@ -23,6 +23,7 @@
 #import <ParseFacebookUtilsV4/ParseFacebookUtilsV4.h>
 #import "TTAnalytics.h"
 #import "TTFindFriendsViewCell.h"
+#import "TTUsernameSort.h"
 
 enum TTActivityViewType : NSUInteger {
     TTActivityViewAllActivities = 1,
@@ -45,6 +46,7 @@ enum TTActivityViewType : NSUInteger {
 @property UIBarButtonItem *filter;
 @property NSMutableArray *friends;
 @property NSMutableArray *facebookFriends;
+@property NSMutableArray *facebookFriendsOriginalArray;
 @property UIRefreshControl *refreshController;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
@@ -55,6 +57,8 @@ enum TTActivityViewType : NSUInteger {
 @property (strong, nonatomic) IBOutlet UILabel *infoLabel;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *facebookButton;
 @property (strong, nonatomic) IBOutlet UITableView *friendsTableView;
+@property (nonatomic, strong) NSMutableArray *searchResults;
+@property BOOL isSearching;
 @end
 
 @implementation TTActivityNotificationsViewController
@@ -93,6 +97,7 @@ enum TTActivityViewType : NSUInteger {
     self.trips = [[NSMutableArray alloc] init];
     self.friends = [[NSMutableArray alloc] init];
     self.facebookFriends = [[NSMutableArray alloc] init];
+    self.facebookFriendsOriginalArray = [[NSMutableArray alloc] init];
     [self loadTrips];
     [self loadFriends];
 }
@@ -243,7 +248,7 @@ enum TTActivityViewType : NSUInteger {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(tableView == self.tableView){
         if (self.filter.tag == 0)
             return self.activities.count;
@@ -254,7 +259,7 @@ enum TTActivityViewType : NSUInteger {
 }
 
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80;
 }
 
@@ -337,20 +342,25 @@ enum TTActivityViewType : NSUInteger {
         return weakCell;
     }else{
         __weak TTFindFriendsViewCell *friendCell = [self.friendsTableView dequeueReusableCellWithIdentifier:@"friendCell" forIndexPath:indexPath];
+        [friendCell bringSubviewToFront:friendCell.followButton];
         friendCell.firstLastName.text = @"";
-        [friendCell.followButton setTitle:@"" forState:UIControlStateNormal];
+//        [friendCell.followButton setTitle:@"" forState:UIControlStateNormal];
         friendCell.profilePic.image = [UIImage imageNamed:@"tt_square_placeholder"];
         
         PFUser *friend = self.facebookFriends[indexPath.row];
         friendCell.firstLastName.text = friend[@"name"];
         if(friend[@"friend"]==0){
             friendCell.followButton.userInteractionEnabled = YES;
-            [friendCell.followButton setTitle:@"FOLLOW" forState:UIControlStateNormal];
+//            [friendCell.followButton setTitle:@"FOLLOW" forState:UIControlStateNormal];
+            [friendCell.followButton setSelected:NO];
         }else{
             friendCell.followButton.userInteractionEnabled = NO;
-            [friendCell.followButton setTitle:@"FOLLOWING" forState:UIControlStateNormal];
+//            [friendCell.followButton setTitle:@"FOLLOWING" forState:UIControlStateNormal];
+            [friendCell.followButton setSelected:YES];
         }
         [friendCell.profilePic setImageWithURL:[NSURL URLWithString:friend[@"profilePicUrl"]]];
+        friendCell.profilePic.tag = indexPath.row;
+        friendCell.tag = indexPath.row;
         
         return friendCell;
     }
@@ -364,10 +374,10 @@ enum TTActivityViewType : NSUInteger {
 // On Row Selection, push to the user's profile
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (_viewType == TTActivityViewAllActivities) {
-        // Don't allow row selection for All Activities--usernames and photos have different links.
-        return;
-    }
+//    if (_viewType == TTActivityViewAllActivities) {
+//        // Don't allow row selection for All Activities--usernames and photos have different links.
+//        return;
+//    }
     
 //    UserProfileViewController *vc;
 //
@@ -435,7 +445,41 @@ enum TTActivityViewType : NSUInteger {
 }
 
 - (IBAction)longPressGesturetoPreviewFriendsProfile:(UILongPressGestureRecognizer *)sender {
-    NSLog(@"FRIENDS PREVIEW");
+    if(sender.state == UIGestureRecognizerStateBegan){
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+        self.popoverProfileViewController = (TTPopoverProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ProfilePopoverView"];
+        CGPoint touchPoint = [sender locationInView:self.view];
+        UIView* touchedView = [self.view hitTest:touchPoint withEvent:nil];
+        if([touchedView isKindOfClass:[TTUserProfileImage class]]){
+            
+            self.popoverProfileViewController.user = self.facebookFriends[touchedView.tag];
+            self.popoverProfileViewController.modalPresentationStyle = UIModalPresentationPopover;
+            self.popoverProfileViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            //force the popover to display like an iPad popover otherwise it will be full screen
+            self.popover  = self.popoverProfileViewController.popoverPresentationController;
+            self.popover.delegate = self;
+            self.popover.sourceView = self.view;
+            self.popover.sourceRect = CGRectMake(27,140,320,380);
+            self.popover.permittedArrowDirections = 0;
+            
+            self.popoverProfileViewController.preferredContentSize = CGSizeMake(320,380);
+            self.popoverProfileViewController.popoverPresentationController.sourceView = self.view;
+            self.popoverProfileViewController.popoverPresentationController.sourceRect = CGRectMake(27,140,320,380);
+            
+            //HACK because modalTransitionStyle doesn't work on fade in
+            CATransition* transition = [CATransition animation];
+            transition.duration = 0.5;
+            transition.type = kCATransitionFade;
+            [self.view.window.layer addAnimation:transition forKey:kCATransition];
+            
+            [self presentViewController:self.popoverProfileViewController animated:NO completion:nil];
+        }
+    }
+    
+    if(sender.state == UIGestureRecognizerStateEnded){
+        [self.popoverProfileViewController dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (IBAction)connectToFacebookWasTapped:(TTOnboardingButton *)sender {
@@ -910,6 +954,8 @@ enum TTActivityViewType : NSUInteger {
                 }
                 i++;
                 
+                self.facebookFriendsOriginalArray = self.facebookFriends;
+                
                 if(i == data.count)
                     [self.friendsTableView reloadData];
             }];
@@ -934,6 +980,141 @@ enum TTActivityViewType : NSUInteger {
         }
     }
     return NO;
+}
+
+-(void)setFollowStatus:(UIButton *)sender {
+    if ([sender isSelected] == YES) {
+        // Unfollow
+        [sender setSelected:NO]; // change the button for immediate user feedback
+        //        [sender setTitle:@"Follow" forState:UIControlStateNormal];
+        //        sender.backgroundColor = [UIColor whiteColor];
+        //        sender.titleLabel.textColor = [TTColor tripTrunkRed];
+        //        [sender setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
+        //        [self.currentUserFriends removeObject:user.objectId];
+        [SocialUtility unfollowUser:self.facebookFriends[sender.tag] block:^(BOOL succeeded, NSError *error) {
+            if(error){
+                NSLog(@"Error: %@", error);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unfollow Failed"
+                                                                message:@"Please try again"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil, nil];
+                [sender setSelected:YES];
+                [alert show];
+            }else{
+                NSLog(@"User unfollowed");
+            }
+        }];
+    }
+    else {
+        // Follow
+        [sender setSelected:YES];
+        sender.titleLabel.textColor = [UIColor whiteColor];
+        [sender setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
+        //        [self.currentUserFriends addObject:user.objectId];
+        [SocialUtility followUserInBackground:self.facebookFriends[sender.tag] block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                //                sender.titleLabel.textColor = [TTColor tripTrunkRed];
+                //                [sender setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
+                NSLog(@"Error: %@", error);
+                //                [self.currentUserFriends removeObject:user.objectId];
+                NSLog(@"Follow failed");
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
+                                                                message:@"Please try again"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil, nil];
+                [sender setSelected:NO];
+                [alert show];
+            }else{
+                NSLog(@"User followed");
+            }
+        }];
+    }
+}
+
+- (IBAction)tapGestureRecognizerForFollowButton:(UITapGestureRecognizer *)sender {
+    CGPoint touchPoint = [sender locationInView:self.view];
+    UIView* touchedView = [self.view hitTest:touchPoint withEvent:nil];
+    CGPoint touchPointInCell = [sender locationInView:touchedView];
+    NSArray *views = [touchedView subviews];
+    for(id view in views){
+        if([view isKindOfClass:[UIButton class]]){
+            UIButton *buttonView = (UIButton*)view;
+            if(CGRectContainsPoint(buttonView.frame, touchPointInCell))
+                [self setFollowStatus:(UIButton*)view];
+            break;
+        }
+    }
+}
+
+-(NSString*)getInitialsForMissingProfilePictureFromUser:(PFUser*)user{
+    return [NSString stringWithFormat:@"%@%@",[user[@"firstName"] substringToIndex:1],[user[@"lastName"] substringToIndex:1]];;
+}
+
+#pragma mark - Friend Search
+- (void)filterResults:(NSString *)searchTerm {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissKeyboard) object:nil];
+    self.facebookFriends = self.facebookFriendsOriginalArray;
+    
+    if (![searchTerm isEqualToString:@""]){
+        TTUsernameSort *us = [[TTUsernameSort alloc] init];
+        NSArray *sortedArray = [us sortResultsByUsername:self.facebookFriends searchTerm:searchTerm];
+        self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
+        self.isSearching = YES;
+        self.facebookFriends = [NSMutableArray arrayWithArray:sortedArray];
+        [self.friendsTableView reloadData];
+        [self performSelector:@selector(dismissKeyboard) withObject:nil afterDelay:4.0];
+        [[TTUtility sharedInstance] internetConnectionFound];
+    }else{
+        [self.friendsTableView reloadData];
+    }
+}
+
+//- (void)keyboardWillShow:(NSNotification *)notification {
+//    //move the search field and collectionview up
+//    [self.view layoutIfNeeded];
+////    self.searchFieldTopConstraint.constant = 117;
+////    self.tableViewTopConstraint.constant = 137;
+////
+////    [UIView animateWithDuration:1.00
+////                     animations:^{
+////                         [self.view layoutIfNeeded];
+////                     }];
+//}
+//
+
+-(void)dismissKeyboard{
+    [self.searchTextField resignFirstResponder];
+    if([self.searchTextField.text isEqualToString:@""]){
+        [self.view layoutIfNeeded];
+    }
+}
+
+
+
+//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    if(![event touchesForView:self.searchTextField]){
+//        [self dismissKeyboard];
+//    }
+//}
+//
+//-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    NSLog(@"touch ended");
+//}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+
+    NSString *typedText;
+    
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    [self filterResults:typedText];
+    
+    return YES;
 }
 
 @end

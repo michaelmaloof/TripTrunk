@@ -10,6 +10,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "AppDelegate.h"
+#import "TTOnboardingButton.h"
 
 @interface TTSettingsViewController ()
 
@@ -38,5 +39,8 @@
     [(AppDelegate *)[[UIApplication sharedApplication] delegate] logout];
 }
 
+- (IBAction)backButtonWasTapped:(TTOnboardingButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 @end
