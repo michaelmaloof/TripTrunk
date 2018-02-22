@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTPlace.h"
+
 @protocol TTCitySearchResultsDelegate;
 
 @interface TTCitySearchResultsTableViewController : UITableViewController <UITableViewDelegate>
@@ -23,6 +25,6 @@
 @protocol TTCitySearchResultsDelegate <NSObject>
 
 @required
--(void)didSelectTableRow:(NSString*)selectedCity;
+-(void)didSelectTableRow:(TTPlace*)selectedCity;
 
 @end

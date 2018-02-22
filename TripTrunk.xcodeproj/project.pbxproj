@@ -119,6 +119,10 @@
 		2772FCE61F27DC9500A97B5D /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE51F27DC9500A97B5D /* Profile.storyboard */; };
 		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
 		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
+		279B7D8920373C57005AFEFB /* TTCreateTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */; };
+		279B7D8C20373C92005AFEFB /* TTTrunkNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8B20373C92005AFEFB /* TTTrunkNameViewController.m */; };
+		279B7D8F20373CBE005AFEFB /* TTTrunkLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8E20373CBE005AFEFB /* TTTrunkLocationViewController.m */; };
+		279B7D92203DF8FF005AFEFB /* TTTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D91203DF8FF005AFEFB /* TTTextField.m */; };
 		27A581441C888D910095ED94 /* TTPushNotificationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581431C888D910095ED94 /* TTPushNotificationHandler.m */; };
 		27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A581461C88D5C40095ED94 /* TTHashtagMentionColorization.m */; };
 		27AF315E1D2C0E8B00D93963 /* AWSMobileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AF315C1D2C0E8B00D93963 /* AWSMobileClient.m */; };
@@ -408,6 +412,14 @@
 		2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
 		2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
 		2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseTableViewCell.m; sourceTree = "<group>"; };
+		279B7D8720373C57005AFEFB /* TTCreateTrunkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTCreateTrunkViewController.h; sourceTree = "<group>"; };
+		279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTCreateTrunkViewController.m; sourceTree = "<group>"; };
+		279B7D8A20373C92005AFEFB /* TTTrunkNameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTrunkNameViewController.h; sourceTree = "<group>"; };
+		279B7D8B20373C92005AFEFB /* TTTrunkNameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTrunkNameViewController.m; sourceTree = "<group>"; };
+		279B7D8D20373CBE005AFEFB /* TTTrunkLocationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTrunkLocationViewController.h; sourceTree = "<group>"; };
+		279B7D8E20373CBE005AFEFB /* TTTrunkLocationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTrunkLocationViewController.m; sourceTree = "<group>"; };
+		279B7D90203DF8FF005AFEFB /* TTTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTextField.h; sourceTree = "<group>"; };
+		279B7D91203DF8FF005AFEFB /* TTTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTextField.m; sourceTree = "<group>"; };
 		27A581421C888D910095ED94 /* TTPushNotificationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTPushNotificationHandler.h; sourceTree = "<group>"; };
 		27A581431C888D910095ED94 /* TTPushNotificationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTPushNotificationHandler.m; sourceTree = "<group>"; };
 		27A581451C88D5C40095ED94 /* TTHashtagMentionColorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHashtagMentionColorization.h; sourceTree = "<group>"; };
@@ -1134,6 +1146,14 @@
 				27D41FBC1FCCB838001B6CD5 /* TTPhotoPicker.m */,
 				27D41FC61FF43D50001B6CD5 /* TTAddMembersViewController.h */,
 				27D41FC71FF43D51001B6CD5 /* TTAddMembersViewController.m */,
+				279B7D8720373C57005AFEFB /* TTCreateTrunkViewController.h */,
+				279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */,
+				279B7D8A20373C92005AFEFB /* TTTrunkNameViewController.h */,
+				279B7D8B20373C92005AFEFB /* TTTrunkNameViewController.m */,
+				279B7D8D20373CBE005AFEFB /* TTTrunkLocationViewController.h */,
+				279B7D8E20373CBE005AFEFB /* TTTrunkLocationViewController.m */,
+				279B7D90203DF8FF005AFEFB /* TTTextField.h */,
+				279B7D91203DF8FF005AFEFB /* TTTextField.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1634,6 +1654,7 @@
 				2758427E1FAA6C0600FD58E5 /* AFImageDownloader.m in Sources */,
 				2758427F1FAA6C0600FD58E5 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				275842801FAA6C0600FD58E5 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				279B7D8920373C57005AFEFB /* TTCreateTrunkViewController.m in Sources */,
 				275842811FAA6C0600FD58E5 /* UIButton+AFNetworking.m in Sources */,
 				275842821FAA6C0600FD58E5 /* UIImageView+AFNetworking.m in Sources */,
 				275842831FAA6C0600FD58E5 /* UIProgressView+AFNetworking.m in Sources */,
@@ -1659,6 +1680,7 @@
 				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
 				27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,
+				279B7D8C20373C92005AFEFB /* TTTrunkNameViewController.m in Sources */,
 				2750D1EA1F2FE09100CBF4DE /* TTRoundedView.m in Sources */,
 				22474D7D1AE5E29400C76E87 /* PhotoCollectionViewCell.m in Sources */,
 				C9FB808B1B827CA4008B8A67 /* CommentTableViewCell.m in Sources */,
@@ -1667,6 +1689,7 @@
 				225E554A1CB074CD00FAAB00 /* TTReportBugViewController.m in Sources */,
 				2762BD851F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
+				279B7D8F20373CBE005AFEFB /* TTTrunkLocationViewController.m in Sources */,
 				271514101C99E0F80054E43F /* TTFont.m in Sources */,
 				22DDB3511BD5E21D00FBEAAC /* TTForgotPasswordViewController.m in Sources */,
 				C9CD1CAC1AFC27FA00D967A5 /* FriendTableViewCell.m in Sources */,
@@ -1712,6 +1735,7 @@
 				2232F9C91C7239AC00D9A2D3 /* TTTimeLineCollectionViewCell.m in Sources */,
 				27D41FC81FF43D58001B6CD5 /* TTAddMembersViewController.m in Sources */,
 				27ED88271ECCCF9300373F72 /* TTOnboardingLoginPasswordViewController.m in Sources */,
+				279B7D92203DF8FF005AFEFB /* TTTextField.m in Sources */,
 				2762BD8B1F2BDDBB003508EB /* TTTimelineCollectionView.m in Sources */,
 				2709AF271F72F7A600F83729 /* TTProfileViewController.m in Sources */,
 				27BFA4AA1EBBC7D000A6CFB4 /* TTNameViewController.m in Sources */,

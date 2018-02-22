@@ -19,6 +19,7 @@
 #import "math.h"
 #import "TTTrunkViewController.h"
 #import "TTActivityNotificationsViewController.h"
+#import "TTCreateTrunkViewController.h"
 
 @interface TTTimelineViewController () <UICollectionViewDelegate>
 
@@ -495,4 +496,11 @@
     [self.navigationController pushViewController:activityViewController animated:YES];
 }
 
+- (IBAction)goToCreateTrunk:(UIButton *)sender {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
+    TTCreateTrunkViewController *createTrunkViewController = (TTCreateTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CreateTrunkViewController"];
+    //    activityViewController.trip
+    [self.navigationController pushViewController:createTrunkViewController animated:YES];
+}
 @end

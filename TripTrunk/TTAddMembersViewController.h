@@ -12,4 +12,5 @@
 
 @interface TTAddMembersViewController : TTBaseViewController
 @property (strong,nonatomic) Trip *trip;
+@property (strong,nonatomic) id delegate;
 @end

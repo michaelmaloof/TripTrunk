@@ -14,6 +14,7 @@
 #import "CitySearchViewController.h"
 #import "TTCitySearchTextField.h"
 #import "TTCitySearchResultsTableViewController.h"
+#import "TTPlace.h"
 
 @interface TTHomeViewController () <UITextFieldDelegate, TTCitySearchTextFieldDelegate, UIPopoverPresentationControllerDelegate,TTCitySearchResultsDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *pageTitle;
@@ -261,8 +262,8 @@
 }
 
 #pragma mark - TTCitySearchResultsDelegate
--(void)didSelectTableRow:(NSString*)selectedCity{
-    [self.homeTextField setText:[selectedCity stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+-(void)didSelectTableRow:(TTPlace*)selectedCity{
+    [self.homeTextField setText:[selectedCity.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
     [self.homeTextField resignFirstResponder];
     self.meetsMinimumRequirements = YES;
     self.finishButton.hidden = NO;

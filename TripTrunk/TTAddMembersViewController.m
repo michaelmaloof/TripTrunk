@@ -15,9 +15,12 @@
 #import "TTColor.h"
 #import "TTUsernameSort.h"
 #import "TTOnboardingTextField.h"
+#import "TTOnboardingButton.h"
 #import "TTPhotosToAddViewCell.h"
 #import "TTPopoverProfileViewController.h"
 #import "TTRoundedImage.h"
+#import "TTTrunkLocationViewController.h"
+#import "TTAnalytics.h"
 
 @interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -32,6 +35,7 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *membersCollectionView;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
+@property (strong, nonatomic) IBOutlet TTOnboardingButton *actionButton;
 @end
 
 @implementation TTAddMembersViewController
@@ -147,6 +151,8 @@
         if(self.membersToAdd.count == 0)
             self.membersCollectionView.hidden = YES;
     }
+    
+    [self setNextButtonTitle];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -245,6 +251,7 @@
     return YES;
 }
 
+#pragma mark - UICollectionViewDelegate
 - (TTPhotosToAddViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     __weak TTPhotosToAddViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.image.image = [UIImage imageNamed:@"tt_square_placeholder"];
@@ -277,6 +284,9 @@
 }
 
 - (IBAction)skipWasPressed:(id)sender {
+    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]])
+        [self createNewTrunkAndAddMembers];
+    else [self addMembersToExistingTrunk];
 }
 
 - (IBAction)longPressToViewProfileAsPreview:(UILongPressGestureRecognizer*)gesture {
@@ -319,6 +329,89 @@
 #pragma mark - UIModalPopoverDelegate
 - (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
     return UIModalPresentationNone;
+}
+
+#pragma mark -
+-(void)setNextButtonTitle{
+    NSString *skipText = NSLocalizedString(@"SKIP", @"SKIP");
+    NSString *nextText;
+    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]])
+        nextText = NSLocalizedString(@"CREATE & INVITE", @"CREATE & INVITE");
+    else nextText = NSLocalizedString(@"ADD MEMBERS", @"ADD MEMBERS");
+    
+    if(self.membersToAdd.count > 0){
+        self.actionButton.hidden = NO;
+        [self.actionButton setTitle:nextText forState:UIControlStateNormal];
+    }else{
+        if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]])
+            [self.actionButton setTitle:skipText forState:UIControlStateNormal];
+        else self.actionButton.hidden = YES;
+    }
+    
+    
+}
+
+-(void)createNewTrunkAndAddMembers{
+
+    PFACL *tripACL = [PFACL ACLWithUser:[PFUser currentUser]];
+
+    if (!self.trip.isPrivate)
+        [tripACL setPublicReadAccess:YES];
+    
+    // Private Trip, set the ACL permissions so only the creator has access - and when members are invited then they'll get READ access as well.
+    // TODO: only update ACL if private status changed during editing.
+    if (self.trip.isPrivate) {
+        [tripACL setPublicReadAccess:NO];
+        [tripACL setReadAccess:YES forUser:self.trip.creator];
+        [tripACL setWriteAccess:YES forUser:self.trip.creator];
+    }else{
+        // Only add the friendsOf_ role to the ACL if the trunk is NOT private! A private trunk shouldn't be visible to followers. just trunk members
+        // This fixes the shitty bug that was live at launch.
+        NSString *roleName = [NSString stringWithFormat:@"friendsOf_%@", [[PFUser currentUser] objectId]];
+        [tripACL setReadAccess:YES forRoleWithName:roleName];
+    }
+    
+    self.trip.ACL = tripACL;
+    
+    
+    if(!self.trip.publicTripDetail){
+        self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
+    }
+    
+    self.trip.publicTripDetail.memberCount = 1;
+    
+    [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+         dispatch_async(dispatch_get_main_queue(), ^{
+             
+             if(error) {
+                 [ParseErrorHandlingController handleError:error];
+                 [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"createNewTrunkAndAddMembers:"];
+                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                     message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
+                                                                    delegate:self
+                                                           cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                           otherButtonTitles:nil, nil];
+//                 alertView.backgroundColor = [UIColor colorWithRed:131.0/255.0 green:226.0/255.0 blue:255.0/255.0 alpha:1.0];
+                 [alertView show];
+             }else{
+                 [[TTUtility sharedInstance] internetConnectionFound];
+                 //trip needs to be saved after the publicTripDetail is created otherwise we get a loop error
+                 PFQuery *query = [PFQuery queryWithClassName:@"PublicTripDetail"];
+                 [query getObjectInBackgroundWithId:self.trip.publicTripDetail.objectId block:^(PFObject *pfObject, NSError *error) {
+                     [pfObject setObject:self.trip forKey:@"trip"];
+                     [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                         [self performSegueWithIdentifier:@"pushToAddPhotos" sender:self];
+                     }];
+                 }];
+
+             }
+         });
+     }];
+    
+}
+
+-(void)addMembersToExistingTrunk{
+    
 }
 
 @end

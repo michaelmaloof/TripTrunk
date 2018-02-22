@@ -1403,7 +1403,23 @@ CLCloudinary *cloudinary;
                                        ttPlace.gpID = place.placeID;
                                        return ttPlace;
                                    });
-                                   return completionBlock(places, nil);
+                                   
+                                   NSMutableArray *placesWithGeocode = [[NSMutableArray alloc] init];
+                                   for(TTPlace *ttPlace in places){
+                                       [placesClient lookUpPlaceID:ttPlace.gpID callback:^(GMSPlace *place, NSError *error) {
+                                           if (error) {
+                                               NSLog(@"Place Details error %@", [error localizedDescription]);
+                                               return;
+                                           }else{
+                                               ttPlace.latitude = place.coordinate.latitude;
+                                               ttPlace.longitude = place.coordinate.longitude;
+                                           }
+                                           [placesWithGeocode addObject:ttPlace];
+                                           if(placesWithGeocode.count == places.count)
+                                               return completionBlock((NSArray*)placesWithGeocode, nil);
+                                       }];
+                                   }
+                                   
                                }];
     }
     else {

@@ -5498,6 +5498,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vKL-2s-bC2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="2067" y="304"/>
         </scene>
     </scenes>
     <resources>
@@ -5530,8 +5531,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="UVS-2K-sz0"/>
-        <segue reference="JSU-Dg-jAI"/>
-        <segue reference="8D2-7c-Dcs"/>
+        <segue reference="yXb-jN-ymd"/>
+        <segue reference="meg-3f-try"/>
         <segue reference="hXf-dS-IMJ"/>
     </inferredMetricsTieBreakers>
 </document>

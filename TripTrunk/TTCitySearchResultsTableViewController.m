@@ -73,7 +73,7 @@
     if(indexPath.row < self.searchResults.count){
         if (self.srdelegate && [self.srdelegate respondsToSelector:@selector(didSelectTableRow:)]){
             TTPlace *place = self.searchResults[indexPath.row];
-            [self.srdelegate didSelectTableRow:place.name];
+            [self.srdelegate didSelectTableRow:place];
         }
     }else{
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
