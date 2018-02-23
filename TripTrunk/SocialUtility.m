@@ -157,8 +157,7 @@
 
 + (void)acceptFollowRequest:(BOOL)accepted
                      fromUser:(PFUser *)user
-                        block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-{
+                        block:(void (^)(BOOL succeeded, NSError *error))completionBlock{
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                             user.objectId, @"fromUserId",
                             [NSNumber numberWithBool:accepted], @"accepted", nil];
@@ -174,8 +173,7 @@
     
 }
 
-+ (void)blockUser:(PFUser *)user;
-{
++ (void)blockUser:(PFUser *)user{
     __block MBProgressHUD *HUD;
     
     dispatch_async(dispatch_get_main_queue(), ^{

@@ -14,7 +14,7 @@
 #import "TTCitySearchResultsTableViewController.h"
 #import "TTPlace.h"
 
-CLLocationManager *locationManager;
+//CLLocationManager *locationManager;
 
 @interface TTTrunkLocationViewController () <UITextFieldDelegate, TTCitySearchTextFieldDelegate, UIPopoverPresentationControllerDelegate,TTCitySearchResultsDelegate>
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *nextButton;
@@ -65,11 +65,14 @@ CLLocationManager *locationManager;
     self.trip.lat = self.place.latitude;
     self.trip.longitude = self.place.longitude;
     self.trip.creator = [PFUser currentUser];
+    self.trip.user = [PFUser currentUser].username;
     self.trip.isPrivate = self.isPrivate.isSelected;
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"MM/dd/yyyy"];
     self.trip.startDate = [df stringFromDate:[NSDate date]];
     self.trip.endDate = [df stringFromDate:[NSDate date]];
+    self.trip.start = [NSDate date];
+    self.trip[@"mostRecentPhoto"] = [NSDate date];
     addMembersViewController.trip = self.trip;
     addMembersViewController.delegate = self;
 }
@@ -83,38 +86,38 @@ CLLocationManager *locationManager;
         [self performSegueWithIdentifier:@"pushToAddPeopleToTrunk" sender:self];
 }
 
-#pragma mark - CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    NSLog(@"Failed to get location %@",error);
-    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationManager:didFailWithError"];
-    [self performSegueWithIdentifier:@"next" sender:self];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusDenied) {
-        // The user denied authorization
-        [self performSegueWithIdentifier:@"next" sender:self];
-    }else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        // The user accepted authorization
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        [locationManager startUpdatingLocation];
-        [self performSegueWithIdentifier:@"next" sender:self];
-    }
-}
-
-#pragma mark - CLLocationManagerAuthorizationStatus
--(void)updateUIAlreadyAuthorized{
-//    self.allowLabel.text = NSLocalizedString(@"You have already authorized TripTrunk to access your location.", @"You have already authorized TripTrunk to access your location.");
-//    self.noThanks.hidden = YES;
-    [locationManager startUpdatingLocation];
-    self.authorizationBypass = YES;
-}
-
--(void)updateUIDeniedAuthorization{
-//    self.allowLabel.text = NSLocalizedString(@"You have denied TripTrunk authorization to access your location.", @"You have denied TripTrunk authorization to access your location.");
-//    self.noThanks.hidden = YES;
-    self.authorizationBypass = YES;
-}
+//#pragma mark - CLLocationManagerDelegate
+//- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+//    NSLog(@"Failed to get location %@",error);
+//    [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"locationManager:didFailWithError"];
+//    [self performSegueWithIdentifier:@"next" sender:self];
+//}
+//
+//- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+//    if (status == kCLAuthorizationStatusDenied) {
+//        // The user denied authorization
+//        [self performSegueWithIdentifier:@"next" sender:self];
+//    }else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+//        // The user accepted authorization
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+//        [locationManager startUpdatingLocation];
+//        [self performSegueWithIdentifier:@"next" sender:self];
+//    }
+//}
+//
+//#pragma mark - CLLocationManagerAuthorizationStatus
+//-(void)updateUIAlreadyAuthorized{
+////    self.allowLabel.text = NSLocalizedString(@"You have already authorized TripTrunk to access your location.", @"You have already authorized TripTrunk to access your location.");
+////    self.noThanks.hidden = YES;
+//    [locationManager startUpdatingLocation];
+//    self.authorizationBypass = YES;
+//}
+//
+//-(void)updateUIDeniedAuthorization{
+////    self.allowLabel.text = NSLocalizedString(@"You have denied TripTrunk authorization to access your location.", @"You have denied TripTrunk authorization to access your location.");
+////    self.noThanks.hidden = YES;
+//    self.authorizationBypass = YES;
+//}
 
 #pragma mark - TTCitySearchTextFieldDelegate
 -(void)displayCitySearchPopoverFromView:(NSArray*)results{

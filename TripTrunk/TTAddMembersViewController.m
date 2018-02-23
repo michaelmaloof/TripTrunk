@@ -373,12 +373,12 @@
     
     self.trip.ACL = tripACL;
     
-    
-    if(!self.trip.publicTripDetail){
+    if(!self.trip.publicTripDetail)
         self.trip.publicTripDetail = [[PublicTripDetail alloc]init];
-    }
     
-    self.trip.publicTripDetail.memberCount = 1;
+//    if(self.membersToAdd.count == 0)
+        self.trip.publicTripDetail.memberCount = 1;
+//    else self.trip.publicTripDetail.memberCount = (int)self.membersToAdd.count;
     
     [self.trip saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
          dispatch_async(dispatch_get_main_queue(), ^{
@@ -400,7 +400,7 @@
                  [query getObjectInBackgroundWithId:self.trip.publicTripDetail.objectId block:^(PFObject *pfObject, NSError *error) {
                      [pfObject setObject:self.trip forKey:@"trip"];
                      [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                         [self performSegueWithIdentifier:@"pushToAddPhotos" sender:self];
+                         [self addMembersToNewlyCreatedTrunk];
                      }];
                  }];
 
@@ -411,7 +411,89 @@
 }
 
 -(void)addMembersToExistingTrunk{
+    NSArray *users = [self idsFromUsers:self.membersToAdd];
     
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   users, @"users",
+                                   [PFUser currentUser].objectId, @"fromUserId",
+                                   self.trip.objectId, @"tripId",
+                                   self.trip.creator.objectId, @"tripCreatorId",
+                                   [NSNumber numberWithBool:self.trip.isPrivate], @"private",
+                                   [NSString stringWithFormat:@"%@", self.trip.city], @"content",
+                                   [NSNumber numberWithDouble:self.trip.lat], @"latitude",
+                                   [NSNumber numberWithDouble:self.trip.longitude], @"longitude",
+                                   self.trip.gpID, @"gpID",
+                                   nil];
+    
+    [PFCloud callFunctionInBackground:@"AddMembersToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
+        if(!error){
+            //THIS INCREMENTS THE MEMBER COUNT BY 1number of members added
+            //This needs to be moved to AddMembersToTrip in CC
+            PublicTripDetail *ptdId = self.trip.publicTripDetail;
+            PFQuery *query = [PFQuery queryWithClassName:@"PublicTripDetail"];
+            [query getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+                int count = 0;
+                if(pfObject[@"memberCount"])
+                    count = [pfObject[@"memberCount"] intValue];
+                
+                count = count+(int)self.membersToAdd.count;
+                [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+                [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+            }];
+            ///-----------------------------^
+        }else{
+            //HANDLE THIS ERROR
+        }
+    }];
+}
+
+-(void)addMembersToNewlyCreatedTrunk{
+    NSArray *users = [[self idsFromUsers:self.membersToAdd] arrayByAddingObject:[PFUser currentUser].objectId];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   users, @"users",
+                                   [PFUser currentUser].objectId, @"fromUserId",
+                                   self.trip.objectId, @"tripId",
+                                   self.trip.creator.objectId, @"tripCreatorId",
+                                   [NSNumber numberWithBool:self.trip.isPrivate], @"private",
+                                   [NSString stringWithFormat:@"%@", self.trip.city], @"content",
+                                   [NSNumber numberWithDouble:self.trip.lat], @"latitude",
+                                   [NSNumber numberWithDouble:self.trip.longitude], @"longitude",
+                                   self.trip.gpID, @"gpID",
+                                   nil];
+    
+    [PFCloud callFunctionInBackground:@"AddMembersToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
+        if(!error){
+            //THIS INCREMENTS THE MEMBER COUNT BY 1number of members added
+            //This needs to be moved to AddMembersToTrip in CC
+            PublicTripDetail *ptdId = self.trip.publicTripDetail;
+            PFQuery *query = [PFQuery queryWithClassName:@"PublicTripDetail"];
+            [query getObjectInBackgroundWithId:ptdId.objectId block:^(PFObject *pfObject, NSError *error) {
+                int count = 0;
+                if(pfObject[@"memberCount"])
+                    count = [pfObject[@"memberCount"] intValue];
+                
+                count = count+(int)self.membersToAdd.count;
+                [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
+                [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    [self performSegueWithIdentifier:@"pushToAddPhotos" sender:self];
+                }];
+            }];
+            ///-----------------------------^
+        }else{
+            //HANDLE THIS ERROR
+        }
+    }];
+}
+
+- (NSArray *)idsFromUsers:(NSArray *)users{
+    NSMutableArray *idList = [[NSMutableArray alloc] initWithCapacity:users.count];
+    for (PFUser *user in users) {
+        [idList addObject:user.objectId];
+    }
+    return idList;
 }
 
 @end

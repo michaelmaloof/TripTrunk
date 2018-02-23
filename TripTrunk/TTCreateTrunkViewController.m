@@ -12,6 +12,8 @@
 #define MAX_HIGHLIGHTED_PHOTOS 4
 
 static NSString *const kCityString  = @"City";
+static NSString *const kStateString  = @"State";
+static NSString *const kCountryString  = @"Country";
 
 #import "TTCreateTrunkViewController.h"
 #import "TTOnboardingButton.h"
@@ -70,13 +72,16 @@ static NSString *const kCityString  = @"City";
                 self.mainPhoto.contentMode = UIViewContentModeScaleAspectFill;
                 if(asset.mediaType == PHAssetMediaTypeVideo)
                     self.mainVideoIcon.hidden = NO;
-                CLGeocoder *geocoder = [CLGeocoder new];
-                [geocoder reverseGeocodeLocation:asset.location completionHandler:^(NSArray *placemarks, NSError *error) {
-                    CLPlacemark *placemark = [placemarks lastObject];
-                    self.cityString = placemark.addressDictionary[kCityString];
-                    // or equivalent
-                    self.locationLabel.text = placemark.locality;
-                }];
+                
+                if(asset.location != nil){
+                    CLGeocoder *geocoder = [CLGeocoder new];
+                    [geocoder reverseGeocodeLocation:asset.location completionHandler:^(NSArray *placemarks, NSError *error) {
+                        CLPlacemark *placemark = [placemarks lastObject];
+                        self.cityString = placemark.addressDictionary[kCityString];
+                        // or equivalent
+                        self.locationLabel.text = [NSString stringWithFormat:@"%@, %@, %@",placemark.addressDictionary[kCityString],placemark.addressDictionary[kStateString],placemark.addressDictionary[kCountryString]];
+                    }];
+                }
             }];
         }
         
