@@ -21,6 +21,7 @@
 #import "TTUtility.h"
 #import "SocialUtility.h"
 #import "TTAnalytics.h"
+#import "TTTimelineViewController.h"
 
 @interface TTAddPhotosViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
 @property (strong, nonatomic) PHFetchResult *assets;
@@ -844,9 +845,20 @@
     self.taskCount++;
     
     if(self.photosToAdd.count == self.taskCount){
-        if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)])
+        if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)]){
             [self.delegate photoUploadCompleted:self.photosToAdd];
-        [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            NSArray * controllerArray = [[self navigationController] viewControllers];
+            
+            for (UIViewController *controller in controllerArray){
+                if([controller isKindOfClass:[TTTimelineViewController class]]){
+                    [self.navigationController popToViewController:controller animated:YES];
+                    break;
+                }
+            }
+        }
+        
     }
 }
 

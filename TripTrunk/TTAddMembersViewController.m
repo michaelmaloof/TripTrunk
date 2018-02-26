@@ -21,6 +21,7 @@
 #import "TTRoundedImage.h"
 #import "TTTrunkLocationViewController.h"
 #import "TTAnalytics.h"
+#import "TTAddPhotosViewController.h"
 
 @interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -495,5 +496,20 @@
     }
     return idList;
 }
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"pushToAddPhotos"]){
+        TTAddPhotosViewController *photoViewController = segue.destinationViewController;
+        photoViewController.trip = self.trip;
+        photoViewController.trunkMembers = self.membersToAdd;
+//        photoViewController.delegate = self;
+    }
+}
+
+//- (void)photoUploadCompleted:(NSArray *)photos {
+//    //nada
+//}
+
+
 
 @end
