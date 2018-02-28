@@ -25,7 +25,7 @@
         <!--Onboarding View Controller-->
         <scene sceneID="5u1-UY-Kyz">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="1ip-ec-yA9" customClass="TTOnboardingViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TTOnboardingViewController" automaticallyAdjustsScrollViewInsets="NO" id="1ip-ec-yA9" customClass="TTOnboardingViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lxf-9X-iqh"/>
                         <viewControllerLayoutGuide type="bottom" id="QC8-no-57r"/>

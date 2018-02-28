@@ -114,6 +114,7 @@
 		2768C9241CCFE2A000CFA89E /* TTUserProfileCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9231CCFE2A000CFA89E /* TTUserProfileCollectionView.m */; };
 		2768C9271CCFE30500CFA89E /* TTUserProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */; };
 		2768C9291CCFED1800CFA89E /* TTUserProfileViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */; };
+		276B65602045F69000422AF7 /* TTTrunkDatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B655F2045F69000422AF7 /* TTTrunkDatesViewController.m */; };
 		2772FCE21F266F5300A97B5D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE11F266F5300A97B5D /* Activity.storyboard */; };
 		2772FCE41F27C00700A97B5D /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE31F27C00700A97B5D /* Timeline.storyboard */; };
 		2772FCE61F27DC9500A97B5D /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE51F27DC9500A97B5D /* Profile.storyboard */; };
@@ -405,6 +406,8 @@
 		2768C9251CCFE30500CFA89E /* TTUserProfileViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTUserProfileViewCell.h; sourceTree = "<group>"; };
 		2768C9261CCFE30500CFA89E /* TTUserProfileViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTUserProfileViewCell.m; sourceTree = "<group>"; };
 		2768C9281CCFED1800CFA89E /* TTUserProfileViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTUserProfileViewCell.xib; sourceTree = "<group>"; };
+		276B655E2045F69000422AF7 /* TTTrunkDatesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTrunkDatesViewController.h; sourceTree = "<group>"; };
+		276B655F2045F69000422AF7 /* TTTrunkDatesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTTrunkDatesViewController.m; sourceTree = "<group>"; };
 		2772FCE11F266F5300A97B5D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		2772FCE31F27C00700A97B5D /* Timeline.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Timeline.storyboard; sourceTree = "<group>"; };
 		2772FCE51F27DC9500A97B5D /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
@@ -1154,6 +1157,8 @@
 				279B7D8E20373CBE005AFEFB /* TTTrunkLocationViewController.m */,
 				279B7D90203DF8FF005AFEFB /* TTTextField.h */,
 				279B7D91203DF8FF005AFEFB /* TTTextField.m */,
+				276B655E2045F69000422AF7 /* TTTrunkDatesViewController.h */,
+				276B655F2045F69000422AF7 /* TTTrunkDatesViewController.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1794,6 +1799,7 @@
 				27B69F0E1F5F243300905B51 /* TTTrunkViewController.m in Sources */,
 				C90552171B3C3ABC007B5946 /* MBProgressHUD.m in Sources */,
 				27444E5A1EF325980021DC7A /* TTHomeMapCollectionViewCell.m in Sources */,
+				276B65602045F69000422AF7 /* TTTrunkDatesViewController.m in Sources */,
 				27F3E3871D3D778600634B75 /* DLFPhotosSelectionManager.m in Sources */,
 				220408DC1AED52C3009DB060 /* TrunkTableViewCell.m in Sources */,
 				226AAC0F1BB21CEF0031AF98 /* UserCellCollectionViewCell.m in Sources */,

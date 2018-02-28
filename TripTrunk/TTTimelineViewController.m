@@ -20,6 +20,7 @@
 #import "TTTrunkViewController.h"
 #import "TTActivityNotificationsViewController.h"
 #import "TTCreateTrunkViewController.h"
+#import "TTOnboardingViewController.h"
 
 @interface TTTimelineViewController () <UICollectionViewDelegate>
 
@@ -47,7 +48,14 @@
     
     self.user = [PFUser currentUser];
     
-    [self loadTimelineData];
+    if(self.user)
+        [self loadTimelineData];
+    else [self sendUserToLogin];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self clearMap];
 }
 
 - (void)viewDidLoad {
@@ -95,9 +103,9 @@
             }
             
             [self explodeFilteredArray];
-            self.currentGroup = 0;
-            [self initMap:self.filteredArray[0]];
-            Excursion *excursion = self.sortedArray[0];
+            self.currentGroup = [self currentlySelectedGroup];
+            [self initMap:self.filteredArray[self.currentGroup]];
+            Excursion *excursion = self.sortedArray[self.currentGroup];
             PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
             [self addFlagToMapWithGeoPoint:point];
             
@@ -393,18 +401,20 @@
 
     CGPoint centerPoint = CGPointMake(self.collectionView.frame.size.width/2 + self.collectionView.contentOffset.x,self.collectionView.frame.size.height/2 + self.collectionView.contentOffset.y);
     NSIndexPath *centerCellIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+//
+//
+//    //need to determine which group the IndexPath is in
+//    int group = 0;
+//    if(centerCellIndexPath.item > 0){
+//        for(int i=1;i<self.excursionGroups.count; i++){
+//            if(BETWEEN(centerCellIndexPath.item, [self.excursionGroups[i-1] intValue], [self.excursionGroups[i] intValue])){
+//                group=i;
+//                break;
+//            }
+//        }
+//    }
     
-
-    //need to determine which group the IndexPath is in
-    int group = 0;
-    if(centerCellIndexPath.item > 0){
-        for(int i=1;i<self.excursionGroups.count; i++){
-            if(BETWEEN(centerCellIndexPath.item, [self.excursionGroups[i-1] intValue], [self.excursionGroups[i] intValue])){
-                group=i;
-                break;
-            }
-        }
-    }
+    int group = [self currentlySelectedGroup];
     
     if(group != self.currentGroup){
         [self clearMap];
@@ -418,6 +428,25 @@
     PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
     [self addFlagToMapWithGeoPoint:point];
     
+}
+
+-(int)currentlySelectedGroup{
+    CGPoint centerPoint = CGPointMake(self.collectionView.frame.size.width/2 + self.collectionView.contentOffset.x,self.collectionView.frame.size.height/2 + self.collectionView.contentOffset.y);
+    NSIndexPath *centerCellIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+    
+    
+    //need to determine which group the IndexPath is in
+    int group = 0;
+    if(centerCellIndexPath.item > 0){
+        for(int i=1;i<self.excursionGroups.count; i++){
+            if(BETWEEN(centerCellIndexPath.item, [self.excursionGroups[i-1] intValue], [self.excursionGroups[i] intValue])){
+                group=i;
+                break;
+            }
+        }
+    }
+    
+    return group;
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -485,6 +514,12 @@
     TTTrunkViewController *trunkViewController = (TTTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTrunkViewController"];
     trunkViewController.excursion = self.sortedArray[indexPath.row];
     [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
+-(void)sendUserToLogin{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+    TTOnboardingViewController *loginViewController = (TTOnboardingViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTOnboardingViewController"];
+    [self.navigationController presentViewController:loginViewController animated:YES completion:nil];
 }
 
 

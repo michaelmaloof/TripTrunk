@@ -8,7 +8,7 @@
 
 #import "TTTrunkNameViewController.h"
 #import "TTOnboardingButton.h"
-#import "TTTrunkLocationViewController.h"
+#import "TTTrunkDatesViewController.h"
 
 @interface TTTrunkNameViewController () <UITextFieldDelegate>
 @property (strong, nonatomic) IBOutlet UITextField *trunkName;
@@ -47,17 +47,17 @@
     if([textField.text isEqualToString:@""]){
         return NO;
     }else{
-        [self performSegueWithIdentifier:@"pushToTrunkLocation" sender:self];
+        [self performSegueWithIdentifier:@"pushToTrunkDates" sender:self];
         return YES;
     }
 }
 
 #pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    TTTrunkLocationViewController *trunkLocationViewController = segue.destinationViewController;
+    TTTrunkDatesViewController *trunkDatesViewController = segue.destinationViewController;
     Trip *trip = [[Trip alloc] init];
     trip.name = self.trunkName.text;
-    trunkLocationViewController.trip = trip;
+    trunkDatesViewController.trip = trip;
 }
  
 - (IBAction)backButtonWasTapped:(TTOnboardingButton *)sender {
@@ -66,7 +66,7 @@
 
 - (IBAction)nextButtonWasTapped:(TTOnboardingButton *)sender {
     if(![self.trunkName.text isEqualToString:@""])
-        [self performSegueWithIdentifier:@"pushToTrunkLocation" sender:self];
+        [self performSegueWithIdentifier:@"pushToTrunkDates" sender:self];
 }
 
 
