@@ -111,20 +111,6 @@
     self.photoUsers = [[NSMutableArray alloc] init];
     self.userTrips = [[NSMutableArray alloc] init];
     self.objid = [[NSMutableArray alloc] init];
-    
-    
-//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-//        if (!error)
-//        {
-//            self.following = [[NSMutableArray alloc]init];
-//            for (PFUser *user in users)
-//            {
-//                [self.following addObject:user];
-//            }
-//        }
-//        if(self.mainPhotos == nil || self.mainPhotos.count == 0)
-//            [self loadNewsFeed:NO refresh:nil];
-//    }];
 }
 
 -(void)viewDidAppear:(BOOL)animated{

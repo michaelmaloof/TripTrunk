@@ -21,6 +21,7 @@
 #import "TTActivityNotificationsViewController.h"
 #import "TTCreateTrunkViewController.h"
 #import "TTOnboardingViewController.h"
+#import "SocialUtility.h"
 
 @interface TTTimelineViewController () <UICollectionViewDelegate>
 
@@ -34,6 +35,7 @@
 @property (strong, nonatomic) NSString *photoDate;
 @property (strong, nonatomic) UIBezierPath *routePath;
 @property NSInteger currentGroup;
+@property (strong, nonatomic) NSArray *following;
 @end
 
 @implementation TTTimelineViewController
@@ -79,18 +81,67 @@
 
 -(void)loadTimelineData{
     
+//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+//        if (!error){
+//            self.following = users;
+//
+//
+//            PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+//            [query whereKey:@"creator" containedIn:users];
+//            [query includeKey:@"PublicTripDetail"];
+//            [query orderByDescending:@"start"];
+//            [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//
+//                //sort objects and group them into excursions
+//                [self groupTripsIntoExcursions:objects block:^(BOOL succeeded, NSString *error) {
+////                    self.currentGroup = [self currentlySelectedGroup];
+////                    [self initMap:self.sortedArray[self.currentGroup]];
+//                        NSSet *data = [NSSet setWithArray:[self.sortedArray valueForKey:@"trip"]];
+//                        NSArray *dataArray = [data allObjects];
+//
+//                            for(int i = 0; i<data.count; i++){
+//                                NSMutableArray *filter = [[NSMutableArray alloc] init];
+//                                for(id object in self.sortedArray){
+//                                    if([object[@"trip"] isEqualToString:dataArray[i]]){
+//                                        [filter addObject:object];
+//                                    }
+//                                }
+//
+//                                [self.filteredArray addObject:filter];
+//                            }
+//
+//                        [self explodeFilteredArray];
+//                        self.currentGroup = [self currentlySelectedGroup];
+//                        [self initMap:self.filteredArray[self.currentGroup]];
+//                        Excursion *excursion = self.sortedArray[self.currentGroup];
+//                        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+//                        [self addFlagToMapWithGeoPoint:point];
+//                }];
+//
+//
+//            }];
+//
+//
+//        }else{
+//            //HANDLE THIS ERROR
+//        }
+//
+//    }];
+    
+    
+    
     //Load all the Excursions from the current user and sort by descending based on start date
     PFQuery *query = [PFQuery queryWithClassName:@"Excursion"];
     [query whereKey:@"creator" equalTo:self.user];
     [query includeKey:@"trunk"];
     [query orderByDescending:@"start"];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        
+
         if(!error){
-            
+
             NSSet *data = [NSSet setWithArray:[objects valueForKey:@"trip"]];
             NSArray *dataArray = [data allObjects];
-            
+
             for(int i = 0; i<data.count; i++){
                 NSMutableArray *filter = [[NSMutableArray alloc] init];
                 for(id object in objects){
@@ -98,22 +149,22 @@
                         [filter addObject:object];
                     }
                 }
-                
+
                 [self.filteredArray addObject:filter];
             }
-            
+
             [self explodeFilteredArray];
             self.currentGroup = [self currentlySelectedGroup];
-            [self initMap:self.filteredArray[self.currentGroup]];
+            [self initMap:self.filteredArray[self.currentGroup]];//<---DOUBLE CHECK TO SEE IF THIS IS WRONG
             Excursion *excursion = self.sortedArray[self.currentGroup];
             PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
             [self addFlagToMapWithGeoPoint:point];
-            
+
         }else{
             //FIXME: Add google error event
             NSLog(@"Error retrieving Excursions");
         }
-        
+
     }];
 
 }
@@ -128,11 +179,11 @@
     PFGeoPoint *homePoint;
     
     //add geopoints to an array in chronological order
-    for(Excursion *excursion in array){
-        homePoint = [PFGeoPoint geoPointWithLatitude:excursion.homeAtCreation.latitude longitude:excursion.homeAtCreation.longitude];
-        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+    for(Trip *trip in array){
+        homePoint = [PFGeoPoint geoPointWithLatitude:34.0522 longitude:-118.2437];
+        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:trip.lat longitude:trip.longitude];
         [geoPointsChronologicalArray addObject:point];
-        [geoPointsChronologicalLabelArray addObject:excursion.trunk.city];
+        [geoPointsChronologicalLabelArray addObject:trip.city];
     }
     
     //add geopoints to an array with map left & right so we can determine camera position and zoom
@@ -173,8 +224,63 @@
         [self addLabelToMapWithGeoPoint:point AndText:geoPointsChronologicalLabelArray[i]];
         i++;
     }
-
+    
     [self.collectionView reloadData];
+    
+//    double mapOffset = 0; //<------determine if the map should offset because a point is below the photos
+//
+//    NSMutableArray *geoPointsChronologicalArray = [[NSMutableArray alloc] init];
+//    NSMutableArray *geoPointsChronologicalLabelArray = [[NSMutableArray alloc] init];
+//    PFGeoPoint *homePoint;
+//
+//    //add geopoints to an array in chronological order
+//    for(Excursion *excursion in array){
+//        homePoint = [PFGeoPoint geoPointWithLatitude:excursion.homeAtCreation.latitude longitude:excursion.homeAtCreation.longitude];
+//        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+//        [geoPointsChronologicalArray addObject:point];
+//        [geoPointsChronologicalLabelArray addObject:excursion.trunk.city];
+//    }
+//
+//    //add geopoints to an array with map left & right so we can determine camera position and zoom
+//    NSArray *geoPointsDirectionalArray = [self sortGeoPointsByLongitudeWithArray:array];
+//
+//    //load furthest left and furthest right
+//    PFGeoPoint *mapLeftGeoPoint = homePoint;
+//    PFGeoPoint *mapRightGeoPoint = [geoPointsDirectionalArray lastObject];
+//
+//    //determine middle point between extent of trip locations
+//    PFGeoPoint *midGeoPoint = [PFGeoPoint geoPointWithLatitude:(mapLeftGeoPoint.latitude+mapRightGeoPoint.latitude)/2 longitude:(mapLeftGeoPoint.longitude+mapRightGeoPoint.longitude)/2];
+//
+//    float distance = ABS(mapLeftGeoPoint.longitude-mapRightGeoPoint.longitude);
+//    float mapZoom = -1.4847*log(distance) + 8.62645;
+//
+//    //set camera position to the middle of the route
+//    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:midGeoPoint.latitude-mapOffset
+//                                                            longitude:midGeoPoint.longitude
+//                                                                 zoom:mapZoom];
+//    self.googleMapView.camera = camera;
+//
+//    NSBundle *mainBundle = [NSBundle mainBundle];
+//    NSURL *styleUrl = [mainBundle URLForResource:@"style" withExtension:@"json"];
+//    NSError *error;
+//
+//    GMSMapStyle *style = [GMSMapStyle styleWithContentsOfFileURL:styleUrl error:&error];
+//    if (!style)
+//        NSLog(@"The style definition could not be loaded: %@", error);
+//    self.googleMapView.mapStyle = style;
+//
+//    [self createBezierPathForMapWithArrayOfGeoPoints:geoPointsChronologicalArray homePoint:homePoint];
+//
+//    int i=0; // <------ this is temporary until it's connected to the database
+//    [self addPointToMapWithGeoPoint:homePoint];
+//    [self addLabelToMapWithGeoPoint:homePoint AndText:@"Home"];
+//    for(PFGeoPoint *point in geoPointsChronologicalArray){
+//        [self addPointToMapWithGeoPoint:point];
+//        [self addLabelToMapWithGeoPoint:point AndText:geoPointsChronologicalLabelArray[i]];
+//        i++;
+//    }
+//
+//    [self.collectionView reloadData];
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -204,6 +310,7 @@
 
 -(void)explodeFilteredArray{
     int count = 0;
+    self.sortedArray = [[NSMutableArray alloc] init];
     for(NSArray *array in self.filteredArray){
         count = count+(int)array.count;
         [self.excursionGroups addObject:@(count)];
@@ -346,6 +453,112 @@
 }
 
 
+#pragma mark - Trip Sorting
+-(void)groupTripsIntoExcursions:(NSArray*)trips block:(void (^)(BOOL succeeded, NSString *error))completionBlock
+{
+    //seperate trips by user
+    NSArray *sortedTrips = [trips valueForKeyPath:@"@distinctUnionOfObjects.user"];
+    NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
+    for (NSString *t in sortedTrips) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user == %@",t];
+        NSArray *currentUserTrips = [trips filteredArrayUsingPredicate:predicate];
+        [sortedArray addObject:(Trip*)currentUserTrips];
+    }
+    
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    NSMutableDictionary *groupedDict = [[NSMutableDictionary alloc] init];
+    NSMutableArray *groupedTrips = [[NSMutableArray alloc] init];
+    //group trips into excursions by user (hard part)
+    for(NSArray *trips in sortedArray){
+        if(trips.count>1){
+            NSArray* reversedArray = [[trips reverseObjectEnumerator] allObjects];
+            int i=0;
+            NSString *sd;
+            for(Trip *trip in trips){
+                if(i==0)
+                    sd = trip.startDate;
+                
+                if(i==trips.count-1){
+                    if(groupedTrips.count>0){
+                        [groupedDict setObject:groupedTrips forKey:sd];
+                        groupedTrips = [[NSMutableArray alloc] init];
+                    }else{
+                        [groupedDict setObject:trip forKey:trip.startDate];
+                    }
+                    break;
+                }
+                
+                Trip *trip2 = reversedArray[i+1];
+                i++;
+                [df setDateFormat:@"MM/dd/yyyy"];
+                NSDate *startDate = [df dateFromString:trip2.startDate];
+                NSDate *endDate = [df dateFromString:trip.endDate];
+                NSTimeInterval secondsBetween = [startDate timeIntervalSinceDate:endDate];
+                int numberOfDays = secondsBetween / 86400;
+                if(numberOfDays < 2){
+                    //group this with the previous
+                    [groupedTrips addObject:trip];
+                    [groupedTrips addObject:trip2];
+                }else{
+                    if(groupedTrips.count>0){
+                        [groupedDict setObject:groupedTrips forKey:sd];
+                        groupedTrips = [[NSMutableArray alloc] init];
+                    }else{
+                        [groupedDict setObject:trip forKey:trip.startDate];
+                    }
+                }
+            }
+            
+        }else{
+            for(Trip *trip in trips){
+                [groupedDict setObject:trip forKey:trip.startDate];
+            }
+        }
+    }
+    
+    
+    //sort dictionary by date
+    NSArray *Keys = [groupedDict allKeys];
+    NSMutableArray *sortedValues = [NSMutableArray array];
+    NSArray *sortedKeys = [Keys sortedArrayUsingFunction:dateSort context:nil];
+    NSArray* reversedsortedKeys = [[sortedKeys reverseObjectEnumerator] allObjects];
+    //resort excursions in chronological order by first trips start date
+    for (NSString *key in reversedsortedKeys)
+        [sortedValues addObject: [groupedDict objectForKey: key]];
+    
+    
+    PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:34.0522 longitude:-118.2437];
+    for(id object in sortedValues){
+        if([object isKindOfClass:[Trip class]]){
+            Trip *trip = (Trip*)object;
+            Excursion *ex = [[Excursion alloc] init];
+            ex.creator = trip.creator;
+            ex.trip = trip.objectId;
+            ex.trunk = trip;
+            ex.homeAtCreation = point; //<--FIXME: THIS IS HARDCODED AND MUST BE FIXED
+            [self.sortedArray addObject:ex];
+        }else{
+            //it's an array of trips
+            NSArray *array = (NSArray*)object;
+            Trip *trip = (Trip*)array[0];
+            NSString *tripId = trip.objectId;
+            for(Trip *trip in array){
+                Excursion *ex = [[Excursion alloc] init];
+                ex.creator = trip.creator;
+                ex.trip = tripId;
+                ex.trunk = trip;
+                ex.homeAtCreation = point; //<--FIXME: THIS IS HARDCODED AND MUST BE FIXED
+                [self.sortedArray addObject:ex];
+            }
+        }
+    }
+    
+    if (completionBlock)
+        completionBlock(YES, nil);
+    else completionBlock(NO, @"Something went wrong creating excursions");
+    
+}
+
 #pragma mark - PFGeoPoint Sorting
 -(NSArray*)sortGeoPointsByLongitudeWithArray:(NSArray*)array{
     
@@ -370,6 +583,14 @@
     }];
     
     return sortedArray;
+}
+
+NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"MM/dd/yyyy"];
+    NSDate *d1 = [df dateFromString:s1];
+    NSDate *d2 = [df dateFromString:s2];
+    return [d1 compare:d2];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -401,18 +622,6 @@
 
     CGPoint centerPoint = CGPointMake(self.collectionView.frame.size.width/2 + self.collectionView.contentOffset.x,self.collectionView.frame.size.height/2 + self.collectionView.contentOffset.y);
     NSIndexPath *centerCellIndexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-//
-//
-//    //need to determine which group the IndexPath is in
-//    int group = 0;
-//    if(centerCellIndexPath.item > 0){
-//        for(int i=1;i<self.excursionGroups.count; i++){
-//            if(BETWEEN(centerCellIndexPath.item, [self.excursionGroups[i-1] intValue], [self.excursionGroups[i] intValue])){
-//                group=i;
-//                break;
-//            }
-//        }
-//    }
     
     int group = [self currentlySelectedGroup];
     
@@ -467,6 +676,44 @@
 
 - (TTTimelinePhotoCellCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
+//    TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+//
+//    //FIXME: Why isn't cellForReuse being called?
+//    cell.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
+//    cell.dateView.hidden = YES;
+//    cell.month.hidden = YES;
+//    cell.month.text = @"";
+//
+//    __block Excursion *excursion = self.sortedArray[indexPath.row];
+//
+//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//    [df setDateFormat:@"MM"];
+//    int month = [[df stringFromDate:excursion.trunk.start] intValue];
+//    __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
+//
+//
+//    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+//    [photoQuery whereKey:@"trip" equalTo:excursion.trunk];
+//    [photoQuery whereKey:@"user" equalTo:self.user];
+//    [photoQuery setLimit:1];
+//    [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//        if(!error){
+//            Photo *photo = (Photo*)object;
+//            [cell.imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
+//            if(![self.photoDate isEqualToString:monthName]){
+//                self.photoDate = monthName;
+//                cell.dateView.hidden = NO;
+//                cell.month.hidden = NO;
+//                cell.month.text = monthName;
+//            }
+//             }else{
+//                 //There's an error. Handle this and add the Google tracking
+//                 NSLog(@"error getting image");
+//                 NSLog(@"%@",excursion);
+//                 NSLog(@"%@",excursion.trunk);
+//             }
+//    }];
+
     TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
     //FIXME: Why isn't cellForReuse being called?
@@ -475,17 +722,18 @@
     cell.month.hidden = YES;
     cell.month.text = @"";
     
-    __block Excursion *excursion = self.sortedArray[indexPath.row];
+    __block Trip *trip = self.sortedArray[indexPath.row];
     
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"MM"];
-    int month = [[df stringFromDate:excursion.trunk.start] intValue];
+    int month = [[df stringFromDate:trip.start] intValue];
     __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
     
-
+    
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-    [photoQuery whereKey:@"trip" equalTo:excursion.trunk];
-    [photoQuery whereKey:@"user" equalTo:self.user];
+    [photoQuery whereKey:@"trip" equalTo:trip];
+    [photoQuery orderByAscending:@"createdAt"];
+//    [photoQuery whereKey:@"user" equalTo:self.user];
     [photoQuery setLimit:1];
     [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
@@ -497,14 +745,13 @@
                 cell.month.hidden = NO;
                 cell.month.text = monthName;
             }
-             }else{
-                 //There's an error. Handle this and add the Google tracking
-                 NSLog(@"error getting image");
-                 NSLog(@"%@",excursion);
-                 NSLog(@"%@",excursion.trunk);
-             }
+        }else{
+            //There's an error. Handle this and add the Google tracking
+            NSLog(@"error getting image");
+//            NSLog(@"%@",excursion);
+//            NSLog(@"%@",excursion.trunk);
+        }
     }];
-
     
     return cell;
 }
