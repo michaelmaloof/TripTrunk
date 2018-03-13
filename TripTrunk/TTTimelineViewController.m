@@ -125,45 +125,6 @@
         }
 
     }];
-    
-    
-    
-//    //Load all the Excursions from the current user and sort by descending based on start date
-//    PFQuery *query = [PFQuery queryWithClassName:@"Excursion"];
-//    [query whereKey:@"creator" equalTo:self.user];
-//    [query includeKey:@"trunk"];
-//    [query orderByDescending:@"start"];
-//    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//
-//        if(!error){
-//
-//            NSSet *data = [NSSet setWithArray:[objects valueForKey:@"trip"]];
-//            NSArray *dataArray = [data allObjects];
-//
-//            for(int i = 0; i<data.count; i++){
-//                NSMutableArray *filter = [[NSMutableArray alloc] init];
-//                for(id object in objects){
-//                    if([object[@"trip"] isEqualToString:dataArray[i]]){
-//                        [filter addObject:object];
-//                    }
-//                }
-//
-//                [self.filteredArray addObject:filter];
-//            }
-//
-//            [self explodeFilteredArray];
-//            self.currentGroup = [self currentlySelectedGroup];
-//            [self initMap:self.filteredArray[self.currentGroup]];//<---DOUBLE CHECK TO SEE IF THIS IS WRONG
-//            Excursion *excursion = self.sortedArray[self.currentGroup];
-//            PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
-//            [self addFlagToMapWithGeoPoint:point];
-//
-//        }else{
-//            //FIXME: Add google error event
-//            NSLog(@"Error retrieving Excursions");
-//        }
-//
-//    }];
 
 }
 
@@ -171,49 +132,49 @@
 -(void)initMap:(NSArray*)array{
     
     double mapOffset = 0; //<------determine if the map should offset because a point is below the photos
-    
+
     NSMutableArray *geoPointsChronologicalArray = [[NSMutableArray alloc] init];
     NSMutableArray *geoPointsChronologicalLabelArray = [[NSMutableArray alloc] init];
     PFGeoPoint *homePoint;
-    
+
     //add geopoints to an array in chronological order
-    for(Trip *trip in array){
-        homePoint = [PFGeoPoint geoPointWithLatitude:34.0522 longitude:-118.2437];
-        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:trip.lat longitude:trip.longitude];
+    for(Excursion *excursion in array){
+        homePoint = [PFGeoPoint geoPointWithLatitude:excursion.homeAtCreation.latitude longitude:excursion.homeAtCreation.longitude];
+        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
         [geoPointsChronologicalArray addObject:point];
-        [geoPointsChronologicalLabelArray addObject:trip.city];
+        [geoPointsChronologicalLabelArray addObject:excursion.trunk.city];
     }
-    
+
     //add geopoints to an array with map left & right so we can determine camera position and zoom
     NSArray *geoPointsDirectionalArray = [self sortGeoPointsByLongitudeWithArray:array];
-    
+
     //load furthest left and furthest right
     PFGeoPoint *mapLeftGeoPoint = homePoint;
     PFGeoPoint *mapRightGeoPoint = [geoPointsDirectionalArray lastObject];
-    
+
     //determine middle point between extent of trip locations
     PFGeoPoint *midGeoPoint = [PFGeoPoint geoPointWithLatitude:(mapLeftGeoPoint.latitude+mapRightGeoPoint.latitude)/2 longitude:(mapLeftGeoPoint.longitude+mapRightGeoPoint.longitude)/2];
-    
+
     float distance = ABS(mapLeftGeoPoint.longitude-mapRightGeoPoint.longitude);
     float mapZoom = -1.4847*log(distance) + 8.62645;
-    
+
     //set camera position to the middle of the route
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:midGeoPoint.latitude-mapOffset
                                                             longitude:midGeoPoint.longitude
                                                                  zoom:mapZoom];
     self.googleMapView.camera = camera;
-    
+
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *styleUrl = [mainBundle URLForResource:@"style" withExtension:@"json"];
     NSError *error;
-    
+
     GMSMapStyle *style = [GMSMapStyle styleWithContentsOfFileURL:styleUrl error:&error];
     if (!style)
         NSLog(@"The style definition could not be loaded: %@", error);
     self.googleMapView.mapStyle = style;
-    
+
     [self createBezierPathForMapWithArrayOfGeoPoints:geoPointsChronologicalArray homePoint:homePoint];
-    
+
     int i=0; // <------ this is temporary until it's connected to the database
     [self addPointToMapWithGeoPoint:homePoint];
     [self addLabelToMapWithGeoPoint:homePoint AndText:@"Home"];
@@ -222,63 +183,8 @@
         [self addLabelToMapWithGeoPoint:point AndText:geoPointsChronologicalLabelArray[i]];
         i++;
     }
-    
+
     [self.collectionView reloadData];
-    
-//    double mapOffset = 0; //<------determine if the map should offset because a point is below the photos
-//
-//    NSMutableArray *geoPointsChronologicalArray = [[NSMutableArray alloc] init];
-//    NSMutableArray *geoPointsChronologicalLabelArray = [[NSMutableArray alloc] init];
-//    PFGeoPoint *homePoint;
-//
-//    //add geopoints to an array in chronological order
-//    for(Excursion *excursion in array){
-//        homePoint = [PFGeoPoint geoPointWithLatitude:excursion.homeAtCreation.latitude longitude:excursion.homeAtCreation.longitude];
-//        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
-//        [geoPointsChronologicalArray addObject:point];
-//        [geoPointsChronologicalLabelArray addObject:excursion.trunk.city];
-//    }
-//
-//    //add geopoints to an array with map left & right so we can determine camera position and zoom
-//    NSArray *geoPointsDirectionalArray = [self sortGeoPointsByLongitudeWithArray:array];
-//
-//    //load furthest left and furthest right
-//    PFGeoPoint *mapLeftGeoPoint = homePoint;
-//    PFGeoPoint *mapRightGeoPoint = [geoPointsDirectionalArray lastObject];
-//
-//    //determine middle point between extent of trip locations
-//    PFGeoPoint *midGeoPoint = [PFGeoPoint geoPointWithLatitude:(mapLeftGeoPoint.latitude+mapRightGeoPoint.latitude)/2 longitude:(mapLeftGeoPoint.longitude+mapRightGeoPoint.longitude)/2];
-//
-//    float distance = ABS(mapLeftGeoPoint.longitude-mapRightGeoPoint.longitude);
-//    float mapZoom = -1.4847*log(distance) + 8.62645;
-//
-//    //set camera position to the middle of the route
-//    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:midGeoPoint.latitude-mapOffset
-//                                                            longitude:midGeoPoint.longitude
-//                                                                 zoom:mapZoom];
-//    self.googleMapView.camera = camera;
-//
-//    NSBundle *mainBundle = [NSBundle mainBundle];
-//    NSURL *styleUrl = [mainBundle URLForResource:@"style" withExtension:@"json"];
-//    NSError *error;
-//
-//    GMSMapStyle *style = [GMSMapStyle styleWithContentsOfFileURL:styleUrl error:&error];
-//    if (!style)
-//        NSLog(@"The style definition could not be loaded: %@", error);
-//    self.googleMapView.mapStyle = style;
-//
-//    [self createBezierPathForMapWithArrayOfGeoPoints:geoPointsChronologicalArray homePoint:homePoint];
-//
-//    int i=0; // <------ this is temporary until it's connected to the database
-//    [self addPointToMapWithGeoPoint:homePoint];
-//    [self addLabelToMapWithGeoPoint:homePoint AndText:@"Home"];
-//    for(PFGeoPoint *point in geoPointsChronologicalArray){
-//        [self addPointToMapWithGeoPoint:point];
-//        [self addLabelToMapWithGeoPoint:point AndText:geoPointsChronologicalLabelArray[i]];
-//        i++;
-//    }
-//
-//    [self.collectionView reloadData];
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -692,7 +598,6 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
     [photoQuery whereKey:@"trip" equalTo:excursion.trunk];
-    [photoQuery whereKey:@"user" equalTo:self.user];
     [photoQuery setLimit:1];
     [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
