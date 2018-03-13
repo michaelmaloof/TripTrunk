@@ -81,91 +81,89 @@
 
 -(void)loadTimelineData{
     
-//    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-//        if (!error){
-//            self.following = users;
-//
-//
-//            PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
-//            [query whereKey:@"creator" containedIn:users];
-//            [query includeKey:@"PublicTripDetail"];
-//            [query orderByDescending:@"start"];
-//            [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//
-//                //sort objects and group them into excursions
-//                [self groupTripsIntoExcursions:objects block:^(BOOL succeeded, NSString *error) {
-////                    self.currentGroup = [self currentlySelectedGroup];
-////                    [self initMap:self.sortedArray[self.currentGroup]];
-//                        NSSet *data = [NSSet setWithArray:[self.sortedArray valueForKey:@"trip"]];
-//                        NSArray *dataArray = [data allObjects];
-//
-//                            for(int i = 0; i<data.count; i++){
-//                                NSMutableArray *filter = [[NSMutableArray alloc] init];
-//                                for(id object in self.sortedArray){
-//                                    if([object[@"trip"] isEqualToString:dataArray[i]]){
-//                                        [filter addObject:object];
-//                                    }
-//                                }
-//
-//                                [self.filteredArray addObject:filter];
-//                            }
-//
-//                        [self explodeFilteredArray];
-//                        self.currentGroup = [self currentlySelectedGroup];
-//                        [self initMap:self.filteredArray[self.currentGroup]];
-//                        Excursion *excursion = self.sortedArray[self.currentGroup];
-//                        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
-//                        [self addFlagToMapWithGeoPoint:point];
-//                }];
-//
-//
-//            }];
-//
-//
-//        }else{
-//            //HANDLE THIS ERROR
-//        }
-//
-//    }];
-    
-    
-    
-    //Load all the Excursions from the current user and sort by descending based on start date
-    PFQuery *query = [PFQuery queryWithClassName:@"Excursion"];
-    [query whereKey:@"creator" equalTo:self.user];
-    [query includeKey:@"trunk"];
-    [query orderByDescending:@"start"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error){
+            self.following = users;
 
-        if(!error){
 
-            NSSet *data = [NSSet setWithArray:[objects valueForKey:@"trip"]];
-            NSArray *dataArray = [data allObjects];
+            PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+            [query whereKey:@"creator" containedIn:users];
+            [query includeKey:@"PublicTripDetail"];
+            [query orderByDescending:@"start"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
 
-            for(int i = 0; i<data.count; i++){
-                NSMutableArray *filter = [[NSMutableArray alloc] init];
-                for(id object in objects){
-                    if([object[@"trip"] isEqualToString:dataArray[i]]){
-                        [filter addObject:object];
-                    }
-                }
+                //sort objects and group them into excursions
+                [self groupTripsIntoExcursions:objects block:^(BOOL succeeded, NSString *error) {
+                        NSSet *data = [NSSet setWithArray:[self.sortedArray valueForKey:@"trip"]];
+                        NSArray *dataArray = [data allObjects];
 
-                [self.filteredArray addObject:filter];
-            }
+                            for(int i = 0; i<data.count; i++){
+                                NSMutableArray *filter = [[NSMutableArray alloc] init];
+                                for(id object in self.sortedArray){
+                                    if([object[@"trip"] isEqualToString:dataArray[i]]){
+                                        [filter addObject:object];
+                                    }
+                                }
 
-            [self explodeFilteredArray];
-            self.currentGroup = [self currentlySelectedGroup];
-            [self initMap:self.filteredArray[self.currentGroup]];//<---DOUBLE CHECK TO SEE IF THIS IS WRONG
-            Excursion *excursion = self.sortedArray[self.currentGroup];
-            PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
-            [self addFlagToMapWithGeoPoint:point];
+                                [self.filteredArray addObject:filter];
+                            }
+
+                        [self explodeFilteredArray];
+                        self.currentGroup = [self currentlySelectedGroup];
+                        [self initMap:self.filteredArray[self.currentGroup]];
+                        Excursion *excursion = self.sortedArray[self.currentGroup];
+                        PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+                        [self addFlagToMapWithGeoPoint:point];
+                }];
+
+
+            }];
+
 
         }else{
-            //FIXME: Add google error event
-            NSLog(@"Error retrieving Excursions");
+            //HANDLE THIS ERROR
         }
 
     }];
+    
+    
+    
+//    //Load all the Excursions from the current user and sort by descending based on start date
+//    PFQuery *query = [PFQuery queryWithClassName:@"Excursion"];
+//    [query whereKey:@"creator" equalTo:self.user];
+//    [query includeKey:@"trunk"];
+//    [query orderByDescending:@"start"];
+//    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//
+//        if(!error){
+//
+//            NSSet *data = [NSSet setWithArray:[objects valueForKey:@"trip"]];
+//            NSArray *dataArray = [data allObjects];
+//
+//            for(int i = 0; i<data.count; i++){
+//                NSMutableArray *filter = [[NSMutableArray alloc] init];
+//                for(id object in objects){
+//                    if([object[@"trip"] isEqualToString:dataArray[i]]){
+//                        [filter addObject:object];
+//                    }
+//                }
+//
+//                [self.filteredArray addObject:filter];
+//            }
+//
+//            [self explodeFilteredArray];
+//            self.currentGroup = [self currentlySelectedGroup];
+//            [self initMap:self.filteredArray[self.currentGroup]];//<---DOUBLE CHECK TO SEE IF THIS IS WRONG
+//            Excursion *excursion = self.sortedArray[self.currentGroup];
+//            PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+//            [self addFlagToMapWithGeoPoint:point];
+//
+//        }else{
+//            //FIXME: Add google error event
+//            NSLog(@"Error retrieving Excursions");
+//        }
+//
+//    }];
 
 }
 
@@ -676,64 +674,25 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 
 - (TTTimelinePhotoCellCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-//    TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-//
-//    //FIXME: Why isn't cellForReuse being called?
-//    cell.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
-//    cell.dateView.hidden = YES;
-//    cell.month.hidden = YES;
-//    cell.month.text = @"";
-//
-//    __block Excursion *excursion = self.sortedArray[indexPath.row];
-//
-//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-//    [df setDateFormat:@"MM"];
-//    int month = [[df stringFromDate:excursion.trunk.start] intValue];
-//    __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
-//
-//
-//    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-//    [photoQuery whereKey:@"trip" equalTo:excursion.trunk];
-//    [photoQuery whereKey:@"user" equalTo:self.user];
-//    [photoQuery setLimit:1];
-//    [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-//        if(!error){
-//            Photo *photo = (Photo*)object;
-//            [cell.imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//            if(![self.photoDate isEqualToString:monthName]){
-//                self.photoDate = monthName;
-//                cell.dateView.hidden = NO;
-//                cell.month.hidden = NO;
-//                cell.month.text = monthName;
-//            }
-//             }else{
-//                 //There's an error. Handle this and add the Google tracking
-//                 NSLog(@"error getting image");
-//                 NSLog(@"%@",excursion);
-//                 NSLog(@"%@",excursion.trunk);
-//             }
-//    }];
-
     TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    
+
     //FIXME: Why isn't cellForReuse being called?
     cell.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
     cell.dateView.hidden = YES;
     cell.month.hidden = YES;
     cell.month.text = @"";
-    
-    __block Trip *trip = self.sortedArray[indexPath.row];
-    
+
+    __block Excursion *excursion = self.sortedArray[indexPath.row];
+
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"MM"];
-    int month = [[df stringFromDate:trip.start] intValue];
+    int month = [[df stringFromDate:excursion.trunk.start] intValue];
     __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
-    
-    
+
+
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-    [photoQuery whereKey:@"trip" equalTo:trip];
-    [photoQuery orderByAscending:@"createdAt"];
-//    [photoQuery whereKey:@"user" equalTo:self.user];
+    [photoQuery whereKey:@"trip" equalTo:excursion.trunk];
+    [photoQuery whereKey:@"user" equalTo:self.user];
     [photoQuery setLimit:1];
     [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if(!error){
@@ -745,13 +704,52 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
                 cell.month.hidden = NO;
                 cell.month.text = monthName;
             }
-        }else{
-            //There's an error. Handle this and add the Google tracking
-            NSLog(@"error getting image");
-//            NSLog(@"%@",excursion);
-//            NSLog(@"%@",excursion.trunk);
-        }
+             }else{
+                 //There's an error. Handle this and add the Google tracking
+                 NSLog(@"error getting image");
+                 NSLog(@"%@",excursion);
+                 NSLog(@"%@",excursion.trunk);
+             }
     }];
+
+//    TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+//
+//    //FIXME: Why isn't cellForReuse being called?
+//    cell.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
+//    cell.dateView.hidden = YES;
+//    cell.month.hidden = YES;
+//    cell.month.text = @"";
+//
+//    __block Trip *trip = self.sortedArray[indexPath.row];
+//
+//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//    [df setDateFormat:@"MM"];
+//    int month = [[df stringFromDate:trip.start] intValue];
+//    __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
+//
+//
+//    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
+//    [photoQuery whereKey:@"trip" equalTo:trip];
+//    [photoQuery orderByAscending:@"createdAt"];
+////    [photoQuery whereKey:@"user" equalTo:self.user];
+//    [photoQuery setLimit:1];
+//    [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//        if(!error){
+//            Photo *photo = (Photo*)object;
+//            [cell.imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
+//            if(![self.photoDate isEqualToString:monthName]){
+//                self.photoDate = monthName;
+//                cell.dateView.hidden = NO;
+//                cell.month.hidden = NO;
+//                cell.month.text = monthName;
+//            }
+//        }else{
+//            //There's an error. Handle this and add the Google tracking
+//            NSLog(@"error getting image");
+////            NSLog(@"%@",excursion);
+////            NSLog(@"%@",excursion.trunk);
+//        }
+//    }];
     
     return cell;
 }
