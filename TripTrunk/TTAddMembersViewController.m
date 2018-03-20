@@ -401,7 +401,29 @@
                  [query getObjectInBackgroundWithId:self.trip.publicTripDetail.objectId block:^(PFObject *pfObject, NSError *error) {
                      [pfObject setObject:self.trip forKey:@"trip"];
                      [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                         [self addMembersToNewlyCreatedTrunk];
+                         PFUser *user = [PFUser currentUser];
+                         NSString *hometown = user[@"hometown"];
+                         [[TTUtility sharedInstance] locationsForSearch:hometown block:^(NSArray *objects, NSError *error) {
+                             if(!error){
+                                 PFGeoPoint *hometownGeopoint = [[PFGeoPoint alloc] init];
+                                 TTPlace *place = [[TTPlace alloc] init];
+                                 place = objects[0];
+                                 hometownGeopoint.latitude = place.latitude;
+                                 hometownGeopoint.longitude = place.longitude;
+                                 PFObject *detail = self.trip.publicTripDetail;
+                                 detail[@"homeAtCreation"] = hometownGeopoint;
+                                 [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                     if(succeeded)
+                                         NSLog(@"hometown geopoint suceeded");
+                                     else NSLog(@"hometown geopoint failed");
+                                     
+                                     [self addMembersToNewlyCreatedTrunk];
+                                 }];
+                             }
+                         }];
+                         
+                         
+                         
                      }];
                  }];
 

@@ -45,6 +45,7 @@ static NSString *const kCountryString  = @"Country";
     }else{
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
             //            [self showNeedAccessMessage];
+            [self reloadAssets];
         }];
     }
 }
@@ -84,7 +85,7 @@ static NSString *const kCountryString  = @"Country";
                 }
             }];
         }
-        
+        //FIXME: change this to a photoset and populate that way. This way is stupid
         if(i==1){
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(127, 127) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 self.subPhoto1.image = result;

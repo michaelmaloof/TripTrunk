@@ -17,5 +17,5 @@
 @property int totalLikes;
 @property int memberCount;
 @property Trip *trip;
-
+@property PFGeoPoint *geoPoint;
 @end

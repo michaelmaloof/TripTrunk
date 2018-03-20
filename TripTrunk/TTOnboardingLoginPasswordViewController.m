@@ -64,6 +64,7 @@
         
         if (error) {
             NSLog(@"Error: %@",error);
+            //FIX ME: There are other errors that show but it says invalid password which is micleading
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
                                                             message:NSLocalizedString(@"Your username and/or password is incorrect. Please try again.",@"Your username and/or password is incorrect. Please try again.")
                                                            delegate:self

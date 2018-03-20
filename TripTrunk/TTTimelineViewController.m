@@ -80,7 +80,7 @@
 }
 
 -(void)loadTimelineData{
-    
+    [self clearMap];
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error){
             self.following = users;
@@ -90,6 +90,7 @@
             [query whereKey:@"creator" containedIn:users];
             [query includeKey:@"PublicTripDetail"];
             [query orderByDescending:@"start"];
+            [query setLimit:10];
             [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
 
                 //sort objects and group them into excursions
@@ -431,7 +432,6 @@
         [sortedValues addObject: [groupedDict objectForKey: key]];
     
     
-    PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:34.0522 longitude:-118.2437];
     for(id object in sortedValues){
         if([object isKindOfClass:[Trip class]]){
             Trip *trip = (Trip*)object;
@@ -439,8 +439,14 @@
             ex.creator = trip.creator;
             ex.trip = trip.objectId;
             ex.trunk = trip;
-            ex.homeAtCreation = point; //<--FIXME: THIS IS HARDCODED AND MUST BE FIXED
-            [self.sortedArray addObject:ex];
+            [trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                ex.homeAtCreation = trip.publicTripDetail[@"homeAtCreation"];
+                [self.sortedArray addObject:ex];
+                
+                if (completionBlock)
+                    completionBlock(YES, nil);
+                else completionBlock(NO, @"Something went wrong creating excursions");
+            }];
         }else{
             //it's an array of trips
             NSArray *array = (NSArray*)object;
@@ -451,15 +457,17 @@
                 ex.creator = trip.creator;
                 ex.trip = tripId;
                 ex.trunk = trip;
-                ex.homeAtCreation = point; //<--FIXME: THIS IS HARDCODED AND MUST BE FIXED
-                [self.sortedArray addObject:ex];
+                [trip.publicTripDetail fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                    ex.homeAtCreation = trip.publicTripDetail[@"homeAtCreation"];
+                    [self.sortedArray addObject:ex];
+                    
+                    if (completionBlock)
+                        completionBlock(YES, nil);
+                    else completionBlock(NO, @"Something went wrong creating excursions");
+                }];
             }
         }
     }
-    
-    if (completionBlock)
-        completionBlock(YES, nil);
-    else completionBlock(NO, @"Something went wrong creating excursions");
     
 }
 
@@ -616,45 +624,6 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
                  NSLog(@"%@",excursion.trunk);
              }
     }];
-
-//    TTTimelinePhotoCellCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-//
-//    //FIXME: Why isn't cellForReuse being called?
-//    cell.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
-//    cell.dateView.hidden = YES;
-//    cell.month.hidden = YES;
-//    cell.month.text = @"";
-//
-//    __block Trip *trip = self.sortedArray[indexPath.row];
-//
-//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-//    [df setDateFormat:@"MM"];
-//    int month = [[df stringFromDate:trip.start] intValue];
-//    __block NSString *monthName = [[df monthSymbols] objectAtIndex:(month-1)];
-//
-//
-//    PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-//    [photoQuery whereKey:@"trip" equalTo:trip];
-//    [photoQuery orderByAscending:@"createdAt"];
-////    [photoQuery whereKey:@"user" equalTo:self.user];
-//    [photoQuery setLimit:1];
-//    [photoQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-//        if(!error){
-//            Photo *photo = (Photo*)object;
-//            [cell.imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
-//            if(![self.photoDate isEqualToString:monthName]){
-//                self.photoDate = monthName;
-//                cell.dateView.hidden = NO;
-//                cell.month.hidden = NO;
-//                cell.month.text = monthName;
-//            }
-//        }else{
-//            //There's an error. Handle this and add the Google tracking
-//            NSLog(@"error getting image");
-////            NSLog(@"%@",excursion);
-////            NSLog(@"%@",excursion.trunk);
-//        }
-//    }];
     
     return cell;
 }
@@ -688,4 +657,64 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
     //    activityViewController.trip
     [self.navigationController pushViewController:createTrunkViewController animated:YES];
 }
+
+//-(void)updateTripDatabaseToIncludeHomeAtCreation{
+//    NSMutableDictionary *latlong = [[NSMutableDictionary alloc] init];
+//    PFQuery *aquery = [PFQuery queryWithClassName:@"PublicTripDetail"];
+//    [aquery whereKeyDoesNotExist:@"homeAtCreation"];
+//    [aquery whereKeyExists:@"trip"];
+////    [aquery setLimit:500];
+//    [aquery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//        NSMutableArray *array = [[NSMutableArray alloc] init];
+//        for(id ptd in objects){
+//            [array addObject:ptd];
+//        }
+//
+//        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+//        [query includeKey:@"creator"];
+//        [query includeKey:@"publicTripDetail"];
+//        [query whereKey:@"publicTripDetail" containedIn:array];
+////        [aquery setLimit:500];
+//        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//
+//            for(Trip *trip in objects){
+//                PFUser *creator = trip.creator;
+//                PFGeoPoint *gp = latlong[@"hometown"];
+//
+//                if(gp){
+//                    PFObject *detail = trip.publicTripDetail;
+//                    detail[@"homeAtCreation"] = gp;
+//                    [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+//                        if(succeeded)
+//                            NSLog(@"done with dictionary");
+//                        else NSLog(@"failed with dictionary ");
+//                    }];
+//                }else{
+//                    NSString *hometown = creator[@"hometown"];
+//                    [[TTUtility sharedInstance] locationsForSearch:hometown block:^(NSArray *objects, NSError *error) {
+//                        if(!error){
+//                            PFGeoPoint *hometownGeopoint = [[PFGeoPoint alloc] init];
+//                            TTPlace *place = [[TTPlace alloc] init];
+//                            place = objects[0];
+//                            hometownGeopoint.latitude = place.latitude;
+//                            hometownGeopoint.longitude = place.longitude;
+//                            [latlong setObject:hometownGeopoint forKey:hometown];
+//                            PFObject *detail = trip.publicTripDetail;
+//                            detail[@"homeAtCreation"] = hometownGeopoint;
+//                            [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+//                                if(succeeded)
+//                                    NSLog(@"done with google");
+//                                else NSLog(@"failed with google");
+//                            }];
+//                        }
+//                    }];
+//                }
+//            }
+//        }];
+//
+//    }];
+//
+//
+//
+//}
 @end
