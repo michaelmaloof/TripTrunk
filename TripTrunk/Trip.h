@@ -31,7 +31,7 @@
 @property double longitude;
 @property NSString *descriptionStory;
 @property NSString *gpID; // gpID is a Google ID for this Place
-
+@property PFGeoPoint *homeAtCreation;
 
 - (void)setPlaceData:(TTPlace *)place;
 

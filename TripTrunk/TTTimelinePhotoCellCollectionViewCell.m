@@ -21,9 +21,9 @@
 
 -(void)prepareForReuse{
     [super prepareForReuse];
-    self.dateView.hidden = YES;
-    self.month.hidden = YES;
-    self.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
+//    self.dateView.hidden = YES;
+//    self.month.hidden = YES;
+//    self.imageView.image = [UIImage imageNamed:@"tt_square_placeholder"];
 }
 
 @end
