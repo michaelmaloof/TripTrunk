@@ -34,6 +34,18 @@ PODS:
     - AWSCore (= 2.6.5)
   - AWSSQS (2.6.5):
     - AWSCore (= 2.6.5)
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
+  - FBSDKCoreKit (4.27.1):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.27.1):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.27.1):
+    - FBSDKCoreKit
   - GMImagePicker (0.0.2)
   - GoogleMaps (2.5.0):
     - GoogleMaps/Maps (= 2.5.0)
@@ -61,6 +73,9 @@ DEPENDENCIES:
   - AWSSimpleDB
   - AWSSNS
   - AWSSQS
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - GMImagePicker (~> 0.0.2)
   - GoogleMaps
   - GooglePlaces
@@ -84,10 +99,14 @@ SPEC CHECKSUMS:
   AWSSimpleDB: f6ba011ad8006c027640a7a80f7a10b922200c05
   AWSSNS: 8f29af433238455d0dbaa455a18da948e0856ed5
   AWSSQS: 631a59b6cc783271cbd7244224d5a0a924796111
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  FBSDKCoreKit: 03365dad5d790249196ffad8be4f6d8a2d98f932
+  FBSDKLoginKit: 66ff53b73cffd967ab773e32fac39e90a60e6d46
+  FBSDKShareKit: 6a6a0ef9e850c741e4e1d7a7d21335205e997ec1
   GMImagePicker: 6438a6764d6280b1dbf19b59140313f5a73daeeb
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
 
-PODFILE CHECKSUM: 9800abdcb519288e6aaee1539bdfdc6c96eba23b
+PODFILE CHECKSUM: f3e6a98988b6a5cc945b046cefe63f1a45ae9ba2
 
 COCOAPODS: 1.4.0.beta.1

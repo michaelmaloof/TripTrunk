@@ -21,4 +21,7 @@ target :'TripTrunk' do
     pod 'GMImagePicker', '~> 0.0.2'
     pod 'GooglePlaces'
     pod 'GoogleMaps'
+    pod 'FBSDKCoreKit'
+    pod 'FBSDKLoginKit'
+    pod 'FBSDKShareKit'
 end

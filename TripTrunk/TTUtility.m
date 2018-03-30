@@ -1570,7 +1570,7 @@ CLCloudinary *cloudinary;
 -(void)appWillTerminate:(NSNotification*)note{
     NSLog(@"appWillTerminate");
     
-    NSString *message = NSLocalizedString(@"Successfully upoaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.", @"Successfully upoaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.");
+    NSString *message = NSLocalizedString(@"Successfully uploaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.", @"Successfully uploaded %d/%d photos/videos to the '%@' trunk. However, %d photos/videos did not upload.");
     message = [NSString stringWithFormat:message,self.photoCount,self.totalPhotos,self.tripName,self.totalPhotos-self.photoCount];
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
