@@ -116,7 +116,7 @@
 -(void)handleFacebookUser{
     _isFBUser = YES;
     
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"/%@/me/",[FBSDKSettings graphAPIVersion]] parameters:@{@"fields": @"id"}];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         if (!error) {
             // result is a dictionary with the user's Facebook data
@@ -148,7 +148,7 @@
             [_user setObject:email forKey:@"email"];
             
             
-            NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large&return_ssl_resources=1", facebookID];
+            NSString *pictureURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/%@/picture?type=large&return_ssl_resources=1", [FBSDKSettings graphAPIVersion],facebookID];
             [_user setObject:pictureURL forKey:@"profilePicUrl"];
             
             [_user saveInBackground];

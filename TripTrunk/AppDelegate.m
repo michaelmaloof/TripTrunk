@@ -80,7 +80,9 @@
             [TTAnalytics initAnalyticsOnStart:env];
     }
     
-    NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
+    NSLog( @"### running FB sdk version: %@ ###", [FBSDKSettings sdkVersion] );
+    NSLog( @"### running FB Graph Request version: %@ ###", [FBSDKSettings graphAPIVersion] );
+    
 
     return YES;
 }

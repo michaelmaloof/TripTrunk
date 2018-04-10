@@ -399,7 +399,7 @@
          } else{
              
              if ([user objectForKey:@"fbid"] == nil){
-                 FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+                 FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"/%@/me/",[FBSDKSettings graphAPIVersion]] parameters:@{@"fields": @"id"}];
                  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                      if (!error){
                          // result is a dictionary with the user's Facebook data

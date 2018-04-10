@@ -1443,8 +1443,9 @@ CLCloudinary *cloudinary;
     
     NSString *graphPath;
     if(photoDetails[@"url"])
-        graphPath = @"/me/photos";
-    else graphPath = @"/me/videos";
+        graphPath = [NSString stringWithFormat:@"/%@/me/photos",[FBSDKSettings graphAPIVersion]];
+    else graphPath = [NSString stringWithFormat:@"/%@/me/videos",[FBSDKSettings graphAPIVersion]];
+    
     
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:photoDetails HTTPMethod:@"POST"];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {

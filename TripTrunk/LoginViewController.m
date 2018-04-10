@@ -127,11 +127,9 @@
     NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
     // Login PFUser using Facebook
-    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error)
-    {
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error){
         
-        if (error)
-        {
+        if(error){
             NSString *errorString = [error userInfo][@"error"];
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"_loginWithFacebook:"];
             NSLog(@"%@",errorString);
@@ -139,53 +137,46 @@
             return;
         }
         
-        if (!user)
-        {
+        if(!user){
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
-        } else if (user.isNew)
-        {
+        }else if (user.isNew){
             [self showSetUsernameView];
-            
-        } else
-        {
-            if ([user objectForKey:@"fbid"] == nil)
-            {
-                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-                [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                    if (!error)
-                    {
-                        // result is a dictionary with the user's Facebook data
-                        NSDictionary *userData = (NSDictionary *)result;
-                        PFUser *user = [PFUser currentUser];
-                        NSString *fbid = [userData objectForKey:@"id"];
-                        if (fbid){
-                            [user setObject:fbid forKey:@"fbid"];
-                            [user saveInBackground];
-                        }
-                    }else{
-                        [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"_loginWithFacebook:"];
-                    }
-                    }];
+        }else{
+                if([user objectForKey:@"fbid"] == nil){
+                    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"/%@/me/",[FBSDKSettings graphAPIVersion]] parameters:@{@"fields": @"id"}];
+                        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                            if (!error){
+                                // result is a dictionary with the user's Facebook data
+                                NSDictionary *userData = (NSDictionary *)result;
+                                PFUser *user = [PFUser currentUser];
+                                NSString *fbid = [userData objectForKey:@"id"];
+                                if (fbid){
+                                    [user setObject:fbid forKey:@"fbid"];
+                                    [user saveInBackground];
+                                }
+                            }else{
+                                [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"_loginWithFacebook:"];
+                            }
+                         }];
                     
-                 }
+                  }
+            
+            
                  // Make sure the user has a TripTrunk username
                  if (![user valueForKey:@"completedRegistration"] || [[user valueForKey:@"completedRegistration"] boolValue] == FALSE) {
                      [self showSetUsernameView];
+                 }else{
+                     [self dismissViewControllerAnimated:YES completion:^{ }];
                  }
-                 else
-                 {
-                     [self dismissViewControllerAnimated:YES completion:^{
-                         
-                     }];
-                 }
-                 }
-                 }];
             }
             
- - (void)showSetUsernameView {
-                [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
-                
-            }
+        
+    }];
+}
+            
+-(void)showSetUsernameView {
+    [self performSegueWithIdentifier:@"setUsernameSegue" sender:self];
+}
 
 #pragma mark - Keyboard delegate methods
 

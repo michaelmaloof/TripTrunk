@@ -276,7 +276,7 @@
         // Get the user's Facebook Friends who are already on TripTrunk
         // Facebook doesn't allow us to get the whole friends list, only friends on the app.
         NSMutableString *facebookRequest = [NSMutableString new];
-        [facebookRequest appendString:@"/me/friends"];
+        [facebookRequest appendString:@"/v2.11/me/friends"];
         [facebookRequest appendString:@"?limit=1000"];
         self.facebookRefreshed = YES;
         [[[FBSDKGraphRequest alloc] initWithGraphPath:facebookRequest parameters:@{@"fields": @"id"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
