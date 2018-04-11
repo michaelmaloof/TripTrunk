@@ -317,7 +317,7 @@
 
 - (IBAction)addFacebook:(id)sender{
     //List of permissions we want from the user's facebook to link tp the parse user. We don't need the email since we won't be changing their current email to their facebook email.
-    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
     //Make sure the user isnt already linked with facebook
     if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]){
@@ -361,7 +361,7 @@
 
 -(void)loginWithFacebook{
     // Set permissions required from the facebook user account
-    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends"];
     
     // Login PFUser using Facebook
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error){
@@ -399,7 +399,7 @@
          } else{
              
              if ([user objectForKey:@"fbid"] == nil){
-                 FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+                 FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/v2.12/me/" parameters:@{@"fields": @"id"}];
                  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                      if (!error){
                          // result is a dictionary with the user's Facebook data

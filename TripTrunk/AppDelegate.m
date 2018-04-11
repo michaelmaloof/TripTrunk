@@ -11,6 +11,7 @@
 #import <ParseUI/ParseUI.h>
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import "TTPushNotificationHandler.h"
 #import "UserProfileViewController.h"
 #import "TrunkViewController.h"
@@ -82,9 +83,10 @@
             if([kPARSE_SERVER_KEY isEqualToString:@"https://api-dev.triptrunkapp.com/parse/"])
                 env = NO;
             [TTAnalytics initAnalyticsOnStart:env];
-    }    
+    }
     
-    NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
+    NSLog( @"### running FB sdk version: %@ ###", [FBSDKSettings sdkVersion]);
+//    NSLog( @"### running FB Graph Request version: %@ ###", [[FBSDKGraphRequest alloc] version]);
     
     if(![PFUser currentUser]){
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
@@ -195,7 +197,7 @@
     UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
     UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
     [homeNavController dismissViewControllerAnimated:YES completion:nil];
-    [homeNavController popToRootViewControllerAnimated:YES];
+//    [homeNavController popToRootViewControllerAnimated:YES];
     [tabbarcontroller setSelectedIndex:0];
     NSLog(@"User has logged out");
 }

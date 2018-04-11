@@ -84,7 +84,6 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMEmptyFolder@1x.png"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMEmptyFolder@2x.png"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMSelected.png"
@@ -103,7 +102,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMEmptyFolder@1x.png"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMEmptyFolder@2x.png"
   install_resource "${PODS_ROOT}/GMImagePicker/GMImagePicker/GMSelected.png"

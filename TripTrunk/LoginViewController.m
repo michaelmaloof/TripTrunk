@@ -124,7 +124,7 @@
     [logMeOut logOut];
 
     // Set permissions required from the facebook user account
-    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends", @"read_custom_friendlists" ];
+    NSArray *permissionsArray = @[ @"email", @"public_profile", @"user_friends",];
     
     // Login PFUser using Facebook
     [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error)
@@ -150,7 +150,7 @@
         {
             if ([user objectForKey:@"fbid"] == nil)
             {
-                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/v2.12/me/" parameters:@{@"fields": @"id"}];
                 [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                     if (!error)
                     {
