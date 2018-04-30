@@ -677,8 +677,8 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 //                                                                     };
 //                                            [PFCloud callFunctionInBackground:@"setGeoPointToPublicTripForHomeAtCreation" withParameters:params block:^(NSArray *response, NSError *error) {
 //                                                if(error)
-//                                                    NSLog(@"Error: %@",error);
-//                                                else NSLog(@"Success: %@",response);
+//                                                    NSLog(@"%@ :: Error: %@",trip.objectId,error);
+//                                                else NSLog(@"%@ :: Success: %@",trip.objectId,response);
 //                                            }];
 //
 //                                        }else{
@@ -692,14 +692,16 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 //                    }
 //                }];
     
-    
-//    [PFCloud callFunctionInBackground:@"copyHomeAtCreationGeoPointToTrip" withParameters:nil block:^(id  _Nullable object, NSError * _Nullable error) {
+//-------------------------------------------
+//    NSDictionary *params = @{@"limit" : @"500"};
+//
+//    [PFCloud callFunctionInBackground:@"copyHomeAtCreationGeoPointToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
 //        if(!error)
 //            NSLog(@"%@",object);
 //        else NSLog(@"%@",error);
 //
 //    }];
-    
+//-------------------------------------------
     
 //        PFQuery *aquery = [PFQuery queryWithClassName:@"Trip"];
 //        [aquery whereKeyDoesNotExist:@"homeAtCreation"];
@@ -755,39 +757,44 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 //            }];
 //}
 
-//-(void)updateTripDatabaseToIncludeHomeAtCreation{
+-(void)updateTripDatabaseToIncludeHomeAtCreation{
+//    int limitNum = 1000;
 //    NSMutableDictionary *latlong = [[NSMutableDictionary alloc] init];
 //    PFQuery *aquery = [PFQuery queryWithClassName:@"PublicTripDetail"];
 //    [aquery whereKeyDoesNotExist:@"homeAtCreation"];
 //    [aquery whereKeyExists:@"trip"];
-////    [aquery setLimit:500];
+////    [aquery setLimit:limitNum];
 //    [aquery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//        NSMutableArray *array = [[NSMutableArray alloc] init];
-//        for(id ptd in objects){
-//            [array addObject:ptd];
-//        }
+////        NSMutableArray *array = [[NSMutableArray alloc] init];
+////        for(id ptd in objects){
+////            [array addObject:ptd];
+////        }
 //
 //        PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
 //        [query includeKey:@"creator"];
 //        [query includeKey:@"publicTripDetail"];
-//        [query whereKey:@"publicTripDetail" containedIn:array];
-////        [query setLimit:500];
+//        [query whereKey:@"publicTripDetail" containedIn:objects];
+////        [query setLimit:limitNum];
 //        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
 //
 //            for(Trip *trip in objects){
 //                PFUser *creator = trip.creator;
-//                PFGeoPoint *gp = latlong[@"hometown"];
+////                PFGeoPoint *gp = latlong[@"hometown"];
 //
-//                if(gp){
-//                    PFObject *detail = trip.publicTripDetail;
-//                    detail[@"homeAtCreation"] = gp;
-//                    [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-//                        if(succeeded)
-//                            NSLog(@"done with dictionary");
-//                        else NSLog(@"failed with dictionary ");
-//                    }];
-//                }else{
-//                    NSString *hometown = creator[@"hometown"];
+////                if(gp){
+////                    PFObject *detail = trip.publicTripDetail;
+////                    detail[@"homeAtCreation"] = gp;
+////                    [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+////                        if(succeeded)
+////                            NSLog(@"done with dictionary");
+////                        else NSLog(@"failed with dictionary ");
+////                    }];
+////                }else{
+//                NSString *hometown;
+//                if(creator[@"hometown"])
+//                    hometown = creator[@"hometown"];
+//                else hometown = @"Los Angeles, CA";
+//
 //                    [[TTUtility sharedInstance] locationsForSearch:hometown block:^(NSArray *objects, NSError *error) {
 //                        if(!error){
 //                            PFGeoPoint *hometownGeopoint = [[PFGeoPoint alloc] init];
@@ -805,13 +812,13 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 //                            }];
 //                        }
 //                    }];
-//                }
+////                }
 //            }
 //        }];
 //
 //    }];
 //
-//
-//
-//}
+
+
+}
 @end
