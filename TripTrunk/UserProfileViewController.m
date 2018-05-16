@@ -244,7 +244,7 @@
     //set the navBar title to the username
     self.title  = [NSString stringWithFormat:@"%@",self.user[@"username"]];
     //prevent username from becoming tabbar title
-    [self tabBarTitle];
+//    [self tabBarTitle];
     //combine first and last name to full name to display. If they don't have a first and last name, show "name" (the old way we tracked user's name)
     [self setNameBasedOnPrivacy:nil];
 }

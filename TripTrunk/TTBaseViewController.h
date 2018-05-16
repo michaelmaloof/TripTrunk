@@ -21,7 +21,7 @@
  *
  *
  */
--(void)tabBarTitle;
+//-(void)tabBarTitle;
 
 
 @end

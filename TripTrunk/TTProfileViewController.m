@@ -74,6 +74,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if(!self.user)
+        self.user = [PFUser currentUser];
     
     //set user details to main details
     self.miniUserDetails.alpha = 0;
@@ -297,13 +299,13 @@
 
 #pragma mark - GoogleMapView
 -(void)initMap{
-    double mapOffset = -2.0; //<------determine if the map should offset because a point is below the photos
+    double mapOffset = -1.75; //<------determine if the map should offset because a point is below the photos
     
     //Map View of trunk location
 //    self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, 375, 200)];
     PFGeoPoint *geoPoint = self.user[@"hometownGeoPoint"];
-    if(!geoPoint)
-        geoPoint = [PFGeoPoint geoPointWithLatitude:32.715736 longitude:-117.161087];//<----- this is temporary. Delete this when hometownGeoPoint is added to everyone's database row
+//    if(!geoPoint)
+//        geoPoint = [PFGeoPoint geoPointWithLatitude:32.715736 longitude:-117.161087];//<----- this is temporary. Delete this when hometownGeoPoint is added to everyone's database row
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude+mapOffset
                                                             longitude:geoPoint.longitude
                                                                  zoom:7];
@@ -410,7 +412,7 @@
 
 -(void)refreshSocialStatCounts{
     //FIXME: CACHE THESE
-    [SocialUtility followerCount:_user block:^(int count, NSError *error) {
+    [SocialUtility followerCount:self.user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
 //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
 //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
@@ -418,7 +420,7 @@
         });
     }];
     
-    [SocialUtility followingCount:_user block:^(int count, NSError *error) {
+    [SocialUtility followingCount:self.user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
 //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
 //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
@@ -426,7 +428,7 @@
         });
     }];
     
-    [SocialUtility trunkCount:_user block:^(int count, NSError *error) {
+    [SocialUtility trunkCount:self.user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
 //            self.trunkCount= count;
             

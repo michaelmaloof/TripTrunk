@@ -22,6 +22,7 @@
 #import "SocialUtility.h"
 #import "TTAnalytics.h"
 #import "TTTimelineViewController.h"
+#import "TTMainTabBarController.h"
 
 @interface TTAddPhotosViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
 @property (strong, nonatomic) PHFetchResult *assets;
@@ -847,16 +848,23 @@
     if(self.photosToAdd.count == self.taskCount){
         if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)]){
             [self.delegate photoUploadCompleted:self.photosToAdd];
-            [self.navigationController popViewControllerAnimated:YES];
+//            [self.navigationController popViewControllerAnimated:YES];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+            TTMainTabBarController *profileViewController = (TTMainTabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"TTMainTabBarController"];
+            [self.navigationController pushViewController:profileViewController animated:YES];
         }else{
-            NSArray * controllerArray = [[self navigationController] viewControllers];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+            TTMainTabBarController *profileViewController = (TTMainTabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"TTMainTabBarController"];
+            [self.navigationController pushViewController:profileViewController animated:YES];
             
-            for (UIViewController *controller in controllerArray){
-                if([controller isKindOfClass:[TTTimelineViewController class]]){
-                    [self.navigationController popToViewController:controller animated:YES];
-                    break;
-                }
-            }
+//            NSArray * controllerArray = [[self navigationController] viewControllers];
+//            //FIXME: Do we need this anymore?
+//            for (UIViewController *controller in controllerArray){
+//                if([controller isKindOfClass:[TTTimelineViewController class]]){
+//                    [self.navigationController popToViewController:controller animated:YES];
+//                    break;
+//                }
+//            }
         }
         
     }

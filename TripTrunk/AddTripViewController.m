@@ -172,7 +172,7 @@
 -(void)setUpTrunkCreation{
     _isEditing = NO;
     self.title  = NSLocalizedString(@"Add New Trunk", @"Add New Trunk");
-    [self tabBarTitle];
+//    [self tabBarTitle];
     [self setOriginalDateTextViews];
     self.trip = [[Trip alloc] init];
     self.cancelBar.title = @"";
@@ -475,7 +475,7 @@
         
         if (error) {
             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-            [self tabBarTitle];
+//            [self tabBarTitle];
             [self notEnoughInfo:NSLocalizedString(@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.",@"Something seems to have gone wrong. Please try again later and make sure you're connected to the internet.")];
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"citySearchDidSelectLocation:"];
         }
@@ -592,12 +592,12 @@
         else {
             [self notEnoughInfo:NSLocalizedString(@"Please fill out all boxes",@"Please fill out all boxes")];
             self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-            [self tabBarTitle];
+//            [self tabBarTitle];
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
     
         self.title  = NSLocalizedString(@"Add New Trunk",@"Add New Trunk");
-        [self tabBarTitle];
+//        [self tabBarTitle];
 
         return;
     }
@@ -613,7 +613,7 @@
     [alertView addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete")];
     alertView.tag = 0;
     [alertView show];
-    [self tabBarTitle];
+//    [self tabBarTitle];
     
 }
 
@@ -693,7 +693,7 @@
     [alertView addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
     [alertView show];
     
-    [self tabBarTitle];
+//    [self tabBarTitle];
 }
 
 #pragma mark - AlertView
@@ -874,7 +874,7 @@
                  }
              }
              // TODO: Set title image
-             [self tabBarTitle];
+//             [self tabBarTitle];
          });
      }];
     

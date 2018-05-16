@@ -38,6 +38,7 @@ static NSString *const kCountryString  = @"Country";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     self.location = [[CLLocation alloc] init];
     if([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized){

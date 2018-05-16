@@ -13,6 +13,9 @@
 #import "Trip.h"
 #import "UIImageView+AFNetworking.h"
 #import "TTTrunkViewController.h"
+#import "TTOnboardingViewController.h"
+#import "TTCreateTrunkViewController.h"
+#import "TTActivityNotificationsViewController.h"
 
 @import GoogleMaps;
 
@@ -41,7 +44,6 @@
     [self initMap];
 //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
     [self initTrips]; //not sure how we're doing this yet so may not do this at all
-    
 }
 
 #pragma mark - UICollectionView
@@ -78,6 +80,8 @@
      
     }];
 }
+
+
 
 -(void)initTrips{
     
@@ -213,6 +217,13 @@
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
+    TTTrunkViewController *trunkViewController = (TTTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTrunkViewController"];
+    trunkViewController.trip = self.sortedArray[indexPath.row];
+    [self.navigationController pushViewController:trunkViewController animated:YES];
+}
+
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
                      withVelocity:(CGPoint)velocity
@@ -273,7 +284,7 @@
 
 #pragma mark - Google Maps
 -(void)initMap{
-    double mapOffset = 1.725;
+    double mapOffset = 1.425;
     PFGeoPoint *geoPoint = self.user[@"hometownGeoPoint"];
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude-mapOffset
                                                             longitude:geoPoint.longitude
@@ -303,7 +314,7 @@
 }
 
 -(void)updateMap:(PFGeoPoint*)geoPoint{
-    double mapOffset = 1.725;
+    double mapOffset = 1.425;
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude-mapOffset
                                                             longitude:geoPoint.longitude
                                                                  zoom:7];
@@ -346,5 +357,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)goToCreateTrunk:(UIButton *)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
+    TTCreateTrunkViewController *createTrunkViewController = (TTCreateTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CreateTrunkViewController"];
+    //    activityViewController.trip
+    [self.navigationController pushViewController:createTrunkViewController animated:YES];
+}
 
+- (IBAction)goToActivity:(UIButton *)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Activity" bundle:nil];
+    TTActivityNotificationsViewController *activityViewController = (TTActivityNotificationsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTActivityNotificationsViewController"];
+    //    activityViewController.trip
+    [self.navigationController pushViewController:activityViewController animated:YES];
+}
 @end

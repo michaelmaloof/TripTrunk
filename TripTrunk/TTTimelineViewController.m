@@ -641,7 +641,7 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 }
 
 
-//NOTE: THIS IS TEMPORARY
+
 - (IBAction)goToActivity:(id)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Activity" bundle:nil];
     TTActivityNotificationsViewController *activityViewController = (TTActivityNotificationsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTActivityNotificationsViewController"];
@@ -656,6 +656,8 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
     //    activityViewController.trip
     [self.navigationController pushViewController:createTrunkViewController animated:YES];
 }
+
+
 
 -(void)updateHomeAtCreationInTrip{
 //                PFQuery *query = [PFQuery queryWithClassName:@"Trip"];

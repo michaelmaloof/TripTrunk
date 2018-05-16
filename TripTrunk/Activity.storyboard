@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Avenir.ttc">
-            <string>Avenir-Book</string>
-            <string>Avenir-Heavy</string>
-            <string>Avenir-Light</string>
-            <string>Avenir-Medium</string>
-            <string>Avenir-Roman</string>
-        </array>
-    </customFonts>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="2hR-EO-xiQ">
+            <objects>
+                <navigationController storyboardIdentifier="TTActivityNotificationsNavController" navigationBarHidden="YES" id="syM-E6-YHS" sceneMemberID="viewController">
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0OD-3j-XWN">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="v5Q-sR-QF8" kind="relationship" relationship="rootViewController" id="WZK-li-4pe"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IMY-nu-3GS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-250" y="125"/>
+        </scene>
         <!--TTActivityNotificationsViewController-->
         <scene sceneID="kUI-v3-4jY">
             <objects>
@@ -38,7 +46,7 @@
                                 </constraints>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vx1-HZ-y3T">
-                                <rect key="frame" x="0.0" y="142" width="375" height="491"/>
+                                <rect key="frame" x="0.0" y="142" width="375" height="583"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" red="0.95999234914779663" green="0.98417359590530396" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
@@ -288,7 +296,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zv3-RQ-9tT" customClass="TTOnboardingButton">
-                                <rect key="frame" x="20" y="563" width="50" height="50"/>
+                                <rect key="frame" x="20" y="583" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="0in-2C-ufT"/>
@@ -323,10 +331,10 @@
                             <constraint firstItem="JFh-HK-h53" firstAttribute="leading" secondItem="Zgb-uG-EZs" secondAttribute="leading" id="6aH-eN-Agf"/>
                             <constraint firstAttribute="trailing" secondItem="afA-uG-pPp" secondAttribute="trailing" id="H60-6k-e9s"/>
                             <constraint firstAttribute="trailing" secondItem="obH-27-ifT" secondAttribute="trailing" id="JRh-fa-vXQ"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="34" id="Jb4-G7-u0q"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-58" id="Jb4-G7-u0q"/>
                             <constraint firstItem="M4l-ag-Z2h" firstAttribute="top" secondItem="Zgb-uG-EZs" secondAttribute="top" constant="120" id="NAh-AI-fFn"/>
                             <constraint firstAttribute="topMargin" secondItem="afA-uG-pPp" secondAttribute="top" id="P8g-Pt-sFu"/>
-                            <constraint firstItem="Zv3-RQ-9tT" firstAttribute="bottom" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-20" id="PsF-R0-2gY"/>
+                            <constraint firstItem="Zv3-RQ-9tT" firstAttribute="bottom" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-92" id="PsF-R0-2gY"/>
                             <constraint firstItem="6x0-04-IgA" firstAttribute="top" secondItem="obH-27-ifT" secondAttribute="bottom" constant="-3" id="Uxr-5g-HGM"/>
                             <constraint firstItem="vx1-HZ-y3T" firstAttribute="leading" secondItem="Zv3-RQ-9tT" secondAttribute="leading" constant="-20" id="YMH-8y-lW1"/>
                             <constraint firstAttribute="trailing" secondItem="JFh-HK-h53" secondAttribute="trailing" id="aKB-Z7-h7b"/>

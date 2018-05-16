@@ -14,7 +14,7 @@
 #import "TTAnalytics.h"
 #import "SocialUtility.h"
 #import "SharkfoodMuteSwitchDetector.h"
-#import "HomeMapViewController.h"
+#import "TTHomeMapViewController.h"
 #import "MBProgressHUD.h"
 
 @interface TTPhotoViewController () <UIGestureRecognizerDelegate,UIScrollViewDelegate>
@@ -124,25 +124,26 @@
     [self clearVideo];
 }
 
-//WHAT IS THIS FOR?
+
 -(void)markPhotoAsViewed{
+    
     for (UINavigationController *controller in self.tabBarController.viewControllers)
     {
-        for (HomeMapViewController *view in controller.viewControllers)
-        {
-            if ([view isKindOfClass:[HomeMapViewController class]])
-            {
-                if (controller == (UINavigationController*)self.tabBarController.viewControllers[0]){
-                    if (view == (HomeMapViewController*)controller.viewControllers[0]){
-                        
+//        for (TTHomeMapViewController *view in controller.viewControllers)
+//        {
+            if ([controller isKindOfClass:[TTHomeMapViewController class]]){
+                TTHomeMapViewController *view = (TTHomeMapViewController*)controller;
+//                if (controller == (TTHomeMapViewController*)self.tabBarController.viewControllers[0]){
+//                    if (view == (TTHomeMapViewController*)controller.viewControllers[0]){
+                
                         [view.viewedPhotos addObject:self.photo.objectId];
                         [TTAnalytics photoViewed:self.photo.objectId];
                         if ([(NSObject*)self.delegate respondsToSelector:@selector(photoWasViewed:)])
                             [self.delegate photoWasViewed:self.photo];
-                    }
-                }
+//                    }
+//                }
             }
-        }
+//        }
     }
 }
 

@@ -110,15 +110,16 @@
     
     [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
     
-//REPAIR: This needs to be fixed for new design
-//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
-//    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
-//    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
-//
-//    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
+
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
+    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
+
+    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
 //    [self setupSearchTabBar];
 //    [self setupActivityTabBar];
 //    [self setupProfileTabBar];
+//    [self setupTabbar];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -202,74 +203,97 @@
     NSLog(@"User has logged out");
 }
 
-#pragma mark - Tab Bar
-
-/**
- *  Creates the Search Tab in the tab bar.
- *  This is necessary because the FindFriendsViewController does not use the storyboard, and so does not work correctly in a storyboard-managed tab bar
- */
-- (void)setupSearchTabBar {
-    // Set up search tab
-    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-    FindFriendsViewController *ffvc = [[FindFriendsViewController alloc] init];
-    UINavigationController *searchNavController = [[UINavigationController alloc] initWithRootViewController:ffvc];
-    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass_tabIcon"] tag:3];
-    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    [searchNavController setTabBarItem:searchItem];
-    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    
-    if (vcs.count == 2) {
-        // While we still have 2 tabs created in Storyboard, then this is the one that SHOULD always be true. The other 2 if-cases are just in case.
-        [vcs insertObject:searchNavController atIndex:1];
-    }
-    else if (vcs.count > 2) {
-        [vcs replaceObjectAtIndex:2 withObject:searchNavController];
-    }
-    else {
-        [vcs addObject:searchNavController];
-    }
-    [tabbarcontroller setViewControllers:vcs];
-    
-}
-
-- (void)setupActivityTabBar {
-    // Set up Activity tab
-    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-    ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
-    UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
-    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"comment_tabIcon"] tag:3];
-    [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    
-    [activityNavController setTabBarItem:activityItem];
-    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    if (vcs.count > 3) {
-        [vcs replaceObjectAtIndex:3 withObject:activityNavController];
-    }
-    else {
-        [vcs addObject:activityNavController];
-    }
-    [tabbarcontroller setViewControllers:vcs];
-}
-
-- (void)setupProfileTabBar {
-    // Set up search tab
-    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-    UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:3];
-    [item setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
-    item.title = @"";
-    [navController setTabBarItem:item];
-    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
-    if (vcs.count > 4) {
-        [vcs replaceObjectAtIndex:4 withObject:navController];
-    }
-    else {
-        [vcs addObject:navController];
-    }
-    [tabbarcontroller setViewControllers:vcs];
-    
-}
+//#pragma mark - Tab Bar
+//
+///**
+// *  Creates the Search Tab in the tab bar.
+// *  This is necessary because the FindFriendsViewController does not use the storyboard, and so does not work correctly in a storyboard-managed tab bar
+// */
+//- (void)setupSearchTabBar {
+//    // Set up search tab
+//    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+//    FindFriendsViewController *ffvc = [[FindFriendsViewController alloc] init];
+//    UINavigationController *searchNavController = [[UINavigationController alloc] initWithRootViewController:ffvc];
+//    UITabBarItem *searchItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"searchGlass_tabIcon"] tag:3];
+//    [searchItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    [searchNavController setTabBarItem:searchItem];
+//    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+//    
+//    if (vcs.count == 2) {
+//        // While we still have 2 tabs created in Storyboard, then this is the one that SHOULD always be true. The other 2 if-cases are just in case.
+//        [vcs insertObject:searchNavController atIndex:1];
+//    }
+//    else if (vcs.count > 2) {
+//        [vcs replaceObjectAtIndex:2 withObject:searchNavController];
+//    }
+//    else {
+//        [vcs addObject:searchNavController];
+//    }
+//    [tabbarcontroller setViewControllers:vcs];
+//    
+//}
+//
+//- (void)setupActivityTabBar {
+//    // Set up Activity tab
+//    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+//    ActivityListViewController *avc = [[ActivityListViewController alloc] initWithActivities:[NSArray array]];
+//    UINavigationController *activityNavController = [[UINavigationController alloc] initWithRootViewController:avc];
+//    UITabBarItem *activityItem = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"comment_tabIcon"] tag:3];
+//    [activityItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    
+//    [activityNavController setTabBarItem:activityItem];
+//    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+//    if (vcs.count > 3) {
+//        [vcs replaceObjectAtIndex:3 withObject:activityNavController];
+//    }
+//    else {
+//        [vcs addObject:activityNavController];
+//    }
+//    [tabbarcontroller setViewControllers:vcs];
+//}
+//
+//- (void)setupProfileTabBar {
+//    // Set up search tab
+//    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
+//    UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+//    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:3];
+//    [item setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    item.title = @"";
+//    [navController setTabBarItem:item];
+//    NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:[tabbarcontroller viewControllers]];
+//    if (vcs.count > 4) {
+//        [vcs replaceObjectAtIndex:4 withObject:navController];
+//    }
+//    else {
+//        [vcs addObject:navController];
+//    }
+//    [tabbarcontroller setViewControllers:vcs];
+//    
+//}
+//
+//-(void)setupTabbar{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+//    UITabBarController *tabBarController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
+////    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+////    UserProfileViewController *viewController = [[UserProfileViewController alloc] initWithUser:[PFUser currentUser]];
+////    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+//    UITabBarItem *item1 = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:0];
+//    UITabBarItem *item2 = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:1];
+//    UITabBarItem *item3 = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"profile_tabIcon"] tag:2];
+//    [item1 setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    item1.title = NSLocalizedString(@"Travel Feed", @"Travel Feed");
+//    [tabBarController setTabBarItem:item1];
+//    
+//    [item2 setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    item2.title = NSLocalizedString(@"My Journey", @"My Journey");
+//    [tabBarController setTabBarItem:item2];
+//    
+//    [item3 setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+//    item3.title = NSLocalizedString(@"Item", @"Item");
+//    [tabBarController setTabBarItem:item3];
+//    
+//}
 
 #pragma mark - Remote Notifications
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -384,66 +408,66 @@
  *
  *  @return return BOOL description
  */
-- (BOOL)handleShortCutItem : (UIApplicationShortcutItem *)shortcutItem launch:(NSDictionary*)launchOptions{
-    
-    BOOL handled = NO;
-    
-    NSString *shortcutSearch = @"Search";
-    NSString *shortcutActivity = @"Activity";
-    NSString *shortcutTrunk = @"Trunk";
-    NSString *shortcutRecent = @"Recent";
-
-    [PFUser enableRevocableSessionInBackground];
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    [PFImageView class];
-    
-    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
-//REPAIR: This needs to be fixed for new design
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
-    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
-    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
-    
-    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
-    
-    [self setupSearchTabBar];
-    [self setupActivityTabBar];
-    [self setupProfileTabBar];
-
-
-    if ([shortcutItem.type isEqualToString:shortcutSearch]) {
-        handled = YES;
-        
-        [(UITabBarController*)self.window.rootViewController setSelectedIndex:1];
-
-    }
-    
-    else if ([shortcutItem.type isEqualToString:shortcutActivity]) {
-        handled = YES;
-        
-        [(UITabBarController*)self.window.rootViewController setSelectedIndex:3];
-
-    }
-    
-    else if ([shortcutItem.type isEqualToString:shortcutTrunk]) {
-        handled = YES;
-        
-        [(UITabBarController*)self.window.rootViewController setSelectedIndex:2];
-
-    }
-    
-    else if ([shortcutItem.type isEqualToString:shortcutRecent]) {
-        
-        handled = YES;
-        
-        [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
-
-
-
-    }
-
-    
-    return handled;
-}
+//- (BOOL)handleShortCutItem : (UIApplicationShortcutItem *)shortcutItem launch:(NSDictionary*)launchOptions{
+//
+//    BOOL handled = NO;
+//
+//    NSString *shortcutSearch = @"Search";
+//    NSString *shortcutActivity = @"Activity";
+//    NSString *shortcutTrunk = @"Trunk";
+//    NSString *shortcutRecent = @"Recent";
+//
+//    [PFUser enableRevocableSessionInBackground];
+//    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+//    [PFImageView class];
+//
+//    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:launchOptions];
+//////REPAIR: This needs to be fixed for new design
+////    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
+////    UITabBarController *rootViewController = (UITabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"ttTabBarController"];
+////    [[UIApplication sharedApplication].keyWindow setRootViewController:rootViewController];
+////
+////    [self handlePush:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]]; // Call the handle push method with the payload. It won't do anything if there's no payload
+////
+//////    [self setupSearchTabBar];
+//////    [self setupActivityTabBar];
+//////    [self setupProfileTabBar];
+////
+////
+////    if ([shortcutItem.type isEqualToString:shortcutSearch]) {
+////        handled = YES;
+////
+////        [(UITabBarController*)self.window.rootViewController setSelectedIndex:1];
+////
+////    }
+////
+////    else if ([shortcutItem.type isEqualToString:shortcutActivity]) {
+////        handled = YES;
+////
+////        [(UITabBarController*)self.window.rootViewController setSelectedIndex:3];
+////
+////    }
+////
+////    else if ([shortcutItem.type isEqualToString:shortcutTrunk]) {
+////        handled = YES;
+////
+////        [(UITabBarController*)self.window.rootViewController setSelectedIndex:2];
+////
+////    }
+////
+////    else if ([shortcutItem.type isEqualToString:shortcutRecent]) {
+////
+////        handled = YES;
+////
+////        [(UITabBarController*)self.window.rootViewController setSelectedIndex:0];
+////
+////
+////
+////    }
+//
+//
+//    return handled;
+//}
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
     
@@ -531,25 +555,25 @@
     NSLog(@"Is this version out of date? %@",([TTUtility checkForUpdate] ? @"YES" : @"NO"));
 }
 
--(void)checkForShortCutItems:(NSDictionary*)launchOptions{
-    // UIApplicationShortcutItem is available in iOS 9 or later.
-    if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
-        // If a shortcut was launched, display its information and take the appropriate action
-        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKeyedSubscript:UIApplicationLaunchOptionsShortcutItemKey];
-        if(shortcutItem)
-        {
-            // When the app launch at first time, this block can not called.
-            [self handleShortCutItem:shortcutItem launch:launchOptions];
-            
-        }else{
-            // normal app launch process without quick action
-            [self launchWithoutQuickAction:launchOptions];
-        }
-    }else{
-        // Less than iOS9 or later
-        [self launchWithoutQuickAction:launchOptions];
-    }
-}
+//-(void)checkForShortCutItems:(NSDictionary*)launchOptions{
+//    // UIApplicationShortcutItem is available in iOS 9 or later.
+//    if([[UIApplicationShortcutItem class] respondsToSelector:@selector(new)]){
+//        // If a shortcut was launched, display its information and take the appropriate action
+//        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKeyedSubscript:UIApplicationLaunchOptionsShortcutItemKey];
+//        if(shortcutItem)
+//        {
+//            // When the app launch at first time, this block can not called.
+//            [self handleShortCutItem:shortcutItem launch:launchOptions];
+//            
+//        }else{
+//            // normal app launch process without quick action
+//            [self launchWithoutQuickAction:launchOptions];
+//        }
+//    }else{
+//        // Less than iOS9 or later
+//        [self launchWithoutQuickAction:launchOptions];
+//    }
+//}
 
 -(void)handleFontOutput{
     //    //Font name console output. Fonts can be tricky. You need to know the exact name to reference them.

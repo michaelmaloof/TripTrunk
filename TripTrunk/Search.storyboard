@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="iDE-h3-MlP">
+            <objects>
+                <navigationController storyboardIdentifier="TTSearchNavController" navigationBarHidden="YES" id="Oc2-ll-H99" sceneMemberID="viewController">
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wOg-Nh-T5B">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="X6y-kH-6Ba" kind="relationship" relationship="rootViewController" id="kIu-HX-eoW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lkg-YV-v35" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-238" y="113"/>
+        </scene>
+        <!--Search View Controller-->
+        <scene sceneID="j2B-t8-mDT">
+            <objects>
+                <viewController id="X6y-kH-6Ba" customClass="TTSearchViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="x49-Cg-kCd"/>
+                        <viewControllerLayoutGuide type="bottom" id="rle-d5-hva"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qXj-Sx-KHm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="cVC-Wd-Od3">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="215"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="215" id="y1c-Ab-KMj"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNg-dV-g1j">
+                                <rect key="frame" x="0.0" y="37" width="375" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="Bte-gr-e9F"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="18"/>
+                                <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VRW-RY-paJ">
+                                <rect key="frame" x="0.0" y="124" width="375" height="543"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="zeY-cf-7ty" customClass="TTFindFriendsViewCell">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zeY-cf-7ty" id="f2V-se-Lhm">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="dGP-cJ-mWw" customClass="TTUserProfileImage">
+                                                    <rect key="frame" x="14" y="14" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="FQC-n5-Tlx"/>
+                                                        <constraint firstAttribute="height" constant="50" id="ukX-F8-PtE"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Name Last Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z0v-io-V6Y">
+                                                    <rect key="frame" x="72" y="29" width="289" height="20"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dvg-zg-UoL">
+                                                    <rect key="frame" x="282" y="24" width="85" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="85" id="7lA-43-iZo"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="f2V-se-Lhm" secondAttribute="centerY" id="31C-s4-KSq"/>
+                                                <constraint firstItem="Z0v-io-V6Y" firstAttribute="centerY" secondItem="dvg-zg-UoL" secondAttribute="centerY" id="Rco-eR-dHh"/>
+                                                <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="Z0v-io-V6Y" secondAttribute="centerY" id="Rwb-63-cHP"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="dvg-zg-UoL" secondAttribute="trailing" constant="-8" id="fJn-2F-Aof"/>
+                                                <constraint firstItem="Z0v-io-V6Y" firstAttribute="leading" secondItem="dGP-cJ-mWw" secondAttribute="trailing" constant="8" id="fpv-yi-DFA"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Z0v-io-V6Y" secondAttribute="trailing" constant="-1" id="pGy-q2-xLs"/>
+                                                <constraint firstItem="dGP-cJ-mWw" firstAttribute="leading" secondItem="f2V-se-Lhm" secondAttribute="leadingMargin" constant="-1" id="wU6-wn-v3W"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="firstLastName" destination="Z0v-io-V6Y" id="KMi-n3-Ax1"/>
+                                            <outlet property="followButton" destination="dvg-zg-UoL" id="MTh-Pw-9qF"/>
+                                            <outlet property="profilePic" destination="dGP-cJ-mWw" id="wBB-6J-IJJ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="X6y-kH-6Ba" id="dlk-UU-1SZ"/>
+                                    <outlet property="delegate" destination="X6y-kH-6Ba" id="xAe-4w-RYT"/>
+                                </connections>
+                            </tableView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Friends" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fTZ-qd-JuW" customClass="TTOnboardingTextField">
+                                <rect key="frame" x="37" y="100" width="302" height="48"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="4IH-me-qGl"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="15"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" textContentType="name"/>
+                                <connections>
+                                    <outlet property="delegate" destination="X6y-kH-6Ba" id="Z63-Nf-v3p"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="top" secondItem="x49-Cg-kCd" secondAttribute="bottom" constant="17" id="2l4-E8-ifx"/>
+                            <constraint firstItem="fTZ-qd-JuW" firstAttribute="top" secondItem="HNg-dV-g1j" secondAttribute="bottom" constant="38" id="5IT-WL-R8d"/>
+                            <constraint firstItem="VRW-RY-paJ" firstAttribute="bottom" secondItem="rle-d5-hva" secondAttribute="top" id="K7o-dd-gKt"/>
+                            <constraint firstItem="cVC-Wd-Od3" firstAttribute="top" secondItem="qXj-Sx-KHm" secondAttribute="top" id="LAY-lS-l5r"/>
+                            <constraint firstItem="cVC-Wd-Od3" firstAttribute="leading" secondItem="HNg-dV-g1j" secondAttribute="leading" id="Lzq-11-i8t"/>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="centerX" secondItem="fTZ-qd-JuW" secondAttribute="centerX" id="UUr-yB-1yf"/>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="leading" secondItem="VRW-RY-paJ" secondAttribute="leading" id="UWf-Bs-0yD"/>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="trailing" secondItem="cVC-Wd-Od3" secondAttribute="trailing" id="qQE-zg-kYb"/>
+                            <constraint firstItem="cVC-Wd-Od3" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" id="rj0-a3-dvb"/>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="trailing" secondItem="VRW-RY-paJ" secondAttribute="trailing" id="tog-tY-YSh"/>
+                            <constraint firstItem="cVC-Wd-Od3" firstAttribute="baseline" secondItem="VRW-RY-paJ" secondAttribute="firstBaseline" constant="91" id="uMZ-NB-Q5F"/>
+                            <constraint firstItem="fTZ-qd-JuW" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" constant="37" id="vvT-no-gQD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="O5w-fh-cwc"/>
+                    <connections>
+                        <outlet property="searchTextField" destination="fTZ-qd-JuW" id="ORw-vY-6oO"/>
+                        <outlet property="tableView" destination="VRW-RY-paJ" id="kdt-1j-Lja"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gpR-fB-Kge" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="453.60000000000002" y="110.19490254872565"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="tt_Onboarding_CliffsRoad" width="375" height="258"/>
+        <image name="tt_square_placeholder" width="255" height="255"/>
+    </resources>
+</document>

@@ -22,7 +22,7 @@
 #import "TTAddMembersViewController.h"
 #import "TTPopoverProfileViewController.h"
 #import "TTPreviewPhotoViewController.h"
-
+#import "TTOnboardingButton.h"
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
@@ -34,6 +34,7 @@
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPreviewPhotoViewController *popoverPreviewPhotoViewController;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
+@property (strong, nonatomic) IBOutlet TTOnboardingButton *addToTrunkButton;
 @end
 
 @implementation TTTrunkViewController
@@ -66,7 +67,7 @@
     
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
     [photoQuery whereKey:@"trip" equalTo:trunk];
-    [photoQuery whereKey:@"user" equalTo:creator];
+//    [photoQuery whereKey:@"user" equalTo:creator];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(!error){
             [self.photos addObjectsFromArray:objects];
@@ -83,6 +84,11 @@
         [self.trunkMembers addObjectsFromArray:users];
         [self.membersCollectionView reloadData];
     }];
+    
+    if(![self.trunkMembers containsObject:[PFUser currentUser]]){
+        self.addToTrunkButton.enabled = NO;
+        self.addToTrunkButton.hidden = YES;
+    }
     
 }
 
@@ -141,7 +147,10 @@
             
             //Map View of trunk location
             self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200)];
-            PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:self.excursion.trunk.lat longitude:self.excursion.trunk.longitude];
+            PFGeoPoint *geoPoint;
+            if(self.excursion)
+                geoPoint = [PFGeoPoint geoPointWithLatitude:self.excursion.trunk.lat longitude:self.excursion.trunk.longitude];
+            else geoPoint = [PFGeoPoint geoPointWithLatitude:self.trip.lat longitude:self.trip.longitude];
             GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude+mapOffset
                                                                     longitude:geoPoint.longitude
                                                                          zoom:7];
@@ -163,7 +172,9 @@
             [collectionView addSubview:self.googleMapView];
             
             [self addPointToMapWithGeoPoint:geoPoint];
-            [self addLabelToMapWithGeoPoint:geoPoint AndText:self.excursion.trunk.city];
+            if(self.excursion)
+                [self addLabelToMapWithGeoPoint:geoPoint AndText:self.excursion.trunk.city];
+            else [self addLabelToMapWithGeoPoint:geoPoint AndText:self.trip.city];
             
             //Members Collection View
             UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
@@ -198,7 +209,8 @@
             button.layer.masksToBounds = YES;
             button.layer.cornerRadius = 5;
             button.imageView.contentMode = UIViewContentModeScaleAspectFill;
-            [collectionView addSubview:button];
+            if([self.trunkMembers containsObject:[PFUser currentUser]])
+                [collectionView addSubview:button];
         }else{
             CGRect frame;
             Photo *photo = self.photos[indexPath.row];
@@ -284,6 +296,36 @@
         
         if(kind == UICollectionElementKindSectionHeader){
             theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
+            CGRect labelFrame = CGRectMake(8, 0, 340, 21);
+            UILabel *trunkTitleLabel = [[UILabel alloc] initWithFrame:labelFrame];
+            trunkTitleLabel.text = self.trip.name;
+            trunkTitleLabel.font = [TTFont tripTrunkFont16];
+            trunkTitleLabel.numberOfLines = 1;
+            trunkTitleLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
+            trunkTitleLabel.adjustsFontSizeToFitWidth = YES;
+//            initialsLabel.adjustsLetterSpacingToFitWidth = YES;
+            trunkTitleLabel.minimumScaleFactor = 10.0f/12.0f;
+            trunkTitleLabel.clipsToBounds = YES;
+            trunkTitleLabel.backgroundColor = [UIColor clearColor];
+            trunkTitleLabel.textColor = [UIColor darkGrayColor];
+            trunkTitleLabel.textAlignment = NSTextAlignmentLeft;
+            
+            CGRect label2Frame = CGRectMake(8, 16, 340, 21);
+            UILabel *trunkDatesLabel = [[UILabel alloc] initWithFrame:label2Frame];
+            trunkDatesLabel.text = [NSString stringWithFormat:@"%@ - %@",self.trip.startDate,self.trip.endDate];
+            trunkDatesLabel.font = [TTFont tripTrunkFont10];
+            trunkDatesLabel.numberOfLines = 1;
+            trunkDatesLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
+            trunkDatesLabel.adjustsFontSizeToFitWidth = YES;
+            //            initialsLabel.adjustsLetterSpacingToFitWidth = YES;
+            trunkDatesLabel.minimumScaleFactor = 10.0f/12.0f;
+            trunkDatesLabel.clipsToBounds = YES;
+            trunkDatesLabel.backgroundColor = [UIColor clearColor];
+            trunkDatesLabel.textColor = [UIColor darkGrayColor];
+            trunkDatesLabel.textAlignment = NSTextAlignmentLeft;
+            
+            [theView addSubview:trunkTitleLabel];
+            [theView addSubview:trunkDatesLabel];
         } else {
             theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
         }
