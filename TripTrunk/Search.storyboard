@@ -54,7 +54,7 @@
                                 <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VRW-RY-paJ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VRW-RY-paJ">
                                 <rect key="frame" x="0.0" y="124" width="375" height="543"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -123,6 +123,7 @@
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="HNg-dV-g1j" firstAttribute="top" secondItem="x49-Cg-kCd" secondAttribute="bottom" constant="17" id="2l4-E8-ifx"/>
                             <constraint firstItem="fTZ-qd-JuW" firstAttribute="top" secondItem="HNg-dV-g1j" secondAttribute="bottom" constant="38" id="5IT-WL-R8d"/>
@@ -137,6 +138,9 @@
                             <constraint firstItem="cVC-Wd-Od3" firstAttribute="baseline" secondItem="VRW-RY-paJ" secondAttribute="firstBaseline" constant="91" id="uMZ-NB-Q5F"/>
                             <constraint firstItem="fTZ-qd-JuW" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" constant="37" id="vvT-no-gQD"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="i4g-Oz-2Q9" appends="YES" id="Rzz-zq-H1U"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="O5w-fh-cwc"/>
                     <connections>
@@ -145,6 +149,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gpR-fB-Kge" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="i4g-Oz-2Q9">
+                    <connections>
+                        <action selector="longPressGestureToPreviewProfile:" destination="X6y-kH-6Ba" id="dSh-mA-i38"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="453.60000000000002" y="110.19490254872565"/>
         </scene>
