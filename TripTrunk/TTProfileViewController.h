@@ -11,4 +11,5 @@
 
 @interface TTProfileViewController : UIViewController
 @property (strong, nonatomic) PFUser *user;
+@property (nonatomic, strong) id delegate;
 @end

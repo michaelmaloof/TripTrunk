@@ -79,18 +79,28 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dvg-zg-UoL">
-                                                    <rect key="frame" x="282" y="24" width="85" height="30"/>
+                                                    <rect key="frame" x="271" y="24" width="96" height="30"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="85" id="7lA-43-iZo"/>
+                                                        <constraint firstAttribute="width" constant="96" id="7lA-43-iZo"/>
                                                     </constraints>
-                                                    <state key="normal" title="Button"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="Button">
+                                                        <color key="titleColor" red="0.30588235289999999" green="0.70196078429999997" blue="0.98823529409999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <state key="selected">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="didTapFollowButton:" destination="X6y-kH-6Ba" eventType="touchUpInside" id="2Av-vv-ScS"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="f2V-se-Lhm" secondAttribute="centerY" id="31C-s4-KSq"/>
                                                 <constraint firstItem="Z0v-io-V6Y" firstAttribute="centerY" secondItem="dvg-zg-UoL" secondAttribute="centerY" id="Rco-eR-dHh"/>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="Z0v-io-V6Y" secondAttribute="centerY" id="Rwb-63-cHP"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="dvg-zg-UoL" secondAttribute="trailing" constant="-8" id="fJn-2F-Aof"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="dvg-zg-UoL" secondAttribute="trailing" constant="-7" id="fJn-2F-Aof"/>
                                                 <constraint firstItem="Z0v-io-V6Y" firstAttribute="leading" secondItem="dGP-cJ-mWw" secondAttribute="trailing" constant="8" id="fpv-yi-DFA"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="Z0v-io-V6Y" secondAttribute="trailing" constant="-1" id="pGy-q2-xLs"/>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="leading" secondItem="f2V-se-Lhm" secondAttribute="leadingMargin" constant="-1" id="wU6-wn-v3W"/>

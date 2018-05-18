@@ -389,6 +389,7 @@ traveling around the world bio</string>
                     <navigationItem key="navigationItem" id="ZgH-Fz-7tU"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="backButton" destination="92z-HT-GCL" id="tvX-7j-ucn"/>
                         <outlet property="followButton" destination="Vba-qk-WVi" id="6gg-Cj-fIf"/>
                         <outlet property="followersCount" destination="g2I-Ov-3tD" id="J2B-9K-Yr6"/>
                         <outlet property="followingCount" destination="hcm-aP-coE" id="rZC-jZ-zzR"/>

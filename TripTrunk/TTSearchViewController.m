@@ -20,8 +20,9 @@
 #import "TTUsernameSort.h"
 #import "TTFindFriendsViewCell.h"
 #import "TTPopoverProfileViewController.h"
+#import "TTProfileViewController.h"
 
-@interface TTSearchViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
+@interface TTSearchViewController () <UserTableViewCellDelegate, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, UIAlertViewDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *searchTextField;
@@ -35,7 +36,7 @@
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSMutableArray *friends;
 @property (strong, nonatomic) NSMutableArray *following; // users this user is already following
-@property (strong, nonatomic) NSMutableArray *pending; // users this user has requested to follow
+@property (strong, nonatomic) NSArray *pending; // users this user has requested to follow
 @property int searchCount;
 @property BOOL removeResults;
 @property BOOL isSearching;
@@ -54,15 +55,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.following = [[NSMutableArray alloc] init];
     // Do any additional setup after loading the view.
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.promoted = [NSMutableArray arrayWithArray:[[TTCache sharedCache] promotedUsers]];
     if(self.promoted.count == 0)
-        [self loadPromotedUsers];;
+        [self loadPromotedUsers];
+    else [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -83,10 +85,9 @@
             [[TTCache sharedCache] setPromotedUsers:self.promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-//                if ([PFUser currentUser][@"fbid"]){
-//                    [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
-//                }
+                if([[TTCache sharedCache] following].count == 0 || [[TTCache sharedCache] following] == nil)
+                    [self loadFollowing];
+                else [self.tableView reloadData];
             });
         }
         else
@@ -132,11 +133,12 @@
                 }
             }
             else {
-                _friends = [NSMutableArray arrayWithArray:objects];
+                self.friends = [NSMutableArray arrayWithArray:objects];
                 // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.isLoadingFacebook = NO;
-                    [self.tableView reloadData];
+//                    [self.tableView reloadData];
+                    [[TTCache sharedCache] setFacebookFriends:objects];
                     if (self.facebookRefreshed == NO){
                         if ([PFUser currentUser][@"fbid"]){
                             if (hasFBFriends == NO){
@@ -199,29 +201,28 @@
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
             for (PFUser *user in users) {
-                [_following addObject:user.objectId];
+                [self.following addObject:user.objectId];
             }
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.isLoadingFollowing = NO;
-                [self.tableView reloadData];
+//                [self.tableView reloadData];
+                [[TTCache sharedCache] setFollowing:users];
             });
             
             
             // Now that we have the array of following, lets also get their Pending..this should be a smaller array.
             [SocialUtility pendingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
                 if (!error && users.count > 0) {
-                    for (PFUser *user in users) {
-                        [_pending addObject:user.objectId];
-                    }
+                    self.pending = users;
                     // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.isLoadingPending = NO;
-                        if (self.loadedOnce == NO){
-                            self.loadedOnce = YES;
-                            //                            [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
-                            //                            [self loadPromotedUsers];
-                        } else {
+                        if ([PFUser currentUser][@"fbid"]){
+                            if([[TTCache sharedCache] facebookFriends].count == 0 || [[TTCache sharedCache] facebookFriends] == nil)
+                                [self getFriendsFromFbids:[[TTCache sharedCache] facebookFriends]];
+                            else [self.tableView reloadData];
+                        }else{
                             [self.tableView reloadData];
                         }
                     });
@@ -232,8 +233,10 @@
                         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadFollowing:"];
                         self.isLoadingPending = NO;
                     }
+                    [self.tableView reloadData];
                 } else {
                     self.isLoadingPending = NO;
+                    [self.tableView reloadData];
                 }
             }];
         }
@@ -244,6 +247,7 @@
                 self.isLoadingPending = NO;
                 self.isLoadingFollowing= NO;
             }
+            [self.tableView reloadData];
         }
     }];
     
@@ -289,14 +293,6 @@
     
 }
 
-
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    self.searchString = nil;
-    self.searchController.active = NO;
-    [self.tableView reloadData];
-    
-}
-
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -314,41 +310,42 @@
 }
 
 - (TTFindFriendsViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
         __weak TTFindFriendsViewCell *friendCell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
 ////        [friendCell bringSubviewToFront:friendCell.followButton];
     friendCell.firstLastName.text = @"";
     friendCell.profilePic.image = [UIImage imageNamed:@"square_placeholder"];
     friendCell.followButton.userInteractionEnabled = NO;
-    [friendCell.followButton setTitle:@"FOLLOW" forState:UIControlStateNormal];
-    friendCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [friendCell.followButton setTitle:@"" forState:UIControlStateNormal];
+//    friendCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     PFUser *user;
     if(self.searchResults){
         user = self.searchResults[indexPath.row];
     }else{
         id promotedUser = self.promoted[indexPath.row];
-//        if([promotedUser isKindOfClass:[PFUser class]])
-//            user = promotedUser;
-//        else
         user = promotedUser[@"user"];
     }
     
     friendCell.firstLastName.text = [NSString stringWithFormat:@"%@ %@",user[@"firstName"], user[@"lastName"]];
     
-        if(user[@"friend"]==0){ //this doesn't work on promoted users
+        if(![self.following containsObject:user.objectId]){
             friendCell.followButton.userInteractionEnabled = YES;
             [friendCell.followButton setTitle:@"FOLLOW" forState:UIControlStateNormal];
             [friendCell.followButton setSelected:NO];
+//            [friendCell.followButton setTitleColor:[TTColor tripTrunkButtonTextBlue] forState:UIControlStateNormal];
+            [friendCell.followButton setBackgroundColor:[UIColor clearColor]];
         }else{
-            friendCell.followButton.userInteractionEnabled = NO;
+            friendCell.followButton.userInteractionEnabled = YES;
             [friendCell.followButton setTitle:@"FOLLOWING" forState:UIControlStateNormal];
             [friendCell.followButton setSelected:YES];
+//            [friendCell.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+            [friendCell.followButton setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
         }
     
         [friendCell.profilePic setImageWithURL:[NSURL URLWithString:user[@"profilePicUrl"]]];
         friendCell.profilePic.tag = indexPath.row;
         friendCell.tag = indexPath.row;
+        friendCell.followButton.tag = indexPath.row;
         
         return friendCell;
 }
@@ -360,24 +357,19 @@
 #pragma mark - Table view delegate
 // On Row Selection, push to the user's profile
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFUser *user;
+    if(self.searchResults){
+        user = self.searchResults[indexPath.row];
+    }else{
+        id promotedUser = self.promoted[indexPath.row];
+        user = promotedUser[@"user"];
+    }
     
-    //    if (_viewType == TTActivityViewAllActivities) {
-    //        // Don't allow row selection for All Activities--usernames and photos have different links.
-    //        return;
-    //    }
-    
-    //    UserProfileViewController *vc;
-    //
-    //    if (self.filter.tag == 0) {
-    //
-    //        vc = [[UserProfileViewController alloc] initWithUser:[[_activities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
-    //
-    //    } else {
-    //        vc = [[UserProfileViewController alloc] initWithUser:[[self.followingActivities objectAtIndex:indexPath.row] valueForKey:@"fromUser"]];
-    //    }
-    //    if (vc) {
-    //        [self.navigationController pushViewController:vc animated:YES];
-    //    }
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+    TTProfileViewController *profileViewController = (TTProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTProfileViewController"];
+    profileViewController.user = user;
+    profileViewController.delegate = self;
+    [self.navigationController pushViewController:profileViewController animated:YES];
 }
 
 //- (void)activityCell:(UICollectionViewCell *)cellView didPressUsernameForUser:(PFUser *)user{
@@ -441,56 +433,62 @@
     return NO;
 }
 
-//-(void)setFollowStatus:(UIButton *)sender {
-//    if ([sender isSelected] == YES) {
-//        // Unfollow
-//        [sender setSelected:NO]; // change the button for immediate user feedback
-//        //        [sender setTitle:@"Follow" forState:UIControlStateNormal];
-//        //        sender.backgroundColor = [UIColor whiteColor];
-//        //        sender.titleLabel.textColor = [TTColor tripTrunkRed];
-//        //        [sender setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
-//        //        [self.currentUserFriends removeObject:user.objectId];
-//        [SocialUtility unfollowUser:self.facebookFriends[sender.tag] block:^(BOOL succeeded, NSError *error) {
-//            if(error){
-//                NSLog(@"Error: %@", error);
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unfollow Failed"
-//                                                                message:@"Please try again"
-//                                                               delegate:self
-//                                                      cancelButtonTitle:@"Okay"
-//                                                      otherButtonTitles:nil, nil];
-//                [sender setSelected:YES];
-//                [alert show];
-//            }else{
-//                NSLog(@"User unfollowed");
-//            }
-//        }];
-//    }
-//    else {
-//        // Follow
-//        [sender setSelected:YES];
-//        sender.titleLabel.textColor = [UIColor whiteColor];
-//        [sender setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
-//        //        [self.currentUserFriends addObject:user.objectId];
-//        [SocialUtility followUserInBackground:self.facebookFriends[sender.tag] block:^(BOOL succeeded, NSError *error) {
-//            if (error) {
-//                //                sender.titleLabel.textColor = [TTColor tripTrunkRed];
-//                //                [sender setTitleColor:[TTColor tripTrunkRed] forState:UIControlStateNormal];
-//                NSLog(@"Error: %@", error);
-//                //                [self.currentUserFriends removeObject:user.objectId];
-//                NSLog(@"Follow failed");
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Follow Failed"
-//                                                                message:@"Please try again"
-//                                                               delegate:self
-//                                                      cancelButtonTitle:@"Okay"
-//                                                      otherButtonTitles:nil, nil];
-//                [sender setSelected:NO];
-//                [alert show];
-//            }else{
-//                NSLog(@"User followed");
-//            }
-//        }];
-//    }
-//}
+-(void)setFollowStatus:(UIButton *)sender withUser:(PFUser *)user{
+    if ([sender isSelected]) {
+        // Unfollow
+        [sender setSelected:NO]; // change the button for immediate user feedback
+        [sender setTitle:@"FOLLOW" forState:UIControlStateNormal];
+//        [sender setTitleColor:[TTColor tripTrunkButtonTextBlue] forState:UIControlStateNormal];
+        [sender setBackgroundColor:[UIColor clearColor]];
+        [SocialUtility unfollowUser:user block:^(BOOL succeeded, NSError *error) {
+            if(error){
+                NSLog(@"Error: %@", error);
+                NSString * title = NSLocalizedString(@"Unfollow Failed", @"Unfollow Failed");
+                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                
+                [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                [sender setSelected:YES];
+            }else{
+                NSLog(@"User unfollowed");
+                //WE NEED TO UPDATE THE CACHE!!!
+                NSMutableArray *following = [[TTCache sharedCache] following];
+                [following removeObject:user];
+                [self.following removeObject:user.objectId];
+                [[TTCache sharedCache] setFollowing:following];
+            }
+        }];
+    }
+    else {
+        // Follow
+        [sender setSelected:YES];
+        [sender setTitle:@"FOLLOWING" forState:UIControlStateNormal];
+//        [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [sender setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
+        [SocialUtility followUserInBackground:user block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+//                [self.currentUserFriends removeObject:user.objectId];
+                NSLog(@"Follow failed");
+
+                NSLog(@"Error: %@", error);
+                NSString * title = NSLocalizedString(@"Follow Failed", @"Follow Failed");
+                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                
+                [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                [sender setSelected:YES];
+            }else{
+                NSLog(@"User followed");
+                //WE NEED TO UPDATE THE CACHE!!!
+                NSMutableArray *following = [[TTCache sharedCache] following];
+                [following addObject:user];
+                [self.following addObject:user.objectId];
+                [[TTCache sharedCache] setFollowing:following];
+            }
+        }];
+    }
+}
+
 
 //- (IBAction)tapGestureRecognizerForFollowButton:(UITapGestureRecognizer *)sender {
 //    CGPoint touchPoint = [sender locationInView:self.view];
@@ -552,6 +550,7 @@
                 self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
                 self.isSearching = YES;
                 [self.tableView reloadData];
+                [self performSelector:@selector(dismissKeyboard) withObject:nil afterDelay:4.0];
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
         }];
@@ -601,5 +600,28 @@
     
     return YES;
 }
+
+- (void)cell:(UserTableViewCell *)cellView didPressFollowButton:(PFUser *)user {
+    
+}
+
+- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
+    
+}
+
+
+- (IBAction)didTapFollowButton:(UIButton *)sender {
+    NSLog(@"sender tage: %ld",(long)sender.tag);
+    PFUser *user;
+    if(self.searchResults){
+        user = self.searchResults[sender.tag];
+    }else{
+        id promotedUser = self.promoted[sender.tag];
+        user = promotedUser[@"user"];
+    }
+    [self setFollowStatus:sender withUser:user];
+}
+
+
 
 @end

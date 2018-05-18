@@ -73,6 +73,32 @@
 
 }
 
+#pragma mark - UIAlertView
+-(void)alertUser:(NSString *)title withMessage:(NSString *)message withYes:(NSString *)yesButton withNo:(NSString *)noButton{
+
+        UIAlertController * alert=[UIAlertController alertControllerWithTitle:title
+                                                                      message:message
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+    if(![yesButton isEqualToString:@""]){
+        UIAlertAction* yesB = [UIAlertAction actionWithTitle:yesButton
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action){
+                                                              NSLog(@"you pressed the Yes button");
+                                                          }];
+        [alert addAction:yesB];
+    }
+    
+    if(![noButton isEqualToString:@""]){
+        UIAlertAction* noB = [UIAlertAction actionWithTitle:noButton
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action){
+                                                             NSLog(@"you pressed cancel button");
+                                                         }];
+        [alert addAction:noB];
+    }
+        [self presentViewController:alert animated:YES completion:nil];
+}
+
 
 -(void)tabBarTitle{
 //REPAIR: This needs to be fixed for new design

@@ -22,6 +22,7 @@
 #import "TTTrunkViewController.h"
 #import "SocialUtility.h"
 #import "TTCache.h"
+#import "TTSearchViewController.h"
 
 @interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
@@ -42,6 +43,7 @@
 @property (strong, nonatomic) NSMutableArray *trunkArray;
 @property (strong, nonatomic) NSMutableArray *imageSet;
 @property (strong, nonatomic) NSNumber *followStatus;
+@property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
 @property NSMutableArray *parseLocations;
@@ -70,6 +72,10 @@
     
     self.followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
     [self setFollowButtonState];
+    if([self.delegate isKindOfClass:[TTSearchViewController class]]){
+        self.backButton.hidden = NO;
+        self.backButton.userInteractionEnabled = YES;
+    }
 }
 
 - (void)viewDidLoad {
@@ -630,6 +636,7 @@
 }
 
 - (IBAction)followButtonAction:(TTOnboardingButton *)sender {
+    //FIXME: IMPLEMENT THIS!!
     NSLog(@"button 2 pressed");
 }
 
