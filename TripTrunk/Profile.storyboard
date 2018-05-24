@@ -154,7 +154,7 @@ traveling around the world bio</string>
                                 </constraints>
                             </view>
                             <collectionView autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JUj-jC-bXC" customClass="TTPassthroughCollectionView">
-                                <rect key="frame" x="0.0" y="183" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="177" width="375" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="350" id="6Y2-99-IJU"/>
@@ -325,20 +325,8 @@ traveling around the world bio</string>
                                     <constraint firstItem="JLx-ql-SdK" firstAttribute="leading" secondItem="3gf-Cw-ug9" secondAttribute="trailing" constant="16" id="ynw-hL-wVk"/>
                                 </constraints>
                             </view>
-                            <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92z-HT-GCL" customClass="TTOnboardingButton">
-                                <rect key="frame" x="38" y="562" width="50" height="50"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="5mb-UM-ZrY"/>
-                                    <constraint firstAttribute="height" constant="50" id="qoh-SR-Zpy"/>
-                                </constraints>
-                                <state key="normal" image="tt_Blue_Back_Arrow"/>
-                                <connections>
-                                    <action selector="backButtonAction:" destination="QdE-E2-ui9" eventType="touchUpInside" id="ZYx-7S-tbQ"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vba-qk-WVi" customClass="TTOnboardingButton">
-                                <rect key="frame" x="189" y="562" width="150" height="50"/>
+                                <rect key="frame" x="189" y="554" width="150" height="50"/>
                                 <color key="backgroundColor" red="0.3199957013130188" green="0.71643155813217163" blue="0.99914258718490601" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Sr6-cg-sYP"/>
@@ -349,7 +337,19 @@ traveling around the world bio</string>
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="followButtonAction:" destination="QdE-E2-ui9" eventType="touchUpInside" id="upp-F5-aFs"/>
+                                    <action selector="followButtonAction:" destination="QdE-E2-ui9" eventType="touchUpInside" id="IgQ-cK-zSi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92z-HT-GCL" customClass="TTOnboardingButton">
+                                <rect key="frame" x="38" y="554" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="5mb-UM-ZrY"/>
+                                    <constraint firstAttribute="height" constant="50" id="qoh-SR-Zpy"/>
+                                </constraints>
+                                <state key="normal" image="tt_Blue_Back_Arrow"/>
+                                <connections>
+                                    <action selector="backButtonAction:" destination="QdE-E2-ui9" eventType="touchUpInside" id="uzF-Cc-cVJ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -359,8 +359,8 @@ traveling around the world bio</string>
                             <constraint firstItem="rIH-u5-iYK" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="topMargin" constant="31" id="0hG-Ey-xf5"/>
                             <constraint firstAttribute="trailing" secondItem="xeD-Lz-Sto" secondAttribute="trailing" id="2Hl-LJ-RkV"/>
                             <constraint firstItem="rIH-u5-iYK" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="88T-Aw-OYh"/>
-                            <constraint firstItem="92z-HT-GCL" firstAttribute="top" secondItem="FYz-bv-okm" secondAttribute="bottom" constant="35" id="8sg-UR-HEW"/>
-                            <constraint firstItem="ScL-zl-JFC" firstAttribute="top" secondItem="Vba-qk-WVi" secondAttribute="bottom" constant="6" id="9bD-oE-fGX"/>
+                            <constraint firstItem="92z-HT-GCL" firstAttribute="top" secondItem="FYz-bv-okm" secondAttribute="bottom" constant="27" id="8sg-UR-HEW"/>
+                            <constraint firstItem="ScL-zl-JFC" firstAttribute="top" secondItem="Vba-qk-WVi" secondAttribute="bottom" constant="14" id="9bD-oE-fGX"/>
                             <constraint firstItem="7R3-mj-Y6d" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="37" id="Akm-Ya-v3s"/>
                             <constraint firstAttribute="bottomMargin" secondItem="ah8-Ma-njH" secondAttribute="bottom" constant="-49" id="D7R-kx-wTd"/>
                             <constraint firstAttribute="topMargin" secondItem="HvK-IO-ucn" secondAttribute="top" constant="-20" id="DqU-tx-Tzn"/>
@@ -370,7 +370,7 @@ traveling around the world bio</string>
                             <constraint firstItem="xeD-Lz-Sto" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JGT-dj-fcC"/>
                             <constraint firstItem="NIz-OT-CC1" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JwR-KS-idZ"/>
                             <constraint firstAttribute="trailing" secondItem="NIz-OT-CC1" secondAttribute="trailing" id="RYk-AA-ods"/>
-                            <constraint firstItem="Vba-qk-WVi" firstAttribute="top" secondItem="JUj-jC-bXC" secondAttribute="bottom" constant="29" id="S1O-h9-yGs"/>
+                            <constraint firstItem="Vba-qk-WVi" firstAttribute="top" secondItem="JUj-jC-bXC" secondAttribute="bottom" constant="27" id="S1O-h9-yGs"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="UvK-nt-cbB"/>
                             <constraint firstItem="92z-HT-GCL" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="38" id="Uxg-fW-9ox"/>
                             <constraint firstAttribute="trailing" secondItem="HvK-IO-ucn" secondAttribute="trailing" id="XbS-im-aoc"/>
@@ -378,7 +378,7 @@ traveling around the world bio</string>
                             <constraint firstAttribute="bottomMargin" secondItem="NIz-OT-CC1" secondAttribute="bottom" constant="-49" id="bRL-T4-kP7"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="leading" secondItem="ah8-Ma-njH" secondAttribute="leading" id="fT9-rY-6du"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Vba-qk-WVi" secondAttribute="trailing" constant="20" id="kLe-Vd-LuF"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="92z-HT-GCL" secondAttribute="bottom" constant="6" id="kRt-bL-JGe"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="92z-HT-GCL" secondAttribute="bottom" constant="14" id="kRt-bL-JGe"/>
                             <constraint firstItem="ah8-Ma-njH" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="topMargin" constant="187" id="lbD-qJ-ekO"/>
                             <constraint firstAttribute="trailing" secondItem="7R3-mj-Y6d" secondAttribute="trailing" constant="37" id="pWo-PZ-by1"/>
                             <constraint firstAttribute="topMargin" secondItem="NIz-OT-CC1" secondAttribute="top" id="t80-AW-JWm"/>

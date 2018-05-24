@@ -295,15 +295,14 @@
                                     <constraint firstItem="yMT-Da-tzZ" firstAttribute="top" secondItem="BmF-Qp-qYW" secondAttribute="top" constant="20" id="vA2-u5-GNH"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zv3-RQ-9tT" customClass="TTOnboardingButton">
-                                <rect key="frame" x="20" y="583" width="50" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zv3-RQ-9tT" customClass="TTOnboardingButton">
+                                <rect key="frame" x="20" y="598" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="0in-2C-ufT"/>
                                     <constraint firstAttribute="height" constant="50" id="LZh-3P-ymC"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="27"/>
-                                <state key="normal" title="X">
+                                <state key="normal" image="tt_Blue_Back_Arrow">
                                     <color key="titleColor" red="0.89729267359999998" green="0.0" blue="0.042279232290000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
@@ -334,7 +333,7 @@
                             <constraint firstAttribute="bottomMargin" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-58" id="Jb4-G7-u0q"/>
                             <constraint firstItem="M4l-ag-Z2h" firstAttribute="top" secondItem="Zgb-uG-EZs" secondAttribute="top" constant="120" id="NAh-AI-fFn"/>
                             <constraint firstAttribute="topMargin" secondItem="afA-uG-pPp" secondAttribute="top" id="P8g-Pt-sFu"/>
-                            <constraint firstItem="Zv3-RQ-9tT" firstAttribute="bottom" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-92" id="PsF-R0-2gY"/>
+                            <constraint firstItem="Zv3-RQ-9tT" firstAttribute="bottom" secondItem="vx1-HZ-y3T" secondAttribute="bottom" constant="-77" id="PsF-R0-2gY"/>
                             <constraint firstItem="6x0-04-IgA" firstAttribute="top" secondItem="obH-27-ifT" secondAttribute="bottom" constant="-3" id="Uxr-5g-HGM"/>
                             <constraint firstItem="vx1-HZ-y3T" firstAttribute="leading" secondItem="Zv3-RQ-9tT" secondAttribute="leading" constant="-20" id="YMH-8y-lW1"/>
                             <constraint firstAttribute="trailing" secondItem="JFh-HK-h53" secondAttribute="trailing" id="aKB-Z7-h7b"/>
@@ -600,7 +599,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1rW-AJ-bH6" customClass="TTOnboardingButton">
-                                <rect key="frame" x="20" y="597" width="50" height="50"/>
+                                <rect key="frame" x="20" y="566" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="E1B-yQ-N0m"/>
@@ -614,7 +613,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v5b-74-yAF" customClass="TTOnboardingButton">
-                                <rect key="frame" x="179" y="597" width="180" height="50"/>
+                                <rect key="frame" x="179" y="566" width="180" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="jcG-5R-wEm"/>
@@ -630,7 +629,7 @@
                         <constraints>
                             <constraint firstItem="NwX-9b-hmJ" firstAttribute="top" secondItem="jnd-wY-wX9" secondAttribute="bottom" constant="75" id="0ca-5n-9hZ"/>
                             <constraint firstItem="Xor-DG-zoa" firstAttribute="centerY" secondItem="aak-Ux-eVY" secondAttribute="centerY" id="DxI-nl-tVS"/>
-                            <constraint firstItem="v5b-74-yAF" firstAttribute="top" secondItem="XCu-hx-moL" secondAttribute="bottom" constant="282" id="H7K-jk-LtA"/>
+                            <constraint firstItem="v5b-74-yAF" firstAttribute="top" secondItem="XCu-hx-moL" secondAttribute="bottom" constant="251" id="H7K-jk-LtA"/>
                             <constraint firstItem="NwX-9b-hmJ" firstAttribute="leading" secondItem="aak-Ux-eVY" secondAttribute="leading" id="IIa-o4-j6c"/>
                             <constraint firstItem="1rW-AJ-bH6" firstAttribute="leading" secondItem="a13-tN-4R0" secondAttribute="leading" constant="20" id="KRx-Xu-apq"/>
                             <constraint firstItem="aak-Ux-eVY" firstAttribute="top" secondItem="NwX-9b-hmJ" secondAttribute="bottom" constant="43" id="O2M-1G-zCs"/>
@@ -641,7 +640,7 @@
                             <constraint firstItem="r6u-Zn-b78" firstAttribute="top" secondItem="aak-Ux-eVY" secondAttribute="bottom" constant="45" id="WG2-B0-2Xx"/>
                             <constraint firstAttribute="trailing" secondItem="jnd-wY-wX9" secondAttribute="trailing" id="cDl-Ss-aRo"/>
                             <constraint firstItem="NwX-9b-hmJ" firstAttribute="centerY" secondItem="eyB-RR-xej" secondAttribute="centerY" id="dbQ-4B-2ah"/>
-                            <constraint firstAttribute="bottom" secondItem="1rW-AJ-bH6" secondAttribute="bottom" constant="20" id="fK7-cr-jyH"/>
+                            <constraint firstAttribute="bottom" secondItem="1rW-AJ-bH6" secondAttribute="bottom" constant="51" id="fK7-cr-jyH"/>
                             <constraint firstItem="r6u-Zn-b78" firstAttribute="leading" secondItem="XCu-hx-moL" secondAttribute="trailing" constant="17" id="fk1-Zm-8mh"/>
                             <constraint firstItem="v5b-74-yAF" firstAttribute="centerX" secondItem="a13-tN-4R0" secondAttribute="centerX" constant="81.5" id="hlY-sf-UDQ"/>
                             <constraint firstItem="r6u-Zn-b78" firstAttribute="centerY" secondItem="XCu-hx-moL" secondAttribute="centerY" id="mh4-k8-0Fe"/>

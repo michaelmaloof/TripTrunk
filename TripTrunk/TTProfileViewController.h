@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "TTBaseViewController.h"
 
-@interface TTProfileViewController : UIViewController
+@interface TTProfileViewController : TTBaseViewController
 @property (strong, nonatomic) PFUser *user;
 @property (nonatomic, strong) id delegate;
 @end

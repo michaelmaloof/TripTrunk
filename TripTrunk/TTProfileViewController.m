@@ -72,9 +72,12 @@
     
     self.followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
     [self setFollowButtonState];
-    if([self.delegate isKindOfClass:[TTSearchViewController class]]){
+    if(self.delegate){
         self.backButton.hidden = NO;
         self.backButton.userInteractionEnabled = YES;
+    }else{
+        self.backButton.hidden = YES;
+        self.backButton.userInteractionEnabled = NO;
     }
 }
 
@@ -636,8 +639,56 @@
 }
 
 - (IBAction)followButtonAction:(TTOnboardingButton *)sender {
-    //FIXME: IMPLEMENT THIS!!
-    NSLog(@"button 2 pressed");
+    if ([self.followStatus intValue] > 0) {
+        // Unfollow
+//        [sender setSelected:NO]; // change the button for immediate user feedback
+        [sender setTitle:@"FOLLOW" forState:UIControlStateNormal];
+        //        [sender setTitleColor:[TTColor tripTrunkButtonTextBlue] forState:UIControlStateNormal];
+        [sender setBackgroundColor:[UIColor clearColor]];
+        [SocialUtility unfollowUser:self.user block:^(BOOL succeeded, NSError *error) {
+            if(error){
+                NSLog(@"Error: %@", error);
+                NSString * title = NSLocalizedString(@"Unfollow Failed", @"Unfollow Failed");
+                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                
+                [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                [sender setSelected:YES];
+            }else{
+                NSLog(@"User unfollowed");
+                //WE NEED TO UPDATE THE CACHE!!!
+                NSMutableArray *following = [[TTCache sharedCache] following];
+                [following removeObject:self.user];
+                [[TTCache sharedCache] setFollowing:following];
+            }
+        }];
+    }else{
+        // Follow
+//        [sender setSelected:YES];
+        [sender setTitle:@"FOLLOWING" forState:UIControlStateNormal];
+        //        [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [sender setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
+        [SocialUtility followUserInBackground:self.user block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                //                [self.currentUserFriends removeObject:user.objectId];
+                NSLog(@"Follow failed");
+                
+                NSLog(@"Error: %@", error);
+                NSString * title = NSLocalizedString(@"Follow Failed", @"Follow Failed");
+                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                
+                [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                [sender setSelected:YES];
+            }else{
+                NSLog(@"User followed");
+                //WE NEED TO UPDATE THE CACHE!!!
+                NSMutableArray *following = [[TTCache sharedCache] following];
+                [following addObject:self.user];
+                [[TTCache sharedCache] setFollowing:following];
+            }
+        }];
+    }
 }
 
 - (IBAction)profileImageTapAction:(UITapGestureRecognizer*)sender {

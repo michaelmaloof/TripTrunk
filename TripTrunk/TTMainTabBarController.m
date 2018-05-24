@@ -34,9 +34,9 @@
         
         [self setViewControllers:tabBarControllers animated:NO];
         
-        tab1.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Travel Feed", @"Travel Feed") image:[UIImage imageNamed:@"paw_blue_list"] selectedImage:[UIImage imageNamed:@"paw_red_list"]];
-        tab2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"My Journey", @"My Journey") image:[UIImage imageNamed:@"paw_blue_list"] selectedImage:[UIImage imageNamed:@"paw_red_list"]];
-        tab3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Search", @"Search") image:[UIImage imageNamed:@"paw_blue_list"] selectedImage:[UIImage imageNamed:@"paw_red_list"]];
+        tab1.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Travel Feed", @"Travel Feed") image:[UIImage imageNamed:@"tt_travelfeed_tab"] selectedImage:[UIImage imageNamed:@"tt_travelfeed_tab"]];
+        tab2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"My Journey", @"My Journey") image:[UIImage imageNamed:@"tt_myjourney_tab"] selectedImage:[UIImage imageNamed:@"tt_myjourney_tab"]];
+        tab3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Search", @"Search") image:[UIImage imageNamed:@"tt_search_tab"] selectedImage:[UIImage imageNamed:@"tt_search_tab"]];
         
         self.tabBar.alpha = 0.4;
         self.tabBar.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];

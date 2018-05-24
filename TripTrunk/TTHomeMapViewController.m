@@ -16,17 +16,25 @@
 #import "TTOnboardingViewController.h"
 #import "TTCreateTrunkViewController.h"
 #import "TTActivityNotificationsViewController.h"
+#import "SocialUtility.h"
+#import "TTCache.h"
 
 @import GoogleMaps;
 
 @interface TTHomeMapViewController ()
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) PFUser *user;
 @property (strong, nonatomic) NSArray *trunks;
 @property (strong, nonatomic) NSMutableArray *filteredArray;
-@property (strong, nonatomic) NSMutableArray *imageSet;
+@property (strong, nonatomic) NSMutableDictionary *imageSet;
 @property (strong, nonatomic) NSMutableArray *sortedArray;
+@property (strong, nonatomic) NSMutableArray *following;
+@property (strong, nonatomic) NSMutableArray *objid;
+@property (strong, nonatomic) NSMutableArray *userTrips;
+@property BOOL reachedBottom;
+@property BOOL isLoading;
 @end
 
 @implementation TTHomeMapViewController
@@ -38,12 +46,28 @@
     //init the arrays
     self.filteredArray = [[NSMutableArray alloc] init];
     self.sortedArray = [[NSMutableArray alloc] init];
-    self.imageSet = [[NSMutableArray alloc] init];
+    self.imageSet = [[NSMutableDictionary alloc] init];
+    self.objid = [[NSMutableArray alloc] init];
+    self.userTrips = [[NSMutableArray alloc] init];
     
-    //setup the view controller
-    [self initMap];
-//    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
-    [self initTrips]; //not sure how we're doing this yet so may not do this at all
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self
+                       action:@selector(refresh:)
+             forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:self.refreshControl];
+    self.refreshControl.tintColor = [TTColor tripTrunkBlue];
+    [self.refreshControl endRefreshing];
+    
+    //get following list
+    [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
+        if(succeeded){
+            [[TTCache sharedCache] setFollowing:self.following];
+            //setup the view controller
+            [self initMap];
+      //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
+            [self initTrips:NO refresh:self.refreshControl]; //not sure how we're doing this yet so may not do this at all
+        }
+    }];
 }
 
 #pragma mark - UICollectionView
@@ -71,7 +95,7 @@
             [self.filteredArray addObject:filter];
         }
             
-            [self initTrips];
+//            [self initTrips];
             
         }else{
             //FIXME: Add google error event
@@ -83,35 +107,95 @@
 
 
 
--(void)initTrips{
+-(void)initTrips:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
     
-    //Load all the trips from the current user and sort by descending based on start date
-    PFQuery *tripQuery = [PFQuery queryWithClassName:@"Trip"];
-    [tripQuery whereKey:@"creator" equalTo:self.user];
-    [tripQuery orderByDescending:@"start"];
-    [tripQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        if(!error){
-            //sort the array by start... Why am I doing this? Was "orderByDescending" not working?
-            NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
-            NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
-            self.sortedArray = [NSMutableArray arrayWithArray:[objects sortedArrayUsingDescriptors:descriptors]];
-
-            //Call image URL download and wait
-            [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+//    //Load all the trips from the current user and sort by descending based on start date
+//    PFQuery *tripQuery = [PFQuery queryWithClassName:@"Trip"];
+////    [tripQuery whereKey:@"creator" equalTo:self.user];
+//    [tripQuery orderByDescending:@"start"];
+//    [tripQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//        if(!error){
+//            //sort the array by start... Why am I doing this? Was "orderByDescending" not working?
+//            NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
+//            NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+//            self.sortedArray = [NSMutableArray arrayWithArray:[objects sortedArrayUsingDescriptors:descriptors]];
+//
+//            //Call image URL download and wait
+//            [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+//
+//                //the block is done so reload the cells or there's an error
+//                if(succeeded){
+//                    [self.collectionView reloadData];
+//                }else{
+//                    //There's an error. Handle this and add the Google tracking
+//                    NSLog(@"initSpotlightImagesWithBlock failed");
+//                }
+//
+//            }];
+//        }else{
+//            //There's an error. Handle this and add the Google tracking
+//            NSLog(@"error initializing trips");
+//        }
+//    }];
+    NSMutableArray *followingObjectIds = [[NSMutableArray alloc] init];
+    for(PFUser *user in self.following){
+        [followingObjectIds addObject:user.objectId];
+    }
+    [followingObjectIds addObject:[PFUser currentUser].objectId];
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDate *tomorrow = [cal dateByAddingUnit:NSCalendarUnitDay
+                                       value:2
+                                      toDate:[NSDate date]
+                                     options:0];
+    
+    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+    [dateformate setDateFormat:@"YYYY-MM-dd"];
+    NSString *dateString=[dateformate stringFromDate:tomorrow];
+    //@"createdDate" : photo.createdAt ? photo.createdAt : dateString,
+    NSDictionary *params = @{
+                             @"objectIds" : followingObjectIds,
+                             @"activityObjectIds" : self.objid,
+                             @"createdDate" : dateString,
+                             @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"],
+                             @"userTrips" : self.userTrips
+                             };
+    
+    [PFCloud callFunctionInBackground:@"queryForNewsFeed" withParameters:params block:^(NSArray *response, NSError *error) {
+        if (!error) {
+            if (!isRefresh && response.count == 0)
+                self.reachedBottom = YES;
+            [[TTUtility sharedInstance] internetConnectionFound];
+            NSMutableArray *trips = [[NSMutableArray alloc] init];
+            for (PFObject *activity in response[0]){
+                Trip *atrip = activity[@"trip"];
+                PFUser *auser = activity[@"fromUser"];
+                NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
+                if(![self.userTrips containsObject:mashup])
+                    [self.userTrips addObject:mashup];
                 
-                //the block is done so reload the cells or there's an error
-                if(succeeded){
-                    [self.collectionView reloadData];
-                }else{
-                    //There's an error. Handle this and add the Google tracking
-                    NSLog(@"initSpotlightImagesWithBlock failed");
-                }
-                
-            }];
-        }else{
-            //There's an error. Handle this and add the Google tracking
-            NSLog(@"error initializing trips");
+                [trips addObject:atrip];
+            }
+            
+                NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
+                NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+                self.sortedArray = [NSMutableArray arrayWithArray:[trips sortedArrayUsingDescriptors:descriptors]];
+    
+                //Call image URL download and wait
+                [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+                    //the block is done so reload the cells or there's an error
+                    if(succeeded){
+                        [self.collectionView reloadData];
+                    }else{
+                        //There's an error. Handle this and add the Google tracking
+                        NSLog(@"initSpotlightImagesWithBlock failed");
+                    }
+    
+                }];
         }
+
+        self.isLoading = NO;
+        [refreshControl endRefreshing];
     }];
 }
 
@@ -129,7 +213,6 @@
         //FIXME: This needs to move to Utility <------------------------------------
         PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
         [photoQuery whereKey:@"trip" equalTo:trunk];
-        [photoQuery whereKey:@"user" equalTo:self.user];
         [photoQuery setLimit:4];
         [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if(!error){
@@ -144,10 +227,11 @@
                 //If the search doesn't return any photos, remove the trunk from the sorted Array
                 if(objects.count != 0){
                     //add the images array to the imageSet Array
-                    [self.imageSet addObject:images];
+                    [self.imageSet setObject:images forKey:trunk.objectId];
                 }else{
                     //no images found, flag for removal from sorted array
                     [deleteObjects addObject:trunk];
+                    NSLog(@"deleted: %@",trunk);
                 }
                 
                 //increment the count for the last record check
@@ -172,24 +256,37 @@
     
 }
 
+-(void)loadFollowingWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
+    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+        if (!error){
+            self.following = [[NSMutableArray alloc] init];
+            self.following  = [NSMutableArray arrayWithArray:users];
+            completionBlock(YES,nil);
+        }else{
+            completionBlock(NO,error);
+        }
+        
+    }];
+}
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.sortedArray.count;
 }
 
 - (TTHomeMapCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     __block TTHomeMapCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     //Load the current trunk details and display them in the cell, obviously
     Trip *trunk = self.sortedArray[indexPath.row];
     cell.trunkTitle.text = trunk.name;
+
     cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
 //FIXME: This obviously needs to be fixed
     cell.trunkMemberInfo.text = @"Some info here";
     
     //Load images from Array of image URLs
-    NSArray* photos = self.imageSet[indexPath.row];
+    NSArray *photos = self.imageSet[trunk.objectId];
     NSString *photoUrl;
     if(photos.count>0){
         photoUrl = photos[0];
@@ -203,7 +300,6 @@
             photoUrl = photos[2];
             [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
             
-            
             photoUrl = photos[3];
             [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
         }else{
@@ -211,7 +307,6 @@
             cell.lowerInfoConstraint.constant = 248;
             cell.spotlightImageHeightConstraint.constant = 350;
         }
-        
     }
     
     return cell;
@@ -257,7 +352,8 @@
         if(amountVisible>screenWidth/2.1){
             Trip *trunk = self.sortedArray[indexPath.row];
             PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
-            [self updateMap:geoPoint];
+            [self clearMap];
+            [self updateMap:geoPoint WithTrunk:trunk];
         }
     }
 }
@@ -307,13 +403,16 @@
     GMSGroundOverlay *overlay = [self mapOverlayWithLatitude:geoPoint.latitude AndLongitude:geoPoint.longitude];
     overlay.map = self.googleMapView;
     
+//    [self addPointToMapWithGeoPoint:geoPoint];
+//    [self addLabelToMapWithGeoPoint:geoPoint AndText:self.user[@"hometown"]];
+    
 //    CLLocationCoordinate2D position = CLLocationCoordinate2DMake(geoPoint.latitude, geoPoint.longitude);
 //    GMSMarker *marker = [GMSMarker markerWithPosition:position];
 //    marker.title = @"Los Angeles";
 //    marker.map = self.googleMapView;
 }
 
--(void)updateMap:(PFGeoPoint*)geoPoint{
+-(void)updateMap:(PFGeoPoint*)geoPoint WithTrunk:(Trip*)trip{
     double mapOffset = 1.425;
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude-mapOffset
                                                             longitude:geoPoint.longitude
@@ -333,8 +432,11 @@
     
     self.googleMapView.mapStyle = style;
     
-    GMSGroundOverlay *overlay = [self mapOverlayWithLatitude:geoPoint.latitude AndLongitude:geoPoint.longitude];
-    overlay.map = self.googleMapView;
+//    GMSGroundOverlay *overlay = [self mapOverlayWithLatitude:geoPoint.latitude AndLongitude:geoPoint.longitude];
+//    overlay.map = self.googleMapView;
+    
+    [self addPointToMapWithGeoPoint:geoPoint];
+    [self addLabelToMapWithGeoPoint:geoPoint AndText:trip.city];
 }
 
 -(GMSGroundOverlay*)mapOverlayWithLatitude:(double)latitude AndLongitude:(double)longitude{
@@ -350,6 +452,71 @@
     overlay.bearing = 0;
     
     return overlay;
+}
+
+#pragma mark - Marker Creation Code
+-(GMSMarker*)createMapMarkerWithGeoPoint:(PFGeoPoint*)geoPoint{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = CLLocationCoordinate2DMake(geoPoint.latitude, geoPoint.longitude);
+    
+    return marker;
+}
+
+-(CGPoint)createMapPointWithGeoPoint:(PFGeoPoint*)geoPoint{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = CLLocationCoordinate2DMake(geoPoint.latitude, geoPoint.longitude);
+    CGPoint point = [self.googleMapView.projection pointForCoordinate:marker.position];
+    
+    return point;
+}
+
+-(void)addPointToMapWithGeoPoint:(PFGeoPoint*)geoPoint{
+    CGPoint point = [self createMapPointWithGeoPoint:geoPoint];
+    
+    UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(point.x-10,point.y-10,20,20)];
+    dot.image=[UIImage imageNamed:@"bluedot"];
+    
+    [self.googleMapView addSubview:dot];
+}
+
+-(void)addFlagToMapWithGeoPoint:(PFGeoPoint*)geoPoint{
+    CGPoint point = [self createMapPointWithGeoPoint:geoPoint];
+    
+    UIImageView *flag =[[UIImageView alloc] initWithFrame:CGRectMake(point.x-10,point.y-20,20,20)];
+    flag.image=[UIImage imageNamed:@"map_point_flag"];
+    flag.tag = 1000;
+    [self.googleMapView addSubview:flag];
+}
+
+-(void)addLabelToMapWithGeoPoint:(PFGeoPoint*)geoPoint AndText:(NSString*)text{
+    CGPoint point = [self createMapPointWithGeoPoint:geoPoint];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(point.x-10,point.y+3,100,21)];
+    label.font = [TTFont tripTrunkFont8];
+    label.textColor = [TTColor tripTrunkDarkGray];
+    label.text = text;
+    
+    [self.googleMapView addSubview:label];
+}
+
+-(void)clearMap{
+    for(UIView *subview in self.googleMapView.subviews){
+        if([subview isKindOfClass:[UIImageView class]] || [subview isKindOfClass:[UILabel class]])
+            [subview removeFromSuperview];
+    }
+    
+    CALayer* layer = [self.googleMapView.layer valueForKey:@"curvesLayer"];
+    [layer removeFromSuperlayer];
+    [self.googleMapView.layer setValue:nil forKey:@"curvesLayer"];
+    
+}
+
+-(void)clearFlag{
+    for(UIView *subview in self.googleMapView.subviews){
+        if(subview.tag == 1000)
+            [subview removeFromSuperview];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
