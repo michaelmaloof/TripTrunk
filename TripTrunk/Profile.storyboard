@@ -154,7 +154,7 @@ traveling around the world bio</string>
                                 </constraints>
                             </view>
                             <collectionView autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JUj-jC-bXC" customClass="TTPassthroughCollectionView">
-                                <rect key="frame" x="0.0" y="177" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="188" width="375" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="350" id="6Y2-99-IJU"/>
@@ -370,7 +370,7 @@ traveling around the world bio</string>
                             <constraint firstItem="xeD-Lz-Sto" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JGT-dj-fcC"/>
                             <constraint firstItem="NIz-OT-CC1" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JwR-KS-idZ"/>
                             <constraint firstAttribute="trailing" secondItem="NIz-OT-CC1" secondAttribute="trailing" id="RYk-AA-ods"/>
-                            <constraint firstItem="Vba-qk-WVi" firstAttribute="top" secondItem="JUj-jC-bXC" secondAttribute="bottom" constant="27" id="S1O-h9-yGs"/>
+                            <constraint firstItem="Vba-qk-WVi" firstAttribute="top" secondItem="JUj-jC-bXC" secondAttribute="bottom" constant="16" id="S1O-h9-yGs"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="UvK-nt-cbB"/>
                             <constraint firstItem="92z-HT-GCL" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="38" id="Uxg-fW-9ox"/>
                             <constraint firstAttribute="trailing" secondItem="HvK-IO-ucn" secondAttribute="trailing" id="XbS-im-aoc"/>

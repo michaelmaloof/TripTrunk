@@ -41,7 +41,7 @@
 @property (strong, nonatomic) IBOutlet UIView *userDetails;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *followButton;
 @property (strong, nonatomic) NSMutableArray *trunkArray;
-@property (strong, nonatomic) NSMutableArray *imageSet;
+@property (strong, nonatomic) NSMutableDictionary *imageSet;
 @property (strong, nonatomic) NSNumber *followStatus;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 
@@ -103,7 +103,7 @@
     self.followingCount.text = @"";
     
     self.trunkArray = [[NSMutableArray alloc] init];
-    self.imageSet = [[NSMutableArray alloc] init];
+    self.imageSet = [[NSMutableDictionary alloc] init];
     
     //initialize the map and move to user's home location
     [self initMap];
@@ -238,7 +238,7 @@
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@",trip.city,trip.state];
     
     //Load images from Array of image URLs
-    NSArray* photos = self.imageSet[indexPath.row];
+    NSArray* photos = self.imageSet[trip.objectId];
     NSString *photoUrl;
     if(photos.count>0){
         photoUrl = photos[0];
@@ -336,7 +336,8 @@
 //    [collectionView addSubview:self.googleMapView];
     
     [self addPointToMapWithGeoPoint:geoPoint];
-    [self addLabelToMapWithGeoPoint:geoPoint AndText:self.user[@"hometown"]];
+    NSArray *city = [self.user[@"hometown"] componentsSeparatedByString:@","];
+    [self addLabelToMapWithGeoPoint:geoPoint AndText:city[0]];
 }
 
 //FIXME: THIS NEEDS TO MOVE TO UTILITY
@@ -577,7 +578,7 @@
                 //If the search doesn't return any photos, remove the trunk from the sorted Array
                 if(objects.count != 0){
                     //add the images array to the imageSet Array
-                    [self.imageSet addObject:images];
+                    [self.imageSet setObject:images forKey:trunk.objectId];
                 }else{
                     //no images found, flag for removal from sorted array
                     [deleteObjects addObject:trunk];
