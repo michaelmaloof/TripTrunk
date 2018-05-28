@@ -108,35 +108,7 @@
 
 
 -(void)initTrips:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
-    
-//    //Load all the trips from the current user and sort by descending based on start date
-//    PFQuery *tripQuery = [PFQuery queryWithClassName:@"Trip"];
-////    [tripQuery whereKey:@"creator" equalTo:self.user];
-//    [tripQuery orderByDescending:@"start"];
-//    [tripQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//        if(!error){
-//            //sort the array by start... Why am I doing this? Was "orderByDescending" not working?
-//            NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
-//            NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
-//            self.sortedArray = [NSMutableArray arrayWithArray:[objects sortedArrayUsingDescriptors:descriptors]];
-//
-//            //Call image URL download and wait
-//            [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
-//
-//                //the block is done so reload the cells or there's an error
-//                if(succeeded){
-//                    [self.collectionView reloadData];
-//                }else{
-//                    //There's an error. Handle this and add the Google tracking
-//                    NSLog(@"initSpotlightImagesWithBlock failed");
-//                }
-//
-//            }];
-//        }else{
-//            //There's an error. Handle this and add the Google tracking
-//            NSLog(@"error initializing trips");
-//        }
-//    }];
+  
     NSMutableArray *followingObjectIds = [[NSMutableArray alloc] init];
     for(PFUser *user in self.following){
         [followingObjectIds addObject:user.objectId];
@@ -180,6 +152,11 @@
                 NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
                 NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
                 self.sortedArray = [NSMutableArray arrayWithArray:[trips sortedArrayUsingDescriptors:descriptors]];
+            
+            Trip *trunk = self.sortedArray[0];
+            PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
+            [self clearMap];
+            [self updateMap:geoPoint WithTrunk:trunk];
     
                 //Call image URL download and wait
                 [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
