@@ -278,6 +278,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
         TTProfileViewController *profileViewController = (TTProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTProfileViewController"];
         profileViewController.user = self.trunkMembers[indexPath.row];
+        profileViewController.delegate = self;
         [self.navigationController pushViewController:profileViewController animated:YES];
     }
 }
