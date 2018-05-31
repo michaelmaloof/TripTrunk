@@ -119,6 +119,7 @@
     [self loadTrunkList];
 }
 
+//FIXME: MOVE THIS TO UTILITY
 -(void)handleMissingProfilePicture{
     self.userProfilePictureMain.image = [UIImage imageNamed:@"tt_square_placeholder"];
     CGRect labelFrame = CGRectMake(10, 10, 105, 105);
@@ -388,17 +389,12 @@
 
 #pragma mark - Trunk Load from Cloud
 -(void)loadTrunkList{
-    int limit = 200; //<-----????????
-    int skip = 0; //<--------????????
-    NSMutableArray *friendsObjectIds = [[NSMutableArray alloc] init];
-    [friendsObjectIds addObject:[PFUser currentUser].objectId];
-    NSDictionary *params = @{
-                             @"objectIds" : friendsObjectIds,
-                             @"limit" : [NSString stringWithFormat:@"%d",limit],
-                             @"skip" : [NSString stringWithFormat:@"%d",skip]
-                             };
-    [PFCloud callFunctionInBackground:@"queryForUniqueTrunks" withParameters:params block:^(NSArray *response, NSError *error) {
-
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query whereKey:@"toUser" equalTo:self.user];
+    [query includeKey:@"trip"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(error){
             self.wasError = YES;
             NSLog(@"Error: %@",error);
@@ -406,9 +402,11 @@
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadTrunkList"];
         }else{
             [[TTUtility sharedInstance] internetConnectionFound];
-            for(id activity in response){
-                [self.trunkArray addObject:activity[@"trip"]];
+            for(id activity in objects){
+                if(activity[@"trip"])
+                    [self.trunkArray addObject:activity[@"trip"]];
             }
+            
             if(self.trunkArray.count > 0){
                 [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
                     [self.trunkCollectionView reloadData];
@@ -416,7 +414,6 @@
                 }];
             }
         }
-    
     }];
 }
 
@@ -563,7 +560,7 @@
         //FIXME: This needs to move to Utility <---------------------------------------------------------------------
         PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
         [photoQuery whereKey:@"trip" equalTo:trunk];
-        [photoQuery whereKey:@"user" equalTo:self.user];
+//        [photoQuery whereKey:@"user" equalTo:self.user];
         [photoQuery setLimit:4];
         [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if(!error){
@@ -590,7 +587,8 @@
                 //check if this is the last record
                 if(count == objectCount){
                     //remove the trunks that have no images in them
-                    [self.trunkArray removeObjectsInArray:deleteObjects];
+                    //FIXME: DO WE WANT TO DELETE THESE? WHAT IF YOU WANT TO ADD A FIRST IMAGE?
+//                    [self.trunkArray removeObjectsInArray:deleteObjects];
                     //finish the block and notify the caller
                     completionBlock(YES,nil);
                 }
