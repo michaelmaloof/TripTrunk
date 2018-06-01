@@ -47,10 +47,10 @@
                                 <rect key="frame" x="0.0" y="207" width="375" height="460"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HvK-IO-ucn" userLabel="User Details View">
-                                <rect key="frame" x="0.0" y="40" width="375" height="627"/>
+                                <rect key="frame" x="0.0" y="188" width="375" height="350"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f4e-gL-PSV" customClass="TTRoundedImage">
-                                        <rect key="frame" x="125" y="157" width="125" height="125"/>
+                                        <rect key="frame" x="125" y="9" width="125" height="125"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="125" id="534-cd-S2u"/>
@@ -61,19 +61,19 @@
                                         </connections>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Last Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xeD-Lz-Sto">
-                                        <rect key="frame" x="0.0" y="290" width="375" height="24"/>
+                                        <rect key="frame" x="0.0" y="143" width="375" height="24"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@Username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sno-p6-dZa">
-                                        <rect key="frame" x="0.0" y="313" width="375" height="20"/>
+                                        <rect key="frame" x="0.0" y="165" width="375" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7R3-mj-Y6d">
-                                        <rect key="frame" x="37" y="379" width="301" height="55"/>
+                                        <rect key="frame" x="37" y="231" width="301" height="55"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <string key="text">Something descriptive about
 traveling around the world bio</string>
@@ -82,7 +82,7 @@ traveling around the world bio</string>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g2I-Ov-3tD">
-                                        <rect key="frame" x="42" y="446" width="60" height="21"/>
+                                        <rect key="frame" x="42" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="BMR-ma-AaK"/>
                                             <constraint firstAttribute="width" constant="60" id="tLM-E0-xFG"/>
@@ -92,7 +92,7 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vR-Q0-2WK">
-                                        <rect key="frame" x="168" y="446" width="60" height="21"/>
+                                        <rect key="frame" x="168" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="Dpf-F4-mPX"/>
                                             <constraint firstAttribute="height" constant="21" id="ljS-aX-JvX"/>
@@ -102,7 +102,7 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hcm-aP-coE">
-                                        <rect key="frame" x="273" y="446" width="60" height="21"/>
+                                        <rect key="frame" x="273" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="Gck-ab-VIE"/>
                                             <constraint firstAttribute="height" constant="21" id="Pcj-A9-YXz"/>
@@ -112,19 +112,19 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYz-bv-okm">
-                                        <rect key="frame" x="43" y="467" width="60" height="20"/>
+                                        <rect key="frame" x="43" y="319" width="60" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Following" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XVQ-5v-EkJ">
-                                        <rect key="frame" x="273" y="467" width="61" height="20"/>
+                                        <rect key="frame" x="273" y="319" width="61" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trunks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eO-2O-lc9">
-                                        <rect key="frame" x="167" y="467" width="40" height="20"/>
+                                        <rect key="frame" x="167" y="319" width="40" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -135,22 +135,26 @@ traveling around the world bio</string>
                                 </accessibility>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="FYz-bv-okm" secondAttribute="bottom" constant="11" id="1MV-qS-yLH"/>
+                                    <constraint firstItem="f4e-gL-PSV" firstAttribute="bottom" secondItem="xeD-Lz-Sto" secondAttribute="top" constant="-9" id="4Fl-Pj-ndp"/>
                                     <constraint firstItem="hcm-aP-coE" firstAttribute="leading" secondItem="7vR-Q0-2WK" secondAttribute="trailing" constant="45" id="A4o-w2-p7b"/>
-                                    <constraint firstItem="sno-p6-dZa" firstAttribute="top" secondItem="xeD-Lz-Sto" secondAttribute="bottom" constant="-1" id="DBT-3E-gj6"/>
+                                    <constraint firstAttribute="height" constant="350" id="EB2-Mw-nRl"/>
                                     <constraint firstItem="7eO-2O-lc9" firstAttribute="top" secondItem="7vR-Q0-2WK" secondAttribute="bottom" id="Hg0-AD-NHm"/>
                                     <constraint firstItem="7vR-Q0-2WK" firstAttribute="centerX" secondItem="HvK-IO-ucn" secondAttribute="centerX" constant="10" id="HqE-Sn-CFT"/>
                                     <constraint firstItem="XVQ-5v-EkJ" firstAttribute="leading" secondItem="7eO-2O-lc9" secondAttribute="trailing" constant="65.5" id="Lbf-kM-noa"/>
+                                    <constraint firstAttribute="bottom" secondItem="XVQ-5v-EkJ" secondAttribute="bottom" constant="11" id="Nv3-in-jgC"/>
+                                    <constraint firstItem="f4e-gL-PSV" firstAttribute="top" secondItem="HvK-IO-ucn" secondAttribute="top" constant="9" id="Pzv-gZ-Ktd"/>
+                                    <constraint firstAttribute="bottom" secondItem="7eO-2O-lc9" secondAttribute="bottom" constant="11" id="UW9-Ow-kLt"/>
                                     <constraint firstItem="7eO-2O-lc9" firstAttribute="centerX" secondItem="HvK-IO-ucn" secondAttribute="centerX" constant="-0.5" id="WbD-cJ-dmK"/>
                                     <constraint firstItem="g2I-Ov-3tD" firstAttribute="top" secondItem="7R3-mj-Y6d" secondAttribute="bottom" constant="12" id="Zca-7N-lsw"/>
                                     <constraint firstItem="7vR-Q0-2WK" firstAttribute="leading" secondItem="g2I-Ov-3tD" secondAttribute="trailing" constant="66" id="Zem-sw-vWg"/>
                                     <constraint firstItem="7eO-2O-lc9" firstAttribute="leading" secondItem="FYz-bv-okm" secondAttribute="trailing" constant="64.5" id="Zxo-CD-vcc"/>
                                     <constraint firstItem="FYz-bv-okm" firstAttribute="top" secondItem="g2I-Ov-3tD" secondAttribute="bottom" id="Zz8-ip-yuT"/>
-                                    <constraint firstItem="hcm-aP-coE" firstAttribute="top" secondItem="7R3-mj-Y6d" secondAttribute="bottom" constant="12" id="p8o-JG-4qb"/>
+                                    <constraint firstItem="sno-p6-dZa" firstAttribute="top" secondItem="xeD-Lz-Sto" secondAttribute="bottom" constant="-2" id="hXe-u8-9ky"/>
+                                    <constraint firstItem="7R3-mj-Y6d" firstAttribute="top" secondItem="sno-p6-dZa" secondAttribute="bottom" constant="46" id="iVP-et-xVy"/>
                                     <constraint firstItem="f4e-gL-PSV" firstAttribute="centerX" secondItem="HvK-IO-ucn" secondAttribute="centerX" id="qyU-13-P2a"/>
                                     <constraint firstItem="7vR-Q0-2WK" firstAttribute="top" secondItem="7R3-mj-Y6d" secondAttribute="bottom" constant="12" id="rYY-Pp-xOe"/>
-                                    <constraint firstItem="7R3-mj-Y6d" firstAttribute="top" secondItem="sno-p6-dZa" secondAttribute="bottom" constant="46" id="t2k-G5-e7k"/>
                                     <constraint firstItem="XVQ-5v-EkJ" firstAttribute="top" secondItem="hcm-aP-coE" secondAttribute="bottom" id="v68-Ml-ofR"/>
-                                    <constraint firstItem="xeD-Lz-Sto" firstAttribute="top" secondItem="f4e-gL-PSV" secondAttribute="bottom" constant="8" id="y9j-tm-7XS"/>
                                 </constraints>
                             </view>
                             <collectionView autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JUj-jC-bXC" customClass="TTPassthroughCollectionView">
@@ -359,21 +363,19 @@ traveling around the world bio</string>
                             <constraint firstItem="rIH-u5-iYK" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="topMargin" constant="31" id="0hG-Ey-xf5"/>
                             <constraint firstAttribute="trailing" secondItem="xeD-Lz-Sto" secondAttribute="trailing" id="2Hl-LJ-RkV"/>
                             <constraint firstItem="rIH-u5-iYK" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="88T-Aw-OYh"/>
-                            <constraint firstItem="92z-HT-GCL" firstAttribute="top" secondItem="FYz-bv-okm" secondAttribute="bottom" constant="27" id="8sg-UR-HEW"/>
                             <constraint firstItem="ScL-zl-JFC" firstAttribute="top" secondItem="Vba-qk-WVi" secondAttribute="bottom" constant="14" id="9bD-oE-fGX"/>
                             <constraint firstItem="7R3-mj-Y6d" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="37" id="Akm-Ya-v3s"/>
                             <constraint firstAttribute="bottomMargin" secondItem="ah8-Ma-njH" secondAttribute="bottom" constant="-49" id="D7R-kx-wTd"/>
-                            <constraint firstAttribute="topMargin" secondItem="HvK-IO-ucn" secondAttribute="top" constant="-20" id="DqU-tx-Tzn"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="HvK-IO-ucn" secondAttribute="bottom" constant="-49" id="EGb-Nf-Qmc"/>
                             <constraint firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="ENe-HW-7jD"/>
+                            <constraint firstItem="HvK-IO-ucn" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="top" constant="188" id="EP6-xS-LLb"/>
                             <constraint firstItem="HvK-IO-ucn" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="Gwh-v5-vqg"/>
                             <constraint firstItem="xeD-Lz-Sto" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JGT-dj-fcC"/>
                             <constraint firstItem="NIz-OT-CC1" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JwR-KS-idZ"/>
                             <constraint firstAttribute="trailing" secondItem="NIz-OT-CC1" secondAttribute="trailing" id="RYk-AA-ods"/>
-                            <constraint firstItem="Vba-qk-WVi" firstAttribute="top" secondItem="JUj-jC-bXC" secondAttribute="bottom" constant="16" id="S1O-h9-yGs"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="UvK-nt-cbB"/>
                             <constraint firstItem="92z-HT-GCL" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="38" id="Uxg-fW-9ox"/>
                             <constraint firstAttribute="trailing" secondItem="HvK-IO-ucn" secondAttribute="trailing" id="XbS-im-aoc"/>
+                            <constraint firstItem="JUj-jC-bXC" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="top" constant="188" id="XhD-ui-ATr"/>
                             <constraint firstAttribute="trailing" secondItem="sno-p6-dZa" secondAttribute="trailing" id="ZJf-A8-q3E"/>
                             <constraint firstAttribute="bottomMargin" secondItem="NIz-OT-CC1" secondAttribute="bottom" constant="-49" id="bRL-T4-kP7"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="leading" secondItem="ah8-Ma-njH" secondAttribute="leading" id="fT9-rY-6du"/>
