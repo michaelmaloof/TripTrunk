@@ -267,18 +267,32 @@
     NSString *photoUrl;
     if(photos.count>0){
         photoUrl = photos[0];
-        [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+        
+        NSArray *urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+        NSString *file = [urlComponents lastObject];
+        NSString *newSpotlightPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_300,h_250,c_fit/%@",file];
+        
+        [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:newSpotlightPhotoUrl]];
         
         //If there are 4 photos then load all of them into the cell, otherwise, only load 1 photo and enlarge the imageView
         if(photos.count>3){
             photoUrl = photos[1];
-            [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+            file = [urlComponents lastObject];
+            NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+            [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
             
             photoUrl = photos[2];
-            [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+            file = [urlComponents lastObject];
+            newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+            [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
             
             photoUrl = photos[3];
-            [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:photoUrl]];
+            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+            file = [urlComponents lastObject];
+            newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+            [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
         }else{
             //only 1 photo is being used so enlarge the imageView
             cell.lowerInfoConstraint.constant = 248;

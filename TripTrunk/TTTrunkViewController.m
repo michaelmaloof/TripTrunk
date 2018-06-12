@@ -214,11 +214,18 @@
         }else{
             CGRect frame;
             Photo *photo = self.photos[indexPath.row];
-            if(indexPath.row == 0)
+            NSArray *urlComponents = [photo.imageUrl componentsSeparatedByString:@"/"];
+            NSString *file = [urlComponents lastObject];
+            NSString *newPhotoUrl;
+            if(indexPath.row == 0){
+                newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_350,h_350,c_fit/%@",file];
                frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
-            else frame = CGRectMake(0, 0, ([UIScreen mainScreen].bounds.size.width/3)-1, ([UIScreen mainScreen].bounds.size.width/3)-1);
+            }else{
+                newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_100,c_fit/%@",file];
+                frame = CGRectMake(0, 0, ([UIScreen mainScreen].bounds.size.width/3)-1, ([UIScreen mainScreen].bounds.size.width/3)-1);
+            }
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-            [imageView setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
+            [imageView setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.clipsToBounds = YES;
             cell.tag = indexPath.row;

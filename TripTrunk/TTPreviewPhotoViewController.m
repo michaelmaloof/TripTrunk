@@ -49,8 +49,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    [self.photoPreview setImageWithURL:[NSURL URLWithString:self.photo.imageUrl]];
+    NSArray *urlComponents = [self.photo.imageUrl componentsSeparatedByString:@"/"];
+    NSString *file = [urlComponents lastObject];
+    NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_375,h_667,c_fit/%@",file];
+    [self.photoPreview setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
     self.photoPreview.contentMode = UIViewContentModeScaleAspectFill;
     [self.photo.user fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         [self.ProfilePic setImageWithURL:[NSURL URLWithString:self.photo.user[@"profilePicUrl"]]];

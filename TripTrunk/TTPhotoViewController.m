@@ -483,8 +483,11 @@
     else nextIndex = self.index-1;
     
     UIImageView *preloadImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,0,0)];
-    Photo *newPhoto = self.photos[self.index];
-    [preloadImage setImageWithURL:[NSURL URLWithString:newPhoto.imageUrl]];
+    Photo *newPhoto = self.photos[nextIndex];
+    NSArray *urlComponents = [newPhoto.imageUrl componentsSeparatedByString:@"/"];
+    NSString *file = [urlComponents lastObject];
+    NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_375,h_667,c_fit/%@",file];
+    [preloadImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
 }
 
 -(void)preloadNextImage{
@@ -494,18 +497,24 @@
     else nextIndex = self.index+1;
     
     UIImageView *preloadImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,0,0)];
-    Photo *newPhoto = self.photos[self.index];
-    [preloadImage setImageWithURL:[NSURL URLWithString:newPhoto.imageUrl]];
+    Photo *newPhoto = self.photos[nextIndex];
+    NSArray *urlComponents = [newPhoto.imageUrl componentsSeparatedByString:@"/"];
+    NSString *file = [urlComponents lastObject];
+    NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_375,h_667,c_fit/%@",file];
+    [preloadImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
 }
 
 -(UIImageView*)createUIImageView:(int)x{
     UIImageView *imageView = [[UIImageView alloc] init];
     Photo *newPhoto = self.photos[self.index];
     self.photo = newPhoto;
+    NSArray *urlComponents = [newPhoto.imageUrl componentsSeparatedByString:@"/"];
+    NSString *file = [urlComponents lastObject];
+    NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_375,h_667,c_fit/%@",file];
     [self updateLikeStatusForCurrentPhoto];
     if(self.image)
         imageView.image = self.image;
-    else [imageView setImageWithURL:[NSURL URLWithString:newPhoto.imageUrl]];
+    else [imageView setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.frame = CGRectMake(x, 0, kScreenWidth, kScreenHeight);
     imageView.clipsToBounds = YES;

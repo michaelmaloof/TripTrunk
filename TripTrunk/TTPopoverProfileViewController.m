@@ -93,7 +93,10 @@
     cell.video_icon.hidden = YES;
     
     Photo *photo = self.photos[indexPath.row];
-    [cell.photo setImageWithURL:[NSURL URLWithString:photo.imageUrl]];
+    NSArray *urlComponents = [photo.imageUrl componentsSeparatedByString:@"/"];
+    NSString *file = [urlComponents lastObject];
+    NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_375,h_667,c_fit/%@",file];
+    [cell.photo setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
     cell.photo.contentMode = UIViewContentModeScaleAspectFill;
     if(photo.video)
         cell.video_icon.hidden = NO;
