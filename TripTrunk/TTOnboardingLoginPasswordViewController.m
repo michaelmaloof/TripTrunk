@@ -72,13 +72,9 @@
                                                   otherButtonTitles:nil, nil];
             [alert show];
         }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
-                TTTimelineViewController *timelineViewController = (TTTimelineViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTimelineViewController"];
-                [self presentViewController:timelineViewController animated:(BOOL)YES completion:^{
-                    
-                }];
-            });
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMapAfterLogin" object:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
         }
         
     }];

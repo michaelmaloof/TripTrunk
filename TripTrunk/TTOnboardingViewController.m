@@ -82,6 +82,7 @@
                  self.isFBUser = YES;
                  [self showSetUsernameView];
              } else {
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMapAfterLogin" object:nil];
                  [self dismissViewControllerAnimated:YES completion:^{
                  }];
              }
@@ -104,5 +105,6 @@
     UINavigationController *homeNavController = [[UINavigationController alloc] initWithRootViewController:eula];
     [self presentViewController:homeNavController animated:YES completion:nil];
 }
+
 
 @end

@@ -10,5 +10,4 @@
 #import "TTBaseLoginViewController.h"
 
 @interface TTOnboardingViewController : TTBaseLoginViewController
-
 @end

@@ -42,6 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.user = [PFUser currentUser];
+    [self setupNotificationCenter];
     
     //init the arrays
     self.filteredArray = [[NSMutableArray alloc] init];
@@ -59,15 +60,29 @@
     [self.refreshControl endRefreshing];
     
     //get following list
-    [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
-        if(succeeded){
-            [[TTCache sharedCache] setFollowing:self.following];
-            //setup the view controller
-            [self initMap];
-      //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
-            [self initTrips:NO refresh:self.refreshControl]; //not sure how we're doing this yet so may not do this at all
-        }
-    }];
+    if(self.user){
+        [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
+            if(succeeded){
+                [[TTCache sharedCache] setFollowing:self.following];
+                //setup the view controller
+                [self initMap];
+          //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
+                [self initTrips:NO refresh:self.refreshControl]; //not sure how we're doing this yet so may not do this at all
+            }
+        }];
+    }
+}
+
+-(void)setupNotificationCenter{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateMapAfterLogin)
+                                                 name:@"updateMapAfterLogin"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetMapForLogout)
+                                                 name:@"resetMapForLogout"
+                                               object:nil];
 }
 
 #pragma mark - UICollectionView
@@ -528,4 +543,23 @@
     //    activityViewController.trip
     [self.navigationController pushViewController:activityViewController animated:YES];
 }
+
+
+- (void)updateMapAfterLogin {
+    self.user = [PFUser currentUser];
+    [[NSNotificationCenter defaultCenter] removeObserver:@"updateMapAfterLogin"];
+    
+    [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
+        if(succeeded){
+            [[TTCache sharedCache] setFollowing:self.following];
+            [self initMap];
+            [self initTrips:NO refresh:self.refreshControl];
+        }
+    }];
+}
+
+-(void)resetMapForLogout{
+    [self clearMap];
+}
+
 @end

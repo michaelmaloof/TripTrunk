@@ -29,7 +29,7 @@
 #import "TTAnalytics.h"
 #import "TTUtility.h"
 #import "TTOnboardingViewController.h"
-
+#import "TTHomeMapViewController.h"
 
 //TripTrunk Parse Keys
 #define kPARSE_APP_ID @"hgAFtnU5haxHqyFnupsASx6MwZmEQs0wY0E43uwI"
@@ -193,14 +193,15 @@
     [[PFInstallation currentInstallation] saveInBackground];
     [PFQuery clearAllCachedResults];
     [PFUser logOut];
-    
-    // This pushes the user back to the map view, on the map tab, which should then show the loginview
-    UITabBarController *tabbarcontroller = (UITabBarController *)self.window.rootViewController;
-    UINavigationController *homeNavController = [[tabbarcontroller viewControllers] objectAtIndex:0];
-    [homeNavController dismissViewControllerAnimated:YES completion:nil];
-//    [homeNavController popToRootViewControllerAnimated:YES];
-    [tabbarcontroller setSelectedIndex:0];
     NSLog(@"User has logged out");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"resetMapForLogout" object:nil];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Login" bundle:nil];
+    TTOnboardingViewController *viewController = (TTOnboardingViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LoginNavigationController"];
+    [self.window makeKeyAndVisible];
+    [self.window.rootViewController presentViewController:viewController
+                                                 animated:YES
+                                               completion:nil];
 }
 
 //#pragma mark - Tab Bar
