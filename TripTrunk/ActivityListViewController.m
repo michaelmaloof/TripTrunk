@@ -30,7 +30,7 @@ enum TTActivityViewType : NSUInteger {
 @interface ActivityListViewController () <UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, ActivityTableViewCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *activities;
-@property (strong, nonatomic) NSMutableArray *followingActivities;
+//@property (strong, nonatomic) NSMutableArray *followingActivities;
 @property NSUInteger viewType;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) Photo *photo;
@@ -40,7 +40,7 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL needToRefresh;
 @property BOOL isLoading;
 @property UIBarButtonItem *filter;
-@property NSMutableArray *friends;
+//@property NSMutableArray *friends;
 @property UIRefreshControl *refreshController;
 @property int color;
 @property NSTimer *colorTimer;

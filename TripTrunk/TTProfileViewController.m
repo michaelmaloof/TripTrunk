@@ -48,7 +48,7 @@
 //Is this stuff needed? It's carried over from the old Trunk VC
 @property NSMutableArray *parseLocations;
 @property NSMutableArray *meParseLocations;
-@property NSMutableArray *friends;
+//@property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
 @property NSMutableArray *haventSeens;

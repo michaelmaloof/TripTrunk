@@ -23,7 +23,7 @@
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *searchResults;
-@property (strong, nonatomic) NSMutableArray *friends;
+//@property (strong, nonatomic) NSMutableArray *friends;
 @property (nonatomic) BOOL isFollowing;
 @property (strong, nonatomic) PFUser *thisUser;
 // Array of PFUser objects that are already part of the trip
@@ -90,7 +90,7 @@
     // Create nested arrays to populate the table view
     NSMutableArray *following = [[NSMutableArray alloc] init];
     NSMutableArray *followers = [[NSMutableArray alloc] init];
-    _friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
+    self.friends = [[NSMutableArray alloc] initWithObjects:following, followers, nil];
     self.followingTableView.multipleTouchEnabled = YES;
     self.followingTableView.allowsMultipleSelection = YES;
     [self initSearchController];
@@ -146,7 +146,7 @@
                 }
             }
             
-            [[_friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
+            [[self.friends objectAtIndex:0] addObjectsFromArray:friendsToAdd];
             
 //            // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
 //            dispatch_async(dispatch_get_main_queue(), ^{
@@ -174,9 +174,9 @@
                 }
             }
             
-            [[_friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
+            [[self.friends objectAtIndex:1] addObjectsFromArray:friendsToAdd];
             
-            self.scrollViewHeightConstraint.constant = 215+([[_friends objectAtIndex:0] count]*66);
+            self.scrollViewHeightConstraint.constant = 215+([[self.friends objectAtIndex:0] count]*66);
             self.viewHeightConstraint.constant = self.scrollViewHeightConstraint.constant;
             
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
@@ -231,11 +231,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Search Controller and the regular table view have different data sources
     if (!self.searchController.active) {
-        return [[_friends objectAtIndex:section] count];
+        return [[self.friends objectAtIndex:section] count];
     } else if (self.isNext == NO && self.isSearching == YES){
         return self.searchResults.count;
     } else {
-        return [[_friends objectAtIndex:section] count];
+        return [[self.friends objectAtIndex:section] count];
     }
 }
 
@@ -261,7 +261,7 @@
         possibleFriend = [self.searchResults objectAtIndex:indexPath.row];
     }
     else {
-        possibleFriend = [[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        possibleFriend = [[self.friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:USER_CELL forIndexPath:indexPath];
     cell.profilePicImageView.image = nil;
@@ -300,11 +300,11 @@
     
     else if (self.membersToAdd.count < 50){
         if (self.isNext == YES && self.isSearching == NO){
-            [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+            [self.membersToAdd addObject:[[self.friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         } else if (self.isSearching == YES){
             [self.membersToAdd addObject:[self.searchResults objectAtIndex:indexPath.row]];
         } else {
-            [self.membersToAdd addObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+            [self.membersToAdd addObject:[[self.friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         }
         
         
@@ -323,7 +323,7 @@
 
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     if (self.isNext == YES && self.isSearching == NO ){
-        [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        [self.membersToAdd removeObject:[[self.friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     } else if (self.isSearching == YES){
         PFUser *user = [self.searchResults objectAtIndex:indexPath.row];
         BOOL delete = false;
@@ -340,7 +340,7 @@
             [self.membersToAdd removeObject:user];
         }
     } else {
-        [self.membersToAdd removeObject:[[_friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        [self.membersToAdd removeObject:[[self.friends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
 }
 

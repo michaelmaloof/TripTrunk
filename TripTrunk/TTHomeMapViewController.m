@@ -1,4 +1,4 @@
-//
+  //
 //  TTHomeMapViewController.m
 //  TripTrunk
 //
@@ -21,16 +21,15 @@
 
 @import GoogleMaps;
 
-@interface TTHomeMapViewController ()
+@interface TTHomeMapViewController () <UIScrollViewDelegate>
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) PFUser *user;
-@property (strong, nonatomic) NSArray *trunks;
 @property (strong, nonatomic) NSMutableArray *filteredArray;
 @property (strong, nonatomic) NSMutableDictionary *imageSet;
 @property (strong, nonatomic) NSMutableArray *sortedArray;
-@property (strong, nonatomic) NSMutableArray *following;
+//@property (strong, nonatomic) NSMutableArray *following;
 @property (strong, nonatomic) NSMutableArray *objid;
 @property (strong, nonatomic) NSMutableArray *userTrips;
 @property BOOL reachedBottom;
@@ -61,15 +60,22 @@
     
     //get following list
     if(self.user){
-        [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
-            if(succeeded){
-                [[TTCache sharedCache] setFollowing:self.following];
-                //setup the view controller
-                [self initMap];
-          //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
-                [self initTrips:NO refresh:self.refreshControl]; //not sure how we're doing this yet so may not do this at all
-            }
-        }];
+        
+        if(self.following.count > 0){
+            [self initMap];
+            [self initTrips:NO refresh:self.refreshControl];
+        }else{
+            [self loadFollowingWithBlock:^(BOOL succeeded, NSError *error) {
+                if(succeeded){
+                    [self initMap];
+                    //    [self initExcursion]; //not sure how we're doing this yet so may not do this at all
+                    [self initTrips:NO refresh:self.refreshControl];
+                }else{
+                    NSLog(@"ERROR: %@",error);
+                }
+            }];
+        }
+        
     }
 }
 
@@ -84,6 +90,25 @@
                                                  name:@"resetMapForLogout"
                                                object:nil];
 }
+
+#pragma mark - load activity data
+//-(void)loadFriends{
+//    // TODO: Make this work for > 100 users since parse default limits 100.
+//    if(!self.following){
+//        [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+//            if (!error) {
+//                self.following = [NSMutableArray arrayWithArray:users];
+//                [self loadUserActivities];
+//
+//            }else {
+//                //            self.navigationItem.rightBarButtonItem.enabled = YES;
+//                self.isLoading = NO;
+//                [ParseErrorHandlingController handleError:error];
+//                NSLog(@"error %@", error);
+//            }
+//        }];
+//    }
+//}
 
 #pragma mark - UICollectionView
 -(void)initExcursion{
@@ -123,56 +148,45 @@
 
 
 -(void)initTrips:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
-  
-    NSMutableArray *followingObjectIds = [[NSMutableArray alloc] init];
-    for(PFUser *user in self.following){
-        [followingObjectIds addObject:user.objectId];
-    }
-    [followingObjectIds addObject:[PFUser currentUser].objectId];
     
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDate *tomorrow = [cal dateByAddingUnit:NSCalendarUnitDay
-                                       value:2
-                                      toDate:[NSDate date]
-                                     options:0];
-    
-    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
-    [dateformate setDateFormat:@"YYYY-MM-dd"];
-    NSString *dateString=[dateformate stringFromDate:tomorrow];
-    //@"createdDate" : photo.createdAt ? photo.createdAt : dateString,
-    NSDictionary *params = @{
-                             @"objectIds" : followingObjectIds,
-                             @"activityObjectIds" : self.objid,
-                             @"createdDate" : dateString,
-                             @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"],
-                             @"userTrips" : self.userTrips
-                             };
-    
-    [PFCloud callFunctionInBackground:@"queryForNewsFeed" withParameters:params block:^(NSArray *response, NSError *error) {
-        if (!error) {
-            if (!isRefresh && response.count == 0)
-                self.reachedBottom = YES;
-            [[TTUtility sharedInstance] internetConnectionFound];
+    [SocialUtility queryForTrunksWithFollowers:self.following withLimit:200 block:^(NSArray *activities, NSError *error) {
+        if(!error){
             NSMutableArray *trips = [[NSMutableArray alloc] init];
-            for (PFObject *activity in response[0]){
+            for (PFObject *activity in activities){
                 Trip *atrip = activity[@"trip"];
                 PFUser *auser = activity[@"fromUser"];
-                NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
-                if(![self.userTrips containsObject:mashup])
-                    [self.userTrips addObject:mashup];
-                
-                [trips addObject:atrip];
+                if(atrip){
+                    NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
+                    if(![self.userTrips containsObject:mashup])
+                        [self.userTrips addObject:mashup]; //FIXME: Why am I doing this?
+
+                    [trips addObject:atrip];
+                }else{
+                    NSLog(@"Trip is missing from activity, why?");
+                }
             }
             
+            NSMutableSet *objects = [NSMutableSet set];
+            NSMutableIndexSet *toDelete = [NSMutableIndexSet indexSet];
+            [trips enumerateObjectsUsingBlock:^(Trip* t, NSUInteger i, BOOL *stop) {
+                if ([objects containsObject:t.objectId]) {
+                    [toDelete addIndex:i];
+                } else {
+                    [objects addObject:t.objectId];
+                }
+            }];
+            [trips removeObjectsAtIndexes:toDelete];
+
+            if(trips.count>0){
                 NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
                 NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
                 self.sortedArray = [NSMutableArray arrayWithArray:[trips sortedArrayUsingDescriptors:descriptors]];
-            
-            Trip *trunk = self.sortedArray[0];
-            PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
-            [self clearMap];
-            [self updateMap:geoPoint WithTrunk:trunk];
-    
+                
+                Trip *trunk = self.sortedArray[0];
+                PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
+                [self clearMap];
+                [self updateMap:geoPoint WithTrunk:trunk];
+                
                 //Call image URL download and wait
                 [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
                     //the block is done so reload the cells or there's an error
@@ -182,13 +196,98 @@
                         //There's an error. Handle this and add the Google tracking
                         NSLog(@"initSpotlightImagesWithBlock failed");
                     }
-    
+                    
                 }];
+            }
+        }else{
+            NSLog(@"ERROR: %@",error);
+            //There's an error. Handle this and add the Google tracking
+            NSLog(@"queryForTrunksWithFollowers failed");
         }
-
+        
+        
         self.isLoading = NO;
         [refreshControl endRefreshing];
     }];
+    
+
+    
+    
+    
+    
+    
+  
+//    NSMutableArray *followingObjectIds = [[NSMutableArray alloc] init];
+//    for(PFUser *user in self.following){
+//        [followingObjectIds addObject:user.objectId];
+//    }
+//    [followingObjectIds addObject:[PFUser currentUser].objectId];
+//
+//    NSCalendar *cal = [NSCalendar currentCalendar];
+//    NSDate *tomorrow = [cal dateByAddingUnit:NSCalendarUnitDay
+//                                       value:2
+//                                      toDate:[NSDate date]
+//                                     options:0];
+//
+//    NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+//    [dateformate setDateFormat:@"YYYY-MM-dd"];
+//    NSString *dateString=[dateformate stringFromDate:tomorrow];
+//    //@"createdDate" : photo.createdAt ? photo.createdAt : dateString,
+//    NSDictionary *params = @{
+//                             @"objectIds" : followingObjectIds,
+//                             @"activityObjectIds" : self.objid,
+//                             @"createdDate" : dateString,
+//                             @"isRefresh" : [NSString stringWithFormat:@"%@",isRefresh ? @"YES" : @"NO"],
+//                             @"userTrips" : self.userTrips
+//                             };
+//
+//    [PFCloud callFunctionInBackground:@"queryForNewsFeed" withParameters:params block:^(NSArray *response, NSError *error) {
+//        if (!error) {
+//            if (!isRefresh && response.count == 0)
+//                self.reachedBottom = YES;
+//            [[TTUtility sharedInstance] internetConnectionFound];
+//
+//            NSMutableArray *trips = [[NSMutableArray alloc] init];
+//            for (PFObject *activity in response[0]){
+//                Trip *atrip = activity[@"trip"];
+//                PFUser *auser = activity[@"fromUser"];
+//                NSString *mashup = [NSString stringWithFormat:@"%@.%@",atrip.objectId,auser.objectId];
+//                if(![self.userTrips containsObject:mashup])
+//                    [self.userTrips addObject:mashup];
+//
+//                [trips addObject:atrip];
+//            }
+//
+//            if(trips.count>0){
+//                NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
+//                NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+//                self.sortedArray = [NSMutableArray arrayWithArray:[trips sortedArrayUsingDescriptors:descriptors]];
+//
+//                Trip *trunk = self.sortedArray[0];
+//                PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
+//                [self clearMap];
+//                [self updateMap:geoPoint WithTrunk:trunk];
+//
+//                //Call image URL download and wait
+//                [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+//                    //the block is done so reload the cells or there's an error
+//                    if(succeeded){
+//                        [self.collectionView reloadData];
+//                    }else{
+//                        //There's an error. Handle this and add the Google tracking
+//                        NSLog(@"initSpotlightImagesWithBlock failed");
+//                    }
+//
+//                }];
+//
+//            }else{
+//                NSLog(@"Something went wrong with queryForNewsFeed. No activities in response[0]");
+//            }
+//        }
+//
+//        self.isLoading = NO;
+//        [refreshControl endRefreshing];
+//    }];
 }
 
 -(void)initSpotlightImagesWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
@@ -223,7 +322,7 @@
                 }else{
                     //no images found, flag for removal from sorted array
                     [deleteObjects addObject:trunk];
-                    NSLog(@"deleted: %@",trunk);
+                    NSLog(@"deleted: %@ -> beacuse there are no images in this trunk",trunk.objectId);
                 }
                 
                 //increment the count for the last record check
@@ -248,17 +347,55 @@
     
 }
 
--(void)loadFollowingWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
-    [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-        if (!error){
-            self.following = [[NSMutableArray alloc] init];
-            self.following  = [NSMutableArray arrayWithArray:users];
-            completionBlock(YES,nil);
-        }else{
-            completionBlock(NO,error);
+#pragma mark - Following & Activities
+-(void)loadUserActivitiesWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
+
+    if(self.followingActivities.count > 0){
+        completionBlock(YES,nil);
+    }else{
+        if (self.isLoading == NO){
+            self.isLoading = YES;
+            [SocialUtility queryForFollowingActivities:0 friends:self.following activities:nil isRefresh:NO query:^(NSArray *activities, NSError *error) {
+                if(!error){
+                    for (PFObject *obj in activities){
+                        if([obj[@"type"] isEqualToString:@"addedPhoto"]){
+                            PFUser *toUser = obj[@"toUser"];
+                            PFUser *fromUser = obj[@"fromUser"];
+                            if (obj[@"trip"]){
+                                Trip *trip = obj[@"trip"];//FIXME Should be cloud code && ![toUser.objectId isEqualToString:fromUser.objectId]
+                                if (trip.name != nil  && toUser != nil && fromUser != nil){
+                                    if(![self.followingActivities containsObject:obj])
+                                        [self.followingActivities addObject:obj];
+                                }
+                            }
+                        }
+                    }
+                    
+                    completionBlock(YES,nil);
+                    self.isLoading = NO;
+                }else{
+                   completionBlock(NO,error);
+                }
+            }];
         }
-        
-    }];
+    }
+}
+
+-(void)loadFollowingWithBlock:(void (^)(BOOL succeeded, NSError *error))completionBlock{
+    if(self.following.count > 0){
+        completionBlock(YES,nil);
+    }else{
+        [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+            if (!error){
+                self.following = [[NSMutableArray alloc] init];
+                self.following  = [NSMutableArray arrayWithArray:users];
+                completionBlock(YES,nil);
+            }else{
+                completionBlock(NO,error);
+            }
+            
+        }];
+    }
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -560,6 +697,29 @@
 
 -(void)resetMapForLogout{
     [self clearMap];
+}
+
+#pragma mark - UIScrollViewDelegate
+-(void)scrollViewDidScroll:(UIScrollView *)sender{
+//    if (self.isViewLoaded && self.view.window)
+//        [self checkWhichVideoToEnable:NO];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate{
+//    CGPoint convertedPoint;
+//    CGSize size = aScrollView.contentSize;
+////    UIEdgeInsets inset = aScrollView.contentInset;
+////    float y = offset.y + bounds.size.width - inset.right;
+////    float h = size.width;
+//    
+//    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+//        convertedPoint = [self.collectionView convertPoint:cell.frame.origin toView:aScrollView];
+//    }
+//    
+//    if(convertedPoint.x+350 > size.width && !self.isLoading) {
+//        self.isLoading = YES;
+//        [self initTrips:NO refresh:nil];
+//    }
 }
 
 @end

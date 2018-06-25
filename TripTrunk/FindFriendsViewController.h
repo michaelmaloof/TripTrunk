@@ -11,7 +11,6 @@
 #import <ParseUI/ParseUI.h>
 #import "TTBaseTableViewController.h"
 
-
 @interface FindFriendsViewController : TTBaseTableViewController
 
 @end

@@ -289,4 +289,11 @@
  */
 + (void)queryForUserFromFBID:(id)fbid  block:(void (^)(PFUser* user, NSError *error))completionBlock;
 
+/**
+ *  load trunks from follower list
+ *
+ *  @param followers            Array of followers the currentUser is following
+ */
++ (void)queryForTrunksWithFollowers:(NSArray*)followers withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock;
+
 @end

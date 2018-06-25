@@ -48,9 +48,9 @@
     [super viewDidLoad];
     self.title = @"Find Friends";
     [self.tableView registerNib:[UINib nibWithNibName:@"UserTableViewCell" bundle:nil] forCellReuseIdentifier:@"FriendCell"];
-    _friends = [[NSMutableArray alloc] init];
-    _following = [[NSMutableArray alloc] init];
-    _pending = [[NSMutableArray alloc] init];
+    self.friends = [[NSMutableArray alloc] init];
+    self.following = [[NSMutableArray alloc] init];
+    self.pending = [[NSMutableArray alloc] init];
     self.loadedOnce = NO;
     [self loadPromotedUsers];
     [self setUpTableViewandSearch];
@@ -152,7 +152,7 @@
             }
         }
         else {
-            _friends = [NSMutableArray arrayWithArray:objects];
+            self.friends = [NSMutableArray arrayWithArray:objects];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.isLoadingFacebook = NO;
@@ -219,7 +219,7 @@
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
         if (!error) {
             for (PFUser *user in users) {
-                [_following addObject:user.objectId];
+                [self.following addObject:user.objectId];
             }
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{

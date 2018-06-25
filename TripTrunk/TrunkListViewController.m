@@ -27,7 +27,7 @@
 @property NSDate *today;
 @property UIBarButtonItem *filter;
 @property UIBarButtonItem *trunkListToggle;
-@property NSMutableArray *friends;
+//@property NSMutableArray *friends;
 @property NSMutableArray *objectIDs;
 @property NSMutableArray *meObjectIDs;
 @property NSMutableArray *haventSeens;

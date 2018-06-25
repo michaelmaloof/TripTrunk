@@ -28,7 +28,7 @@
 
 @interface TTNewsFeedViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, PhotoDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) NSMutableArray *following;
+//@property (strong, nonatomic) NSMutableArray *following;
 @property TTTTimeIntervalFormatter *timeFormatter;
 @property (strong, nonatomic) NSMutableArray *objid;
 @property BOOL isLoading;

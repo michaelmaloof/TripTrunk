@@ -19,6 +19,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.followingActivities = [[NSMutableArray alloc] init];
+    self.friends = [[NSMutableArray alloc] init];
+    self.facebookFriends = [[NSMutableArray alloc] init];
+    self.followers = [[NSMutableArray alloc] init];
+    self.following = [[NSMutableArray alloc] init];
+    self.pending = [[NSMutableArray alloc] init];
+    self.promoted = [[NSMutableArray alloc] init];
+    
 //This is to remove the titles under the tab bar icons
 //    [self tabBarTitle];
     [self checkUserInternetConnection];

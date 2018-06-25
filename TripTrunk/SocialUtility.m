@@ -1334,4 +1334,25 @@
     }];
 }
 
+
++ (void)queryForTrunksWithFollowers:(NSArray*)followers withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock{
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    [query whereKey:@"type" equalTo:@"addToTrip"];
+    [query whereKey:@"toUser" containedIn:followers];
+    [query orderByDescending:@"createdAt"];
+    [query includeKey:@"trip"];
+    [query setLimit:limit];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error){
+            [[TTUtility sharedInstance] internetConnectionFound];
+            completionBlock(objects,nil);
+        } else {
+            [ParseErrorHandlingController handleError:error];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"queryForTrunksWithFollowers:withLimit:"];
+            completionBlock(nil,error);
+        }
+    }];
+    
+}
+
 @end

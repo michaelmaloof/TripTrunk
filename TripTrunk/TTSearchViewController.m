@@ -26,7 +26,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *searchTextField;
-@property (strong, nonatomic) NSMutableArray *promoted;
+//@property (strong, nonatomic) NSMutableArray *promoted;
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
@@ -34,9 +34,9 @@
 @property PFUser *user;
 @property BOOL loadedOnce;
 @property (nonatomic, strong) NSMutableArray *searchResults;
-@property (strong, nonatomic) NSMutableArray *friends;
-@property (strong, nonatomic) NSMutableArray *following; // users this user is already following
-@property (strong, nonatomic) NSArray *pending; // users this user has requested to follow
+//@property (strong, nonatomic) NSMutableArray *friends;
+//@property (strong, nonatomic) NSMutableArray *following; // users this user is already following
+//@property (strong, nonatomic) NSArray *pending; // users this user has requested to follow
 @property int searchCount;
 @property BOOL removeResults;
 @property BOOL isSearching;
@@ -177,7 +177,7 @@
             else
             {
                 [[TTUtility sharedInstance] internetConnectionFound];
-                [_friends addObjectsFromArray:objects];
+                [self.friends addObjectsFromArray:objects];
                 
                 
                 // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.

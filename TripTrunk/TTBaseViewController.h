@@ -15,6 +15,13 @@
 #import "TTFont.h"
 
 @interface TTBaseViewController : UIViewController
+@property (strong, nonatomic) NSMutableArray *followingActivities;
+@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableArray *facebookFriends;
+@property (strong, nonatomic) NSMutableArray *followers;
+@property (strong, nonatomic) NSMutableArray *following;
+@property (strong, nonatomic) NSMutableArray *pending;
+@property (strong, nonatomic) NSMutableArray *promoted;
 
 /**
  *  Make sure we have no tab bar titles

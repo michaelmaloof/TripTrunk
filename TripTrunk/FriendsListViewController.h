@@ -11,7 +11,6 @@
 #import <ParseUI/ParseUI.h>
 #import "TTBaseTableViewController.h"
 
-
 @interface FriendsListViewController : TTBaseTableViewController
 - (id)initWithUser:(PFUser *)user andFollowingStatus:(BOOL)isFollowing;
 

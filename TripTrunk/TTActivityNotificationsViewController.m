@@ -44,8 +44,8 @@ enum TTActivityViewType : NSUInteger {
 @property BOOL needToRefresh;
 @property BOOL isLoading;
 @property UIBarButtonItem *filter;
-@property NSMutableArray *friends;
-@property NSMutableArray *facebookFriends;
+//@property NSMutableArray *friends;
+//@property NSMutableArray *facebookFriends;
 @property NSMutableArray *facebookFriendsOriginalArray;
 @property UIRefreshControl *refreshController;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
