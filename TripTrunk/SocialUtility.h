@@ -293,7 +293,8 @@
  *  load trunks from follower list
  *
  *  @param followers            Array of followers the currentUser is following
+ *  @param previousTrunks       Array of trunks already loaded
  */
-+ (void)queryForTrunksWithFollowers:(NSArray*)followers withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock;
++ (void)queryForTrunksWithFollowers:(NSArray*)followers withoutPreviousTrunks:(NSArray*)previousTrunks withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock;
 
 @end

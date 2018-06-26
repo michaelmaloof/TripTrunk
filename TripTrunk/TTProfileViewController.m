@@ -430,22 +430,31 @@
 }
 
 -(void)refreshSocialStatCounts{
-    //FIXME: CACHE THESE
-    [SocialUtility followerCount:self.user block:^(int count, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-//            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
-            self.followersCount.text = [NSString stringWithFormat:@"%i",count];
-        });
-    }];
     
-    [SocialUtility followingCount:self.user block:^(int count, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-//            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
-            self.followingCount.text = [NSString stringWithFormat:@"%i",count];
-        });
-    }];
+    if(self.followers && self.followers.count>0){
+        self.followersCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.followers.count];
+    }else{
+        //FIXME: CACHE THESE
+        [SocialUtility followerCount:self.user block:^(int count, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+    //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+    //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
+                self.followersCount.text = [NSString stringWithFormat:@"%i",count];
+            });
+        }];
+    }
+    
+    if(self.following && self.following.count>0){
+        self.followingCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.following.count];
+    }else{
+        [SocialUtility followingCount:self.user block:^(int count, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+    //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
+    //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
+                self.followingCount.text = [NSString stringWithFormat:@"%i",count];
+            });
+        }];
+    }
     
     [SocialUtility trunkCount:self.user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{

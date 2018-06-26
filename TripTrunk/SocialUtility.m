@@ -1335,10 +1335,11 @@
 }
 
 
-+ (void)queryForTrunksWithFollowers:(NSArray*)followers withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock{
++ (void)queryForTrunksWithFollowers:(NSArray*)followers withoutPreviousTrunks:(NSArray*)previousTrunks withLimit:(int)limit block:(void (^)(NSArray* activities, NSError *error))completionBlock{
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query whereKey:@"toUser" containedIn:followers];
+    [query whereKey:@"trip" notContainedIn:previousTrunks];
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"trip"];
     [query setLimit:limit];

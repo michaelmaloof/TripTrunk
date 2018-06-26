@@ -149,7 +149,7 @@
 
 -(void)initTrips:(BOOL)isRefresh refresh:(UIRefreshControl*)refreshControl{
     
-    [SocialUtility queryForTrunksWithFollowers:self.following withLimit:200 block:^(NSArray *activities, NSError *error) {
+    [SocialUtility queryForTrunksWithFollowers:self.following withoutPreviousTrunks:self.sortedArray withLimit:200 block:^(NSArray *activities, NSError *error) {
         if(!error){
             NSMutableArray *trips = [[NSMutableArray alloc] init];
             for (PFObject *activity in activities){
@@ -180,7 +180,8 @@
             if(trips.count>0){
                 NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
                 NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
-                self.sortedArray = [NSMutableArray arrayWithArray:[trips sortedArrayUsingDescriptors:descriptors]];
+                NSArray *comboArray = [self.sortedArray arrayByAddingObjectsFromArray:[trips sortedArrayUsingDescriptors:descriptors]];
+                self.sortedArray = [NSMutableArray arrayWithArray:comboArray];
                 
                 Trip *trunk = self.sortedArray[0];
                 PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
@@ -452,6 +453,7 @@
         }
     }
     
+    cell.tag = indexPath.row;
     return cell;
 }
 
@@ -519,6 +521,22 @@
     result = [UIImage imageWithData:data];
     
     return result;
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)sender{
+    //    if (self.isViewLoaded && self.view.window)
+    //        [self checkWhichVideoToEnable:NO];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate{
+    if(!self.isLoading){
+        for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        if(cell.tag > self.sortedArray.count-2){
+            self.isLoading = YES;
+            [self initTrips:NO refresh:nil];
+        }
+    }
+    }
 }
 
 #pragma mark - Google Maps
@@ -699,27 +717,5 @@
     [self clearMap];
 }
 
-#pragma mark - UIScrollViewDelegate
--(void)scrollViewDidScroll:(UIScrollView *)sender{
-//    if (self.isViewLoaded && self.view.window)
-//        [self checkWhichVideoToEnable:NO];
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate{
-//    CGPoint convertedPoint;
-//    CGSize size = aScrollView.contentSize;
-////    UIEdgeInsets inset = aScrollView.contentInset;
-////    float y = offset.y + bounds.size.width - inset.right;
-////    float h = size.width;
-//    
-//    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
-//        convertedPoint = [self.collectionView convertPoint:cell.frame.origin toView:aScrollView];
-//    }
-//    
-//    if(convertedPoint.x+350 > size.width && !self.isLoading) {
-//        self.isLoading = YES;
-//        [self initTrips:NO refresh:nil];
-//    }
-}
 
 @end
