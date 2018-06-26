@@ -34,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *userTrips;
 @property BOOL reachedBottom;
 @property BOOL isLoading;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
 @end
 
 @implementation TTHomeMapViewController
@@ -181,7 +182,7 @@
                 NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
                 NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
                 NSArray *comboArray = [self.sortedArray arrayByAddingObjectsFromArray:[trips sortedArrayUsingDescriptors:descriptors]];
-                self.sortedArray = [NSMutableArray arrayWithArray:comboArray];
+                self.sortedArray = [NSMutableArray arrayWithArray:[comboArray sortedArrayUsingDescriptors:descriptors]];
                 
                 Trip *trunk = self.sortedArray[0];
                 PFGeoPoint* geoPoint = [PFGeoPoint geoPointWithLatitude:trunk.lat longitude:trunk.longitude];
@@ -197,7 +198,8 @@
                         //There's an error. Handle this and add the Google tracking
                         NSLog(@"initSpotlightImagesWithBlock failed");
                     }
-                    
+                    [self.refreshActivityIndicator stopAnimating];
+                    self.refreshActivityIndicator.hidden = YES;
                 }];
             }
         }else{
@@ -523,9 +525,22 @@
     return result;
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)sender{
-    //    if (self.isViewLoaded && self.view.window)
-    //        [self checkWhichVideoToEnable:NO];
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        if(cell.tag == 0){
+            CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
+            
+            if(convertedPoint.x>60){
+                [self.refreshActivityIndicator startAnimating];
+                self.refreshActivityIndicator.hidden = NO;
+            }else{
+                if(self.isLoading){
+                    [self.refreshActivityIndicator stopAnimating];
+                    self.refreshActivityIndicator.hidden = YES;
+                }
+            }
+        }
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate{
@@ -535,7 +550,17 @@
             self.isLoading = YES;
             [self initTrips:NO refresh:nil];
         }
-    }
+            
+            if(cell.tag == 0){
+                CGPoint convertedPoint=[self.collectionView convertPoint:cell.frame.origin toView:self.collectionView.superview];
+                
+                if(convertedPoint.x>125){
+                    [self.refreshActivityIndicator startAnimating];
+                    self.refreshActivityIndicator.hidden = NO;
+                    [self initTrips:YES refresh:self.refreshControl]; //FIXME: Refresh Control doesn't work on horizontal anyway, rewrite
+                }
+            }
+        }
     }
 }
 

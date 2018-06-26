@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EzY-RV-k7B">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EzY-RV-k7B">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -211,6 +211,9 @@
                                     <outlet property="delegate" destination="9IJ-xm-SqM" id="PwG-OG-CSM"/>
                                 </connections>
                             </collectionView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Cfa-Yg-UD2">
+                                <rect key="frame" x="10" y="359" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -219,7 +222,9 @@
                             <constraint firstAttribute="topMargin" secondItem="dL9-y1-G7j" secondAttribute="top" id="4B5-9N-IXI"/>
                             <constraint firstAttribute="trailing" secondItem="dL9-y1-G7j" secondAttribute="trailing" id="7L2-oP-2Zu"/>
                             <constraint firstAttribute="trailing" secondItem="CU1-zf-R4P" secondAttribute="trailing" constant="16" id="7o3-uJ-nVn"/>
+                            <constraint firstItem="z8n-VI-MeD" firstAttribute="leading" secondItem="Cfa-Yg-UD2" secondAttribute="trailing" constant="-30" id="MRY-1Q-UXN"/>
                             <constraint firstItem="z8n-VI-MeD" firstAttribute="top" secondItem="UhY-yq-bNV" secondAttribute="bottom" constant="107" id="Ntv-5Z-h6C"/>
+                            <constraint firstItem="z8n-VI-MeD" firstAttribute="top" secondItem="Cfa-Yg-UD2" secondAttribute="bottom" constant="-172" id="RSH-dP-Lql"/>
                             <constraint firstItem="z8n-VI-MeD" firstAttribute="leading" secondItem="E8P-2U-DQZ" secondAttribute="leading" id="WiJ-Ve-s4O"/>
                             <constraint firstItem="dL9-y1-G7j" firstAttribute="leading" secondItem="E8P-2U-DQZ" secondAttribute="leading" id="aQk-L2-MBo"/>
                             <constraint firstAttribute="trailing" secondItem="z8n-VI-MeD" secondAttribute="trailing" id="eQ2-z5-yjI"/>
@@ -233,6 +238,7 @@
                     <connections>
                         <outlet property="collectionView" destination="z8n-VI-MeD" id="aK2-iX-K1P"/>
                         <outlet property="googleMapView" destination="dL9-y1-G7j" id="2aR-RT-ITj"/>
+                        <outlet property="refreshActivityIndicator" destination="Cfa-Yg-UD2" id="tMh-M9-P3z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w7o-dg-Smo" userLabel="First Responder" sceneMemberID="firstResponder"/>
