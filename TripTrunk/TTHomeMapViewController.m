@@ -51,7 +51,7 @@
     self.objid = [[NSMutableArray alloc] init];
     self.userTrips = [[NSMutableArray alloc] init];
     
-    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl = [[UIRefreshControl alloc] init]; //FIXME: GET RID OF THIS, DOESn't Work on horizontal
     [self.refreshControl addTarget:self
                        action:@selector(refresh:)
              forControlEvents:UIControlEventValueChanged];
@@ -211,6 +211,8 @@
         
         self.isLoading = NO;
         [refreshControl endRefreshing];
+        [self.refreshActivityIndicator stopAnimating];
+        self.refreshActivityIndicator.hidden = YES;
     }];
     
 
@@ -557,6 +559,7 @@
                 if(convertedPoint.x>125){
                     [self.refreshActivityIndicator startAnimating];
                     self.refreshActivityIndicator.hidden = NO;
+                    self.isLoading = YES;
                     [self initTrips:YES refresh:self.refreshControl]; //FIXME: Refresh Control doesn't work on horizontal anyway, rewrite
                 }
             }

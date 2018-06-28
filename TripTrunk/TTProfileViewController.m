@@ -44,6 +44,8 @@
 @property (strong, nonatomic) NSMutableDictionary *imageSet;
 @property (strong, nonatomic) NSNumber *followStatus;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
+@property BOOL isLoading;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
 @property NSMutableArray *parseLocations;
@@ -69,6 +71,7 @@
 @implementation TTProfileViewController
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    self.isLoading = NO;
     
     self.followStatus = [[TTCache sharedCache] followStatusForUser:self.user];
     [self setFollowButtonState];
@@ -276,6 +279,7 @@
         
     }
     
+    cell.tag = indexPath.row;
     return cell;
 }
 
@@ -401,11 +405,14 @@
 
 #pragma mark - Trunk Load from Cloud
 -(void)loadTrunkList{
-    
+    self.isLoading = YES;
     PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
     [query whereKey:@"type" equalTo:@"addToTrip"];
     [query whereKey:@"toUser" equalTo:self.user];
+    [query orderByDescending:@"createdAt"];
+    [query whereKey:@"trip" notContainedIn:self.trunkArray];
     [query includeKey:@"trip"];
+//    [query setLimit:10];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(error){
             self.wasError = YES;
@@ -413,19 +420,35 @@
             [ParseErrorHandlingController handleError:error];
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"loadTrunkList"];
         }else{
-            [[TTUtility sharedInstance] internetConnectionFound];
-            for(id activity in objects){
-                if(activity[@"trip"])
-                    [self.trunkArray addObject:activity[@"trip"]];
-            }
+            if(objects.count == 0){
+                NSLog(@"Ain't no more trips to load for this user");
+            }else{
             
-            if(self.trunkArray.count > 0){
-                [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
-                    [self.trunkCollectionView reloadData];
-                    self.trunkCollectionView.hidden = NO;
-                }];
+                [[TTUtility sharedInstance] internetConnectionFound];
+                NSMutableArray *trips = [[NSMutableArray alloc] init];
+                for(id activity in objects){
+                    if(activity[@"trip"])
+                        [trips addObject:activity[@"trip"]];
+                }
+                
+                NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"start" ascending:NO];
+                NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+                NSArray *comboArray = [self.trunkArray arrayByAddingObjectsFromArray:[trips sortedArrayUsingDescriptors:descriptors]];
+                self.trunkArray = [NSMutableArray arrayWithArray:[comboArray sortedArrayUsingDescriptors:descriptors]];
+                
+                if(self.trunkArray.count > 0){
+                    [self initSpotlightImagesWithBlock:^(BOOL succeeded, NSError *error) {
+                        [self.trunkCollectionView reloadData];
+                        self.trunkCollectionView.hidden = NO;
+                    }];
+                }
+            
             }
         }
+        
+        self.isLoading = NO;
+        [self.refreshActivityIndicator stopAnimating];
+        self.refreshActivityIndicator.hidden = YES;
     }];
 }
 
@@ -648,6 +671,28 @@
         if(firstIndexPath.row == 0){
             if(frame.origin.x > 130)
                 [self setUserProfileState:NO];
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate{
+    if(!self.isLoading){
+        for (UICollectionViewCell *cell in [self.trunkCollectionView visibleCells]) {
+            if(cell.tag > self.trunkArray.count-2){
+                self.isLoading = YES;
+                [self loadTrunkList];
+            }
+            
+            if(cell.tag == 0){
+                CGPoint convertedPoint=[self.trunkCollectionView convertPoint:cell.frame.origin toView:self.trunkCollectionView.superview];
+                
+                if(convertedPoint.x>300){
+                    [self.refreshActivityIndicator startAnimating];
+                    self.refreshActivityIndicator.hidden = NO;
+                    self.isLoading = YES;
+                    [self loadTrunkList];
+                }
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -46,6 +46,9 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white-gradient" translatesAutoresizingMaskIntoConstraints="NO" id="ah8-Ma-njH">
                                 <rect key="frame" x="0.0" y="207" width="375" height="460"/>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="1tk-Ag-HIC">
+                                <rect key="frame" x="177" y="386" width="20" height="20"/>
+                            </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HvK-IO-ucn" userLabel="User Details View">
                                 <rect key="frame" x="0.0" y="188" width="375" height="350"/>
                                 <subviews>
@@ -378,9 +381,11 @@ traveling around the world bio</string>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="top" constant="188" id="XhD-ui-ATr"/>
                             <constraint firstAttribute="trailing" secondItem="sno-p6-dZa" secondAttribute="trailing" id="ZJf-A8-q3E"/>
                             <constraint firstAttribute="bottomMargin" secondItem="NIz-OT-CC1" secondAttribute="bottom" constant="-49" id="bRL-T4-kP7"/>
+                            <constraint firstItem="HvK-IO-ucn" firstAttribute="leading" secondItem="1tk-Ag-HIC" secondAttribute="trailing" constant="-197" id="e5V-XP-A1S"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="leading" secondItem="ah8-Ma-njH" secondAttribute="leading" id="fT9-rY-6du"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Vba-qk-WVi" secondAttribute="trailing" constant="20" id="kLe-Vd-LuF"/>
                             <constraint firstAttribute="bottomMargin" secondItem="92z-HT-GCL" secondAttribute="bottom" constant="14" id="kRt-bL-JGe"/>
+                            <constraint firstItem="1tk-Ag-HIC" firstAttribute="top" secondItem="HvK-IO-ucn" secondAttribute="bottom" constant="-152" id="lae-Oy-Nic"/>
                             <constraint firstItem="ah8-Ma-njH" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="topMargin" constant="187" id="lbD-qJ-ekO"/>
                             <constraint firstAttribute="trailing" secondItem="7R3-mj-Y6d" secondAttribute="trailing" constant="37" id="pWo-PZ-by1"/>
                             <constraint firstAttribute="topMargin" secondItem="NIz-OT-CC1" secondAttribute="top" id="t80-AW-JWm"/>
@@ -397,6 +402,7 @@ traveling around the world bio</string>
                         <outlet property="followingCount" destination="hcm-aP-coE" id="rZC-jZ-zzR"/>
                         <outlet property="googleMapView" destination="NIz-OT-CC1" id="tj5-M0-2JI"/>
                         <outlet property="miniUserDetails" destination="rIH-u5-iYK" id="g6Z-Na-wiY"/>
+                        <outlet property="refreshActivityIndicator" destination="1tk-Ag-HIC" id="Erh-KE-jeY"/>
                         <outlet property="trunkCollectionView" destination="JUj-jC-bXC" id="g5T-qn-Xo4"/>
                         <outlet property="trunksCount" destination="7vR-Q0-2WK" id="D4U-ow-LEk"/>
                         <outlet property="userBio" destination="7R3-mj-Y6d" id="4YQ-wv-ic5"/>
