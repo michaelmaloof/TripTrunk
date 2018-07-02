@@ -589,8 +589,8 @@
     
     self.googleMapView.mapStyle = style;
     
-    GMSGroundOverlay *overlay = [self mapOverlayWithLatitude:geoPoint.latitude AndLongitude:geoPoint.longitude];
-    overlay.map = self.googleMapView;
+//    GMSGroundOverlay *overlay = [self mapOverlayWithLatitude:geoPoint.latitude AndLongitude:geoPoint.longitude];
+//    overlay.map = self.googleMapView;
     
 //    [self addPointToMapWithGeoPoint:geoPoint];
 //    [self addLabelToMapWithGeoPoint:geoPoint AndText:self.user[@"hometown"]];
