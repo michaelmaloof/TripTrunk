@@ -65,8 +65,9 @@
     NSDate *endDate = [[NSDate alloc] init];
     endDate = [df dateFromString:self.endDate.text];
     [df setDateFormat:@"MM/dd/yyyy"];
-    self.trip.startDate = [df stringFromDate:startDate];
     self.trip.endDate = [df stringFromDate:endDate];
+    self.trip.startDate = [df stringFromDate:startDate];
+    self.trip.start = [df dateFromString:self.trip.startDate];
     trunkLocationViewController.trip = self.trip;
 }
 

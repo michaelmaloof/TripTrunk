@@ -70,10 +70,12 @@ static NSString *const kCountryString  = @"Country";
         PHAsset *asset = self.assets[i];
         if(i==0){
             [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(375, 315) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                self.mainPhoto.image = result;
-                self.mainPhoto.contentMode = UIViewContentModeScaleAspectFill;
-                if(asset.mediaType == PHAssetMediaTypeVideo)
-                    self.mainVideoIcon.hidden = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.mainPhoto.image = result;
+                    self.mainPhoto.contentMode = UIViewContentModeScaleAspectFill;
+                    if(asset.mediaType == PHAssetMediaTypeVideo)
+                        self.mainVideoIcon.hidden = NO;
+                });
                 
                 if(asset.location != nil){
                     CLGeocoder *geocoder = [CLGeocoder new];

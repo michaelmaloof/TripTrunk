@@ -26,7 +26,7 @@
 @interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property BOOL isSearching;
-@property (strong,nonatomic) NSArray *friends;
+//@property (strong,nonatomic) NSArray *friends;
 @property (strong, nonatomic) NSMutableArray *membersToAdd;
 @property (strong,nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *searchTextField;
@@ -47,7 +47,7 @@
     self.tableView.backgroundColor = [TTColor tripTrunkBackgroundLightBlue];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
-        self.friends = [NSArray arrayWithArray:users];
+        self.friends = [NSMutableArray arrayWithArray:users];
         [SocialUtility followers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
             [self.friends arrayByAddingObjectsFromArray:users];
             [self.tableView reloadData];
@@ -199,7 +199,7 @@
                 NSArray *sortedArray = [us sortResultsByUsername:self.searchResults searchTerm:searchTerm];
                 self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
                 self.isSearching = YES;
-                self.friends = [NSArray arrayWithArray:sortedArray];
+                self.friends = [NSMutableArray arrayWithArray:sortedArray];
                 [self.tableView reloadData];
                 [self performSelector:@selector(dismissKeyboard) withObject:nil afterDelay:2.0];
                 [[TTUtility sharedInstance] internetConnectionFound];
@@ -412,10 +412,13 @@
                                  hometownGeopoint.longitude = place.longitude;
                                  PFObject *detail = self.trip.publicTripDetail;
                                  detail[@"homeAtCreation"] = hometownGeopoint;
+                                 self.trip[@"homeAtCreation"] = hometownGeopoint;
                                  [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                                      if(succeeded)
                                          NSLog(@"hometown geopoint suceeded");
                                      else NSLog(@"hometown geopoint failed");
+                                     
+                                     [self.trip saveInBackground];
                                      
                                      [self addMembersToNewlyCreatedTrunk];
                                  }];
