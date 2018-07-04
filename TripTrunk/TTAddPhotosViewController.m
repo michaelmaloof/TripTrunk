@@ -846,6 +846,7 @@
     self.taskCount++;
     
     if(self.photosToAdd.count == self.taskCount){
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTrunksAfterNew" object:nil];
         if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)]){
             [self.delegate photoUploadCompleted:self.photosToAdd];
 //            [self.navigationController popViewControllerAnimated:YES];

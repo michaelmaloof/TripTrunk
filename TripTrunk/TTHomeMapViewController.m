@@ -90,6 +90,11 @@
                                              selector:@selector(resetMapForLogout)
                                                  name:@"resetMapForLogout"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateTrunksAfterNew)
+                                                 name:@"updateTrunksAfterNew"
+                                               object:nil];
 }
 
 #pragma mark - load activity data
@@ -743,6 +748,11 @@
 
 -(void)resetMapForLogout{
     [self clearMap];
+}
+
+-(void)updateTrunksAfterNew{
+    [self clearMap];
+    [self initTrips:NO refresh:self.refreshControl];
 }
 
 
