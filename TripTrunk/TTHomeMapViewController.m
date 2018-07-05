@@ -421,8 +421,27 @@
 
     cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
-//FIXME: This obviously needs to be fixed
-    cell.trunkMemberInfo.text = @"Some info here";
+    if(trunk.memberCount){
+        if(trunk.memberCount>2)
+            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trunk.memberCount];
+        else cell.trunkMemberInfo.text = @"Just one member";
+        
+    }else{
+        NSLog(@"Making a call to parse for the member count");
+        [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
+            if(!error){
+                if(users.count>2){
+                    trunk.memberCount = users.count;
+                    cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
+                }else{
+                    trunk.memberCount = 1;
+                    cell.trunkMemberInfo.text = @"Just one member";
+                }
+                
+                [self.sortedArray replaceObjectAtIndex:indexPath.row withObject:trunk];
+            }
+        }];
+    }
     
     //Load images from Array of image URLs
     NSArray *photos = self.imageSet[trunk.objectId];

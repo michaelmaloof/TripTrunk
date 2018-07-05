@@ -241,6 +241,28 @@
     cell.trunkTitle.text = trip.name;
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@",trip.city,trip.state];
     
+    if(trip.memberCount){
+        if(trip.memberCount>2)
+            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trip.memberCount];
+        else cell.trunkMemberInfo.text = @"Just one member";
+        
+    }else{
+        NSLog(@"Making a call to parse for the member count");
+        [SocialUtility trunkMembers:trip block:^(NSArray *users, NSError *error) {
+            if(!error){
+                if(users.count>2){
+                    trip.memberCount = users.count;
+                    cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
+                }else{
+                    trip.memberCount = 1;
+                    cell.trunkMemberInfo.text = @"Just one member";
+                }
+                
+                [self.trunkArray replaceObjectAtIndex:indexPath.row withObject:trip];
+            }
+        }];
+    }
+    
     //Load images from Array of image URLs
     NSArray* photos = self.imageSet[trip.objectId];
     NSString *photoUrl;

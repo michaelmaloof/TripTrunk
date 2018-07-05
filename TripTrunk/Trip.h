@@ -32,6 +32,7 @@
 @property NSString *descriptionStory;
 @property NSString *gpID; // gpID is a Google ID for this Place
 @property PFGeoPoint *homeAtCreation;
+@property NSInteger memberCount;
 
 - (void)setPlaceData:(TTPlace *)place;
 
