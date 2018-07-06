@@ -285,7 +285,7 @@
 }
 
 - (IBAction)skipWasPressed:(id)sender {
-    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]])
+    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]]) //FIXME: verify that this works
         [self createNewTrunkAndAddMembers];
     else [self addMembersToExistingTrunk];
 }
@@ -336,7 +336,7 @@
 -(void)setNextButtonTitle{
     NSString *skipText = NSLocalizedString(@"SKIP", @"SKIP");
     NSString *nextText;
-    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]])
+    if([self.delegate isKindOfClass:[TTTrunkLocationViewController class]]) //FIXME: verify that this works
         nextText = NSLocalizedString(@"CREATE & INVITE", @"CREATE & INVITE");
     else nextText = NSLocalizedString(@"ADD MEMBERS", @"ADD MEMBERS");
     
@@ -465,6 +465,7 @@
                 count = count+(int)self.membersToAdd.count;
                 [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
                 [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersAdded" object:nil];
                     [self.navigationController popViewControllerAnimated:YES];
                 }];
             }];

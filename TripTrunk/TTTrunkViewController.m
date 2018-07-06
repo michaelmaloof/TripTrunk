@@ -35,6 +35,7 @@
 @property (strong, nonatomic) TTPreviewPhotoViewController *popoverPreviewPhotoViewController;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *addToTrunkButton;
+@property (strong, nonatomic) Trip *trunk;
 @end
 
 @implementation TTTrunkViewController
@@ -43,13 +44,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    Trip *trunk;
+
     PFUser *creator;
     if(self.excursion){
-        trunk = self.excursion.trunk;
+        self.trunk = self.excursion.trunk;
         creator = self.excursion.creator;
     }else{
-        trunk = self.trip;
+        self.trunk = self.trip;
         creator = self.trip.creator;
     }
 
@@ -66,7 +67,7 @@
     self.photo = [[Photo alloc] init];
     
     PFQuery *photoQuery = [PFQuery queryWithClassName:@"Photo"];
-    [photoQuery whereKey:@"trip" equalTo:trunk];
+    [photoQuery whereKey:@"trip" equalTo:self.trunk];
 //    [photoQuery whereKey:@"user" equalTo:creator];
     [photoQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(!error){
@@ -80,7 +81,7 @@
     
 
     self.trunkMembers = [[NSMutableArray alloc] init];
-    [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
+    [SocialUtility trunkMembers:self.trunk block:^(NSArray *users, NSError *error) {
         [self.trunkMembers addObjectsFromArray:users];
         [self.membersCollectionView reloadData];
         
@@ -100,7 +101,10 @@
 //        }
     }];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateMembersCollectionView)
+                                                 name:@"MembersAdded"
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -220,8 +224,16 @@
             button.layer.masksToBounds = YES;
             button.layer.cornerRadius = 5;
             button.imageView.contentMode = UIViewContentModeScaleAspectFill;
-            if([self.trunkMembers containsObject:[PFUser currentUser]])
-                [collectionView addSubview:button];
+            
+            for(PFUser *user in self.trunkMembers){
+                if([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                    [collectionView addSubview:button];
+                    break;
+                }
+            }
+            
+//            if([self.trunkMembers containsObject:[PFUser currentUser]])
+//                [collectionView addSubview:button];
         }else{
             CGRect frame;
             Photo *photo = self.photos[indexPath.row];
@@ -565,6 +577,20 @@
         [self.photos insertObject:photo atIndex:0];
     }
     [self.mainCollectionView reloadData];
+}
+
+#pragma mark - AddMembersDelegate
+-(void)membersAdded:(NSArray*)users{
+    [self.trunkMembers addObjectsFromArray:users];
+    [self.membersCollectionView reloadData];
+}
+
+-(void)updateMembersCollectionView{
+    self.trunkMembers = [[NSMutableArray alloc] init];
+    [SocialUtility trunkMembers:self.trunk block:^(NSArray *users, NSError *error) {
+        [self.trunkMembers addObjectsFromArray:users];
+        [self.membersCollectionView reloadData];
+    }];
 }
 
 @end
