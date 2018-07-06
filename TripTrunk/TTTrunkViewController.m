@@ -83,12 +83,23 @@
     [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
         [self.trunkMembers addObjectsFromArray:users];
         [self.membersCollectionView reloadData];
+        
+        for(PFUser *user in users){
+            self.addToTrunkButton.enabled = NO;
+            self.addToTrunkButton.hidden = YES;
+            if([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+                self.addToTrunkButton.enabled = YES;
+                self.addToTrunkButton.hidden = NO;
+                break;
+            }
+        }
+        
+//        if(![self.trunkMembers containsObject:[PFUser currentUser].objectId]){
+//            self.addToTrunkButton.enabled = NO;
+//            self.addToTrunkButton.hidden = YES;
+//        }
     }];
     
-    if(![self.trunkMembers containsObject:[PFUser currentUser]]){
-        self.addToTrunkButton.enabled = NO;
-        self.addToTrunkButton.hidden = YES;
-    }
     
 }
 
@@ -532,6 +543,7 @@
         if(self.excursion)
             addPhotos.trip = self.excursion.trunk;
         else addPhotos.trip = self.trip;
+        addPhotos.newTrip = NO;
     }
     
     if([segue.identifier isEqualToString:@"pushToAddMembersToTrunk"]){

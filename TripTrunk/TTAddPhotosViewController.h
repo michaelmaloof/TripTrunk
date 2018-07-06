@@ -18,4 +18,5 @@
 @property (strong,nonatomic) NSArray *trunkMembers;
 @property id<AddPhotosDelegate> delegate;
 @property id adelegate;
+@property BOOL newTrip;
 @end

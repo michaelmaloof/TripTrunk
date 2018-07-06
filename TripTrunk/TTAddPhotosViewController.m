@@ -849,10 +849,15 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTrunksAfterNew" object:nil];
         if ([(NSObject*)self.delegate respondsToSelector:@selector(photoUploadCompleted:)]){
             [self.delegate photoUploadCompleted:self.photosToAdd];
-//            [self.navigationController popViewControllerAnimated:YES];
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
-            TTMainTabBarController *profileViewController = (TTMainTabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"TTMainTabBarController"];
-            [self.navigationController pushViewController:profileViewController animated:YES];
+            
+            if(self.newTrip){
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
+                TTMainTabBarController *profileViewController = (TTMainTabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"TTMainTabBarController"];
+                [self.navigationController pushViewController:profileViewController animated:YES];
+            }else{
+               [self.navigationController popViewControllerAnimated:YES];
+            }
+            
         }else{
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Home" bundle:nil];
             TTMainTabBarController *profileViewController = (TTMainTabBarController *)[storyboard instantiateViewControllerWithIdentifier:@"TTMainTabBarController"];

@@ -527,13 +527,10 @@
         TTAddPhotosViewController *photoViewController = segue.destinationViewController;
         photoViewController.trip = self.trip;
         photoViewController.trunkMembers = self.membersToAdd;
+        photoViewController.newTrip = YES;
 //        photoViewController.delegate = self;
     }
 }
-
-//- (void)photoUploadCompleted:(NSArray *)photos {
-//    //nada
-//}
 
 
 
