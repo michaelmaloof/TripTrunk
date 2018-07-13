@@ -23,7 +23,10 @@
 #import "TTPopoverProfileViewController.h"
 #import "TTPreviewPhotoViewController.h"
 #import "TTOnboardingButton.h"
-@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
+#import "TTUtility.h"
+#import "TTEditTrunkViewController.h"
+
+@interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,EditTrunkDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
 @property (strong, nonatomic) UICollectionView *membersCollectionView;
 @property (strong, nonatomic) GMSMapView *googleMapView;
@@ -36,6 +39,7 @@
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *addToTrunkButton;
 @property (strong, nonatomic) Trip *trunk;
+@property (strong, nonatomic) UICollectionReusableView *theView;
 @end
 
 @implementation TTTrunkViewController
@@ -322,11 +326,14 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionReusableView *theView;
+    
         if(collectionView == self.mainCollectionView){
         
         if(kind == UICollectionElementKindSectionHeader){
-            theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
+            for(id view in self.theView.subviews){
+                [view removeFromSuperview];
+            }
+            self.theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
             CGRect labelFrame = CGRectMake(8, 0, 340, 21);
             UILabel *trunkTitleLabel = [[UILabel alloc] initWithFrame:labelFrame];
             trunkTitleLabel.text = self.trip.name;
@@ -355,14 +362,24 @@
             trunkDatesLabel.textColor = [UIColor darkGrayColor];
             trunkDatesLabel.textAlignment = NSTextAlignmentLeft;
             
-            [theView addSubview:trunkTitleLabel];
-            [theView addSubview:trunkDatesLabel];
+            CGRect buttonFrame = CGRectMake(335, 6, 25, 21);
+            UIButton *optionsButton = [[UIButton alloc] initWithFrame:buttonFrame];
+            [optionsButton setTitle:@"•••" forState:UIControlStateNormal];
+            [optionsButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+            optionsButton.clipsToBounds = YES;
+            optionsButton.backgroundColor = [UIColor clearColor];
+            [optionsButton addTarget:self action:@selector(trunkOptions) forControlEvents:UIControlEventTouchUpInside];
+            
+            
+            [self.theView addSubview:trunkTitleLabel];
+            [self.theView addSubview:trunkDatesLabel];
+            [self.theView addSubview:optionsButton];
         } else {
-            theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
+            self.theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
         }
     }
     
-    return theView;
+    return self.theView;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
@@ -534,6 +551,156 @@
     }
 }
 
+-(void)trunkOptions{
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Trunk Options", @"Trunk Options")
+                                                                  message:nil
+                                                           preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction* editButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Edit Trunk", @"Edit Trunk")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * action){
+                                                            [self performSegueWithIdentifier:@"pushToEditTrunk" sender:self];
+                                                        }];
+    
+    UIAlertAction* leaveButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Leave Trunk", @"Leave Trunk")
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * action){
+                                                          [self leaveTrunk];
+                                                      }];
+    
+    UIAlertAction* downloadButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Download Trunk Photos", @"Download Trunk Photos")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * action){
+                                                            [self downloadTrunkPhotos];
+                                                        }];
+    
+    UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action){
+                                                         NSLog(@"you pressed cencel button");
+                                                     }];
+    
+    if([self.trunk.creator.objectId isEqualToString:[PFUser currentUser].objectId])
+        [alert addAction:editButton];
+    
+    for(PFUser *user in self.trunkMembers){
+        if([user.objectId isEqualToString:[PFUser currentUser].objectId]){
+            [alert addAction:leaveButton];
+            break;
+        }
+    }
+    
+    
+    [alert addAction:downloadButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)downloadTrunkPhotos{
+
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Save Trunk photos to phone?",@"Save Trunk photos to phone?")
+                                                                  message:nil
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* downloadButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Download",@"Download")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action){
+                                                               NSLog(@"you pressed the download button");
+                                                               [[TTUtility sharedInstance] downloadAllTrunkPhotos:self.photos];
+                                                           }];
+    
+    UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action){
+                                                         NSLog(@"you pressed cencel button");
+                                                     }];
+    
+    [alert addAction:downloadButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
+
+//
+//-(void)moreTapped{
+//    UIActionSheet *actionSheet;
+//
+//    if ([self.trip.creator.objectId isEqualToString:[PFUser currentUser].objectId]){
+//        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+//                                                  delegate:self
+//                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+//                                    destructiveButtonTitle:nil
+//                                         otherButtonTitles:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos"),NSLocalizedString(@"Edit Trunk",@"Edit Trunk"),nil];
+//
+//    }
+//
+//    else if (self.isMember == YES) {
+//        actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+//                                                  delegate:self
+//                                         cancelButtonTitle:NSLocalizedString(@"Cancel",@"Cancel")
+//                                    destructiveButtonTitle:nil
+//                                         otherButtonTitles:NSLocalizedString(@"Download Trunk Photos",@"Download Trunk Photos"),NSLocalizedString(@"Leave Trunk",@"Leave Trunk"),nil];
+//    }
+//
+//    [actionSheet showInView:self.view];
+//
+//}
+
+
+
+-(void)leaveTrunk{
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Leave Trunk", @"Leave Trunk")
+                                                                  message:NSLocalizedString(@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited",@"Are you sure you want to delete yourself from this Trunk? Once done, you'll be unable to join the Trunk unless reinvited")
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* leaveButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Leave Trunk", @"Leave Trunk")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action){
+                                                               NSLog(@"you confirmed to leave trunk");
+                                                               [self leaveTrunkAction];
+                                                               
+                                                           }];
+    
+    UIAlertAction* cancelButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action){
+                                                         NSLog(@"you pressed cencel button");
+                                                     }];
+    
+
+    [alert addAction:leaveButton];
+    [alert addAction:cancelButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)leaveTrunkAction{
+
+    [SocialUtility removeUser:[PFUser currentUser] fromTrip:self.trip block:^(BOOL succeeded, NSError *error) {
+        if(succeeded){
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                          message:NSLocalizedString(@"Failed to leave trunk. Try Again.",@"Failed to leave trunk. Try Again.")
+                                                                   preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction* okayButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction * action){
+                                                                   NSLog(@"you pressed okay button");
+                                                               }];
+            
+            [alert addAction:okayButton];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
+}
+
+
+
 #pragma mark - UIModalPopoverDelegate
 - (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
     return UIModalPresentationNone;
@@ -561,6 +728,12 @@
     if([segue.identifier isEqualToString:@"pushToAddMembersToTrunk"]){
         TTAddMembersViewController *addMembers = segue.destinationViewController;
         addMembers.trip = self.trip;
+    }
+    
+    if([segue.identifier isEqualToString:@"pushToEditTrunk"]){
+        TTEditTrunkViewController *editTrunk = segue.destinationViewController;
+        editTrunk.delegate = self;
+        editTrunk.trip = self.trip;
     }
     
 }
@@ -591,6 +764,14 @@
         [self.trunkMembers addObjectsFromArray:users];
         [self.membersCollectionView reloadData];
     }];
+}
+
+- (void)trunkDetailsEdited:(Trip *)trip {
+    [self.mainCollectionView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(trunkDetailsEdited:)])
+            [self.delegate trunkDetailsEdited:self.trip];
+    });
 }
 
 @end

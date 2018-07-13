@@ -131,6 +131,7 @@
 		2772FCE21F266F5300A97B5D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE11F266F5300A97B5D /* Activity.storyboard */; };
 		2772FCE41F27C00700A97B5D /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE31F27C00700A97B5D /* Timeline.storyboard */; };
 		2772FCE61F27DC9500A97B5D /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE51F27DC9500A97B5D /* Profile.storyboard */; };
+		2780A09A20F67FE700A413B7 /* TTEditTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */; };
 		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
 		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
 		279B7D8920373C57005AFEFB /* TTCreateTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */; };
@@ -437,6 +438,8 @@
 		2772FCE11F266F5300A97B5D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		2772FCE31F27C00700A97B5D /* Timeline.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Timeline.storyboard; sourceTree = "<group>"; };
 		2772FCE51F27DC9500A97B5D /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		2780A09820F67FE700A413B7 /* TTEditTrunkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTEditTrunkViewController.h; sourceTree = "<group>"; };
+		2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTEditTrunkViewController.m; sourceTree = "<group>"; };
 		2795EF211D5CE73D003116F4 /* TTBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseCollectionViewCell.h; sourceTree = "<group>"; };
 		2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
 		2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
@@ -1216,6 +1219,8 @@
 				279B7D91203DF8FF005AFEFB /* TTTextField.m */,
 				276B655E2045F69000422AF7 /* TTTrunkDatesViewController.h */,
 				276B655F2045F69000422AF7 /* TTTrunkDatesViewController.m */,
+				2780A09820F67FE700A413B7 /* TTEditTrunkViewController.h */,
+				2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */,
 			);
 			name = Trunk;
 			sourceTree = "<group>";
@@ -1784,6 +1789,7 @@
 				27BFA4A71EBBC7D000A6CFB4 /* TTEmailViewController.m in Sources */,
 				C95FD1411B2A66A7001755FF /* TPKeyboardAvoidingScrollView.m in Sources */,
 				C95FD1421B2A66A7001755FF /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
+				2780A09A20F67FE700A413B7 /* TTEditTrunkViewController.m in Sources */,
 				27F3E3811D3D778600634B75 /* DLFAssetsLayout.m in Sources */,
 				27B69F1A1F5F305C00905B51 /* TTTrunkViewCell.m in Sources */,
 				2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */,

@@ -11,7 +11,14 @@
 #import "Trip.h"
 #import "Photo.h"
 
+@protocol TrunkDelegate;
+
 @interface TTTrunkViewController : TTBaseViewController
 @property(strong, nonatomic) Excursion *excursion;
 @property(strong, nonatomic) Trip *trip;
+@property (strong,nonatomic) id<TrunkDelegate>delegate;
+@end
+
+@protocol TrunkDelegate <NSObject>
+- (void)trunkDetailsEdited:(Trip *)trip;
 @end

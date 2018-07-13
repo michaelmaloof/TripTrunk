@@ -21,7 +21,7 @@
 
 @import GoogleMaps;
 
-@interface TTHomeMapViewController () <UIScrollViewDelegate>
+@interface TTHomeMapViewController () <UIScrollViewDelegate,TrunkDelegate>
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -489,6 +489,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
     TTTrunkViewController *trunkViewController = (TTTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTrunkViewController"];
     trunkViewController.trip = self.sortedArray[indexPath.row];
+    trunkViewController.delegate = self;
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
@@ -774,5 +775,9 @@
     [self initTrips:NO refresh:self.refreshControl];
 }
 
+
+- (void)trunkDetailsEdited:(Trip *)trip {
+    [self initTrips:NO refresh:self.refreshControl];
+}
 
 @end
