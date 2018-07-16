@@ -727,6 +727,7 @@
     
     if([segue.identifier isEqualToString:@"pushToAddMembersToTrunk"]){
         TTAddMembersViewController *addMembers = segue.destinationViewController;
+        addMembers.existingMembersOfTrunk = self.trunkMembers;
         addMembers.trip = self.trip;
     }
     

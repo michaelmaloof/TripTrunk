@@ -437,10 +437,17 @@
 }
 
 -(void)addMembersToExistingTrunk{
-    NSArray *users = [self idsFromUsers:self.membersToAdd];
+    NSMutableArray *users = [self idsFromUsers:self.membersToAdd];
+    NSMutableArray *newUsers = [[NSMutableArray alloc] init];
+    NSArray *existingMembers = [self idsFromUsers:self.existingMembersOfTrunk];
+    
+    for(id user in users){
+        if(![existingMembers containsObject:user])
+            [newUsers addObject:user];
+    }
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   users, @"users",
+                                   newUsers, @"users",
                                    [PFUser currentUser].objectId, @"fromUserId",
                                    self.trip.objectId, @"tripId",
                                    self.trip.creator.objectId, @"tripCreatorId",
@@ -450,7 +457,7 @@
                                    [NSNumber numberWithDouble:self.trip.longitude], @"longitude",
                                    self.trip.gpID, @"gpID",
                                    nil];
-    
+
     [PFCloud callFunctionInBackground:@"AddMembersToTrip" withParameters:params block:^(id  _Nullable object, NSError * _Nullable error) {
         if(!error){
             //THIS INCREMENTS THE MEMBER COUNT BY 1number of members added
@@ -471,7 +478,24 @@
             }];
             ///-----------------------------^
         }else{
-            //HANDLE THIS ERROR
+            NSString *errorString = [NSString stringWithFormat:@"%@",error];
+            NSArray *errorArray = [errorString componentsSeparatedByString:@"\" UserInfo="];
+            NSArray *errorMessage = [errorArray[0] componentsSeparatedByString:@"ERROR: "];
+            NSString *errorMessageString = NSLocalizedString(errorMessage[1], errorMessage[1]); //FIXME: This is wrong
+            UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"Error")
+                                                                          message:errorMessageString
+                                                                   preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* okButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok")
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action){
+                                                                 NSLog(@"you pressed ok button");
+                                                                 [self.navigationController popViewControllerAnimated:YES];
+                                                             }];
+        
+            [alert addAction:okButton];
+            [self presentViewController:alert animated:YES completion:nil];
+            [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"addMembersToExistingTrunk:"];
         }
     }];
 }
@@ -515,7 +539,7 @@
     }];
 }
 
-- (NSArray *)idsFromUsers:(NSArray *)users{
+- (NSMutableArray *)idsFromUsers:(NSArray *)users{
     NSMutableArray *idList = [[NSMutableArray alloc] initWithCapacity:users.count];
     for (PFUser *user in users) {
         [idList addObject:user.objectId];

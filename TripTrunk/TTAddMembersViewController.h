@@ -13,4 +13,5 @@
 @interface TTAddMembersViewController : TTBaseViewController
 @property (strong,nonatomic) Trip *trip;
 @property (strong,nonatomic) id delegate;
+@property (strong, nonatomic) NSArray *existingMembersOfTrunk;
 @end
