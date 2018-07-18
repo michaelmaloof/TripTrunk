@@ -125,17 +125,17 @@
 #pragma mark - UIAlertView
 -(void)showNeedAccessMessage{ //<-------------- need this?
     
-    UIAlertController * alert=[UIAlertController alertControllerWithTitle:@"Image picker"
-                                                                  message:@"App need get access to photos"
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image picker",@"Image picker")
+                                                                  message:NSLocalizedString(@"App need get access to photos",@"App need get access to photos")
                                                            preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction* yesButton = [UIAlertAction actionWithTitle:@"OK"
+    UIAlertAction* yesButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK",@"OK")
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * action){
         NSLog(@"you pressed the Yes button");
     }];
     
-    UIAlertAction* noButton = [UIAlertAction actionWithTitle:@"Cancel"
+    UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",@"Cancel")
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * action){
         NSLog(@"you pressed cencel button");

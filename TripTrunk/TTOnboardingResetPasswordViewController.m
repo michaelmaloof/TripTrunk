@@ -79,21 +79,37 @@
 //            } else {
                 [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text block:^(BOOL succeeded, NSError * _Nullable error) {
                     if(!error){
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
-                                                                        message:NSLocalizedString(@"If you don't see the email in 24 hours please try to reset the password again",@"If you don't see the email in 24 hours please try to reset the password again")
-                                                                       delegate:self
-                                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                                              otherButtonTitles:nil, nil];
-                        alert.tag = 1;
-                        [alert show];
+                        
+                        UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Request Sent",@"Request Sent")
+                                                                                      message:NSLocalizedString(@"If you don't see the email in 24 hours please try to reset the password again",@"If you don't see the email in 24 hours please try to reset the password again")
+                                                                               preferredStyle:UIAlertControllerStyleAlert];
+                        
+                        UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                                           style:UIAlertActionStyleDefault
+                                                                         handler:^(UIAlertAction * action){
+                                                                             NSLog(@"you pressed Okay button");
+                                                                             [self.navigationController popViewControllerAnimated:YES];
+                                                                         }];
+                        [alert addAction:noButton];
+                        
+                        [self presentViewController:alert animated:YES completion:nil];
+                        
+                        
                     }else{
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
-                                                                        message:error.localizedDescription
-                                                                       delegate:self
-                                                              cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
-                                                              otherButtonTitles:nil, nil];
-                        alert.tag = 1;
-                        [alert show];
+                        
+                        UIAlertController * alert=[UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                                      message:error.localizedDescription
+                                                                               preferredStyle:UIAlertControllerStyleAlert];
+                        
+                        UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                                           style:UIAlertActionStyleDefault
+                                                                         handler:^(UIAlertAction * action){
+                                                                             NSLog(@"you pressed cancel button");
+                                                                             
+                                                                         }];
+                        [alert addAction:noButton];
+                        
+                        [self presentViewController:alert animated:YES completion:nil];
                     }
                     
                 }];
