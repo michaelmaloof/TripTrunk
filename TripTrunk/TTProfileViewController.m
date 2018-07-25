@@ -23,6 +23,7 @@
 #import "SocialUtility.h"
 #import "TTCache.h"
 #import "TTSearchViewController.h"
+#import "TTEditProfileViewController.h"
 
 @interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
@@ -45,6 +46,8 @@
 @property (strong, nonatomic) NSNumber *followStatus;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
+@property (strong, nonatomic) IBOutlet UIImageView *privateIcon_large;
+@property (strong, nonatomic) IBOutlet UIImageView *privateIcon_mini;
 @property BOOL isLoading;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
@@ -82,10 +85,11 @@
         self.backButton.hidden = YES;
         self.backButton.userInteractionEnabled = NO;
     }
-}
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+    self.tabBarController.tabBar.hidden = NO;
+    
+    [self clearMap];
+    
     if(!self.user)
         self.user = [PFUser currentUser];
     
@@ -105,6 +109,14 @@
     self.trunksCount.text = @"";
     self.followingCount.text = @"";
     
+    if(self.user[@"private"]){
+        self.privateIcon_large.hidden = NO;
+        self.privateIcon_mini.hidden = NO;
+    }else{
+        self.privateIcon_large.hidden = YES;
+        self.privateIcon_mini.hidden = YES;
+    }
+    
     self.trunkArray = [[NSMutableArray alloc] init];
     self.imageSet = [[NSMutableDictionary alloc] init];
     
@@ -120,6 +132,52 @@
     
     //get the trunk list
     [self loadTrunkList];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    if(!self.user)
+        self.user = [PFUser currentUser];
+    
+//    //set user details to main details
+//    self.miniUserDetails.alpha = 0;
+//    self.userDetails.alpha = 1;
+//
+//    //setup profile information
+//    [self.userProfilePictureSmall setImageWithURL:[NSURL URLWithString:self.user[@"profilePicUrl"]]];
+//    self.userFirstLastNameSmall.text = self.user[@"name"];
+//    self.usernameSmall.text = [NSString stringWithFormat:@"@%@",self.user.username];
+//    [self.userProfilePictureMain setImageWithURL:[NSURL URLWithString:self.user[@"profilePicUrl"]]];
+//    self.userFirstLastNameMain.text = self.user[@"name"];
+//    self.usernameMain.text = [NSString stringWithFormat:@"@%@",self.user.username];
+//    self.userBio.text = self.user[@"bio"];
+//    self.followersCount.text = @"";
+//    self.trunksCount.text = @"";
+//    self.followingCount.text = @"";
+//
+//    if(self.user[@"private"]){
+//        self.privateIcon_large.hidden = NO;
+//        self.privateIcon_mini.hidden = NO;
+//    }else{
+//        self.privateIcon_large.hidden = YES;
+//        self.privateIcon_mini.hidden = YES;
+//    }
+//
+//    self.trunkArray = [[NSMutableArray alloc] init];
+//    self.imageSet = [[NSMutableDictionary alloc] init];
+//
+//    //initialize the map and move to user's home location
+//    [self initMap];
+//
+//    //If the user doesn't have a profile image, set it to User's initials
+//    if(!self.user[@"profilePicUrl"])
+//        [self handleMissingProfilePicture];
+//
+//    //update the user's social stats
+//    [self refreshSocialStatCounts];
+//
+//    //get the trunk list
+//    [self loadTrunkList];
 }
 
 //FIXME: MOVE THIS TO UTILITY
@@ -212,6 +270,11 @@
             }
             self.followButton.hidden = NO;
         }
+    }else{
+        self.followButton.hidden = NO;
+        [self.followButton setTitle:@"EDIT PROFILE" forState:UIControlStateNormal];
+        self.followButton.backgroundColor = [TTColor onboardingButtonColorBlue];
+        [self.followButton setTitleColor:[TTColor tripTrunkWhite] forState:UIControlStateNormal];
     }
 }
 
@@ -423,6 +486,18 @@
     label.text = text;
     
     [self.googleMapView addSubview:label];
+}
+
+-(void)clearMap{
+    for(UIView *subview in self.googleMapView.subviews){
+        if([subview isKindOfClass:[UIImageView class]] || [subview isKindOfClass:[UILabel class]])
+            [subview removeFromSuperview];
+    }
+    
+    CALayer* layer = [self.googleMapView.layer valueForKey:@"curvesLayer"];
+    [layer removeFromSuperlayer];
+    [self.googleMapView.layer setValue:nil forKey:@"curvesLayer"];
+    
 }
 
 #pragma mark - Trunk Load from Cloud
@@ -726,55 +801,59 @@
 }
 
 - (IBAction)followButtonAction:(TTOnboardingButton *)sender {
-    if ([self.followStatus intValue] > 0) {
-        // Unfollow
-//        [sender setSelected:NO]; // change the button for immediate user feedback
-        [sender setTitle:@"FOLLOW" forState:UIControlStateNormal];
-        //        [sender setTitleColor:[TTColor tripTrunkButtonTextBlue] forState:UIControlStateNormal];
-        [sender setBackgroundColor:[UIColor clearColor]];
-        [SocialUtility unfollowUser:self.user block:^(BOOL succeeded, NSError *error) {
-            if(error){
-                NSLog(@"Error: %@", error);
-                NSString * title = NSLocalizedString(@"Unfollow Failed", @"Unfollow Failed");
-                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
-                NSString * button = NSLocalizedString(@"Okay", @"Okay");
-                
-                [self alertUser:title withMessage:message withYes:@"" withNo:button];
-                [sender setSelected:YES];
-            }else{
-                NSLog(@"User unfollowed");
-                //WE NEED TO UPDATE THE CACHE!!!
-                NSMutableArray *following = [[TTCache sharedCache] following];
-                [following removeObject:self.user];
-                [[TTCache sharedCache] setFollowing:following];
-            }
-        }];
+    if([sender.titleLabel.text isEqualToString:@"EDIT PROFILE"]){
+        [self performSegueWithIdentifier:@"editProfileSegue" sender:self];
     }else{
-        // Follow
-//        [sender setSelected:YES];
-        [sender setTitle:@"FOLLOWING" forState:UIControlStateNormal];
-        //        [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [sender setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
-        [SocialUtility followUserInBackground:self.user block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                //                [self.currentUserFriends removeObject:user.objectId];
-                NSLog(@"Follow failed");
-                
-                NSLog(@"Error: %@", error);
-                NSString * title = NSLocalizedString(@"Follow Failed", @"Follow Failed");
-                NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
-                NSString * button = NSLocalizedString(@"Okay", @"Okay");
-                
-                [self alertUser:title withMessage:message withYes:@"" withNo:button];
-                [sender setSelected:YES];
-            }else{
-                NSLog(@"User followed");
-                //WE NEED TO UPDATE THE CACHE!!!
-                NSMutableArray *following = [[TTCache sharedCache] following];
-                [following addObject:self.user];
-                [[TTCache sharedCache] setFollowing:following];
-            }
-        }];
+        if ([self.followStatus intValue] > 0) {
+            // Unfollow
+    //        [sender setSelected:NO]; // change the button for immediate user feedback
+            [sender setTitle:@"FOLLOW" forState:UIControlStateNormal];
+            //        [sender setTitleColor:[TTColor tripTrunkButtonTextBlue] forState:UIControlStateNormal];
+            [sender setBackgroundColor:[UIColor clearColor]];
+            [SocialUtility unfollowUser:self.user block:^(BOOL succeeded, NSError *error) {
+                if(error){
+                    NSLog(@"Error: %@", error);
+                    NSString * title = NSLocalizedString(@"Unfollow Failed", @"Unfollow Failed");
+                    NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                    NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                    
+                    [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                    [sender setSelected:YES];
+                }else{
+                    NSLog(@"User unfollowed");
+                    //WE NEED TO UPDATE THE CACHE!!!
+                    NSMutableArray *following = [[TTCache sharedCache] following];
+                    [following removeObject:self.user];
+                    [[TTCache sharedCache] setFollowing:following];
+                }
+            }];
+        }else{
+            // Follow
+    //        [sender setSelected:YES];
+            [sender setTitle:@"FOLLOWING" forState:UIControlStateNormal];
+            //        [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+            [sender setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
+            [SocialUtility followUserInBackground:self.user block:^(BOOL succeeded, NSError *error) {
+                if (error) {
+                    //                [self.currentUserFriends removeObject:user.objectId];
+                    NSLog(@"Follow failed");
+                    
+                    NSLog(@"Error: %@", error);
+                    NSString * title = NSLocalizedString(@"Follow Failed", @"Follow Failed");
+                    NSString * message = NSLocalizedString(@"Please try again", @"Please try again");
+                    NSString * button = NSLocalizedString(@"Okay", @"Okay");
+                    
+                    [self alertUser:title withMessage:message withYes:@"" withNo:button];
+                    [sender setSelected:YES];
+                }else{
+                    NSLog(@"User followed");
+                    //WE NEED TO UPDATE THE CACHE!!!
+                    NSMutableArray *following = [[TTCache sharedCache] following];
+                    [following addObject:self.user];
+                    [[TTCache sharedCache] setFollowing:following];
+                }
+            }];
+        }
     }
 }
 
@@ -791,6 +870,13 @@
     photoViewController.image = self.userProfilePictureMain.image;
     
     [self.navigationController pushViewController:photoViewController animated:YES];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"editProfileSegue"]){
+        TTEditProfileViewController *editViewController = segue.destinationViewController;
+        editViewController.profilePic = self.userProfilePictureMain.image;
+    }
 }
 
 @end

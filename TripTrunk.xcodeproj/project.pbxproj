@@ -134,6 +134,7 @@
 		2780A09A20F67FE700A413B7 /* TTEditTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */; };
 		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
 		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
+		2798BBBD20FFDC69004EC0EC /* TTEditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2798BBBC20FFDC69004EC0EC /* TTEditProfileViewController.m */; };
 		279B7D8920373C57005AFEFB /* TTCreateTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */; };
 		279B7D8C20373C92005AFEFB /* TTTrunkNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8B20373C92005AFEFB /* TTTrunkNameViewController.m */; };
 		279B7D8F20373CBE005AFEFB /* TTTrunkLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 279B7D8E20373CBE005AFEFB /* TTTrunkLocationViewController.m */; };
@@ -444,6 +445,8 @@
 		2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseCollectionViewCell.m; sourceTree = "<group>"; };
 		2795EF231D5CE73D003116F4 /* TTBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseTableViewCell.h; sourceTree = "<group>"; };
 		2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTBaseTableViewCell.m; sourceTree = "<group>"; };
+		2798BBBB20FFDC69004EC0EC /* TTEditProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTEditProfileViewController.h; sourceTree = "<group>"; };
+		2798BBBC20FFDC69004EC0EC /* TTEditProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTEditProfileViewController.m; sourceTree = "<group>"; };
 		279B7D8720373C57005AFEFB /* TTCreateTrunkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTCreateTrunkViewController.h; sourceTree = "<group>"; };
 		279B7D8820373C57005AFEFB /* TTCreateTrunkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTCreateTrunkViewController.m; sourceTree = "<group>"; };
 		279B7D8A20373C92005AFEFB /* TTTrunkNameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTTrunkNameViewController.h; sourceTree = "<group>"; };
@@ -1049,6 +1052,8 @@
 				27E388221FA3D40300A9F733 /* TTPassthroughCollectionView.m */,
 				272335C42006B634005E50AE /* TTPopoverProfileViewController.h */,
 				272335C52006B634005E50AE /* TTPopoverProfileViewController.m */,
+				2798BBBB20FFDC69004EC0EC /* TTEditProfileViewController.h */,
+				2798BBBC20FFDC69004EC0EC /* TTEditProfileViewController.m */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1749,6 +1754,7 @@
 				27F3E3851D3D778600634B75 /* DLFPhotosLibrary.m in Sources */,
 				223547F71AE333F2001FE916 /* Photo.m in Sources */,
 				27CDB51B202CFB7700E71E61 /* TTSettingsViewController.m in Sources */,
+				2798BBBD20FFDC69004EC0EC /* TTEditProfileViewController.m in Sources */,
 				27A581471C88D5C40095ED94 /* TTHashtagMentionColorization.m in Sources */,
 				27340DF21E3FBFED0070F051 /* SharkfoodMuteSwitchDetector.m in Sources */,
 				C90C3CF61B04F45500CABBC9 /* UserTableViewCell.m in Sources */,

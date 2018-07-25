@@ -929,7 +929,10 @@
                                                       options:options
                                                 resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                                                     // Calls the method to actually upload the image and save the User to parse
-                                                    [[TTUtility sharedInstance] uploadProfilePic:imageData forUser:[PFUser currentUser]];
+//                                                    [[TTUtility sharedInstance] uploadProfilePic:imageData forUser:[PFUser currentUser]];
+                                                    [[TTUtility sharedInstance] uploadProfilePic:imageData forUser:self.user block:^(BOOL succeeded, NSError *error) {
+                                                        //nothing
+                                                    }];
                                                 }];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;

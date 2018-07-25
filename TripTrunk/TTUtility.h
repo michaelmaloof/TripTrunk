@@ -31,7 +31,7 @@
  *  @param imageData NSData of a raw image
  *  @param user  User whose profile pic it is
  */
-- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user;
+- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
 - (NSString *)profilePreviewImageUrl:(NSString *)urlString;
 

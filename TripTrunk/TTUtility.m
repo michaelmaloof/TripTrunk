@@ -86,8 +86,7 @@ CLCloudinary *cloudinary;
     return self;
 }
 
-- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user;
-{
+- (void)uploadProfilePic:(NSData *)imageData forUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock{
     CLUploader *uploader = [[CLUploader alloc] init:cloudinary delegate:self];
     
     // Initialize the progressView if it isn't initialized already
@@ -115,9 +114,11 @@ CLCloudinary *cloudinary;
                   if(error) {
                       [ParseErrorHandlingController handleError:error];
                       [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"uploadProfilePic:"];
+                      completionBlock(NO,error);
                   }
                   else {
                       [[TTUtility sharedInstance] internetConnectionFound];
+                      completionBlock(YES,nil);
                   }
               }];
               
