@@ -131,6 +131,9 @@
 		2772FCE21F266F5300A97B5D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE11F266F5300A97B5D /* Activity.storyboard */; };
 		2772FCE41F27C00700A97B5D /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE31F27C00700A97B5D /* Timeline.storyboard */; };
 		2772FCE61F27DC9500A97B5D /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2772FCE51F27DC9500A97B5D /* Profile.storyboard */; };
+		277AD056210A66860062EF16 /* TTWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 277AD055210A66860062EF16 /* TTWebViewViewController.m */; };
+		277AD058210A6BCA0062EF16 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 277AD057210A6BCA0062EF16 /* WebKit.framework */; };
+		277AD05B210B9CA80062EF16 /* TTReportBugsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 277AD05A210B9CA80062EF16 /* TTReportBugsViewController.m */; };
 		2780A09A20F67FE700A413B7 /* TTEditTrunkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */; };
 		2795EF251D5CE73D003116F4 /* TTBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF221D5CE73D003116F4 /* TTBaseCollectionViewCell.m */; };
 		2795EF261D5CE73D003116F4 /* TTBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2795EF241D5CE73D003116F4 /* TTBaseTableViewCell.m */; };
@@ -439,6 +442,11 @@
 		2772FCE11F266F5300A97B5D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		2772FCE31F27C00700A97B5D /* Timeline.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Timeline.storyboard; sourceTree = "<group>"; };
 		2772FCE51F27DC9500A97B5D /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		277AD054210A66860062EF16 /* TTWebViewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWebViewViewController.h; sourceTree = "<group>"; };
+		277AD055210A66860062EF16 /* TTWebViewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTWebViewViewController.m; sourceTree = "<group>"; };
+		277AD057210A6BCA0062EF16 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		277AD059210B9CA80062EF16 /* TTReportBugsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTReportBugsViewController.h; sourceTree = "<group>"; };
+		277AD05A210B9CA80062EF16 /* TTReportBugsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTReportBugsViewController.m; sourceTree = "<group>"; };
 		2780A09820F67FE700A413B7 /* TTEditTrunkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTEditTrunkViewController.h; sourceTree = "<group>"; };
 		2780A09920F67FE700A413B7 /* TTEditTrunkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTEditTrunkViewController.m; sourceTree = "<group>"; };
 		2795EF211D5CE73D003116F4 /* TTBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTBaseCollectionViewCell.h; sourceTree = "<group>"; };
@@ -696,6 +704,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				277AD058210A6BCA0062EF16 /* WebKit.framework in Frameworks */,
 				27EF96C61FB24E8B008F427F /* GoogleMapsCore.framework in Frameworks */,
 				27EF96C71FB24E8B008F427F /* GoogleMaps.framework in Frameworks */,
 				273799DE207D3C4A002BEE71 /* FBSDKLoginKit.framework in Frameworks */,
@@ -1308,6 +1317,10 @@
 				27CDB50D201FD14700E71E61 /* TTActivityNotificationsViewController.m */,
 				27CDB519202CFB7700E71E61 /* TTSettingsViewController.h */,
 				27CDB51A202CFB7700E71E61 /* TTSettingsViewController.m */,
+				277AD054210A66860062EF16 /* TTWebViewViewController.h */,
+				277AD055210A66860062EF16 /* TTWebViewViewController.m */,
+				277AD059210B9CA80062EF16 /* TTReportBugsViewController.h */,
+				277AD05A210B9CA80062EF16 /* TTReportBugsViewController.m */,
 			);
 			name = Activity;
 			sourceTree = "<group>";
@@ -1412,6 +1425,7 @@
 		6CF2D92033AF265024ABD54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				277AD057210A6BCA0062EF16 /* WebKit.framework */,
 				27EF96C51FB24E8B008F427F /* GoogleMaps.framework */,
 				27EF96C41FB24E8A008F427F /* GoogleMapsCore.framework */,
 				27EF96C21FB24DD1008F427F /* GoogleMapsBase.framework */,
@@ -1741,6 +1755,7 @@
 				27D41FBA1FCCB73C001B6CD5 /* TTAddPhotosViewController.m in Sources */,
 				275842771FAA6BB700FD58E5 /* AFHTTPSessionManager.m in Sources */,
 				C9FAB7AD1B1B9FC600282EA3 /* TrunkMembersViewController.m in Sources */,
+				277AD056210A66860062EF16 /* TTWebViewViewController.m in Sources */,
 				C97706611B975EC300FB11B2 /* TTTAttributedLabel.m in Sources */,
 				27BFA4AC1EBBC7D000A6CFB4 /* TTUsernameViewController.m in Sources */,
 				27ED882A1ECCCFEA00373F72 /* TTOnboardingResetPasswordViewController.m in Sources */,
@@ -1766,6 +1781,7 @@
 				22A81F041C8B2DF400CF76BD /* TTNoInternetView.m in Sources */,
 				225E554A1CB074CD00FAAB00 /* TTReportBugViewController.m in Sources */,
 				2762BD851F2BDA49003508EB /* TTTimelinePhotoCellCollectionViewCell.m in Sources */,
+				277AD05B210B9CA80062EF16 /* TTReportBugsViewController.m in Sources */,
 				2744E035209A51A900A85B9A /* TTMainTabBarController.m in Sources */,
 				C9FB808F1B83C7E9008B8A67 /* TTCommentInputView.m in Sources */,
 				279B7D8F20373CBE005AFEFB /* TTTrunkLocationViewController.m in Sources */,
