@@ -41,6 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self prepareMap];
     self.user = [PFUser currentUser];
     [self setupNotificationCenter];
     
@@ -593,6 +594,19 @@
 }
 
 #pragma mark - Google Maps
+-(void)prepareMap{
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *styleUrl = [mainBundle URLForResource:@"style" withExtension:@"json"];
+    NSError *error;
+    
+    GMSMapStyle *style = [GMSMapStyle styleWithContentsOfFileURL:styleUrl error:&error];
+    
+    if (!style) {
+        NSLog(@"The style definition could not be loaded: %@", error);
+    }
+    
+    self.googleMapView.mapStyle = style;
+}
 -(void)initMap{
     double mapOffset = 1.425;
     PFGeoPoint *geoPoint = self.user[@"hometownGeoPoint"];

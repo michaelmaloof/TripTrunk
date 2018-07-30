@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -95,20 +95,31 @@
                                                         <action selector="didTapFollowButton:" destination="X6y-kH-6Ba" eventType="touchUpInside" id="2Av-vv-ScS"/>
                                                     </connections>
                                                 </button>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qGe-GR-g5W">
+                                                    <rect key="frame" x="14" y="14" width="50" height="50"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="30"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="f2V-se-Lhm" secondAttribute="centerY" id="31C-s4-KSq"/>
+                                                <constraint firstItem="qGe-GR-g5W" firstAttribute="width" secondItem="dGP-cJ-mWw" secondAttribute="width" id="BzR-hM-bcR"/>
+                                                <constraint firstItem="qGe-GR-g5W" firstAttribute="leading" secondItem="dGP-cJ-mWw" secondAttribute="trailing" constant="-50" id="EgG-h9-tmC"/>
                                                 <constraint firstItem="Z0v-io-V6Y" firstAttribute="centerY" secondItem="dvg-zg-UoL" secondAttribute="centerY" id="Rco-eR-dHh"/>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="centerY" secondItem="Z0v-io-V6Y" secondAttribute="centerY" id="Rwb-63-cHP"/>
+                                                <constraint firstItem="qGe-GR-g5W" firstAttribute="height" secondItem="dGP-cJ-mWw" secondAttribute="height" id="TiE-Y0-wdF"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="dvg-zg-UoL" secondAttribute="trailing" constant="-7" id="fJn-2F-Aof"/>
                                                 <constraint firstItem="Z0v-io-V6Y" firstAttribute="leading" secondItem="dGP-cJ-mWw" secondAttribute="trailing" constant="8" id="fpv-yi-DFA"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="Z0v-io-V6Y" secondAttribute="trailing" constant="-1" id="pGy-q2-xLs"/>
+                                                <constraint firstItem="qGe-GR-g5W" firstAttribute="top" secondItem="dGP-cJ-mWw" secondAttribute="bottom" constant="-50" id="rgQ-Ti-Pin"/>
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="leading" secondItem="f2V-se-Lhm" secondAttribute="leadingMargin" constant="-1" id="wU6-wn-v3W"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="firstLastName" destination="Z0v-io-V6Y" id="KMi-n3-Ax1"/>
                                             <outlet property="followButton" destination="dvg-zg-UoL" id="MTh-Pw-9qF"/>
+                                            <outlet property="initialsLabel" destination="qGe-GR-g5W" id="063-ba-k9A"/>
                                             <outlet property="profilePic" destination="dGP-cJ-mWw" id="wBB-6J-IJJ"/>
                                         </connections>
                                     </tableViewCell>
@@ -150,6 +161,7 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="i4g-Oz-2Q9" appends="YES" id="Rzz-zq-H1U"/>
+                            <outletCollection property="gestureRecognizers" destination="FMc-Dk-MP4" appends="YES" id="5l8-6l-xEh"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="O5w-fh-cwc"/>
@@ -164,6 +176,11 @@
                         <action selector="longPressGestureToPreviewProfile:" destination="X6y-kH-6Ba" id="dSh-mA-i38"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <tapGestureRecognizer id="FMc-Dk-MP4">
+                    <connections>
+                        <action selector="tapGestureAction:" destination="X6y-kH-6Ba" id="DMZ-JK-oQC"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="453.60000000000002" y="110.19490254872565"/>
         </scene>

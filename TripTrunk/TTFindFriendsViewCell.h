@@ -14,5 +14,6 @@
 @property (strong, nonatomic) IBOutlet TTUserProfileImage *profilePic;
 @property (strong, nonatomic) IBOutlet UILabel *firstLastName;
 @property (strong, nonatomic) IBOutlet UIButton *followButton;
+@property (strong, nonatomic) IBOutlet UILabel *initialsLabel;
 
 @end

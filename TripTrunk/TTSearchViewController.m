@@ -316,6 +316,7 @@
     friendCell.profilePic.image = [UIImage imageNamed:@"square_placeholder"];
     friendCell.followButton.userInteractionEnabled = NO;
     [friendCell.followButton setTitle:@"" forState:UIControlStateNormal];
+    friendCell.initialsLabel.hidden = YES;
 //    friendCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     PFUser *user;
@@ -342,7 +343,13 @@
             [friendCell.followButton setBackgroundColor:[TTColor tripTrunkButtonTextBlue]];
         }
     
+    if(user[@"profilePicUrl"]){
         [friendCell.profilePic setImageWithURL:[NSURL URLWithString:user[@"profilePicUrl"]]];
+    }else{
+        friendCell.profilePic.image = [UIImage imageNamed:@"square_placeholder"];
+        friendCell.initialsLabel.text = [self getInitialsForMissingProfilePictureFromUser:user];
+        friendCell.initialsLabel.hidden = NO;
+    }
         friendCell.profilePic.tag = indexPath.row;
         friendCell.tag = indexPath.row;
         friendCell.followButton.tag = indexPath.row;
@@ -550,7 +557,7 @@
                 self.searchResults = [NSMutableArray arrayWithArray:sortedArray];
                 self.isSearching = YES;
                 [self.tableView reloadData];
-                [self performSelector:@selector(dismissKeyboard) withObject:nil afterDelay:4.0];
+                [self performSelector:@selector(dismissKeyboard) withObject:nil afterDelay:3.0];
                 [[TTUtility sharedInstance] internetConnectionFound];
             }
         }];
@@ -623,5 +630,10 @@
 }
 
 
-
+#pragma mark - Gestures
+- (IBAction)tapGestureAction:(UITapGestureRecognizer *)sender {
+    [self dismissKeyboard];
+}
 @end
+    
+    
