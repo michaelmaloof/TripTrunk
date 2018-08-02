@@ -46,6 +46,17 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white-gradient" translatesAutoresizingMaskIntoConstraints="NO" id="ah8-Ma-njH">
                                 <rect key="frame" x="0.0" y="207" width="375" height="460"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ob9-vx-Caq">
+                                <rect key="frame" x="342" y="23" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="XKe-Zk-s96"/>
+                                    <constraint firstAttribute="width" constant="30" id="zKY-4a-57P"/>
+                                </constraints>
+                                <state key="normal" title="•••"/>
+                                <connections>
+                                    <action selector="moreOptionsAction:" destination="QdE-E2-ui9" eventType="touchUpInside" id="Q87-1U-oob"/>
+                                </connections>
+                            </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="1tk-Ag-HIC">
                                 <rect key="frame" x="177" y="386" width="20" height="20"/>
                             </activityIndicatorView>
@@ -387,6 +398,7 @@ traveling around the world bio</string>
                             <constraint firstAttribute="trailing" secondItem="xeD-Lz-Sto" secondAttribute="trailing" id="2Hl-LJ-RkV"/>
                             <constraint firstItem="rIH-u5-iYK" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="88T-Aw-OYh"/>
                             <constraint firstItem="ScL-zl-JFC" firstAttribute="top" secondItem="Vba-qk-WVi" secondAttribute="bottom" constant="14" id="9bD-oE-fGX"/>
+                            <constraint firstItem="ob9-vx-Caq" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="top" constant="23" id="9lC-NY-nuV"/>
                             <constraint firstItem="7R3-mj-Y6d" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="37" id="Akm-Ya-v3s"/>
                             <constraint firstAttribute="bottomMargin" secondItem="ah8-Ma-njH" secondAttribute="bottom" constant="-49" id="D7R-kx-wTd"/>
                             <constraint firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="ENe-HW-7jD"/>
@@ -394,6 +406,7 @@ traveling around the world bio</string>
                             <constraint firstItem="HvK-IO-ucn" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="Gwh-v5-vqg"/>
                             <constraint firstItem="xeD-Lz-Sto" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JGT-dj-fcC"/>
                             <constraint firstItem="NIz-OT-CC1" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JwR-KS-idZ"/>
+                            <constraint firstItem="ob9-vx-Caq" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="342" id="PNz-w6-VMb"/>
                             <constraint firstAttribute="trailing" secondItem="NIz-OT-CC1" secondAttribute="trailing" id="RYk-AA-ods"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="UvK-nt-cbB"/>
                             <constraint firstItem="92z-HT-GCL" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="38" id="Uxg-fW-9ox"/>
@@ -422,6 +435,7 @@ traveling around the world bio</string>
                         <outlet property="followingCount" destination="hcm-aP-coE" id="rZC-jZ-zzR"/>
                         <outlet property="googleMapView" destination="NIz-OT-CC1" id="tj5-M0-2JI"/>
                         <outlet property="miniUserDetails" destination="rIH-u5-iYK" id="g6Z-Na-wiY"/>
+                        <outlet property="moreOptionsButton" destination="ob9-vx-Caq" id="k8n-WZ-9cK"/>
                         <outlet property="privateIcon_large" destination="XQx-u6-mOp" id="nnp-RJ-bch"/>
                         <outlet property="privateIcon_mini" destination="K5z-3D-bKB" id="Pd9-WY-7DZ"/>
                         <outlet property="refreshActivityIndicator" destination="1tk-Ag-HIC" id="Erh-KE-jeY"/>

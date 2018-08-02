@@ -173,7 +173,7 @@
     
 }
 
-+ (void)blockUser:(PFUser *)user{
++ (void)blockUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock{
     __block MBProgressHUD *HUD;
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -182,7 +182,7 @@
         HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
     });
     
-    PFObject *block = [PFObject objectWithClassName:@"Block"];
+    PFObject *block = [PFObject objectWithClassName:@"BlockedUsers"];
     [block setObject:[PFUser currentUser] forKey:@"fromUser"];
     [block setObject:user forKey:@"blockedUser"];
     PFACL *acl = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -190,14 +190,74 @@
     [acl setWriteAccess:YES forUser:[PFUser currentUser]];
     [block setACL:acl];
     
-    [block saveEventually];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // Hide HUD spinner
-        HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+    [block saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        if(error)
+            HUD.labelText = NSLocalizedString(@"Error!",@"Error!");
+        else HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Hide HUD spinner
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+                if(error)
+                    completionBlock(NO,error);
+                else completionBlock(YES,nil);
+            });
         });
+    }];
+    
+    
+    
+}
+
++ (void)unblockUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock{
+    __block MBProgressHUD *HUD;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HUD = [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+        HUD.labelText = NSLocalizedString(@"Unblocking...",@"Unblocking...");
+        HUD.mode = MBProgressHUDModeText; // change to Determinate to show progress
     });
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"BlockedUsers"];
+    [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [query whereKey:@"blockedUser" equalTo:user];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (object) {
+            [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if(succeeded)
+                    completionBlock(YES,nil);
+                else completionBlock(NO, error);
+            }];
+        } else {
+            NSLog(@"Unable to delete: %@", error);
+            completionBlock(NO,error);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Hide HUD spinner
+            HUD.labelText = NSLocalizedString(@"Done!",@"Done!");
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
+            });
+        });
+    }];
+}
+
++ (void)checkForUserBlockStatus:(PFUser *)user block:(void (^)(BOOL blocked, NSError *error))completionBlock{
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"BlockedUsers"];
+    [query whereKey:@"fromUser" equalTo:[PFUser currentUser]];
+    [query whereKey:@"blockedUser" equalTo:user];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if(error)
+            completionBlock(YES,error);
+        
+        if (objects.count == 1)
+            completionBlock(YES,nil);
+        else completionBlock(NO,nil);
+    }];
 }
 
 + (void)addUser:(PFUser *)user toTrip:(Trip *)trip block:(void (^)(BOOL succeeded, NSError *error))completionBlock

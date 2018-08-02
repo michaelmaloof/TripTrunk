@@ -66,7 +66,21 @@
  *
  *  @param user User to block
  */
-+ (void)blockUser:(PFUser *)user;
++ (void)blockUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  The currentUser will unblock the given user
+ *
+ *  @param user User to block
+ */
++ (void)unblockUser:(PFUser *)user block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
+/**
+ *  Check the block status of the given user for current user
+ *
+ *  @param user User to test
+ */
++ (void)checkForUserBlockStatus:(PFUser *)user block:(void (^)(BOOL blocked, NSError *error))completionBlock;
 
 /**
  *  Delete the trip and all related objects

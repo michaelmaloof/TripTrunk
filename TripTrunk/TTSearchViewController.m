@@ -513,6 +513,9 @@
 //}
 
 -(NSString*)getInitialsForMissingProfilePictureFromUser:(PFUser*)user{
+    if([user[@"firstName"] isEqualToString:@""] || [user[@"lastName"] isEqualToString:@""])
+        return @"";
+    
     return [NSString stringWithFormat:@"%@%@",[user[@"firstName"] substringToIndex:1],[user[@"lastName"] substringToIndex:1]];;
 }
 
@@ -526,7 +529,7 @@
         //TODO: add NOT IN existingUsers query to both of these
         
         //     Gets all the users who have blocked this user. Hopefully it's 0!
-        PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
+        PFQuery *blockQuery = [PFQuery queryWithClassName:@"BlockedUsers"];
         [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
         
         PFQuery *usernameQuery = [PFUser query];

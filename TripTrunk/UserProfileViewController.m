@@ -862,7 +862,9 @@
     
     if (buttonIndex == 1 && alertView.tag == 1) {
         // BLOCK USER
-        [SocialUtility blockUser:_user];
+        [SocialUtility blockUser:_user block:^(BOOL succeeded, NSError *error) {
+            //nada
+        }];
     } else if (alertView.tag == 11 && buttonIndex == 1){
         self.followButton.tag = 0;
         [self setButtonColor];

@@ -362,7 +362,7 @@
         
     if (self.searchCount < 30){
 //     Gets all the users who have blocked this user. Hopefully it's 0!
-    PFQuery *blockQuery = [PFQuery queryWithClassName:@"Block"];
+    PFQuery *blockQuery = [PFQuery queryWithClassName:@"BlockedUsers"];
     [blockQuery whereKey:@"blockedUser" equalTo:[PFUser currentUser]];
     blockQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
 

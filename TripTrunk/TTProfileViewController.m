@@ -48,6 +48,7 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
 @property (strong, nonatomic) IBOutlet UIImageView *privateIcon_large;
 @property (strong, nonatomic) IBOutlet UIImageView *privateIcon_mini;
+@property (strong, nonatomic) IBOutlet UIButton *moreOptionsButton;
 @property BOOL isLoading;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
@@ -81,17 +82,25 @@
     if(self.delegate){
         self.backButton.hidden = NO;
         self.backButton.userInteractionEnabled = YES;
+        self.tabBarController.tabBar.hidden = YES;
     }else{
         self.backButton.hidden = YES;
         self.backButton.userInteractionEnabled = NO;
+        self.tabBarController.tabBar.hidden = NO;
     }
 
-    self.tabBarController.tabBar.hidden = NO;
-    
     [self clearMap];
     
     if(!self.user)
         self.user = [PFUser currentUser];
+    
+    if(self.user == [PFUser currentUser]){
+        self.moreOptionsButton.hidden = YES;
+        self.moreOptionsButton.userInteractionEnabled = NO;
+    }else{
+        self.moreOptionsButton.hidden = NO;
+        self.moreOptionsButton.userInteractionEnabled = YES;
+    }
     
     //set user details to main details
     self.miniUserDetails.alpha = 0;
@@ -138,6 +147,14 @@
     [super viewDidLoad];
     if(!self.user)
         self.user = [PFUser currentUser];
+    
+    if(self.user == [PFUser currentUser]){
+        self.moreOptionsButton.hidden = YES;
+        self.moreOptionsButton.userInteractionEnabled = NO;
+    }else{
+        self.moreOptionsButton.hidden = NO;
+        self.moreOptionsButton.userInteractionEnabled = YES;
+    }
     
 //    //set user details to main details
 //    self.miniUserDetails.alpha = 0;
@@ -870,6 +887,58 @@
     photoViewController.image = self.userProfilePictureMain.image;
     
     [self.navigationController pushViewController:photoViewController animated:YES];
+}
+
+- (IBAction)moreOptionsAction:(UIButton *)sender {
+    [SocialUtility checkForUserBlockStatus:self.user block:^(BOOL blocked, NSError *error) {
+        if(!error){
+            UIAlertController * alert;
+            UIAlertAction* yesButton;
+            if(blocked){
+                alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Unblock User?",@"Unblock User?")
+                                                                              message:NSLocalizedString(@"This user will now be able to see your profile and be able to follow you",@"This user will now be able to see your profile and be able to follow you")
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+                
+                    yesButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes",@"Yes")
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action){
+                                                           NSLog(@"you pressed the unblock button");
+                                                           [SocialUtility unblockUser:self.user block:^(BOOL succeeded, NSError *error) {
+                                                               if(succeeded)
+                                                                   NSLog(@"User unblocked");
+                                                               else NSLog(@"Error unblocking: %@",error);
+                                                           }];
+                                                       }];
+            }else{
+                alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Block User?",@"Block User?")
+                                                                              message:NSLocalizedString(@"This user will no longer see your profile or be able to follow you",@"This user will no longer see your profile or be able to follow you")
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+                
+                yesButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes",@"Yes")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action){
+                                                       NSLog(@"you pressed the block button");
+                                                       [SocialUtility blockUser:self.user block:^(BOOL succeeded, NSError *error) {
+                                                           if(succeeded)
+                                                               NSLog(@"User blocked");
+                                                           else NSLog(@"Error blocking: %@",error);
+                                                       }];
+                                                   }];
+
+            }
+            
+            UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * action){
+                                                                 NSLog(@"you pressed cencel button");
+                                                             }];
+            
+            [alert addAction:yesButton];
+            [alert addAction:noButton];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
