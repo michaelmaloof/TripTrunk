@@ -544,8 +544,8 @@
         [nameQuery whereKey:@"lowercaseName" containsString:[searchTerm lowercaseString]];
         [nameQuery whereKey:@"username" notEqualTo:[[PFUser currentUser] username]]; // exclude currentUser
         
-        PFQuery *query = [PFQuery orQueryWithSubqueries:@[usernameQuery, nameQuery]];
-        query.limit = 10;
+        PFQuery *query = [PFQuery orQueryWithSubqueries:@[nameQuery, usernameQuery]];
+//        query.limit = 100;
         //FIXME SEARCH NEEDS A SKIP OR ITLL KEEP RETURNING THE SAME ONES
         
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
