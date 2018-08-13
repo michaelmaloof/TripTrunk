@@ -25,6 +25,7 @@
 #import "TTOnboardingButton.h"
 #import "TTUtility.h"
 #import "TTEditTrunkViewController.h"
+#import "TTTimelineViewController.h"
 
 @interface TTTrunkViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AddPhotosDelegate,PhotoDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,EditTrunkDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *mainCollectionView;
@@ -370,10 +371,19 @@
             optionsButton.backgroundColor = [UIColor clearColor];
             [optionsButton addTarget:self action:@selector(trunkOptions) forControlEvents:UIControlEventTouchUpInside];
             
+            CGRect timelineButtonFrame = CGRectMake(300, 6, 25, 21);
+            UIButton *timelineButton = [[UIButton alloc] initWithFrame:timelineButtonFrame];
+            [timelineButton setImage:[UIImage imageNamed:@"tt_myjourney_tab"] forState:(UIControlState)UIControlStateNormal];
+            timelineButton.contentMode = UIViewContentModeScaleAspectFit;
+            timelineButton.clipsToBounds = YES;
+            timelineButton.backgroundColor = [UIColor clearColor];
+            [timelineButton addTarget:self action:@selector(excursionButtonAction) forControlEvents:UIControlEventTouchUpInside];
+            
             
             [self.theView addSubview:trunkTitleLabel];
             [self.theView addSubview:trunkDatesLabel];
             [self.theView addSubview:optionsButton];
+            [self.theView addSubview:timelineButton];
         } else {
             self.theView = [self.mainCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
         }
@@ -699,6 +709,13 @@
     }];
 }
 
+- (void)excursionButtonAction{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Timeline" bundle:nil];
+    TTTimelineViewController *timelineViewController = (TTTimelineViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTimelineViewController"];
+    timelineViewController.trip = self.trunk;
+//    timelineViewController.delegate = self;
+    [self.navigationController pushViewController:timelineViewController animated:YES];
+}
 
 
 #pragma mark - UIModalPopoverDelegate

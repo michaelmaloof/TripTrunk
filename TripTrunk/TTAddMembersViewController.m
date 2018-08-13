@@ -472,8 +472,13 @@
                 count = count+(int)self.membersToAdd.count;
                 [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
                 [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersAdded" object:nil];
-                    [self.navigationController popViewControllerAnimated:YES];
+//                    if(succeeded){
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"MembersAdded" object:nil];
+                        [self.navigationController popViewControllerAnimated:YES];
+//                    }else{
+//                        //FIXME: HANDLE THIS ERROR!!!!!!!!
+//                        NSLog(@"ERROR: %@",error);
+//                    }
                 }];
             }];
             ///-----------------------------^
@@ -529,7 +534,9 @@
                 count = count+(int)self.membersToAdd.count;
                 [pfObject setObject:[NSNumber numberWithInt:count] forKey:@"memberCount"];
                 [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    [self performSegueWithIdentifier:@"pushToAddPhotos" sender:self];
+//                    if(succeeded)
+                        [self performSegueWithIdentifier:@"pushToAddPhotos" sender:self];
+//                    else NSLog(@"ERROR: %@",error); //FIXME: HANDLE THIS ERROR!!!!!!!!!!!!
                 }];
             }];
             ///-----------------------------^

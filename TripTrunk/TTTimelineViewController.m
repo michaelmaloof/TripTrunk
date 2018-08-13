@@ -22,6 +22,7 @@
 #import "TTCreateTrunkViewController.h"
 #import "TTOnboardingViewController.h"
 #import "SocialUtility.h"
+#import "TTOnboardingButton.h"
 
 @interface TTTimelineViewController () <UICollectionViewDelegate>
 
@@ -51,7 +52,7 @@
     self.user = [PFUser currentUser];
     
     if(self.user)
-        [self loadTimelineData];
+        [self loadTimelineDataForTrip];
     else [self sendUserToLogin];
 }
 
@@ -77,6 +78,137 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+//This is to load the data from a supplied trip
+-(void)loadTimelineDataForTrip{
+    //This is for a backwards timeline.
+    // trip --> IN
+    // OUT --> trips that are before or after less than 1 day
+    
+    [self clearMap];
+            [SocialUtility followingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
+                if (!error){
+                    self.following = users;
+                    
+                    NSMutableArray *queryUsers = [[NSMutableArray alloc] init];
+                    queryUsers = [NSMutableArray arrayWithArray:users];
+                    [queryUsers addObject:self.user];
+                    PFQuery *query = [PFQuery queryWithClassName:@"Trip"];
+                    [query whereKey:@"creator" containedIn:queryUsers];
+                    [query includeKey:@"PublicTripDetail"];
+                    [query orderByDescending:@"start"];
+                    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                    [df setDateStyle:NSDateFormatterLongStyle];
+                    [df setDateFormat:@"MM/dd/yyyy"];
+                    NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+                    
+                    
+                    NSCalendar *theCalendar = [NSCalendar currentCalendar];
+                    NSDate *preDate = [df dateFromString:self.trip[@"startDate"]];
+                    dayComponent.day = -15;
+                    NSDate *startQuery = [theCalendar dateByAddingComponents:dayComponent toDate:preDate options:0];
+                    dayComponent.day = 15;
+                    NSDate *endQuery = [theCalendar dateByAddingComponents:dayComponent toDate:preDate options:0];
+                    
+                    //This limits to a 'safe' 30-day span rather than grab all trips
+                    [query whereKey:@"start" greaterThan:startQuery]; //start
+                    [query whereKey:@"start" lessThan:endQuery]; //end
+                    
+                    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                        BOOL tripFound = NO;
+                        NSMutableArray *preTrips = [[NSMutableArray alloc] init];
+                        NSMutableArray *postTrips = [[NSMutableArray alloc] init];
+                        NSMutableArray *groupedTrips = [[NSMutableArray alloc] init];
+                        for(Trip* trip in objects){
+                            //looking for our self.trip
+                            if([trip.objectId isEqual:self.trip.objectId]){
+                                tripFound = YES;
+                            }else{
+                                if(!tripFound)
+                                    [postTrips addObject:trip];
+                                else [preTrips addObject:trip];
+                            }
+                        }
+                        
+                        Trip *currentTrip = self.trip;
+                        for(Trip* preTrip in preTrips){
+                            if([self areDatesWithin24HoursOfEachOther:preTrip.endDate andDate:currentTrip.startDate]){
+                                [groupedTrips addObject:preTrip];
+                                currentTrip = preTrip;
+                            }else{
+                                break;
+                            }
+                        }
+                        
+                    //reorder groups to be in chronological order
+                    groupedTrips=[[[groupedTrips reverseObjectEnumerator] allObjects] mutableCopy];
+                        
+                    //add current trip so it is in chronological order
+                    [groupedTrips addObject:self.trip];
+                        
+                    postTrips=[[[postTrips reverseObjectEnumerator] allObjects] mutableCopy];
+                        
+                    //lets go through the following trips and stop when a trip is longer than 24 hours past
+                        for(Trip *postTrip in postTrips){
+                            Trip *currentTrip = self.trip;
+                            if([self areDatesWithin24HoursOfEachOther:currentTrip.endDate andDate:postTrip.startDate]){
+                                [groupedTrips addObject:postTrip];
+                                currentTrip = postTrip;
+                            }else{
+                                break;
+                            }
+                        }
+                        
+                        //sort objects and group them into excursions
+                        [self groupTripsIntoExcursionsForTrip:groupedTrips block:^(BOOL succeeded, NSString *error) {
+                            //GO THROUGH AND CHECK TO SEE IF I NEED TO DO THIS STILL?
+                            NSSet *data = [NSSet setWithArray:[self.sortedArray valueForKey:@"trip"]];
+                            NSArray *dataArray = [data allObjects];
+
+                            for(int i = 0; i<data.count; i++){
+                                NSMutableArray *filter = [[NSMutableArray alloc] init];
+                                for(id object in self.sortedArray){
+                                    if([object[@"trip"] isEqualToString:dataArray[i]]){
+                                        [filter addObject:object];
+                                    }
+                                }
+
+                                [self.filteredArray addObject:filter];
+                            }
+
+                            [self explodeFilteredArray];
+                            self.currentGroup = [self currentlySelectedGroup];
+                            [self initMap:self.filteredArray[self.currentGroup]];
+                            Excursion *excursion = self.sortedArray[self.currentGroup];
+                            PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:excursion.trunk.lat longitude:excursion.trunk.longitude];
+                            [self addFlagToMapWithGeoPoint:point];
+                        }];
+                        
+                    }];
+                    
+                }
+            
+    }];
+    
+}
+
+-(BOOL)areDatesWithin24HoursOfEachOther:(NSString *)firstDate andDate:(NSString*)secondDate{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateStyle:NSDateFormatterLongStyle];
+    [df setDateFormat:@"MM/dd/yyyy"];
+    NSDate *date1 = [df dateFromString:firstDate];
+    NSDate *date2 = [df dateFromString:secondDate];
+    
+    NSUInteger unitFlags = NSCalendarUnitHour;
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [calendar components:unitFlags fromDate:date1 toDate:date2 options:0];
+    NSInteger diffInHours = [components hour];
+    
+    if((int)diffInHours <=24 && (int)diffInHours >=-24)
+        return YES;
+    
+    return NO;
 }
 
 -(void)loadTimelineData{
@@ -467,6 +599,21 @@
     
 }
 
+-(void)groupTripsIntoExcursionsForTrip:(NSArray*)trips block:(void (^)(BOOL succeeded, NSString *error))completionBlock
+{
+    //doing this so I don't have to completely rewrite code. This is the third way we've decided to do this
+    NSString *fakeTripVariable = @"5uMW6I0jWx";
+    for(Trip *trip in trips){
+        Excursion *ex = [[Excursion alloc] init];
+        ex.creator = trip.creator;
+        ex.trip = fakeTripVariable;
+        ex.trunk = trip;
+        ex.homeAtCreation = trip.homeAtCreation;
+        [self.sortedArray addObject:ex];
+    }
+    completionBlock(YES, nil);
+}
+
 #pragma mark - PFGeoPoint Sorting
 -(NSArray*)sortGeoPointsByLongitudeWithArray:(NSArray*)array{
     
@@ -630,7 +777,10 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Trunk" bundle:nil];
     TTTrunkViewController *trunkViewController = (TTTrunkViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTTrunkViewController"];
-    trunkViewController.excursion = self.sortedArray[indexPath.row];
+    Excursion *excursion = self.sortedArray[indexPath.row];
+    trunkViewController.excursion = excursion;
+    Trip *trip = excursion.trunk;
+    trunkViewController.trip = trip;
     [self.navigationController pushViewController:trunkViewController animated:YES];
 }
 
@@ -657,6 +807,9 @@ NSComparisonResult dateSort(NSString *s1, NSString *s2, void *context) {
     [self.navigationController pushViewController:createTrunkViewController animated:YES];
 }
 
+- (IBAction)backButtonAction:(TTOnboardingButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 
 -(void)updateHomeAtCreationInTrip{

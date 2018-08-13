@@ -418,72 +418,73 @@
     __block TTHomeMapCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     //Load the current trunk details and display them in the cell, obviously
     Trip *trunk = self.sortedArray[indexPath.row];
-    cell.trunkTitle.text = trunk.name;
-
-    cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
-    cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
-    if(trunk.memberCount){
-        if(trunk.memberCount>2)
-            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trunk.memberCount];
-        else cell.trunkMemberInfo.text = @"Just one member";
-        
-    }else{
-        NSLog(@"Making a call to parse for the member count");
-        [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
-            if(!error){
-                if(users.count>2){
-                    trunk.memberCount = users.count;
-                    cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
-                }else{
-                    trunk.memberCount = 1;
-                    cell.trunkMemberInfo.text = @"Just one member";
-                }
-                
-                [self.sortedArray replaceObjectAtIndex:indexPath.row withObject:trunk];
-            }
-        }];
-    }
     
-    //Load images from Array of image URLs
-    NSArray *photos = self.imageSet[trunk.objectId];
-    NSString *photoUrl;
-    if(photos.count>0){
-        photoUrl = photos[0];
+        cell.trunkTitle.text = trunk.name;
         
-        NSArray *urlComponents = [photoUrl componentsSeparatedByString:@"/"];
-        NSString *file = [urlComponents lastObject];
-        NSString *newSpotlightPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_300,h_250,c_fit/%@",file];
-        
-        [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:newSpotlightPhotoUrl]];
-        
-        //If there are 4 photos then load all of them into the cell, otherwise, only load 1 photo and enlarge the imageView
-        if(photos.count>3){
-            photoUrl = photos[1];
-            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
-            file = [urlComponents lastObject];
-            NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
-            [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
+        cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trunk.startDate],[self formattedDate:trunk.endDate]];
+        cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@, %@",trunk.city,trunk.state,trunk.country];
+        if(trunk.publicTripDetail.memberCount){
+            if(trunk.publicTripDetail.memberCount>2)
+                cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trunk.publicTripDetail.memberCount];
+            else cell.trunkMemberInfo.text = @"Just one member";
             
-            photoUrl = photos[2];
-            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
-            file = [urlComponents lastObject];
-            newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
-            [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
-            
-            photoUrl = photos[3];
-            urlComponents = [photoUrl componentsSeparatedByString:@"/"];
-            file = [urlComponents lastObject];
-            newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
-            [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
         }else{
-            //only 1 photo is being used so enlarge the imageView
-            cell.lowerInfoConstraint.constant = 248;
-            cell.spotlightImageHeightConstraint.constant = 350;
+            NSLog(@"Making a call to parse for the member count");
+            [SocialUtility trunkMembers:trunk block:^(NSArray *users, NSError *error) {
+                if(!error){
+                    if(users.count>2){
+                        trunk.publicTripDetail.memberCount = (int)users.count;
+                        cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
+                    }else{
+                        trunk.memberCount = 1;
+                        cell.trunkMemberInfo.text = @"Just one member";
+                    }
+                    
+                    [self.sortedArray replaceObjectAtIndex:indexPath.row withObject:trunk];
+                }
+            }];
         }
-    }
-    
-    cell.tag = indexPath.row;
-    return cell;
+        
+        //Load images from Array of image URLs
+        NSArray *photos = self.imageSet[trunk.objectId];
+        NSString *photoUrl;
+        if(photos.count>0){
+            photoUrl = photos[0];
+            
+            NSArray *urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+            NSString *file = [urlComponents lastObject];
+            NSString *newSpotlightPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_300,h_250,c_fit/%@",file];
+            
+            [cell.spotlightTrunkImage setImageWithURL:[NSURL URLWithString:newSpotlightPhotoUrl]];
+            
+            //If there are 4 photos then load all of them into the cell, otherwise, only load 1 photo and enlarge the imageView
+            if(photos.count>3){
+                photoUrl = photos[1];
+                urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+                file = [urlComponents lastObject];
+                NSString *newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+                [cell.secondaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
+                
+                photoUrl = photos[2];
+                urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+                file = [urlComponents lastObject];
+                newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+                [cell.tertiaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
+                
+                photoUrl = photos[3];
+                urlComponents = [photoUrl componentsSeparatedByString:@"/"];
+                file = [urlComponents lastObject];
+                newPhotoUrl = [NSString stringWithFormat:@"http://res.cloudinary.com/triptrunk/image/upload/w_100,h_150,c_fit/%@",file];
+                [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
+            }else{
+                //only 1 photo is being used so enlarge the imageView
+                cell.lowerInfoConstraint.constant = 248;
+                cell.spotlightImageHeightConstraint.constant = 350;
+            }
+        }
+        
+        cell.tag = indexPath.row;
+        return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath{

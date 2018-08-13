@@ -321,9 +321,9 @@
     cell.trunkTitle.text = trip.name;
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@",trip.city,trip.state];
     
-    if(trip.memberCount){
-        if(trip.memberCount>2)
-            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trip.memberCount];
+    if(trip.publicTripDetail.memberCount){
+        if(trip.publicTripDetail.memberCount>2)
+            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trip.publicTripDetail.memberCount];
         else cell.trunkMemberInfo.text = @"Just one member";
         
     }else{
@@ -331,7 +331,7 @@
         [SocialUtility trunkMembers:trip block:^(NSArray *users, NSError *error) {
             if(!error){
                 if(users.count>2){
-                    trip.memberCount = users.count;
+                    trip.publicTripDetail.memberCount = (int)users.count;
                     cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
                 }else{
                     trip.memberCount = 1;
@@ -347,6 +347,7 @@
     NSArray* photos = self.imageSet[trip.objectId];
     NSString *photoUrl;
     if(photos.count>0){
+        //FIXME: These are hardcoded to set the size of the photos being downloaded so we don't use full res images in thumbnails, etc.. But we should use a variable at least up until the w_xxx, h_xxx
         photoUrl = photos[0];
         NSArray *urlComponents = [photoUrl componentsSeparatedByString:@"/"];
         NSString *file = [urlComponents lastObject];

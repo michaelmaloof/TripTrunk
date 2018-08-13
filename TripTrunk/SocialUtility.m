@@ -1402,6 +1402,7 @@
     [query whereKey:@"trip" notContainedIn:previousTrunks];
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"trip"];
+    [query includeKey:@"trip.publicTripDetail"];
     [query setLimit:limit];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error){

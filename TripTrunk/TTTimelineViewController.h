@@ -7,9 +7,10 @@
 //
 
 #import "TTBaseViewController.h"
+#import "Trip.h"
 
 @interface TTTimelineViewController : TTBaseViewController 
 
-
+@property (strong, nonatomic) Trip *trip;
 
 @end
