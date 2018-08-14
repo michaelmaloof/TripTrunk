@@ -527,6 +527,7 @@
     [query orderByDescending:@"createdAt"];
     [query whereKey:@"trip" notContainedIn:self.trunkArray];
     [query includeKey:@"trip"];
+    [query includeKey:@"trip.publicTripDetail"];
 //    [query setLimit:10];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if(error){

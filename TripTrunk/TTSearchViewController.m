@@ -207,14 +207,14 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.isLoadingFollowing = NO;
 //                [self.tableView reloadData];
-                [[TTCache sharedCache] setFollowing:users];
+                [[TTCache sharedCache] setFollowing:(NSMutableArray*)users];
             });
             
             
             // Now that we have the array of following, lets also get their Pending..this should be a smaller array.
             [SocialUtility pendingUsers:[PFUser currentUser] block:^(NSArray *users, NSError *error) {
                 if (!error && users.count > 0) {
-                    self.pending = users;
+                    self.pending = (NSMutableArray*)users;
                     // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.isLoadingPending = NO;
@@ -260,7 +260,7 @@
             // Get the user's Facebook Friends who are already on TripTrunk
             // Facebook doesn't allow us to get the whole friends list, only friends on the app.
             NSMutableString *facebookRequest = [NSMutableString new];
-            [facebookRequest appendString:@"/v2.12/me/friends"];
+            [facebookRequest appendString:@"/v2.12/me/friends"]; //FIXME: This should be in the plist to make it easy to update
             [facebookRequest appendString:@"?limit=1000"];
             self.facebookRefreshed = YES;
             [[[FBSDKGraphRequest alloc] initWithGraphPath:facebookRequest parameters:@{@"fields": @"id"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -636,6 +636,24 @@
 #pragma mark - Gestures
 - (IBAction)tapGestureAction:(UITapGestureRecognizer *)sender {
     [self dismissKeyboard];
+}
+
+- (IBAction)tableViewTapGestureAction:(UITapGestureRecognizer *)sender {
+    CGPoint touchPoint = [sender locationInView:self.view];
+    UIView* touchedView = [self.view hitTest:touchPoint withEvent:nil];
+    PFUser *user;
+    if(self.searchResults){
+        user = self.searchResults[touchedView.tag];
+    }else{
+        id promotedUser = self.promoted[touchedView.tag];
+        user = promotedUser[@"user"];
+    }
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+    TTProfileViewController *profileViewController = (TTProfileViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TTProfileViewController"];
+    profileViewController.user = user;
+    profileViewController.delegate = self;
+    [self.navigationController pushViewController:profileViewController animated:YES];
 }
 @end
     

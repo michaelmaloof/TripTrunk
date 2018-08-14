@@ -39,11 +39,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="cVC-Wd-Od3">
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="cVC-Wd-Od3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="215"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="215" id="y1c-Ab-KMj"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="FMc-Dk-MP4" appends="YES" id="Wf4-on-7wY"/>
+                                </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNg-dV-g1j">
                                 <rect key="frame" x="0.0" y="37" width="375" height="25"/>
@@ -116,11 +119,13 @@
                                                 <constraint firstItem="dGP-cJ-mWw" firstAttribute="leading" secondItem="f2V-se-Lhm" secondAttribute="leadingMargin" constant="-1" id="wU6-wn-v3W"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <gestureRecognizers/>
                                         <connections>
                                             <outlet property="firstLastName" destination="Z0v-io-V6Y" id="KMi-n3-Ax1"/>
                                             <outlet property="followButton" destination="dvg-zg-UoL" id="MTh-Pw-9qF"/>
                                             <outlet property="initialsLabel" destination="qGe-GR-g5W" id="063-ba-k9A"/>
                                             <outlet property="profilePic" destination="dGP-cJ-mWw" id="wBB-6J-IJJ"/>
+                                            <outletCollection property="gestureRecognizers" destination="7VS-pf-Hio" appends="YES" id="afI-FK-QLd"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -161,7 +166,6 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="i4g-Oz-2Q9" appends="YES" id="Rzz-zq-H1U"/>
-                            <outletCollection property="gestureRecognizers" destination="FMc-Dk-MP4" appends="YES" id="5l8-6l-xEh"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="O5w-fh-cwc"/>
@@ -179,6 +183,11 @@
                 <tapGestureRecognizer id="FMc-Dk-MP4">
                     <connections>
                         <action selector="tapGestureAction:" destination="X6y-kH-6Ba" id="DMZ-JK-oQC"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="7VS-pf-Hio">
+                    <connections>
+                        <action selector="tableViewTapGestureAction:" destination="X6y-kH-6Ba" id="qkI-AX-d16"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
