@@ -22,6 +22,7 @@
 #import "TTTrunkLocationViewController.h"
 #import "TTAnalytics.h"
 #import "TTAddPhotosViewController.h"
+#import "PublicTripDetail.h"
 
 @interface TTAddMembersViewController () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableArray *searchResults;
@@ -402,7 +403,7 @@
                      [pfObject setObject:self.trip forKey:@"trip"];
                      [pfObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                          PFUser *user = [PFUser currentUser];
-                         NSString *hometown = user[@"hometown"];
+                         NSString *hometown = [user[@"hometown"] stringByReplacingOccurrencesOfString:@" " withString:@""];
                          [[TTUtility sharedInstance] locationsForSearch:hometown block:^(NSArray *objects, NSError *error) {
                              if(!error){
                                  PFGeoPoint *hometownGeopoint = [[PFGeoPoint alloc] init];
@@ -410,17 +411,26 @@
                                  place = objects[0];
                                  hometownGeopoint.latitude = place.latitude;
                                  hometownGeopoint.longitude = place.longitude;
-                                 PFObject *detail = self.trip.publicTripDetail;
+                                 PublicTripDetail *detail = self.trip.publicTripDetail;
                                  detail[@"homeAtCreation"] = hometownGeopoint;
+                                 detail.trip = self.trip;
                                  self.trip[@"homeAtCreation"] = hometownGeopoint;
                                  [detail saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                                     if(succeeded)
-                                         NSLog(@"hometown geopoint suceeded");
-                                     else NSLog(@"hometown geopoint failed");
+                                     if(succeeded){
+                                        NSLog(@"hometown geopoint suceeded");
+                                        [self.trip saveInBackground];
+                                        [self addMembersToNewlyCreatedTrunk];
+                                     }else{
+                                         NSLog(@"hometown geopoint failed: %@",error);
+                                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error",@"Error")
+                                                                                             message:NSLocalizedString(@"Please Try Again",@"Please Try Again")
+                                                                                            delegate:self
+                                                                                   cancelButtonTitle:NSLocalizedString(@"Okay",@"Okay")
+                                                                                   otherButtonTitles:nil, nil];
+                                         [alertView show];
+                                     }
                                      
-                                     [self.trip saveInBackground];
                                      
-                                     [self addMembersToNewlyCreatedTrunk];
                                  }];
                              }
                          }];

@@ -61,6 +61,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    self.tabBarController.tabBar.hidden = NO;
     self.promoted = [NSMutableArray arrayWithArray:[[TTCache sharedCache] promotedUsers]];
     if(self.promoted.count == 0)
         [self loadPromotedUsers];
@@ -138,7 +139,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.isLoadingFacebook = NO;
 //                    [self.tableView reloadData];
-                    [[TTCache sharedCache] setFacebookFriends:objects];
+                    [[TTCache sharedCache] setFacebookFriends:(NSMutableArray*)objects];
                     if (self.facebookRefreshed == NO){
                         if ([PFUser currentUser][@"fbid"]){
                             if (hasFBFriends == NO){
