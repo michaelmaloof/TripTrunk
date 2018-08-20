@@ -322,9 +322,12 @@
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@",trip.city,trip.state];
     
     if(trip.publicTripDetail.memberCount){
-        if(trip.publicTripDetail.memberCount>2)
-            cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trip.publicTripDetail.memberCount];
-        else cell.trunkMemberInfo.text = @"Just one member";
+        if(trip.publicTripDetail.memberCount>2){
+            NSString *memberCountString = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)trip.publicTripDetail.memberCount];
+            cell.trunkMemberInfo.text = NSLocalizedString(memberCountString,memberCountString);
+        }else{
+            cell.trunkMemberInfo.text = NSLocalizedString(@"Made with 1 other", @"Made with 1 other");
+        }
         
     }else{
         NSLog(@"Making a call to parse for the member count");
@@ -332,10 +335,11 @@
             if(!error){
                 if(users.count>2){
                     trip.publicTripDetail.memberCount = (int)users.count;
-                    cell.trunkMemberInfo.text = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
+                    NSString *memberCountString = [NSString stringWithFormat:@"Made with %lu others",(unsigned long)users.count];
+                    cell.trunkMemberInfo.text = NSLocalizedString(memberCountString,memberCountString);
                 }else{
                     trip.memberCount = 1;
-                    cell.trunkMemberInfo.text = @"Just one member";
+                    cell.trunkMemberInfo.text = NSLocalizedString(@"Made with 1 other", @"Made with 1 other");
                 }
                 
                 [self.trunkArray replaceObjectAtIndex:indexPath.row withObject:trip];

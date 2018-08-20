@@ -35,11 +35,11 @@
 				<string>USEast1</string>
 				<key>SNSConfiguredTopics</key>
 				<array>
-					<string>arn:aws:sns:us-east-1:958928567633:triptrunkdev_alldevices_MOBILEHUB_1812265947</string>
+					<string>arn:aws:sns:us-east-1:958928567633:triptrunkprod_alldevices_MOBILEHUB_1497687970</string>
 					<string></string>
 				</array>
 				<key>SNSPlatformApplicationARN</key>
-				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkdev_MOBILEHUB_1812265947</string>
+				<string>arn:aws:sns:us-east-1:958928567633:app/APNS/triptrunkprod-mobilehub-1497687970</string>
 			</dict>
 		</dict>
 	</dict>
