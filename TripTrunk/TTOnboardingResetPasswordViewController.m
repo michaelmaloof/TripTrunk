@@ -15,6 +15,9 @@
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *emailTextField;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *resetButton;
 @property (strong, nonatomic) IBOutlet UILabel *acceptabilityLabel;
+@property NSString *email;
+@property BOOL lookupInterrupted;
+@property BOOL lookupFinished;
 @property BOOL meetsMinimumRequirements;
 @end
 
@@ -34,27 +37,24 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     
-    if([self.emailTextField.text containsString:@"@"] && [self.emailTextField.text containsString:@"."]){
+    //Email has changed
+    self.acceptabilityLabel.text = @"";
+    self.resetButton.hidden = YES;
+    self.lookupInterrupted = YES;
+    self.lookupFinished = NO;
+    
+    NSString *typedText;
+    
+    if(range.location == textField.text.length)
+        typedText = [textField.text stringByAppendingString:string];
+    else typedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if([TTEmailValidation emailIsValid:typedText]){
+        self.acceptabilityLabel.text = @"";
         self.resetButton.hidden = NO;
-        self.meetsMinimumRequirements = YES;
     }else{
-        self.resetButton.hidden = YES;
-        self.meetsMinimumRequirements = NO;
+        self.acceptabilityLabel.text = @"Please enter a valid email address...";
     }
-    
-    NSString *e = textField.text; NSString *email;
-    if([string isEqualToString:@""])
-        email = [e substringToIndex:e.length - 1];
-    else email = [e stringByAppendingString:string];
-    
-    if([TTEmailValidation emailIsValid:email]){
-        self.resetButton.hidden = NO;
-        self.meetsMinimumRequirements = YES;
-    }else{
-        self.resetButton.hidden = YES;
-        self.meetsMinimumRequirements = NO;
-    }
-    
     
     return YES;
 }
