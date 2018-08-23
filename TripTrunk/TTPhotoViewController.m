@@ -314,7 +314,8 @@
         if(self.photo.video){
             [[TTUtility sharedInstance] downloadPhotoVideo:[NSURL URLWithString:self.photo.video[@"videoUrl"]]];
         }else{
-            UIImageWriteToSavedPhotosAlbum(self.photo.image, nil, nil, nil);
+//            UIImageWriteToSavedPhotosAlbum(self.photo.image, nil, nil, nil); //this was used to download images we already have but since we have made photos low quality in the app and have to switch to downloading by url again (like before)
+            [[TTUtility sharedInstance] downloadPhoto:self.photo];
             [TTAnalytics downloadPhoto];
         }
     }];

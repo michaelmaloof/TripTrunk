@@ -486,6 +486,7 @@ CLCloudinary *cloudinary;
     }];
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFImageResponseSerializer serializer];
     [manager GET:[NSURL URLWithString:photo.imageUrl].absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         if (responseObject) {
             UIImage *image = (UIImage *)responseObject;
@@ -504,7 +505,7 @@ CLCloudinary *cloudinary;
             
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error downloading photo");
+        NSLog(@"Error downloading photo: %@",error);
         [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"downloadPhoto:"];
         
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
