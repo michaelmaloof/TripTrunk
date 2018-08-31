@@ -3,25 +3,25 @@
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "40-2.png",
+      "filename" : "40.png",
       "scale" : "2x"
     },
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "60-1.png",
+      "filename" : "60.png",
       "scale" : "3x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "58-1.png",
+      "filename" : "58.png",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "87-1.png",
+      "filename" : "87.png",
       "scale" : "3x"
     },
     {
@@ -57,7 +57,7 @@
     {
       "size" : "20x20",
       "idiom" : "ipad",
-      "filename" : "40.png",
+      "filename" : "40-1.png",
       "scale" : "2x"
     },
     {
@@ -69,13 +69,13 @@
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "58-2.png",
+      "filename" : "58-1.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "40-1.png",
+      "filename" : "40-2.png",
       "scale" : "1x"
     },
     {
@@ -105,7 +105,7 @@
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "tt 1024.jpg",
+      "filename" : "1024x1024.png",
       "scale" : "1x"
     }
   ],

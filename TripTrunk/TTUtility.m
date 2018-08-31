@@ -662,10 +662,11 @@ CLCloudinary *cloudinary;
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // Hide HUD spinner
                             HUD.labelText = NSLocalizedString(@"Complete!", @"Complete"!);
+                            [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                            bgTask = UIBackgroundTaskInvalid;
                             [MBProgressHUD hideHUDForView:[[[UIApplication sharedApplication] delegate] window] animated:YES];
                         });
-                    }
-                    else {
+                    }else {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             NSString *downloading = NSLocalizedString(@"Downloading", "Downloading");
                             NSString *of = NSLocalizedString(@"of", "of");
@@ -673,8 +674,7 @@ CLCloudinary *cloudinary;
                         });
                     }
                     
-                    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                    bgTask = UIBackgroundTaskInvalid;
+                    
                     
                 }
             } failure:^(NSURLSessionTask *operation, NSError *error) {

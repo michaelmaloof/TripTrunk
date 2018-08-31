@@ -240,6 +240,12 @@
 //            if([self.trunkMembers containsObject:[PFUser currentUser]])
 //                [collectionView addSubview:button];
         }else{
+            //reset the cells by removing the the imageview subviews
+            NSArray *viewsToRemove = [cell subviews];
+            for (UIView *v in viewsToRemove) {
+                [v removeFromSuperview];
+            }
+            
             CGRect frame;
             Photo *photo = self.photos[indexPath.row];
             NSArray *urlComponents = [photo.imageUrl componentsSeparatedByString:@"/"];
@@ -623,7 +629,7 @@
     UIAlertAction* noButton = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * action){
-                                                         NSLog(@"you pressed cencel button");
+                                                         NSLog(@"you pressed cancel button");
                                                      }];
     
     [alert addAction:downloadButton];
