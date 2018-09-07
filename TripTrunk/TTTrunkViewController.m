@@ -369,7 +369,7 @@
             trunkDatesLabel.textColor = [UIColor darkGrayColor];
             trunkDatesLabel.textAlignment = NSTextAlignmentLeft;
             
-            CGRect buttonFrame = CGRectMake(335, 6, 25, 21);
+            CGRect buttonFrame = CGRectMake(kScreenWidth-30, 6, 25, 21);
             UIButton *optionsButton = [[UIButton alloc] initWithFrame:buttonFrame];
             [optionsButton setTitle:@"•••" forState:UIControlStateNormal];
             [optionsButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
@@ -377,7 +377,7 @@
             optionsButton.backgroundColor = [UIColor clearColor];
             [optionsButton addTarget:self action:@selector(trunkOptions) forControlEvents:UIControlEventTouchUpInside];
             
-            CGRect timelineButtonFrame = CGRectMake(300, 6, 25, 21);
+            CGRect timelineButtonFrame = CGRectMake(kScreenWidth-65, 6, 25, 21);
             UIButton *timelineButton = [[UIButton alloc] initWithFrame:timelineButtonFrame];
             [timelineButton setImage:[UIImage imageNamed:@"tt_myjourney_tab"] forState:(UIControlState)UIControlStateNormal];
             timelineButton.contentMode = UIViewContentModeScaleAspectFit;

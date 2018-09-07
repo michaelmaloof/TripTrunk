@@ -5,7 +5,7 @@
 //  Created by Michael Maloof on 1/4/17.
 //  Copyright © 2017 Michael Maloof. All rights reserved.
 //
-
+#import <sys/utsname.h>
 #import "TTBaseLoginViewController.h"
 
 @interface TTBaseLoginViewController ()
@@ -260,6 +260,14 @@
                                           otherButtonTitles:nil, nil];
     [alert show];
     
+}
+
+- (NSString*)deviceName{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine
+                              encoding:NSUTF8StringEncoding];
 }
 
 

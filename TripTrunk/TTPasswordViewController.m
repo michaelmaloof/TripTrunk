@@ -18,13 +18,23 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
 //FIXME: Why is this here on an account creation?
 @property (weak, nonatomic) IBOutlet UIButton *forgotPassword;
-@property (strong, nonatomic) IBOutlet UILabel *acceptabilityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *acceptabilityLabel;
 @property NSString *password;
 @property BOOL meetsMinimumRequirements;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 
 @end
 
 @implementation TTPasswordViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+        self.acceptabilityLabel.textColor = [UIColor whiteColor];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

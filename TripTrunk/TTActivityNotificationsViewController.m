@@ -31,12 +31,12 @@ enum TTActivityViewType : NSUInteger {
 };
 
 @interface TTActivityNotificationsViewController () <UICollectionViewDelegate,UICollectionViewDataSource,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate> //<ActivityTableViewCellDelegate>
-@property (strong, nonatomic) IBOutlet UILabel *headline;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *leadingConstraintForFacebookConnect;
+@property (weak, nonatomic) IBOutlet UILabel *headline;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *leadingConstraintForFacebookConnect;
 @property (strong, nonatomic) NSMutableArray *activities;
 @property (strong, nonatomic) NSMutableArray *followingActivities;
 @property NSUInteger viewType;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 //@property (strong, nonatomic) Photo *photo;
 @property BOOL activitySearchComplete;
 @property BOOL isLikes;
@@ -50,15 +50,16 @@ enum TTActivityViewType : NSUInteger {
 @property UIRefreshControl *refreshController;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property (strong, nonatomic) TTPopoverProfileViewController *popoverProfileViewController;
-@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UIView *findFriendsView;
-@property (strong, nonatomic) IBOutlet TTOnboardingTextField *searchTextField;
-@property (strong, nonatomic) IBOutlet UILabel *connectToFacebookLabel;
-@property (strong, nonatomic) IBOutlet UILabel *infoLabel;
-@property (strong, nonatomic) IBOutlet TTOnboardingButton *facebookButton;
-@property (strong, nonatomic) IBOutlet UITableView *friendsTableView;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UIView *findFriendsView;
+@property (weak, nonatomic) IBOutlet TTOnboardingTextField *searchTextField;
+@property (weak, nonatomic) IBOutlet UILabel *connectToFacebookLabel;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet TTOnboardingButton *facebookButton;
+@property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property BOOL isSearching;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *findFriendsLeadingConstraint;
 @end
 
 @implementation TTActivityNotificationsViewController
@@ -100,6 +101,14 @@ enum TTActivityViewType : NSUInteger {
     self.facebookFriendsOriginalArray = [[NSMutableArray alloc] init];
     [self loadTrips];
     [self loadFriends];
+    
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    self.findFriendsLeadingConstraint.constant = kScreenWidth;
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning {

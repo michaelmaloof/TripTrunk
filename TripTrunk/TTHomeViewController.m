@@ -27,9 +27,18 @@
 @property (strong, nonatomic) TTCitySearchResultsTableViewController *citySearchPopover;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property BOOL meetsMinimumRequirements;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 @end
 
 @implementation TTHomeViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,6 +52,10 @@
     [super viewWillAppear:YES];
     self.meetsMinimumRequirements = NO;
     self.finishButton.hidden = YES;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self.homeTextField becomeFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning {

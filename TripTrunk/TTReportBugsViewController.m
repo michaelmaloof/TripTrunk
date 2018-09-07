@@ -12,11 +12,21 @@
 #import "TTOnboardingButton.h"
 
 @interface TTReportBugsViewController ()
-@property (strong, nonatomic) IBOutlet UITextView *bugTextView;
-@property (strong,nonatomic) NSString *email;
+@property (weak, nonatomic) IBOutlet UITextView *bugTextView;
+@property (weak,nonatomic) NSString *email;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bugReportHeightConstraint;
 @end
 
 @implementation TTReportBugsViewController
+
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.bugReportHeightConstraint.constant = 150;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

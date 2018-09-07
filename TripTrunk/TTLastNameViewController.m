@@ -18,9 +18,18 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
 @property NSString *lastName;
 @property BOOL meetsMinimumRequirements;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 @end
 
 @implementation TTLastNameViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

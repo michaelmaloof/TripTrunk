@@ -23,9 +23,19 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *aI;
 @property BOOL lookupInterrupted;
 @property BOOL lookupFinished;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 @end
 
 @implementation TTUsernameViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+        self.availabilityLabel.textColor = [UIColor whiteColor];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

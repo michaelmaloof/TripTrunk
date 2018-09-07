@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -36,10 +36,10 @@
                         <viewControllerLayoutGuide type="bottom" id="rle-d5-hva"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qXj-Sx-KHm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="cVC-Wd-Od3">
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="cVC-Wd-Od3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="215"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="215" id="y1c-Ab-KMj"/>
@@ -49,7 +49,7 @@
                                 </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNg-dV-g1j">
-                                <rect key="frame" x="0.0" y="37" width="375" height="25"/>
+                                <rect key="frame" x="59" y="61" width="258" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="Bte-gr-e9F"/>
                                 </constraints>
@@ -58,14 +58,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VRW-RY-paJ">
-                                <rect key="frame" x="0.0" y="124" width="375" height="543"/>
+                                <rect key="frame" x="0.0" y="124" width="375" height="654"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="zeY-cf-7ty" customClass="TTFindFriendsViewCell">
                                         <rect key="frame" x="0.0" y="28" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zeY-cf-7ty" id="f2V-se-Lhm">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="79.666666666666671"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="dGP-cJ-mWw" customClass="TTUserProfileImage">
@@ -135,7 +135,7 @@
                                 </connections>
                             </tableView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Friends" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fTZ-qd-JuW" customClass="TTOnboardingTextField">
-                                <rect key="frame" x="37" y="100" width="302" height="48"/>
+                                <rect key="frame" x="37" y="100" width="307" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="4IH-me-qGl"/>
@@ -152,17 +152,18 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="HNg-dV-g1j" firstAttribute="top" secondItem="x49-Cg-kCd" secondAttribute="bottom" constant="17" id="2l4-E8-ifx"/>
-                            <constraint firstItem="fTZ-qd-JuW" firstAttribute="top" secondItem="HNg-dV-g1j" secondAttribute="bottom" constant="38" id="5IT-WL-R8d"/>
+                            <constraint firstItem="VRW-RY-paJ" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" id="Dxz-JA-X0r"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HNg-dV-g1j" secondAttribute="trailing" constant="42" id="Jvh-Uw-ps8"/>
                             <constraint firstItem="VRW-RY-paJ" firstAttribute="bottom" secondItem="rle-d5-hva" secondAttribute="top" id="K7o-dd-gKt"/>
                             <constraint firstItem="cVC-Wd-Od3" firstAttribute="top" secondItem="qXj-Sx-KHm" secondAttribute="top" id="LAY-lS-l5r"/>
-                            <constraint firstItem="cVC-Wd-Od3" firstAttribute="leading" secondItem="HNg-dV-g1j" secondAttribute="leading" id="Lzq-11-i8t"/>
-                            <constraint firstItem="HNg-dV-g1j" firstAttribute="centerX" secondItem="fTZ-qd-JuW" secondAttribute="centerX" id="UUr-yB-1yf"/>
-                            <constraint firstItem="HNg-dV-g1j" firstAttribute="leading" secondItem="VRW-RY-paJ" secondAttribute="leading" id="UWf-Bs-0yD"/>
-                            <constraint firstItem="HNg-dV-g1j" firstAttribute="trailing" secondItem="cVC-Wd-Od3" secondAttribute="trailing" id="qQE-zg-kYb"/>
+                            <constraint firstAttribute="trailing" secondItem="VRW-RY-paJ" secondAttribute="trailing" id="S2k-SP-cVk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fTZ-qd-JuW" secondAttribute="trailing" constant="15" id="Veb-mt-evu"/>
+                            <constraint firstAttribute="trailing" secondItem="cVC-Wd-Od3" secondAttribute="trailing" id="drt-R5-gPV"/>
+                            <constraint firstItem="fTZ-qd-JuW" firstAttribute="top" secondItem="cVC-Wd-Od3" secondAttribute="bottom" constant="-115" id="dt3-ep-On9"/>
                             <constraint firstItem="cVC-Wd-Od3" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" id="rj0-a3-dvb"/>
-                            <constraint firstItem="HNg-dV-g1j" firstAttribute="trailing" secondItem="VRW-RY-paJ" secondAttribute="trailing" id="tog-tY-YSh"/>
                             <constraint firstItem="cVC-Wd-Od3" firstAttribute="baseline" secondItem="VRW-RY-paJ" secondAttribute="firstBaseline" constant="91" id="uMZ-NB-Q5F"/>
                             <constraint firstItem="fTZ-qd-JuW" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leading" constant="37" id="vvT-no-gQD"/>
+                            <constraint firstItem="HNg-dV-g1j" firstAttribute="leading" secondItem="qXj-Sx-KHm" secondAttribute="leadingMargin" constant="43" id="yzK-4E-Tch"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="i4g-Oz-2Q9" appends="YES" id="Rzz-zq-H1U"/>
@@ -191,11 +192,11 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="453.60000000000002" y="110.19490254872565"/>
+            <point key="canvasLocation" x="452.17391304347831" y="110.05434782608697"/>
         </scene>
     </scenes>
     <resources>
         <image name="tt_Onboarding_CliffsRoad" width="375" height="258"/>
-        <image name="tt_square_placeholder" width="255" height="255"/>
+        <image name="tt_square_placeholder" width="300" height="300"/>
     </resources>
 </document>

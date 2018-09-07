@@ -6,6 +6,7 @@
 //  Copyright © 2015 Michael Maloof. All rights reserved.
 //
 
+#import <sys/utsname.h>
 #import "TTBaseViewController.h"
 #import "AFNetworkReachabilityManager.h"
 #import "TTUtility.h"
@@ -116,6 +117,14 @@
 //    [[self.tabBarController.viewControllers objectAtIndex:3] setTitle:@""];
 //    [[self.tabBarController.viewControllers objectAtIndex:4] setTitle:@""];
     
+}
+
+- (NSString*)deviceName{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine
+                              encoding:NSUTF8StringEncoding];
 }
 
 @end

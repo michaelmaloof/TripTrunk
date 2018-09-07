@@ -15,10 +15,19 @@
 @property (strong, nonatomic) IBOutlet TTOnboardingTextField *passwordTextField;
 @property (strong, nonatomic) IBOutlet TTOnboardingButton *loginButton;
 @property (strong, nonatomic) IBOutlet UIButton *forgotPasswordButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 
 @end
 
 @implementation TTOnboardingLoginPasswordViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

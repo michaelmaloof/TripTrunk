@@ -30,5 +30,5 @@
  */
 //-(void)tabBarTitle;
 -(void)alertUser:(NSString *)title withMessage:(NSString *)message withYes:(NSString *)yesButton withNo:(NSString *)noButton;
-
+- (NSString*)deviceName;
 @end

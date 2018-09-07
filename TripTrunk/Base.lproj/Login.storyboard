@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eh6-iT-bpl">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -24,7 +24,7 @@
                         <viewControllerLayoutGuide type="bottom" id="QC8-no-57r"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lAs-6A-dC1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="19x-Ml-UAb">
@@ -39,16 +39,16 @@ forget your epic adventures.</string>
                                 <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="12"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Landing" translatesAutoresizingMaskIntoConstraints="NO" id="zZo-az-NxY">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Landing" translatesAutoresizingMaskIntoConstraints="NO" id="zZo-az-NxY">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="bQR-N3-QIT"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOZ-fU-Ae0">
-                                <rect key="frame" x="78" y="574" width="219" height="48"/>
+                                <rect key="frame" x="78.666666666666686" y="743" width="219" height="25"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="lAe-cl-mi1"/>
+                                    <constraint firstAttribute="height" constant="25" id="lAe-cl-mi1"/>
                                     <constraint firstAttribute="width" constant="219" id="p3z-Ky-D9w"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="13"/>
@@ -60,7 +60,7 @@ forget your epic adventures.</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnX-eX-gJf" customClass="TTOnboardingButton">
-                                <rect key="frame" x="50" y="518" width="275" height="48"/>
+                                <rect key="frame" x="50" y="685" width="275" height="48"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Dge-a2-tY9"/>
@@ -82,11 +82,11 @@ forget your epic adventures.</string>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cSb-H2-m4b">
-                                <rect key="frame" x="21" y="630" width="333" height="30"/>
+                                <rect key="frame" x="21" y="775" width="333" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Bqs-l3-6LJ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="9"/>
                                 <state key="normal" title="By Signing Up you agree to our Terms of Use and Privacy Policy.">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -101,12 +101,12 @@ forget your epic adventures.</string>
                             <constraint firstItem="19x-Ml-UAb" firstAttribute="top" secondItem="dgP-N0-iGV" secondAttribute="bottom" constant="18" id="6ls-sb-0dv"/>
                             <constraint firstItem="19x-Ml-UAb" firstAttribute="centerX" secondItem="lAs-6A-dC1" secondAttribute="centerX" id="6sZ-yP-9w5"/>
                             <constraint firstItem="dgP-N0-iGV" firstAttribute="centerX" secondItem="lAs-6A-dC1" secondAttribute="centerX" constant="1" id="9yx-ve-Liw"/>
-                            <constraint firstItem="bOZ-fU-Ae0" firstAttribute="top" secondItem="tnX-eX-gJf" secondAttribute="bottom" constant="8" symbolic="YES" id="HDT-4n-hO6"/>
+                            <constraint firstItem="bOZ-fU-Ae0" firstAttribute="top" secondItem="tnX-eX-gJf" secondAttribute="bottom" constant="10" id="HDT-4n-hO6"/>
                             <constraint firstItem="zZo-az-NxY" firstAttribute="width" secondItem="lAs-6A-dC1" secondAttribute="width" id="OVn-hQ-fZ5"/>
                             <constraint firstItem="cSb-H2-m4b" firstAttribute="leading" secondItem="lAs-6A-dC1" secondAttribute="leadingMargin" constant="5" id="SRn-wg-ITj"/>
                             <constraint firstItem="zZo-az-NxY" firstAttribute="centerX" secondItem="lAs-6A-dC1" secondAttribute="centerX" id="U1A-A6-V1y"/>
-                            <constraint firstItem="cSb-H2-m4b" firstAttribute="top" secondItem="bOZ-fU-Ae0" secondAttribute="bottom" constant="8" id="ZGc-ea-oCb"/>
-                            <constraint firstItem="tnX-eX-gJf" firstAttribute="top" secondItem="19x-Ml-UAb" secondAttribute="bottom" constant="56" id="btk-Tc-qa2"/>
+                            <constraint firstAttribute="bottom" secondItem="cSb-H2-m4b" secondAttribute="bottom" constant="7" id="XlW-AI-GCh"/>
+                            <constraint firstItem="cSb-H2-m4b" firstAttribute="top" secondItem="bOZ-fU-Ae0" secondAttribute="bottom" constant="7" id="ZGc-ea-oCb"/>
                             <constraint firstItem="dgP-N0-iGV" firstAttribute="top" secondItem="zZo-az-NxY" secondAttribute="bottom" constant="-135" id="hfv-9z-MOF"/>
                             <constraint firstItem="tnX-eX-gJf" firstAttribute="centerX" secondItem="lAs-6A-dC1" secondAttribute="centerX" id="ngT-1Z-ZlW"/>
                             <constraint firstItem="19x-Ml-UAb" firstAttribute="width" secondItem="dgP-N0-iGV" secondAttribute="width" constant="24" id="pV9-8y-o2w"/>
@@ -125,7 +125,7 @@ forget your epic adventures.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnc-aF-krN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="487.19999999999999" y="-575.26236881559225"/>
+            <point key="canvasLocation" x="485.625" y="-575.70422535211264"/>
         </scene>
         <!--Username View Controller-->
         <scene sceneID="eNt-wJ-GzW">
@@ -136,10 +136,10 @@ forget your epic adventures.</string>
                         <viewControllerLayoutGuide type="bottom" id="ABs-db-bmB"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4YH-D2-bwV">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="nRR-hG-SzZ">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="nRR-hG-SzZ">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="FjB-ii-KDd"/>
@@ -180,12 +180,11 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0VR-vd-vkm">
-                                <rect key="frame" x="96" y="343" width="182" height="30"/>
+                                <rect key="frame" x="96" y="343" width="152" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2oh-gx-AGz"/>
-                                    <constraint firstAttribute="width" constant="182" id="PVg-xu-5bd"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="8"/>
                                 <state key="normal" title="Already have an account?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -248,6 +247,7 @@ want to go by on TripTrunk?</string>
                         <constraints>
                             <constraint firstItem="dSs-aS-nDK" firstAttribute="top" secondItem="hFe-Zc-iA3" secondAttribute="bottom" constant="14" id="05C-IJ-wtK"/>
                             <constraint firstItem="0VR-vd-vkm" firstAttribute="leading" secondItem="Lh3-5W-niY" secondAttribute="trailing" constant="10" id="1Ar-nq-Zob"/>
+                            <constraint firstItem="lug-rw-aBV" firstAttribute="leading" secondItem="0VR-vd-vkm" secondAttribute="trailing" constant="8" id="61q-eN-ZUE"/>
                             <constraint firstItem="Ikv-Ap-isl" firstAttribute="leading" secondItem="4YH-D2-bwV" secondAttribute="leadingMargin" constant="20" id="9hp-Ou-SnI"/>
                             <constraint firstItem="nRR-hG-SzZ" firstAttribute="top" secondItem="4YH-D2-bwV" secondAttribute="top" id="A0T-Ul-vBQ"/>
                             <constraint firstItem="Fqk-hu-rHR" firstAttribute="top" secondItem="nRR-hG-SzZ" secondAttribute="bottom" constant="28" id="BGF-bS-mzL"/>
@@ -282,6 +282,7 @@ want to go by on TripTrunk?</string>
                         <outlet property="nextButton" destination="lug-rw-aBV" id="2eg-j9-Xmu"/>
                         <outlet property="pageTitle" destination="Ikv-Ap-isl" id="4oT-ly-idp"/>
                         <outlet property="usernameTextField" destination="dSs-aS-nDK" id="vWN-El-bTT"/>
+                        <outlet property="verticalPositionConstraint" destination="i2Z-Uh-5SD" id="cxf-lp-izY"/>
                         <segue destination="p45-b1-m7c" kind="show" identifier="next" id="0wH-Dh-OXq"/>
                         <segue destination="Ct8-Na-GWg" kind="show" identifier="login" id="ffF-eZ-cyg"/>
                     </connections>
@@ -299,20 +300,20 @@ want to go by on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="Gte-kH-xWy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Emc-zZ-g9y">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="4eN-46-Gem">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="4eN-46-Gem">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="yWq-rW-IfY"/>
                                 </constraints>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Pick a password greater than 8 characters" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OTJ-zQ-e3w">
-                                <rect key="frame" x="32" y="181" width="307" height="67"/>
+                                <rect key="frame" x="32" y="181" width="288" height="67"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="67" id="hZj-AF-uHN"/>
-                                    <constraint firstAttribute="width" constant="307" id="ud2-j4-kvj"/>
+                                    <constraint firstAttribute="width" constant="288" id="ud2-j4-kvj"/>
                                 </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
@@ -344,7 +345,7 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LF8-H6-1LX" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="333.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="333.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2PJ-5J-gOD"/>
@@ -362,12 +363,11 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEY-Mq-DQo">
-                                <rect key="frame" x="116" y="343" width="143" height="30"/>
+                                <rect key="frame" x="94" y="343" width="154" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="i5D-s1-NjZ"/>
-                                    <constraint firstAttribute="width" constant="143" id="itV-N1-bgR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="8"/>
                                 <state key="normal" title="Forgot Password?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -399,12 +399,14 @@ want to go by on TripTrunk?</string>
                             <constraint firstItem="xNQ-jU-9wO" firstAttribute="top" secondItem="4eN-46-Gem" secondAttribute="bottom" constant="-20" id="41y-Px-mOl"/>
                             <constraint firstItem="xNQ-jU-9wO" firstAttribute="leading" secondItem="Emc-zZ-g9y" secondAttribute="leading" constant="36" id="67e-kb-DWb"/>
                             <constraint firstAttribute="trailingMargin" secondItem="LF8-H6-1LX" secondAttribute="trailing" constant="20" id="6js-XQ-hlV"/>
+                            <constraint firstItem="LF8-H6-1LX" firstAttribute="leading" secondItem="hEY-Mq-DQo" secondAttribute="trailing" constant="8" id="7gt-UN-EqQ"/>
                             <constraint firstAttribute="trailing" secondItem="xNQ-jU-9wO" secondAttribute="trailing" constant="36" id="Eca-gK-DPL"/>
                             <constraint firstItem="OTJ-zQ-e3w" firstAttribute="leading" secondItem="Emc-zZ-g9y" secondAttribute="leadingMargin" constant="16" id="HiN-1T-PiC"/>
                             <constraint firstItem="hEY-Mq-DQo" firstAttribute="centerY" secondItem="bLO-Xt-oMF" secondAttribute="centerY" id="Hy1-fQ-f3D"/>
                             <constraint firstItem="xNQ-jU-9wO" firstAttribute="centerX" secondItem="Emc-zZ-g9y" secondAttribute="centerX" id="Mca-xA-L5f"/>
                             <constraint firstItem="4eN-46-Gem" firstAttribute="centerX" secondItem="Emc-zZ-g9y" secondAttribute="centerX" id="NFo-gY-fYg"/>
                             <constraint firstItem="4eN-46-Gem" firstAttribute="width" secondItem="Emc-zZ-g9y" secondAttribute="width" id="OWu-wA-hGi"/>
+                            <constraint firstItem="hEY-Mq-DQo" firstAttribute="leading" secondItem="bLO-Xt-oMF" secondAttribute="trailing" constant="8" id="PoN-KU-dpB"/>
                             <constraint firstItem="LF8-H6-1LX" firstAttribute="centerY" secondItem="bLO-Xt-oMF" secondAttribute="centerY" id="RHr-eI-Yaz"/>
                             <constraint firstItem="bLO-Xt-oMF" firstAttribute="leading" secondItem="Emc-zZ-g9y" secondAttribute="leadingMargin" constant="20" id="U2I-Wh-AwB"/>
                             <constraint firstItem="0ZO-sX-24g" firstAttribute="centerX" secondItem="Emc-zZ-g9y" secondAttribute="centerX" id="WRp-jw-7Qb"/>
@@ -412,7 +414,6 @@ want to go by on TripTrunk?</string>
                             <constraint firstItem="4eN-46-Gem" firstAttribute="top" secondItem="Emc-zZ-g9y" secondAttribute="top" id="fwi-S9-1ld"/>
                             <constraint firstItem="0ZO-sX-24g" firstAttribute="top" secondItem="xNQ-jU-9wO" secondAttribute="bottom" constant="4" id="h2L-ZW-4NW"/>
                             <constraint firstItem="0ZO-sX-24g" firstAttribute="width" secondItem="xNQ-jU-9wO" secondAttribute="width" id="iVJ-1Q-FHM"/>
-                            <constraint firstItem="hEY-Mq-DQo" firstAttribute="centerX" secondItem="Emc-zZ-g9y" secondAttribute="centerX" id="iqC-5T-nDl"/>
                             <constraint firstItem="OTJ-zQ-e3w" firstAttribute="top" secondItem="YjI-KF-edN" secondAttribute="bottom" constant="-5" id="xI3-ZV-jff"/>
                         </constraints>
                     </view>
@@ -425,12 +426,13 @@ want to go by on TripTrunk?</string>
                         <outlet property="pageTitle" destination="YjI-KF-edN" id="xmk-FA-q4K"/>
                         <outlet property="passwordTextField" destination="xNQ-jU-9wO" id="dBk-6c-VQN"/>
                         <outlet property="trunkImage" destination="4eN-46-Gem" id="JAm-9F-K3k"/>
+                        <outlet property="verticalPositionConstraint" destination="41y-Px-mOl" id="uKe-Wc-FfD"/>
                         <segue destination="hSI-EF-EvR" kind="show" identifier="next" id="msv-Jg-HMY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="19h-Xt-fDV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1848.8" y="-571.66416791604206"/>
+            <point key="canvasLocation" x="1847.2" y="-572.56371814092961"/>
         </scene>
         <!--Name View Controller-->
         <scene sceneID="KcK-QT-CUX">
@@ -441,10 +443,10 @@ want to go by on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="EkK-Hf-cts"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="UXl-mq-yyM">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Skateboard" translatesAutoresizingMaskIntoConstraints="NO" id="gTt-Z1-dNG">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Skateboard" translatesAutoresizingMaskIntoConstraints="NO" id="gTt-Z1-dNG">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="zXD-1S-m54"/>
@@ -496,7 +498,7 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RsU-Iy-CsU" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="333.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="333.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="STj-f1-Bhh"/>
@@ -540,6 +542,7 @@ want to go by on TripTrunk?</string>
                         <outlet property="nextButton" destination="RsU-Iy-CsU" id="MXZ-Te-Th8"/>
                         <outlet property="pageTitle" destination="feH-OM-7ZA" id="AfB-5y-XDg"/>
                         <outlet property="trunkImage" destination="gTt-Z1-dNG" id="d2Y-ly-sTM"/>
+                        <outlet property="verticalPositionConstraint" destination="kCA-EY-N7g" id="Ycf-gn-kd6"/>
                         <segue destination="u2F-Sp-UgL" kind="show" identifier="next" id="iaI-b9-3tc"/>
                     </connections>
                 </viewController>
@@ -556,10 +559,10 @@ want to go by on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="Esy-LJ-AON"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="CWf-6l-tOa">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_TreesRoad" translatesAutoresizingMaskIntoConstraints="NO" id="c2q-0T-t8F">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_TreesRoad" translatesAutoresizingMaskIntoConstraints="NO" id="c2q-0T-t8F">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="k8H-7Z-Uec"/>
@@ -601,7 +604,7 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBB-w3-qgu" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="335.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="335.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="2lP-Nd-OlY"/>
@@ -619,10 +622,9 @@ want to go by on TripTrunk?</string>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="If you forget your password we'll use your email address to reset it." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvS-1W-Ug7">
-                                <rect key="frame" x="32" y="181" width="307" height="50"/>
+                                <rect key="frame" x="32" y="181" width="300" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="HnM-PP-96S"/>
-                                    <constraint firstAttribute="width" constant="307" id="Nn2-3t-XWL"/>
                                 </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
@@ -658,6 +660,7 @@ want to go by on TripTrunk?</string>
                             <constraint firstItem="bVq-O9-SQg" firstAttribute="top" secondItem="kvS-1W-Ug7" secondAttribute="bottom" constant="19" id="QNn-SW-QKO"/>
                             <constraint firstItem="BFt-ry-5ud" firstAttribute="top" secondItem="bVq-O9-SQg" secondAttribute="bottom" constant="-34" id="Wcg-S0-AH5"/>
                             <constraint firstItem="kvS-1W-Ug7" firstAttribute="top" secondItem="iIE-Ur-XeW" secondAttribute="bottom" constant="-5" id="Xsf-dn-uFb"/>
+                            <constraint firstItem="c2q-0T-t8F" firstAttribute="leading" secondItem="kvS-1W-Ug7" secondAttribute="trailing" constant="-332" id="ZqW-oe-UOq"/>
                             <constraint firstItem="iuu-MH-ZB8" firstAttribute="leading" secondItem="w3l-vb-Ms5" secondAttribute="trailing" constant="4" id="e1N-zz-hBl"/>
                             <constraint firstAttribute="trailing" secondItem="bVq-O9-SQg" secondAttribute="trailing" constant="36" id="j59-Tg-Vur"/>
                             <constraint firstItem="bVq-O9-SQg" firstAttribute="centerX" secondItem="CWf-6l-tOa" secondAttribute="centerX" id="jdk-TF-Jgg"/>
@@ -681,6 +684,7 @@ want to go by on TripTrunk?</string>
                         <outlet property="nextButton" destination="lBB-w3-qgu" id="Jm3-mh-jti"/>
                         <outlet property="pageTitle" destination="iIE-Ur-XeW" id="mWw-wU-tBe"/>
                         <outlet property="trunkImage" destination="c2q-0T-t8F" id="mZ2-Af-gSU"/>
+                        <outlet property="verticalPositionConstraint" destination="tBj-GV-O3b" id="TcG-V4-v7v"/>
                         <segue destination="2GM-gD-mO8" kind="show" identifier="next" id="93m-77-1yM"/>
                     </connections>
                 </viewController>
@@ -697,10 +701,10 @@ want to go by on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="XdW-HQ-gJB"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="as8-h1-3i6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_City" translatesAutoresizingMaskIntoConstraints="NO" id="peh-3m-18W">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_City" translatesAutoresizingMaskIntoConstraints="NO" id="peh-3m-18W">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="q4v-7W-ioY"/>
@@ -729,10 +733,10 @@ relies heavily on your location.</string>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ah-Pv-gUy">
-                                <rect key="frame" x="32" y="288" width="307" height="91"/>
+                                <rect key="frame" x="32" y="288" width="307" height="58"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="307" id="G6t-Zq-crO"/>
-                                    <constraint firstAttribute="height" constant="91" id="M58-M0-Ejv"/>
+                                    <constraint firstAttribute="height" constant="58" id="M58-M0-Ejv"/>
                                 </constraints>
                                 <string key="text">Allow TripTrunk to
 access your location?
@@ -742,10 +746,10 @@ access your location?
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bB7-Oe-Rnp">
-                                <rect key="frame" x="220" y="456" width="74" height="50"/>
+                                <rect key="frame" x="220" y="435" width="74" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="74" id="J1t-a7-lkO"/>
-                                    <constraint firstAttribute="height" constant="50" id="aSM-OR-9Cg"/>
+                                    <constraint firstAttribute="height" constant="36" id="aSM-OR-9Cg"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                 <state key="normal" title="No Thanks">
@@ -756,7 +760,7 @@ access your location?
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TXI-8N-AQx" customClass="TTOnboardingButton">
-                                <rect key="frame" x="32" y="398" width="50" height="50"/>
+                                <rect key="frame" x="32" y="381" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="HNt-uP-kB6"/>
@@ -768,7 +772,7 @@ access your location?
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8W-4h-bun" customClass="TTOnboardingButton">
-                                <rect key="frame" x="175" y="398" width="164" height="50"/>
+                                <rect key="frame" x="175" y="381" width="164" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="aES-xI-D1p"/>
@@ -793,17 +797,17 @@ access your location?
                             <constraint firstItem="2ah-Pv-gUy" firstAttribute="top" secondItem="peh-3m-18W" secondAttribute="bottom" constant="18" id="LJO-P0-3za"/>
                             <constraint firstItem="bB7-Oe-Rnp" firstAttribute="centerX" secondItem="Z8W-4h-bun" secondAttribute="centerX" id="POQ-Pb-7bF"/>
                             <constraint firstItem="TXI-8N-AQx" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="16" id="QH4-M7-nqa"/>
-                            <constraint firstItem="Z8W-4h-bun" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="19" id="R6m-sq-fOJ"/>
+                            <constraint firstItem="Z8W-4h-bun" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="35" id="R6m-sq-fOJ"/>
                             <constraint firstItem="Cgk-Wn-Tmq" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="20" id="RCg-NH-l0A"/>
                             <constraint firstItem="peh-3m-18W" firstAttribute="width" secondItem="as8-h1-3i6" secondAttribute="width" id="X1K-3m-i0U"/>
                             <constraint firstItem="2ah-Pv-gUy" firstAttribute="centerX" secondItem="as8-h1-3i6" secondAttribute="centerX" constant="-2" id="Yd8-Pc-vh2"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Z8W-4h-bun" secondAttribute="trailing" constant="20" id="cG2-yh-Sm0"/>
-                            <constraint firstItem="TXI-8N-AQx" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="19" id="fU7-pj-4Zv"/>
+                            <constraint firstItem="TXI-8N-AQx" firstAttribute="top" secondItem="2ah-Pv-gUy" secondAttribute="bottom" constant="35" id="fU7-pj-4Zv"/>
                             <constraint firstItem="peh-3m-18W" firstAttribute="top" secondItem="as8-h1-3i6" secondAttribute="top" id="gRp-wV-nx6"/>
                             <constraint firstItem="xcp-d9-C6J" firstAttribute="top" secondItem="Cgk-Wn-Tmq" secondAttribute="bottom" constant="-5" id="j1o-gC-Vzx"/>
                             <constraint firstItem="xcp-d9-C6J" firstAttribute="leading" secondItem="as8-h1-3i6" secondAttribute="leadingMargin" constant="16" id="nF7-pZ-G89"/>
                             <constraint firstItem="TXI-8N-AQx" firstAttribute="centerY" secondItem="Z8W-4h-bun" secondAttribute="centerY" id="wHM-R4-alo"/>
-                            <constraint firstItem="bB7-Oe-Rnp" firstAttribute="top" secondItem="Z8W-4h-bun" secondAttribute="bottom" constant="8" id="zia-kn-xa0"/>
+                            <constraint firstItem="bB7-Oe-Rnp" firstAttribute="top" secondItem="Z8W-4h-bun" secondAttribute="bottom" constant="4" id="zia-kn-xa0"/>
                         </constraints>
                     </view>
                     <connections>
@@ -828,10 +832,10 @@ access your location?
                         <viewControllerLayoutGuide type="bottom" id="BWB-xA-0Z1"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="FUu-LQ-sqz">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_City" translatesAutoresizingMaskIntoConstraints="NO" id="hsB-dG-g2i">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_City" translatesAutoresizingMaskIntoConstraints="NO" id="hsB-dG-g2i">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="fMw-ng-Yeb"/>
@@ -920,6 +924,7 @@ access your location?
                         <outlet property="info" destination="H1M-FF-lmM" id="ae4-La-yjY"/>
                         <outlet property="pageTitle" destination="Kir-TX-07a" id="eqw-wy-MLq"/>
                         <outlet property="trunkImage" destination="hsB-dG-g2i" id="2wN-mc-iNu"/>
+                        <outlet property="verticalPositionConstraint" destination="JF3-6R-Ncx" id="MvR-z3-nyv"/>
                         <segue destination="L2w-X3-pjM" kind="show" identifier="next" id="lgP-lf-VDW"/>
                     </connections>
                 </viewController>
@@ -930,10 +935,10 @@ access your location?
         <!--Navigation Controller-->
         <scene sceneID="UOi-Tz-FOw">
             <objects>
-                <navigationController storyboardIdentifier="LoginNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="eh6-iT-bpl" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LoginNavigationController" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="eh6-iT-bpl" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sd9-6H-UU9">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -954,10 +959,10 @@ access your location?
                         <viewControllerLayoutGuide type="bottom" id="ER3-Ej-nej"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BaL-LW-CfR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Jogger" translatesAutoresizingMaskIntoConstraints="NO" id="a4X-QF-W2s">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_Jogger" translatesAutoresizingMaskIntoConstraints="NO" id="a4X-QF-W2s">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="7sf-Jv-Duy"/>
@@ -1009,7 +1014,7 @@ access your location?
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K8W-4Z-TNa" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="333.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="333.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="5HF-OS-Eke"/>
@@ -1053,6 +1058,7 @@ access your location?
                         <outlet property="nextButton" destination="K8W-4Z-TNa" id="Ql8-c2-cx5"/>
                         <outlet property="pageTitle" destination="q3K-Sw-8tE" id="qnZ-sj-483"/>
                         <outlet property="trunkImage" destination="a4X-QF-W2s" id="zAT-ZN-fDC"/>
+                        <outlet property="verticalPositionConstraint" destination="zyV-vd-gFU" id="nd5-Vs-Hfe"/>
                         <segue destination="HGR-2G-BQv" kind="show" identifier="next" id="sPf-eU-HrD"/>
                     </connections>
                 </viewController>
@@ -1069,17 +1075,17 @@ access your location?
                         <viewControllerLayoutGuide type="bottom" id="NGN-zR-1Z6"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="o55-dl-eum">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Intro" translatesAutoresizingMaskIntoConstraints="NO" id="D4v-5Y-GD1">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Intro" translatesAutoresizingMaskIntoConstraints="NO" id="D4v-5Y-GD1">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="335"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="335" id="DSQ-Nb-IO6"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="902-wd-qJ2" customClass="TTOnboardingButton">
-                                <rect key="frame" x="51" y="575" width="275" height="48"/>
+                                <rect key="frame" x="51" y="740" width="275" height="48"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="275" id="gSW-0o-UO3"/>
@@ -1101,22 +1107,22 @@ access your location?
                                 </constraints>
                             </imageView>
                             <textView autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" editable="NO" text="Upload your photos and videos so that our Elephants can help you always remember your adventures traveling." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pI3-fO-GWh">
-                                <rect key="frame" x="52" y="434" width="274" height="103"/>
+                                <rect key="frame" x="51.666666666666657" y="434" width="274" height="76"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="103" id="Ws8-RN-Ag8"/>
+                                    <constraint firstAttribute="height" constant="76" id="Ws8-RN-Ag8"/>
                                 </constraints>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="12"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="pI3-fO-GWh" firstAttribute="centerX" secondItem="o55-dl-eum" secondAttribute="centerX" constant="1" id="3jk-WQ-rgs"/>
-                            <constraint firstItem="902-wd-qJ2" firstAttribute="top" secondItem="pI3-fO-GWh" secondAttribute="bottom" constant="38" id="735-rp-zNO"/>
                             <constraint firstItem="pI3-fO-GWh" firstAttribute="width" secondItem="3b1-iu-UOq" secondAttribute="width" constant="19" id="OrN-h1-M0a"/>
                             <constraint firstItem="3b1-iu-UOq" firstAttribute="centerX" secondItem="o55-dl-eum" secondAttribute="centerX" constant="1" id="dSD-W5-LcK"/>
                             <constraint firstItem="D4v-5Y-GD1" firstAttribute="centerX" secondItem="o55-dl-eum" secondAttribute="centerX" id="fuB-Mw-Pc8"/>
+                            <constraint firstAttribute="bottom" secondItem="902-wd-qJ2" secondAttribute="bottom" constant="24" id="g3s-s5-pgq"/>
                             <constraint firstItem="3b1-iu-UOq" firstAttribute="top" secondItem="D4v-5Y-GD1" secondAttribute="bottom" constant="-175" id="i6V-pA-jCe"/>
                             <constraint firstItem="D4v-5Y-GD1" firstAttribute="width" secondItem="o55-dl-eum" secondAttribute="width" id="rWT-M6-aad"/>
                             <constraint firstItem="pI3-fO-GWh" firstAttribute="top" secondItem="3b1-iu-UOq" secondAttribute="bottom" constant="19" id="u6a-vt-vhC"/>
@@ -1125,6 +1131,9 @@ access your location?
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="HUd-29-Eou"/>
+                    <connections>
+                        <outlet property="info" destination="pI3-fO-GWh" id="Zdy-O7-zvc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u6A-dv-kMZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1139,10 +1148,10 @@ access your location?
                         <viewControllerLayoutGuide type="bottom" id="NlX-KM-1gE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jjA-co-9ju">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-5R-enU">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_LakeView" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-5R-enU">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="0N4-AZ-FUA"/>
@@ -1183,12 +1192,11 @@ use on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qb-Ku-n7Y">
-                                <rect key="frame" x="96" y="343" width="182" height="30"/>
+                                <rect key="frame" x="96" y="343" width="152" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="ANd-6I-PaP"/>
-                                    <constraint firstAttribute="width" constant="182" id="v9G-WK-igZ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="8"/>
                                 <state key="normal" title="Don't have an account yet?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -1240,6 +1248,7 @@ use on TripTrunk?</string>
                         <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="dlE-5R-enU" firstAttribute="centerX" secondItem="jjA-co-9ju" secondAttribute="centerX" id="13U-a2-rDT"/>
+                            <constraint firstItem="f9a-gI-OCk" firstAttribute="leading" secondItem="8qb-Ku-n7Y" secondAttribute="trailing" constant="8" id="3K1-2o-zyc"/>
                             <constraint firstItem="XvV-Q9-T3i" firstAttribute="top" secondItem="yx7-Xq-ENe" secondAttribute="bottom" constant="-5" id="68K-dg-Dm0"/>
                             <constraint firstItem="dlE-5R-enU" firstAttribute="top" secondItem="jjA-co-9ju" secondAttribute="top" id="8pK-7G-nG4"/>
                             <constraint firstItem="VXc-L9-QqF" firstAttribute="centerX" secondItem="jjA-co-9ju" secondAttribute="centerX" id="B4B-R5-YSg"/>
@@ -1265,12 +1274,13 @@ use on TripTrunk?</string>
                         <outlet property="nextButton" destination="f9a-gI-OCk" id="z8C-37-ANW"/>
                         <outlet property="noAccountButton" destination="8qb-Ku-n7Y" id="xvc-Nk-8K8"/>
                         <outlet property="usernameTextField" destination="vk3-YG-OlU" id="IFL-zP-MS7"/>
+                        <outlet property="verticalPositionConstraint" destination="P4w-iE-bts" id="sRi-E3-8Z7"/>
                         <segue destination="eVH-Ph-55y" kind="show" identifier="next" id="tuY-Wu-xjx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HLr-Oi-gh4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1164" y="116"/>
+            <point key="canvasLocation" x="1162.5" y="115"/>
         </scene>
         <!--Onboarding Login Password View Controller-->
         <scene sceneID="9MJ-eh-AXM">
@@ -1281,10 +1291,10 @@ use on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="yqD-le-gqI"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="l87-Fv-5D8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="Zgh-Qk-p7t">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_CliffsRoad" translatesAutoresizingMaskIntoConstraints="NO" id="Zgh-Qk-p7t">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="Lpa-q1-0RQ"/>
@@ -1326,7 +1336,7 @@ use on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jpo-dA-E87" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="333.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="333.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="H1t-yY-SLz"/>
@@ -1344,12 +1354,11 @@ use on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ile-AR-Gel">
-                                <rect key="frame" x="116" y="343" width="143" height="30"/>
+                                <rect key="frame" x="94" y="343" width="154" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="143" id="Dk7-Wf-zSr"/>
                                     <constraint firstAttribute="height" constant="30" id="WwO-z3-DM2"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="8"/>
                                 <state key="normal" title="Forgot your password?">
                                     <color key="titleColor" red="0.0" green="0.57254901960000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -1371,18 +1380,19 @@ use on TripTrunk?</string>
                         <color key="backgroundColor" red="0.90196078430000004" green="0.95686274510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Zgh-Qk-p7t" firstAttribute="width" secondItem="l87-Fv-5D8" secondAttribute="width" id="Jq0-rr-agS"/>
+                            <constraint firstItem="Jpo-dA-E87" firstAttribute="leading" secondItem="Ile-AR-Gel" secondAttribute="trailing" constant="8" id="L9K-SY-cdF"/>
                             <constraint firstItem="p5I-tz-CN5" firstAttribute="leading" secondItem="l87-Fv-5D8" secondAttribute="leadingMargin" constant="20" id="Lw0-bO-yjC"/>
                             <constraint firstItem="UqC-GA-p6d" firstAttribute="top" secondItem="Zgh-Qk-p7t" secondAttribute="bottom" constant="-20" id="MJY-7w-HhJ"/>
                             <constraint firstAttribute="trailing" secondItem="UqC-GA-p6d" secondAttribute="trailing" constant="36" id="Mmt-2n-4Tj"/>
-                            <constraint firstItem="Ile-AR-Gel" firstAttribute="centerY" secondItem="2Zo-WF-rMR" secondAttribute="centerY" id="Nqp-l2-Kbm"/>
                             <constraint firstItem="2Zo-WF-rMR" firstAttribute="top" secondItem="UqC-GA-p6d" secondAttribute="bottom" constant="35" id="OPr-hj-0XO"/>
                             <constraint firstItem="UqC-GA-p6d" firstAttribute="top" secondItem="DG2-T6-B9f" secondAttribute="bottom" constant="2" id="TiO-Q0-h9r"/>
                             <constraint firstItem="DG2-T6-B9f" firstAttribute="top" secondItem="p5I-tz-CN5" secondAttribute="bottom" constant="-5" id="UA3-7i-wS5"/>
                             <constraint firstItem="UqC-GA-p6d" firstAttribute="leading" secondItem="l87-Fv-5D8" secondAttribute="leading" constant="36" id="Vqy-Ah-nxR"/>
                             <constraint firstItem="Zgh-Qk-p7t" firstAttribute="centerX" secondItem="l87-Fv-5D8" secondAttribute="centerX" id="WoH-0G-FOb"/>
                             <constraint firstItem="2Zo-WF-rMR" firstAttribute="leading" secondItem="l87-Fv-5D8" secondAttribute="leadingMargin" constant="20" id="X1Q-G3-9bt"/>
+                            <constraint firstItem="Ile-AR-Gel" firstAttribute="leading" secondItem="2Zo-WF-rMR" secondAttribute="trailing" constant="8" id="Xzp-qp-EUK"/>
                             <constraint firstItem="Zgh-Qk-p7t" firstAttribute="top" secondItem="l87-Fv-5D8" secondAttribute="top" id="ZCV-6p-D1j"/>
-                            <constraint firstItem="Ile-AR-Gel" firstAttribute="centerX" secondItem="l87-Fv-5D8" secondAttribute="centerX" id="fh4-ZJ-RFm"/>
+                            <constraint firstItem="Ile-AR-Gel" firstAttribute="centerY" secondItem="2Zo-WF-rMR" secondAttribute="centerY" id="hdR-hb-nAv"/>
                             <constraint firstItem="DG2-T6-B9f" firstAttribute="leading" secondItem="l87-Fv-5D8" secondAttribute="leadingMargin" constant="16" id="ow5-6S-k8b"/>
                             <constraint firstItem="UqC-GA-p6d" firstAttribute="centerX" secondItem="l87-Fv-5D8" secondAttribute="centerX" id="sej-0o-cVt"/>
                             <constraint firstItem="Jpo-dA-E87" firstAttribute="centerY" secondItem="2Zo-WF-rMR" secondAttribute="centerY" id="shP-ed-529"/>
@@ -1393,11 +1403,12 @@ use on TripTrunk?</string>
                         <outlet property="forgotPasswordButton" destination="Ile-AR-Gel" id="lV9-J3-y1h"/>
                         <outlet property="loginButton" destination="Jpo-dA-E87" id="xIy-F9-bu5"/>
                         <outlet property="passwordTextField" destination="UqC-GA-p6d" id="P90-7O-6Ln"/>
+                        <outlet property="verticalPositionConstraint" destination="MJY-7w-HhJ" id="bXH-X0-tq2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BB0-NN-w1L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1849" y="116"/>
+            <point key="canvasLocation" x="1848.75" y="115"/>
         </scene>
         <!--Onboarding Reset Password View Controller-->
         <scene sceneID="NUm-Yb-obN">
@@ -1408,10 +1419,10 @@ use on TripTrunk?</string>
                         <viewControllerLayoutGuide type="bottom" id="u7q-df-dZW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vqn-aG-RVB">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_TreesRoad" translatesAutoresizingMaskIntoConstraints="NO" id="nU8-J6-pff">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_Onboarding_TreesRoad" translatesAutoresizingMaskIntoConstraints="NO" id="nU8-J6-pff">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="270"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="270" id="QOh-3G-v3T"/>
@@ -1453,7 +1464,7 @@ use on TripTrunk?</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C0x-bd-f5k" customClass="TTOnboardingButton">
-                                <rect key="frame" x="256" y="335.5" width="83" height="50"/>
+                                <rect key="frame" x="256" y="335.66666666666669" width="83" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="Cj9-c0-9Rw"/>
@@ -1513,6 +1524,7 @@ use on TripTrunk?</string>
                         <outlet property="acceptabilityLabel" destination="oHP-Yi-th5" id="AFR-6X-65m"/>
                         <outlet property="emailTextField" destination="dVS-Bd-KeQ" id="Hj2-J9-tj6"/>
                         <outlet property="resetButton" destination="C0x-bd-f5k" id="nYk-gC-xDp"/>
+                        <outlet property="verticalPositionConstraint" destination="RHl-WD-OCG" id="WP4-Pr-2cT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OFf-bG-TxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1532,7 +1544,7 @@ use on TripTrunk?</string>
                                 <rect key="frame" x="0.0" y="28" width="300" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="toS-yj-7wL" id="ewF-Xy-roM">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" alpha="0.34999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_location_icon" translatesAutoresizingMaskIntoConstraints="NO" id="XRE-BW-biG">
@@ -1543,7 +1555,7 @@ use on TripTrunk?</string>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DZx-uM-Lh1">
-                                            <rect key="frame" x="44" y="10.5" width="248" height="22"/>
+                                            <rect key="frame" x="44" y="10.666666666666664" width="248" height="22"/>
                                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1576,7 +1588,7 @@ use on TripTrunk?</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KaV-sz-BeM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1848" y="1213.4932533733133"/>
+            <point key="canvasLocation" x="5381" y="-171"/>
         </scene>
     </scenes>
     <resources>
@@ -1590,7 +1602,7 @@ use on TripTrunk?</string>
         <image name="tt_Onboarding_Skateboard" width="375" height="258"/>
         <image name="tt_Onboarding_TreesRoad" width="375" height="258"/>
         <image name="tt_blueElephanRedBalloon" width="252" height="253"/>
-        <image name="tt_location_icon" width="145" height="145"/>
+        <image name="tt_location_icon" width="170" height="170"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="2eZ-NB-Jll"/>

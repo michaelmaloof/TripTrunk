@@ -41,6 +41,7 @@
 
 @implementation TTTimelineViewController
 
+#pragma mark - views
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     

@@ -12,14 +12,24 @@
 #import "TTOnboardingButton.h"
 
 @interface TTOnboardingLoginUsernameViewController ()
-@property (strong, nonatomic) IBOutlet TTOnboardingTextField *usernameTextField;
-@property (strong, nonatomic) IBOutlet TTOnboardingButton *nextButton;
-@property (strong, nonatomic) IBOutlet UIButton *noAccountButton;
-@property (strong, nonatomic) IBOutlet UILabel *acceptabilityLabel;
+@property (weak, nonatomic) IBOutlet TTOnboardingTextField *usernameTextField;
+@property (weak, nonatomic) IBOutlet TTOnboardingButton *nextButton;
+@property (weak, nonatomic) IBOutlet UIButton *noAccountButton;
+@property (weak, nonatomic) IBOutlet UILabel *acceptabilityLabel;
 @property NSString *username;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 @end
 
 @implementation TTOnboardingLoginUsernameViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+        self.acceptabilityLabel.textColor = [UIColor whiteColor];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

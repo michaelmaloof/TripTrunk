@@ -26,29 +26,29 @@
 #import "TTEditProfileViewController.h"
 
 @interface TTProfileViewController () <UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
-@property (strong, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
-@property (strong, nonatomic) IBOutlet UIImageView *userProfilePictureSmall;
-@property (strong, nonatomic) IBOutlet UILabel *userFirstLastNameSmall;
-@property (strong, nonatomic) IBOutlet UILabel *usernameSmall;
-@property (strong, nonatomic) IBOutlet UIImageView *userProfilePictureMain;
-@property (strong, nonatomic) IBOutlet UILabel *userFirstLastNameMain;
-@property (strong, nonatomic) IBOutlet UILabel *usernameMain;
-@property (strong, nonatomic) IBOutlet UITextView *userBio;
-@property (strong, nonatomic) IBOutlet UILabel *followersCount;
-@property (strong, nonatomic) IBOutlet UILabel *trunksCount;
-@property (strong, nonatomic) IBOutlet UILabel *followingCount;
-@property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
-@property (strong, nonatomic) IBOutlet UIView *miniUserDetails;
-@property (strong, nonatomic) IBOutlet UIView *userDetails;
-@property (strong, nonatomic) IBOutlet TTOnboardingButton *followButton;
+@property (weak, nonatomic) IBOutlet UICollectionView *trunkCollectionView;
+@property (weak, nonatomic) IBOutlet UIImageView *userProfilePictureSmall;
+@property (weak, nonatomic) IBOutlet UILabel *userFirstLastNameSmall;
+@property (weak, nonatomic) IBOutlet UILabel *usernameSmall;
+@property (weak, nonatomic) IBOutlet UIImageView *userProfilePictureMain;
+@property (weak, nonatomic) IBOutlet UILabel *userFirstLastNameMain;
+@property (weak, nonatomic) IBOutlet UILabel *usernameMain;
+@property (weak, nonatomic) IBOutlet UITextView *userBio;
+@property (weak, nonatomic) IBOutlet UILabel *followersCount;
+@property (weak, nonatomic) IBOutlet UILabel *trunksCount;
+@property (weak, nonatomic) IBOutlet UILabel *followingCount;
+@property (weak, nonatomic) IBOutlet GMSMapView *googleMapView;
+@property (weak, nonatomic) IBOutlet UIView *miniUserDetails;
+@property (weak, nonatomic) IBOutlet UIView *userDetails;
+@property (weak, nonatomic) IBOutlet TTOnboardingButton *followButton;
 @property (strong, nonatomic) NSMutableArray *trunkArray;
 @property (strong, nonatomic) NSMutableDictionary *imageSet;
 @property (strong, nonatomic) NSNumber *followStatus;
-@property (strong, nonatomic) IBOutlet TTOnboardingButton *backButton;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
-@property (strong, nonatomic) IBOutlet UIImageView *privateIcon_large;
-@property (strong, nonatomic) IBOutlet UIImageView *privateIcon_mini;
-@property (strong, nonatomic) IBOutlet UIButton *moreOptionsButton;
+@property (weak, nonatomic) IBOutlet TTOnboardingButton *backButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIImageView *privateIcon_large;
+@property (weak, nonatomic) IBOutlet UIImageView *privateIcon_mini;
+@property (weak, nonatomic) IBOutlet UIButton *moreOptionsButton;
 @property BOOL isLoading;
 
 //Is this stuff needed? It's carried over from the old Trunk VC
@@ -70,9 +70,26 @@
 @property UIRefreshControl *refreshController;
 @property int color;
 @property NSTimer *colorTimer;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *userDetailsVerticalPlacementConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *userBioVerticalPlacementConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewVPConstraint;
 @end
 
 @implementation TTProfileViewController
+
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.userDetailsVerticalPlacementConstraint.constant = 100;
+        self.collectionViewVPConstraint.constant = 100;
+        self.userBioVerticalPlacementConstraint.constant = 0;
+       
+    }
+}
+
+#pragma mark - views
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.isLoading = NO;
@@ -317,8 +334,23 @@
 - (TTHomeMapCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     TTHomeMapCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 //    id activity = self.trunkArray[indexPath.row];
+    
+    cell.trunkTitle.text = @"";
+    cell.trunkDates.text = @"";
+    cell.trunkLocation.text = @"";
+    cell.trunkMemberInfo.text = @"";
+    cell.spotlightTrunkImage.image = [UIImage imageNamed:@"tt_square_placeholder"];
+    cell.secondaryTrunkImage.image = [UIImage imageNamed:@"tt_square_placeholder"];
+    cell.tertiaryTrunkImage.image = [UIImage imageNamed:@"tt_square_placeholder"];
+    cell.quaternaryTrunkImage.image = [UIImage imageNamed:@"tt_square_placeholder"];
+    
+    cell.spotlightImageHeightConstraint.constant = 249;
+    cell.lowerInfoConstraint.constant = 148;
+    
+    
     Trip *trip = self.trunkArray[indexPath.row];
     cell.trunkTitle.text = trip.name;
+    cell.trunkDates.text = [NSString stringWithFormat:@"%@ - %@",[self formattedDate:trip.startDate],[self formattedDate:trip.endDate]];
     cell.trunkLocation.text = [NSString stringWithFormat:@"%@, %@",trip.city,trip.state];
     
     if(trip.publicTripDetail.memberCount){
@@ -432,7 +464,8 @@
 
 #pragma mark - GoogleMapView
 -(void)initMap{
-    double mapOffset = -1.75; //<------determine if the map should offset because a point is below the photos
+    //FIXME: OFFSET SHOULD BE DYNAMIC
+    double mapOffset = -2.05; //<------determine if the map should offset because a point is below the photos
     
     //Map View of trunk location
 //    self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, 375, 200)];
@@ -441,7 +474,7 @@
 //        geoPoint = [PFGeoPoint geoPointWithLatitude:32.715736 longitude:-117.161087];//<----- this is temporary. Delete this when hometownGeoPoint is added to everyone's database row
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude+mapOffset
                                                             longitude:geoPoint.longitude
-                                                                 zoom:7];
+                                                                 zoom:7]; //FIXME: ZOOM SHOULD BE DETERMINED PROGRAMATICALLY, STATIC WORKS BUT NOT GOOD
     
     self.googleMapView.camera = camera;
     
@@ -952,6 +985,18 @@
         TTEditProfileViewController *editViewController = segue.destinationViewController;
         editViewController.profilePic = self.userProfilePictureMain.image;
     }
+}
+
+//FIXME: Create own class or move to utility
+-(NSString*)formattedDate:(NSString*)date{
+    //FIXME: This is only US date format, create a date formatter class to handle all locations
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate *formattedDate = [dateFormatter dateFromString:date];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    
+    return [dateFormatter stringFromDate:formattedDate];
 }
 
 @end

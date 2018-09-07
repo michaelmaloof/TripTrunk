@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -19,18 +19,18 @@
                         <viewControllerLayoutGuide type="bottom" id="i7C-P9-COU"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lPP-XD-6mT">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tpg-IO-nm4" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <color key="backgroundColor" red="0.63713812830000005" green="0.8004749417" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" notEnabled="YES"/>
                                 </accessibility>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A8N-Ox-Hit" customClass="TTOnboardingButton">
-                                <rect key="frame" x="16" y="597" width="50" height="50"/>
+                                <rect key="frame" x="16" y="708" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="3K3-oj-jeV"/>
@@ -42,7 +42,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gp5-Kz-XNp">
-                                <rect key="frame" x="186" y="541" width="2" height="50"/>
+                                <rect key="frame" x="186.66666666666666" y="686" width="2" height="50"/>
                                 <color key="backgroundColor" red="0.0" green="0.57828801870346069" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="2" id="69W-wZ-f12"/>
@@ -50,7 +50,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="byx-9d-XwD">
-                                <rect key="frame" x="0.0" y="458" width="375" height="133"/>
+                                <rect key="frame" x="0.0" y="603" width="375" height="133"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="133" id="8el-nk-UAJ"/>
@@ -82,7 +82,7 @@
                                                     <rect key="frame" x="0.0" y="96" width="75" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSa-US-5Ad">
-                                                            <rect key="frame" x="0.0" y="4" width="75" height="15.5"/>
+                                                            <rect key="frame" x="0.0" y="3.9999999999999991" width="75" height="15.666666666666664"/>
                                                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.55172504194630867" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -119,7 +119,7 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s3P-O4-RHm" customClass="TTRoundedButton">
-                                <rect key="frame" x="164" y="52" width="48" height="48"/>
+                                <rect key="frame" x="163.66666666666666" y="76" width="48" height="48"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="Ihy-g0-Wv5"/>
@@ -131,7 +131,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JnG-R8-IdM">
-                                <rect key="frame" x="324" y="59" width="35" height="35"/>
+                                <rect key="frame" x="324" y="83" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="1FD-Ei-rrH"/>
                                     <constraint firstAttribute="height" constant="35" id="uwO-Bx-gzo"/>
@@ -146,8 +146,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="gp5-Kz-XNp" firstAttribute="top" secondItem="byx-9d-XwD" secondAttribute="bottom" constant="-50" id="1tq-at-1Ty"/>
-                            <constraint firstItem="byx-9d-XwD" firstAttribute="top" secondItem="lPP-XD-6mT" secondAttribute="topMargin" constant="438" id="43v-gM-ZGc"/>
                             <constraint firstItem="Tpg-IO-nm4" firstAttribute="top" secondItem="s3P-O4-RHm" secondAttribute="bottom" constant="-80" id="6v0-M3-4KL"/>
+                            <constraint firstAttribute="bottom" secondItem="byx-9d-XwD" secondAttribute="bottom" constant="76" id="EMV-RF-jJg"/>
                             <constraint firstItem="gp5-Kz-XNp" firstAttribute="centerX" secondItem="lPP-XD-6mT" secondAttribute="centerX" id="Hdu-eo-aGM"/>
                             <constraint firstItem="s3P-O4-RHm" firstAttribute="centerX" secondItem="Tpg-IO-nm4" secondAttribute="centerX" id="Jbe-2n-c1G"/>
                             <constraint firstItem="JnG-R8-IdM" firstAttribute="centerY" secondItem="s3P-O4-RHm" secondAttribute="centerY" id="VA6-zd-GJQ"/>
@@ -177,6 +177,6 @@
     <resources>
         <image name="ttBell" width="39" height="36"/>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
-        <image name="tt_square_placeholder" width="255" height="255"/>
+        <image name="tt_square_placeholder" width="300" height="300"/>
     </resources>
 </document>

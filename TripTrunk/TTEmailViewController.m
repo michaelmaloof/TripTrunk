@@ -24,10 +24,22 @@
 @property BOOL meetsMinimumRequirements;
 @property BOOL lookupInterrupted;
 @property BOOL lookupFinished;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
 @end
 
 @implementation TTEmailViewController
 
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = -145;
+        self.availabilityLabel.textColor = [UIColor whiteColor];
+    }
+}
+
+#pragma mark - views
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.emailTextField.delegate = self;

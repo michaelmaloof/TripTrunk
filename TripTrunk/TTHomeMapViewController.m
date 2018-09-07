@@ -21,7 +21,7 @@
 
 @import GoogleMaps;
 
-@interface TTHomeMapViewController () <UIScrollViewDelegate,TrunkDelegate>
+@interface TTHomeMapViewController () <UIScrollViewDelegate,TrunkDelegate,UICollectionViewDelegate>
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) IBOutlet GMSMapView *googleMapView;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -35,16 +35,37 @@
 @property BOOL reachedBottom;
 @property BOOL isLoading;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewVerticalPositionConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *alertButtonVerticalConstraint;
 @end
 
 @implementation TTHomeMapViewController
 
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.collectionViewVerticalPositionConstraint.constant = 4;
+        self.alertButtonVerticalConstraint.constant = 8;
+    }
+}
+
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"])
+        return UIEdgeInsetsMake(0, 10, 0, 0);
+    else return UIEdgeInsetsMake(0, 37, 0, 0);
+}
+
+#pragma mark - views
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self prepareMap];
     self.user = [PFUser currentUser];
     [self setupNotificationCenter];
-    
+        
     //init the arrays
     self.filteredArray = [[NSMutableArray alloc] init];
     self.sortedArray = [[NSMutableArray alloc] init];
@@ -538,6 +559,7 @@
     }
 }
 
+//FIXME: Create own class or move to utility
 -(NSString*)formattedDate:(NSString*)date{
     //FIXME: This is only US date format, create a date formatter class to handle all locations
     NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];

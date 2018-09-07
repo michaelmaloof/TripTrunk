@@ -26,10 +26,28 @@
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
 @property BOOL meetsMinimumRequirements;
 @property (strong, nonatomic) IBOutlet UITextView *trunkTitle;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *privateLabelVPConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *privateLabel;
+@property (weak, nonatomic) IBOutlet UITextView *privateInfoLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cityVerticalPositionConstraint;
 
 @end
 
 @implementation TTTrunkLocationViewController
+
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstraint.constant = 0;
+        self.cityVerticalPositionConstraint.constant = 16; self.privateLabelVPConstraint.constant = 4;
+        self.privateLabel.textColor = [UIColor whiteColor];
+        self.privateInfoLabel.textColor = [UIColor whiteColor];
+       
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

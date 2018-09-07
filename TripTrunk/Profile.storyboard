@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -36,15 +36,15 @@
                         <viewControllerLayoutGuide type="bottom" id="ScL-zl-JFC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qUx-sA-w2X">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NIz-OT-CC1" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <color key="backgroundColor" red="0.49019607840000001" green="0.78039215689999997" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white-gradient" translatesAutoresizingMaskIntoConstraints="NO" id="ah8-Ma-njH">
-                                <rect key="frame" x="0.0" y="207" width="375" height="460"/>
+                                <rect key="frame" x="0.0" y="231" width="375" height="547"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ob9-vx-Caq">
                                 <rect key="frame" x="342" y="23" width="30" height="30"/>
@@ -64,7 +64,7 @@
                                 <rect key="frame" x="0.0" y="188" width="375" height="350"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="f4e-gL-PSV" customClass="TTRoundedImage">
-                                        <rect key="frame" x="125" y="9" width="125" height="125"/>
+                                        <rect key="frame" x="125.66666666666669" y="9" width="125" height="125"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="125" id="534-cd-S2u"/>
@@ -96,7 +96,7 @@ traveling around the world bio</string>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g2I-Ov-3tD">
-                                        <rect key="frame" x="42" y="298" width="60" height="21"/>
+                                        <rect key="frame" x="41.666666666666657" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="BMR-ma-AaK"/>
                                             <constraint firstAttribute="width" constant="60" id="tLM-E0-xFG"/>
@@ -106,7 +106,7 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7vR-Q0-2WK">
-                                        <rect key="frame" x="168" y="298" width="60" height="21"/>
+                                        <rect key="frame" x="167.66666666666666" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="Dpf-F4-mPX"/>
                                             <constraint firstAttribute="height" constant="21" id="ljS-aX-JvX"/>
@@ -116,7 +116,7 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hcm-aP-coE">
-                                        <rect key="frame" x="273" y="298" width="60" height="21"/>
+                                        <rect key="frame" x="272.66666666666669" y="298" width="60" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="Gck-ab-VIE"/>
                                             <constraint firstAttribute="height" constant="21" id="Pcj-A9-YXz"/>
@@ -126,29 +126,27 @@ traveling around the world bio</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYz-bv-okm">
-                                        <rect key="frame" x="43" y="319" width="60" height="20"/>
+                                        <rect key="frame" x="43.666666666666657" y="319" width="60" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Following" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XVQ-5v-EkJ">
-                                        <rect key="frame" x="273" y="319" width="61" height="20"/>
+                                        <rect key="frame" x="273.66666666666669" y="319" width="61" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trunks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eO-2O-lc9">
-                                        <rect key="frame" x="167" y="319" width="40" height="20"/>
+                                        <rect key="frame" x="167.66666666666666" y="319" width="40" height="20"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock_small_gray" translatesAutoresizingMaskIntoConstraints="NO" id="XQx-u6-mOp">
-                                        <rect key="frame" x="232" y="13" width="13" height="16"/>
+                                        <rect key="frame" x="232.66666666666666" y="13" width="13" height="16"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="Jq1-Qo-4aR"/>
                                             <constraint firstAttribute="height" constant="16" id="ST5-JD-G6k"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="13" id="a22-s0-NPK"/>
                                             <constraint firstAttribute="width" constant="13" id="x9j-p8-0np"/>
                                         </constraints>
                                     </imageView>
@@ -160,8 +158,8 @@ traveling around the world bio</string>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="FYz-bv-okm" secondAttribute="bottom" constant="11" id="1MV-qS-yLH"/>
                                     <constraint firstItem="f4e-gL-PSV" firstAttribute="bottom" secondItem="xeD-Lz-Sto" secondAttribute="top" constant="-9" id="4Fl-Pj-ndp"/>
+                                    <constraint firstItem="XQx-u6-mOp" firstAttribute="leading" secondItem="f4e-gL-PSV" secondAttribute="trailing" constant="-18" id="673-Uw-aEC"/>
                                     <constraint firstItem="hcm-aP-coE" firstAttribute="leading" secondItem="7vR-Q0-2WK" secondAttribute="trailing" constant="45" id="A4o-w2-p7b"/>
-                                    <constraint firstAttribute="trailing" secondItem="XQx-u6-mOp" secondAttribute="trailing" constant="130" id="E8w-Ew-05F"/>
                                     <constraint firstAttribute="height" constant="350" id="EB2-Mw-nRl"/>
                                     <constraint firstItem="7eO-2O-lc9" firstAttribute="top" secondItem="7vR-Q0-2WK" secondAttribute="bottom" id="Hg0-AD-NHm"/>
                                     <constraint firstItem="7vR-Q0-2WK" firstAttribute="centerX" secondItem="HvK-IO-ucn" secondAttribute="centerX" constant="10" id="HqE-Sn-CFT"/>
@@ -176,8 +174,8 @@ traveling around the world bio</string>
                                     <constraint firstItem="FYz-bv-okm" firstAttribute="top" secondItem="g2I-Ov-3tD" secondAttribute="bottom" id="Zz8-ip-yuT"/>
                                     <constraint firstItem="sno-p6-dZa" firstAttribute="top" secondItem="xeD-Lz-Sto" secondAttribute="bottom" constant="-2" id="hXe-u8-9ky"/>
                                     <constraint firstItem="7R3-mj-Y6d" firstAttribute="top" secondItem="sno-p6-dZa" secondAttribute="bottom" constant="46" id="iVP-et-xVy"/>
+                                    <constraint firstItem="f4e-gL-PSV" firstAttribute="top" secondItem="XQx-u6-mOp" secondAttribute="bottom" constant="-20" id="o3w-dP-gJU"/>
                                     <constraint firstItem="f4e-gL-PSV" firstAttribute="centerX" secondItem="HvK-IO-ucn" secondAttribute="centerX" id="qyU-13-P2a"/>
-                                    <constraint firstItem="XQx-u6-mOp" firstAttribute="top" secondItem="HvK-IO-ucn" secondAttribute="top" constant="13" id="rGk-zV-SZ8"/>
                                     <constraint firstItem="7vR-Q0-2WK" firstAttribute="top" secondItem="7R3-mj-Y6d" secondAttribute="bottom" constant="12" id="rYY-Pp-xOe"/>
                                     <constraint firstItem="XVQ-5v-EkJ" firstAttribute="top" secondItem="hcm-aP-coE" secondAttribute="bottom" id="v68-Ml-ofR"/>
                                 </constraints>
@@ -311,7 +309,7 @@ traveling around the world bio</string>
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rIH-u5-iYK" userLabel="Mini User Details View">
-                                <rect key="frame" x="0.0" y="51" width="375" height="72"/>
+                                <rect key="frame" x="0.0" y="75" width="375" height="72"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3gf-Cw-ug9" customClass="TTRoundedImage">
                                         <rect key="frame" x="25" y="8" width="55" height="55"/>
@@ -364,7 +362,7 @@ traveling around the world bio</string>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vba-qk-WVi" customClass="TTOnboardingButton">
-                                <rect key="frame" x="189" y="554" width="150" height="50"/>
+                                <rect key="frame" x="189" y="665" width="150" height="50"/>
                                 <color key="backgroundColor" red="0.3199957013130188" green="0.71643155813217163" blue="0.99914258718490601" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Sr6-cg-sYP"/>
@@ -379,7 +377,7 @@ traveling around the world bio</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92z-HT-GCL" customClass="TTOnboardingButton">
-                                <rect key="frame" x="38" y="554" width="50" height="50"/>
+                                <rect key="frame" x="38" y="665" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="5mb-UM-ZrY"/>
@@ -406,7 +404,6 @@ traveling around the world bio</string>
                             <constraint firstItem="HvK-IO-ucn" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="Gwh-v5-vqg"/>
                             <constraint firstItem="xeD-Lz-Sto" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JGT-dj-fcC"/>
                             <constraint firstItem="NIz-OT-CC1" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" id="JwR-KS-idZ"/>
-                            <constraint firstItem="ob9-vx-Caq" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="342" id="PNz-w6-VMb"/>
                             <constraint firstAttribute="trailing" secondItem="NIz-OT-CC1" secondAttribute="trailing" id="RYk-AA-ods"/>
                             <constraint firstItem="JUj-jC-bXC" firstAttribute="trailing" secondItem="ah8-Ma-njH" secondAttribute="trailing" id="UvK-nt-cbB"/>
                             <constraint firstItem="92z-HT-GCL" firstAttribute="leading" secondItem="qUx-sA-w2X" secondAttribute="leading" constant="38" id="Uxg-fW-9ox"/>
@@ -420,6 +417,7 @@ traveling around the world bio</string>
                             <constraint firstAttribute="bottomMargin" secondItem="92z-HT-GCL" secondAttribute="bottom" constant="14" id="kRt-bL-JGe"/>
                             <constraint firstItem="1tk-Ag-HIC" firstAttribute="top" secondItem="HvK-IO-ucn" secondAttribute="bottom" constant="-152" id="lae-Oy-Nic"/>
                             <constraint firstItem="ah8-Ma-njH" firstAttribute="top" secondItem="qUx-sA-w2X" secondAttribute="topMargin" constant="187" id="lbD-qJ-ekO"/>
+                            <constraint firstAttribute="trailing" secondItem="ob9-vx-Caq" secondAttribute="trailing" constant="3" id="pQQ-2k-AYQ"/>
                             <constraint firstAttribute="trailing" secondItem="7R3-mj-Y6d" secondAttribute="trailing" constant="37" id="pWo-PZ-by1"/>
                             <constraint firstAttribute="topMargin" secondItem="NIz-OT-CC1" secondAttribute="top" id="t80-AW-JWm"/>
                             <constraint firstAttribute="trailing" secondItem="rIH-u5-iYK" secondAttribute="trailing" id="uc2-7y-5Jz"/>
@@ -430,6 +428,7 @@ traveling around the world bio</string>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="backButton" destination="92z-HT-GCL" id="tvX-7j-ucn"/>
+                        <outlet property="collectionViewVPConstraint" destination="XhD-ui-ATr" id="zNs-sL-WOB"/>
                         <outlet property="followButton" destination="Vba-qk-WVi" id="6gg-Cj-fIf"/>
                         <outlet property="followersCount" destination="g2I-Ov-3tD" id="J2B-9K-Yr6"/>
                         <outlet property="followingCount" destination="hcm-aP-coE" id="rZC-jZ-zzR"/>
@@ -442,7 +441,9 @@ traveling around the world bio</string>
                         <outlet property="trunkCollectionView" destination="JUj-jC-bXC" id="g5T-qn-Xo4"/>
                         <outlet property="trunksCount" destination="7vR-Q0-2WK" id="D4U-ow-LEk"/>
                         <outlet property="userBio" destination="7R3-mj-Y6d" id="4YQ-wv-ic5"/>
+                        <outlet property="userBioVerticalPlacementConstraint" destination="iVP-et-xVy" id="ged-Yo-S7b"/>
                         <outlet property="userDetails" destination="HvK-IO-ucn" id="pMx-r0-wf8"/>
+                        <outlet property="userDetailsVerticalPlacementConstraint" destination="EP6-xS-LLb" id="N0R-Qz-Ejg"/>
                         <outlet property="userFirstLastNameMain" destination="xeD-Lz-Sto" id="VSU-GT-p9r"/>
                         <outlet property="userFirstLastNameSmall" destination="OzJ-xF-iHV" id="am4-mi-LDc"/>
                         <outlet property="userProfilePictureMain" destination="f4e-gL-PSV" id="l6w-8c-RUB"/>
@@ -475,15 +476,15 @@ traveling around the world bio</string>
                         <viewControllerLayoutGuide type="bottom" id="cXu-BN-W7l"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="khg-9s-FX1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-51-liq" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="-2" width="375" height="669"/>
+                                <rect key="frame" x="0.0" y="-2" width="375" height="814"/>
                                 <color key="backgroundColor" red="0.49019607840000001" green="0.78039215689999997" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EL6-Xw-Tpq">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EL6-Xw-Tpq">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Name" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p2y-dK-0ZO">
                                         <rect key="frame" x="8" y="64" width="78" height="22"/>
@@ -531,12 +532,10 @@ traveling around the world bio</string>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wxb-rf-Lgx">
-                                        <rect key="frame" x="94" y="60" width="276" height="30"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wxb-rf-Lgx">
+                                        <rect key="frame" x="94" y="60" width="273" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="DtS-ee-91J"/>
-                                            <constraint firstAttribute="width" constant="276" id="dGa-QU-laA"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="276" id="n67-T9-XYd"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
@@ -545,11 +544,10 @@ traveling around the world bio</string>
                                             <outlet property="delegate" destination="sDq-61-fJd" id="SII-VJ-9Eb"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tJB-xt-BVo">
-                                        <rect key="frame" x="94" y="91" width="276" height="30"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tJB-xt-BVo">
+                                        <rect key="frame" x="94" y="91" width="273" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="so3-Wx-tsa"/>
-                                            <constraint firstAttribute="width" constant="276" id="y24-4Z-kD9"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
@@ -558,11 +556,10 @@ traveling around the world bio</string>
                                             <outlet property="delegate" destination="sDq-61-fJd" id="PLX-u5-adD"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cRH-vZ-v0Z">
-                                        <rect key="frame" x="94" y="122" width="276" height="30"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cRH-vZ-v0Z">
+                                        <rect key="frame" x="94" y="122" width="273" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="5bF-jc-6iB"/>
-                                            <constraint firstAttribute="width" constant="276" id="rQj-JI-31c"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="16"/>
@@ -571,10 +568,9 @@ traveling around the world bio</string>
                                             <outlet property="delegate" destination="sDq-61-fJd" id="ECg-XT-FbK"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CvB-KY-BMQ" customClass="TTCitySearchTextField">
-                                        <rect key="frame" x="94" y="153" width="276" height="30"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CvB-KY-BMQ" customClass="TTCitySearchTextField">
+                                        <rect key="frame" x="94" y="153" width="273" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="276" id="Cek-km-C9A"/>
                                             <constraint firstAttribute="height" constant="30" id="sXX-eV-6Za"/>
                                         </constraints>
                                         <nil key="textColor"/>
@@ -584,13 +580,12 @@ traveling around the world bio</string>
                                             <action selector="beginEditingLocation:" destination="sDq-61-fJd" eventType="editingDidBegin" id="ZFc-Lo-AEb"/>
                                         </connections>
                                     </textField>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="D5z-rY-XXo">
-                                        <rect key="frame" x="94" y="188" width="276" height="73"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="D5z-rY-XXo">
+                                        <rect key="frame" x="94" y="188" width="273" height="73"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="73" id="Iqs-Ue-JXW"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="73" id="h5j-Nt-kjb"/>
-                                            <constraint firstAttribute="width" constant="276" id="i3s-ju-NpO"/>
                                         </constraints>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
@@ -615,21 +610,6 @@ traveling around the world bio</string>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n2P-so-Eu3" customClass="TTOnboardingButton">
-                                        <rect key="frame" x="189" y="596" width="150" height="50"/>
-                                        <color key="backgroundColor" red="0.31999570129999999" green="0.71643155810000003" blue="0.99914258720000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="Bv0-GK-NTm"/>
-                                            <constraint firstAttribute="height" constant="50" id="TfZ-02-u1i"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
-                                        <state key="normal" title="SAVE CHANGES">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="saveChangesWasTapped:" destination="sDq-61-fJd" eventType="touchUpInside" id="RMT-kY-Wx8"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gNm-Mj-u0n">
                                         <rect key="frame" x="94" y="265" width="122" height="30"/>
                                         <constraints>
@@ -651,52 +631,66 @@ traveling around the world bio</string>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n2P-so-Eu3" customClass="TTOnboardingButton">
+                                        <rect key="frame" x="189" y="707" width="150" height="50"/>
+                                        <color key="backgroundColor" red="0.31999570129999999" green="0.71643155810000003" blue="0.99914258720000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="Bv0-GK-NTm"/>
+                                            <constraint firstAttribute="height" constant="50" id="TfZ-02-u1i"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
+                                        <state key="normal" title="SAVE CHANGES">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveChangesWasTapped:" destination="sDq-61-fJd" eventType="touchUpInside" id="RMT-kY-Wx8"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="tJB-xt-BVo" firstAttribute="top" secondItem="wxb-rf-Lgx" secondAttribute="bottom" constant="1" id="0bH-dm-nyy"/>
-                                    <constraint firstAttribute="trailing" secondItem="n2P-so-Eu3" secondAttribute="trailing" constant="36" id="36s-kA-xgC"/>
+                                    <constraint firstAttribute="trailing" secondItem="tJB-xt-BVo" secondAttribute="trailing" constant="8" id="2QG-M0-sR9"/>
                                     <constraint firstItem="zte-Cl-JBh" firstAttribute="top" secondItem="EL6-Xw-Tpq" secondAttribute="top" constant="24" id="3WR-5a-eBb"/>
                                     <constraint firstItem="p2y-dK-0ZO" firstAttribute="top" secondItem="kgG-Uu-S7c" secondAttribute="bottom" constant="14" id="3kn-ia-J7i"/>
                                     <constraint firstItem="abj-it-7Ia" firstAttribute="centerY" secondItem="tJB-xt-BVo" secondAttribute="centerY" id="4Vi-ol-LLQ"/>
                                     <constraint firstItem="wxb-rf-Lgx" firstAttribute="top" secondItem="zte-Cl-JBh" secondAttribute="bottom" constant="5" id="5G1-eC-P7d"/>
-                                    <constraint firstAttribute="trailing" secondItem="wxb-rf-Lgx" secondAttribute="trailing" constant="5" id="6ak-Pt-Oxn"/>
+                                    <constraint firstAttribute="trailing" secondItem="wxb-rf-Lgx" secondAttribute="trailing" constant="8" id="6ak-Pt-Oxn"/>
                                     <constraint firstItem="kgG-Uu-S7c" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="37" id="7sE-rd-afs"/>
                                     <constraint firstItem="cRH-vZ-v0Z" firstAttribute="top" secondItem="tJB-xt-BVo" secondAttribute="bottom" constant="1" id="9mj-F3-GTa"/>
                                     <constraint firstItem="i6G-jT-WVl" firstAttribute="top" secondItem="WzF-9D-Yp5" secondAttribute="bottom" constant="9" id="DAS-TL-ANS"/>
                                     <constraint firstItem="p2y-dK-0ZO" firstAttribute="centerY" secondItem="wxb-rf-Lgx" secondAttribute="centerY" id="EsM-lq-i67"/>
                                     <constraint firstItem="WzF-9D-Yp5" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="11" id="GZo-4O-Ykd"/>
                                     <constraint firstItem="zte-Cl-JBh" firstAttribute="leading" secondItem="kgG-Uu-S7c" secondAttribute="trailing" constant="8" symbolic="YES" id="HC4-iA-oUm"/>
-                                    <constraint firstItem="wxb-rf-Lgx" firstAttribute="leading" secondItem="p2y-dK-0ZO" secondAttribute="trailing" constant="8" symbolic="YES" id="LqF-I1-Dke"/>
+                                    <constraint firstItem="wxb-rf-Lgx" firstAttribute="leading" secondItem="p2y-dK-0ZO" secondAttribute="trailing" constant="8" id="LqF-I1-Dke"/>
                                     <constraint firstItem="gNm-Mj-u0n" firstAttribute="top" secondItem="D5z-rY-XXo" secondAttribute="bottom" constant="4" id="Lud-Q1-C9W"/>
                                     <constraint firstItem="CvB-KY-BMQ" firstAttribute="leading" secondItem="D5z-rY-XXo" secondAttribute="leading" id="OjT-a2-dCp"/>
                                     <constraint firstItem="D5z-rY-XXo" firstAttribute="top" secondItem="CvB-KY-BMQ" secondAttribute="bottom" constant="5" id="OlG-fo-tEB"/>
                                     <constraint firstItem="WzF-9D-Yp5" firstAttribute="leading" secondItem="i6G-jT-WVl" secondAttribute="leading" id="PHh-zI-RAq"/>
                                     <constraint firstItem="J2u-3X-UOg" firstAttribute="top" secondItem="D5z-rY-XXo" secondAttribute="bottom" constant="9" id="PdP-aE-1vP"/>
-                                    <constraint firstItem="cRH-vZ-v0Z" firstAttribute="trailing" secondItem="CvB-KY-BMQ" secondAttribute="trailing" id="SYP-pc-vEa"/>
-                                    <constraint firstItem="D5z-rY-XXo" firstAttribute="leading" secondItem="GDh-wY-aeB" secondAttribute="trailing" constant="8" symbolic="YES" id="TAi-om-IGx"/>
+                                    <constraint firstItem="D5z-rY-XXo" firstAttribute="leading" secondItem="GDh-wY-aeB" secondAttribute="trailing" constant="8" id="TAi-om-IGx"/>
                                     <constraint firstItem="GDh-wY-aeB" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="11" id="VCt-Ql-MV3"/>
-                                    <constraint firstItem="tJB-xt-BVo" firstAttribute="leading" secondItem="abj-it-7Ia" secondAttribute="trailing" constant="8" symbolic="YES" id="Vfb-eK-i7m"/>
-                                    <constraint firstItem="CvB-KY-BMQ" firstAttribute="leading" secondItem="i6G-jT-WVl" secondAttribute="trailing" constant="8" symbolic="YES" id="WmI-Yx-sYh"/>
+                                    <constraint firstItem="tJB-xt-BVo" firstAttribute="leading" secondItem="abj-it-7Ia" secondAttribute="trailing" constant="8" id="Vfb-eK-i7m"/>
+                                    <constraint firstItem="CvB-KY-BMQ" firstAttribute="leading" secondItem="i6G-jT-WVl" secondAttribute="trailing" constant="8" id="WmI-Yx-sYh"/>
                                     <constraint firstItem="abj-it-7Ia" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="9" id="Xh0-dh-vFz"/>
                                     <constraint firstItem="GDh-wY-aeB" firstAttribute="top" secondItem="i6G-jT-WVl" secondAttribute="bottom" constant="9" id="XwE-03-kQh"/>
                                     <constraint firstItem="tJB-xt-BVo" firstAttribute="leading" secondItem="cRH-vZ-v0Z" secondAttribute="leading" id="ZEJ-mH-if9"/>
                                     <constraint firstItem="gNm-Mj-u0n" firstAttribute="leading" secondItem="J2u-3X-UOg" secondAttribute="trailing" constant="8" id="dGG-jM-hwP"/>
                                     <constraint firstItem="i6G-jT-WVl" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="11" id="dP2-JE-Lc7"/>
-                                    <constraint firstItem="wxb-rf-Lgx" firstAttribute="trailing" secondItem="tJB-xt-BVo" secondAttribute="trailing" id="dS9-mO-CYe"/>
                                     <constraint firstItem="cRH-vZ-v0Z" firstAttribute="leading" secondItem="CvB-KY-BMQ" secondAttribute="leading" id="dXT-FP-QaG"/>
-                                    <constraint firstItem="cRH-vZ-v0Z" firstAttribute="leading" secondItem="WzF-9D-Yp5" secondAttribute="trailing" constant="8" symbolic="YES" id="dkb-dH-VuR"/>
+                                    <constraint firstItem="cRH-vZ-v0Z" firstAttribute="leading" secondItem="WzF-9D-Yp5" secondAttribute="trailing" constant="8" id="dkb-dH-VuR"/>
+                                    <constraint firstAttribute="trailing" secondItem="cRH-vZ-v0Z" secondAttribute="trailing" constant="8" id="eLI-hH-MSr"/>
                                     <constraint firstItem="CvB-KY-BMQ" firstAttribute="top" secondItem="cRH-vZ-v0Z" secondAttribute="bottom" constant="1" id="ffH-NN-zzv"/>
+                                    <constraint firstAttribute="trailing" secondItem="CvB-KY-BMQ" secondAttribute="trailing" constant="8" id="h4U-Iy-9Uc"/>
                                     <constraint firstAttribute="bottom" secondItem="D5z-rY-XXo" secondAttribute="bottom" constant="175" id="h9T-39-rBC"/>
                                     <constraint firstItem="wxb-rf-Lgx" firstAttribute="leading" secondItem="tJB-xt-BVo" secondAttribute="leading" id="i95-fG-9kP"/>
                                     <constraint firstItem="p2y-dK-0ZO" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="8" id="jCR-r5-qSw"/>
                                     <constraint firstItem="GDh-wY-aeB" firstAttribute="top" secondItem="D5z-rY-XXo" secondAttribute="top" id="koJ-1v-5mr"/>
                                     <constraint firstItem="i6G-jT-WVl" firstAttribute="centerY" secondItem="CvB-KY-BMQ" secondAttribute="centerY" id="mis-Ig-gWw"/>
                                     <constraint firstItem="kgG-Uu-S7c" firstAttribute="top" secondItem="EL6-Xw-Tpq" secondAttribute="top" constant="28" id="nla-sT-hJV"/>
-                                    <constraint firstItem="tJB-xt-BVo" firstAttribute="trailing" secondItem="cRH-vZ-v0Z" secondAttribute="trailing" id="pHE-8H-783"/>
+                                    <constraint firstAttribute="trailing" secondItem="D5z-rY-XXo" secondAttribute="trailing" constant="8" id="nwS-S6-KJw"/>
                                     <constraint firstItem="WzF-9D-Yp5" firstAttribute="centerY" secondItem="cRH-vZ-v0Z" secondAttribute="centerY" id="qzR-mg-BCv"/>
                                     <constraint firstItem="kgG-Uu-S7c" firstAttribute="centerY" secondItem="zte-Cl-JBh" secondAttribute="centerY" id="v8s-6O-LO1"/>
-                                    <constraint firstItem="CvB-KY-BMQ" firstAttribute="trailing" secondItem="D5z-rY-XXo" secondAttribute="trailing" id="zEG-bn-h6d"/>
                                     <constraint firstItem="zte-Cl-JBh" firstAttribute="leading" secondItem="wxb-rf-Lgx" secondAttribute="leading" id="zYm-ai-Aae"/>
                                     <constraint firstItem="i6G-jT-WVl" firstAttribute="leading" secondItem="GDh-wY-aeB" secondAttribute="leading" id="zhn-rx-QV0"/>
                                     <constraint firstItem="J2u-3X-UOg" firstAttribute="leading" secondItem="EL6-Xw-Tpq" secondAttribute="leading" constant="11" id="zi8-Ba-7rd"/>
@@ -712,7 +706,7 @@ traveling around the world bio</string>
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6vt-Le-8Xh" customClass="TTOnboardingButton">
-                                <rect key="frame" x="36" y="596" width="50" height="50"/>
+                                <rect key="frame" x="36" y="707" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="IyC-im-uAs"/>
@@ -724,7 +718,7 @@ traveling around the world bio</string>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="NvM-o7-Yjo" customClass="TTRoundedImage">
-                                <rect key="frame" x="125" y="51" width="125" height="125"/>
+                                <rect key="frame" x="125" y="75" width="125" height="125"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="125" id="1oJ-8F-6bo"/>
@@ -732,7 +726,7 @@ traveling around the world bio</string>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a0G-0G-gx5">
-                                <rect key="frame" x="192" y="153" width="58" height="22"/>
+                                <rect key="frame" x="192" y="177" width="58" height="22"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Fpk-TY-OFO"/>
@@ -750,18 +744,18 @@ traveling around the world bio</string>
                         <color key="backgroundColor" red="0.92016392950000003" green="0.96426218750000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="EL6-Xw-Tpq" firstAttribute="top" secondItem="khg-9s-FX1" secondAttribute="top" id="6VZ-w7-kdS"/>
+                            <constraint firstItem="NvM-o7-Yjo" firstAttribute="top" secondItem="RpE-3w-4fc" secondAttribute="bottom" constant="31" id="8tn-Vv-ECE"/>
                             <constraint firstItem="EL6-Xw-Tpq" firstAttribute="bottom" secondItem="cXu-BN-W7l" secondAttribute="top" id="Awd-WW-bdW"/>
-                            <constraint firstItem="n2P-so-Eu3" firstAttribute="centerY" secondItem="6vt-Le-8Xh" secondAttribute="centerY" id="Bea-Mp-XFc"/>
+                            <constraint firstAttribute="trailing" secondItem="n2P-so-Eu3" secondAttribute="trailing" constant="36" id="HRn-XG-9wR"/>
                             <constraint firstAttribute="trailing" secondItem="nSc-51-liq" secondAttribute="trailing" id="L0x-WA-eMj"/>
-                            <constraint firstItem="NvM-o7-Yjo" firstAttribute="top" secondItem="khg-9s-FX1" secondAttribute="top" constant="51" id="LdN-zB-54s"/>
                             <constraint firstItem="nSc-51-liq" firstAttribute="top" secondItem="khg-9s-FX1" secondAttribute="top" constant="-2" id="Sbn-e3-YZm"/>
-                            <constraint firstAttribute="trailing" secondItem="NvM-o7-Yjo" secondAttribute="trailing" constant="125" id="Sn2-kK-315"/>
-                            <constraint firstItem="NvM-o7-Yjo" firstAttribute="leading" secondItem="khg-9s-FX1" secondAttribute="leading" constant="125" id="ZMu-V8-E4h"/>
                             <constraint firstAttribute="trailing" secondItem="EL6-Xw-Tpq" secondAttribute="trailing" id="c2P-B2-5FS"/>
+                            <constraint firstItem="n2P-so-Eu3" firstAttribute="bottom" secondItem="6vt-Le-8Xh" secondAttribute="bottom" id="dTc-gM-ftd"/>
                             <constraint firstItem="cXu-BN-W7l" firstAttribute="top" secondItem="6vt-Le-8Xh" secondAttribute="bottom" constant="21" id="lKm-gO-P6J"/>
                             <constraint firstItem="a0G-0G-gx5" firstAttribute="leading" secondItem="NvM-o7-Yjo" secondAttribute="trailing" constant="-58" id="mCV-2M-50J"/>
                             <constraint firstAttribute="bottom" secondItem="nSc-51-liq" secondAttribute="bottom" id="n9E-5L-nNl"/>
                             <constraint firstItem="a0G-0G-gx5" firstAttribute="top" secondItem="NvM-o7-Yjo" secondAttribute="bottom" constant="-23" id="nkQ-q7-AbQ"/>
+                            <constraint firstItem="NvM-o7-Yjo" firstAttribute="centerX" secondItem="khg-9s-FX1" secondAttribute="centerX" id="nkh-we-jWr"/>
                             <constraint firstItem="nSc-51-liq" firstAttribute="leading" secondItem="khg-9s-FX1" secondAttribute="leading" id="qrz-WD-OYG"/>
                             <constraint firstItem="6vt-Le-8Xh" firstAttribute="leading" secondItem="khg-9s-FX1" secondAttribute="leadingMargin" constant="20" id="uOQ-yZ-DMV"/>
                             <constraint firstItem="EL6-Xw-Tpq" firstAttribute="leading" secondItem="khg-9s-FX1" secondAttribute="leading" id="uT2-vs-atZ"/>
@@ -802,10 +796,10 @@ traveling around the world bio</string>
                         <viewControllerLayoutGuide type="bottom" id="61N-OQ-Tqy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="LLq-zZ-ZsI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="3Yt-O7-mLm" customClass="TTRoundedImage">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tt_square_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="3Yt-O7-mLm" customClass="TTRoundedImage">
                                 <rect key="frame" x="9" y="11" width="95" height="95"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="95" id="JdR-xT-1L8"/>
@@ -856,7 +850,7 @@ traveling around the world bio</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMT-Jh-GtG">
-                                <rect key="frame" x="27.5" y="136" width="60" height="20"/>
+                                <rect key="frame" x="27.666666666666671" y="136" width="60" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="9FM-X9-ESD"/>
                                     <constraint firstAttribute="width" constant="60" id="yDp-wj-xIA"/>
@@ -7083,10 +7077,10 @@ AAWIWwAFiF8ABYhmAAWIbgAFiHsABYiAAAWIggAFiIQABYiJAAWIkQAFiJQABYiZAAWIoQAFiKQABYi2
 AAWIuQAFiL4AAAAAAAAEAQAAAAAAAABBAAAAAAAAAAAAAAAAAAWIwA
 </mutableData>
         </image>
-        <image name="lock_small_gray" width="9" height="13"/>
+        <image name="lock_small_gray" width="6" height="8"/>
         <image name="tt_Blue_Back_Arrow" width="20" height="19"/>
-        <image name="tt_square_placeholder" width="255" height="255"/>
+        <image name="tt_square_placeholder" width="300" height="300"/>
         <image name="video_icon" width="16" height="11"/>
-        <image name="white-gradient" width="319" height="397"/>
+        <image name="white-gradient" width="375" height="467"/>
     </resources>
 </document>

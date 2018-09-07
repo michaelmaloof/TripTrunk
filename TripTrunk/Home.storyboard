@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EzY-RV-k7B">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -48,18 +48,18 @@
                         <viewControllerLayoutGuide type="bottom" id="SMV-GZ-Vxh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="E8P-2U-DQZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dL9-y1-G7j" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="698"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="785"/>
                                 <color key="backgroundColor" red="0.63713812828063965" green="0.80047494173049927" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" notEnabled="YES"/>
                                 </accessibility>
                             </view>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UhY-yq-bNV" customClass="TTRoundedButton">
-                                <rect key="frame" x="163.5" y="52" width="48" height="48"/>
+                                <rect key="frame" x="163.66666666666666" y="76" width="48" height="48"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="1NU-3j-k1I"/>
@@ -71,7 +71,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CU1-zf-R4P">
-                                <rect key="frame" x="324" y="58.5" width="35" height="35"/>
+                                <rect key="frame" x="324" y="82.666666666666671" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="mHE-f2-zx6"/>
                                     <constraint firstAttribute="height" constant="35" id="rTD-Ec-tt5"/>
@@ -83,7 +83,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="z8n-VI-MeD">
-                                <rect key="frame" x="0.0" y="207" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="231" width="375" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="350" id="mrC-ev-uLH"/>
@@ -212,7 +212,7 @@
                                 </connections>
                             </collectionView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Cfa-Yg-UD2">
-                                <rect key="frame" x="10" y="359" width="20" height="20"/>
+                                <rect key="frame" x="10" y="383" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -236,7 +236,9 @@
                     <navigationItem key="navigationItem" id="YAj-TX-SlS"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="alertButtonVerticalConstraint" destination="jMz-KG-ZFD" id="oJ5-p5-P1v"/>
                         <outlet property="collectionView" destination="z8n-VI-MeD" id="aK2-iX-K1P"/>
+                        <outlet property="collectionViewVerticalPositionConstraint" destination="Ntv-5Z-h6C" id="lJL-bn-gHQ"/>
                         <outlet property="googleMapView" destination="dL9-y1-G7j" id="2aR-RT-ITj"/>
                         <outlet property="refreshActivityIndicator" destination="Cfa-Yg-UD2" id="tMh-M9-P3z"/>
                     </connections>

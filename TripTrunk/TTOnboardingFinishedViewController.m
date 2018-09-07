@@ -9,10 +9,19 @@
 #import "TTOnboardingFinishedViewController.h"
 
 @interface TTOnboardingFinishedViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *info;
 
 @end
 
 @implementation TTOnboardingFinishedViewController
+
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.info.hidden = YES;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

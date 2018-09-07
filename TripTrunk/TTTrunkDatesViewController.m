@@ -11,16 +11,38 @@
 #import "TTTrunkLocationViewController.h"
 #import "TTTextField.h"
 
-@interface TTTrunkDatesViewController ()
-@property (strong, nonatomic) IBOutlet UITextView *trunkTitle;
-@property (strong, nonatomic) IBOutlet TTTextField *startDate;
-@property (strong, nonatomic) IBOutlet TTTextField *endDate;
+@interface TTTrunkDatesViewController () <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextView *trunkTitle;
+@property (weak, nonatomic) IBOutlet TTTextField *startDate;
+@property (weak, nonatomic) IBOutlet TTTextField *endDate;
 @property (strong, nonatomic) UIDatePicker *datePicker;
-@property (strong, nonatomic) IBOutlet TTOnboardingButton *nextButton;
+@property (weak, nonatomic) IBOutlet TTOnboardingButton *nextButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalPositionConstrinat;
+@property (weak, nonatomic) IBOutlet UILabel *startLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *dateVerticalPositionConstrinat;
 @end
 
 @implementation TTTrunkDatesViewController
 
+#pragma mark - iPad Hack
+-(void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    //FIXME: iPhone4 for iPad hack
+    if ([[self deviceName] containsString:@"iPad"]){
+        self.verticalPositionConstrinat.constant = 0;
+        self.startLabel.textColor = [UIColor whiteColor];
+        self.endLabel.textColor = [UIColor whiteColor];
+        self.dateVerticalPositionConstrinat.constant =  25;
+    }
+}
+
+-(void)dismissDatePicker{
+    [self.startDate resignFirstResponder];
+    [self.endDate resignFirstResponder];
+}
+
+#pragma mark - views
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.trunkTitle.text = self.trip.name;
@@ -82,6 +104,9 @@
     if([self.startDate.text isEqualToString:@""] || [self.endDate.text isEqualToString:@""])
         self.nextButton.hidden = YES;
     else self.nextButton.hidden = NO;
+    
+    //FIXME: iPhone 4 for iPad Hack
+    [self performSelector:@selector(dismissDatePicker) withObject:nil afterDelay:2.0];
 }
 
 
