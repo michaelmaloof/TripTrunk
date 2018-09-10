@@ -86,9 +86,9 @@
             [[TTCache sharedCache] setPromotedUsers:self.promoted];
             // Reload the tableview. probably doesn't need to be on the ui thread, but just to be safe.
             dispatch_async(dispatch_get_main_queue(), ^{
-                if([[TTCache sharedCache] following].count == 0 || [[TTCache sharedCache] following] == nil)
+//                if([[TTCache sharedCache] following].count == 0 || [[TTCache sharedCache] following] == nil)//This isn't working properly
                     [self loadFollowing];
-                else [self.tableView reloadData];
+//                else [self.tableView reloadData];
             });
         }
         else

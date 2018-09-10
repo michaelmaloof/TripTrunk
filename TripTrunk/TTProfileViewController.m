@@ -466,6 +466,7 @@
 -(void)initMap{
     //FIXME: OFFSET SHOULD BE DYNAMIC
     double mapOffset = -2.05; //<------determine if the map should offset because a point is below the photos
+    //THIS NEEDS TO CHANGE BASED ON WHETHER THE TABBAR IS SHOWING> NOT SURE WHY
     
     //Map View of trunk location
 //    self.googleMapView = [[GMSMapView alloc] initWithFrame:CGRectMake(0, 0, 375, 200)];
