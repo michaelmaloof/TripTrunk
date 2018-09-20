@@ -108,6 +108,7 @@ enum TTActivityViewType : NSUInteger {
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     self.findFriendsLeadingConstraint.constant = kScreenWidth;
+    self.leadingConstraintForFacebookConnect.constant = kScreenWidth+100;
     self.tabBarController.tabBar.hidden = NO;
 }
 
@@ -911,7 +912,7 @@ enum TTActivityViewType : NSUInteger {
         
     }else{
         //hide view
-        self.leadingConstraintForFacebookConnect.constant = kScreenWidth;
+        self.leadingConstraintForFacebookConnect.constant = kScreenWidth+100;
         self.tableView.userInteractionEnabled = YES;
         self.findFriendsView.userInteractionEnabled = NO;
         self.searchTextField.hidden = YES;
