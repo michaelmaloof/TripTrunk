@@ -23,5 +23,7 @@
 //It needs to be added.
 //It's sad to see TripTrunk end, or at least go on hold, especially before it can be cleaned up.
 
+//To run parse dashboard in Terminal:
+//parse-dashboard --config parse-dashboard-config.json
 @end
 

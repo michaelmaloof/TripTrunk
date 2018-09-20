@@ -614,8 +614,6 @@
         //FIXME: CACHE THESE
         [SocialUtility followerCount:self.user block:^(int count, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-    //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-    //            [self.followersButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
                 self.followersCount.text = [NSString stringWithFormat:@"%i",count];
             });
         }];
@@ -626,8 +624,6 @@
     }else{
         [SocialUtility followingCount:self.user block:^(int count, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-    //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-    //            [self.followingButton setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateDisabled];
                 self.followingCount.text = [NSString stringWithFormat:@"%i",count];
             });
         }];
@@ -635,15 +631,10 @@
     
     [SocialUtility trunkCount:self.user block:^(int count, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-//            self.trunkCount= count;
-            
-            if (count == 0){
-//                [self.trunkCountButton setTitle:@"0" forState:UIControlStateNormal];
+            if (count == 0)
                 self.trunksCount.text = @"0";
-            }else {
-//                [self.trunkCountButton   setTitle:[NSString stringWithFormat:@"%i",count] forState:UIControlStateNormal];
-                self.trunksCount.text = [NSString stringWithFormat:@"%i",count];
-            }
+            else self.trunksCount.text = [NSString stringWithFormat:@"%i",count];
+            
         });
     }];
 }

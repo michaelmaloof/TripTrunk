@@ -179,6 +179,10 @@
     
     [SocialUtility queryForTrunksWithFollowers:self.following withoutPreviousTrunks:self.sortedArray withLimit:200 block:^(NSArray *activities, NSError *error) {
         if(!error){
+            if(activities.count <= 0){
+                //noone trunks to show!
+                [self showNewUserAlert];
+            }
             NSMutableArray *trips = [[NSMutableArray alloc] init];
             for (PFObject *activity in activities){
                 Trip *atrip = activity[@"trip"];
@@ -635,7 +639,8 @@
     self.googleMapView.mapStyle = style;
 }
 -(void)initMap{
-    double mapOffset = 1.425;
+    double mapOffset = 1.425; //FIXME: <--this number needs to be converted to have blue dot on same sopt of screen regardless of device
+
     PFGeoPoint *geoPoint = self.user[@"hometownGeoPoint"];
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude-mapOffset
                                                             longitude:geoPoint.longitude
@@ -669,6 +674,7 @@
 
 -(void)updateMap:(PFGeoPoint*)geoPoint WithTrunk:(Trip*)trip{
     double mapOffset = 1.425;
+    
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:geoPoint.latitude-mapOffset
                                                             longitude:geoPoint.longitude
                                                                  zoom:7];
@@ -819,6 +825,25 @@
 
 - (void)trunkDetailsEdited:(Trip *)trip {
     [self initTrips:NO refresh:self.refreshControl];
+}
+
+-(void)showNewUserAlert{
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:NSLocalizedString(@"This is kinda boring",@"This is kinda boring")
+                                 message:NSLocalizedString(@"Add a trunk or follow some users to load trunks to view.",@"Add a trunk or follow some users to load trunks to view.")
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"Okay",@"Okay")
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action) {
+                                  
+                               }];
+    
+    [alert addAction:okButton];
+    
+    UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    [vc presentViewController:alert animated:YES completion:nil];
 }
 
 @end

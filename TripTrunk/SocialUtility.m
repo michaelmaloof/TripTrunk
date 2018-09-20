@@ -1275,21 +1275,25 @@
 //        completionBlock(number, error);
 //    }];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        
+        if(objects.count==0)
+            completionBlock(0, error);
         
         if (error){
             [ParseErrorHandlingController handleError:error];
             [TTAnalytics errorOccurred:[NSString stringWithFormat:@"%@",error] method:@"trunkCount:"];
+            completionBlock(0, error);
         }else {
 //            [[TTUtility sharedInstance] internetConnectionFound];
-        }
-        int count = 0;
-        for (PFObject *obj in objects){
-            if (obj[@"trip"]) {
-                count += 1;
+            int count = 0;
+            for (PFObject *obj in objects){
+                if (obj[@"trip"]) {
+                    count += 1;
+                }
             }
-        completionBlock(count, error);
+            
+            completionBlock(count, error);
         }
+        
     }];
 }
 
