@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet TTCitySearchTextField *homeTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *finishButton;
+@property (strong, nonatomic) PFGeoPoint *hometownGeoPoint;
 @property (strong, nonatomic) PFUser *user;
 @property (strong, nonatomic) TTCitySearchResultsTableViewController *citySearchPopover;
 @property (strong, nonatomic) UIPopoverPresentationController *popover;
@@ -193,6 +194,7 @@
         [self.user setValue:fullName forKey:@"name"];
         self.user.email = self.aNewUser[@"Email"];
         self.user.password = self.aNewUser[@"Password"];
+        [self.user setValue:self.hometownGeoPoint forKey:@"hometownGeoPoint"];
         [self.user setValue:self.homeTextField.text forKey:@"hometown"];
         
         // Set that the user has completed registration
@@ -208,6 +210,8 @@
         }else{
             [self.user signUp:&error];
         }
+        
+        
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self performSegueWithIdentifier:@"next" sender:self];
@@ -277,6 +281,8 @@
 #pragma mark - TTCitySearchResultsDelegate
 -(void)didSelectTableRow:(TTPlace*)selectedCity{
     [self.homeTextField setText:[selectedCity.name stringByReplacingOccurrencesOfString:@", United States" withString:@""]];
+    self.hometownGeoPoint = [[PFGeoPoint alloc] init];
+    self.hometownGeoPoint = [PFGeoPoint geoPointWithLatitude:selectedCity.latitude longitude:selectedCity.longitude];
     [self.homeTextField resignFirstResponder];
     self.meetsMinimumRequirements = YES;
     self.finishButton.hidden = NO;
