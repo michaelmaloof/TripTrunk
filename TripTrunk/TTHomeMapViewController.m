@@ -37,6 +37,7 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *refreshActivityIndicator;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewVerticalPositionConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *alertButtonVerticalConstraint;
+@property BOOL alertUserOfNoFriendsOrTrunks;
 @end
 
 @implementation TTHomeMapViewController
@@ -62,6 +63,7 @@
 #pragma mark - views
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.alertUserOfNoFriendsOrTrunks = YES;
     [self prepareMap];
     self.user = [PFUser currentUser];
     [self setupNotificationCenter];
@@ -81,8 +83,13 @@
     self.refreshControl.tintColor = [TTColor tripTrunkBlue];
     [self.refreshControl endRefreshing];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     //get following list
-    if(self.user){
+    if(self.user && self.alertUserOfNoFriendsOrTrunks){
+        self.alertUserOfNoFriendsOrTrunks = NO;
         
         if(self.following.count > 0){
             [self initMap];
@@ -507,8 +514,8 @@
                 [cell.quaternaryTrunkImage setImageWithURL:[NSURL URLWithString:newPhotoUrl]];
             }else{
                 //only 1 photo is being used so enlarge the imageView
-                cell.lowerInfoConstraint.constant = 248;
-                cell.spotlightImageHeightConstraint.constant = 350;
+                cell.lowerInfoConstraint.constant = 248; //Don't hardcode this!
+                cell.spotlightImageHeightConstraint.constant = 350; //Don't hardcode this!
             }
         }
         
